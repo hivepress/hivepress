@@ -14,7 +14,7 @@ A highly customizable, easy-to-use plugin that lets you build any kind of direct
 
 HivePress is an extensible, highly customizable, easy-to-use plugin that lets you build any kind of directory or classifieds website.
 
-[Demo](https://demo.hivepress.co/) | [Documentation](https://github.com/hivepress/hivepress/wiki) | [Support](https://github.com/hivepress/hivepress/issues)
+[Demo](https://demo.hivepress.co/) | [Documentation](https://docs.hivepress.co/) | [Support](https://github.com/hivepress/hivepress/issues)
 
 = Listings =
 * Allow anyone to submit listings
