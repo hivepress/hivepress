@@ -88,7 +88,7 @@ abstract class Entity extends Component {
 			add_action( 'hivepress/template/template_context/' . $this->name . '_archive', [ $this, 'set_archive_context' ] );
 
 			// Set view context.
-			add_action( 'hivepress/template/template_context/' . $this->name . '_list', [ $this, 'set_view_context' ] );
+			add_action( 'hivepress/template/template_context/' . $this->name . '_edits', [ $this, 'set_view_context' ] );
 
 			// Set category context.
 			add_action( 'hivepress/template/template_context/category_archive', [ $this, 'set_category_archive_context' ] );
