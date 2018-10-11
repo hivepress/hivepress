@@ -8,13 +8,13 @@ Stable tag: 1.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A highly customizable, easy-to-use plugin that lets you build any kind of directory or classifieds website.
+An extensible, highly customizable, easy-to-use plugin that lets you build any kind of directory or classifieds website.
 
 == Description ==
 
 HivePress is an extensible, highly customizable, easy-to-use plugin that lets you build any kind of directory or classifieds website.
 
-[Demo](https://demo.hivepress.co/) | [Documentation](https://github.com/hivepress/hivepress/wiki) | [Support](https://github.com/hivepress/hivepress/issues)
+[Demo](https://demo.hivepress.co/) | [Documentation](https://docs.hivepress.co/) | [Support](https://github.com/hivepress/hivepress/issues)
 
 = Listings =
 * Allow anyone to submit listings
@@ -54,7 +54,7 @@ HivePress is an extensible, highly customizable, easy-to-use plugin that lets yo
 
 = Easy Customization =
 * Override any template or template part via the theme/hivepress directory
-* Insert custom template parts anywhere and reorder them with HivePress API
+* Insert custom template parts anywhere and reorder them with HivePress hooks
 * Easily style anything with CSS snippets since there are no hardcoded styles
 
 == Installation ==

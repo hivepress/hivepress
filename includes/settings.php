@@ -270,9 +270,9 @@ $settings = [
 						'fields' => [
 							'email_user_register'         => [
 								'name'        => esc_html__( 'User Registered', 'hivepress' ),
-								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %user_name%, %user_password%.', 'hivepress' ),
+								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
 								'type'        => 'textarea',
-								'default'     => hp_sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+								'default'     => hp_sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 								'required'    => true,
 								'order'       => 10,
 							],
@@ -557,9 +557,14 @@ $settings = [
 
 				'areas' => [
 					'content' => [
+						'title'      => [
+							'path'  => 'parts/title',
+							'order' => 10,
+						],
+
 						'login_form' => [
 							'path'  => 'user/parts/login-form',
-							'order' => 10,
+							'order' => 20,
 						],
 					],
 				],
@@ -570,9 +575,14 @@ $settings = [
 
 				'areas' => [
 					'content' => [
+						'title'               => [
+							'path'  => 'parts/title',
+							'order' => 10,
+						],
+
 						'reset_password_form' => [
 							'path'  => 'user/parts/reset-password-form',
-							'order' => 10,
+							'order' => 20,
 						],
 					],
 				],
@@ -603,8 +613,8 @@ $settings = [
 
 				'areas'  => [
 					'content' => [
-						'update_form' => [
-							'path'  => 'user/parts/update-form',
+						'settings_form' => [
+							'path'  => 'user/parts/settings-form',
 							'order' => 20,
 						],
 					],
@@ -1162,22 +1172,22 @@ $settings = [
 				'order'      => 30,
 			],
 
-			'list'                => [
+			'edits'               => [
 				'title'      => esc_html__( 'My Listings', 'hivepress' ),
 				'regex'      => '^account/listings/?$',
-				'redirect'   => 'index.php?hp_listing_view=1',
+				'redirect'   => 'index.php?hp_listing_edits=1',
 				'capability' => 'read',
-				'template'   => 'listing_list',
+				'template'   => 'listing_edits',
 				'menu'       => 'user_account',
 				'order'      => 10,
 			],
 
-			'update'              => [
+			'edit'                => [
 				'title'      => esc_html__( 'Edit Listing', 'hivepress' ),
 				'regex'      => '^account/listing/([0-9]+)/?$',
 				'redirect'   => 'index.php?hp_listing_edit=$matches[1]',
 				'capability' => 'read',
-				'template'   => 'listing_update',
+				'template'   => 'listing_edit',
 			],
 
 			'vendor'              => [
@@ -1252,26 +1262,26 @@ $settings = [
 				],
 			],
 
-			'listing_list'                => [
+			'listing_edits'               => [
 				'parent' => 'user_account',
 
 				'areas'  => [
 					'content' => [
 						'loop' => [
-							'path'  => 'listing/parts/loop-update',
+							'path'  => 'listing/parts/loop-edit',
 							'order' => 20,
 						],
 					],
 				],
 			],
 
-			'listing_update'              => [
+			'listing_edit'                => [
 				'parent' => 'user_account',
 
 				'areas'  => [
 					'content' => [
-						'update_form' => [
-							'path'  => 'listing/parts/update-form',
+						'edit_form' => [
+							'path'  => 'listing/parts/edit-form',
 							'order' => 20,
 						],
 					],

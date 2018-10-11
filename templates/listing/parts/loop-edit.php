@@ -43,5 +43,5 @@ if ( $listing_query->have_posts() ) :
 	<div class="hp-no-results">
 		<p><?php esc_html_e( 'No listings yet.', 'hivepress' ); ?></p>
 	</div>
-<?php endif; ?>
-<button type="button" class="hp-js-link" data-url="<?php echo esc_url( hivepress()->template->get_url( 'listing__submission' ) ); ?>"><?php esc_html_e( 'Submit Listing', 'hivepress' ); ?></button>
+	<?php
+endif;
