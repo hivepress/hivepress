@@ -557,9 +557,14 @@ $settings = [
 
 				'areas' => [
 					'content' => [
+						'title' => [
+							'path' => 'parts/title',
+							'order' => 10,
+						],
+
 						'login_form' => [
 							'path'  => 'user/parts/login-form',
-							'order' => 10,
+							'order' => 20,
 						],
 					],
 				],
@@ -570,9 +575,14 @@ $settings = [
 
 				'areas' => [
 					'content' => [
+						'title' => [
+							'path' => 'parts/title',
+							'order' => 10,
+						],
+
 						'reset_password_form' => [
 							'path'  => 'user/parts/reset-password-form',
-							'order' => 10,
+							'order' => 20,
 						],
 					],
 				],

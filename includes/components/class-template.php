@@ -181,6 +181,7 @@ class Template extends Component {
 				foreach ( array_keys( $rewrite_tags ) as $rewrite_tag ) {
 					if ( get_query_var( $rewrite_tag ) ) {
 						$query->is_home = false;
+						$query->is_404  = false;
 
 						// Filter page title.
 						$page['title'] = apply_filters( "hivepress/template/page_title/{$page_id}", hp_get_array_value( $page, 'title', '' ) );

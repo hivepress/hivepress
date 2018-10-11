@@ -357,8 +357,10 @@ abstract class Entity extends Component {
 				$taxonomy = [
 					'label'        => $attribute['name'],
 					'hierarchical' => true,
+					'public'       => false,
+					'show_ui'      => true,
 					'show_in_menu' => false,
-					'rewrite'      => [ 'slug' => str_replace( '_', '-', hp_unprefix( $taxonomy_name ) ) ],
+					'rewrite'      => false,
 				];
 
 				// Register taxonomy.
