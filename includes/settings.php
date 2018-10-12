@@ -24,7 +24,7 @@ $settings = [
 
 		// Styles.
 		'admin_styles'  => [
-			'core' => [
+			'backend' => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
 			],
@@ -32,7 +32,7 @@ $settings = [
 
 		// Scripts.
 		'admin_scripts' => [
-			'core' => [
+			'backend' => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
 				'deps'   => [ 'jquery' ],
@@ -49,6 +49,7 @@ $settings = [
 				'sections' => [
 					'recaptcha' => [
 						'name'   => 'reCAPTCHA',
+						'order'  => 10,
 
 						'fields' => [
 							'recaptcha_site_key'   => [
@@ -194,7 +195,7 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
 			],
 
-			'core'              => [
+			'frontend'          => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
 			],
@@ -228,7 +229,7 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
 			],
 
-			'core'             => [
+			'frontend'         => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
 				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
