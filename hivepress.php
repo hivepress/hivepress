@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name: HivePress
- * Plugin URI: https://hivepress.co/
  * Description: Multipurpose listing & directory plugin.
  * Version: 1.0.0
  * Author: HivePress
