@@ -75,7 +75,9 @@ class Admin extends Component {
 	 * Adds admin pages.
 	 */
 	public function add_pages() {
-		add_submenu_page( 'options-general.php', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ] );
+		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg', 2 );
+		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
+		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Add-ons', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Add-ons', 'hivepress' ), 'manage_options', 'hp_addons', [ $this, 'render_addons' ] );
 	}
 
 	/**
@@ -95,6 +97,43 @@ class Admin extends Component {
 			if ( file_exists( $template_path ) ) {
 				$tabs        = $this->get_settings_tabs();
 				$current_tab = $this->get_settings_tab();
+
+				// todo
+				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+				$api = plugins_api(
+					'query_plugins',
+					array(
+						'author'            => 'hivepress',
+						'fields'            => [
+							'icons' => true,
+						],
+					)
+				);
+
+				$plugins = array_filter(
+					$api->plugins,
+					function( $plugin ) {
+						return $plugin->slug !== 'hivepress';
+					}
+				);
+
+				foreach($plugins as $index => $plugin) {
+					$status=install_plugin_install_status($plugin);
+
+					if(!in_array($status['status'], ['install', 'update_available'])) {
+						if(!is_plugin_active($plugin->slug.'/'.$plugin->slug.'.php')) {
+							$status['status']='activate';
+							$status['url']=admin_url('plugins.php?'.http_build_query([
+								'action' => 'activate',
+								'plugin' => $plugin->slug.'/'.$plugin->slug.'.php',
+								'_wpnonce' => wp_create_nonce('activate-plugin_'.$plugin->slug.'/'.$plugin->slug.'.php'),
+							]));
+						}
+					}
+
+					$plugins[$index]->name=str_replace(HP_CORE_NAME.' ', '', $plugin->name);
+					$plugins[$index]=(object)array_merge((array)$plugin, $status);
+				}
 
 				include $template_path;
 			}
