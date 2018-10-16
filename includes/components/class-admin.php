@@ -12,6 +12,13 @@ defined( 'ABSPATH' ) || exit;
 class Admin extends Component {
 
 	/**
+	 * Array of post types.
+	 *
+	 * @var array
+	 */
+	private $post_types = [];
+
+	/**
 	 * Array of options.
 	 *
 	 * @var array
@@ -41,6 +48,9 @@ class Admin extends Component {
 		parent::__construct( $settings );
 
 		if ( is_admin() ) {
+
+			// Initialize post types.
+			add_action( 'hivepress/component/init_post_types', [ $this, 'init_post_types' ] );
 
 			// Manage pages.
 			add_action( 'admin_menu', [ $this, 'add_pages' ] );
@@ -77,6 +87,15 @@ class Admin extends Component {
 	}
 
 	/**
+	 * Initializes post types.
+	 *
+	 * @param array $post_types
+	 */
+	public function init_post_types( $post_types ) {
+		$this->post_types = array_merge( $this->post_types, array_keys( $post_types ) );
+	}
+
+	/**
 	 * Adds admin pages.
 	 */
 	public function add_pages() {
@@ -105,9 +124,11 @@ class Admin extends Component {
 				$pages = [
 					'hp_separator',
 					'hp_settings',
-					// todo shouldn't be hardcoded.
-					'edit.php?post_type=hp_listing',
 				];
+
+				foreach ( $this->post_types as $post_type ) {
+					$pages[] = 'edit.php?post_type=' . hp_prefix( $post_type );
+				}
 
 				// Filter menu items.
 				$menu = array_filter(
