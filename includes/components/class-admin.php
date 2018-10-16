@@ -332,7 +332,7 @@ class Admin extends Component {
 		$current_tab = hp_get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
-		if ( ! in_array( $current_tab, $tabs ) ) {
+		if ( ! in_array( $current_tab, $tabs, true ) ) {
 			$current_tab = $first_tab;
 		}
 
@@ -428,7 +428,7 @@ class Admin extends Component {
 			foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
 				$screen = hp_prefix( $meta_box['screen'] );
 
-				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen ) ) ) {
+				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen, true ) ) ) {
 
 					// Filter fields.
 					$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'post_id' => $post_id ] );
@@ -702,7 +702,7 @@ class Admin extends Component {
 					$addon_status = install_plugin_install_status( $addon );
 
 					// Set activation status.
-					if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ] ) && ! is_plugin_active( $addon_path ) ) {
+					if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $addon_path ) ) {
 						$addon_status['status'] = 'activate';
 						$addon_status['url']    = admin_url(
 							'plugins.php?' . http_build_query(
@@ -796,7 +796,7 @@ class Admin extends Component {
 		$current_tab = hp_get_array_value( $_GET, 'addon_status', $first_tab );
 
 		// Set the default tab.
-		if ( ! in_array( $current_tab, $tabs ) ) {
+		if ( ! in_array( $current_tab, $tabs, true ) ) {
 			$current_tab = $first_tab;
 		}
 
@@ -827,7 +827,7 @@ class Admin extends Component {
 	public function filter_comment_types( $clauses ) {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ] ) ) {
+		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
 			$clauses['where'] .= ' AND comment_type NOT LIKE "hp_%"';
 		}
 
@@ -840,7 +840,7 @@ class Admin extends Component {
 	public function init_media() {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) ) {
+		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			wp_enqueue_media();
 		}
 	}

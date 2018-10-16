@@ -305,7 +305,7 @@ abstract class Entity extends Component {
 					}
 				}
 
-				if ( in_array( reset( $field_types ), [ 'select', 'radio', 'checkboxes' ] ) ) {
+				if ( in_array( reset( $field_types ), [ 'select', 'radio', 'checkboxes' ], true ) ) {
 					$attribute_id = substr( $attribute_id, 0, 32 - strlen( hp_prefix( $this->name . '_' ) ) );
 
 					$attribute['type'] = 'taxonomy';
@@ -468,7 +468,7 @@ abstract class Entity extends Component {
 			$attributes = array_filter(
 				$this->attributes,
 				function( $attribute ) use ( $category_id ) {
-					return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'] );
+					return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
 				}
 			);
 		}
@@ -509,7 +509,7 @@ abstract class Entity extends Component {
 		$attributes = array_filter(
 			$this->attributes,
 			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'] );
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
 			}
 		);
 
@@ -577,7 +577,7 @@ abstract class Entity extends Component {
 		$attributes = array_filter(
 			$this->get_attributes( $this->get_id() ),
 			function( $attribute ) use ( $area_id ) {
-				return in_array( $area_id, $attribute['areas'] );
+				return in_array( $area_id, $attribute['areas'], true );
 			}
 		);
 
@@ -726,7 +726,7 @@ abstract class Entity extends Component {
 	 * @param WP_Post $post
 	 */
 	public function moderate( $new_status, $old_status, $post ) {
-		if ( hp_prefix( $this->name ) === $post->post_type && 'pending' === $old_status && in_array( $new_status, [ 'publish', 'trash' ] ) ) {
+		if ( hp_prefix( $this->name ) === $post->post_type && 'pending' === $old_status && in_array( $new_status, [ 'publish', 'trash' ], true ) ) {
 
 			// Get action.
 			$action = 'approve';

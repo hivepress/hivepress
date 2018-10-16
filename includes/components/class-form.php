@@ -350,7 +350,7 @@ class Form extends Component {
 			// Verify captcha.
 			$captcha_secret_key = get_option( 'hp_recaptcha_secret_key' );
 
-			if ( ( $args['captcha'] || in_array( $form_id, (array) get_option( 'hp_recaptcha_forms' ) ) ) && '' !== $captcha_secret_key ) {
+			if ( ( $args['captcha'] || in_array( $form_id, (array) get_option( 'hp_recaptcha_forms' ), true ) ) && '' !== $captcha_secret_key ) {
 				$captcha_response = hp_get_remote_json(
 					'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 						[
@@ -538,7 +538,7 @@ class Form extends Component {
 			// Render captcha.
 			$captcha_site_key = get_option( 'hp_recaptcha_site_key' );
 
-			if ( ( $args['captcha'] || in_array( $form_id, (array) get_option( 'hp_recaptcha_forms' ) ) ) && '' !== $captcha_site_key ) {
+			if ( ( $args['captcha'] || in_array( $form_id, (array) get_option( 'hp_recaptcha_forms' ), true ) ) && '' !== $captcha_site_key ) {
 				$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( $captcha_site_key ) . '"></div>';
 			}
 
@@ -634,7 +634,7 @@ class Form extends Component {
 			$values = array_filter(
 				$values,
 				function( $field_id ) use ( $field_ids ) {
-					return in_array( $field_id, $field_ids );
+					return in_array( $field_id, $field_ids, true );
 				},
 				ARRAY_FILTER_USE_KEY
 			);
@@ -884,7 +884,7 @@ class Form extends Component {
 
 				// Checkbox.
 				case 'checkbox':
-					if ( ! in_array( $value, [ '', '1' ] ) ) {
+					if ( ! in_array( $value, [ '', '1' ], true ) ) {
 						$this->add_error( sprintf( esc_html__( '"%s contains invalid value.', 'hivepress' ), $args['name'] ) );
 					}
 
@@ -1017,7 +1017,7 @@ class Form extends Component {
 				foreach ( $args['options'] as $option_id => $option_label ) {
 					$option_value = null;
 
-					if ( in_array( $option_id, $value ) ) {
+					if ( in_array( $option_id, $value, true ) ) {
 						$option_value = '1';
 					}
 
@@ -1354,7 +1354,7 @@ class Form extends Component {
 						$file_type       = wp_check_filetype( wp_unslash( $_FILES[ $file_id ]['name'] ) );
 						$file_extensions = array_map( 'strtoupper', hp_get_array_value( $field, 'extensions', [] ) );
 
-						if ( ! in_array( strtoupper( $file_type['ext'] ), $file_extensions ) ) {
+						if ( ! in_array( strtoupper( $file_type['ext'] ), $file_extensions, true ) ) {
 							$this->add_error( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_extensions ) ) );
 						}
 					}
