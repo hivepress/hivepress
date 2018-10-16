@@ -1199,7 +1199,7 @@ class Form extends Component {
 			default:
 				$field_type = $args['type'];
 
-				$output .= apply_filters( "hivepress/form/field_html/{$field_type}", $output, $field_id, $args, $value );
+				$output .= apply_filters( "hivepress/form/field_html/{$field_type}", '', $field_id, $args, $value );
 		}
 
 		if ( 'hidden' !== $args['type'] ) {
