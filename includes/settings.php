@@ -749,7 +749,7 @@ $settings = [
 				'public'      => true,
 				'has_archive' => true,
 				'supports'    => [ 'title', 'editor', 'thumbnail', 'author' ],
-				'menu_icon'   => HP_CORE_URL . '/assets/images/logo.svg',
+				'menu_icon'   => 'dashicons-format-aside',
 				'rewrite'     => [ 'slug' => 'listing' ],
 
 				'labels'      => [

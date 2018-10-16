@@ -42,8 +42,10 @@ class Admin extends Component {
 
 		if ( is_admin() ) {
 
-			// Add admin pages.
+			// Manage pages.
 			add_action( 'admin_menu', [ $this, 'add_pages' ] );
+			add_filter( 'custom_menu_order', [ $this, 'order_pages' ] );
+			add_filter( 'menu_order', [ $this, 'order_pages' ] );
 
 			// Manage options.
 			add_action( 'hivepress/component/init_options', [ $this, 'init_options' ] );
@@ -78,9 +80,51 @@ class Admin extends Component {
 	 * Adds admin pages.
 	 */
 	public function add_pages() {
-		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg', 2 );
+		global $menu;
+
+		// Add separator.
+		$menu[] = [ '', 'manage_options', 'hp_separator', '', 'wp-menu-separator' ];
+
+		// Add pages.
+		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
 		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
 		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Add-ons', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Add-ons', 'hivepress' ), 'manage_options', 'hp_addons', [ $this, 'render_addons' ] );
+	}
+
+	/**
+	 * Orders admin pages.
+	 *
+	 * @param array $menu
+	 * @return array
+	 */
+	public function order_pages( $menu ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( is_array( $menu ) ) {
+
+				// Get admin pages.
+				$pages = [
+					'hp_separator',
+					'hp_settings',
+					// todo shouldn't be hardcoded.
+					'edit.php?post_type=hp_listing',
+				];
+
+				// Filter menu items.
+				$menu = array_filter(
+					$menu,
+					function( $name ) use ( $pages ) {
+						return ! in_array( $name, $pages, true );
+					}
+				);
+
+				// Insert menu items.
+				array_splice( $menu, array_search( 'separator2', $menu, true ) - 1, 0, $pages );
+
+				return $menu;
+			} else {
+				return true;
+			}
+		}
 	}
 
 	/**
