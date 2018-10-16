@@ -68,6 +68,9 @@ class Admin extends Component {
 
 			// Init media.
 			add_action( 'admin_enqueue_scripts', [ $this, 'init_media' ] );
+
+			// Render notices.
+			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
 	}
 
@@ -95,44 +98,13 @@ class Admin extends Component {
 			$template_path = HP_CORE_PATH . '/templates/admin/' . $template_name . '.php';
 
 			if ( file_exists( $template_path ) ) {
-				$tabs        = $this->get_settings_tabs();
-				$current_tab = $this->get_settings_tab();
-
-				// todo
-				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-				$api = plugins_api(
-					'query_plugins',
-					array(
-						'author'            => 'hivepress',
-						'fields'            => [
-							'icons' => true,
-						],
-					)
-				);
-
-				$plugins = array_filter(
-					$api->plugins,
-					function( $plugin ) {
-						return $plugin->slug !== 'hivepress';
-					}
-				);
-
-				foreach($plugins as $index => $plugin) {
-					$status=install_plugin_install_status($plugin);
-
-					if(!in_array($status['status'], ['install', 'update_available'])) {
-						if(!is_plugin_active($plugin->slug.'/'.$plugin->slug.'.php')) {
-							$status['status']='activate';
-							$status['url']=admin_url('plugins.php?'.http_build_query([
-								'action' => 'activate',
-								'plugin' => $plugin->slug.'/'.$plugin->slug.'.php',
-								'_wpnonce' => wp_create_nonce('activate-plugin_'.$plugin->slug.'/'.$plugin->slug.'.php'),
-							]));
-						}
-					}
-
-					$plugins[$index]->name=str_replace(HP_CORE_NAME.' ', '', $plugin->name);
-					$plugins[$index]=(object)array_merge((array)$plugin, $status);
+				if ( 'settings' === $template_name ) {
+					$tabs        = $this->get_settings_tabs();
+					$current_tab = $this->get_settings_tab();
+				} elseif ( 'addons' === $template_name ) {
+					$tabs        = $this->get_addons_tabs();
+					$current_tab = $this->get_addons_tab();
+					$addons      = $this->get_addons( $current_tab );
 				}
 
 				include $template_path;
@@ -187,7 +159,7 @@ class Admin extends Component {
 	public function register_settings() {
 		global $pagenow;
 
-		if ( 'options.php' === $pagenow || ( 'options-general.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) ) {
+		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) ) {
 
 			// Get current tab.
 			$tab = hp_get_array_value( $this->options, $this->get_settings_tab() );
@@ -622,6 +594,151 @@ class Admin extends Component {
 	}
 
 	/**
+	 * Gets add-ons.
+	 *
+	 * @param string $status
+	 * @return array
+	 */
+	private function get_addons( $status = 'all' ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		// Get cached add-ons.
+		$addons = get_transient( 'hp_addons' );
+
+		if ( false === $addons ) {
+			$addons = [];
+
+			// Query plugins.
+			$api = plugins_api(
+				'query_plugins',
+				[
+					'author' => 'hivepress',
+					'fields' => [
+						'icons' => true,
+					],
+				]
+			);
+
+			if ( ! is_wp_error( $api ) ) {
+
+				// Filter add-ons.
+				$addons = array_filter(
+					$api->plugins,
+					function( $plugin ) {
+						return 'hivepress' !== $plugin->slug;
+					}
+				);
+
+				// Set add-on statuses.
+				foreach ( $addons as $index => $addon ) {
+
+					// Get path and status.
+					$addon_path   = $addon->slug . '/' . $addon->slug . '.php';
+					$addon_status = install_plugin_install_status( $addon );
+
+					// Set activation status.
+					if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ] ) && ! is_plugin_active( $addon_path ) ) {
+						$addon_status['status'] = 'activate';
+						$addon_status['url']    = admin_url(
+							'plugins.php?' . http_build_query(
+								[
+									'action'   => 'activate',
+									'plugin'   => $addon_path,
+									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $addon_path ),
+								]
+							)
+						);
+					}
+
+					$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
+					$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
+				}
+
+				// Cache add-ons.
+				set_transient( 'hp_addons', $addons, DAY_IN_SECONDS );
+			}
+		}
+
+		// Filter add-ons.
+		if ( 'all' !== $status ) {
+			$addons = array_filter(
+				$addons,
+				function( $addon ) use ( $status ) {
+					return 'installed' === $status && 'install' !== $addon->status;
+				}
+			);
+		}
+
+		return $addons;
+	}
+
+	/**
+	 * Gets add-ons tabs.
+	 *
+	 * @return array
+	 */
+	private function get_addons_tabs() {
+
+		// Set tabs.
+		$tabs = [
+			'all'       => [
+				'name'  => esc_html__( 'All', 'hivepress' ),
+				'count' => 0,
+			],
+			'installed' => [
+				'name'  => esc_html__( 'Installed', 'hivepress' ),
+				'count' => 0,
+			],
+		];
+
+		// Get add-ons.
+		$addons = $this->get_addons();
+
+		// Set tab counts.
+		$tabs['all']['count']       = count( $addons );
+		$tabs['installed']['count'] = count(
+			array_filter(
+				$addons,
+				function( $addon ) {
+					return 'install' !== $addon->status;
+				}
+			)
+		);
+
+		// Filter tabs.
+		$tabs = array_filter(
+			$tabs,
+			function( $tab ) {
+				return 0 !== $tab['count'];
+			}
+		);
+
+		return $tabs;
+	}
+
+	/**
+	 * Gets current add-ons tab.
+	 *
+	 * @return mixed
+	 */
+	private function get_addons_tab() {
+		$current_tab = false;
+
+		// Get all tabs.
+		$tabs = array_keys( $this->get_addons_tabs() );
+
+		$first_tab   = hp_get_array_value( $tabs, 0 );
+		$current_tab = hp_get_array_value( $_GET, 'addon_status', $first_tab );
+
+		// Set the default tab.
+		if ( ! in_array( $current_tab, $tabs ) ) {
+			$current_tab = $first_tab;
+		}
+
+		return $current_tab;
+	}
+
+	/**
 	 * Adds post states.
 	 *
 	 * @param array   $states
@@ -660,6 +777,17 @@ class Admin extends Component {
 
 		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) ) {
 			wp_enqueue_media();
+		}
+	}
+
+	/**
+	 * Renders notices.
+	 */
+	public function render_notices() {
+		global $pagenow;
+
+		if ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) {
+			settings_errors();
 		}
 	}
 
