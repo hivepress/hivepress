@@ -116,14 +116,6 @@ $settings = [
 				],
 			],
 		],
-
-		// Scripts.
-		'scripts' => [
-			'recaptcha' => [
-				'handle' => 'g-recaptcha',
-				'src'    => 'https://www.google.com/recaptcha/api.js',
-			],
-		],
 	],
 
 	// Email component.

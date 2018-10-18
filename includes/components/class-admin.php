@@ -475,18 +475,6 @@ class Admin extends Component {
 			$output .= '<table class="hp-form form-table">';
 
 			foreach ( $meta_box['fields'] as $field_id => $field ) {
-				$output .= '<tr>';
-
-				// Render field label.
-				$output .= '<th scope="row">' . esc_html( $field['name'] ) . $this->render_tooltip( hp_get_array_value( $field, 'description' ) ) . '</th>';
-
-				// Set field parent.
-				if ( isset( $field['parent'] ) ) {
-					$field['attributes'] = [
-						'class'       => 'hp-js-field',
-						'data-parent' => is_array( $field['parent'] ) ? wp_json_encode( array_combine( hp_prefix( array_keys( $field['parent'] ) ), $field['parent'] ) ) : hp_prefix( $field['parent'] ),
-					];
-				}
 
 				// Get field value.
 				$value = get_post_meta( $post->ID, hp_prefix( $field_id ), true );
@@ -495,10 +483,29 @@ class Admin extends Component {
 					$value = null;
 				}
 
-				// Render field.
-				$output .= '<td>' . hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value ) . '</td>';
+				if ( 'hidden' === $field['type'] ) {
 
-				$output .= '</tr>';
+					// Render field.
+					$output .= hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value );
+				} else {
+					$output .= '<tr>';
+
+					// Render field label.
+					$output .= '<th scope="row">' . esc_html( $field['name'] ) . $this->render_tooltip( hp_get_array_value( $field, 'description' ) ) . '</th>';
+
+					// Set field parent.
+					if ( isset( $field['parent'] ) ) {
+						$field['attributes'] = [
+							'class'       => 'hp-js-field',
+							'data-parent' => is_array( $field['parent'] ) ? wp_json_encode( array_combine( hp_prefix( array_keys( $field['parent'] ) ), $field['parent'] ) ) : hp_prefix( $field['parent'] ),
+						];
+					}
+
+					// Render field.
+					$output .= '<td>' . hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value ) . '</td>';
+
+					$output .= '</tr>';
+				}
 			}
 
 			$output .= '</table>';

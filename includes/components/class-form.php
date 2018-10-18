@@ -61,6 +61,12 @@ class Form extends Component {
 
 		// Set field options.
 		add_filter( 'hivepress/form/field_args', [ $this, 'set_field_options' ] );
+
+		if ( ! is_admin() ) {
+
+			// Enqueue scripts.
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		}
 	}
 
 	/**
@@ -1521,5 +1527,20 @@ class Form extends Component {
 		$file_type .= '__' . str_replace( '-', '_', sanitize_title( get_post_meta( $attachment_id, 'hp_type', true ) ) );
 
 		return $file_type;
+	}
+
+	/**
+	 * Enqueues scripts.
+	 */
+	public function enqueue_scripts() {
+		if ( get_option( 'hp_recaptcha_site_key' ) !== '' && get_option( 'hp_recaptcha_secret_key' ) !== '' ) {
+			wp_enqueue_script(
+				'recaptcha',
+				'https://www.google.com/recaptcha/api.js',
+				[],
+				HP_CORE_VERSION,
+				true
+			);
+		}
 	}
 }
