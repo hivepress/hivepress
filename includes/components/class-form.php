@@ -876,13 +876,13 @@ class Form extends Component {
 
 		// Check required field.
 		if ( $args['required'] && ( '' === $value || ( is_array( $value ) && count( array_filter( $value, 'strlen' ) ) === 0 ) ) ) {
-			$this->add_error( sprintf( esc_html__( '"%s is required.', 'hivepress' ), $args['name'] ) );
+			$this->add_error( sprintf( esc_html__( '"%s" is required.', 'hivepress' ), $args['name'] ) );
 		} else {
 			$error_count = count( $this->get_messages() );
 
 			// Validate field options.
 			if ( isset( $args['options'] ) && '' !== $value && count( array_diff( (array) $value, array_keys( $args['options'] ) ) ) > 0 ) {
-				$this->add_error( sprintf( esc_html__( '"%s contains invalid value.', 'hivepress' ), $args['name'] ) );
+				$this->add_error( sprintf( esc_html__( '"%s" contains invalid value.', 'hivepress' ), $args['name'] ) );
 			}
 
 			// Validate field value.
@@ -891,7 +891,7 @@ class Form extends Component {
 				// Checkbox.
 				case 'checkbox':
 					if ( ! in_array( $value, [ '', '1' ], true ) ) {
-						$this->add_error( sprintf( esc_html__( '"%s contains invalid value.', 'hivepress' ), $args['name'] ) );
+						$this->add_error( sprintf( esc_html__( '"%s" contains invalid value.', 'hivepress' ), $args['name'] ) );
 					}
 
 					break;
@@ -899,7 +899,7 @@ class Form extends Component {
 				// Number.
 				case 'number':
 					if ( ! is_numeric( $value ) && '' !== $value ) {
-						$this->add_error( sprintf( esc_html__( '"%s contains invalid number.', 'hivepress' ), $args['name'] ) );
+						$this->add_error( sprintf( esc_html__( '"%s" contains invalid number.', 'hivepress' ), $args['name'] ) );
 					}
 
 					break;
@@ -907,7 +907,7 @@ class Form extends Component {
 				// Email.
 				case 'email':
 					if ( '' !== $value && ! is_email( $value ) ) {
-						$this->add_error( sprintf( esc_html__( '"%s contains invalid email address.', 'hivepress' ), $args['name'] ) );
+						$this->add_error( sprintf( esc_html__( '"%s" contains invalid email address.', 'hivepress' ), $args['name'] ) );
 					}
 
 					break;
