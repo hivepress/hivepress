@@ -12,6 +12,13 @@ defined( 'ABSPATH' ) || exit;
 class Admin extends Component {
 
 	/**
+	 * Array of post types.
+	 *
+	 * @var array
+	 */
+	private $post_types = [];
+
+	/**
 	 * Array of options.
 	 *
 	 * @var array
@@ -42,8 +49,13 @@ class Admin extends Component {
 
 		if ( is_admin() ) {
 
-			// Add admin pages.
+			// Initialize post types.
+			add_action( 'hivepress/component/init_post_types', [ $this, 'init_post_types' ] );
+
+			// Manage pages.
 			add_action( 'admin_menu', [ $this, 'add_pages' ] );
+			add_filter( 'custom_menu_order', [ $this, 'order_pages' ] );
+			add_filter( 'menu_order', [ $this, 'order_pages' ] );
 
 			// Manage options.
 			add_action( 'hivepress/component/init_options', [ $this, 'init_options' ] );
@@ -68,14 +80,72 @@ class Admin extends Component {
 
 			// Init media.
 			add_action( 'admin_enqueue_scripts', [ $this, 'init_media' ] );
+
+			// Render notices.
+			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
+	}
+
+	/**
+	 * Initializes post types.
+	 *
+	 * @param array $post_types
+	 */
+	public function init_post_types( $post_types ) {
+		$this->post_types = array_merge( $this->post_types, array_keys( $post_types ) );
 	}
 
 	/**
 	 * Adds admin pages.
 	 */
 	public function add_pages() {
-		add_submenu_page( 'options-general.php', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ] );
+		global $menu;
+
+		// Add separator.
+		$menu[] = [ '', 'manage_options', 'hp_separator', '', 'wp-menu-separator' ];
+
+		// Add pages.
+		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
+		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
+		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Add-ons', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Add-ons', 'hivepress' ), 'manage_options', 'hp_addons', [ $this, 'render_addons' ] );
+	}
+
+	/**
+	 * Orders admin pages.
+	 *
+	 * @param array $menu
+	 * @return array
+	 */
+	public function order_pages( $menu ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			if ( is_array( $menu ) ) {
+
+				// Get admin pages.
+				$pages = [
+					'hp_separator',
+					'hp_settings',
+				];
+
+				foreach ( $this->post_types as $post_type ) {
+					$pages[] = 'edit.php?post_type=' . hp_prefix( $post_type );
+				}
+
+				// Filter menu items.
+				$menu = array_filter(
+					$menu,
+					function( $name ) use ( $pages ) {
+						return ! in_array( $name, $pages, true );
+					}
+				);
+
+				// Insert menu items.
+				array_splice( $menu, array_search( 'separator2', $menu, true ) - 1, 0, $pages );
+
+				return $menu;
+			} else {
+				return true;
+			}
+		}
 	}
 
 	/**
@@ -93,8 +163,14 @@ class Admin extends Component {
 			$template_path = HP_CORE_PATH . '/templates/admin/' . $template_name . '.php';
 
 			if ( file_exists( $template_path ) ) {
-				$tabs        = $this->get_settings_tabs();
-				$current_tab = $this->get_settings_tab();
+				if ( 'settings' === $template_name ) {
+					$tabs        = $this->get_settings_tabs();
+					$current_tab = $this->get_settings_tab();
+				} elseif ( 'addons' === $template_name ) {
+					$tabs        = $this->get_addons_tabs();
+					$current_tab = $this->get_addons_tab();
+					$addons      = $this->get_addons( $current_tab );
+				}
 
 				include $template_path;
 			}
@@ -148,7 +224,7 @@ class Admin extends Component {
 	public function register_settings() {
 		global $pagenow;
 
-		if ( 'options.php' === $pagenow || ( 'options-general.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) ) {
+		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) ) {
 
 			// Get current tab.
 			$tab = hp_get_array_value( $this->options, $this->get_settings_tab() );
@@ -256,7 +332,7 @@ class Admin extends Component {
 		$current_tab = hp_get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
-		if ( ! in_array( $current_tab, $tabs ) ) {
+		if ( ! in_array( $current_tab, $tabs, true ) ) {
 			$current_tab = $first_tab;
 		}
 
@@ -352,7 +428,7 @@ class Admin extends Component {
 			foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
 				$screen = hp_prefix( $meta_box['screen'] );
 
-				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen ) ) ) {
+				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen, true ) ) ) {
 
 					// Filter fields.
 					$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'post_id' => $post_id ] );
@@ -399,18 +475,6 @@ class Admin extends Component {
 			$output .= '<table class="hp-form form-table">';
 
 			foreach ( $meta_box['fields'] as $field_id => $field ) {
-				$output .= '<tr>';
-
-				// Render field label.
-				$output .= '<th scope="row">' . esc_html( $field['name'] ) . $this->render_tooltip( hp_get_array_value( $field, 'description' ) ) . '</th>';
-
-				// Set field parent.
-				if ( isset( $field['parent'] ) ) {
-					$field['attributes'] = [
-						'class'       => 'hp-js-field',
-						'data-parent' => is_array( $field['parent'] ) ? wp_json_encode( array_combine( hp_prefix( array_keys( $field['parent'] ) ), $field['parent'] ) ) : hp_prefix( $field['parent'] ),
-					];
-				}
 
 				// Get field value.
 				$value = get_post_meta( $post->ID, hp_prefix( $field_id ), true );
@@ -419,10 +483,29 @@ class Admin extends Component {
 					$value = null;
 				}
 
-				// Render field.
-				$output .= '<td>' . hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value ) . '</td>';
+				if ( 'hidden' === $field['type'] ) {
 
-				$output .= '</tr>';
+					// Render field.
+					$output .= hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value );
+				} else {
+					$output .= '<tr>';
+
+					// Render field label.
+					$output .= '<th scope="row">' . esc_html( $field['name'] ) . $this->render_tooltip( hp_get_array_value( $field, 'description' ) ) . '</th>';
+
+					// Set field parent.
+					if ( isset( $field['parent'] ) ) {
+						$field['attributes'] = [
+							'class'       => 'hp-js-field',
+							'data-parent' => is_array( $field['parent'] ) ? wp_json_encode( array_combine( hp_prefix( array_keys( $field['parent'] ) ), $field['parent'] ) ) : hp_prefix( $field['parent'] ),
+						];
+					}
+
+					// Render field.
+					$output .= '<td>' . hivepress()->form->render_field( hp_prefix( $field_id ), $field, $value ) . '</td>';
+
+					$output .= '</tr>';
+				}
 			}
 
 			$output .= '</table>';
@@ -583,6 +666,151 @@ class Admin extends Component {
 	}
 
 	/**
+	 * Gets add-ons.
+	 *
+	 * @param string $status
+	 * @return array
+	 */
+	private function get_addons( $status = 'all' ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+
+		// Get cached add-ons.
+		$addons = get_transient( 'hp_addons' );
+
+		if ( false === $addons ) {
+			$addons = [];
+
+			// Query plugins.
+			$api = plugins_api(
+				'query_plugins',
+				[
+					'author' => 'hivepress',
+					'fields' => [
+						'icons' => true,
+					],
+				]
+			);
+
+			if ( ! is_wp_error( $api ) ) {
+
+				// Filter add-ons.
+				$addons = array_filter(
+					$api->plugins,
+					function( $plugin ) {
+						return 'hivepress' !== $plugin->slug;
+					}
+				);
+
+				// Set add-on statuses.
+				foreach ( $addons as $index => $addon ) {
+
+					// Get path and status.
+					$addon_path   = $addon->slug . '/' . $addon->slug . '.php';
+					$addon_status = install_plugin_install_status( $addon );
+
+					// Set activation status.
+					if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $addon_path ) ) {
+						$addon_status['status'] = 'activate';
+						$addon_status['url']    = admin_url(
+							'plugins.php?' . http_build_query(
+								[
+									'action'   => 'activate',
+									'plugin'   => $addon_path,
+									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $addon_path ),
+								]
+							)
+						);
+					}
+
+					$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
+					$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
+				}
+
+				// Cache add-ons.
+				set_transient( 'hp_addons', $addons, DAY_IN_SECONDS );
+			}
+		}
+
+		// Filter add-ons.
+		if ( 'all' !== $status ) {
+			$addons = array_filter(
+				$addons,
+				function( $addon ) use ( $status ) {
+					return 'installed' === $status && 'install' !== $addon->status;
+				}
+			);
+		}
+
+		return $addons;
+	}
+
+	/**
+	 * Gets add-ons tabs.
+	 *
+	 * @return array
+	 */
+	private function get_addons_tabs() {
+
+		// Set tabs.
+		$tabs = [
+			'all'       => [
+				'name'  => esc_html__( 'All', 'hivepress' ),
+				'count' => 0,
+			],
+			'installed' => [
+				'name'  => esc_html__( 'Installed', 'hivepress' ),
+				'count' => 0,
+			],
+		];
+
+		// Get add-ons.
+		$addons = $this->get_addons();
+
+		// Set tab counts.
+		$tabs['all']['count']       = count( $addons );
+		$tabs['installed']['count'] = count(
+			array_filter(
+				$addons,
+				function( $addon ) {
+					return 'install' !== $addon->status;
+				}
+			)
+		);
+
+		// Filter tabs.
+		$tabs = array_filter(
+			$tabs,
+			function( $tab ) {
+				return 0 !== $tab['count'];
+			}
+		);
+
+		return $tabs;
+	}
+
+	/**
+	 * Gets current add-ons tab.
+	 *
+	 * @return mixed
+	 */
+	private function get_addons_tab() {
+		$current_tab = false;
+
+		// Get all tabs.
+		$tabs = array_keys( $this->get_addons_tabs() );
+
+		$first_tab   = hp_get_array_value( $tabs, 0 );
+		$current_tab = hp_get_array_value( $_GET, 'addon_status', $first_tab );
+
+		// Set the default tab.
+		if ( ! in_array( $current_tab, $tabs, true ) ) {
+			$current_tab = $first_tab;
+		}
+
+		return $current_tab;
+	}
+
+	/**
 	 * Adds post states.
 	 *
 	 * @param array   $states
@@ -606,7 +834,7 @@ class Admin extends Component {
 	public function filter_comment_types( $clauses ) {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ] ) ) {
+		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
 			$clauses['where'] .= ' AND comment_type NOT LIKE "hp_%"';
 		}
 
@@ -619,8 +847,19 @@ class Admin extends Component {
 	public function init_media() {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) ) {
+		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			wp_enqueue_media();
+		}
+	}
+
+	/**
+	 * Renders notices.
+	 */
+	public function render_notices() {
+		global $pagenow;
+
+		if ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) {
+			settings_errors();
 		}
 	}
 

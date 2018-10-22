@@ -24,7 +24,7 @@ $settings = [
 
 		// Styles.
 		'admin_styles'  => [
-			'core' => [
+			'backend' => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
 			],
@@ -32,7 +32,7 @@ $settings = [
 
 		// Scripts.
 		'admin_scripts' => [
-			'core' => [
+			'backend' => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
 				'deps'   => [ 'jquery' ],
@@ -49,6 +49,7 @@ $settings = [
 				'sections' => [
 					'recaptcha' => [
 						'name'   => 'reCAPTCHA',
+						'order'  => 10,
 
 						'fields' => [
 							'recaptcha_site_key'   => [
@@ -113,14 +114,6 @@ $settings = [
 						'required' => true,
 					],
 				],
-			],
-		],
-
-		// Scripts.
-		'scripts' => [
-			'recaptcha' => [
-				'handle' => 'g-recaptcha',
-				'src'    => 'https://www.google.com/recaptcha/api.js',
 			],
 		],
 	],
@@ -194,7 +187,7 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
 			],
 
-			'core'              => [
+			'frontend'          => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
 			],
@@ -228,7 +221,7 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
 			],
 
-			'core'             => [
+			'frontend'         => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
 				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
@@ -270,9 +263,9 @@ $settings = [
 						'fields' => [
 							'email_user_register'         => [
 								'name'        => esc_html__( 'User Registered', 'hivepress' ),
-								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
+								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %user_name%, %user_password%.', 'hivepress' ),
 								'type'        => 'textarea',
-								'default'     => hp_sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+								'default'     => hp_sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 								'required'    => true,
 								'order'       => 10,
 							],
@@ -748,7 +741,7 @@ $settings = [
 				'public'      => true,
 				'has_archive' => true,
 				'supports'    => [ 'title', 'editor', 'thumbnail', 'author' ],
-				'menu_icon'   => HP_CORE_URL . '/assets/images/logo.svg',
+				'menu_icon'   => 'dashicons-format-aside',
 				'rewrite'     => [ 'slug' => 'listing' ],
 
 				'labels'      => [
@@ -1543,7 +1536,7 @@ $settings = [
 					'actions'    => [
 						'report_form' => [
 							'path'  => 'listing/parts/report-form',
-							'order' => 1000,
+							'order' => 100,
 						],
 					],
 

@@ -348,7 +348,7 @@ class Template extends Component {
 			}
 		}
 
-		if ( in_array( $post_type, $post_types ) ) {
+		if ( in_array( $post_type, $post_types, true ) ) {
 
 			// Check archive pages.
 			if ( is_post_type_archive( $post_types ) ) {

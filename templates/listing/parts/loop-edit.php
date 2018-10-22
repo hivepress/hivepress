@@ -29,7 +29,7 @@ if ( $listing_query->have_posts() ) :
 					?>
 				</td>
 				<td>
-					<time datetime="<?php the_time( 'Y-m-d' ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
+					<time datetime="<?php echo esc_attr( get_the_time( 'Y-m-d' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 				</td>
 				<td>
 					<?php if ( get_post_status() === 'publish' ) : ?>

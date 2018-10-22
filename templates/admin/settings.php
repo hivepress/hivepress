@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( ! empty( $tabs ) ) : ?>
 	<nav class="nav-tab-wrapper">
 		<?php foreach ( $tabs as $active_tab => $tab_name ) : ?>
-		<a href="<?php echo esc_url( admin_url( 'options-general.php?page=hp_settings&tab=' . $active_tab ) ); ?>" class="nav-tab <?php if ( $active_tab === $current_tab ) : ?>nav-tab-active<?php endif; ?>"><?php echo esc_html( $tab_name ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_settings&tab=' . $active_tab ) ); ?>" class="nav-tab <?php if ( $active_tab === $current_tab ) : ?>nav-tab-active<?php endif; ?>"><?php echo esc_html( $tab_name ); ?></a>
 		<?php endforeach; ?>
 	</nav>
 	<?php endif; ?>
