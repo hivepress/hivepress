@@ -263,9 +263,9 @@ $settings = [
 						'fields' => [
 							'email_user_register'         => [
 								'name'        => esc_html__( 'User Registered', 'hivepress' ),
-								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
+								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %user_name%, %user_password%.', 'hivepress' ),
 								'type'        => 'textarea',
-								'default'     => hp_sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+								'default'     => hp_sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 								'required'    => true,
 								'order'       => 10,
 							],
@@ -1536,7 +1536,7 @@ $settings = [
 					'actions'    => [
 						'report_form' => [
 							'path'  => 'listing/parts/report-form',
-							'order' => 1000,
+							'order' => 100,
 						],
 					],
 
