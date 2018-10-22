@@ -1,22 +1,25 @@
-(function($) {
-  'use strict';
+var hivepress = {
 
   /**
    * Gets prefixed selector.
    */
-  function getSelector(name) {
+  getSelector: function(name) {
     return '.hp-js-' + name;
-  }
+  },
 
   /**
-   * Gets custom object.
+   * Gets jQuery object.
    */
-  function getObject(name) {
-    return $(getSelector(name));
-  }
+  getObject: function(name) {
+    return jQuery(this.getSelector(name));
+  },
+};
+
+(function($) {
+  'use strict';
 
   // Link
-  $(document).on('click', getSelector('link'), function(e) {
+  $(document).on('click', hivepress.getSelector('link'), function(e) {
     var link = $(this),
       type = [];
 
@@ -32,7 +35,7 @@
   });
 
   // Field
-  getObject('field').each(function() {
+  hivepress.getObject('field').each(function() {
     var field = $(this);
 
     if (field.data('parent')) {
@@ -65,7 +68,7 @@
   });
 
   // File select
-  getObject('file-select').each(function() {
+  hivepress.getObject('file-select').each(function() {
     var button = $(this),
       container = button.parent().children('div').clone();
 

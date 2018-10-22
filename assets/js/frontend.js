@@ -1,19 +1,22 @@
-(function($) {
-  'use strict';
+var hivepress = {
 
   /**
    * Gets prefixed selector.
    */
-  function getSelector(name) {
+  getSelector: function(name) {
     return '.hp-js-' + name;
-  }
+  },
 
   /**
-   * Gets custom object.
+   * Gets jQuery object.
    */
-  function getObject(name) {
-    return $(getSelector(name));
-  }
+  getObject: function(name) {
+    return jQuery(this.getSelector(name));
+  },
+};
+
+(function($) {
+  'use strict';
 
   /**
    * Serializes jQuery object.
@@ -47,7 +50,7 @@
   }
 
   // Link
-  $(document).on('click', getSelector('link'), function(e) {
+  $(document).on('click', hivepress.getSelector('link'), function(e) {
     var link = $(this),
       type = [];
 
@@ -95,7 +98,7 @@
   });
 
   // Slider
-  getObject('slider').each(function() {
+  hivepress.getObject('slider').each(function() {
     var slider = $(this);
 
     if (slider.data('type') == 'gallery') {
@@ -140,7 +143,7 @@
   });
 
   // Form
-  getObject('form').each(function() {
+  hivepress.getObject('form').each(function() {
     var form = $(this),
       type = [];
 
@@ -155,7 +158,7 @@
     }
 
     if (type.includes('ajax')) {
-      var messageContainer = form.find(getSelector('messages')),
+      var messageContainer = form.find(hivepress.getSelector('messages')),
         captchaId = $('.g-recaptcha').index(form.find('.g-recaptcha').get(0)),
         submitButton = form.find('input[type="submit"]');
 
@@ -211,7 +214,7 @@
   });
 
   // File upload
-  getObject('file-upload').each(function() {
+  hivepress.getObject('file-upload').each(function() {
     var field = $(this),
       form = field.closest('form'),
       selectButton = field.parent('button'),
@@ -245,7 +248,7 @@
   });
 
   // Sortable
-  getObject('sortable').each(function() {
+  hivepress.getObject('sortable').each(function() {
     var container = $(this),
       form = container.closest('form');
 
@@ -260,7 +263,7 @@
 
   // Sticky
   $(window).load(function() {
-    getObject('sticky').each(function() {
+    hivepress.getObject('sticky').each(function() {
       var container = $(this),
         spacing = 30;
 
