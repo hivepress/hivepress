@@ -701,34 +701,34 @@ class Admin extends Component {
 					}
 				);
 
-				// Set add-on statuses.
-				foreach ( $addons as $index => $addon ) {
-
-					// Get path and status.
-					$addon_path   = $addon->slug . '/' . $addon->slug . '.php';
-					$addon_status = install_plugin_install_status( $addon );
-
-					// Set activation status.
-					if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $addon_path ) ) {
-						$addon_status['status'] = 'activate';
-						$addon_status['url']    = admin_url(
-							'plugins.php?' . http_build_query(
-								[
-									'action'   => 'activate',
-									'plugin'   => $addon_path,
-									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $addon_path ),
-								]
-							)
-						);
-					}
-
-					$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
-					$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
-				}
-
 				// Cache add-ons.
 				set_transient( 'hp_addons', $addons, DAY_IN_SECONDS );
 			}
+		}
+
+		// Set add-on statuses.
+		foreach ( $addons as $index => $addon ) {
+
+			// Get path and status.
+			$addon_path   = $addon->slug . '/' . $addon->slug . '.php';
+			$addon_status = install_plugin_install_status( $addon );
+
+			// Set activation status.
+			if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $addon_path ) ) {
+				$addon_status['status'] = 'activate';
+				$addon_status['url']    = admin_url(
+					'plugins.php?' . http_build_query(
+						[
+							'action'   => 'activate',
+							'plugin'   => $addon_path,
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $addon_path ),
+						]
+					)
+				);
+			}
+
+			$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
+			$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
 		}
 
 		// Filter add-ons.
