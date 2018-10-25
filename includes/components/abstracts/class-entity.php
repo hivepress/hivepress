@@ -517,8 +517,8 @@ abstract class Entity extends Component {
 		foreach ( $attributes as $attribute_id => $attribute ) {
 			if ( $attribute['sortable'] ) {
 				if ( 'number' === $attribute['edit_field']['type'] ) {
-					$fields['sort']['options'][ $attribute_id . '__asc' ]  = sprintf( esc_html__( '%s &uarr;', 'hivepress' ), $attribute['name'] );
-					$fields['sort']['options'][ $attribute_id . '__desc' ] = sprintf( esc_html__( '%s &darr;', 'hivepress' ), $attribute['name'] );
+					$fields['sort']['options'][ $attribute_id . '__asc' ]  = sprintf( '%s &uarr;', $attribute['name'] );
+					$fields['sort']['options'][ $attribute_id . '__desc' ] = sprintf( '%s &darr;', $attribute['name'] );
 				} else {
 					$fields['sort']['options'][ $attribute_id ] = $attribute['name'];
 				}
