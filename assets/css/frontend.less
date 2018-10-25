@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -279,8 +278,8 @@ Mixins
 			margin: 0;
 
 			a {
-				color:inherit;
-				text-decoration:none;
+				color: inherit;
+				text-decoration: none;
 			}
 		}
 
@@ -317,6 +316,22 @@ Mixins
 
 		&--listing-search &__field-wrapper {
 			flex: 1;
+		}
+		@media only screen and (max-width:48em) {
+			&--listing-search {
+				flex-direction: column;
+			}
+
+			&--listing-search &__field-wrapper {
+				&:not(:last-child) {
+					margin-bottom: 1.5rem;
+				}
+			}
+
+			&--listing-search &__submit {
+				width: 100%;
+				text-align: center;
+			}
 		}
 
 		&--listing-filter&--empty {
@@ -461,11 +476,23 @@ Mixins
 			margin-bottom: 0.5rem;
 		}
 
+		&--single &__properties &__attributes {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
 		&--archive &__actions,
 		&--archive &__properties,
 		&--archive &__properties &__attributes {
 			display: flex;
 			align-items: center;
+		}
+
+		&--archive &__properties &__attributes {
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
 		}
 
 		&--archive &__properties &__attribute {
@@ -597,7 +624,7 @@ Mixins
 
 			.menu-toggle {
 				@media only screen and (max-width:48em) {
-					float:left;
+					float: left;
 				}
 			}
 
@@ -613,12 +640,11 @@ Mixins
 	&-theme--storefront &-menu {
 		float: right;
 		margin-left: 1.5rem;
-
 		@media only screen and (max-width:48em) {
-			float:none;
-			clear:both;
-			margin:0;
-			padding:1.5rem 0;
+			float: none;
+			clear: both;
+			margin: 0;
+			padding: 1.5rem 0;
 		}
 	}
 }
