@@ -523,22 +523,22 @@ $settings = [
 			'page'                => [
 				'areas' => [
 					'menu'   => [
-						'user_account_link' => [
+						'user_account' => [
 							'path'  => 'user/parts/account-link',
 							'order' => 10,
 						],
 					],
 
 					'popups' => [
-						'user_register_popup'         => [
+						'user_register'         => [
 							'path' => 'user/parts/register-popup',
 						],
 
-						'user_login_popup'            => [
+						'user_login'            => [
 							'path' => 'user/parts/login-popup',
 						],
 
-						'user_request_password_popup' => [
+						'user_request_password' => [
 							'path' => 'user/parts/request-password-popup',
 						],
 					],
@@ -981,6 +981,7 @@ $settings = [
 			],
 
 			'sort'   => [
+				'action'        => home_url(),
 				'method'        => 'GET',
 				'parent'        => [ 'search', 'filter' ],
 				'submit_button' => false,
@@ -991,6 +992,10 @@ $settings = [
 						'type'    => 'select',
 						'options' => [],
 						'order'   => 10,
+					],
+
+					'category'  => [
+						'type' => 'hidden',
 					],
 
 					'post_type' => [
@@ -1195,7 +1200,7 @@ $settings = [
 			'page'                        => [
 				'areas' => [
 					'menu' => [
-						'listing_submission_link' => [
+						'listing_submission' => [
 							'path'  => 'listing/parts/submission-link',
 							'order' => 20,
 						],
