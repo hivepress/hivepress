@@ -286,6 +286,12 @@ Mixins
 		&__count {
 			font-size: 80%;
 		}
+
+		&__description {
+			p {
+				margin:0;
+			}
+		}
 	}
 	/*--------------------------------------------------------------
 	Listing archive
@@ -311,6 +317,8 @@ Mixins
 
 		&--listing-search &__field-wrapper,
 		&--listing-search &__submit-wrapper {
+			display:flex;
+			align-items: center;
 			margin: 0 0.5rem;
 		}
 
