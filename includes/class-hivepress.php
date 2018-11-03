@@ -82,7 +82,7 @@ final class HivePress {
 
 		// Define constants.
 		foreach ( self::$plugin_paths as $plugin_path ) {
-			$plugin_basename = plugin_basename( $plugin_path );
+			$plugin_basename = basename( $plugin_path );
 			$plugin_file     = $plugin_path . '/' . $plugin_basename . '.php';
 			$plugin_prefix   = strtoupper( hp_prefix( str_replace( '-', '_', trim( str_replace( 'hivepress', '', $plugin_basename ), '-' ) ) ) ) . '_';
 
@@ -244,7 +244,7 @@ final class HivePress {
 
 		// Load translation files.
 		foreach ( self::$plugin_paths as $plugin_path ) {
-			$plugin_basename   = plugin_basename( $plugin_path );
+			$plugin_basename   = basename( $plugin_path );
 			$plugin_textdomain = sanitize_title( $plugin_basename );
 
 			load_plugin_textdomain( $plugin_textdomain, false, $plugin_basename . '/languages' );
