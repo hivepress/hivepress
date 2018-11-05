@@ -837,12 +837,26 @@ $settings = [
 						],
 					],
 
+					'decimals'   => [
+						'name'        => esc_html__( 'Decimals', 'hivepress' ),
+						'description' => esc_html__( 'Set the number of decimal places allowed for numeric values.', 'hivepress' ),
+						'type'        => 'number',
+						'default'     => 0,
+						'parent'      => [
+							'type' => [
+								'number',
+								'number__number_range',
+							],
+						],
+						'order'       => 30,
+					],
+
 					'label'      => [
 						'name'        => esc_html__( 'Label', 'hivepress' ),
 						'description' => esc_html__( 'Set the checkbox label that will also be used for displaying this attribute.', 'hivepress' ),
 						'type'        => 'text',
 						'parent'      => [ 'type' => 'checkbox' ],
-						'order'       => 30,
+						'order'       => 40,
 					],
 
 					'format'     => [
@@ -850,14 +864,14 @@ $settings = [
 						'description' => esc_html__( 'Set the attribute display format, the following placeholders are available: %value%.', 'hivepress' ),
 						'type'        => 'text',
 						'default'     => '%value%',
-						'order'       => 40,
+						'order'       => 50,
 					],
 
 					'areas'      => [
 						'name'        => esc_html__( 'Areas', 'hivepress' ),
 						'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
 						'type'        => 'checkboxes',
-						'order'       => 50,
+						'order'       => 60,
 
 						'options'     => [
 							'archive__primary'   => esc_html__( 'Archive page (primary)', 'hivepress' ),
@@ -871,7 +885,7 @@ $settings = [
 						'name'  => esc_html__( 'Editable', 'hivepress' ),
 						'label' => esc_html__( 'Add to the front-end editor', 'hivepress' ),
 						'type'  => 'checkbox',
-						'order' => 60,
+						'order' => 70,
 					],
 
 					'required'   => [
@@ -879,7 +893,7 @@ $settings = [
 						'label'  => esc_html__( 'Make this attribute required', 'hivepress' ),
 						'type'   => 'checkbox',
 						'parent' => 'editable',
-						'order'  => 70,
+						'order'  => 80,
 					],
 
 					'filterable' => [

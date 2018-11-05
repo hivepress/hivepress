@@ -293,16 +293,28 @@ abstract class Entity extends Component {
 					'order' => 100 + $attribute['order'],
 				];
 
-				if ( 'text' === reset( $field_types ) ) {
-					$field['max_length'] = 128;
-				}
+				switch ( reset( $field_types ) ) {
 
-				if ( 'checkbox' === reset( $field_types ) ) {
-					$field['label'] = $attribute['name'];
+					case 'text':
+						$field['max_length'] = 128;
 
-					if ( '' !== $attribute_post->hp_label ) {
-						$field['label'] = $attribute_post->hp_label;
-					}
+						break;
+
+					case 'number':
+						if ( '' !== $attribute_post->hp_decimals ) {
+							$field['decimals'] = absint( $attribute_post->hp_decimals );
+						}
+
+						break;
+
+					case 'checkbox':
+						$field['label'] = $attribute['name'];
+
+						if ( '' !== $attribute_post->hp_label ) {
+							$field['label'] = $attribute_post->hp_label;
+						}
+
+						break;
 				}
 
 				if ( in_array( reset( $field_types ), [ 'select', 'radio', 'checkboxes' ], true ) ) {
@@ -600,7 +612,7 @@ abstract class Entity extends Component {
 						if ( 'checkbox' === $attribute['edit_field']['type'] ) {
 							$value = $attribute['edit_field']['label'];
 						} elseif ( 'number' === $attribute['edit_field']['type'] ) {
-							$value = number_format_i18n( $attribute_value );
+							$value = number_format_i18n( $attribute_value, $attribute['edit_field']['decimals'] );
 						} else {
 							$value = $attribute_value;
 						}
