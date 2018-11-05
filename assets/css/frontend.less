@@ -1,6 +1,7 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
+
 .image-wrapper {
 	img {
 		display: block;
@@ -41,9 +42,9 @@ Mixins
 		}
 
 		&__message {
-			background-color: rgba(0,0,0,0.04);
-			border-left: 3px solid transparent;
 			padding: 0.25rem 1.5rem;
+			border-left: 3px solid transparent;
+			background-color: rgba(0,0,0,.04);
 
 			&:first-child {
 				padding-top: 1rem;
@@ -111,27 +112,34 @@ Mixins
 				margin: 0 -.5rem;
 
 				input[type=number] {
-					flex: 1;
 					width: 100%;
 					margin: 0 0.5rem;
+					flex: 1;
 				}
 			}
 
 			&--file-upload {
-				button {
+				&::after {
+					display: table;
+					clear: both;
+					content: '';
+				}
+
+				label {
 					position: relative;
+					float: left;
 					overflow: hidden;
 				}
 
-				input[type="file"] {
+				input[type='file'] {
+					font-size: 200px !important;
 					position: absolute;
 					top: 0;
 					right: 0;
 					margin: 0;
-					opacity: 0;
-					font-size: 200px !important;
-					direction: ltr;
 					cursor: pointer;
+					opacity: 0;
+					direction: ltr;
 				}
 
 				> div:first-child {
@@ -141,26 +149,26 @@ Mixins
 					}
 
 					> div {
-						.image-wrapper;
 						position: relative;
 						margin-bottom: 2rem;
+						.image-wrapper;
 
 						&:not(:only-child) img {
 							cursor: move;
 						}
 
 						a {
-							display: block;
-							position: absolute;
-							right: 1.5rem;
-							top: 0.5rem;
-							color: #fff;
-							background-color: rgba(0,0,0,0.5);
-							text-decoration: none;
-							text-align: center;
 							line-height: 1.5rem;
-							height: 1.5rem;
+							position: absolute;
+							top: 0.5rem;
+							right: 1.5rem;
+							display: block;
 							width: 1.5rem;
+							height: 1.5rem;
+							text-align: center;
+							text-decoration: none;
+							color: #fff;
+							background-color: rgba(0,0,0,.5);
 						}
 					}
 				}
@@ -278,8 +286,8 @@ Mixins
 			margin: 0;
 
 			a {
-				color: inherit;
 				text-decoration: none;
+				color: inherit;
 			}
 		}
 
@@ -289,7 +297,7 @@ Mixins
 
 		&__description {
 			p {
-				margin:0;
+				margin: 0;
 			}
 		}
 	}
@@ -303,9 +311,9 @@ Mixins
 
 		&--listing-archive &__topbar {
 			display: flex;
+			margin-bottom: 2rem;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 2rem;
 		}
 	}
 
@@ -317,9 +325,9 @@ Mixins
 
 		&--listing-search &__field-wrapper,
 		&--listing-search &__submit-wrapper {
-			display:flex;
-			align-items: center;
+			display: flex;
 			margin: 0 0.5rem;
+			align-items: center;
 		}
 
 		&--listing-search &__field-wrapper {
@@ -348,13 +356,13 @@ Mixins
 
 		&--listing-sort &__field-wrapper {
 			display: flex;
-			align-items: center;
 			margin: 0;
+			align-items: center;
 		}
 
 		&--listing-sort &__field-label {
-			white-space: nowrap;
 			margin: 0 0.5rem 0 0;
+			white-space: nowrap;
 		}
 
 		&--listing-sort &__field--select {
@@ -400,8 +408,8 @@ Mixins
 			margin: 0;
 
 			a {
-				color: inherit;
 				text-decoration: none;
+				color: inherit;
 			}
 		}
 
@@ -410,8 +418,8 @@ Mixins
 		}
 
 		&__date {
-			display: block;
 			font-size: 80%;
+			display: block;
 		}
 
 		&--single &__preview {
@@ -431,7 +439,7 @@ Mixins
 			overflow: hidden;
 
 			.slick-list {
-				margin: 0 -0.5rem;
+				margin: 0 -.5rem;
 			}
 
 			.slick-slide {
@@ -449,18 +457,18 @@ Mixins
 			}
 
 			.slick-arrow {
-				display: block;
+				line-height: 1.5rem;
 				position: absolute;
 				z-index: 1;
 				top: 50%;
-				color: #fff;
-				background-color: rgba(0,0,0,0.5);
-				text-decoration: none;
-				text-align: center;
-				line-height: 1.5rem;
-				height: 1.5rem;
+				display: block;
 				width: 1.5rem;
-				margin-top: -0.75rem;
+				height: 1.5rem;
+				margin-top: -.75rem;
+				text-align: center;
+				text-decoration: none;
+				color: #fff;
+				background-color: rgba(0,0,0,.5);
 
 				&.slick-disabled {
 					top: -9999px;
@@ -512,10 +520,10 @@ Mixins
 		}
 
 		&--single &__properties &__attribute {
-			text-align: center;
 			font-size: 120%;
-			background-color: rgba(0,0,0,0.04);
 			padding: 1rem 1.5rem;
+			text-align: center;
+			background-color: rgba(0,0,0,.04);
 
 			&:not(:last-child) {
 				margin-bottom: 1rem;
@@ -560,8 +568,8 @@ Mixins
 		}
 
 		&--archive &__header {
-			flex: 0 0 4rem;
 			margin-right: 1.5rem;
+			flex: 0 0 4rem;
 		}
 
 		&--single &__preview {
@@ -582,8 +590,8 @@ Mixins
 			margin: 0;
 
 			a {
-				color: inherit;
 				text-decoration: none;
+				color: inherit;
 			}
 		}
 
@@ -635,14 +643,14 @@ Mixins
 					float: left;
 				}
 			}
-
-			.content-area {
-				width: 100%;
-				float: left;
-				margin-left: 0;
-				margin-right: 0;
-			}
 		}
+	}
+
+	&-theme--storefront &-container {
+		float: left;
+		width: 100%;
+		margin-right: 0;
+		margin-left: 0;
 	}
 
 	&-theme--storefront &-menu {

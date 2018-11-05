@@ -30,12 +30,14 @@ class User extends Component {
 		add_action( 'wp_loaded', [ $this, 'init_data' ] );
 
 		// Register user.
+		add_filter( 'hivepress/form/form_args/user__register', [ $this, 'set_redirect_form_args' ] );
+		add_filter( 'hivepress/form/form_values/user__register', [ $this, 'set_redirect_form_values' ] );
 		add_filter( 'hivepress/form/form_fields/user__register', [ $this, 'add_terms_checkbox' ] );
 		add_action( 'hivepress/form/submit_form/user__register', [ $this, 'register' ] );
 
 		// Login user.
-		add_filter( 'hivepress/form/form_args/user__login', [ $this, 'set_login_form_args' ] );
-		add_filter( 'hivepress/form/form_values/user__login', [ $this, 'set_login_form_values' ] );
+		add_filter( 'hivepress/form/form_args/user__login', [ $this, 'set_redirect_form_args' ] );
+		add_filter( 'hivepress/form/form_values/user__login', [ $this, 'set_redirect_form_values' ] );
 		add_action( 'hivepress/form/submit_form/user__login', [ $this, 'login' ] );
 
 		// Reset password.
@@ -119,6 +121,38 @@ class User extends Component {
 		if ( strpos( $name, 'get_' ) === 0 ) {
 			return hp_get_array_value( $this->data, str_replace( 'get_', '', $name ) );
 		}
+	}
+
+	/**
+	 * Sets redirect form arguments.
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	public function set_redirect_form_args( $args ) {
+		$url = hp_get_array_value( $_POST, 'redirect' );
+
+		if ( hp_validate_redirect( $url ) ) {
+			$args['success_redirect'] = $url;
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Sets redirect form values.
+	 *
+	 * @param array $values
+	 * @return array
+	 */
+	public function set_redirect_form_values( $values ) {
+		$url = hp_get_array_value( $_GET, 'redirect' );
+
+		if ( hp_validate_redirect( $url ) ) {
+			$values['redirect'] = $url;
+		}
+
+		return $values;
 	}
 
 	/**
@@ -222,38 +256,6 @@ class User extends Component {
 				);
 			}
 		}
-	}
-
-	/**
-	 * Sets login form arguments.
-	 *
-	 * @param array $args
-	 * @return array
-	 */
-	public function set_login_form_args( $args ) {
-		$url = hp_get_array_value( $_POST, 'redirect' );
-
-		if ( hp_validate_redirect( $url ) ) {
-			$args['success_redirect'] = $url;
-		}
-
-		return $args;
-	}
-
-	/**
-	 * Sets login form values.
-	 *
-	 * @param array $values
-	 * @return array
-	 */
-	public function set_login_form_values( $values ) {
-		$url = hp_get_array_value( $_GET, 'redirect' );
-
-		if ( hp_validate_redirect( $url ) ) {
-			$values['redirect'] = $url;
-		}
-
-		return $values;
 	}
 
 	/**
