@@ -1069,13 +1069,23 @@ abstract class Entity extends Component {
 			]
 		);
 
-		// Add listing.
 		if ( 0 === $listing_id ) {
+
+			// Add listing.
 			$listing_id = wp_insert_post(
 				[
 					'post_type'   => hp_prefix( $this->name ),
 					'post_status' => 'auto-draft',
 					'post_author' => get_current_user_id(),
+				]
+			);
+		} else {
+
+			// Clear title.
+			wp_update_post(
+				[
+					'ID'         => $listing_id,
+					'post_title' => '',
 				]
 			);
 		}

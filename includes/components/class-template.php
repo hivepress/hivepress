@@ -677,42 +677,42 @@ class Template extends Component {
 		// Open page wrapper.
 		switch ( $template ) {
 			case 'twentyten':
-				$output .= '<div id="container"><div id="content" role="main">';
+				$output .= '<div id="container" class="hp-container"><div id="content" role="main">';
 
 				break;
 
 			case 'twentyeleven':
-				$output .= '<div id="primary"><div id="content" role="main">';
+				$output .= '<div id="primary" class="hp-container"><div id="content" role="main">';
 
 				break;
 
 			case 'twentytwelve':
-				$output .= '<div id="primary" class="site-content"><div id="content" role="main">';
+				$output .= '<div id="primary" class="site-content hp-container"><div id="content" role="main">';
 
 				break;
 
 			case 'twentythirteen':
-				$output .= '<div id="primary" class="site-content"><div id="content" role="main" class="entry-content">';
+				$output .= '<div id="primary" class="site-content hp-container"><div id="content" role="main" class="entry-content">';
 
 				break;
 
 			case 'twentyfourteen':
-				$output .= '<div id="primary" class="content-area"><div id="content" role="main" class="site-content">';
+				$output .= '<div id="primary" class="content-area hp-container"><div id="content" role="main" class="site-content">';
 
 				break;
 
 			case 'twentyfifteen':
-				$output .= '<div id="primary" role="main" class="content-area"><div id="main" class="site-main">';
+				$output .= '<div id="primary" role="main" class="content-area hp-container"><div id="main" class="site-main">';
 
 				break;
 
 			case 'twentyseventeen':
-				$output .= '<div class="wrap"><div id="primary" class="content-area"><main id="main" class="site-main" role="main">';
+				$output .= '<div class="wrap hp-container"><div id="primary" class="content-area"><main id="main" class="site-main" role="main">';
 
 				break;
 
 			default:
-				$output .= '<div id="primary" class="content-area"><main id="main" class="site-main" role="main">';
+				$output .= '<div id="primary" class="content-area hp-container"><main id="main" class="site-main" role="main">';
 
 				break;
 		}

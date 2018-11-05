@@ -109,7 +109,11 @@ function hp_merge_arrays() {
 	foreach ( $arrays as $array ) {
 		foreach ( $array as $key => $value ) {
 			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
-				$merged[ $key ] = $value;
+				if ( is_numeric( $key ) ) {
+					$merged[] = $value;
+				} else {
+					$merged[ $key ] = $value;
+				}
 			} else {
 				$merged[ $key ] = hp_merge_arrays( $merged[ $key ], $value );
 			}

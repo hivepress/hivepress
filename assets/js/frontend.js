@@ -159,7 +159,8 @@ var hivepress = {
 
 		if (type.includes('ajax')) {
 			var messageContainer = form.find(hivepress.getSelector('messages')),
-				captchaId = $('.g-recaptcha').index(form.find('.g-recaptcha').get(0)),
+				captcha = form.find('.g-recaptcha'),
+				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find('input[type="submit"]');
 
 			form.on('submit', function(e) {
@@ -189,7 +190,7 @@ var hivepress = {
 						} else {
 							submitButton.prop('disabled', false);
 
-							if (typeof grecaptcha !== 'undefined' && captchaId != -1) {
+							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								grecaptcha.reset(captchaId);
 							}
 
