@@ -317,6 +317,10 @@ $settings = [
 						'required' => true,
 						'order'    => 20,
 					],
+
+					'redirect' => [
+						'type' => 'hidden',
+					],
 				],
 
 				'submit_button'    => [
