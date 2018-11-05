@@ -1075,7 +1075,7 @@ class Form extends Component {
 			case 'file_upload':
 				$output .= '<div ' . $attributes . '>';
 
-				$sortable = hp_get_array_value( $attributes, 'multiple', false ) ? 'hp-js-sortable' : '';
+				$sortable = hp_get_array_value( $args, 'multiple', false ) ? 'hp-js-sortable' : '';
 
 				$output .= '<div class="hp-row ' . esc_attr( $sortable ) . '" data-json="' . esc_attr(
 					wp_json_encode(
@@ -1116,7 +1116,9 @@ class Form extends Component {
 				}
 
 				$output .= '</div>';
-				$output .= '<button type="button">' . esc_html( hp_get_array_value( $args, 'label', esc_html__( 'Select File', 'hivepress' ) ) );
+
+				$output .= '<label for="' . esc_attr( $args['id'] ) . '">';
+				$output .= '<button type="button">' . esc_html( hp_get_array_value( $args, 'label', esc_html__( 'Select File', 'hivepress' ) ) ) . '</button>';
 
 				$output .= $this->render_field(
 					$field_id,
@@ -1137,7 +1139,7 @@ class Form extends Component {
 					]
 				);
 
-				$output .= '</button>';
+				$output .= '</label>';
 				$output .= '</div>';
 
 				break;
