@@ -175,14 +175,18 @@ Mixins
 			}
 		}
 
-		.g-recaptcha {
-			margin-bottom: 1.5rem;
-		}
-
 		&__submit-wrapper {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+		}
+
+		&__submit {
+			white-space: nowrap;
+		}
+
+		.g-recaptcha {
+			margin-bottom: 1.5rem;
 		}
 	}
 	/*--------------------------------------------------------------
@@ -268,13 +272,15 @@ Mixins
 	Category
 	--------------------------------------------------------------*/
 	&-categories {
-		&:last-child {
-			margin-bottom: -2rem;
-		}
+		margin-bottom: -2rem;
 	}
 
 	&-category {
 		margin-bottom: 2rem;
+
+		&__image {
+			.image-wrapper;
+		}
 
 		&__count,
 		&__description,
@@ -375,9 +381,7 @@ Mixins
 	Listing
 	--------------------------------------------------------------*/
 	&-listings {
-		&:last-child {
-			margin-bottom: -2rem;
-		}
+		margin-bottom: -2rem;
 	}
 
 	&-listing {
@@ -540,6 +544,10 @@ Mixins
 
 			&:not(:first-child) {
 				margin-left: 1rem;
+			}
+
+			> i {
+				display:block;
 			}
 		}
 

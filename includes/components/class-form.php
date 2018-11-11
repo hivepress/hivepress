@@ -1196,7 +1196,7 @@ class Form extends Component {
 
 			// Submit.
 			case 'submit':
-				$output .= '<input type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $args['name'] ) . '" ' . $attributes . '>';
+				$output .= '<button type="' . esc_attr( $args['type'] ) . '" ' . $attributes . '>' . esc_html( $args['name'] ) . '</button>';
 
 				break;
 
