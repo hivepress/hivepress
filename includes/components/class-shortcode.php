@@ -31,6 +31,9 @@ class Shortcode extends Component {
 
 		// Add shortcodes.
 		add_action( 'init', [ $this, 'add_shortcodes' ] );
+
+		// Filter shortcodes.
+		add_filter( 'the_content', [ $this, 'filter_shortcodes' ] );
 	}
 
 	/**
@@ -52,6 +55,29 @@ class Shortcode extends Component {
 	}
 
 	/**
+	 * Filters shortcodes.
+	 *
+	 * @param string $content
+	 * @return string
+	 */
+	public function filter_shortcodes( $content ) {
+		$shortcodes = implode(
+			'|',
+			array_map(
+				function( $shortcode_id ) {
+					return 'hivepress_' . $shortcode_id;
+				},
+				array_keys( $this->shortcodes )
+			)
+		);
+
+		$content = preg_replace( '/(<p>)?\[(' . $shortcodes . ')(.*?)?\](<\/p>)?/', '[$2$3]', $content );
+		$content = preg_replace( '/(<p>)?\[\/(' . $shortcodes . ')](<\/p>)?/', '[/$2]', $content );
+
+		return $content;
+	}
+
+	/**
 	 * Routes component functions.
 	 *
 	 * @param string $name
@@ -67,7 +93,7 @@ class Shortcode extends Component {
 			$shortcode_id = str_replace( 'render_', '', $name );
 
 			// Render shortcode HTML.
-			return apply_filters( "hivepress/shortcode/shortcode_html/{$shortcode_id}", '', reset( $args ) );
+			return apply_filters( "hivepress/shortcode/shortcode_html/{$shortcode_id}", $args[1], $args[0] );
 		}
 	}
 }
