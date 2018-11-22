@@ -19,10 +19,13 @@ class Listing extends Entity {
 	public function __construct( $settings ) {
 		parent::__construct( $settings );
 
-		// Render shortcodes.
-		add_filter( 'hivepress/shortcode/shortcode_html/listing_search', [ $this, 'render_search_shortcode' ], 10, 2 );
-		add_filter( 'hivepress/shortcode/shortcode_html/listings', [ $this, 'render_listings_shortcode' ], 10, 2 );
-		add_filter( 'hivepress/shortcode/shortcode_html/listing_categories', [ $this, 'render_categories_shortcode' ], 10, 2 );
+		if ( ! is_admin() ) {
+
+			// Render shortcodes.
+			add_filter( 'hivepress/shortcode/shortcode_html/listing_search', [ $this, 'render_search_shortcode' ], 10, 2 );
+			add_filter( 'hivepress/shortcode/shortcode_html/listings', [ $this, 'render_listings_shortcode' ], 10, 2 );
+			add_filter( 'hivepress/shortcode/shortcode_html/listing_categories', [ $this, 'render_categories_shortcode' ], 10, 2 );
+		}
 	}
 
 	/**
@@ -37,7 +40,7 @@ class Listing extends Entity {
 	}
 
 	/**
-	 * Renders categories shortcode.
+	 * Renders listings shortcode.
 	 *
 	 * @param string $output
 	 * @param array  $atts
