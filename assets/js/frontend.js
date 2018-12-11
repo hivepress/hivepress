@@ -122,6 +122,7 @@ var hivepress = {
 				image.addClass(name + '-image').slick({
 					slidesToShow: 1,
 					slidesToScroll: 1,
+					adaptiveHeight: true,
 					infinite: false,
 					arrows: false,
 					asNavFor: nav,
@@ -132,8 +133,8 @@ var hivepress = {
 						slidesToShow: Math.round(slider.width() / 125),
 						slidesToScroll: 1,
 						infinite: false,
-						prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="fas fa-chevron-left"></i></a>',
-						nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="fas fa-chevron-right"></i></a>',
+						prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></a>',
+						nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></a>',
 						focusOnSelect: true,
 						asNavFor: image,
 					});
@@ -269,7 +270,7 @@ var hivepress = {
 	$(window).load(function() {
 		hivepress.getObject('sticky').each(function() {
 			var container = $(this),
-				spacing = 30;
+				spacing = 30 + $('#wpadminbar').height();
 
 			container.wrapInner('<div />');
 

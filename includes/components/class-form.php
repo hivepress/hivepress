@@ -1200,10 +1200,15 @@ class Form extends Component {
 
 				break;
 
+			// Search.
+			case 'search':
+				$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $value ) . '" autocomplete="off" ' . $attributes . '>';
+
+				break;
+
 			// Other types.
 			case 'text':
 			case 'email':
-			case 'search':
 			case 'password':
 			case 'file':
 				$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $value ) . '" ' . $attributes . '>';

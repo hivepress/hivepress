@@ -431,7 +431,7 @@ class Template extends Component {
 		$template_path = locate_template( 'hivepress/' . $name . '.php' );
 
 		if ( empty( $template_path ) ) {
-			foreach ( hivepress()->get_plugin_paths() as $plugin_path ) {
+			foreach ( array_reverse( hivepress()->get_plugin_paths() ) as $plugin_path ) {
 				if ( file_exists( $plugin_path . '/templates/' . $name . '.php' ) ) {
 					$template_path = $plugin_path . '/templates/' . $name . '.php';
 

@@ -72,7 +72,7 @@ class Shortcode extends Component {
 		);
 
 		$content = preg_replace( '/(<p>)?\[(' . $shortcodes . ')(.*?)?\](<\/p>)?/', '[$2$3]', $content );
-		$content = preg_replace( '/(<p>)?\[\/(' . $shortcodes . ')](<\/p>)?/', '[/$2]', $content );
+		$content = preg_replace( '/(<p>)?\[\/(' . $shortcodes . ')\](<\/p>)?/', '[/$2]', $content );
 
 		return $content;
 	}

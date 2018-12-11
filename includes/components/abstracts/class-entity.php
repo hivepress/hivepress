@@ -59,6 +59,9 @@ abstract class Entity extends Component {
 		add_filter( 'hivepress/form/form_values/' . $this->name . '__delete', [ $this, 'set_data' ] );
 		add_action( 'hivepress/form/submit_form/' . $this->name . '__delete', [ $this, 'delete' ] );
 
+		// Count listings.
+		add_action( 'save_post_' . hp_prefix( $this->name ), [ $this, 'count' ], 10, 2 );
+
 		// Update featured image.
 		add_action( 'hivepress/form/upload_file/' . $this->name . '__images', [ $this, 'update_image' ] );
 		add_action( 'hivepress/form/delete_file/' . $this->name . '__images', [ $this, 'update_image' ] );
@@ -891,12 +894,44 @@ abstract class Entity extends Component {
 	}
 
 	/**
+	 * Counts listings.
+	 *
+	 * @param int     $post_id
+	 * @param WP_Post $post
+	 */
+	public function count( $post_id, $post ) {
+
+		// Get vendor ID.
+		$vendor_id = absint( $post->post_author );
+
+		// Count listings.
+		$count = count(
+			get_posts(
+				[
+					'post_type'      => hp_prefix( $this->name ),
+					'post_status'    => 'publish',
+					'author'         => $vendor_id,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				]
+			)
+		);
+
+		// Update vendor.
+		if ( $count > 0 ) {
+			update_user_meta( $vendor_id, 'hp_' . $this->name . '_count', $count );
+		} else {
+			delete_user_meta( $vendor_id, 'hp_' . $this->name . '_count' );
+		}
+	}
+
+	/**
 	 * Sets search query.
 	 *
 	 * @param WP_Query $query
 	 */
 	public function set_search_query( $query ) {
-		if ( $query->is_main_query() && ( is_post_type_archive( hp_prefix( $this->name ) ) || is_tax( hp_prefix( $this->name . '_category' ) ) ) ) {
+		if ( $query->is_main_query() && $this->is_archive() ) {
 
 			// Set results per page.
 			$query->set( 'posts_per_page', absint( get_option( hp_prefix( $this->name . 's_per_page' ) ) ) );
@@ -1050,6 +1085,17 @@ abstract class Entity extends Component {
 				$query->set( 'tax_query', $tax_query );
 			}
 		}
+	}
+
+	/**
+	 * Checks archive pages.
+	 *
+	 * @return bool
+	 */
+	public function is_archive() {
+		$page_id = absint( get_option( 'hp_page_' . $this->name . 's' ) );
+
+		return ( is_page() && get_queried_object_id() === $page_id ) || is_post_type_archive( hp_prefix( $this->name ) ) || is_tax( hp_prefix( $this->name . '_category' ), hp_prefix( $this->name . '_tag' ) );
 	}
 
 	/**
@@ -1264,25 +1310,27 @@ abstract class Entity extends Component {
 	 * @return array
 	 */
 	public function set_vendor_context( $context ) {
-		if ( is_singular( hp_prefix( $this->name ) ) ) {
+		if ( ! isset( $context['vendor'] ) ) {
+			if ( is_singular( hp_prefix( $this->name ) ) ) {
 
-			// Get vendor.
-			$context['vendor'] = get_userdata( get_post_field( 'post_author', get_queried_object_id() ) );
-		} else {
+				// Get vendor.
+				$context['vendor'] = get_userdata( get_post_field( 'post_author', get_queried_object_id() ) );
+			} else {
 
-			// Get vendor.
-			$context['vendor'] = get_user_by( 'login', sanitize_user( get_query_var( 'hp_' . $this->name . '_vendor' ) ) );
+				// Get vendor.
+				$context['vendor'] = get_user_by( 'login', sanitize_user( get_query_var( 'hp_' . $this->name . '_vendor' ) ) );
 
-			// Set context.
-			$context['column_width']  = 6;
-			$context['listing_query'] = new \WP_Query(
-				[
-					'post_type'      => hp_prefix( $this->name ),
-					'author'         => $context['vendor']->ID,
-					'post_status'    => 'publish',
-					'posts_per_page' => -1,
-				]
-			);
+				// Set context.
+				$context['column_width']  = 6;
+				$context['listing_query'] = new \WP_Query(
+					[
+						'post_type'      => hp_prefix( $this->name ),
+						'author'         => $context['vendor']->ID,
+						'post_status'    => 'publish',
+						'posts_per_page' => -1,
+					]
+				);
+			}
 		}
 
 		return $context;
