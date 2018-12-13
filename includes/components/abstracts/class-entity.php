@@ -350,6 +350,11 @@ abstract class Entity extends Component {
 			$this->attributes[ $attribute_id ] = $attribute;
 		}
 
+		// Filter attributes.
+		$component_name = $this->name;
+
+		$this->attributes = apply_filters( "hivepress/{$component_name}/attributes", $this->attributes );
+
 		// Sort attributes.
 		$this->attributes = hp_sort_array( $this->attributes );
 	}
@@ -592,7 +597,7 @@ abstract class Entity extends Component {
 		$attributes = array_filter(
 			$this->get_attributes( $this->get_id() ),
 			function( $attribute ) use ( $area_id ) {
-				return in_array( $area_id, $attribute['areas'], true );
+				return isset( $attribute['areas'] ) && in_array( $area_id, $attribute['areas'], true );
 			}
 		);
 

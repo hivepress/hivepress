@@ -172,6 +172,11 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/fontawesome/solid.min.css',
 			],
 
+			'jquery_ui'          => [
+				'handle' => 'jquery-ui',
+				'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
+			],
+
 			'fancybox'          => [
 				'handle' => 'fancybox',
 				'src'    => HP_CORE_URL . '/assets/css/fancybox.min.css',
@@ -791,6 +796,14 @@ $settings = [
 				'args'        => [
 					'hierarchical' => true,
 					'rewrite'      => [ 'slug' => 'listing-category' ],
+				],
+			],
+
+			'listing_tag'      => [
+				'object_type' => 'listing',
+
+				'args'        => [
+					'rewrite' => [ 'slug' => 'listing-tag' ],
 				],
 			],
 		],

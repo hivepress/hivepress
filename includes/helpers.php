@@ -288,11 +288,11 @@ function hp_get_remote_json( $url, $headers = [] ) {
  */
 function hp_get_post_id( $args ) {
 	$args = array_merge(
+		$args,
 		[
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
-		],
-		$args
+		]
 	);
 
 	$posts = get_posts( $args );

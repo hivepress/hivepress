@@ -736,7 +736,18 @@ class Form extends Component {
 				);
 
 				if ( ! empty( $value ) ) {
-					$value = [ reset( $value ), end( $value ) ];
+					$min_value = reset( $value );
+					$max_value = end( $value );
+
+					if ( isset( $args['min_value'] ) && $min_value < $args['min_value'] ) {
+						$min_value = $args['min_value'];
+					}
+
+					if ( isset( $args['max_value'] ) && $max_value > $args['max_value'] ) {
+						$max_value = $args['max_value'];
+					}
+
+					$value = [ $min_value, $max_value ];
 				} else {
 					$value = [ '', '' ];
 				}
@@ -1003,7 +1014,7 @@ class Form extends Component {
 				$output .= '<div ' . $attributes . '>';
 
 				foreach ( $args['options'] as $option_id => $option_label ) {
-					$output .= '<label for="' . esc_attr( $args['id'] . '_' . $option_id ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] . '_' . $option_id ) . '" value="' . esc_attr( $option_id ) . '" ' . checked( $value, $option_id, false ) . ' ' . $attributes . '>' . esc_html( $option_label ) . '</label>';
+					$output .= '<label for="' . esc_attr( $args['id'] . '_' . $option_id ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] . '_' . $option_id ) . '" value="' . esc_attr( $option_id ) . '" ' . checked( $value, $option_id, false ) . ' ' . $attributes . '><span>' . esc_html( $option_label ) . '</span></label>';
 				}
 
 				$output .= '</div>';
@@ -1012,7 +1023,7 @@ class Form extends Component {
 
 			// Checkbox.
 			case 'checkbox':
-				$output .= '<label for="' . esc_attr( $args['id'] ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( hp_get_array_value( $args, 'value', '1' ) ) . '" ' . checked( $value, 1, false ) . ' ' . $attributes . '>' . hp_sanitize_html( hp_get_array_value( $args, 'label' ) ) . '</label>';
+				$output .= '<label for="' . esc_attr( $args['id'] ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( hp_get_array_value( $args, 'value', '1' ) ) . '" ' . checked( $value, 1, false ) . ' ' . $attributes . '><span>' . hp_sanitize_html( hp_get_array_value( $args, 'label' ) ) . '</span></label>';
 
 				break;
 
