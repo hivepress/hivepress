@@ -82,7 +82,7 @@ class Template extends Component {
 			add_filter( 'document_title_parts', [ $this, 'set_title' ] );
 
 			// Manage templates.
-			add_filter( 'template_include', [ $this, 'set_template' ] );
+			add_filter( 'template_include', [ $this, 'set_template' ], 99 );
 			add_action( 'get_header', [ $this, 'register_parts' ] );
 
 			// Add theme class.

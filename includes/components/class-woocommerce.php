@@ -30,7 +30,7 @@ class WooCommerce extends \HivePress\Component {
 		$price = '';
 
 		if ( $this->is_active() ) {
-			$price = wc_price( $number );
+			$price = wp_strip_all_tags( wc_price( $number ) );
 		}
 
 		return $price;
