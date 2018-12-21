@@ -53,6 +53,7 @@ class Listing extends Entity {
 				'number'   => 3,
 				'columns'  => 3,
 				'order'    => '',
+				'status'   => '',
 			],
 			$atts
 		);
@@ -86,6 +87,12 @@ class Listing extends Entity {
 			$query_args['order']   = 'ASC';
 		} elseif ( 'random' === $atts['order'] ) {
 			$query_args['orderby'] = 'rand';
+		}
+
+		// Get status.
+		if ( 'featured' === $atts['status'] ) {
+			$query_args['meta_key']   = hp_prefix( $atts['status'] );
+			$query_args['meta_value'] = '1';
 		}
 
 		// Query listings.

@@ -800,39 +800,6 @@ abstract class Entity extends Component {
 
 			// Update listing data.
 			$this->update_data( $listing_id, $values );
-
-			// Check moderated attributes.
-			$attributes = [];
-
-			foreach ( $this->get_attributes( $listing_id ) as $attribute_id => $attribute ) {
-				if ( $attribute['moderated'] && $values[ $attribute_id ] !== $listing[ $attribute_id ] ) {
-					$attributes[] = $attribute['name'];
-				}
-			}
-
-			if ( ! empty( $attributes ) ) {
-
-				// Change listing status.
-				wp_update_post(
-					[
-						'ID'          => $listing_id,
-						'post_status' => 'pending',
-					]
-				);
-
-				// Send email.
-				hivepress()->email->send(
-					$this->name . '__update',
-					[
-						'to'           => get_option( 'admin_email' ),
-						'placeholders' => [
-							'listing_title'   => get_the_title( $listing_id ),
-							'listing_url'     => admin_url( 'post.php?action=edit&post=' . $listing_id ),
-							'listing_changes' => implode( ', ', $attributes ),
-						],
-					]
-				);
-			}
 		}
 	}
 

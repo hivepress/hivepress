@@ -266,6 +266,14 @@ var hivepress = {
 		});
 	});
 
+	// Select
+	hivepress.getObject('form').find('select').each(function() {
+		$(this).select2({
+			width: '100%',
+			minimumResultsForSearch: 25,
+		});
+	});
+
 	// Sticky
 	$(window).load(function() {
 		hivepress.getObject('sticky').each(function() {

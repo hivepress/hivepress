@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 		echo hivepress()->form->render_form(
 			'listing__submit',
 			[
-				'after_submit'  => hivepress()->listing->get_categories() ? '<a href="' . esc_url( hivepress()->template->get_url( 'listing__submission_category' ) ) . '"><i class="hp-icon fas fa-arrow-left"></i>' . esc_html__( 'Change Category', 'hivepress' ) . '</a>' : '',
+				'after_submit'  => hivepress()->listing->get_categories() ? '<a href="' . esc_url( hivepress()->template->get_url( 'listing__submission_category' ) ) . '"><i class="hp-icon fas fa-arrow-left"></i><span>' . esc_html__( 'Change Category', 'hivepress' ) . '</span></a>' : '',
 				'attributes'    => [
 					'data-type' => 'ajax',
 				],

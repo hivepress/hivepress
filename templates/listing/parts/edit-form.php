@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 echo hivepress()->form->render_form(
 	'listing__update',
 	[
-		'after_submit'  => '<a href="#hp-listing-delete" class="hp-js-link" data-type="popup"><i class="hp-icon fas fa-times"></i>' . esc_html__( 'Delete Listing', 'hivepress' ) . '</a>',
+		'after_submit'  => '<a href="#hp-listing-delete" class="hp-js-link" data-type="popup"><i class="hp-icon fas fa-times"></i><span>' . esc_html__( 'Delete Listing', 'hivepress' ) . '</span></a>',
 		'attributes'    => [
 			'data-type' => 'ajax',
 		],

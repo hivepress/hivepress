@@ -1034,7 +1034,7 @@ class Form extends Component {
 				foreach ( $args['options'] as $option_id => $option_label ) {
 					$option_value = null;
 
-					if ( in_array( $option_id, $value, true ) ) {
+					if ( in_array( (string) $option_id, $value, true ) ) {
 						$option_value = '1';
 					}
 

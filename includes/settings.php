@@ -172,7 +172,7 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/fontawesome/solid.min.css',
 			],
 
-			'jquery_ui'          => [
+			'jquery_ui'         => [
 				'handle' => 'jquery-ui',
 				'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
 			],
@@ -185,6 +185,11 @@ $settings = [
 			'slick'             => [
 				'handle' => 'slick',
 				'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
+			],
+
+			'select2'           => [
+				'handle' => 'select2',
+				'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
 			],
 
 			'grid'              => [
@@ -221,6 +226,11 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
 			],
 
+			'select2'          => [
+				'handle' => 'select2',
+				'src'    => HP_CORE_URL . '/assets/js/select2.min.js',
+			],
+
 			'sticky_sidebar'   => [
 				'handle' => 'sticky-sidebar',
 				'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
@@ -229,7 +239,7 @@ $settings = [
 			'frontend'         => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'select2', 'sticky-sidebar' ],
 				'data'   => [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ],
 			],
 		],
@@ -813,7 +823,14 @@ $settings = [
 			'attributes'         => [
 				'title'  => esc_html__( 'Attributes', 'hivepress' ),
 				'screen' => 'listing',
-				'fields' => [],
+				'fields' => [
+					'featured' => [
+						'name'  => esc_html__( 'Featured', 'hivepress' ),
+						'label' => esc_html__( 'Make this listing featured', 'hivepress' ),
+						'type'  => 'checkbox',
+						'order' => 1,
+					],
+				],
 			],
 
 			'attribute_settings' => [
@@ -1019,7 +1036,7 @@ $settings = [
 
 				'fields'        => [
 					'sort'      => [
-						'name'    => esc_html__( 'Sort by:', 'hivepress' ),
+						'name'    => esc_html__( 'Sort by', 'hivepress' ),
 						'type'    => 'select',
 						'options' => [],
 						'order'   => 10,
@@ -1719,7 +1736,7 @@ $settings = [
 
 					'content' => [
 						'title' => [
-							'path'  => 'vendor/content-single/title',
+							'path'  => 'vendor/content-single/parts/title',
 							'order' => 10,
 						],
 

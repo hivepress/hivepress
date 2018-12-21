@@ -16,7 +16,7 @@ if ( $listing_query->have_posts() ) :
 						the_title();
 					else :
 						?>
-						<a href="<?php echo esc_url( hivepress()->template->get_url( 'listing__edit', [ get_the_ID() ] ) ); ?>"><i class="hp-icon fas fa-edit"></i><?php the_title(); ?></a>
+						<a href="<?php echo esc_url( hivepress()->template->get_url( 'listing__edit', [ get_the_ID() ] ) ); ?>"><i class="hp-icon fas fa-edit"></i><span><?php the_title(); ?></span></a>
 					<?php endif; ?>
 				</td>
 				<td>
@@ -33,7 +33,7 @@ if ( $listing_query->have_posts() ) :
 				</td>
 				<td>
 					<?php if ( get_post_status() === 'publish' ) : ?>
-						<a href="<?php the_permalink(); ?>" target="_blank"><i class="hp-icon fas fa-external-link-alt"></i><?php esc_html_e( 'View', 'hivepress' ); ?></a>
+						<a href="<?php the_permalink(); ?>" target="_blank"><i class="hp-icon fas fa-external-link-alt"></i><span><?php esc_html_e( 'View', 'hivepress' ); ?></span></a>
 					<?php endif; ?>
 				</td>
 			</tr>
