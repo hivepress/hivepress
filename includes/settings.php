@@ -1762,11 +1762,29 @@ $settings = [
 			],
 		],
 
-		// Shortcodes.
-		'shortcodes'  => [
-			'listing_search'     => [],
-			'listing_categories' => [],
-			'listings'           => [],
+		// Blocks.
+		'blocks'      => [
+			'listing_search' => [
+				'title'    => esc_html__( 'Listing Search', 'hivepress' ),
+				'category' => 'widgets',
+				'fields' => [
+					'todo' => [
+						'name' => 'Todo',
+						'type' => 'text',
+						'default' => 'todo',
+					],
+				],
+			],
+
+			// 'listing_categories' => [
+			// 	'title'    => esc_html__( 'Listing Search', 'hivepress' ),
+			// 	'category' => 'widgets',
+			// ],
+			//
+			// 'listings' => [
+			// 	'title'    => esc_html__( 'Listings', 'hivepress' ),
+			// 	'category' => 'widgets',
+			// ],
 		],
 	],
 ];
