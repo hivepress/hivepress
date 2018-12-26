@@ -26,8 +26,11 @@ class Editor extends Component {
 	public function __construct( $settings ) {
 		parent::__construct( $settings );
 
+		// Add styles.
+		add_action( 'hivepress/component/init_styles', [ $this, 'add_styles' ] );
+
 		// Initialize blocks.
-		add_action( 'hivepress/component/init_blocks', [ $this, 'init_blocks' ] );
+		add_action( 'hivepress/component/init_editor_blocks', [ $this, 'init_blocks' ] );
 
 		// Register blocks.
 		add_action( 'init', [ $this, 'register_blocks' ] );
@@ -37,6 +40,19 @@ class Editor extends Component {
 
 		// Filter shortcodes.
 		add_filter( 'the_content', [ $this, 'filter_shortcodes' ] );
+	}
+
+	/**
+	 * Adds styles.
+	 *
+	 * @param array $styles
+	 */
+	public function add_styles( $styles ) {
+		foreach ( $styles as $style ) {
+			if ( isset( $style['src'] ) && hp_get_array_value( $style, 'editor', false ) ) {
+				add_editor_style( $style['src'] );
+			}
+		}
 	}
 
 	/**
@@ -52,12 +68,31 @@ class Editor extends Component {
 	 * Registers blocks.
 	 */
 	public function register_blocks() {
-		wp_register_script( 'hp-editor', HP_CORE_URL . '/assets/js/editor.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
-		wp_localize_script( 'hp-editor', 'blocks', $this->blocks );
-
-		wp_register_style( 'hp-editor', HP_CORE_URL . '/assets/css/frontend.min.css', [ 'wp-edit-blocks' ] );
-
 		foreach ( $this->blocks as $block_id => $block ) {
+
+			// Get block slug and type.
+			$block_slug  = str_replace( '_', '-', $block_id );
+			$block_type  = 'hivepress/' . str_replace( '_', '-', $block_id );
+			$block_title = HP_CORE_NAME . ' ' . $block['title'];
+
+			// Register block script.
+			$script_handle = 'hp-block-' . $block_slug;
+
+			wp_register_script( $script_handle, HP_CORE_URL . '/assets/js/editor-block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
+
+			wp_localize_script(
+				$script_handle,
+				'block',
+				array_merge(
+					$block,
+					[
+						'type'  => $block_type,
+						'title' => $block_title,
+					]
+				)
+			);
+
+			// Get block attributes.
 			$attributes = [];
 
 			foreach ( hp_get_array_value( $block, 'fields', [] ) as $field_id => $field ) {
@@ -66,60 +101,17 @@ class Editor extends Component {
 					'default' => hp_get_array_value( $field, 'default' ),
 				];
 			}
+
+			// Register block type.
 			register_block_type(
-				'hivepress/' . str_replace( '_', '-', $block_id ),
+				$block_type,
 				[
-					'editor_script'   => 'hp-editor',
-					'editor_style'    => 'hp-editor',
+					'editor_script'   => $script_handle,
 					'render_callback' => [ $this, 'render_' . $block_id ],
 					'attributes'      => $attributes,
 				]
 			);
 		}
-
-		//
-		// public function gutenberg_boilerplate_block() {
-		// wp_register_script(
-		// 'gutenberg-boilerplate-es5-step01',
-		// HP_CORE_URL.'/assets/js/blocks/block.js',
-		// array( 'wp-blocks', 'wp-element', 'wp-components' )
-		// );
-		//
-		// wp_register_style(
-		// 'gutenberg-boilerplate-es5-step01-editor',
-		// HP_CORE_URL.'/assets/js/blocks/editor.css',
-		// array( 'wp-edit-blocks' ),
-		// filemtime( HP_CORE_PATH.'/assets/js/blocks/editor.css' )
-		// );
-		//
-		// register_block_type( 'gutenberg-boilerplate-es5/hello-world-step-01', array(
-		// 'attributes'      => array(
-		// 'foo' => array(
-		// 'type' => 'string',
-		// ),
-		// ),
-		// 'editor_script' => 'gutenberg-boilerplate-es5-step01',
-		// 'editor_style' => 'gutenberg-boilerplate-es5-step01-editor',
-		// 'render_callback' => [$this, 'my_plugin_render_block_latest_post'],
-		// ) );
-		// }
-		//
-		// public function my_plugin_render_block_latest_post( $attributes, $content ) {
-		// $recent_posts = wp_get_recent_posts( array(
-		// 'numberposts' => 1,
-		// 'post_status' => 'publish',
-		// ) );
-		// if ( count( $recent_posts ) === 0 ) {
-		// return 'No posts';
-		// }
-		// $post = $recent_posts[ 0 ];
-		// $post_id = $post['ID'];
-		// return sprintf(
-		// '<a class="wp-block-my-plugin-latest-post" href="%1$s">%2$s</a>',
-		// esc_url( get_permalink( $post_id ) ),
-		// esc_html( get_the_title( $post_id ) )
-		// );
-		// }
 	}
 
 	/**

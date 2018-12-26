@@ -69,6 +69,9 @@ class Template extends Component {
 		// Initialize templates.
 		add_action( 'hivepress/component/init_templates', [ $this, 'init_templates' ] );
 
+		// Register templates.
+		add_action( 'init', [ $this, 'register_parts' ] );
+
 		if ( ! is_admin() ) {
 
 			// Initialize post types and taxonomies.
@@ -81,9 +84,8 @@ class Template extends Component {
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_title' ] );
 
-			// Manage templates.
+			// Set page template.
 			add_filter( 'template_include', [ $this, 'set_template' ], 99 );
-			add_action( 'get_header', [ $this, 'register_parts' ] );
 
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );

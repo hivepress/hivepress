@@ -195,11 +195,13 @@ $settings = [
 			'grid'              => [
 				'handle' => 'hp-grid',
 				'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
+				'editor' => true,
 			],
 
 			'frontend'          => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
+				'editor' => true,
 			],
 		],
 
@@ -639,7 +641,7 @@ $settings = [
 	'listing'  => [
 
 		// Options.
-		'options'     => [
+		'options'       => [
 			'listings' => [
 				'name'     => esc_html__( 'Listings', 'hivepress' ),
 				'order'    => 10,
@@ -729,7 +731,7 @@ $settings = [
 		],
 
 		// Emails.
-		'emails'      => [
+		'emails'        => [
 			'submit'  => [
 				'subject' => esc_html__( 'Listing Submitted', 'hivepress' ),
 				'message' => hp_sanitize_html( __( 'A new listing "%listing_title%" has been submitted, click on the following link to view it: %listing_url%', 'hivepress' ) ),
@@ -755,7 +757,7 @@ $settings = [
 		],
 
 		// Post types.
-		'post_types'  => [
+		'post_types'    => [
 			'listing'           => [
 				'public'      => true,
 				'has_archive' => true,
@@ -799,7 +801,7 @@ $settings = [
 		],
 
 		// Taxonomies.
-		'taxonomies'  => [
+		'taxonomies'    => [
 			'listing_category' => [
 				'object_type' => 'listing',
 
@@ -819,7 +821,7 @@ $settings = [
 		],
 
 		// Meta boxes.
-		'meta_boxes'  => [
+		'meta_boxes'    => [
 			'attributes'         => [
 				'title'  => esc_html__( 'Attributes', 'hivepress' ),
 				'screen' => 'listing',
@@ -981,7 +983,7 @@ $settings = [
 		],
 
 		// Forms.
-		'forms'       => [
+		'forms'         => [
 			'search' => [
 				'action'        => home_url(),
 				'method'        => 'GET',
@@ -1181,7 +1183,7 @@ $settings = [
 		],
 
 		// Pages.
-		'pages'       => [
+		'pages'         => [
 			'submission'          => [
 				'regex'      => '^submit-listing/?$',
 				'redirect'   => 'index.php?hp_listing_submission=1',
@@ -1244,7 +1246,7 @@ $settings = [
 		],
 
 		// Templates.
-		'templates'   => [
+		'templates'     => [
 			'page'                        => [
 				'areas' => [
 					'menu' => [
@@ -1750,7 +1752,7 @@ $settings = [
 		],
 
 		// Image sizes.
-		'image_sizes' => [
+		'image_sizes'   => [
 			'medium' => [
 				'width'  => 400,
 				'height' => 267,
@@ -1762,29 +1764,58 @@ $settings = [
 			],
 		],
 
-		// Blocks.
-		'blocks'      => [
-			'listing_search' => [
+		// Editor blocks.
+		'editor_blocks' => [
+			'listing_search'     => [
 				'title'    => esc_html__( 'Listing Search', 'hivepress' ),
 				'category' => 'widgets',
-				'fields' => [
-					'todo' => [
-						'name' => 'Todo',
-						'type' => 'text',
-						'default' => 'todo',
+			],
+
+			'listing_categories' => [
+				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
+				'category' => 'widgets',
+				'fields'   => [
+					'number' => [
+						'name'    => esc_html__( 'Number', 'hivepress' ),
+						'type'    => 'number',
+						'default' => 3,
 					],
 				],
 			],
 
-			// 'listing_categories' => [
-			// 	'title'    => esc_html__( 'Listing Search', 'hivepress' ),
-			// 	'category' => 'widgets',
-			// ],
-			//
-			// 'listings' => [
-			// 	'title'    => esc_html__( 'Listings', 'hivepress' ),
-			// 	'category' => 'widgets',
-			// ],
+			'listings'           => [
+				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'category' => 'widgets',
+				'fields'   => [
+					'columns' => [
+						'name'    => esc_html__( 'Columns', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 3,
+						'options' => [
+							2 => '2',
+							3 => '3',
+							4 => '4',
+						],
+					],
+
+					'number' => [
+						'name'    => esc_html__( 'Number', 'hivepress' ),
+						'type'    => 'number',
+						'default' => 3,
+					],
+
+					'order' => [
+						'name'    => esc_html__( 'Order', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 'date',
+						'options' => [
+							'date' => esc_html__('Date', 'hivepress'),
+							'title' => esc_html__('Title', 'hivepress'),
+							'random' => esc_html__('Random', 'hivepress'),
+						],
+					],
+				],
+			],
 		],
 	],
 ];
