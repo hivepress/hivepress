@@ -1250,7 +1250,7 @@ class Form extends Component {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
-			if ( $args['type'] === 'select' ) {
+			if ( 'select' === $args['type'] ) {
 				$options = [ '' => '&mdash;' ];
 			}
 

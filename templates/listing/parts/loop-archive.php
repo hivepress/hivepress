@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( $listing_query->have_posts() ) :
 	?>
-	<div class="hp-listings">
+	<div class="hp-listings hp-content hp-block hp-block--listings">
 		<div class="hp-row">
 			<?php
 			while ( $listing_query->have_posts() ) :

@@ -143,7 +143,7 @@ class Listing extends Entity {
 		];
 
 		// Get order.
-		if ( 'name' === $atts['order'] ) {
+		if ( 'title' === $atts['order'] ) {
 			$category_args['orderby'] = 'name';
 		} elseif ( 'count' === $atts['order'] ) {
 			$category_args['orderby'] = 'count';

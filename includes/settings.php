@@ -1775,18 +1775,6 @@ $settings = [
 				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
 				'category' => 'widgets',
 				'fields'   => [
-					'number' => [
-						'name'    => esc_html__( 'Number', 'hivepress' ),
-						'type'    => 'number',
-						'default' => 3,
-					],
-				],
-			],
-
-			'listings'           => [
-				'title'    => esc_html__( 'Listings', 'hivepress' ),
-				'category' => 'widgets',
-				'fields'   => [
 					'columns' => [
 						'name'    => esc_html__( 'Columns', 'hivepress' ),
 						'type'    => 'select',
@@ -1796,23 +1784,88 @@ $settings = [
 							3 => '3',
 							4 => '4',
 						],
+						'order'   => 10,
 					],
 
-					'number' => [
+					'number'  => [
 						'name'    => esc_html__( 'Number', 'hivepress' ),
 						'type'    => 'number',
 						'default' => 3,
+						'order'   => 20,
 					],
 
-					'order' => [
+					'parent'  => [
+						'name'     => esc_html__( 'Parent', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'order'    => 30,
+					],
+
+					'order'   => [
+						'name'    => esc_html__( 'Order', 'hivepress' ),
+						'type'    => 'select',
+						'options' => [
+							''      => '—',
+							'title' => esc_html__( 'Title', 'hivepress' ),
+							'count' => esc_html__( 'Count', 'hivepress' ),
+						],
+						'order'   => 40,
+					],
+				],
+			],
+
+			'listings'           => [
+				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'category' => 'widgets',
+				'fields'   => [
+					'columns'  => [
+						'name'    => esc_html__( 'Columns', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 3,
+						'options' => [
+							2 => '2',
+							3 => '3',
+							4 => '4',
+						],
+						'order'   => 10,
+					],
+
+					'number'   => [
+						'name'    => esc_html__( 'Number', 'hivepress' ),
+						'type'    => 'number',
+						'default' => 3,
+						'order'   => 20,
+					],
+
+					'category' => [
+						'name'     => esc_html__( 'Category', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'order'    => 30,
+					],
+
+					'status'   => [
+						'name'    => esc_html__( 'Status', 'hivepress' ),
+						'type'    => 'select',
+						'options' => [
+							''         => '—',
+							'featured' => esc_html__( 'Featured', 'hivepress' ),
+						],
+						'order'   => 40,
+					],
+
+					'order'    => [
 						'name'    => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
 						'default' => 'date',
 						'options' => [
-							'date' => esc_html__('Date', 'hivepress'),
-							'title' => esc_html__('Title', 'hivepress'),
-							'random' => esc_html__('Random', 'hivepress'),
+							'date'   => esc_html__( 'Date', 'hivepress' ),
+							'title'  => esc_html__( 'Title', 'hivepress' ),
+							'random' => esc_html__( 'Random', 'hivepress' ),
 						],
+						'order'   => 50,
 					],
 				],
 			],

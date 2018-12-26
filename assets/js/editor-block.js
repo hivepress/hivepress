@@ -21,39 +21,45 @@ registerBlockType(block['type'], {
 	edit: function(props) {
 		var controls = [];
 
-		if (block.hasOwnProperty('fields')) {console.log(block);
-			for (var fieldId in block.fields) {
-				var field = block.fields[fieldId],
-					control = TextControl,
-					args = {
-						label: field.name,
-						value: props.attributes[fieldId],
-						onChange: (value) => {
-							var values = {};
+		for (var blockId in blocks) {
+			if (blocks[blockId].type === props.name) {
+				var block = blocks[blockId];
 
-							values[fieldId] = value;
+				if (block.hasOwnProperty('fields')) {
+					for (var fieldId in block.fields) {
+						var field = block.fields[fieldId],
+							control = TextControl,
+							args = {
+								label: field.name,
+								value: props.attributes[fieldId],
+								onChange: (value) => {
+									var values = {};
 
-							props.setAttributes(values);
-						},
-					};
+									values[fieldId] = value;
 
-				if (field.type === 'number') {
-					args['type'] = 'number';
-				} else if (field.type === 'select') {
-					control = SelectControl;
-					args['options'] = [];
+									props.setAttributes(values);
+								},
+							};
 
-					if (field.hasOwnProperty('options')) {
-						for (var optionId in field.options) {
-							args['options'].push({
-								label: field.options[optionId],
-								value: optionId,
-							});
+						if (field.type === 'number') {
+							args['type'] = 'number';
+						} else if (field.type === 'select') {
+							control = SelectControl;
+							args['options'] = [];
+
+							if (field.hasOwnProperty('options')) {
+								for (var optionId in field.options) {
+									args['options'].push({
+										label: field.options[optionId],
+										value: optionId,
+									});
+								}
+							}
 						}
+
+						controls.push(createElement(control, args));
 					}
 				}
-
-				controls.push(createElement(control, args));
 			}
 		}
 

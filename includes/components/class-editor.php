@@ -33,7 +33,7 @@ class Editor extends Component {
 		add_action( 'hivepress/component/init_editor_blocks', [ $this, 'init_blocks' ] );
 
 		// Register blocks.
-		add_action( 'init', [ $this, 'register_blocks' ] );
+		add_action( 'init', [ $this, 'register_blocks' ], 99 );
 
 		// Add shortcodes.
 		add_action( 'init', [ $this, 'add_shortcodes' ] );
@@ -68,29 +68,46 @@ class Editor extends Component {
 	 * Registers blocks.
 	 */
 	public function register_blocks() {
-		foreach ( $this->blocks as $block_id => $block ) {
 
-			// Get block slug and type.
-			$block_slug  = str_replace( '_', '-', $block_id );
-			$block_type  = 'hivepress/' . str_replace( '_', '-', $block_id );
-			$block_title = HP_CORE_NAME . ' ' . $block['title'];
+		// Filter blocks.
+		$blocks = array_filter(
+			$this->blocks,
+			function( $block ) {
+				return hp_get_array_value( $block, 'block', true );
+			}
+		);
+
+		array_walk(
+			$blocks,
+			function( &$block, $block_id ) {
+
+				// Get block slug.
+				$block_slug = str_replace( '_', '-', $block_id );
+
+				// Set block details.
+				$block['title']         = HP_CORE_NAME . ' ' . $block['title'];
+				$block['type']          = 'hivepress/' . $block_slug;
+				$block['script_handle'] = 'hp-block-' . $block_slug;
+
+				// Set block fields.
+				if ( isset( $block['fields'] ) && is_array( $block['fields'] ) ) {
+					foreach ( $block['fields'] as $field_id => $field ) {
+						$block['fields'][ $field_id ] = hivepress()->form->set_field_options( $block['fields'][ $field_id ] );
+					}
+
+					$block['fields'] = hp_sort_array( $block['fields'] );
+				}
+			}
+		);
+
+		// Register blocks.
+		foreach ( $blocks as $block_id => $block ) {
 
 			// Register block script.
-			$script_handle = 'hp-block-' . $block_slug;
+			wp_register_script( $block['script_handle'], HP_CORE_URL . '/assets/js/editor-block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ] );
 
-			wp_register_script( $script_handle, HP_CORE_URL . '/assets/js/editor-block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
-
-			wp_localize_script(
-				$script_handle,
-				'block',
-				array_merge(
-					$block,
-					[
-						'type'  => $block_type,
-						'title' => $block_title,
-					]
-				)
-			);
+			wp_localize_script( $block['script_handle'], 'blocks', $blocks );
+			wp_localize_script( $block['script_handle'], 'block', $block );
 
 			// Get block attributes.
 			$attributes = [];
@@ -104,9 +121,9 @@ class Editor extends Component {
 
 			// Register block type.
 			register_block_type(
-				$block_type,
+				$block['type'],
 				[
-					'editor_script'   => $script_handle,
+					'editor_script'   => $block['script_handle'],
 					'render_callback' => [ $this, 'render_' . $block_id ],
 					'attributes'      => $attributes,
 				]
