@@ -3,7 +3,8 @@ var registerBlockType = wp.blocks.registerBlockType,
 	ServerSideRender = wp.components.ServerSideRender,
 	InspectorControls = wp.editor.InspectorControls,
 	TextControl = wp.components.TextControl,
-	SelectControl = wp.components.SelectControl;
+	SelectControl = wp.components.SelectControl,
+	InnerBlocks = wp.editor.InnerBlocks;
 
 registerBlockType(block['type'], {
 	title: block.title,
@@ -63,16 +64,40 @@ registerBlockType(block['type'], {
 			}
 		}
 
-		return [
-			createElement(ServerSideRender, {
-				block: props.name,
-				attributes: props.attributes,
-			}),
-			createElement(InspectorControls, {}, [controls]),
-		];
+		if (props.name === 'hivepress/section') {
+			return [
+				createElement('div', {
+					class: 'content-section'
+				}, createElement('div', {
+					class: 'container'
+				}, createElement(InnerBlocks, {
+					templateLock: false
+				})))
+			];
+		} else if (props.name === 'hivepress/block') {
+			return [
+				createElement('div', {
+					class: 'content-block'
+				}, createElement(InnerBlocks, {
+					templateLock: false
+				}))
+			];
+		} else {
+			return [
+				createElement(ServerSideRender, {
+					block: props.name,
+					attributes: props.attributes,
+				}),
+				createElement(InspectorControls, {}, [controls]),
+			];
+		}
 	},
 
-	save: function() {
-		return null;
+	save: function(props) {
+		if (props.innerBlocks.length > 0) {
+			return createElement(InnerBlocks.Content);
+		} else {
+			return null;
+		}
 	},
 });
