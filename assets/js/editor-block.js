@@ -1,10 +1,10 @@
 var registerBlockType = wp.blocks.registerBlockType,
 	createElement = wp.element.createElement,
 	ServerSideRender = wp.components.ServerSideRender,
+	InnerBlocks = wp.editor.InnerBlocks,
 	InspectorControls = wp.editor.InspectorControls,
 	TextControl = wp.components.TextControl,
-	SelectControl = wp.components.SelectControl,
-	InnerBlocks = wp.editor.InnerBlocks;
+	SelectControl = wp.components.SelectControl;
 
 registerBlockType(block['type'], {
 	title: block.title,
@@ -34,9 +34,18 @@ registerBlockType(block['type'], {
 								label: field.name,
 								value: props.attributes[fieldId],
 								onChange: (value) => {
-									var values = {};
+									var fieldType = event.target.type,
+										fieldIndex = parseInt(event.target.id.split('-').pop()),
+										fields = [],
+										values = {};
 
-									values[fieldId] = value;
+									for (var fieldId in block.fields) {
+										if (fieldType.startsWith(block.fields[fieldId].type)) {
+											fields.push(fieldId);
+										}
+									}
+
+									values[fields[fieldIndex]] = value;
 
 									props.setAttributes(values);
 								},
@@ -64,12 +73,13 @@ registerBlockType(block['type'], {
 			}
 		}
 
+		//todo
 		if (props.name === 'hivepress/section') {
 			return [
 				createElement('div', {
-					class: 'content-section'
+					class: 'content-section',
 				}, createElement('div', {
-					class: 'container'
+					class: 'container',
 				}, createElement(InnerBlocks, {
 					templateLock: false
 				})))
@@ -77,9 +87,9 @@ registerBlockType(block['type'], {
 		} else if (props.name === 'hivepress/block') {
 			return [
 				createElement('div', {
-					class: 'content-block'
+					class: 'content-block',
 				}, createElement(InnerBlocks, {
-					templateLock: false
+					templateLock: false,
 				}))
 			];
 		} else {
