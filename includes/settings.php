@@ -1799,14 +1799,16 @@ $settings = [
 						'type'     => 'select',
 						'options'  => 'terms',
 						'taxonomy' => 'hp_listing_category',
+						'default'  => '',
 						'order'    => 30,
 					],
 
 					'order'   => [
 						'name'    => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
+						'default' => '',
 						'options' => [
-							''      => '—',
+							''      => '&mdash;',
 							'title' => esc_html__( 'Title', 'hivepress' ),
 							'count' => esc_html__( 'Count', 'hivepress' ),
 						],
@@ -1843,14 +1845,16 @@ $settings = [
 						'type'     => 'select',
 						'options'  => 'terms',
 						'taxonomy' => 'hp_listing_category',
+						'default'  => '',
 						'order'    => 30,
 					],
 
 					'status'   => [
 						'name'    => esc_html__( 'Status', 'hivepress' ),
 						'type'    => 'select',
+						'default' => '',
 						'options' => [
-							''         => '—',
+							''         => '&mdash;',
 							'featured' => esc_html__( 'Featured', 'hivepress' ),
 						],
 						'order'   => 40,

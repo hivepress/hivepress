@@ -1,5 +1,6 @@
 var registerBlockType = wp.blocks.registerBlockType,
 	createElement = wp.element.createElement,
+	decodeEntities = wp.htmlEntities.decodeEntities,
 	ServerSideRender = wp.components.ServerSideRender,
 	InnerBlocks = wp.editor.InnerBlocks,
 	InspectorControls = wp.editor.InspectorControls,
@@ -20,32 +21,26 @@ registerBlockType(block['type'], {
 	),
 
 	edit: function(props) {
-		var controls = [];
+		var block = {},
+			controls = [];
 
 		for (var blockId in blocks) {
 			if (blocks[blockId].type === props.name) {
-				var block = blocks[blockId];
+				block = blocks[blockId];
 
 				if (block.hasOwnProperty('fields')) {
 					for (var fieldId in block.fields) {
 						var field = block.fields[fieldId],
 							control = TextControl,
 							args = {
+								id: block.type.replace('/', '-') + '-' + fieldId,
 								label: field.name,
 								value: props.attributes[fieldId],
 								onChange: (value) => {
-									var fieldType = event.target.type,
-										fieldIndex = parseInt(event.target.id.split('-').pop()),
-										fields = [],
+									var fieldId = event.target.id.split('-').pop(),
 										values = {};
 
-									for (var fieldId in block.fields) {
-										if (fieldType.startsWith(block.fields[fieldId].type)) {
-											fields.push(fieldId);
-										}
-									}
-
-									values[fields[fieldIndex]] = value;
+									values[fieldId] = value;
 
 									props.setAttributes(values);
 								},
@@ -60,7 +55,7 @@ registerBlockType(block['type'], {
 							if (field.hasOwnProperty('options')) {
 								for (var optionId in field.options) {
 									args['options'].push({
-										label: field.options[optionId],
+										label: decodeEntities(field.options[optionId]),
 										value: optionId,
 									});
 								}
@@ -73,25 +68,28 @@ registerBlockType(block['type'], {
 			}
 		}
 
-		//todo
-		if (props.name === 'hivepress/section') {
-			return [
-				createElement('div', {
-					class: 'content-section',
-				}, createElement('div', {
-					class: 'container',
-				}, createElement(InnerBlocks, {
-					templateLock: false
-				})))
-			];
-		} else if (props.name === 'hivepress/block') {
-			return [
-				createElement('div', {
-					class: 'content-block',
-				}, createElement(InnerBlocks, {
-					templateLock: false,
-				}))
-			];
+		if (block.hasOwnProperty('containers')) {
+			if (block.containers.length > 1) {
+				return [
+					createElement('div', {
+						class: block.containers.shift(),
+					}, createElement('div', {
+						class: block.containers.pop(),
+					}, createElement(InnerBlocks, {
+						templateLock: false
+					}))),
+					createElement(InspectorControls, {}, [controls]),
+				];
+			} else {
+				return [
+					createElement('div', {
+						class: block.containers.shift(),
+					}, createElement(InnerBlocks, {
+						templateLock: false,
+					})),
+					createElement(InspectorControls, {}, [controls]),
+				];
+			}
 		} else {
 			return [
 				createElement(ServerSideRender, {
