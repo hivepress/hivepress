@@ -72,9 +72,9 @@ registerBlockType(block['type'], {
 			if (block.containers.length > 1) {
 				return [
 					createElement('div', {
-						class: block.containers.shift(),
+						class: block.containers[0] + ' ' + props.className,
 					}, createElement('div', {
-						class: block.containers.pop(),
+						class: block.containers[1],
 					}, createElement(InnerBlocks, {
 						templateLock: false
 					}))),
@@ -83,7 +83,7 @@ registerBlockType(block['type'], {
 			} else {
 				return [
 					createElement('div', {
-						class: block.containers.shift(),
+						class: block.containers[0] + ' ' + props.className,
 					}, createElement(InnerBlocks, {
 						templateLock: false,
 					})),
