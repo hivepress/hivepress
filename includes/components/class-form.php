@@ -1114,7 +1114,7 @@ class Form extends Component {
 						$output .= $this->render_link(
 							'form__delete_file',
 							[
-								'text'       => '<i class="fas fa-times"></i>',
+								'text'       => '<i class="hp-icon fas fa-times"></i>',
 								'attributes' => [
 									'data-type' => 'remove',
 								],
@@ -1436,7 +1436,7 @@ class Form extends Component {
 								$output .= $this->render_link(
 									'form__delete_file',
 									[
-										'text'       => '<i class="fas fa-times"></i>',
+										'text'       => '<i class="hp-icon fas fa-times"></i>',
 										'attributes' => [
 											'data-type' => 'remove',
 										],
