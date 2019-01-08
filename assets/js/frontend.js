@@ -162,14 +162,19 @@ var hivepress = {
 			var messageContainer = form.find(hivepress.getSelector('messages')),
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
-				submitButton = form.find('input[type="submit"]');
+				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
 				if (submitButton.data('name')) {
 					var name = submitButton.attr('data-name');
 
-					submitButton.attr('data-name', submitButton.val());
-					submitButton.val(name);
+					if (submitButton.is('button')) {
+						submitButton.attr('data-name', submitButton.text());
+						submitButton.text(name);
+					} else {
+						submitButton.attr('data-name', submitButton.val());
+						submitButton.val(name);
+					}
 
 					if (submitButton.attr('data-state') != 'active') {
 						submitButton.attr('data-state', 'active');

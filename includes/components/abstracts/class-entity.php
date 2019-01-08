@@ -37,6 +37,7 @@ abstract class Entity extends Component {
 		add_action( 'wp_loaded', [ $this, 'init_attributes' ] );
 		add_action( 'wp_loaded', [ $this, 'add_attributes' ] );
 		add_action( 'before_delete_post', [ $this, 'delete_attribute' ] );
+		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
 		// Submit listing.
 		add_filter( 'hivepress/form/form_values/' . $this->name . '__submit', [ $this, 'set_data' ] );
@@ -458,6 +459,20 @@ abstract class Entity extends Component {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Imports attribute.
+	 *
+	 * @param array $term
+	 * @return array
+	 */
+	public function import_attribute( $term ) {
+		if ( strpos( $term['taxonomy'], 'hp_' ) === 0 && ! taxonomy_exists( $term['taxonomy'] ) ) {
+			register_taxonomy( $term['taxonomy'], hp_prefix( $this->name ) );
+		}
+
+		return $term;
 	}
 
 	/**
