@@ -1377,7 +1377,7 @@ class Form extends Component {
 					// Validate quantity.
 					$file_count = hp_get_array_value( $field, 'multiple', false ) ? hp_get_array_value( $field, 'max_files', 10 ) : 2;
 
-					if ( count( $attachment_ids ) >= $file_count ) {
+					if ( count( $attachment_ids ) >= $file_count && ! current_user_can( 'manage_options' ) ) {
 						$this->add_error( esc_html__( 'Maximum number of files exceeded.', 'hivepress' ) );
 					} else {
 
