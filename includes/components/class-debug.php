@@ -230,11 +230,11 @@ class Debug extends Component {
 	 * @param return array
 	 */
 	public function log_email_content( $args ) {
-		error_log( ' ' );
-		error_log( $args['to'] );
-		error_log( $args['subject'] );
-		error_log( $args['message'] );
-		error_log( ' ' );
+		// error_log( ' ' );
+		// error_log( $args['to'] );
+		// error_log( $args['subject'] );
+		// error_log( $args['message'] );
+		// error_log( ' ' );
 
 		return $args;
 	}

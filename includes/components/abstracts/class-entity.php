@@ -1082,7 +1082,7 @@ abstract class Entity extends Component {
 	public function is_archive() {
 		$page_id = absint( get_option( 'hp_page_' . $this->name . 's' ) );
 
-		return ( is_page() && get_queried_object_id() === $page_id ) || is_post_type_archive( hp_prefix( $this->name ) ) || is_tax( hp_prefix( $this->name . '_category' ), hp_prefix( $this->name . '_tag' ) );
+		return ( is_page() && get_queried_object_id() === $page_id ) || is_post_type_archive( hp_prefix( $this->name ) ) || is_tax( hp_prefix( $this->name . '_category' ) ) || is_tax( hp_prefix( $this->name . '_tag' ) );
 	}
 
 	/**

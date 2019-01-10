@@ -586,7 +586,7 @@ class Template extends Component {
 		$pages = array_filter(
 			$this->pages,
 			function( $page ) use ( $name ) {
-				return hp_get_array_value( $page, 'menu' ) === $name;
+				return hp_get_array_value( $page, 'menu' ) === $name && ( ! isset( $page['capability'] ) || ( ( 'login' === $page['capability'] && ! is_user_logged_in() ) || current_user_can( $page['capability'] ) ) );
 			}
 		);
 

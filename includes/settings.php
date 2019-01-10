@@ -1224,7 +1224,7 @@ $settings = [
 				'title'      => esc_html__( 'My Listings', 'hivepress' ),
 				'regex'      => '^account/listings/?$',
 				'redirect'   => 'index.php?hp_listing_edits=1',
-				'capability' => 'read',
+				'capability' => 'edit_posts',
 				'template'   => 'listing_edits',
 				'menu'       => 'user_account',
 				'order'      => 10,
