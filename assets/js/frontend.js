@@ -273,10 +273,17 @@ var hivepress = {
 
 	// Select
 	hivepress.getObject('form').find('select').each(function() {
-		$(this).select2({
-			width: '100%',
-			minimumResultsForSearch: 25,
-		});
+		var field = $(this),
+			settings = {
+				width: '100%',
+				minimumResultsForSearch: 25,
+			};
+
+		if (field.css('max-width') === 'none') {
+			settings['dropdownAutoWidth'] = true;
+		}
+
+		field.select2(settings);
 	});
 
 	// Sticky
