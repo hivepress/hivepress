@@ -83,7 +83,7 @@ abstract class Entity extends Component {
 			add_action( 'hivepress/template/redirect_page/' . $this->name . '__submission_review', [ $this, 'redirect_submission_review' ] );
 
 			// Redirect edit page.
-			add_action( 'hivepress/template/redirect_page/' . $this->name . '__update', [ $this, 'redirect_edit' ] );
+			add_action( 'hivepress/template/redirect_page/' . $this->name . '__edit', [ $this, 'redirect_edit' ] );
 
 			// Redirect vendor page.
 			add_action( 'hivepress/template/redirect_page/' . $this->name . '__vendor', [ $this, 'redirect_vendor' ] );
@@ -1240,7 +1240,7 @@ abstract class Entity extends Component {
 
 		// Redirect user.
 		if ( 0 === $listing_id ) {
-			hp_redirect( hivepress()->template->get_url( $this->name . '__view' ) );
+			hp_redirect( hivepress()->template->get_url( $this->name . '__edits' ) );
 		}
 	}
 

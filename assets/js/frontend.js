@@ -183,6 +183,7 @@ var hivepress = {
 					}
 				} else {
 					submitButton.prop('disabled', true);
+					submitButton.attr('data-state', 'loading');
 				}
 
 				$.post(hpCoreData.ajaxurl, form.serializeObject({}), function(response) {
@@ -195,6 +196,10 @@ var hivepress = {
 							}
 						} else {
 							submitButton.prop('disabled', false);
+
+							if (submitButton.attr('data-state') === 'loading') {
+								submitButton.attr('data-state', '');
+							}
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								grecaptcha.reset(captchaId);
@@ -235,11 +240,15 @@ var hivepress = {
 			formData: form.serializeObject(field.data('json')),
 			start: function() {
 				field.prop('disabled', true);
+
 				selectButton.prop('disabled', true);
+				selectButton.attr('data-state', 'loading');
 			},
 			stop: function() {
 				field.prop('disabled', false);
+
 				selectButton.prop('disabled', false);
+				selectButton.attr('data-state', '');
 			},
 			done: function(e, data) {
 				if (data.result.hasOwnProperty('status')) {

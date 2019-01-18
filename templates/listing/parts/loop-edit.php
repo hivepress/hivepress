@@ -6,10 +6,12 @@ if ( $listing_query->have_posts() ) :
 	?>
 	<table>
 		<thead>
-			<th><?php esc_html_e( 'Listing', 'hivepress' ); ?></th>
-			<th></th>
-			<th><?php esc_html_e( 'Date', 'hivepress' ); ?></th>
-			<th></th>
+			<tr>
+				<th><?php esc_html_e( 'Listing', 'hivepress' ); ?></th>
+				<th></th>
+				<th><?php esc_html_e( 'Date', 'hivepress' ); ?></th>
+				<th></th>
+			</tr>
 		</thead>
 		<tbody>
 			<?php
