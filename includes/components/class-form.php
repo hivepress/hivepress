@@ -523,7 +523,7 @@ class Form extends Component {
 				$before_field = '<div class="hp-form__field-wrapper hp-form__field-wrapper--%type_slug%">';
 
 				if ( isset( $field['name'] ) ) {
-					$before_field .= '<label for="%id%" class="hp-form__field-label">%name%</label>';
+					$before_field .= '<label class="hp-form__field-label">%name%</label>';
 				}
 
 				$output .= $this->render_field(

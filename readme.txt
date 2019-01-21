@@ -2,9 +2,9 @@
 Contributors: hivepress
 Tags: directory, business directory, classifieds, classified ads, listings
 Requires at least: 4.7
-Tested up to: 4.9
+Tested up to: 5.0
 Requires PHP: 5.6
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,6 +50,8 @@ HivePress is an extensible, highly customizable, easy-to-use plugin that lets yo
 = Free Add-ons =
 * Favorite Listings
 * Private Messages
+* Reviews
+* Geolocation
 * A few add-ons in progress - stay tuned!
 
 = Easy Customization =

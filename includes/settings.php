@@ -280,9 +280,9 @@ $settings = [
 						'fields' => [
 							'email_user_register'         => [
 								'name'        => esc_html__( 'User Registered', 'hivepress' ),
-								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
+								'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %user_name%, %user_password%.', 'hivepress' ),
 								'type'        => 'textarea',
-								'default'     => hp_sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+								'default'     => hp_sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 								'required'    => true,
 								'order'       => 10,
 							],
@@ -607,9 +607,14 @@ $settings = [
 
 				'areas' => [
 					'sidebar' => [
-						'menu' => [
+						'menu'    => [
 							'path'  => 'user/account/menu',
 							'order' => 10,
+						],
+
+						'widgets' => [
+							'path'  => 'user/account/parts/widgets',
+							'order' => 20,
 						],
 					],
 
@@ -1442,6 +1447,11 @@ $settings = [
 							'path'  => 'listing/archive/filter-form',
 							'order' => 20,
 						],
+
+						'widgets'         => [
+							'path'  => 'listing/archive/parts/widgets',
+							'order' => 30,
+						],
 					],
 
 					'content' => [
@@ -1643,6 +1653,11 @@ $settings = [
 							'path'  => 'listing/content-single/vendor',
 							'order' => 30,
 						],
+
+						'widgets'    => [
+							'path'  => 'listing/content-single/parts/widgets',
+							'order' => 40,
+						],
 					],
 				],
 			],
@@ -1737,6 +1752,11 @@ $settings = [
 						'actions' => [
 							'path'  => 'vendor/content-single/actions',
 							'order' => 40,
+						],
+
+						'widgets' => [
+							'path'  => 'vendor/content-single/parts/widgets',
+							'order' => 50,
 						],
 					],
 

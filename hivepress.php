@@ -2,7 +2,7 @@
 /**
  * Plugin Name: HivePress
  * Description: Multipurpose listing & directory plugin.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: HivePress
  * Author URI: https://hivepress.co/
  * Text Domain: hivepress
