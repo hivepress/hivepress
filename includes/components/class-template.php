@@ -78,12 +78,15 @@ class Template extends Component {
 			// Initialize the current page.
 			add_action( 'parse_query', [ $this, 'init_page' ] );
 
+			// Register templates.
+			add_action( 'get_header', [ $this, 'register_parts' ] );
+			add_action( 'rest_api_init', [ $this, 'register_parts' ] );
+
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_title' ] );
 
-			// Manage templates.
-			add_filter( 'template_include', [ $this, 'set_template' ] );
-			add_action( 'get_header', [ $this, 'register_parts' ] );
+			// Set page template.
+			add_filter( 'template_include', [ $this, 'set_template' ], 99 );
 
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
@@ -431,7 +434,7 @@ class Template extends Component {
 		$template_path = locate_template( 'hivepress/' . $name . '.php' );
 
 		if ( empty( $template_path ) ) {
-			foreach ( hivepress()->get_plugin_paths() as $plugin_path ) {
+			foreach ( array_reverse( hivepress()->get_plugin_paths() ) as $plugin_path ) {
 				if ( file_exists( $plugin_path . '/templates/' . $name . '.php' ) ) {
 					$template_path = $plugin_path . '/templates/' . $name . '.php';
 
@@ -583,7 +586,7 @@ class Template extends Component {
 		$pages = array_filter(
 			$this->pages,
 			function( $page ) use ( $name ) {
-				return hp_get_array_value( $page, 'menu' ) === $name;
+				return hp_get_array_value( $page, 'menu' ) === $name && ( ! isset( $page['capability'] ) || ( ( 'login' === $page['capability'] && ! is_user_logged_in() ) || current_user_can( $page['capability'] ) ) );
 			}
 		);
 
@@ -762,7 +765,7 @@ class Template extends Component {
 	 * @return array
 	 */
 	public function add_theme_class( $classes ) {
-		return array_merge( $classes, [ 'hp-theme--' . get_template() ] );
+		return array_merge( $classes, [ 'hp-content', 'hp-theme--' . get_template() ] );
 	}
 
 	/**

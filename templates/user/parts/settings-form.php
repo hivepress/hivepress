@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 echo hivepress()->form->render_form(
 	'user__update',
 	[
-		'after_submit'  => ! current_user_can( 'manage_options' ) ? '<a href="#hp-user-delete" class="hp-js-link" data-type="popup"><i class="hp-icon fas fa-times"></i>' . esc_html__( 'Delete Account', 'hivepress' ) . '</a>' : '',
+		'after_submit'  => ! current_user_can( 'manage_options' ) ? '<a href="#hp-user-delete" class="hp-js-link" data-type="popup"><i class="hp-icon fas fa-times"></i><span>' . esc_html__( 'Delete Account', 'hivepress' ) . '</span></a>' : '',
 		'attributes'    => [
 			'data-type' => 'ajax',
 		],

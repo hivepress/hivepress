@@ -122,6 +122,7 @@ var hivepress = {
 				image.addClass(name + '-image').slick({
 					slidesToShow: 1,
 					slidesToScroll: 1,
+					adaptiveHeight: true,
 					infinite: false,
 					arrows: false,
 					asNavFor: nav,
@@ -132,8 +133,8 @@ var hivepress = {
 						slidesToShow: Math.round(slider.width() / 125),
 						slidesToScroll: 1,
 						infinite: false,
-						prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="fas fa-chevron-left"></i></a>',
-						nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="fas fa-chevron-right"></i></a>',
+						prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></a>',
+						nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></a>',
 						focusOnSelect: true,
 						asNavFor: image,
 					});
@@ -161,14 +162,19 @@ var hivepress = {
 			var messageContainer = form.find(hivepress.getSelector('messages')),
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
-				submitButton = form.find('input[type="submit"]');
+				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
 				if (submitButton.data('name')) {
 					var name = submitButton.attr('data-name');
 
-					submitButton.attr('data-name', submitButton.val());
-					submitButton.val(name);
+					if (submitButton.is('button')) {
+						submitButton.attr('data-name', submitButton.text());
+						submitButton.text(name);
+					} else {
+						submitButton.attr('data-name', submitButton.val());
+						submitButton.val(name);
+					}
 
 					if (submitButton.attr('data-state') != 'active') {
 						submitButton.attr('data-state', 'active');
@@ -177,6 +183,7 @@ var hivepress = {
 					}
 				} else {
 					submitButton.prop('disabled', true);
+					submitButton.attr('data-state', 'loading');
 				}
 
 				$.post(hpCoreData.ajaxurl, form.serializeObject({}), function(response) {
@@ -189,6 +196,10 @@ var hivepress = {
 							}
 						} else {
 							submitButton.prop('disabled', false);
+
+							if (submitButton.attr('data-state') === 'loading') {
+								submitButton.attr('data-state', '');
+							}
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								grecaptcha.reset(captchaId);
@@ -229,11 +240,15 @@ var hivepress = {
 			formData: form.serializeObject(field.data('json')),
 			start: function() {
 				field.prop('disabled', true);
+
 				selectButton.prop('disabled', true);
+				selectButton.attr('data-state', 'loading');
 			},
 			stop: function() {
 				field.prop('disabled', false);
+
 				selectButton.prop('disabled', false);
+				selectButton.attr('data-state', '');
 			},
 			done: function(e, data) {
 				if (data.result.hasOwnProperty('status')) {
@@ -265,11 +280,26 @@ var hivepress = {
 		});
 	});
 
+	// Select
+	hivepress.getObject('form').find('select').each(function() {
+		var field = $(this),
+			settings = {
+				width: '100%',
+				minimumResultsForSearch: 25,
+			};
+
+		if (field.css('max-width') === 'none') {
+			settings['dropdownAutoWidth'] = true;
+		}
+
+		field.select2(settings);
+	});
+
 	// Sticky
 	$(window).load(function() {
 		hivepress.getObject('sticky').each(function() {
 			var container = $(this),
-				spacing = 30;
+				spacing = 30 + $('#wpadminbar').height();
 
 			container.wrapInner('<div />');
 

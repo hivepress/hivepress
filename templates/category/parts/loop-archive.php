@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! empty( $categories ) ) :
 	?>
-	<div class="hp-categories">
+	<div class="hp-categories hp-content hp-block hp-block--listing-categories">
 		<div class="hp-row">
 			<?php foreach ( $categories as $category ) : ?>
 			<div class="hp-col-sm-<?php echo esc_attr( $column_width ); ?> hp-col-xs-12">

@@ -3,5 +3,5 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="hp-vendor__image">
-	<?php echo get_avatar( $vendor->ID ); ?>
+	<?php echo get_avatar( $vendor->ID, 150 ); ?>
 </div>

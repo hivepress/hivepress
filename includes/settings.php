@@ -172,6 +172,11 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/fontawesome/solid.min.css',
 			],
 
+			'jquery_ui'         => [
+				'handle' => 'jquery-ui',
+				'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
+			],
+
 			'fancybox'          => [
 				'handle' => 'fancybox',
 				'src'    => HP_CORE_URL . '/assets/css/fancybox.min.css',
@@ -182,14 +187,21 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
 			],
 
+			'select2'           => [
+				'handle' => 'select2',
+				'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
+			],
+
 			'grid'              => [
 				'handle' => 'hp-grid',
 				'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
+				'editor' => true,
 			],
 
 			'frontend'          => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
+				'editor' => true,
 			],
 		],
 
@@ -216,6 +228,11 @@ $settings = [
 				'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
 			],
 
+			'select2'          => [
+				'handle' => 'select2',
+				'src'    => HP_CORE_URL . '/assets/js/select2.min.js',
+			],
+
 			'sticky_sidebar'   => [
 				'handle' => 'sticky-sidebar',
 				'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
@@ -224,7 +241,7 @@ $settings = [
 			'frontend'         => [
 				'handle' => 'hp-core',
 				'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+				'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'select2', 'sticky-sidebar' ],
 				'data'   => [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ],
 			],
 		],
@@ -590,9 +607,14 @@ $settings = [
 
 				'areas' => [
 					'sidebar' => [
-						'menu' => [
+						'menu'    => [
 							'path'  => 'user/account/menu',
 							'order' => 10,
+						],
+
+						'widgets' => [
+							'path'  => 'user/account/parts/widgets',
+							'order' => 20,
 						],
 					],
 
@@ -624,7 +646,7 @@ $settings = [
 	'listing'  => [
 
 		// Options.
-		'options'     => [
+		'options'       => [
 			'listings' => [
 				'name'     => esc_html__( 'Listings', 'hivepress' ),
 				'order'    => 10,
@@ -714,7 +736,7 @@ $settings = [
 		],
 
 		// Emails.
-		'emails'      => [
+		'emails'        => [
 			'submit'  => [
 				'subject' => esc_html__( 'Listing Submitted', 'hivepress' ),
 				'message' => hp_sanitize_html( __( 'A new listing "%listing_title%" has been submitted, click on the following link to view it: %listing_url%', 'hivepress' ) ),
@@ -740,7 +762,7 @@ $settings = [
 		],
 
 		// Post types.
-		'post_types'  => [
+		'post_types'    => [
 			'listing'           => [
 				'public'      => true,
 				'has_archive' => true,
@@ -784,7 +806,7 @@ $settings = [
 		],
 
 		// Taxonomies.
-		'taxonomies'  => [
+		'taxonomies'    => [
 			'listing_category' => [
 				'object_type' => 'listing',
 
@@ -793,14 +815,29 @@ $settings = [
 					'rewrite'      => [ 'slug' => 'listing-category' ],
 				],
 			],
+
+			'listing_tag'      => [
+				'object_type' => 'listing',
+
+				'args'        => [
+					'rewrite' => [ 'slug' => 'listing-tag' ],
+				],
+			],
 		],
 
 		// Meta boxes.
-		'meta_boxes'  => [
+		'meta_boxes'    => [
 			'attributes'         => [
 				'title'  => esc_html__( 'Attributes', 'hivepress' ),
 				'screen' => 'listing',
-				'fields' => [],
+				'fields' => [
+					'featured' => [
+						'name'  => esc_html__( 'Featured', 'hivepress' ),
+						'label' => esc_html__( 'Make this listing featured', 'hivepress' ),
+						'type'  => 'checkbox',
+						'order' => 1,
+					],
+				],
 			],
 
 			'attribute_settings' => [
@@ -951,7 +988,7 @@ $settings = [
 		],
 
 		// Forms.
-		'forms'       => [
+		'forms'         => [
 			'search' => [
 				'action'        => home_url(),
 				'method'        => 'GET',
@@ -982,6 +1019,10 @@ $settings = [
 				'parent'        => [ 'search', 'sort' ],
 
 				'fields'        => [
+					's'         => [
+						'type' => 'hidden',
+					],
+
 					'category'  => [
 						'type' => 'hidden',
 					],
@@ -1006,7 +1047,7 @@ $settings = [
 
 				'fields'        => [
 					'sort'      => [
-						'name'    => esc_html__( 'Sort by:', 'hivepress' ),
+						'name'    => esc_html__( 'Sort by', 'hivepress' ),
 						'type'    => 'select',
 						'options' => [],
 						'order'   => 10,
@@ -1151,7 +1192,7 @@ $settings = [
 		],
 
 		// Pages.
-		'pages'       => [
+		'pages'         => [
 			'submission'          => [
 				'regex'      => '^submit-listing/?$',
 				'redirect'   => 'index.php?hp_listing_submission=1',
@@ -1192,7 +1233,7 @@ $settings = [
 				'title'      => esc_html__( 'My Listings', 'hivepress' ),
 				'regex'      => '^account/listings/?$',
 				'redirect'   => 'index.php?hp_listing_edits=1',
-				'capability' => 'read',
+				'capability' => 'edit_posts',
 				'template'   => 'listing_edits',
 				'menu'       => 'user_account',
 				'order'      => 10,
@@ -1214,7 +1255,7 @@ $settings = [
 		],
 
 		// Templates.
-		'templates'   => [
+		'templates'     => [
 			'page'                        => [
 				'areas' => [
 					'menu' => [
@@ -1406,6 +1447,11 @@ $settings = [
 							'path'  => 'listing/archive/filter-form',
 							'order' => 20,
 						],
+
+						'widgets'         => [
+							'path'  => 'listing/archive/parts/widgets',
+							'order' => 30,
+						],
 					],
 
 					'content' => [
@@ -1547,6 +1593,11 @@ $settings = [
 							'path'  => 'listing/parts/description',
 							'order' => 20,
 						],
+
+						'tags'        => [
+							'path'  => 'listing/parts/tags',
+							'order' => 30,
+						],
 					],
 
 					'properties' => [
@@ -1601,6 +1652,11 @@ $settings = [
 						'vendor'     => [
 							'path'  => 'listing/content-single/vendor',
 							'order' => 30,
+						],
+
+						'widgets'    => [
+							'path'  => 'listing/content-single/parts/widgets',
+							'order' => 40,
 						],
 					],
 				],
@@ -1697,11 +1753,16 @@ $settings = [
 							'path'  => 'vendor/content-single/actions',
 							'order' => 40,
 						],
+
+						'widgets' => [
+							'path'  => 'vendor/content-single/parts/widgets',
+							'order' => 50,
+						],
 					],
 
 					'content' => [
 						'title' => [
-							'path'  => 'vendor/content-single/title',
+							'path'  => 'vendor/content-single/parts/title',
 							'order' => 10,
 						],
 
@@ -1715,7 +1776,7 @@ $settings = [
 		],
 
 		// Image sizes.
-		'image_sizes' => [
+		'image_sizes'   => [
 			'medium' => [
 				'width'  => 400,
 				'height' => 267,
@@ -1727,11 +1788,115 @@ $settings = [
 			],
 		],
 
-		// Shortcodes.
-		'shortcodes'  => [
-			'listing_search'     => [],
-			'listing_categories' => [],
-			'listings'           => [],
+		// Editor blocks.
+		'editor_blocks' => [
+			'listing_search'     => [
+				'title'    => esc_html__( 'Listing Search', 'hivepress' ),
+				'category' => 'widgets',
+			],
+
+			'listing_categories' => [
+				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
+				'category' => 'widgets',
+				'fields'   => [
+					'columns' => [
+						'name'    => esc_html__( 'Columns', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 3,
+						'options' => [
+							2 => '2',
+							3 => '3',
+							4 => '4',
+						],
+						'order'   => 10,
+					],
+
+					'number'  => [
+						'name'    => esc_html__( 'Number', 'hivepress' ),
+						'type'    => 'number',
+						'default' => 3,
+						'order'   => 20,
+					],
+
+					'parent'  => [
+						'name'     => esc_html__( 'Parent', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'default'  => '',
+						'order'    => 30,
+					],
+
+					'order'   => [
+						'name'    => esc_html__( 'Order', 'hivepress' ),
+						'type'    => 'select',
+						'default' => '',
+						'options' => [
+							''      => '&mdash;',
+							'title' => esc_html__( 'Title', 'hivepress' ),
+							'count' => esc_html__( 'Count', 'hivepress' ),
+						],
+						'order'   => 40,
+					],
+				],
+			],
+
+			'listings'           => [
+				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'category' => 'widgets',
+				'fields'   => [
+					'columns'  => [
+						'name'    => esc_html__( 'Columns', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 3,
+						'options' => [
+							2 => '2',
+							3 => '3',
+							4 => '4',
+						],
+						'order'   => 10,
+					],
+
+					'number'   => [
+						'name'    => esc_html__( 'Number', 'hivepress' ),
+						'type'    => 'number',
+						'default' => 3,
+						'order'   => 20,
+					],
+
+					'category' => [
+						'name'     => esc_html__( 'Category', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'default'  => '',
+						'order'    => 30,
+					],
+
+					'status'   => [
+						'name'    => esc_html__( 'Status', 'hivepress' ),
+						'type'    => 'select',
+						'default' => '',
+						'options' => [
+							''         => '&mdash;',
+							'featured' => esc_html__( 'Featured', 'hivepress' ),
+						],
+						'order'   => 40,
+					],
+
+					'order'    => [
+						'name'    => esc_html__( 'Order', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 'date',
+						'options' => [
+							'date'   => esc_html__( 'Date', 'hivepress' ),
+							'title'  => esc_html__( 'Title', 'hivepress' ),
+							'random' => esc_html__( 'Random', 'hivepress' ),
+						],
+						'order'   => 50,
+					],
+				],
+			],
 		],
 	],
 ];

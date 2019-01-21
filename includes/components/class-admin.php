@@ -727,6 +727,8 @@ class Admin extends Component {
 				);
 			}
 
+			unset( $addon_status['version'] );
+
 			$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
 			$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
 		}

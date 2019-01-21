@@ -523,7 +523,7 @@ class Form extends Component {
 				$before_field = '<div class="hp-form__field-wrapper hp-form__field-wrapper--%type_slug%">';
 
 				if ( isset( $field['name'] ) ) {
-					$before_field .= '<label for="%id%" class="hp-form__field-label">%name%</label>';
+					$before_field .= '<label class="hp-form__field-label">%name%</label>';
 				}
 
 				$output .= $this->render_field(
@@ -736,7 +736,18 @@ class Form extends Component {
 				);
 
 				if ( ! empty( $value ) ) {
-					$value = [ reset( $value ), end( $value ) ];
+					$min_value = reset( $value );
+					$max_value = end( $value );
+
+					if ( isset( $args['min_value'] ) && $min_value < $args['min_value'] ) {
+						$min_value = $args['min_value'];
+					}
+
+					if ( isset( $args['max_value'] ) && $max_value > $args['max_value'] ) {
+						$max_value = $args['max_value'];
+					}
+
+					$value = [ $min_value, $max_value ];
 				} else {
 					$value = [ '', '' ];
 				}
@@ -1003,7 +1014,7 @@ class Form extends Component {
 				$output .= '<div ' . $attributes . '>';
 
 				foreach ( $args['options'] as $option_id => $option_label ) {
-					$output .= '<label for="' . esc_attr( $args['id'] . '_' . $option_id ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] . '_' . $option_id ) . '" value="' . esc_attr( $option_id ) . '" ' . checked( $value, $option_id, false ) . ' ' . $attributes . '>' . esc_html( $option_label ) . '</label>';
+					$output .= '<label for="' . esc_attr( $args['id'] . '_' . $option_id ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] . '_' . $option_id ) . '" value="' . esc_attr( $option_id ) . '" ' . checked( $value, $option_id, false ) . ' ' . $attributes . '><span>' . esc_html( $option_label ) . '</span></label>';
 				}
 
 				$output .= '</div>';
@@ -1012,7 +1023,7 @@ class Form extends Component {
 
 			// Checkbox.
 			case 'checkbox':
-				$output .= '<label for="' . esc_attr( $args['id'] ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( hp_get_array_value( $args, 'value', '1' ) ) . '" ' . checked( $value, 1, false ) . ' ' . $attributes . '>' . hp_sanitize_html( hp_get_array_value( $args, 'label' ) ) . '</label>';
+				$output .= '<label for="' . esc_attr( $args['id'] ) . '"><input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( hp_get_array_value( $args, 'value', '1' ) ) . '" ' . checked( $value, 1, false ) . ' ' . $attributes . '><span>' . hp_sanitize_html( hp_get_array_value( $args, 'label' ) ) . '</span></label>';
 
 				break;
 
@@ -1023,7 +1034,7 @@ class Form extends Component {
 				foreach ( $args['options'] as $option_id => $option_label ) {
 					$option_value = null;
 
-					if ( in_array( $option_id, $value, true ) ) {
+					if ( in_array( (string) $option_id, $value, true ) ) {
 						$option_value = '1';
 					}
 
@@ -1103,7 +1114,7 @@ class Form extends Component {
 						$output .= $this->render_link(
 							'form__delete_file',
 							[
-								'text'       => '<i class="fas fa-times"></i>',
+								'text'       => '<i class="hp-icon fas fa-times"></i>',
 								'attributes' => [
 									'data-type' => 'remove',
 								],
@@ -1196,14 +1207,19 @@ class Form extends Component {
 
 			// Submit.
 			case 'submit':
-				$output .= '<input type="' . esc_attr( $args['type'] ) . '" value="' . esc_attr( $args['name'] ) . '" ' . $attributes . '>';
+				$output .= '<button type="' . esc_attr( $args['type'] ) . '" ' . $attributes . '>' . esc_html( $args['name'] ) . '</button>';
+
+				break;
+
+			// Search.
+			case 'search':
+				$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $value ) . '" autocomplete="off" ' . $attributes . '>';
 
 				break;
 
 			// Other types.
 			case 'text':
 			case 'email':
-			case 'search':
 			case 'password':
 			case 'file':
 				$output .= '<input type="' . esc_attr( $args['type'] ) . '" name="' . esc_attr( $field_id ) . '" id="' . esc_attr( $args['id'] ) . '" value="' . esc_attr( $value ) . '" ' . $attributes . '>';
@@ -1234,7 +1250,7 @@ class Form extends Component {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
-			if ( $args['type'] === 'select' ) {
+			if ( 'select' === $args['type'] ) {
 				$options = [ '' => '&mdash;' ];
 			}
 
@@ -1361,7 +1377,7 @@ class Form extends Component {
 					// Validate quantity.
 					$file_count = hp_get_array_value( $field, 'multiple', false ) ? hp_get_array_value( $field, 'max_files', 10 ) : 2;
 
-					if ( count( $attachment_ids ) >= $file_count ) {
+					if ( count( $attachment_ids ) >= $file_count && ! current_user_can( 'manage_options' ) ) {
 						$this->add_error( esc_html__( 'Maximum number of files exceeded.', 'hivepress' ) );
 					} else {
 
@@ -1420,7 +1436,7 @@ class Form extends Component {
 								$output .= $this->render_link(
 									'form__delete_file',
 									[
-										'text'       => '<i class="fas fa-times"></i>',
+										'text'       => '<i class="hp-icon fas fa-times"></i>',
 										'attributes' => [
 											'data-type' => 'remove',
 										],

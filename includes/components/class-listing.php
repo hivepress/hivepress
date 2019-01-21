@@ -19,37 +19,38 @@ class Listing extends Entity {
 	public function __construct( $settings ) {
 		parent::__construct( $settings );
 
-		// Render shortcodes.
-		add_filter( 'hivepress/shortcode/shortcode_html/listing_search', [ $this, 'render_search_shortcode' ], 10, 2 );
-		add_filter( 'hivepress/shortcode/shortcode_html/listings', [ $this, 'render_listings_shortcode' ], 10, 2 );
-		add_filter( 'hivepress/shortcode/shortcode_html/listing_categories', [ $this, 'render_categories_shortcode' ], 10, 2 );
+		// Render editor blocks.
+		add_filter( 'hivepress/editor/block_html/listing_search', [ $this, 'render_search_block' ], 10, 2 );
+		add_filter( 'hivepress/editor/block_html/listings', [ $this, 'render_listings_block' ], 10, 2 );
+		add_filter( 'hivepress/editor/block_html/listing_categories', [ $this, 'render_categories_block' ], 10, 2 );
 	}
 
 	/**
-	 * Renders search shortcode.
+	 * Renders search block.
 	 *
 	 * @param string $output
 	 * @param array  $atts
 	 * @return string
 	 */
-	public function render_search_shortcode( $output, $atts ) {
+	public function render_search_block( $output, $atts ) {
 		return hivepress()->template->render_part( 'listing/parts/search-form' );
 	}
 
 	/**
-	 * Renders categories shortcode.
+	 * Renders listings block.
 	 *
 	 * @param string $output
 	 * @param array  $atts
 	 * @return string
 	 */
-	public function render_listings_shortcode( $output, $atts ) {
+	public function render_listings_block( $output, $atts ) {
 		$atts = shortcode_atts(
 			[
 				'category' => '',
 				'number'   => 3,
 				'columns'  => 3,
 				'order'    => '',
+				'status'   => '',
 			],
 			$atts
 		);
@@ -85,6 +86,12 @@ class Listing extends Entity {
 			$query_args['orderby'] = 'rand';
 		}
 
+		// Get status.
+		if ( 'featured' === $atts['status'] ) {
+			$query_args['meta_key']   = hp_prefix( $atts['status'] );
+			$query_args['meta_value'] = '1';
+		}
+
 		// Query listings.
 		$query = new \WP_Query( $query_args );
 
@@ -102,13 +109,13 @@ class Listing extends Entity {
 	}
 
 	/**
-	 * Renders categories shortcode.
+	 * Renders categories block.
 	 *
 	 * @param string $output
 	 * @param array  $atts
 	 * @return string
 	 */
-	public function render_categories_shortcode( $output, $atts ) {
+	public function render_categories_block( $output, $atts ) {
 		$atts = shortcode_atts(
 			[
 				'parent'  => '',
@@ -136,7 +143,7 @@ class Listing extends Entity {
 		];
 
 		// Get order.
-		if ( 'name' === $atts['order'] ) {
+		if ( 'title' === $atts['order'] ) {
 			$category_args['orderby'] = 'name';
 		} elseif ( 'count' === $atts['order'] ) {
 			$category_args['orderby'] = 'count';

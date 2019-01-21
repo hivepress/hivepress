@@ -288,12 +288,16 @@ function hp_get_remote_json( $url, $headers = [] ) {
  */
 function hp_get_post_id( $args ) {
 	$args = array_merge(
+		$args,
 		[
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
-		],
-		$args
+		]
 	);
+
+	if ( hp_get_array_value( $args, 'post_status' ) === 'any' ) {
+		$args['post_status'] = [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ];
+	}
 
 	$posts = get_posts( $args );
 

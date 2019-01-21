@@ -175,21 +175,29 @@ Mixins
 			}
 		}
 
-		.g-recaptcha {
-			margin-bottom: 1.5rem;
-		}
-
 		&__submit-wrapper {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+		}
+
+		&__submit {
+			white-space: nowrap;
+		}
+
+		.g-recaptcha {
+			margin-bottom: 1.5rem;
 		}
 	}
 	/*--------------------------------------------------------------
 	Icons
 	--------------------------------------------------------------*/
 	&-icon {
-		margin-right: 0.5rem;
+		font-size:16px;
+
+		&:not(:last-child) {
+			margin-right: 0.5rem;
+		}
 	}
 	/*--------------------------------------------------------------
 	Popups
@@ -268,13 +276,15 @@ Mixins
 	Category
 	--------------------------------------------------------------*/
 	&-categories {
-		&:last-child {
-			margin-bottom: -2rem;
-		}
+		margin-bottom: -2rem;
 	}
 
 	&-category {
 		margin-bottom: 2rem;
+
+		&__image {
+			.image-wrapper;
+		}
 
 		&__count,
 		&__description,
@@ -364,20 +374,12 @@ Mixins
 			margin: 0 0.5rem 0 0;
 			white-space: nowrap;
 		}
-
-		&--listing-sort &__field--select {
-			line-height: 1.5rem;
-			height: 1.5rem;
-			padding: 0 0.25rem;
-		}
 	}
 	/*--------------------------------------------------------------
 	Listing
 	--------------------------------------------------------------*/
 	&-listings {
-		&:last-child {
-			margin-bottom: -2rem;
-		}
+		margin-bottom: -2rem;
 	}
 
 	&-listing {
@@ -541,6 +543,10 @@ Mixins
 			&:not(:first-child) {
 				margin-left: 1rem;
 			}
+
+			> i {
+				display:block;
+			}
 		}
 
 		&--single &__action {
@@ -562,6 +568,10 @@ Mixins
 	/*--------------------------------------------------------------
 	Vendor
 	--------------------------------------------------------------*/
+	&-vendors {
+		margin-bottom: -2rem;
+	}
+
 	&-vendor {
 		&--archive {
 			display: flex;
