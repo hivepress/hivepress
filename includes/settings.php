@@ -1014,6 +1014,10 @@ $settings = [
 				'parent'        => [ 'search', 'sort' ],
 
 				'fields'        => [
+					's'         => [
+						'type' => 'hidden',
+					],
+
 					'category'  => [
 						'type' => 'hidden',
 					],
