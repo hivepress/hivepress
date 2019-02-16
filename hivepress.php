@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/includes/autoload.php';
 
 /**
- * Returns the main plugin instance.
+ * Returns the main HivePress instance.
  *
  * @return HivePress\Core
  */
@@ -26,5 +26,5 @@ function hivepress() {
 	return HivePress\Core::instance();
 }
 
-// Initialize plugin.
+// Initialize HivePress.
 hivepress();

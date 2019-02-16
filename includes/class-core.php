@@ -29,6 +29,13 @@ final class Core {
 	private function __wakeup() {}
 
 	/**
+	 * Class constructor.
+	 */
+	private function __construct() {
+		// todo.
+	}
+
+	/**
 	 * Ensures only one plugin instance is loaded.
 	 *
 	 * @see hivepress()
