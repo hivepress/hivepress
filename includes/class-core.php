@@ -24,6 +24,13 @@ final class Core {
 	 */
 	private static $instance;
 
+	/**
+	 * Array of component instances.
+	 *
+	 * @var array
+	 */
+	private $components = [];
+
 	// Forbid cloning and duplicating instances.
 	private function __clone() {}
 	private function __wakeup() {}
@@ -33,6 +40,18 @@ final class Core {
 	 */
 	private function __construct() {
 		// todo.
+		add_action( 'plugins_loaded', [ $this, 'setup' ] );
+	}
+
+	// todo.
+	public function setup() {
+		$dirs = [ 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress' ];
+
+		foreach ( $dirs as $dir ) {
+			foreach ( glob( $dir . '/includes/components/*.php' ) as $filepath ) {
+
+			}
+		}
 	}
 
 	/**

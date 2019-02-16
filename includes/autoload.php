@@ -11,15 +11,15 @@ defined( 'ABSPATH' ) || exit;
 // Register autoloading function.
 spl_autoload_register(
 	function ( $class ) {
-		$dirs = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
+		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
 
-		if ( count( $dirs ) > 1 && reset( $dirs ) === 'hivepress' ) {
-			$filename = 'class-' . end( $dirs ) . '.php';
+		if ( count( $parts ) > 1 && reset( $parts ) === 'hivepress' ) {
+			$filename = 'class-' . end( $parts ) . '.php';
 
-			array_shift( $dirs );
-			array_pop( $dirs );
+			array_shift( $parts );
+			array_pop( $parts );
 
-			$filepath = rtrim( __DIR__ . '/' . implode( '/', $dirs ), '/' ) . '/' . $filename;
+			$filepath = rtrim( __DIR__ . '/' . implode( '/', $parts ), '/' ) . '/' . $filename;
 
 			if ( file_exists( $filepath ) ) {
 				require_once $filepath;

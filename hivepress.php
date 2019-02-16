@@ -14,7 +14,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Require autoloading functions.
+// Include autoloading functions.
 require_once __DIR__ . '/includes/autoload.php';
 
 /**
