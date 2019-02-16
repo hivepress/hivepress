@@ -13,3 +13,18 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+// Require autoloading functions.
+require_once __DIR__ . '/includes/autoload.php';
+
+/**
+ * Returns the main plugin instance.
+ *
+ * @return HivePress\Core
+ */
+function hivepress() {
+	return HivePress\Core::instance();
+}
+
+// Initialize plugin.
+hivepress();
