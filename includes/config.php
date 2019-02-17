@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 return [
 
 	// Options.
-	'options'    => [
+	'options'     => [
 		'listings'     => [
 			'title'    => esc_html__( 'Listings', 'hivepress' ),
 			'order'    => 10,
@@ -26,7 +26,7 @@ return [
 	],
 
 	// Post types.
-	'post_types' => [
+	'post_types'  => [
 		'listing'           => [
 			'public'      => true,
 			'has_archive' => true,
@@ -70,7 +70,7 @@ return [
 	],
 
 	// Taxonomies.
-	'taxonomies' => [
+	'taxonomies'  => [
 		'listing_category' => [
 			'object_type' => 'listing',
 
@@ -82,10 +82,83 @@ return [
 	],
 
 	// Meta boxes.
-	'meta_boxes' => [
+	'meta_boxes'  => [
 		'listing_attributes' => [
 			'title'  => esc_html__( 'Attributes', 'hivepress' ),
 			'screen' => 'listing',
+		],
+	],
+
+	// Image sizes.
+	'image_sizes' => [],
+
+	// Styles.
+	'styles'      => [
+		'core_backend'      => [
+			'handle' => 'hp-core-backend',
+			'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
+			'admin'  => true,
+		],
+
+		'core_frontend'     => [
+			'handle' => 'hp-core-frontend',
+			'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
+		],
+
+		'fontawesome'       => [
+			'handle' => 'fontawesome',
+			'src'    => HP_CORE_URL . '/assets/css/fontawesome.min.css',
+		],
+
+		'fontawesome_solid' => [
+			'handle' => 'fontawesome-solid',
+			'src'    => HP_CORE_URL . '/assets/css/fontawesome-solid.min.css',
+		],
+
+		'fancybox'          => [
+			'handle' => 'fancybox',
+			'src'    => HP_CORE_URL . '/assets/css/fancybox.min.css',
+		],
+
+		'slick'             => [
+			'handle' => 'slick',
+			'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
+		],
+	],
+
+	// Scripts.
+	'scripts'     => [
+		'core_backend'     => [
+			'handle' => 'hp-core-backend',
+			'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
+			'deps'   => [ 'jquery' ],
+			'admin'  => true,
+		],
+
+		'iframe_transport' => [
+			'handle' => 'iframe-transport',
+			'src'    => HP_CORE_URL . '/assets/js/jquery.iframe-transport.min.js',
+		],
+
+		'file_upload'      => [
+			'handle' => 'fileupload',
+			'src'    => HP_CORE_URL . '/assets/js/jquery.fileupload.min.js',
+			'deps'   => [ 'jquery-ui-widget', 'iframe-transport' ],
+		],
+
+		'fancybox'         => [
+			'handle' => 'fancybox',
+			'src'    => HP_CORE_URL . '/assets/js/jquery.fancybox.min.js',
+		],
+
+		'slick'            => [
+			'handle' => 'slick',
+			'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
+		],
+
+		'sticky_sidebar'   => [
+			'handle' => 'sticky-sidebar',
+			'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
 		],
 	],
 ];

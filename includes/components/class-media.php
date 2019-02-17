@@ -1,0 +1,94 @@
+<?php
+/**
+ * Media component.
+ *
+ * @package HivePress\Components
+ */
+
+namespace HivePress\Components;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Media component class.
+ *
+ * @class Media
+ */
+final class Media {
+
+	/**
+	 * Class constructor.
+	 */
+	public function __construct() {
+
+		// Add image sizes.
+		add_action( 'init', [ $this, 'add_image_sizes' ] );
+
+		// Enqueue styles.
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+
+		// Enqueue scripts.
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	}
+
+	/**
+	 * Adds image sizes.
+	 */
+	public function add_image_sizes() {
+		foreach ( hivepress()->get_config( 'image_sizes' ) as $image_size => $image_size_args ) {
+			add_image_size( hp_prefix( $image_size ), $image_size_args['width'], hp_get_array_value( $image_size_args, 'height', 9999 ), hp_get_array_value( $image_size_args, 'crop', false ) );
+		}
+	}
+
+	/**
+	 * Enqueues styles.
+	 */
+	public function enqueue_styles() {
+
+		// Get styles.
+		$styles = hivepress()->get_config( 'styles' );
+
+		// Filter styles.
+		$styles = array_filter(
+			$styles,
+			function( $style ) {
+				return ! is_admin() xor hp_get_array_value( $style, 'admin', false );
+			}
+		);
+
+		// Enqueue styles.
+		foreach ( $styles as $style ) {
+			wp_enqueue_style( $style['handle'], $style['src'], hp_get_array_value( $style, 'deps', [] ), hp_get_array_value( $style, 'version', HP_CORE_VERSION ) );
+		}
+	}
+
+	/**
+	 * Enqueues scripts.
+	 */
+	public function enqueue_scripts() {
+
+		// Get scripts.
+		$scripts = hivepress()->get_config( 'scripts' );
+
+		// Filter scripts.
+		$scripts = array_filter(
+			$scripts,
+			function( $script ) {
+				return ! is_admin() xor hp_get_array_value( $script, 'admin', false );
+			}
+		);
+
+		// Enqueue scripts.
+		foreach ( $scripts as $script ) {
+			wp_enqueue_script( $script['handle'], $script['src'], hp_get_array_value( $script, 'deps', [] ), hp_get_array_value( $script, 'version', HP_CORE_VERSION ), hp_get_array_value( $script, 'in_footer', true ) );
+
+			// Add script data.
+			if ( isset( $script['data'] ) ) {
+				wp_localize_script( $script['handle'], lcfirst( str_replace( ' ', '', ucwords( str_replace( '-', ' ', $script['handle'] ) ) ) ) . 'Data', $script['data'] );
+			}
+		}
+	}
+}
