@@ -1,0 +1,118 @@
+<?php
+/**
+ * Helper functions.
+ *
+ * @package HivePress
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Adds HivePress prefix.
+ *
+ * @param mixed $names Names to prefix.
+ * @return mixed
+ */
+function hp_prefix( $names ) {
+	$prefixed = '';
+
+	if ( is_array( $names ) ) {
+		$prefixed = array_map(
+			function( $name ) {
+				return 'hp_' . $name;
+			},
+			$names
+		);
+	} else {
+		$prefixed = 'hp_' . $names;
+	}
+
+	return $prefixed;
+}
+
+/**
+ * Removes HivePress prefix.
+ *
+ * @param mixed $names Names to unprefix.
+ * @return mixed
+ */
+function hp_unprefix( $names ) {
+	$unprefixed = '';
+
+	if ( is_array( $names ) ) {
+		$unprefixed = array_map(
+			function( $name ) {
+				return str_replace( 'hp_', '', $name );
+			},
+			$names
+		);
+	} else {
+		$unprefixed = str_replace( 'hp_', '', $names );
+	}
+
+	return $unprefixed;
+}
+
+/**
+ * Gets array item value by key.
+ *
+ * @param array  $array Source array.
+ * @param string $key Key to search.
+ * @param mixed  $default Default value.
+ * @return mixed
+ */
+function hp_get_array_value( $array, $key, $default = null ) {
+	$value = $default;
+
+	if ( is_array( $array ) && isset( $array[ $key ] ) ) {
+		$value = $array[ $key ];
+	}
+
+	return $value;
+}
+
+/**
+ * Sorts array by custom order.
+ *
+ * @param array $array Source array.
+ * @return array
+ */
+function hp_sort_array( $array ) {
+	$sorted = [];
+
+	foreach ( $array as $key => $value ) {
+		if ( is_array( $value ) ) {
+			if ( ! isset( $value['order'] ) ) {
+				$value['order'] = 0;
+			}
+
+			$sorted[ $key ] = $value;
+		}
+	}
+
+	$sorted = wp_list_sort( $sorted, 'order', 'ASC', true );
+
+	return $sorted;
+}
+
+/**
+ * Sanitizes HTML.
+ *
+ * @param string $html HTML to sanitize.
+ * @return string
+ */
+function hp_sanitize_html( $html ) {
+	$tags = [
+		'strong' => [],
+		'a'      => [
+			'href'   => [],
+			'target' => [],
+		],
+		'i'      => [
+			'class' => [],
+		],
+	];
+
+	return wp_kses( $html, $tags );
+}
