@@ -387,7 +387,7 @@ final class Admin {
 			// Render fields.
 			$output .= '<table class="form-table hp-form">';
 
-			foreach ( $meta_box['fields'] as $field_id => $field ) {
+			foreach ( $meta_box['fields'] as $field_id => $field_args ) {
 
 				// Get field value.
 				$value = get_post_meta( $post->ID, hp_prefix( $field_id ), true );
@@ -396,7 +396,25 @@ final class Admin {
 					$value = null;
 				}
 
-				// todo render field.
+				// Create field.
+				// todo.
+				$field = new \HivePress\Fields\Number();
+
+				if ( 'hidden' === $field_args['type'] ) {
+
+					// Render field.
+					$output .= $field->render();
+				} else {
+					$output .= '<tr>';
+
+					// Render field label.
+					$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . '</th>';
+
+					// Render field.
+					$output .= '<td>' . $field->render() . '</td>';
+
+					$output .= '</tr>';
+				}
 			}
 
 			$output .= '</table>';

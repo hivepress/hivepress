@@ -86,6 +86,13 @@ return [
 		'listing_attributes' => [
 			'title'  => esc_html__( 'Attributes', 'hivepress' ),
 			'screen' => 'listing',
+
+			'fields' => [
+				'todo' => [
+					'label' => 'todo',
+					'type'  => 'number',
+				],
+			],
 		],
 	],
 
