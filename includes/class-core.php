@@ -63,7 +63,7 @@ final class Core {
 
 		define( 'HP_CORE_NAME', 'HivePress' );
 		define( 'HP_CORE_PATH', plugin_dir_path( 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\hivepress.php' ) );
-		define( 'HP_CORE_URL', plugin_dir_url( 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\hivepress.php' ) );
+		define( 'HP_CORE_URL', rtrim( plugin_dir_url( 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\hivepress.php' ), '/') );
 		define('HP_CORE_VERSION', '1.1.1');
 
 		$this->config=include 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\config.php';

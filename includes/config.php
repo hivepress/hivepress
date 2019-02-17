@@ -94,17 +94,6 @@ return [
 
 	// Styles.
 	'styles'      => [
-		'core_backend'      => [
-			'handle' => 'hp-core-backend',
-			'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
-			'admin'  => true,
-		],
-
-		'core_frontend'     => [
-			'handle' => 'hp-core-frontend',
-			'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
-		],
-
 		'fontawesome'       => [
 			'handle' => 'fontawesome',
 			'src'    => HP_CORE_URL . '/assets/css/fontawesome.min.css',
@@ -124,17 +113,26 @@ return [
 			'handle' => 'slick',
 			'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
 		],
+
+		'jquery_ui'         => [
+			'handle' => 'jquery-ui',
+			'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
+		],
+
+		'core_frontend'     => [
+			'handle' => 'hp-core-frontend',
+			'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
+		],
+
+		'core_backend'      => [
+			'handle' => 'hp-core-backend',
+			'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
+			'admin'  => true,
+		],
 	],
 
 	// Scripts.
 	'scripts'     => [
-		'core_backend'     => [
-			'handle' => 'hp-core-backend',
-			'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
-			'deps'   => [ 'jquery' ],
-			'admin'  => true,
-		],
-
 		'iframe_transport' => [
 			'handle' => 'iframe-transport',
 			'src'    => HP_CORE_URL . '/assets/js/jquery.iframe-transport.min.js',
@@ -159,6 +157,19 @@ return [
 		'sticky_sidebar'   => [
 			'handle' => 'sticky-sidebar',
 			'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
+		],
+
+		'core_frontend'    => [
+			'handle' => 'hp-core-frontend',
+			'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
+			'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		],
+
+		'core_backend'     => [
+			'handle' => 'hp-core-backend',
+			'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
+			'deps'   => [ 'jquery' ],
+			'admin'  => true,
 		],
 	],
 ];
