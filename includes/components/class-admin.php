@@ -41,6 +41,9 @@ final class Admin {
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+
+			// Render notices.
+			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
 	}
 
@@ -122,9 +125,9 @@ final class Admin {
 	 * @param array  $args Function arguments.
 	 */
 	public function __call( $name, $args ) {
-
-		// Render admin page.
 		if ( strpos( $name, 'render_' ) === 0 ) {
+
+			// Render admin page.
 			$template_name = str_replace( '_', '-', str_replace( 'render_', '', $name ) );
 			$template_path = HP_CORE_PATH . '/templates/admin/' . $template_name . '.php';
 
@@ -140,6 +143,10 @@ final class Admin {
 
 				include $template_path;
 			}
+		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
+
+			// Validate setting.
+			return $this->validate_setting( str_replace( 'validate_', '', $name ), $args[0] );
 		}
 	}
 
@@ -172,7 +179,7 @@ final class Admin {
 						$option_id         = hp_prefix( $option_id );
 						$option['default'] = get_option( $option_id );
 
-						add_settings_field( $option_id, esc_html( $option['label'] ), [ $this, 'render_settings_field' ], 'hp_settings', $section_id, array_merge( $option, [ 'name' => $option_id ] ) );
+						add_settings_field( $option_id, esc_html( $option['label'] ) . $this->render_tooltip( hp_get_array_value( $option, 'description' ) ), [ $this, 'render_settings_field' ], 'hp_settings', $section_id, array_merge( $option, [ 'name' => $option_id ] ) );
 						register_setting( 'hp_settings', $option_id, [ $this, 'validate_' . hp_unprefix( $option_id ) ] );
 					}
 				}
@@ -208,6 +215,8 @@ final class Admin {
 
 		// Validate setting.
 		if ( false !== $setting ) {
+
+			// todo check below.
 			$setting_id = hp_prefix( $id );
 
 			$value = hivepress()->form->validate_field( $setting, hp_get_array_value( $_POST, $setting_id ) );
@@ -549,7 +558,7 @@ final class Admin {
 					$output .= '<tr>';
 
 					// Render field label.
-					$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . '</th>';
+					$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . $this->render_tooltip( hp_get_array_value( $field, 'description' ) ) . '</th>';
 
 					// Render field.
 					$output .= '<td>' . $field->render() . '</td>';
@@ -562,5 +571,32 @@ final class Admin {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Renders notices.
+	 */
+	public function render_notices() {
+		global $pagenow;
+
+		if ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) {
+			settings_errors();
+		}
+	}
+
+	/**
+	 * Renders tooltip.
+	 *
+	 * @param string $text Tooltip text.
+	 * @return string
+	 */
+	private function render_tooltip( $text ) {
+		$output = '';
+
+		if ( ! empty( $text ) ) {
+			$output .= '<div class="hp-tooltip"><span class="hp-tooltip__icon dashicons dashicons-editor-help"></span><div class="hp-tooltip__text">' . esc_html( $text ) . '</div></div>';
+		}
+
+		return $output;
 	}
 }
