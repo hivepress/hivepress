@@ -18,6 +18,39 @@ defined( 'ABSPATH' ) || exit;
 abstract class Field {
 
 	/**
+	 * Field name.
+	 *
+	 * @var string
+	 */
+	protected $name;
+
+	/**
+	 * Field label.
+	 *
+	 * @var string
+	 */
+	protected $label;
+
+	/**
+	 * Field value.
+	 *
+	 * @var mixed
+	 */
+	protected $value;
+
+	/**
+	 * Field attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
+	 * Sanitizes field value.
+	 */
+	abstract protected function sanitize();
+
+	/**
 	 * Renders field HTML.
 	 *
 	 * @return string

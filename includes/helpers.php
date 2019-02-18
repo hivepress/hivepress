@@ -97,6 +97,24 @@ function hp_sort_array( $array ) {
 }
 
 /**
+ * Renders HTML attributes.
+ *
+ * @param array $atts Array of attributes.
+ * @return string
+ */
+function hp_html_attributes( $atts ) {
+	$output = '';
+
+	foreach ( $atts as $att_name => $att_value ) {
+		if ( ! is_null( $att_value ) ) {
+			$output .= esc_html( $att_name ) . '="' . esc_attr( trim( $att_value ) ) . '" ';
+		}
+	}
+
+	return trim( $output );
+}
+
+/**
  * Sanitizes HTML.
  *
  * @param string $html HTML to sanitize.
