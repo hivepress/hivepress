@@ -1,6 +1,6 @@
 <?php
 /**
- * Search field.
+ * URL field.
  *
  * @package HivePress\Fields
  */
@@ -11,8 +11,8 @@ namespace HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Search field class.
+ * URL field class.
  *
- * @class Search
+ * @class URL
  */
-class Search extends Text {}
+class URL extends Text {}

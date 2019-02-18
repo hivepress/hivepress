@@ -355,9 +355,18 @@ final class Admin {
 				$screen = hp_prefix( $meta_box['screen'] );
 
 				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen, true ) ) ) {
-					foreach ( $meta_box['fields'] as $field_id => $field ) {
+					foreach ( $meta_box['fields'] as $field_id => $field_args ) {
 
-						// todo validate and save.
+						// Get field class.
+						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+						// Create field.
+						$field = new $field_class( $field_args );
+
+						// todo pass value.
+						if ( $field->validate() ) {
+							update_post_meta( $post_id, hp_prefix( $field_id ), $field->get_value() );
+						}
 					}
 				}
 			}
@@ -396,9 +405,11 @@ final class Admin {
 					$value = null;
 				}
 
+				// Get field class.
+				$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
 				// Create field.
-				// todo.
-				$field = new \HivePress\Fields\Number();
+				$field = new $field_class( $field_args );
 
 				if ( 'hidden' === $field_args['type'] ) {
 

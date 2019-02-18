@@ -15,7 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Email
  */
-class Email extends Field {
+class Email extends Text {
+
+	/**
+	 * Maximum length.
+	 *
+	 * @var int
+	 */
+	protected $max_length = 254;
 
 	/**
 	 * Sanitizes field value.
@@ -27,11 +34,13 @@ class Email extends Field {
 	}
 
 	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
+	 * Validate field value.
 	 */
-	public function render() {
-		return '<input type="email" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
+	protected function validate() {
+		if ( ! is_email( $value ) ) {
+			$this->errors[] = 'todo';
+		}
+
+		return parent::validate();
 	}
 }

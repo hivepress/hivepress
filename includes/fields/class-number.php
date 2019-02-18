@@ -25,12 +25,41 @@ class Number extends Field {
 	protected $decimals = 0;
 
 	/**
+	 * Minimum value.
+	 *
+	 * @var int
+	 */
+	protected $min_value;
+
+	/**
+	 * Maximum value.
+	 *
+	 * @var int
+	 */
+	protected $max_value;
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
 			$this->value = round( floatval( $this->value ), $this->decimals );
 		}
+	}
+
+	/**
+	 * Validate field value.
+	 */
+	protected function validate() {
+		if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
+			$this->errors[] = 'todo';
+		}
+
+		if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
+			$this->errors[] = 'todo';
+		}
+
+		return parent::validate();
 	}
 
 	/**
@@ -43,6 +72,6 @@ class Number extends Field {
 		// Get step.
 		$step = 1 / pow( 10, $this->decimals );
 
-		return '<input type="number" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" step="' . esc_attr( $step ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" step="' . esc_attr( $step ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
 	}
 }

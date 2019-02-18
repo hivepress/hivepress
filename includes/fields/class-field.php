@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 abstract class Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected $type;
+
+	/**
 	 * Field name.
 	 *
 	 * @var string
@@ -39,6 +46,20 @@ abstract class Field {
 	protected $value;
 
 	/**
+	 * Value requirement.
+	 *
+	 * @var bool
+	 */
+	protected $required = false;
+
+	/**
+	 * Validation errors.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * Field attributes.
 	 *
 	 * @var array
@@ -46,9 +67,38 @@ abstract class Field {
 	protected $attributes = [];
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $props Field properties.
+	 */
+	public function __construct( $props ) {
+
+		// Set type.
+		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+
+		// Set properties.
+		foreach ( $props as $prop_name => $prop_value ) {
+			if ( property_exists( $this, $prop_name ) ) {
+				$this->$prop_name = $prop_value;
+			}
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	abstract protected function sanitize();
+
+	/**
+	 * Validates field value.
+	 */
+	protected function validate() {
+		if ( $this->required && is_null( $this->value ) ) {
+			$this->errors[] = 'todo';
+		}
+
+		return empty( $this->errors );
+	}
 
 	/**
 	 * Renders field HTML.

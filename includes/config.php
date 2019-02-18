@@ -15,7 +15,23 @@ return [
 		'listings'     => [
 			'title'    => esc_html__( 'Listings', 'hivepress' ),
 			'order'    => 10,
-			'sections' => [],
+
+			'sections' => [
+				'display' => [
+					'title'  => esc_html__( 'Display', 'hivepress' ),
+					'order'  => 10,
+
+					'fields' => [
+						'listings_per_page' => [
+							'type'     => 'number',
+							'label'    => esc_html__( 'Listings per Page', 'hivepress' ),
+							'default'  => 10,
+							'required' => true,
+							'order'    => 10,
+						],
+					],
+				],
+			],
 		],
 
 		'integrations' => [
@@ -86,13 +102,7 @@ return [
 		'listing_attributes' => [
 			'title'  => esc_html__( 'Attributes', 'hivepress' ),
 			'screen' => 'listing',
-
-			'fields' => [
-				'todo' => [
-					'label' => 'todo',
-					'type'  => 'number',
-				],
-			],
+			'fields' => [],
 		],
 	],
 
