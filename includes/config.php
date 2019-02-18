@@ -23,11 +23,12 @@ return [
 
 					'fields' => [
 						'listings_per_page' => [
-							'type'     => 'number',
-							'label'    => esc_html__( 'Listings per Page', 'hivepress' ),
-							'default'  => 10,
-							'required' => true,
-							'order'    => 10,
+							'type'      => 'number',
+							'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
+							'default'   => 10,
+							'min_value' => 1,
+							'required'  => true,
+							'order'     => 10,
 						],
 					],
 				],
@@ -37,7 +38,29 @@ return [
 		'integrations' => [
 			'title'    => esc_html__( 'Integrations', 'hivepress' ),
 			'order'    => 100,
-			'sections' => [],
+
+			'sections' => [
+				'recaptcha' => [
+					'title'  => 'reCAPTCHA',
+					'order'  => 10,
+
+					'fields' => [
+						'recaptcha_site_key'   => [
+							'label'      => esc_html__( 'Site Key', 'hivepress' ),
+							'type'       => 'text',
+							'max_length' => 256,
+							'order'      => 10,
+						],
+
+						'recaptcha_secret_key' => [
+							'label'      => esc_html__( 'Secret Key', 'hivepress' ),
+							'type'       => 'text',
+							'max_length' => 256,
+							'order'      => 20,
+						],
+					],
+				],
+			],
 		],
 	],
 
@@ -99,9 +122,15 @@ return [
 
 	// Meta boxes.
 	'meta_boxes'  => [
-		'listing_attributes' => [
+		'listing_attributes'         => [
 			'title'  => esc_html__( 'Attributes', 'hivepress' ),
 			'screen' => 'listing',
+			'fields' => [],
+		],
+
+		'listing_attribute_settings' => [
+			'title'  => esc_html__( 'Settings', 'hivepress' ),
+			'screen' => 'listing_attribute',
 			'fields' => [],
 		],
 	],
