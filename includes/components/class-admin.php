@@ -35,6 +35,9 @@ final class Admin {
 			add_filter( 'custom_menu_order', [ $this, 'order_pages' ] );
 			add_filter( 'menu_order', [ $this, 'order_pages' ] );
 
+			// Register settings.
+			add_action( 'admin_init', [ $this, 'register_settings' ] );
+
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
@@ -138,6 +141,133 @@ final class Admin {
 				include $template_path;
 			}
 		}
+	}
+
+	/**
+	 * Registers settings.
+	 */
+	public function register_settings() {
+		global $pagenow;
+
+		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp_get_array_value( $_GET, 'page' ) ) ) {
+
+			// Get current tab.
+			$tab = hp_get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+
+			if ( ! is_null( $tab ) ) {
+
+				// Sort sections.
+				$tab['sections'] = hp_sort_array( $tab['sections'] );
+
+				foreach ( $tab['sections'] as $section_id => $section ) {
+
+					// Add settings section.
+					add_settings_section( $section_id, esc_html( hp_get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
+
+					// Sort settings.
+					$section['fields'] = hp_sort_array( $section['fields'] );
+
+					// Register settings.
+					foreach ( $section['fields'] as $option_id => $option ) {
+						$option_id         = hp_prefix( $option_id );
+						$option['default'] = get_option( $option_id );
+
+						add_settings_field( $option_id, esc_html( $option['label'] ), [ $this, 'render_settings_field' ], 'hp_settings', $section_id, array_merge( $option, [ 'name' => $option_id ] ) );
+						register_setting( 'hp_settings', $option_id, [ $this, 'validate_' . hp_unprefix( $option_id ) ] );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Validates setting.
+	 *
+	 * @param string $id Option ID.
+	 * @return mixed
+	 */
+	private function validate_setting( $id ) {
+
+		// Get current tab.
+		$tab = hp_get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+
+		// Get setting.
+		$setting = false;
+
+		if ( ! is_null( $tab ) ) {
+			foreach ( $tab['sections'] as $section_id => $section ) {
+				foreach ( $section['fields'] as $option_id => $option ) {
+					if ( $option_id === $id ) {
+						$setting = $option;
+
+						break 2;
+					}
+				}
+			}
+		}
+
+		// Validate setting.
+		if ( false !== $setting ) {
+			$setting_id = hp_prefix( $id );
+
+			$value = hivepress()->form->validate_field( $setting, hp_get_array_value( $_POST, $setting_id ) );
+
+			if ( false !== $value ) {
+				return $value;
+			} else {
+				foreach ( hivepress()->form->get_messages() as $message ) {
+					add_settings_error( $setting_id, $setting_id . '_error', esc_html( $message['text'] ), $message['type'] );
+				}
+
+				hivepress()->form->clear_messages();
+
+				return get_option( $setting_id );
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders settings section.
+	 *
+	 * @param array $args Section arguments.
+	 */
+	public function render_settings_section( $args ) {
+
+		// Get current tab.
+		$tab = hp_get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+
+		if ( ! is_null( $tab ) ) {
+
+			// Get current section.
+			$section = hp_get_array_value( $tab['sections'], $args['id'] );
+
+			if ( ! is_null( $section ) ) {
+
+				// Render description.
+				if ( isset( $section['description'] ) ) {
+					echo '<p>' . esc_html( $section['description'] ) . '</p>';
+				}
+			}
+		}
+	}
+
+	/**
+	 * Renders settings field.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function render_settings_field( $args ) {
+
+		// Get field class.
+		$field_class = '\HivePress\Fields\\' . $args['type'];
+
+		// Create field.
+		$field = new $field_class( $args );
+
+		// Render field.
+		echo $field->render();
 	}
 
 	/**
