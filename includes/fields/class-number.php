@@ -50,7 +50,7 @@ class Number extends Field {
 	/**
 	 * Validate field value.
 	 */
-	protected function validate() {
+	public function validate() {
 		if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
 			$this->errors[] = 'todo';
 		}
@@ -72,6 +72,6 @@ class Number extends Field {
 		// Get step.
 		$step = 1 / pow( 10, $this->decimals );
 
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" step="' . esc_attr( $step ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" step="' . esc_attr( $step ) . '" min="' . esc_attr( $this->min_value ) . '" max="' . esc_attr( $this->max_value ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
 	}
 }

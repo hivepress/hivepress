@@ -36,7 +36,7 @@ class Email extends Text {
 	/**
 	 * Validate field value.
 	 */
-	protected function validate() {
+	public function validate() {
 		if ( ! is_email( $value ) ) {
 			$this->errors[] = 'todo';
 		}

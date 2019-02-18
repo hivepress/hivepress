@@ -42,6 +42,9 @@ final class Admin {
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
 
+			// Add term boxes.
+			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
+
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
@@ -216,19 +219,24 @@ final class Admin {
 		// Validate setting.
 		if ( false !== $setting ) {
 
-			// todo check below.
+			// Get setting ID.
 			$setting_id = hp_prefix( $id );
 
-			$value = hivepress()->form->validate_field( $setting, hp_get_array_value( $_POST, $setting_id ) );
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $setting['type'];
 
-			if ( false !== $value ) {
-				return $value;
+			// Create field.
+			$field = new $field_class( $setting );
+
+			// Validate field.
+			$field->set_value( hp_get_array_value( $_POST, $setting_id ) );
+
+			if ( $field->validate() ) {
+				return $field->get_value();
 			} else {
-				foreach ( hivepress()->form->get_messages() as $message ) {
-					add_settings_error( $setting_id, $setting_id . '_error', esc_html( $message['text'] ), $message['type'] );
+				foreach ( $field->get_errors() as $error ) {
+					add_settings_error( $setting_id, $setting_id, esc_html( $error ) );
 				}
-
-				hivepress()->form->clear_messages();
 
 				return get_option( $setting_id );
 			}
@@ -502,8 +510,12 @@ final class Admin {
 						// Create field.
 						$field = new $field_class( $field_args );
 
-						// todo pass value.
+						// Validate field.
+						$field->set_value( hp_get_array_value( $_POST, hp_prefix( $field_id ) ) );
+
 						if ( $field->validate() ) {
+
+							// Update meta value.
 							update_post_meta( $post_id, hp_prefix( $field_id ), $field->get_value() );
 						}
 					}
@@ -568,6 +580,157 @@ final class Admin {
 			}
 
 			$output .= '</table>';
+		}
+
+		echo $output;
+	}
+
+	/**
+	 * Adds term boxes.
+	 */
+	public function add_term_boxes() {
+		foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+			if ( taxonomy_exists( hp_prefix( $meta_box['screen'] ) ) ) {
+				$taxonomy = hp_prefix( $meta_box['screen'] );
+
+				// Update term boxes.
+				add_action( 'edit_' . $taxonomy, [ $this, 'update_term_box' ] );
+				add_action( 'create_' . $taxonomy, [ $this, 'update_term_box' ] );
+
+				// Render term boxes.
+				add_action( $taxonomy . '_edit_form_fields', [ $this, 'render_term_box' ], 10, 2 );
+				add_action( $taxonomy . '_add_form_fields', [ $this, 'render_term_box' ], 10, 2 );
+			}
+		}
+	}
+
+	/**
+	 * Updates term box values.
+	 *
+	 * @param int $term_id
+	 */
+	public function update_term_box( $term_id ) {
+
+		// Get term.
+		$term = get_term( $term_id );
+
+		if ( ! is_null( $term ) ) {
+			foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+				$screen = hp_prefix( $meta_box['screen'] );
+
+				if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $term->taxonomy ) {
+
+					// Filter fields.
+					$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'term_id' => $term->term_id ] );
+
+					foreach ( $meta_box['fields'] as $field_id => $field ) {
+
+						// Validate field.
+						$value = hivepress()->form->validate_field( $field, hp_get_array_value( $_POST, hp_prefix( $field_id ) ) );
+
+						// Update meta value.
+						if ( false !== $value ) {
+							update_term_meta( $term->term_id, hp_prefix( $field_id ), $value );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Renders term box fields.
+	 *
+	 * @param mixed  $term
+	 * @param string $taxonomy
+	 */
+	public function render_term_box( $term, $taxonomy = '' ) {
+		$output = '';
+
+		// Get term ID.
+		$term_id = 0;
+
+		if ( ! is_object( $term ) ) {
+			$taxonomy = $term;
+		} else {
+			$term_id = $term->term_id;
+		}
+
+		foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+			$screen = hp_prefix( $meta_box['screen'] );
+
+			if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $taxonomy ) {
+
+				// Filter fields.
+				$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'term_id' => $term_id ] );
+
+				// Sort fields.
+				$meta_box['fields'] = hp_sort_array( $meta_box['fields'] );
+
+				foreach ( $meta_box['fields'] as $field_id => $field ) {
+					if ( ! is_object( $term ) ) {
+						$output .= '<div class="form-field">';
+
+						// Render label.
+						$output .= '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['name'] ) . '</label>';
+
+						// Render field.
+						$output .= hivepress()->form->render_field(
+							hp_prefix( $field_id ),
+							hp_merge_arrays(
+								$field,
+								[
+									'attributes' => [
+										'class' => 'hp-form__field hp-form__field--%type_slug%',
+									],
+								]
+							)
+						);
+
+						// Render description.
+						if ( isset( $field['description'] ) ) {
+							$output .= '<p>' . esc_html( $field['description'] ) . '</p>';
+						}
+
+						$output .= '</div>';
+					} else {
+						$output .= '<tr class="form-field">';
+
+						// Render label.
+						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['name'] ) . '</label></th>';
+						$output .= '<td>';
+
+						// Get field value.
+						$value = get_term_meta( $term->term_id, hp_prefix( $field_id ), true );
+
+						if ( '' === $value ) {
+							$value = null;
+						}
+
+						// Render field.
+						$output .= hivepress()->form->render_field(
+							hp_prefix( $field_id ),
+							hp_merge_arrays(
+								$field,
+								[
+									'default'    => $value,
+									'attributes' => [
+										'class' => 'hp-form__field hp-form__field--%type_slug%',
+									],
+								]
+							)
+						);
+
+						// Render description.
+						if ( isset( $field['description'] ) ) {
+							$output .= '<p class="description">' . esc_html( $field['description'] ) . '</p>';
+						}
+
+						$output .= '</td>';
+						$output .= '</tr>';
+					}
+				}
+			}
 		}
 
 		echo $output;

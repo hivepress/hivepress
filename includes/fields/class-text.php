@@ -43,7 +43,7 @@ class Text extends Field {
 	/**
 	 * Validate field value.
 	 */
-	protected function validate() {
+	public function validate() {
 		if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
 			$this->errors[] = 'todo';
 		}
