@@ -549,6 +549,12 @@ final class Admin {
 
 			foreach ( $meta_box['fields'] as $field_id => $field_args ) {
 
+				// Get field class.
+				$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+				// Create field.
+				$field = new $field_class( array_merge( $field_args, [ 'name' => hp_prefix( $field_id ) ] ) );
+
 				// Get field value.
 				$value = get_post_meta( $post->ID, hp_prefix( $field_id ), true );
 
@@ -556,11 +562,7 @@ final class Admin {
 					$value = null;
 				}
 
-				// Get field class.
-				$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-				// Create field.
-				$field = new $field_class( $field_args );
+				$field->set_value( $value );
 
 				if ( 'hidden' === $field_args['type'] ) {
 
@@ -668,17 +670,18 @@ final class Admin {
 				$meta_box['fields'] = hp_sort_array( $meta_box['fields'] );
 
 				foreach ( $meta_box['fields'] as $field_id => $field_args ) {
+
+					// Get field class.
+					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+					// Create field.
+					$field = new $field_class( array_merge( $field_args, [ 'name' => hp_prefix( $field_id ) ] ) );
+
 					if ( ! is_object( $term ) ) {
 						$output .= '<div class="form-field">';
 
 						// Render label.
 						$output .= '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label>';
-
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-						// Create field.
-						$field = new $field_class( $field_args );
 
 						// Render field.
 						$output .= $field->render();
@@ -695,12 +698,6 @@ final class Admin {
 						// Render label.
 						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
 						$output .= '<td>';
-
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-						// Create field.
-						$field = new $field_class( $field_args );
 
 						// Get field value.
 						$value = get_term_meta( $term->term_id, hp_prefix( $field_id ), true );
