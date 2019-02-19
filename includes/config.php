@@ -23,8 +23,8 @@ return [
 
 					'fields' => [
 						'listings_per_page' => [
-							'type'      => 'number',
 							'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
+							'type'      => 'number',
 							'default'   => 10,
 							'min_value' => 1,
 							'required'  => true,
@@ -132,6 +132,19 @@ return [
 			'title'  => esc_html__( 'Settings', 'hivepress' ),
 			'screen' => 'listing_attribute',
 			'fields' => [],
+		],
+
+		'listing_category_settings'  => [
+			'screen' => 'listing_category',
+
+			'fields' => [
+				'order' => [
+					'label'     => esc_html__( 'Order', 'hivepress' ),
+					'type'      => 'number',
+					'min_value' => 0,
+					'order'     => 10,
+				],
+			],
 		],
 	],
 

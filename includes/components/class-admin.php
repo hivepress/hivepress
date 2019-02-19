@@ -696,6 +696,12 @@ final class Admin {
 						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
 						$output .= '<td>';
 
+						// Get field class.
+						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+						// Create field.
+						$field = new $field_class( $field_args );
+
 						// Get field value.
 						$value = get_term_meta( $term->term_id, hp_prefix( $field_id ), true );
 
@@ -703,11 +709,7 @@ final class Admin {
 							$value = null;
 						}
 
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-						// Create field.
-						$field = new $field_class( $field_args );
+						$field->set_value( $value );
 
 						// Render field.
 						$output .= $field->render();

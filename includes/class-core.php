@@ -72,6 +72,7 @@ final class Core {
 
 		new \HivePress\Components\Admin();
 		new \HivePress\Components\Media();
+		new \HivePress\Components\Debug();
 	}
 
 	// todo.
