@@ -63,5 +63,9 @@ class User_Login extends Form {
 
 		// Authenticate user.
 		$user = wp_signon( $credentials, is_ssl() );
+
+		if ( is_wp_error( $user ) ) {
+			$this->errors[] = 'todo';
+		}
 	}
 }

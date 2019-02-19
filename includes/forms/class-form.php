@@ -53,10 +53,17 @@ abstract class Form {
 	protected $fields = [];
 
 	/**
+	 * Form errors.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
-		
+
 	}
 
 	/**

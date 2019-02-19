@@ -22,6 +22,14 @@ return [
 					'order'  => 10,
 
 					'fields' => [
+						'page_listings'     => [
+							'label'       => esc_html__( 'Listings Page', 'hivepress' ),
+							'description' => esc_html__( 'Choose a page that displays all listings.', 'hivepress' ),
+							'type'        => 'select',
+							'options'     => 'posts',
+							'order'       => 10,
+						],
+
 						'listings_per_page' => [
 							'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
 							'type'      => 'number',
@@ -37,7 +45,15 @@ return [
 					'title'  => esc_html__( 'Submission', 'hivepress' ),
 					'order'  => 20,
 
-					'fields' => [],
+					'fields' => [
+						'page_listing_submission_terms' => [
+							'label'       => esc_html__( 'Submission Terms Page', 'hivepress' ),
+							'description' => esc_html__( 'Choose a page with terms that user has to accept before submitting a new listing.', 'hivepress' ),
+							'type'        => 'select',
+							'options'     => 'posts',
+							'order'       => 10,
+						],
+					],
 				],
 
 				'emails'     => [
@@ -76,7 +92,15 @@ return [
 					'title'  => esc_html__( 'Registration', 'hivepress' ),
 					'order'  => 10,
 
-					'fields' => [],
+					'fields' => [
+						'page_user_registration_terms' => [
+							'label'       => esc_html__( 'Registration Terms Page', 'hivepress' ),
+							'description' => esc_html__( 'Choose a page with terms that user has to accept before registering.', 'hivepress' ),
+							'type'        => 'select',
+							'options'     => 'posts',
+							'order'       => 10,
+						],
+					],
 				],
 
 				'emails'       => [
@@ -256,6 +280,11 @@ return [
 			'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
 		],
 
+		'select2'           => [
+			'handle' => 'select2',
+			'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
+		],
+
 		'core_frontend'     => [
 			'handle' => 'hp-core-frontend',
 			'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
@@ -289,6 +318,11 @@ return [
 		'slick'            => [
 			'handle' => 'slick',
 			'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
+		],
+
+		'select2'          => [
+			'handle' => 'select2',
+			'src'    => HP_CORE_URL . '/assets/js/select2.min.js',
 		],
 
 		'sticky_sidebar'   => [
