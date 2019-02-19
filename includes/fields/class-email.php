@@ -17,17 +17,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Email extends Text {
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $props Field properties.
-	 */
-	public function __construct( $props ) {
-		parent::__construct( $props );
-
-		// Set maximum length.
-		$this->set_max_length( 254 );
-	}
+	// todo set max length to 254.
 
 	/**
 	 * Sanitizes field value.

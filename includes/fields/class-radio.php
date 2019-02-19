@@ -25,6 +25,14 @@ class Radio extends Select {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
+		$output = '<div ' . hp_html_attributes( $this->attributes ) . '>';
+
+		foreach ( $this->options as $option_value => $option_label ) {
+			// todo.
+		}
+
+		$output .= '</div>';
+
+		return $output;
 	}
 }
