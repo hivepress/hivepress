@@ -589,7 +589,7 @@ final class Admin {
 	 * Adds term boxes.
 	 */
 	public function add_term_boxes() {
-		foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_id => $meta_box ) {
 			if ( taxonomy_exists( hp_prefix( $meta_box['screen'] ) ) ) {
 				$taxonomy = hp_prefix( $meta_box['screen'] );
 
@@ -607,7 +607,7 @@ final class Admin {
 	/**
 	 * Updates term box values.
 	 *
-	 * @param int $term_id
+	 * @param int $term_id Term ID.
 	 */
 	public function update_term_box( $term_id ) {
 
@@ -615,22 +615,25 @@ final class Admin {
 		$term = get_term( $term_id );
 
 		if ( ! is_null( $term ) ) {
-			foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_id => $meta_box ) {
 				$screen = hp_prefix( $meta_box['screen'] );
 
 				if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $term->taxonomy ) {
+					foreach ( $meta_box['fields'] as $field_id => $field_args ) {
 
-					// Filter fields.
-					$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'term_id' => $term->term_id ] );
+						// Get field class.
+						$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-					foreach ( $meta_box['fields'] as $field_id => $field ) {
+						// Create field.
+						$field = new $field_class( $field_args );
 
 						// Validate field.
-						$value = hivepress()->form->validate_field( $field, hp_get_array_value( $_POST, hp_prefix( $field_id ) ) );
+						$field->set_value( hp_get_array_value( $_POST, hp_prefix( $field_id ) ) );
 
-						// Update meta value.
-						if ( false !== $value ) {
-							update_term_meta( $term->term_id, hp_prefix( $field_id ), $value );
+						if ( $field->validate() ) {
+
+							// Update meta value.
+							update_term_meta( $term->term_id, hp_prefix( $field_id ), $field->get_value() );
 						}
 					}
 				}
@@ -641,8 +644,8 @@ final class Admin {
 	/**
 	 * Renders term box fields.
 	 *
-	 * @param mixed  $term
-	 * @param string $taxonomy
+	 * @param mixed  $term Term object.
+	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function render_term_box( $term, $taxonomy = '' ) {
 		$output = '';
@@ -656,40 +659,33 @@ final class Admin {
 			$term_id = $term->term_id;
 		}
 
-		foreach ( $this->meta_boxes as $meta_box_id => $meta_box ) {
+		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_id => $meta_box ) {
 			$screen = hp_prefix( $meta_box['screen'] );
 
 			if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $taxonomy ) {
 
-				// Filter fields.
-				$meta_box['fields'] = apply_filters( "hivepress/admin/meta_box_fields/{$meta_box_id}", $meta_box['fields'], [ 'term_id' => $term_id ] );
-
 				// Sort fields.
 				$meta_box['fields'] = hp_sort_array( $meta_box['fields'] );
 
-				foreach ( $meta_box['fields'] as $field_id => $field ) {
+				foreach ( $meta_box['fields'] as $field_id => $field_args ) {
 					if ( ! is_object( $term ) ) {
 						$output .= '<div class="form-field">';
 
 						// Render label.
-						$output .= '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['name'] ) . '</label>';
+						$output .= '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+
+						// Get field class.
+						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+						// Create field.
+						$field = new $field_class( $field_args );
 
 						// Render field.
-						$output .= hivepress()->form->render_field(
-							hp_prefix( $field_id ),
-							hp_merge_arrays(
-								$field,
-								[
-									'attributes' => [
-										'class' => 'hp-form__field hp-form__field--%type_slug%',
-									],
-								]
-							)
-						);
+						$output .= $field->render();
 
 						// Render description.
-						if ( isset( $field['description'] ) ) {
-							$output .= '<p>' . esc_html( $field['description'] ) . '</p>';
+						if ( isset( $field_args['description'] ) ) {
+							$output .= '<p>' . esc_html( $field_args['description'] ) . '</p>';
 						}
 
 						$output .= '</div>';
@@ -697,7 +693,7 @@ final class Admin {
 						$output .= '<tr class="form-field">';
 
 						// Render label.
-						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['name'] ) . '</label></th>';
+						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
 						$output .= '<td>';
 
 						// Get field value.
@@ -707,23 +703,18 @@ final class Admin {
 							$value = null;
 						}
 
+						// Get field class.
+						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+						// Create field.
+						$field = new $field_class( $field_args );
+
 						// Render field.
-						$output .= hivepress()->form->render_field(
-							hp_prefix( $field_id ),
-							hp_merge_arrays(
-								$field,
-								[
-									'default'    => $value,
-									'attributes' => [
-										'class' => 'hp-form__field hp-form__field--%type_slug%',
-									],
-								]
-							)
-						);
+						$output .= $field->render();
 
 						// Render description.
-						if ( isset( $field['description'] ) ) {
-							$output .= '<p class="description">' . esc_html( $field['description'] ) . '</p>';
+						if ( isset( $field_args['description'] ) ) {
+							$output .= '<p class="description">' . esc_html( $field_args['description'] ) . '</p>';
 						}
 
 						$output .= '</td>';
