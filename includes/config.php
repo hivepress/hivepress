@@ -17,7 +17,7 @@ return [
 			'order'    => 10,
 
 			'sections' => [
-				'display' => [
+				'display'    => [
 					'title'  => esc_html__( 'Display', 'hivepress' ),
 					'order'  => 10,
 
@@ -31,6 +31,41 @@ return [
 							'order'     => 30,
 						],
 					],
+				],
+
+				'submission' => [
+					'title'  => esc_html__( 'Submission', 'hivepress' ),
+					'order'  => 30,
+
+					'fields' => [],
+				],
+
+				'emails'     => [
+					'title'  => esc_html__( 'Emails', 'hivepress' ),
+					'order'  => 30,
+
+					'fields' => [],
+				],
+			],
+		],
+
+		'users'        => [
+			'title'    => esc_html__( 'Users', 'hivepress' ),
+			'order'    => 20,
+
+			'sections' => [
+				'registration' => [
+					'title'  => esc_html__( 'Registration', 'hivepress' ),
+					'order'  => 10,
+
+					'fields' => [],
+				],
+
+				'emails'       => [
+					'title'  => esc_html__( 'Emails', 'hivepress' ),
+					'order'  => 20,
+
+					'fields' => [],
 				],
 			],
 		],

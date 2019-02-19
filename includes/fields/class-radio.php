@@ -28,7 +28,7 @@ class Radio extends Select {
 		$output = '<div ' . hp_html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $option_value => $option_label ) {
-			// todo.
+			$output .= '<label for="' . esc_attr( $this->name . '_' . $option_value ) . '"><input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name . '_' . $option_value ) . '" value="' . esc_attr( $option_value ) . '" ' . checked( $value, $option_value, false ) . ' ' . hp_html_attributes( $this->attributes ) . '><span>' . esc_html( $option_label ) . '</span></label>';
 		}
 
 		$output .= '</div>';
