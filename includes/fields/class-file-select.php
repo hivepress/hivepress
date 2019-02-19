@@ -1,6 +1,6 @@
 <?php
 /**
- * Password field.
+ * File select field.
  *
  * @package HivePress\Fields
  */
@@ -11,20 +11,25 @@ namespace HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Password field class.
+ * File select field class.
  *
- * @class Password
+ * @class File_Select
  */
-class Password extends Text {
-
-	// todo limit length to 64.
+class File_Select extends Field {
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_strip_all_tags( $this->value, true );
-		}
+		// todo.
+	}
+
+	/**
+	 * Renders field HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		// todo.
 	}
 }

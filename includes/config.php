@@ -283,11 +283,25 @@ return [
 			'screen' => 'listing_category',
 
 			'fields' => [
-				'order' => [
+				'image'                 => [
+					'label'   => esc_html__( 'Image', 'hivepress' ),
+					'caption' => esc_html__( 'Select Image', 'hivepress' ),
+					'type'    => 'file_select',
+					'order'   => 10,
+				],
+
+				'order'                 => [
 					'label'     => esc_html__( 'Order', 'hivepress' ),
 					'type'      => 'number',
 					'min_value' => 0,
-					'order'     => 10,
+					'order'     => 20,
+				],
+
+				'display_subcategories' => [
+					'label'   => esc_html__( 'Display', 'hivepress' ),
+					'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
+					'type'    => 'checkbox',
+					'order'   => 30,
 				],
 			],
 		],
