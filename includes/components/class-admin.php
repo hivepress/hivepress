@@ -684,7 +684,7 @@ final class Admin {
 						$output .= '<div class="form-field">';
 
 						// Render label.
-						$output .= '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+						$output .= '<label for="' . esc_attr( hp_prefix( $field_id ) ) . '">' . esc_html( $field_args['label'] ) . '</label>';
 
 						// Render field.
 						$output .= $field->render();
@@ -699,7 +699,7 @@ final class Admin {
 						$output .= '<tr class="form-field">';
 
 						// Render label.
-						$output .= '<th scope="row"><label for="' . esc_attr( $field_id ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
+						$output .= '<th scope="row"><label for="' . esc_attr( hp_prefix( $field_id ) ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
 						$output .= '<td>';
 
 						// Get field value.
