@@ -44,7 +44,25 @@ return [
 					'title'  => esc_html__( 'Emails', 'hivepress' ),
 					'order'  => 30,
 
-					'fields' => [],
+					'fields' => [
+						'email_listing_approve' => [
+							'label'       => esc_html__( 'Listing Approved', 'hivepress' ),
+							'description' => esc_html__( 'This email is sent to users when listing is approved, the following placeholders are available: %user_name%, %listing_title%, %listing_url%.', 'hivepress' ),
+							'type'        => 'textarea',
+							'default'     => hp_sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
+							'required'    => true,
+							'order'       => 10,
+						],
+
+						'email_listing_reject'  => [
+							'label'       => esc_html__( 'Listing Rejected', 'hivepress' ),
+							'description' => esc_html__( 'This email is sent to users when listing is rejected, the following placeholders are available: %user_name%, %listing_title%.', 'hivepress' ),
+							'type'        => 'textarea',
+							'default'     => hp_sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
+							'required'    => true,
+							'order'       => 20,
+						],
+					],
 				],
 			],
 		],
@@ -65,7 +83,25 @@ return [
 					'title'  => esc_html__( 'Emails', 'hivepress' ),
 					'order'  => 20,
 
-					'fields' => [],
+					'fields' => [
+						'email_user_register'         => [
+							'label'       => esc_html__( 'User Registered', 'hivepress' ),
+							'description' => esc_html__( 'This email is sent to users after registration, the following placeholders are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
+							'type'        => 'textarea',
+							'default'     => hp_sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+							'required'    => true,
+							'order'       => 10,
+						],
+
+						'email_user_request_password' => [
+							'label'       => esc_html__( 'Password Reset', 'hivepress' ),
+							'description' => esc_html__( 'This email is sent to users when new password is requested, the following placeholders are available: %user_name%, %password_reset_url%.', 'hivepress' ),
+							'type'        => 'textarea',
+							'default'     => hp_sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
+							'required'    => true,
+							'order'       => 20,
+						],
+					],
 				],
 			],
 		],
