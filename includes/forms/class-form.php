@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 abstract class Form {
 
 	/**
+	 * Form attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {

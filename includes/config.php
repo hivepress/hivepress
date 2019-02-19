@@ -35,7 +35,7 @@ return [
 
 				'submission' => [
 					'title'  => esc_html__( 'Submission', 'hivepress' ),
-					'order'  => 30,
+					'order'  => 20,
 
 					'fields' => [],
 				],
