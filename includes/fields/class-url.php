@@ -15,4 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class URL
  */
-class URL extends Text {}
+class URL extends Text {
+
+	/**
+	 * Sanitizes field value.
+	 */
+	protected function sanitize() {
+		if ( ! is_null( $this->value ) ) {
+			$this->value = esc_url_raw( $this->value );
+		}
+	}
+}

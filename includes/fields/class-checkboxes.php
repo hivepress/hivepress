@@ -15,14 +15,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Checkboxes
  */
-class Checkboxes extends Field {
+class Checkboxes extends Select {
 
-	/**
-	 * Sanitizes field value.
-	 */
-	protected function sanitize() {
-
-	}
+	// todo set multiple to true.
 
 	/**
 	 * Renders field HTML.
@@ -30,6 +25,6 @@ class Checkboxes extends Field {
 	 * @return string
 	 */
 	public function render() {
-
+		// todo.
 	}
 }

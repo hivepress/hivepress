@@ -15,21 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Password
  */
-class Password extends Field {
+class Password extends Text {
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-
-	}
-
-	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
-	 */
-	public function render() {
-
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_strip_all_tags( $this->value, true );
+		}
 	}
 }

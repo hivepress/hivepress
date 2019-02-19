@@ -73,19 +73,17 @@ abstract class Field {
 	 */
 	public function __construct( $props ) {
 
-		// Set type.
-		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
-
 		// Set properties.
 		foreach ( $props as $prop_name => $prop_value ) {
-			if ( property_exists( $this, $prop_name ) ) {
-				$this->$prop_name = $prop_value;
-			}
+			call_user_func_array( [ $this, 'set_' . $prop_name ], [ $prop_value ] );
 		}
+
+		// Set type.
+		$this->set_type( strtolower( ( new \ReflectionClass( $this ) )->getShortName() ) );
 
 		// Set value.
 		if ( is_null( $this->value ) && isset( $props['default'] ) ) {
-			$this->value = $props['default'];
+			$this->set_value( $props['default'] );
 		}
 	}
 
@@ -135,6 +133,20 @@ abstract class Field {
 		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}
+	}
+
+	/**
+	 * Sets field value.
+	 *
+	 * @param mixed $value Field value.
+	 */
+	final public function set_value( $value ) {
+
+		// Set value.
+		$this->value = $value;
+
+		// Sanitize value.
+		$this->sanitize();
 	}
 
 	/**

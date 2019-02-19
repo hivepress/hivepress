@@ -51,15 +51,19 @@ class Number extends Field {
 	 * Validate field value.
 	 */
 	public function validate() {
-		if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
-			$this->errors[] = 'todo';
+		parent::validate();
+
+		if ( ! is_null( $this->value ) ) {
+			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
+				$this->errors[] = 'todo';
+			}
+
+			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
+				$this->errors[] = 'todo';
+			}
 		}
 
-		if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
-			$this->errors[] = 'todo';
-		}
-
-		return parent::validate();
+		return empty( $this->errors );
 	}
 
 	/**

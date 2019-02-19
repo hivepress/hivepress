@@ -18,11 +18,16 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
-	 * Maximum length.
+	 * Class constructor.
 	 *
-	 * @var int
+	 * @param array $props Field properties.
 	 */
-	protected $max_length = 254;
+	public function __construct( $props ) {
+		parent::__construct( $props );
+
+		// Set maximum length.
+		$this->set_max_length( 254 );
+	}
 
 	/**
 	 * Sanitizes field value.
@@ -37,10 +42,12 @@ class Email extends Text {
 	 * Validate field value.
 	 */
 	public function validate() {
-		if ( ! is_email( $value ) ) {
+		parent::validate();
+
+		if ( ! is_null( $this->value ) && ! is_email( $this->value ) ) {
 			$this->errors[] = 'todo';
 		}
 
-		return parent::validate();
+		return empty( $this->errors );
 	}
 }

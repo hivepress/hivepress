@@ -15,14 +15,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Radio
  */
-class Radio extends Field {
+class Radio extends Select {
 
-	/**
-	 * Sanitizes field value.
-	 */
-	protected function sanitize() {
-
-	}
+	// todo set multiple to false.
 
 	/**
 	 * Renders field HTML.
@@ -30,6 +25,6 @@ class Radio extends Field {
 	 * @return string
 	 */
 	public function render() {
-
+		// todo.
 	}
 }

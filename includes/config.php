@@ -28,7 +28,7 @@ return [
 							'default'   => 10,
 							'min_value' => 1,
 							'required'  => true,
-							'order'     => 10,
+							'order'     => 30,
 						],
 					],
 				],
@@ -57,6 +57,13 @@ return [
 							'type'       => 'text',
 							'max_length' => 256,
 							'order'      => 20,
+						],
+
+						'recaptcha_forms'      => [
+							'label'   => esc_html__( 'Protected Forms', 'hivepress' ),
+							'type'    => 'checkboxes',
+							'options' => 'forms',
+							'order'   => 30,
 						],
 					],
 				],

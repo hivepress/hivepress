@@ -44,15 +44,19 @@ class Text extends Field {
 	 * Validate field value.
 	 */
 	public function validate() {
-		if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
-			$this->errors[] = 'todo';
+		parent::validate();
+
+		if ( ! is_null( $this->value ) ) {
+			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
+				$this->errors[] = 'todo';
+			}
+
+			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
+				$this->errors[] = 'todo';
+			}
 		}
 
-		if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
-			$this->errors[] = 'todo';
-		}
-
-		return parent::validate();
+		return empty( $this->errors );
 	}
 
 	/**
