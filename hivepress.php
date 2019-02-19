@@ -28,3 +28,10 @@ function hivepress() {
 
 // Initialize HivePress.
 hivepress();
+
+// todo remove.
+add_action('init', function() {
+	$form = new HivePress\Forms\User_Login();
+	echo $form->render();
+	die();
+});
