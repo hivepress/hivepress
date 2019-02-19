@@ -22,7 +22,7 @@ abstract class Form {
 	 *
 	 * @var string
 	 */
-	protected $name;
+	private $name;
 
 	/**
 	 * Form action.

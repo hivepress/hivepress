@@ -25,6 +25,13 @@ final class Core {
 	private static $instance;
 
 	/**
+	 * Array of HivePress directories.
+	 *
+	 * @var array
+	 */
+	private $dirs = [];
+
+	/**
 	 * Array of HivePress configuration.
 	 *
 	 * @var array
@@ -52,23 +59,57 @@ final class Core {
 
 	// todo.
 	public function setup() {
-		require_once 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\helpers.php';
-		$dirs = [ 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress' ];
+		$this->dirs[] = 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress';
 
-		foreach ( $dirs as $dir ) {
-			foreach ( glob( $dir . '/includes/components/*.php' ) as $filepath ) {
+		// Define constants.
+		foreach ( $this->dirs as $dir ) {
+			$basename = basename( $dir );
+			$filepath = $dir . '/' . $basename . '.php';
+			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', trim( str_replace( 'hivepress', '', $basename ), '-' ) ) ) . '_';
 
+			if ( 'hivepress' === $basename ) {
+				$prefix = 'HP_CORE_';
+			}
+
+			if ( file_exists( $filepath ) ) {
+				$data = get_file_data(
+					$filepath,
+					[
+						'name'    => 'Plugin Name',
+						'version' => 'Version',
+					]
+				);
+
+				if ( ! defined( $prefix . 'NAME' ) ) {
+					define( $prefix . 'NAME', $data['name'] );
+				}
+
+				if ( ! defined( $prefix . 'VERSION' ) ) {
+					define( $prefix . 'VERSION', $data['version'] );
+				}
+
+				if ( ! defined( $prefix . 'DIR' ) ) {
+					define( $prefix . 'DIR', $dir );
+				}
+
+				if ( ! defined( $prefix . 'URL' ) ) {
+					define( $prefix . 'URL', rtrim( plugin_dir_url( $filepath ), '/' ) );
+				}
 			}
 		}
 
-		define( 'HP_CORE_NAME', 'HivePress' );
-		define( 'HP_CORE_PATH', plugin_dir_path( 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\hivepress.php' ) );
-		define( 'HP_CORE_URL', rtrim( plugin_dir_url( 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\hivepress.php' ), '/') );
-		define('HP_CORE_VERSION', '1.1.1');
+		// Include helper functions.
+		require_once HP_CORE_DIR . '/includes/helpers.php';
 
-		$this->config=include 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\config.php';
+		// Load translation files.
+		foreach ( $this->dirs as $dir ) {
+			$basename   = basename( $dir );
+			$textdomain = sanitize_title( $basename );
 
+			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
+		}
 
+		$this->config = include 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\config.php';
 
 		new \HivePress\Components\Admin();
 		new \HivePress\Components\Media();

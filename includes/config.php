@@ -30,6 +30,13 @@ return [
 							'order'       => 10,
 						],
 
+						'page_listings_display_subcategories' => [
+							'label'   => esc_html__( 'Listings Page Display', 'hivepress' ),
+							'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
+							'type'    => 'checkbox',
+							'order'   => 20,
+						],
+
 						'listings_per_page' => [
 							'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
 							'type'      => 'number',
@@ -52,6 +59,14 @@ return [
 							'type'        => 'select',
 							'options'     => 'posts',
 							'order'       => 10,
+						],
+
+						'listing_enable_moderation'     => [
+							'label'   => esc_html__( 'Moderation', 'hivepress' ),
+							'caption' => esc_html__( 'Manually approve new listings', 'hivepress' ),
+							'type'    => 'checkbox',
+							'default' => true,
+							'order'   => 20,
 						],
 					],
 				],
@@ -233,7 +248,35 @@ return [
 		'listing_attribute_settings' => [
 			'title'  => esc_html__( 'Settings', 'hivepress' ),
 			'screen' => 'listing_attribute',
-			'fields' => [],
+			'fields' => [
+				'editable'   => [
+					'label'   => esc_html__( 'Editable', 'hivepress' ),
+					'caption' => esc_html__( 'Add to the front-end editor', 'hivepress' ),
+					'type'    => 'checkbox',
+					'order'   => 70,
+				],
+
+				'required'   => [
+					'label'   => esc_html__( 'Required', 'hivepress' ),
+					'caption' => esc_html__( 'Make this attribute required', 'hivepress' ),
+					'type'    => 'checkbox',
+					'order'   => 80,
+				],
+
+				'filterable' => [
+					'label'   => esc_html__( 'Searchable', 'hivepress' ),
+					'caption' => esc_html__( 'Add to the search filter', 'hivepress' ),
+					'type'    => 'checkbox',
+					'order'   => 90,
+				],
+
+				'sortable'   => [
+					'label'   => esc_html__( 'Sortable', 'hivepress' ),
+					'caption' => esc_html__( 'Add to the sorting options', 'hivepress' ),
+					'type'    => 'checkbox',
+					'order'   => 100,
+				],
+			],
 		],
 
 		'listing_category_settings'  => [

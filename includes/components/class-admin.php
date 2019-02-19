@@ -45,6 +45,9 @@ final class Admin {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Enqueue scripts.
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
@@ -132,7 +135,7 @@ final class Admin {
 
 			// Render admin page.
 			$template_name = str_replace( '_', '-', str_replace( 'render_', '', $name ) );
-			$template_path = HP_CORE_PATH . '/templates/admin/' . $template_name . '.php';
+			$template_path = HP_CORE_DIR . '/templates/admin/' . $template_name . '.php';
 
 			if ( file_exists( $template_path ) ) {
 				if ( 'settings' === $template_name ) {
@@ -724,6 +727,17 @@ final class Admin {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Enqueues scripts.
+	 */
+	public function enqueue_scripts() {
+		global $pagenow;
+
+		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
+			wp_enqueue_media();
+		}
 	}
 
 	/**
