@@ -1,4 +1,4 @@
-reset<?php
+<?php
 /**
  * User reset password form.
  *
@@ -29,6 +29,18 @@ class User_Reset_Password extends Form {
 				'required'   => true,
 				'order'      => 10,
 			],
+
+			'username' => [
+				'type'     => 'hidden',
+				'required' => true,
+				'default'  => sanitize_user( hp_get_array_value( $_GET, 'username' ) ),
+			],
+
+			'key'      => [
+				'type'     => 'hidden',
+				'required' => true,
+				'default'  => sanitize_text_field( hp_get_array_value( $_GET, 'key' ) ),
+			],
 		];
 
 		parent::__construct();
@@ -41,5 +53,28 @@ class User_Reset_Password extends Form {
 	 */
 	public function submit( $values ) {
 
+		// Get user.
+		$user = check_password_reset_key( $values['key'], $values['username'] );
+
+		if ( ! is_wp_error( $user ) ) {
+
+			// Reset password.
+			reset_password( $user, $values['password'] );
+
+			// Authenticate user.
+			wp_signon(
+				[
+					'user_login'    => $values['username'],
+					'user_password' => $values['password'],
+					'remember'      => true,
+				],
+				is_ssl()
+			);
+
+			// Send email.
+			wp_password_change_notification( $user );
+		} else {
+			$this->errors[] = esc_html__( 'Password reset link is expired or invalid.', 'hivepress' );
+		}
 	}
 }

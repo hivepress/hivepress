@@ -54,6 +54,26 @@ class User_Update extends Form {
 	 */
 	public function submit( $values ) {
 
+		// Get user ID.
+		$user_id = get_current_user_id();
+
+		// Get user name.
+		$first_name   = hp_get_array_value( $values, 'first_name', '' );
+		$last_name    = hp_get_array_value( $values, 'last_name', '' );
+		$display_name = trim( $first_name . ' ' . $last_name );
+
+		// Update name and description.
+		update_user_meta( $user_id, 'first_name', $first_name );
+		update_user_meta( $user_id, 'last_name', $last_name );
+		update_user_meta( $user_id, 'description', hp_get_array_value( $values, 'description' ) );
+
+		if ( '' !== $display_name ) {
+			wp_update_user(
+				[
+					'ID'           => $user_id,
+					'display_name' => $display_name,
+				]
+			);
+		}
 	}
 }
-update

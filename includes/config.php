@@ -342,9 +342,16 @@ return [
 			'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
 		],
 
+		'grid'              => [
+			'handle' => 'hp-grid',
+			'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
+			'editor' => true,
+		],
+
 		'core_frontend'     => [
 			'handle' => 'hp-core-frontend',
 			'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
+			'editor' => true,
 		],
 
 		'core_backend'      => [
