@@ -29,6 +29,9 @@ class User_Register extends Form {
 	 */
 	public function __construct() {
 
+		// Set title.
+		$this->title = esc_html__( 'Register User', 'hivepress' );
+
 		// Set fields.
 		$this->fields = [
 			'email'    => [

@@ -28,6 +28,11 @@ class User_Request_Password extends Form {
 	 * Class constructor.
 	 */
 	public function __construct() {
+
+		// Set title.
+		$this->title = esc_html__( 'Reset Password', 'hivepress' );
+
+		// Set fields.
 		$this->fields = [
 			'username' => [
 				'label'      => esc_html__( 'Username or Email', 'hivepress' ),

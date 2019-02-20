@@ -25,6 +25,13 @@ abstract class Form {
 	private $name;
 
 	/**
+	 * Form title.
+	 *
+	 * @var string
+	 */
+	protected $title;
+
+	/**
 	 * Form action.
 	 *
 	 * @var string

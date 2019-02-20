@@ -23,4 +23,13 @@ class Listing_Submit extends Form {
 	 * @var bool
 	 */
 	protected $captcha = false;
+
+	/**
+	 * Class constructor.
+	 */
+	public function __construct() {
+
+		// Set title.
+		$this->title = esc_html__( 'Submit Listing', 'hivepress' );
+	}
 }

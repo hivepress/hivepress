@@ -28,8 +28,18 @@ class Listing_Report extends Form {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->fields = [
 
+		// Set title.
+		$this->title = esc_html__( 'Report Listing', 'hivepress' );
+
+		// Set fields.
+		$this->fields = [
+			'reason' => [
+				'type'       => 'textarea',
+				'max_length' => 2048,
+				'required'   => true,
+				'order'      => 10,
+			],
 		];
 
 		parent::__construct();
