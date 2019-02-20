@@ -32,6 +32,9 @@ final class Media {
 		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+		// Filter scripts.
+		add_filter( 'script_loader_tag', [ $this, 'filter_script' ], 10, 2 );
 	}
 
 	/**
@@ -90,5 +93,26 @@ final class Media {
 				wp_localize_script( $script['handle'], lcfirst( str_replace( ' ', '', ucwords( str_replace( '-', ' ', $script['handle'] ) ) ) ) . 'Data', $script['data'] );
 			}
 		}
+	}
+
+	/**
+	 * Filters script HTML.
+	 *
+	 * @param string $tag Script tag.
+	 * @param string $handle Script handle.
+	 * @return string
+	 */
+	public function filter_script( $tag, $handle ) {
+
+		// Set attributes.
+		$atts = [ 'async', 'defer' ];
+
+		foreach ( $atts as $att ) {
+			if ( wp_scripts()->get_data( $handle, $att ) ) {
+				$tag = str_replace( '></', ' ' . $att . '></', $tag );
+			}
+		}
+
+		return $tag;
 	}
 }

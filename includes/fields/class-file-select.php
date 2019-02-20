@@ -21,7 +21,21 @@ class File_Select extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		// todo.
+		if ( ! is_null( $this->value ) ) {
+			$attachment_id = hp_get_post_id(
+				[
+					'post_type'   => 'attachment',
+					'post_status' => 'any',
+					'post__in'    => [ absint( $this->value ) ],
+				]
+			);
+
+			if ( 0 !== $attachment_id ) {
+				$this->value = $attachment_id;
+			} else {
+				$this->value = null;
+			}
+		}
 	}
 
 	/**
@@ -30,6 +44,11 @@ class File_Select extends Field {
 	 * @return string
 	 */
 	public function render() {
+		$output = '<div ' . hp_html_attributes( $this->attributes ) . '>';
+
 		// todo.
+		$output .= '</div>';
+
+		return $output;
 	}
 }

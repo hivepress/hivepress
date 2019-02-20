@@ -115,6 +115,8 @@ final class Core {
 		new \HivePress\Components\Media();
 		new \HivePress\Components\Debug();
 		new \HivePress\Components\Template();
+		new \HivePress\Components\Email();
+		new \HivePress\Components\Form();
 	}
 
 	// todo.
