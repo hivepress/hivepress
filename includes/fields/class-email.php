@@ -17,7 +17,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Email extends Text {
 
-	// todo set max length to 254.
+	/**
+	 * Maximum length.
+	 *
+	 * @var int
+	 */
+	protected $max_length = 254;
+
+	// Forbid setting maximum length.
+	public function set_max_length( $value ) {}
 
 	/**
 	 * Sanitizes field value.

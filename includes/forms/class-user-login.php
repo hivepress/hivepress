@@ -21,9 +21,7 @@ class User_Login extends Form {
 	 * Class constructor.
 	 */
 	public function __construct() {
-
-		// todo.
-		$fields = [
+		$this->fields = [
 			'username' => [
 				'label'      => esc_html__( 'Username or Email', 'hivepress' ),
 				'type'       => 'text',
@@ -33,20 +31,21 @@ class User_Login extends Form {
 			],
 
 			'password' => [
-				'name'     => esc_html__( 'Password', 'hivepress' ),
+				'label'    => esc_html__( 'Password', 'hivepress' ),
 				'type'     => 'password',
 				'required' => true,
 				'order'    => 20,
 			],
 		];
 
-		foreach ( $fields as $field_id => $field_args ) {
-			$field_class               = '\HivePress\Fields\\' . $field_args['type'];
-			$this->fields[ $field_id ] = new $field_class( $field_args );
-		}
+		parent::__construct();
 	}
 
-	// todo.
+	/**
+	 * Submits form.
+	 *
+	 * @param array $values Field values.
+	 */
 	public function submit( $values ) {
 
 		// Set credentials.
@@ -65,7 +64,7 @@ class User_Login extends Form {
 		$user = wp_signon( $credentials, is_ssl() );
 
 		if ( is_wp_error( $user ) ) {
-			$this->errors[] = 'todo';
+			$this->errors[] = esc_html__( 'Username or password is incorrect.', 'hivepress' );
 		}
 	}
 }

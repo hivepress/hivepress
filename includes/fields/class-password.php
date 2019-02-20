@@ -17,7 +17,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Password extends Text {
 
-	// todo limit length to 64.
+	/**
+	 * Maximum length.
+	 *
+	 * @var int
+	 */
+	protected $max_length = 64;
+
+	// Forbid setting maximum length.
+	public function set_max_length( $value ) {}
 
 	/**
 	 * Sanitizes field value.
