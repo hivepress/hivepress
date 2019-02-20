@@ -313,6 +313,9 @@ return [
 	// Image sizes.
 	'image_sizes' => [],
 
+	// Templates.
+	'templates'   => [],
+
 	// Styles.
 	'styles'      => [
 		'fontawesome'       => [
