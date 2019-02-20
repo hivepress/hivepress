@@ -48,10 +48,9 @@ class User_Reset_Password extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
 
 		// Get user.
 		$user = check_password_reset_key( $values['key'], $values['username'] );

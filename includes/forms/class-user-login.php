@@ -55,10 +55,9 @@ class User_Login extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
 
 		// Set credentials.
 		$credentials = [

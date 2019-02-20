@@ -78,10 +78,21 @@ abstract class Form {
 	 */
 	public function __construct() {
 
-		// todo
+		// todo.
 		foreach ( $this->fields as $field_id => $field_args ) {
 			$field_class               = '\HivePress\Fields\\' . $field_args['type'];
 			$this->fields[ $field_id ] = new $field_class( $field_args );
+		}
+	}
+
+	/**
+	 * Submits form.
+	 */
+	public function submit() {
+
+		// Verify captcha.
+		if ( $this->captcha ) {
+			// todo.
 		}
 	}
 

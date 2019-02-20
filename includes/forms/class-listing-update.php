@@ -37,6 +37,15 @@ class Listing_Update extends Form {
 				'required'   => true,
 				'order'      => 20,
 			],
+
+			'images'      => [
+				'label'      => esc_html__( 'Images', 'hivepress' ),
+				'caption'    => esc_html__( 'Select Images', 'hivepress' ),
+				'type'       => 'file_upload',
+				'extensions' => [ 'jpg', 'jpeg', 'png' ],
+				'multiple'   => true,
+				'order'      => 30,
+			],
 		];
 
 		parent::__construct();
@@ -44,10 +53,9 @@ class Listing_Update extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
 
 	}
 }

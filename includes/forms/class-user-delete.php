@@ -35,10 +35,10 @@ class User_Delete extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
+
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
 		// Check password.

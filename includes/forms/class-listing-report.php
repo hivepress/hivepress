@@ -47,10 +47,9 @@ class Listing_Report extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
 
 	}
 }

@@ -73,10 +73,9 @@ class User_Register extends Form {
 
 	/**
 	 * Submits form.
-	 *
-	 * @param array $values Field values.
 	 */
-	public function submit( $values ) {
+	public function submit() {
+		parent::submit();
 
 		// Check username.
 		if ( isset( $values['username'] ) ) {
