@@ -60,11 +60,18 @@ abstract class Form {
 	protected $errors = [];
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected $captcha;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
 
-		//todo
+		// todo
 		foreach ( $this->fields as $field_id => $field_args ) {
 			$field_class               = '\HivePress\Fields\\' . $field_args['type'];
 			$this->fields[ $field_id ] = new $field_class( $field_args );

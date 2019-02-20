@@ -27,6 +27,7 @@ return [
 							'description' => esc_html__( 'Choose a page that displays all listings.', 'hivepress' ),
 							'type'        => 'select',
 							'options'     => 'posts',
+							'post_type'   => 'page',
 							'order'       => 10,
 						],
 
@@ -58,6 +59,7 @@ return [
 							'description' => esc_html__( 'Choose a page with terms that user has to accept before submitting a new listing.', 'hivepress' ),
 							'type'        => 'select',
 							'options'     => 'posts',
+							'post_type'   => 'page',
 							'order'       => 10,
 						],
 
@@ -113,6 +115,7 @@ return [
 							'description' => esc_html__( 'Choose a page with terms that user has to accept before registering.', 'hivepress' ),
 							'type'        => 'select',
 							'options'     => 'posts',
+							'post_type'   => 'page',
 							'order'       => 10,
 						],
 					],

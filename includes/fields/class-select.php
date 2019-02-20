@@ -24,11 +24,6 @@ class Select extends Field {
 	 */
 	protected $options = [];
 
-	// todo.
-	public function set_options( $value ) {
-		$this->options = [];
-	}
-
 	/**
 	 * Sanitizes field value.
 	 */

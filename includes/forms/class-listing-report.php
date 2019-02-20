@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Report extends Form {
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected $captcha = false;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {

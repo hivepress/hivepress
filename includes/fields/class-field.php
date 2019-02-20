@@ -73,17 +73,20 @@ abstract class Field {
 	 */
 	public function __construct( $props ) {
 
-		// Set properties.
-		foreach ( $props as $prop_name => $prop_value ) {
-			call_user_func_array( [ $this, 'set_' . $prop_name ], [ $prop_value ] );
-		}
-
 		// Set type.
-		$this->set_type( strtolower( ( new \ReflectionClass( $this ) )->getShortName() ) );
+		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+
+		// todo.
+		$props = apply_filters( 'todo123', $props );
 
 		// Set value.
 		if ( is_null( $this->value ) && isset( $props['default'] ) ) {
 			$this->set_value( $props['default'] );
+		}
+
+		// Set properties.
+		foreach ( $props as $prop_name => $prop_value ) {
+			call_user_func_array( [ $this, 'set_' . $prop_name ], [ $prop_value ] );
 		}
 	}
 
@@ -148,6 +151,9 @@ abstract class Field {
 		// Sanitize value.
 		$this->sanitize();
 	}
+
+	// Forbid setting type.
+	public function set_type() {}
 
 	/**
 	 * Sanitizes field value.
