@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 final class Admin {
 
 	/**
+	 * Array of post states.
+	 *
+	 * @var array
+	 */
+	private $post_states = [];
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -38,12 +45,22 @@ final class Admin {
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
+			// Add options.
+			add_action( 'todo', [ $this, 'add_options' ] );
+
+			// Manage post states.
+			add_action( 'init', [ $this, 'register_post_states' ] );
+			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
+
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
+
+			// Filter comments.
+			add_filter( 'comments_clauses', [ $this, 'filter_comments' ] );
 
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -474,6 +491,55 @@ final class Admin {
 	}
 
 	/**
+	 * Adds options.
+	 */
+	public function add_options() {
+		foreach ( hivepress()->get_config( 'options' ) as $tab ) {
+			foreach ( $tab['sections'] as $section ) {
+				foreach ( $section['fields'] as $option_id => $option ) {
+					if ( isset( $option['default'] ) ) {
+						add_option( hp_prefix( $option_id ), $option['default'] );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Registers post states.
+	 */
+	public function register_post_states() {
+		foreach ( hivepress()->get_config( 'options' ) as $tab ) {
+			foreach ( $tab['sections'] as $section ) {
+				foreach ( $section['fields'] as $field_id => $field ) {
+					if ( strpos( $field_id, 'page_' ) === 0 ) {
+						$post_id = absint( get_option( hp_prefix( $field_id ) ) );
+
+						if ( 0 !== $post_id ) {
+							$this->post_states[ $post_id ] = $field['label'];
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds post states.
+	 *
+	 * @param array   $states Post states.
+	 * @param WP_Post $post Post object.
+	 * @return array
+	 */
+	public function add_post_states( $states, $post ) {
+		if ( isset( $this->post_states[ $post->ID ] ) ) {
+			$states[] = $this->post_states[ $post->ID ];
+		}
+
+		return $states;
+	}
+
+	/**
 	 * Adds meta boxes.
 	 *
 	 * @param string  $post_type Post type.
@@ -727,6 +793,22 @@ final class Admin {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Filters comments.
+	 *
+	 * @param array $clauses Comment clauses.
+	 * @return array
+	 */
+	public function filter_comments( $clauses ) {
+		global $pagenow;
+
+		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
+			$clauses['where'] .= ' AND comment_type NOT LIKE "hp_%"';
+		}
+
+		return $clauses;
 	}
 
 	/**
