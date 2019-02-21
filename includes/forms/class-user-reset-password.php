@@ -19,31 +19,36 @@ class User_Reset_Password extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			'password' => [
-				'label'      => esc_html__( 'New Password', 'hivepress' ),
-				'type'       => 'password',
-				'min_length' => 6,
-				'required'   => true,
-				'order'      => 10,
-			],
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-			'username' => [
-				'type'     => 'hidden',
-				'required' => true,
-				'default'  => sanitize_user( hp_get_array_value( $_GET, 'username' ) ),
-			],
+		// Set fields.
+		$this->set_fields(
+			[
+				'password' => [
+					'label'      => esc_html__( 'New Password', 'hivepress' ),
+					'type'       => 'password',
+					'min_length' => 6,
+					'required'   => true,
+					'order'      => 10,
+				],
 
-			'key'      => [
-				'type'     => 'hidden',
-				'required' => true,
-				'default'  => sanitize_text_field( hp_get_array_value( $_GET, 'key' ) ),
-			],
-		];
+				'username' => [
+					'type'     => 'hidden',
+					'required' => true,
+					'default'  => sanitize_user( hp_get_array_value( $_GET, 'username' ) ),
+				],
 
-		parent::__construct();
+				'key'      => [
+					'type'     => 'hidden',
+					'required' => true,
+					'default'  => sanitize_text_field( hp_get_array_value( $_GET, 'key' ) ),
+				],
+			]
+		);
 	}
 
 	/**

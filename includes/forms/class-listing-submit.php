@@ -26,12 +26,14 @@ class Listing_Submit extends Listing_Update {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
 		// Set title.
-		$this->title = esc_html__( 'Submit Listing', 'hivepress' );
+		$this->set_title( esc_html__( 'Submit Listing', 'hivepress' ) );
 
 		// Add terms checkbox.
 		$page_id = hp_get_post_id(
@@ -43,12 +45,16 @@ class Listing_Submit extends Listing_Update {
 		);
 
 		if ( 0 !== $page_id ) {
-			$this->fields['terms'] = [
-				'caption'  => sprintf( hp_sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
-				'type'     => 'checkbox',
-				'required' => true,
-				'order'    => 100,
-			];
+			$this->set_fields(
+				[
+					'terms' => [
+						'caption'  => sprintf( hp_sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
+						'type'     => 'checkbox',
+						'required' => true,
+						'order'    => 100,
+					],
+				]
+			);
 		}
 	}
 }

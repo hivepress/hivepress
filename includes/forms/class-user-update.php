@@ -19,60 +19,65 @@ class User_Update extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			'image'            => [
-				'label'      => esc_html__( 'Profile Image', 'hivepress' ),
-				'caption'    => esc_html__( 'Select Image', 'hivepress' ),
-				'type'       => 'file_upload',
-				'extensions' => [ 'jpg', 'jpeg', 'png' ],
-				'order'      => 10,
-			],
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-			'first_name'       => [
-				'label'      => esc_html__( 'First Name', 'hivepress' ),
-				'type'       => 'text',
-				'max_length' => 64,
-				'order'      => 20,
-			],
+		// Set fields.
+		$this->set_fields(
+			[
+				'image'            => [
+					'label'      => esc_html__( 'Profile Image', 'hivepress' ),
+					'caption'    => esc_html__( 'Select Image', 'hivepress' ),
+					'type'       => 'file_upload',
+					'extensions' => [ 'jpg', 'jpeg', 'png' ],
+					'order'      => 10,
+				],
 
-			'last_name'        => [
-				'label'      => esc_html__( 'Last Name', 'hivepress' ),
-				'type'       => 'text',
-				'max_length' => 64,
-				'order'      => 30,
-			],
+				'first_name'       => [
+					'label'      => esc_html__( 'First Name', 'hivepress' ),
+					'type'       => 'text',
+					'max_length' => 64,
+					'order'      => 20,
+				],
 
-			'description'      => [
-				'label'      => esc_html__( 'Profile Info', 'hivepress' ),
-				'type'       => 'textarea',
-				'max_length' => 2048,
-				'order'      => 40,
-			],
+				'last_name'        => [
+					'label'      => esc_html__( 'Last Name', 'hivepress' ),
+					'type'       => 'text',
+					'max_length' => 64,
+					'order'      => 30,
+				],
 
-			'email'            => [
-				'label'    => esc_html__( 'Email', 'hivepress' ),
-				'type'     => 'email',
-				'required' => true,
-				'order'    => 50,
-			],
+				'description'      => [
+					'label'      => esc_html__( 'Profile Info', 'hivepress' ),
+					'type'       => 'textarea',
+					'max_length' => 2048,
+					'order'      => 40,
+				],
 
-			'new_password'     => [
-				'label'      => esc_html__( 'New Password', 'hivepress' ),
-				'type'       => 'password',
-				'min_length' => 6,
-				'order'      => 60,
-			],
+				'email'            => [
+					'label'    => esc_html__( 'Email', 'hivepress' ),
+					'type'     => 'email',
+					'required' => true,
+					'order'    => 50,
+				],
 
-			'current_password' => [
-				'label' => esc_html__( 'Current Password', 'hivepress' ),
-				'type'  => 'password',
-				'order' => 70,
-			],
-		];
+				'new_password'     => [
+					'label'      => esc_html__( 'New Password', 'hivepress' ),
+					'type'       => 'password',
+					'min_length' => 6,
+					'order'      => 60,
+				],
 
-		parent::__construct();
+				'current_password' => [
+					'label' => esc_html__( 'Current Password', 'hivepress' ),
+					'type'  => 'password',
+					'order' => 70,
+				],
+			]
+		);
 	}
 
 	/**

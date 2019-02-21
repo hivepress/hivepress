@@ -22,7 +22,7 @@ class Listing_Delete extends Form {
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public function __construct( $args ) {
+	public function __construct( $args = [] ) {
 		parent::__construct( $args );
 	}
 

@@ -19,18 +19,23 @@ class User_Delete extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			'password' => [
-				'label'    => esc_html__( 'Password', 'hivepress' ),
-				'type'     => 'password',
-				'required' => true,
-				'order'    => 10,
-			],
-		];
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-		parent::__construct();
+		// Set fields.
+		$this->set_fields(
+			[
+				'password' => [
+					'label'    => esc_html__( 'Password', 'hivepress' ),
+					'type'     => 'password',
+					'required' => true,
+					'order'    => 10,
+				],
+			]
+		);
 	}
 
 	/**

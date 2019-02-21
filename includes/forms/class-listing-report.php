@@ -26,23 +26,26 @@ class Listing_Report extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
 		// Set title.
-		$this->title = esc_html__( 'Report Listing', 'hivepress' );
+		$this->set_title( esc_html__( 'Report Listing', 'hivepress' ) );
 
 		// Set fields.
-		$this->fields = [
-			'reason' => [
-				'type'       => 'textarea',
-				'max_length' => 2048,
-				'required'   => true,
-				'order'      => 10,
-			],
-		];
-
-		parent::__construct();
+		$this->set_fields(
+			[
+				'reason' => [
+					'type'       => 'textarea',
+					'max_length' => 2048,
+					'required'   => true,
+					'order'      => 10,
+				],
+			]
+		);
 	}
 
 	/**
@@ -50,6 +53,5 @@ class Listing_Report extends Form {
 	 */
 	public function submit() {
 		parent::submit();
-
 	}
 }

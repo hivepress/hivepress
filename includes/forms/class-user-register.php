@@ -26,29 +26,34 @@ class User_Register extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
 		// Set title.
-		$this->title = esc_html__( 'Register User', 'hivepress' );
+		$this->set_title( esc_html__( 'Register User', 'hivepress' ) );
 
 		// Set fields.
-		$this->fields = [
-			'email'    => [
-				'label'    => esc_html__( 'Email', 'hivepress' ),
-				'type'     => 'email',
-				'required' => true,
-				'order'    => 10,
-			],
+		$this->set_fields(
+			[
+				'email'    => [
+					'label'    => esc_html__( 'Email', 'hivepress' ),
+					'type'     => 'email',
+					'required' => true,
+					'order'    => 10,
+				],
 
-			'password' => [
-				'label'      => esc_html__( 'Password', 'hivepress' ),
-				'type'       => 'password',
-				'min_length' => 6,
-				'required'   => true,
-				'order'      => 20,
-			],
-		];
+				'password' => [
+					'label'      => esc_html__( 'Password', 'hivepress' ),
+					'type'       => 'password',
+					'min_length' => 6,
+					'required'   => true,
+					'order'      => 20,
+				],
+			]
+		);
 
 		// Add terms checkbox.
 		$page_id = hp_get_post_id(
@@ -60,15 +65,17 @@ class User_Register extends Form {
 		);
 
 		if ( 0 !== $page_id ) {
-			$this->fields['terms'] = [
-				'caption'  => sprintf( hp_sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
-				'type'     => 'checkbox',
-				'required' => true,
-				'order'    => 100,
-			];
+			$this->set_fields(
+				[
+					'terms' => [
+						'caption'  => sprintf( hp_sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
+						'type'     => 'checkbox',
+						'required' => true,
+						'order'    => 100,
+					],
+				]
+			);
 		}
-
-		parent::__construct();
 	}
 
 	/**

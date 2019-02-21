@@ -19,18 +19,23 @@ class Listing_Sort extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			'sort' => [
-				'label'   => esc_html__( 'Sort by', 'hivepress' ),
-				'type'    => 'select',
-				'options' => [],
-				'order'   => 10,
-			],
-		];
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-		parent::__construct();
+		// Set fields.
+		$this->set_fields(
+			[
+				'sort' => [
+					'label'   => esc_html__( 'Sort by', 'hivepress' ),
+					'type'    => 'select',
+					'options' => [],
+					'order'   => 10,
+				],
+			]
+		);
 	}
 
 	/**
@@ -38,6 +43,5 @@ class Listing_Sort extends Form {
 	 */
 	public function submit() {
 		parent::submit();
-
 	}
 }

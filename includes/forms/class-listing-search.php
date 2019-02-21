@@ -19,18 +19,23 @@ class Listing_Search extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			's' => [
-				'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
-				'type'        => 'search',
-				'max_length'  => 256,
-				'order'       => 10,
-			],
-		];
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-		parent::__construct();
+		// Set fields.
+		$this->set_fields(
+			[
+				's' => [
+					'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
+					'type'        => 'search',
+					'max_length'  => 256,
+					'order'       => 10,
+				],
+			]
+		);
 	}
 
 	/**
@@ -38,6 +43,5 @@ class Listing_Search extends Form {
 	 */
 	public function submit() {
 		parent::submit();
-
 	}
 }

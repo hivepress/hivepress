@@ -78,7 +78,7 @@ abstract class Form {
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public function __construct( $args ) {
+	public function __construct( $args = [] ) {
 
 		// Set name.
 		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );

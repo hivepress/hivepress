@@ -19,36 +19,41 @@ class Listing_Update extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-			'title'       => [
-				'label'      => esc_html__( 'Title', 'hivepress' ),
-				'type'       => 'text',
-				'max_length' => 128,
-				'required'   => true,
-				'order'      => 10,
-			],
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
-			'description' => [
-				'label'      => esc_html__( 'Description', 'hivepress' ),
-				'type'       => 'textarea',
-				'max_length' => 10240,
-				'required'   => true,
-				'order'      => 20,
-			],
+		// Set fields.
+		$this->set_fields(
+			[
+				'title'       => [
+					'label'      => esc_html__( 'Title', 'hivepress' ),
+					'type'       => 'text',
+					'max_length' => 128,
+					'required'   => true,
+					'order'      => 10,
+				],
 
-			'images'      => [
-				'label'      => esc_html__( 'Images', 'hivepress' ),
-				'caption'    => esc_html__( 'Select Images', 'hivepress' ),
-				'type'       => 'file_upload',
-				'extensions' => [ 'jpg', 'jpeg', 'png' ],
-				'multiple'   => true,
-				'order'      => 30,
-			],
-		];
+				'description' => [
+					'label'      => esc_html__( 'Description', 'hivepress' ),
+					'type'       => 'textarea',
+					'max_length' => 10240,
+					'required'   => true,
+					'order'      => 20,
+				],
 
-		parent::__construct();
+				'images'      => [
+					'label'      => esc_html__( 'Images', 'hivepress' ),
+					'caption'    => esc_html__( 'Select Images', 'hivepress' ),
+					'type'       => 'file_upload',
+					'extensions' => [ 'jpg', 'jpeg', 'png' ],
+					'multiple'   => true,
+					'order'      => 30,
+				],
+			]
+		);
 	}
 
 	/**
@@ -56,6 +61,5 @@ class Listing_Update extends Form {
 	 */
 	public function submit() {
 		parent::submit();
-
 	}
 }

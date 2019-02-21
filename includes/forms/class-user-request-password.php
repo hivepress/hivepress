@@ -26,24 +26,27 @@ class User_Request_Password extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
 		// Set title.
-		$this->title = esc_html__( 'Reset Password', 'hivepress' );
+		$this->set_title( esc_html__( 'Reset Password', 'hivepress' ) );
 
 		// Set fields.
-		$this->fields = [
-			'username' => [
-				'label'      => esc_html__( 'Username or Email', 'hivepress' ),
-				'type'       => 'text',
-				'max_length' => 254,
-				'required'   => true,
-				'order'      => 10,
-			],
-		];
-
-		parent::__construct();
+		$this->set_fields(
+			[
+				'username' => [
+					'label'      => esc_html__( 'Username or Email', 'hivepress' ),
+					'type'       => 'text',
+					'max_length' => 254,
+					'required'   => true,
+					'order'      => 10,
+				],
+			]
+		);
 	}
 
 	/**

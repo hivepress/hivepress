@@ -26,31 +26,34 @@ class User_Login extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
+		parent::__construct( $args );
 
 		// Set title.
-		$this->title = esc_html__( 'Login User', 'hivepress' );
+		$this->set_title( esc_html__( 'Login User', 'hivepress' ) );
 
 		// Set fields.
-		$this->fields = [
-			'username' => [
-				'label'      => esc_html__( 'Username or Email', 'hivepress' ),
-				'type'       => 'text',
-				'max_length' => 254,
-				'required'   => true,
-				'order'      => 10,
-			],
+		$this->set_fields(
+			[
+				'username' => [
+					'label'      => esc_html__( 'Username or Email', 'hivepress' ),
+					'type'       => 'text',
+					'max_length' => 254,
+					'required'   => true,
+					'order'      => 10,
+				],
 
-			'password' => [
-				'label'    => esc_html__( 'Password', 'hivepress' ),
-				'type'     => 'password',
-				'required' => true,
-				'order'    => 20,
-			],
-		];
-
-		parent::__construct();
+				'password' => [
+					'label'    => esc_html__( 'Password', 'hivepress' ),
+					'type'     => 'password',
+					'required' => true,
+					'order'    => 20,
+				],
+			]
+		);
 	}
 
 	/**
