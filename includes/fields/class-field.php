@@ -22,71 +22,71 @@ abstract class Field {
 	 *
 	 * @var string
 	 */
-	protected $type;
+	private $type;
 
 	/**
 	 * Field name.
 	 *
 	 * @var string
 	 */
-	protected $name;
+	private $name;
 
 	/**
 	 * Field label.
 	 *
 	 * @var string
 	 */
-	protected $label;
+	private $label;
 
 	/**
 	 * Field value.
 	 *
 	 * @var mixed
 	 */
-	protected $value;
+	private $value;
 
 	/**
 	 * Value requirement.
 	 *
 	 * @var bool
 	 */
-	protected $required = false;
-
-	/**
-	 * Validation errors.
-	 *
-	 * @var array
-	 */
-	protected $errors = [];
+	private $required = false;
 
 	/**
 	 * Field attributes.
 	 *
 	 * @var array
 	 */
-	protected $attributes = [];
+	private $attributes = [];
+
+	/**
+	 * Validation errors.
+	 *
+	 * @var array
+	 */
+	private $errors = [];
 
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $props Field properties.
+	 * @param array $args Field arguments.
 	 */
-	public function __construct( $props ) {
+	public function __construct( $args ) {
+
+		// todo.
+		$args = apply_filters( 'todo123', $args );
 
 		// Set type.
 		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
-		// todo.
-		$props = apply_filters( 'todo123', $props );
-
 		// Set value.
-		if ( is_null( $this->value ) && isset( $props['default'] ) ) {
-			$this->set_value( $props['default'] );
+		if ( isset( $args['default'] ) ) {
+			$this->set_value( $args['default'] );
 		}
 
 		// Set properties.
-		foreach ( $props as $prop_name => $prop_value ) {
-			call_user_func_array( [ $this, 'set_' . $prop_name ], [ $prop_value ] );
+		foreach ( $args as $arg_name => $arg_value ) {
+			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
 	}
 
@@ -116,7 +116,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets field property.
+	 * Sets property.
 	 *
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
@@ -128,7 +128,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets field property.
+	 * Gets property.
 	 *
 	 * @param string $name Property name.
 	 */
@@ -137,6 +137,9 @@ abstract class Field {
 			return $this->$name;
 		}
 	}
+
+	// Forbid setting type.
+	final public function set_type() {}
 
 	/**
 	 * Sets field value.
@@ -152,9 +155,6 @@ abstract class Field {
 		$this->sanitize();
 	}
 
-	// Forbid setting type.
-	public function set_type() {}
-
 	/**
 	 * Sanitizes field value.
 	 */
@@ -164,11 +164,7 @@ abstract class Field {
 	 * Validates field value.
 	 */
 	public function validate() {
-		if ( $this->required && is_null( $this->value ) ) {
-			$this->errors[] = 'todo';
-		}
-
-		return empty( $this->errors );
+		return count( $this->get_errors() ) === 0;
 	}
 
 	/**
