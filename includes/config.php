@@ -314,7 +314,40 @@ return [
 	'image_sizes' => [],
 
 	// Templates.
-	'templates'   => [],
+	'templates'   => [
+		'listings_page' => [
+			'blocks' => [
+				'container' => [
+					'type'       => 'container',
+					'order'      => 10,
+					'attributes' => [],
+					'blocks'     => [
+						'sidebar' => [
+							'type'       => 'container',
+							'order'      => 10,
+							'attributes' => [
+								'tag' => 'aside',
+							],
+							'blocks'     => [],
+						],
+						'content' => [
+							'type'       => 'container',
+							'order'      => 20,
+							'attributes' => [
+								'tag' => 'main',
+							],
+							'blocks'     => [
+								'listings' => [
+									'type'  => 'listings',
+									'order' => 20,
+								],
+							],
+						],
+					],
+				],
+			],
+		],
+	],
 
 	// Styles.
 	'styles'      => [
