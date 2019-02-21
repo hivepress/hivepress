@@ -161,7 +161,7 @@ abstract class Form {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<form action="' . esc_url( $this->get_action() ) . '" method="' . esc_url( $this->get_method() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<form action="' . esc_url( $this->get_action() ) . '" method="' . esc_attr( $this->get_method() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->get_fields() as $field_name => $field ) {
 			$output .= $field->render();

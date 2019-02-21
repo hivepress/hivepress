@@ -6,8 +6,8 @@ var registerBlockType = wp.blocks.registerBlockType,
 	TextControl = wp.components.TextControl,
 	SelectControl = wp.components.SelectControl;
 
-registerBlockType(block.type, {
-	title: block.title,
+registerBlockType(hpBlock.type, {
+	title: hpBlock.title,
 	category: 'widgets',
 	icon: createElement('svg', {
 			width: 24,

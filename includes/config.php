@@ -317,9 +317,22 @@ return [
 	'templates'   => [
 		'listings_page' => [
 			'blocks' => [
-				'container' => [
+				'header'  => [
 					'type'       => 'container',
 					'order'      => 10,
+					'attributes' => [
+						'tag' => 'header',
+					],
+					'blocks'     => [
+						'listing_search_form' => [
+							'type'  => 'listing_search_form',
+							'order' => 10,
+						],
+					],
+				],
+				'content' => [
+					'type'       => 'container',
+					'order'      => 20,
 					'attributes' => [
 						'tag'        => 'div',
 						'attributes' => [
