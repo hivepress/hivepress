@@ -25,7 +25,7 @@ class Password extends Text {
 	protected $max_length = 64;
 
 	// Forbid setting maximum length.
-	public function set_max_length( $value ) {}
+	final private function set_max_length() {}
 
 	/**
 	 * Sanitizes field value.

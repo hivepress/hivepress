@@ -79,6 +79,11 @@ abstract class Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args ) {
+
+		// Set name.
+		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+
+		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
@@ -132,10 +137,13 @@ abstract class Form {
 		}
 	}
 
+	// Forbid setting name.
+	final private function set_name() {}
+
 	/**
 	 * Sets form fields.
 	 *
-	 * @param mixed $fields Form fields.
+	 * @param array $fields Form fields.
 	 */
 	final public function set_fields( $fields ) {
 		$this->fields = [];

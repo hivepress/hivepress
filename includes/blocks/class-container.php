@@ -22,25 +22,20 @@ class Container extends Block {
 	 *
 	 * @var array
 	 */
-	protected $blocks = [];
+	private $blocks = [];
 
 	/**
-	 * Class constructor.
+	 * Sets inner blocks.
+	 *
+	 * @param mixed $blocks Inner blocks.
 	 */
-	public function __construct( $args ) {
-		if ( isset( $args['blocks'] ) ) {
-			foreach ( $args['blocks'] as $block_args ) {
-				$block_class    = '\HivePress\Blocks\\' . $block_args['type'];
-				$this->blocks[] = new $block_class( $block_args );
-			}
-		}
+	final public function set_blocks( $blocks ) {
+		$this->blocks = [];
 
-		if ( isset( $args['attributes'] ) ) {
-			$this->attributes = $args['attributes'];
-		}
+		foreach ( $blocks as $block_name => $block_args ) {
+			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-		if(!isset($this->attributes['tag'])) {
-			$this->attributes['tag']='div';
+			$this->blocks[ $block_name ] = new $block_class( $block_args );
 		}
 	}
 
@@ -50,13 +45,13 @@ class Container extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<' . esc_attr( $this->attributes['tag'] ) . '>';
+		$output = '<' . esc_attr( $this->get_attribute( 'tag' ) ) . ' ' . hp_html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
 
 		foreach ( $this->blocks as $block ) {
 			$output .= $block->render();
 		}
 
-		$output .= '</' . esc_attr( $this->attributes['tag'] ) . '>';
+		$output .= '</' . esc_attr( $this->get_attribute( 'tag' ) ) . '>';
 
 		return $output;
 	}

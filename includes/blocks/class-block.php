@@ -33,9 +33,13 @@ abstract class Block {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Block arguments.
 	 */
-	public function __construct() {
-
+	public function __construct( $args ) {
+		foreach ( $args as $arg_name => $arg_value ) {
+			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+		}
 	}
 
 	/**
@@ -84,6 +88,15 @@ abstract class Block {
 		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}
+	}
+
+	/**
+	 * Gets block attribute.
+	 *
+	 * @param mixed $name Attribute name.
+	 */
+	final public function get_attribute( $name ) {
+		return hp_get_array_value( $this->get_attributes(), $name );
 	}
 
 	/**

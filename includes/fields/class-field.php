@@ -139,7 +139,7 @@ abstract class Field {
 	}
 
 	// Forbid setting type.
-	final public function set_type() {}
+	final private function set_type() {}
 
 	/**
 	 * Sets field value.

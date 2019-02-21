@@ -320,13 +320,21 @@ return [
 				'container' => [
 					'type'       => 'container',
 					'order'      => 10,
-					'attributes' => [],
+					'attributes' => [
+						'tag'        => 'div',
+						'attributes' => [
+							'class' => 'row',
+						],
+					],
 					'blocks'     => [
 						'sidebar' => [
 							'type'       => 'container',
 							'order'      => 10,
 							'attributes' => [
-								'tag' => 'aside',
+								'tag'        => 'aside',
+								'attributes' => [
+									'class' => 'col-sm-4 col-xs-12',
+								],
 							],
 							'blocks'     => [],
 						],
@@ -334,7 +342,10 @@ return [
 							'type'       => 'container',
 							'order'      => 20,
 							'attributes' => [
-								'tag' => 'main',
+								'tag'        => 'main',
+								'attributes' => [
+									'class' => 'col-sm-8 col-xs-12',
+								],
 							],
 							'blocks'     => [
 								'listings' => [

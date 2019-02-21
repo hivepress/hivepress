@@ -19,13 +19,11 @@ class Listing_Filter extends Form {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
 	 */
-	public function __construct() {
-		$this->fields = [
-
-		];
-
-		parent::__construct();
+	public function __construct( $args ) {
+		parent::__construct( $args );
 	}
 
 	/**
@@ -33,6 +31,5 @@ class Listing_Filter extends Form {
 	 */
 	public function submit() {
 		parent::submit();
-
 	}
 }

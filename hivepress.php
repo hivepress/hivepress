@@ -29,18 +29,19 @@ function hivepress() {
 // Initialize HivePress.
 hivepress();
 
-// todo remove.
-// add_action('init', function() {
-// 	$form = new HivePress\Forms\User_Login();
-// 	echo $form->render();
-// 	die();
-// });
+//todo remove.
 add_action('init', function() {
-	foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
-		$block_class='\HivePress\Blocks\\'.$block_args['type'];
-		$block=new $block_class($block_args);
-
-		echo $block->render();
-	}
+	$form = new HivePress\Forms\User_Login([]);
+	echo $form->render();
 	die();
 });
+
+// add_action('init', function() {
+// 	foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
+// 		$block_class='\HivePress\Blocks\\'.$block_args['type'];
+// 		$block=new $block_class($block_args);
+//
+// 		echo $block->render();
+// 	}
+// 	die();
+// });
