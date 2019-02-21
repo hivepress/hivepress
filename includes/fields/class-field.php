@@ -71,7 +71,7 @@ abstract class Field {
 	 *
 	 * @param array $args Field arguments.
 	 */
-	public function __construct( $args ) {
+	public function __construct( $args = [] ) {
 
 		// todo.
 		$args = apply_filters( 'todo123', $args );

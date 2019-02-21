@@ -151,8 +151,22 @@ abstract class Form {
 		foreach ( $fields as $field_name => $field_args ) {
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-			$this->fields[ $field_name ] = new $field_class( $field_args );
+			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 		}
+	}
+
+	/**
+	 * Gets form attributes.
+	 *
+	 * @return array
+	 */
+	final public function get_attributes() {
+		$attributes = $this->attributes;
+
+		// Set class.
+		$attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $attributes, 'class' );
+
+		return $attributes;
 	}
 
 	/**
@@ -165,6 +179,17 @@ abstract class Form {
 
 		foreach ( $this->get_fields() as $field_name => $field ) {
 			$output .= $field->render();
+		}
+
+		$output .= '<button type="submit">' . esc_html__( 'Submit', 'hivepress' ) . '</button>';
+
+		if ( $this->get_method() === 'POST' ) {
+			$output .= ( new \HivePress\Fields\Hidden(
+				[
+					'name'    => '_wpnonce',
+					'default' => wp_create_nonce( $this->get_name() ),
+				]
+			) )->render();
 		}
 
 		$output .= '</form>';
