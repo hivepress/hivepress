@@ -65,6 +65,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" minlength="' . esc_attr( $this->min_length ) . '" maxlength="' . esc_attr( $this->max_length ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->get_type() ) . '" name="' . esc_attr( $this->get_name() ) . '" value="' . esc_attr( $this->get_value() ) . '" minlength="' . esc_attr( $this->get_min_length() ) . '" maxlength="' . esc_attr( $this->get_max_length() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 	}
 }

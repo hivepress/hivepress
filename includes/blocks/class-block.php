@@ -36,7 +36,7 @@ abstract class Block {
 	 *
 	 * @param array $args Block arguments.
 	 */
-	public function __construct( $args ) {
+	public function __construct( $args = [] ) {
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}

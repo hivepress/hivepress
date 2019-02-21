@@ -52,10 +52,10 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->name ) . '">';
+		$output = '<select name="' . esc_attr( $this->get_name() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
-		foreach ( $this->options as $option_value => $option_label ) {
-			$output .= '<option value="' . esc_attr( $option_value ) . '" ' . selected( $this->value, $option_value, false ) . '>' . esc_html( $option_label ) . '</option>';
+		foreach ( $this->get_options() as $option_value => $option_label ) {
+			$output .= '<option value="' . esc_attr( $option_value ) . '" ' . selected( $this->get_value(), $option_value, false ) . '>' . esc_html( $option_label ) . '</option>';
 		}
 
 		$output .= '</select>';

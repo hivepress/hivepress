@@ -1,6 +1,6 @@
 <?php
 /**
- * Listings block.
+ * Listing categories block.
  *
  * @package HivePress\Blocks
  */
@@ -11,11 +11,11 @@ namespace HivePress\Blocks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listings block class.
+ * Listing categories block class.
  *
- * @class Listings
+ * @class Listing_Categories
  */
-class Listings extends Block {
+class Listing_Categories extends Block {
 
 	/**
 	 * Class constructor.
@@ -26,7 +26,7 @@ class Listings extends Block {
 		parent::__construct( $args );
 
 		// Set title.
-		$this->set_title( esc_html__( 'Listings', 'hivepress' ) );
+		$this->set_title( esc_html__( 'Listing Categories', 'hivepress' ) );
 	}
 
 	/**

@@ -58,6 +58,10 @@ final class Core {
 	}
 
 	// todo.
+	public function get_dirs() {
+		return $this->dirs;
+	}
+	
 	public function setup() {
 		$this->dirs[] = 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress';
 

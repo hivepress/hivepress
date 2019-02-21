@@ -142,16 +142,16 @@ final class Admin {
 	}
 
 	/**
-	 * Routes component functions.
+	 * Routes methods.
 	 *
-	 * @param string $name Function name.
-	 * @param array  $args Function arguments.
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'render_' ) === 0 ) {
 
 			// Render admin page.
-			$template_name = str_replace( '_', '-', str_replace( 'render_', '', $name ) );
+			$template_name = str_replace( '_', '-', substr( $name, strlen( 'render' ) + 1 ) );
 			$template_path = HP_CORE_DIR . '/templates/admin/' . $template_name . '.php';
 
 			if ( file_exists( $template_path ) ) {
@@ -169,7 +169,7 @@ final class Admin {
 		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
 
 			// Validate setting.
-			return $this->validate_setting( str_replace( 'validate_', '', $name ), $args[0] );
+			return $this->validate_setting( substr( $name, strlen( 'validate' ) + 1 ), $args[0] );
 		}
 	}
 

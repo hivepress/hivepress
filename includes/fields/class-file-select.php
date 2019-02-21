@@ -44,7 +44,7 @@ class File_Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp_html_attributes( $this->attributes ) . '>';
+		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// todo.
 		$output .= '</div>';

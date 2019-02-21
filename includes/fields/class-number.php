@@ -74,8 +74,8 @@ class Number extends Field {
 	public function render() {
 
 		// Get step.
-		$step = 1 / pow( 10, $this->decimals );
+		$step = 1 / pow( 10, $this->get_decimals() );
 
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" step="' . esc_attr( $step ) . '" min="' . esc_attr( $this->min_value ) . '" max="' . esc_attr( $this->max_value ) . '" ' . hp_html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->get_type() ) . '" name="' . esc_attr( $this->get_name() ) . '" value="' . esc_attr( $this->get_value() ) . '" step="' . esc_attr( $step ) . '" min="' . esc_attr( $this->get_min_value() ) . '" max="' . esc_attr( $this->get_max_value() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 	}
 }

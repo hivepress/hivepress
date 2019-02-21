@@ -30,11 +30,11 @@ function hivepress() {
 hivepress();
 
 //todo remove.
-add_action('init', function() {
-	$form = new HivePress\Forms\User_Login([]);
-	echo $form->render();
-	die();
-});
+// add_action('init', function() {
+// 	$form = new HivePress\Forms\User_Login([]);
+// 	echo $form->render();
+// 	die();
+// });
 
 // add_action('init', function() {
 // 	foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
