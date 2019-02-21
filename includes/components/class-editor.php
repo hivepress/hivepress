@@ -40,23 +40,15 @@ final class Editor {
 		// Get blocks.
 		$blocks = [];
 
-		foreach ( hivepress()->get_dirs() as $dir ) {
-			foreach ( glob( $dir . '/includes/blocks/*.php' ) as $filepath ) {
-				$block_slug  = str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) );
-				$block_name  = str_replace( '-', '_', $block_slug );
-				$block_class = '\HivePress\Blocks\\' . $block_name;
+		foreach ( hivepress()->get_blocks() as $block_name => $block ) {
+			if ( $block->get_title() ) {
+				$block_slug = str_replace( '_', '-', $block_name );
 
-				if ( ! ( new \ReflectionClass( $block_class ) )->isAbstract() ) {
-					$block = new $block_class();
-
-					if ( $block->get_title() ) {
-						$blocks[ $block_name ] = [
-							'title'  => HP_CORE_NAME . ' ' . $block->get_title(),
-							'type'   => 'hivepress/' . $block_slug,
-							'script' => 'hp-block-' . $block_slug,
-						];
-					}
-				}
+				$blocks[ $block_name ] = [
+					'title'  => HP_CORE_NAME . ' ' . $block->get_title(),
+					'type'   => 'hivepress/' . $block_slug,
+					'script' => 'hp-block-' . $block_slug,
+				];
 			}
 		}
 

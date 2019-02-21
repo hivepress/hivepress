@@ -77,6 +77,16 @@ final class Form {
 					}
 
 					break;
+
+				// Forms.
+				case 'forms':
+					foreach ( hivepress()->get_forms() as $form_name => $form ) {
+						if ( $form->get_title() ) {
+							$options[ $form_name ] = $form->get_title();
+						}
+					}
+
+					break;
 			}
 
 			$args['options'] = $options;

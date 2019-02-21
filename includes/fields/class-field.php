@@ -43,7 +43,7 @@ abstract class Field {
 	 *
 	 * @var mixed
 	 */
-	private $value;
+	protected $value;
 
 	/**
 	 * Value requirement.

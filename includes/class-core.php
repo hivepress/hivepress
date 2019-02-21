@@ -55,13 +55,29 @@ final class Core {
 	private function __construct() {
 		// todo.
 		add_action( 'plugins_loaded', [ $this, 'setup' ] );
+		spl_autoload_register( [ $this, 'autoload' ] );
 	}
 
 	// todo.
-	public function get_dirs() {
-		return $this->dirs;
+	private function autoload( $class ) {
+		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
+
+		if ( count( $parts ) > 1 && reset( $parts ) === 'hivepress' ) {
+			$filename = 'class-' . end( $parts ) . '.php';
+
+			array_shift( $parts );
+			array_pop( $parts );
+
+			foreach ( $this->dirs as $dir ) {
+				$filepath = rtrim( $dir . '/includes/' . implode( '/', $parts ), '/' ) . '/' . $filename;
+
+				if ( file_exists( $filepath ) ) {
+					require_once $filepath;
+				}
+			}
+		}
 	}
-	
+
 	public function setup() {
 		$this->dirs[] = 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress';
 
@@ -115,18 +131,33 @@ final class Core {
 
 		$this->config = include 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\config.php';
 
-		new \HivePress\Components\Admin();
-		new \HivePress\Components\Media();
-		new \HivePress\Components\Debug();
-		new \HivePress\Components\Template();
-		new \HivePress\Components\Email();
-		new \HivePress\Components\Form();
-		new \HivePress\Components\Editor();
+		$this->components = $this->get_components();
 	}
 
 	// todo.
 	public function get_config( $name ) {
 		return $this->config[ $name ];
+	}
+
+	// todo
+	public function __call( $name, $args ) {
+		if ( strpos( $name, 'get_' ) === 0 ) {
+			$type  = substr( $name, strlen( 'get' ) + 1 );
+			$items = [];
+
+			foreach ( $this->dirs as $dir ) {
+				foreach ( glob( $dir . '/includes/' . $type . '/*.php' ) as $filepath ) {
+					$id    = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
+					$class = '\HivePress\\' . $type . '\\' . $id;
+
+					if ( ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
+						$items[ $id ] = new $class();
+					}
+				}
+			}
+
+			return $items;
+		}
 	}
 
 	/**

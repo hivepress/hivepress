@@ -14,11 +14,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Include autoloading functions.
-require_once __DIR__ . '/includes/autoload.php';
+// Include the core HivePress class.
+require_once __DIR__ . '/includes/class-core.php';
 
 /**
- * Returns the main HivePress instance.
+ * Returns the core HivePress instance.
  *
  * @return HivePress\Core
  */
@@ -28,20 +28,3 @@ function hivepress() {
 
 // Initialize HivePress.
 hivepress();
-
-//todo remove.
-// add_action('init', function() {
-// 	$form = new HivePress\Forms\User_Login([]);
-// 	echo $form->render();
-// 	die();
-// });
-
-add_action('init', function() {
-	foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
-		$block_class='\HivePress\Blocks\\'.$block_args['type'];
-		$block=new $block_class($block_args);
-
-		echo $block->render();
-	}
-	die();
-});

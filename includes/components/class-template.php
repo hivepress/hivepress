@@ -50,6 +50,16 @@ final class Template {
 	 */
 	public function set_page_template( $template ) {
 		// todo.
+		get_header();
+		foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
+			$block_class='\HivePress\Blocks\\'.$block_args['type'];
+			$block=new $block_class($block_args);
+
+			echo $block->render();
+		}
+		get_footer();
+		die();
+
 		return $template;
 	}
 }
