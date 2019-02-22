@@ -57,6 +57,12 @@ final class Core {
 		// Autoload classes.
 		spl_autoload_register( [ $this, 'autoload' ] );
 
+		// Activate HivePress.
+		register_activation_hook( HP_CORE_FILE, [ __CLASS__, 'activate' ] );
+
+		// Install HivePress.
+		add_action( 'init', [ $this, 'install' ] );
+
 		// Setup HivePress.
 		add_action( 'plugins_loaded', [ $this, 'setup' ] );
 	}
@@ -80,7 +86,7 @@ final class Core {
 	 *
 	 * @param string $class Class name.
 	 */
-	private function autoload( $class ) {
+	public function autoload( $class ) {
 		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
 
 		if ( count( $parts ) > 1 && reset( $parts ) === 'hivepress' ) {
@@ -100,12 +106,42 @@ final class Core {
 	}
 
 	/**
+	 * Activates HivePress.
+	 */
+	public static function activate() {
+
+		// Set activation status.
+		add_option( 'hp_core_activated', '1' );
+	}
+
+	/**
+	 * Installs HivePress.
+	 */
+	public function install() {
+		if ( get_option( 'hp_core_activated' ) || count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
+
+			// Fires on HivePress activation.
+			do_action( 'hivepress/activate' );
+
+			// Delete activation status.
+			if ( get_option( 'hp_core_activated' ) ) {
+				delete_option( 'hp_core_activated' );
+			}
+
+			// Update HivePress directories number.
+			if ( count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
+				update_option( 'hp_dirs_number', count( $this->dirs ) );
+			}
+		}
+	}
+
+	/**
 	 * Setups HivePress.
 	 */
 	public function setup() {
 
-		// Set the core directory.
-		$this->dirs[] = dirname( HP_CORE_FILE );
+		// Set HivePress directories.
+		$this->dirs = apply_filters( 'hivepress/dirs', [ dirname( HP_CORE_FILE ) ] );
 
 		// Define constants.
 		$this->define_constants();
@@ -124,11 +160,10 @@ final class Core {
 	 * Defines constants.
 	 */
 	private function define_constants() {
-		// todo.
 		foreach ( $this->dirs as $dir ) {
 			$basename = basename( $dir );
 			$filepath = $dir . '/' . $basename . '.php';
-			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', trim( str_replace( 'hivepress', '', $basename ), '-' ) ) ) . '_';
+			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', str_replace( 'hivepress-', '', $basename ) ) ) . '_';
 
 			if ( 'hivepress' === $basename ) {
 				$prefix = 'HP_CORE_';
