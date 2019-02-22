@@ -28,7 +28,12 @@ class Checkboxes extends Select {
 		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->get_options() as $option_value => $option_label ) {
-			// todo.
+			$output .= ( new Checkbox(
+				[
+					'name'    => $this->get_name() . '_' . $option_value,
+					'caption' => $option_label,
+				]
+			) )->render();
 		}
 
 		$output .= '</div>';

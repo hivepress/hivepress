@@ -23,7 +23,9 @@ class Listing extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = 'todo';
+
+		// todo.
+		$output = ( new Template( [ 'attributes' => [ 'path' => 'todo' ] ] ) )->render();
 
 		return $output;
 	}

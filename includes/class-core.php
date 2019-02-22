@@ -237,6 +237,15 @@ final class Core {
 	}
 
 	/**
+	 * Gets HivePress directories.
+	 *
+	 * @return array
+	 */
+	public function get_dirs() {
+		return $this->dirs;
+	}
+
+	/**
 	 * Gets configuration.
 	 *
 	 * @param string $name Configuration name.

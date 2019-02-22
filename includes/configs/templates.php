@@ -17,7 +17,7 @@ return [
 				'attributes' => [
 					'tag'        => 'div',
 					'attributes' => [
-						'class' => 'row',
+						'class' => 'hp-row',
 					],
 				],
 				'blocks'     => [
@@ -27,7 +27,7 @@ return [
 						'attributes' => [
 							'tag'        => 'main',
 							'attributes' => [
-								'class' => 'col-sm-8 col-xs-12',
+								'class' => 'hp-col-sm-8 hp-col-xs-12',
 							],
 						],
 						'blocks'     => [],
@@ -38,7 +38,7 @@ return [
 						'attributes' => [
 							'tag'        => 'aside',
 							'attributes' => [
-								'class' => 'col-sm-4 col-xs-12',
+								'class' => 'hp-col-sm-4 hp-col-xs-12',
 							],
 						],
 						'blocks'     => [],
@@ -68,7 +68,7 @@ return [
 				'attributes' => [
 					'tag'        => 'div',
 					'attributes' => [
-						'class' => 'row',
+						'class' => 'hp-row',
 					],
 				],
 				'blocks'     => [
@@ -78,7 +78,7 @@ return [
 						'attributes' => [
 							'tag'        => 'aside',
 							'attributes' => [
-								'class' => 'col-sm-4 col-xs-12',
+								'class' => 'hp-col-sm-4 hp-col-xs-12',
 							],
 						],
 						'blocks'     => [],
@@ -89,7 +89,7 @@ return [
 						'attributes' => [
 							'tag'        => 'main',
 							'attributes' => [
-								'class' => 'col-sm-8 col-xs-12',
+								'class' => 'hp-col-sm-8 hp-col-xs-12',
 							],
 						],
 						'blocks'     => [
