@@ -73,8 +73,8 @@ abstract class Field {
 	 */
 	public function __construct( $args = [] ) {
 
-		// todo.
-		$args = apply_filters( 'todo123', $args );
+		// Filter field arguments.
+		$args = apply_filters( 'hivepress/fields/field/args', $args );
 
 		// Set type.
 		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );

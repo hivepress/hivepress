@@ -22,15 +22,20 @@ final class Form {
 	 */
 	public function __construct() {
 
-		// todo.
-		add_filter( 'todo123', [ $this, 'set_field_args' ] );
+		// Set field options.
+		add_filter( 'hivepress/fields/field/args', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
-	// todo.
-	public function set_field_args( $args ) {
+	/**
+	 * Sets field options.
+	 *
+	 * @param array $args Field arguments.
+	 * @return array
+	 */
+	public function set_field_options( $args ) {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
@@ -99,7 +104,7 @@ final class Form {
 	 * Enqueues scripts.
 	 */
 	public function enqueue_scripts() {
-		if ( get_option( 'hp_recaptcha_site_key' ) !== '' && get_option( 'hp_recaptcha_secret_key' ) !== '' ) {
+		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) ) {
 			wp_enqueue_script(
 				'recaptcha',
 				'https://www.google.com/recaptcha/api.js',

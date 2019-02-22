@@ -244,17 +244,18 @@ final class Core {
 	 */
 	public function get_config( $name ) {
 		if ( ! isset( $this->config[ $name ] ) ) {
-			$this->config[ $name ] = [];
+			$config = [];
 
 			foreach ( $this->dirs as $dir ) {
 				$filepath = $dir . '/includes/configs/' . str_replace( '_', '-', $name ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
-					$config = include $filepath;
-
-					$this->config[ $name ] = array_merge( $this->config[ $name ], $config );
+					$config = array_merge( $config, include $filepath );
 				}
 			}
+
+			// Filter configuration.
+			$this->config[ $name ] = apply_filters( 'hivepress/' . $name, $config );
 		}
 
 		return $this->config[ $name ];

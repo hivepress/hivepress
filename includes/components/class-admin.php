@@ -46,7 +46,7 @@ final class Admin {
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
 			// Add options.
-			add_action( 'todo', [ $this, 'add_options' ] );
+			add_action( 'hivepress/activate', [ $this, 'add_options' ] );
 
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
