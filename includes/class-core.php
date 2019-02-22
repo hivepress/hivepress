@@ -203,7 +203,7 @@ final class Core {
 	private function load_textdomains() {
 		foreach ( $this->dirs as $dir ) {
 			$basename   = basename( $dir );
-			$textdomain = sanitize_title( $basename );
+			$textdomain = str_replace( '_', '-', $basename );
 
 			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
 		}
