@@ -23,4 +23,18 @@ abstract class Controller {
 	public function __construct() {
 
 	}
+
+	/**
+	 * Matches controller URL.
+	 *
+	 * @return bool
+	 */
+	abstract public function match();
+
+	/**
+	 * Renders controller response.
+	 *
+	 * @return string
+	 */
+	abstract public function render();
 }

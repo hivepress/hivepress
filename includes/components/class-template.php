@@ -49,17 +49,17 @@ final class Template {
 	 * @return string
 	 */
 	public function set_page_template( $template ) {
+		//todo.
 		$controllers=hivepress()->get_controllers();
-		// todo.
-		get_header();
-		foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
-			$block_class='\HivePress\Blocks\\'.$block_args['type'];
-			$block=new $block_class($block_args);
 
-			echo $block->render();
+		foreach($controllers as $controller) {
+			if($controller->match()) {
+				get_header();
+				echo $controller->render();
+				get_footer();
+				die();
+			}
 		}
-		get_footer();
-		die();
 
 		return $template;
 	}

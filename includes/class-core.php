@@ -129,14 +129,16 @@ final class Core {
 			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
 		}
 
-		$this->config = include 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress\includes\config.php';
-
 		$this->components = $this->get_components();
 	}
 
 	// todo.
 	public function get_config( $name ) {
-		return $this->config[ $name ];
+		if ( ! isset( $this->config[ $name ] ) ) {
+			$this->config[ $name ] = include HP_CORE_DIR . '/includes/configs/' . str_replace( '_', '-', $name ) . '.php';
+		}
+
+		return hp_get_array_value( $this->config, $name );
 	}
 
 	// todo
