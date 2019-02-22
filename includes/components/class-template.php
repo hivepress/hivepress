@@ -49,6 +49,7 @@ final class Template {
 	 * @return string
 	 */
 	public function set_page_template( $template ) {
+		$controllers=hivepress()->get_controllers();
 		// todo.
 		get_header();
 		foreach(hivepress()->get_config('templates')['listings_page']['blocks'] as $block_args) {
