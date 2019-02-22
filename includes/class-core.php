@@ -53,12 +53,33 @@ final class Core {
 	 * Class constructor.
 	 */
 	private function __construct() {
-		// todo.
-		add_action( 'plugins_loaded', [ $this, 'setup' ] );
+
+		// Autoload classes.
 		spl_autoload_register( [ $this, 'autoload' ] );
+
+		// Setup HivePress.
+		add_action( 'plugins_loaded', [ $this, 'setup' ] );
 	}
 
-	// todo.
+	/**
+	 * Ensures only one instance is loaded.
+	 *
+	 * @see hivepress()
+	 * @return Core
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Autoloads classes.
+	 *
+	 * @param string $class Class name.
+	 */
 	private function autoload( $class ) {
 		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
 
@@ -78,10 +99,32 @@ final class Core {
 		}
 	}
 
+	/**
+	 * Setups HivePress.
+	 */
 	public function setup() {
-		$this->dirs[] = 'C:\xampp\htdocs\hivepress\wp-content\plugins\hivepress';
+
+		// Set the core directory.
+		$this->dirs[] = dirname( HP_CORE_FILE );
 
 		// Define constants.
+		$this->define_constants();
+
+		// Include helper functions.
+		require_once HP_CORE_DIR . '/includes/helpers.php';
+
+		// Load textdomains.
+		$this->load_textdomains();
+
+		// Set components.
+		$this->components = $this->get_components();
+	}
+
+	/**
+	 * Defines constants.
+	 */
+	private function define_constants() {
+		// todo.
 		foreach ( $this->dirs as $dir ) {
 			$basename = basename( $dir );
 			$filepath = $dir . '/' . $basename . '.php';
@@ -117,69 +160,75 @@ final class Core {
 				}
 			}
 		}
+	}
 
-		// Include helper functions.
-		require_once HP_CORE_DIR . '/includes/helpers.php';
-
-		// Load translation files.
+	/**
+	 * Loads textdomains.
+	 */
+	private function load_textdomains() {
 		foreach ( $this->dirs as $dir ) {
 			$basename   = basename( $dir );
 			$textdomain = sanitize_title( $basename );
 
 			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
 		}
-
-		$this->components = $this->get_components();
 	}
 
-	// todo.
-	public function get_config( $name ) {
-		if ( ! isset( $this->config[ $name ] ) ) {
-			$this->config[ $name ] = include HP_CORE_DIR . '/includes/configs/' . str_replace( '_', '-', $name ) . '.php';
-		}
-
-		return hp_get_array_value( $this->config, $name );
-	}
-
-	// todo
+	/**
+	 * Routes methods.
+	 *
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
+	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
-			$type  = substr( $name, strlen( 'get' ) + 1 );
-			$items = [];
+			$instances = [];
+
+			$instance_type = substr( $name, strlen( 'get' ) + 1 );
 
 			foreach ( $this->dirs as $dir ) {
-				foreach ( glob( $dir . '/includes/' . $type . '/*.php' ) as $filepath ) {
-					$id    = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
-					$class = '\HivePress\\' . $type . '\\' . $id;
+				foreach ( glob( $dir . '/includes/' . $instance_type . '/*.php' ) as $filepath ) {
+					$instance_name  = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
+					$instance_class = '\HivePress\\' . $instance_type . '\\' . $instance_name;
 
-					if ( ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
-						$items[ $id ] = new $class();
+					if ( ! ( new \ReflectionClass( $instance_class ) )->isAbstract() ) {
+						$instances[ $instance_name ] = new $instance_class();
 					}
 				}
 			}
 
-			return $items;
+			return $instances;
 		}
 	}
 
 	/**
-	 * Ensures only one plugin instance is loaded.
+	 * Gets configuration.
 	 *
-	 * @see hivepress()
-	 * @return Core
+	 * @param string $name Configuration name.
+	 * @return array
 	 */
-	public static function instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
+	public function get_config( $name ) {
+		if ( ! isset( $this->config[ $name ] ) ) {
+			$this->config[ $name ] = [];
+
+			foreach ( $this->dirs as $dir ) {
+				$filepath = $dir . '/includes/configs/' . str_replace( '_', '-', $name ) . '.php';
+
+				if ( file_exists( $filepath ) ) {
+					$config = include $filepath;
+
+					$this->config[ $name ] = array_merge( $this->config[ $name ], $config );
+				}
+			}
 		}
 
-		return self::$instance;
+		return $this->config[ $name ];
 	}
 
 	/**
-	 * Gets component instance.
+	 * Gets property.
 	 *
-	 * @param string $name Component name.
+	 * @param string $name Property name.
 	 * @return mixed
 	 */
 	public function __get( $name ) {
