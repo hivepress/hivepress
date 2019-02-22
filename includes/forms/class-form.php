@@ -148,7 +148,7 @@ abstract class Form {
 	final public function set_fields( $fields ) {
 		$this->fields = [];
 
-		foreach ( $fields as $field_name => $field_args ) {
+		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
 			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
@@ -178,6 +178,8 @@ abstract class Form {
 		$output = '<form action="' . esc_url( $this->get_action() ) . '" method="' . esc_attr( $this->get_method() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->get_fields() as $field_name => $field ) {
+			$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
+
 			$output .= $field->render();
 		}
 

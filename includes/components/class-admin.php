@@ -185,20 +185,13 @@ final class Admin {
 			$tab = hp_get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
 
 			if ( ! is_null( $tab ) ) {
-
-				// Sort sections.
-				$tab['sections'] = hp_sort_array( $tab['sections'] );
-
-				foreach ( $tab['sections'] as $section_id => $section ) {
+				foreach ( hp_sort_array( $tab['sections'] ) as $section_id => $section ) {
 
 					// Add settings section.
 					add_settings_section( $section_id, esc_html( hp_get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
 
-					// Sort settings.
-					$section['fields'] = hp_sort_array( $section['fields'] );
-
 					// Register settings.
-					foreach ( $section['fields'] as $option_id => $option ) {
+					foreach ( hp_sort_array( $section['fields'] ) as $option_id => $option ) {
 						$option_id         = hp_prefix( $option_id );
 						$option['default'] = get_option( $option_id );
 
@@ -612,13 +605,10 @@ final class Admin {
 			// Get meta box ID.
 			$meta_box_id = hp_unprefix( $args['id'] );
 
-			// Sort fields.
-			$meta_box['fields'] = hp_sort_array( $meta_box['fields'] );
-
 			// Render fields.
 			$output .= '<table class="form-table hp-form">';
 
-			foreach ( $meta_box['fields'] as $field_id => $field_args ) {
+			foreach ( hp_sort_array( $meta_box['fields'] ) as $field_id => $field_args ) {
 
 				// Get field class.
 				$field_class = '\HivePress\Fields\\' . $field_args['type'];
@@ -738,11 +728,7 @@ final class Admin {
 			$screen = hp_prefix( $meta_box['screen'] );
 
 			if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $taxonomy ) {
-
-				// Sort fields.
-				$meta_box['fields'] = hp_sort_array( $meta_box['fields'] );
-
-				foreach ( $meta_box['fields'] as $field_id => $field_args ) {
+				foreach ( hp_sort_array( $meta_box['fields'] ) as $field_id => $field_args ) {
 
 					// Get field class.
 					$field_class = '\HivePress\Fields\\' . $field_args['type'];

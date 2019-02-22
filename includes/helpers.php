@@ -138,6 +138,23 @@ function hp_sanitize_html( $html ) {
 }
 
 /**
+ * Replaces placeholders with values.
+ *
+ * @param array  $placeholders Array of placeholders.
+ * @param string $text Text to be processed.
+ * @return string
+ */
+function hp_replace_placeholders( $placeholders, $text ) {
+	foreach ( $placeholders as $placeholder_name => $placeholder_value ) {
+		if ( ! is_array( $placeholder_value ) ) {
+			$text = str_replace( '%' . $placeholder_name . '%', $placeholder_value, $text );
+		}
+	}
+
+	return $text;
+}
+
+/**
  * Gets post ID.
  *
  * @param array $args Post arguments.

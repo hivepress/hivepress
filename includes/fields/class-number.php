@@ -55,11 +55,11 @@ class Number extends Field {
 
 		if ( ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
-				$this->errors[] = 'todo';
+				$this->errors[] = hp_sanitize_html( __( "%1\$s can't be lower than %2\$s.", 'hivepress' ), '<strong>' . $this->get_label() . '</strong>', number_format_i18n( $this->min_value ) );
 			}
 
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
-				$this->errors[] = 'todo';
+				$this->errors[] = hp_sanitize_html( __( "%1\$s can't be greater than %2\$s.", 'hivepress' ), '<strong>' . $this->get_label() . '</strong>', number_format_i18n( $this->min_value ) );
 			}
 		}
 

@@ -17,7 +17,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Radio extends Select {
 
-	// todo set multiple to false.
+	/**
+	 * Multiple status.
+	 *
+	 * @var bool
+	 */
+	protected $multiple = false;
+
+	// Forbid setting multiple status.
+	final private function set_multiple() {}
 
 	/**
 	 * Renders field HTML.

@@ -40,7 +40,7 @@ class Select extends Field {
 		parent::validate();
 
 		if ( ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
-			$this->errors[] = 'todo';
+			$this->errors[] = hp_sanitize_html( __( '%s contains invalid value.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' );
 		}
 
 		return empty( $this->errors );

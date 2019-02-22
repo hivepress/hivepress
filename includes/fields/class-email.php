@@ -43,7 +43,7 @@ class Email extends Text {
 		parent::validate();
 
 		if ( ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->errors[] = 'todo';
+			$this->errors[] = hp_sanitize_html( __( '%s should be a valid email address.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' );
 		}
 
 		return empty( $this->errors );

@@ -17,7 +17,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Checkboxes extends Select {
 
-	// todo set multiple to true.
+	/**
+	 * Multiple status.
+	 *
+	 * @var bool
+	 */
+	protected $multiple = true;
+
+	// Forbid setting multiple status.
+	final private function set_multiple() {}
 
 	/**
 	 * Renders field HTML.
