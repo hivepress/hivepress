@@ -24,6 +24,11 @@ class File_Upload extends Field {
 		// todo.
 	}
 
+	// todo.
+	public function validate() {
+		return empty( $this->errors );
+	}
+
 	/**
 	 * Renders field HTML.
 	 *

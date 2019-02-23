@@ -36,6 +36,8 @@ final class Form {
 	 * Registers API routes.
 	 */
 	public function register_api_routes() {
+
+		// Submit form.
 		register_rest_route(
 			'hivepress/v1',
 			'/forms/(?P<name>[a-z_]+)',

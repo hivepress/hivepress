@@ -123,12 +123,24 @@ final class Media {
 	 * Registers API routes.
 	 */
 	public function register_api_routes() {
+
+		// Upload file.
 		register_rest_route(
 			'hivepress/v1',
 			'/files',
 			[
 				'methods'  => 'POST',
 				'callback' => [ $this, 'upload_file' ],
+			]
+		);
+
+		// Delete file.
+		register_rest_route(
+			'hivepress/v1',
+			'/files/(?P<id>[0-9]+)',
+			[
+				'methods'  => 'DELETE',
+				'callback' => [ $this, 'delete_file' ],
 			]
 		);
 	}
@@ -140,7 +152,9 @@ final class Media {
 	 * @return mixed
 	 */
 	public function upload_file( $request ) {
-		$response = null;
+		$response = [
+			'success' => false,
+		];
 
 		if ( is_user_logged_in() ) {
 			require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -159,32 +173,71 @@ final class Media {
 				$field = hp_get_array_value( $form->get_fields(), $request->get_param( 'field' ) );
 
 				if ( ! is_null( $field ) && $field->get_type() === 'file_upload' ) {
+					if ( $field->validate() ) {
 
-					// Upload file.
-					$attachment_id = media_handle_upload( $request->get_param( 'field' ) );
+						// Upload file.
+						$attachment_id = media_handle_upload( $request->get_param( 'field' ) );
 
-					if ( ! is_wp_error( $attachment_id ) ) {
+						if ( ! is_wp_error( $attachment_id ) ) {
 
-						// Get file URL.
-						$attachment_url = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
+							// Get file URL.
+							$attachment_url = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
 
-						if ( false !== $attachment_url ) {
-							$attachment_url = reset( $attachment_url );
+							if ( false !== $attachment_url ) {
+								$attachment_url = reset( $attachment_url );
+							}
+
+							// Set response.
+							$response = [
+								'success' => true,
+								'id'      => $attachment_id,
+								'url'     => $attachment_url,
+							];
+						} else {
+							$response['errors'] = [ esc_html__( 'Error uploading file.', 'hivepress' ) ];
 						}
-
-						$response = [
-							'success' => true,
-							'url'     => $attachment_url,
-						];
 					} else {
-						$response = [
-							'success' => false,
-						];
+						$response['errors'] = $field->get_errors();
 					}
 				}
 			}
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Deletes file.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return mixed
+	 */
+	public function delete_file( $request ) {
+		if ( is_user_logged_in() ) {
+
+			// Get attachment ID.
+			$attachment_id = hp_get_post_id(
+				[
+					'post_type'   => 'attachment',
+					'post_status' => 'any',
+					'post__in'    => [ absint( $request->get_param( 'id' ) ) ],
+				]
+			);
+
+			if ( 0 !== $attachment_id ) {
+
+				// Get user IDs.
+				$user_ids = [
+					absint( get_post_field( 'post_author', $attachment_id ) ),
+					absint( get_post_field( 'post_author', get_post_field( 'post_parent', $attachment_id ) ) ),
+				];
+
+				if ( in_array( get_curren_user_id(), $user_ids, true ) ) {
+
+					// Delete attachment.
+					wp_delete_attachment( $attachment_id, true );
+				}
+			}
+		}
 	}
 }

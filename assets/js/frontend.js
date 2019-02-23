@@ -53,7 +53,7 @@ var hivepress = {
 		if (form.attr('method') === 'POST') {
 			form.on('submit', function(e) {
 				$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + form.data('name'), form.serializeObject(), function(response) {
-					if (response.hasOwnProperty('success')) {
+					if (response) {
 						if (response.success) {
 							if (response.redirect) {
 								window.location.reload(true);
@@ -80,8 +80,9 @@ var hivepress = {
 		field.fileupload({
 			url: hpCoreFrontendData.apiURL + 'hivepress/v1/files',
 			formData: {
-				form: field.closest('form').data('name'),
-				field: field.attr('name'),
+				'form': field.closest('form').data('name'),
+				'field': field.attr('name'),
+				'_wpnonce': hpCoreFrontendData.apiNonce,
 			},
 			dataType: 'json',
 			start: function() {
@@ -97,7 +98,7 @@ var hivepress = {
 				selectButton.attr('data-state', '');
 			},
 			done: function(e, data) {
-				if (data.result.hasOwnProperty('success')) {
+				if (data.result) {
 
 				}
 
