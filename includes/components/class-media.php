@@ -35,6 +35,9 @@ final class Media {
 
 		// Filter scripts.
 		add_filter( 'script_loader_tag', [ $this, 'filter_script' ], 10, 2 );
+
+		// Register API routes.
+		add_action( 'rest_api_init', [ $this, 'register_api_routes' ] );
 	}
 
 	/**
@@ -114,5 +117,74 @@ final class Media {
 		}
 
 		return $tag;
+	}
+
+	/**
+	 * Registers API routes.
+	 */
+	public function register_api_routes() {
+		register_rest_route(
+			'hivepress/v1',
+			'/files',
+			[
+				'methods'  => 'POST',
+				'callback' => [ $this, 'upload_file' ],
+			]
+		);
+	}
+
+	/**
+	 * Uploads file.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return mixed
+	 */
+	public function upload_file( $request ) {
+		$response = null;
+
+		if ( is_user_logged_in() ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+
+			// Get form class.
+			$form_class = '\HivePress\Forms\\' . $request->get_param( 'form' );
+
+			if ( class_exists( $form_class ) ) {
+
+				// Create form.
+				$form = new $form_class();
+
+				// Get field.
+				$field = hp_get_array_value( $form->get_fields(), $request->get_param( 'field' ) );
+
+				if ( ! is_null( $field ) && $field->get_type() === 'file_upload' ) {
+
+					// Upload file.
+					$attachment_id = media_handle_upload( $request->get_param( 'field' ) );
+
+					if ( ! is_wp_error( $attachment_id ) ) {
+
+						// Get file URL.
+						$attachment_url = wp_get_attachment_image_src( $attachment_id, 'thumbnail' );
+
+						if ( false !== $attachment_url ) {
+							$attachment_url = reset( $attachment_url );
+						}
+
+						$response = [
+							'success' => true,
+							'url'     => $attachment_url,
+						];
+					} else {
+						$response = [
+							'success' => false,
+						];
+					}
+				}
+			}
+		}
+
+		return $response;
 	}
 }

@@ -86,56 +86,59 @@ class User_Update extends Form {
 	public function submit() {
 		parent::submit();
 
-		// Get user.
-		$user = wp_get_current_user();
+		if ( is_user_logged_in() ) {
 
-		// Get user name.
-		$first_name   = hp_get_array_value( $values, 'first_name', '' );
-		$last_name    = hp_get_array_value( $values, 'last_name', '' );
-		$display_name = trim( $first_name . ' ' . $last_name );
+			// Get user.
+			$user = wp_get_current_user();
 
-		// Update name and description.
-		update_user_meta( $user->ID, 'first_name', $first_name );
-		update_user_meta( $user->ID, 'last_name', $last_name );
-		update_user_meta( $user->ID, 'description', hp_get_array_value( $values, 'description' ) );
+			// Get user name.
+			$first_name   = hp_get_array_value( $values, 'first_name', '' );
+			$last_name    = hp_get_array_value( $values, 'last_name', '' );
+			$display_name = trim( $first_name . ' ' . $last_name );
 
-		if ( '' !== $display_name ) {
-			wp_update_user(
-				[
-					'ID'           => $user->ID,
-					'display_name' => $display_name,
-				]
-			);
-		}
+			// Update name and description.
+			update_user_meta( $user->ID, 'first_name', $first_name );
+			update_user_meta( $user->ID, 'last_name', $last_name );
+			update_user_meta( $user->ID, 'description', hp_get_array_value( $values, 'description' ) );
 
-		// Update email and password.
-		if ( $this->get_value( 'email' ) !== $user->user_email || '' !== $this->get_value( 'new_password' ) ) {
+			if ( '' !== $display_name ) {
+				wp_update_user(
+					[
+						'ID'           => $user->ID,
+						'display_name' => $display_name,
+					]
+				);
+			}
 
-			// Check password.
-			if ( '' === $this->get_value( 'current_password' ) ) {
-				$this->errors[] = esc_html__( 'The current password is required.', 'hivepress' );
-			} elseif ( ! wp_check_password( $this->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
-				$this->errors[] = esc_html__( 'The current password is incorrect.', 'hivepress' );
-			} else {
+			// Update email and password.
+			if ( $this->get_value( 'email' ) !== $user->user_email || '' !== $this->get_value( 'new_password' ) ) {
 
-				// Update email.
-				if ( $this->get_value( 'email' ) !== $user->user_email ) {
-					wp_update_user(
-						[
-							'ID'         => $user->ID,
-							'user_email' => $this->get_value( 'email' ),
-						]
-					);
-				}
+				// Check password.
+				if ( '' === $this->get_value( 'current_password' ) ) {
+					$this->errors[] = esc_html__( 'The current password is required.', 'hivepress' );
+				} elseif ( ! wp_check_password( $this->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
+					$this->errors[] = esc_html__( 'The current password is incorrect.', 'hivepress' );
+				} else {
 
-				// Change password.
-				if ( '' !== $this->get_value( 'new_password' ) ) {
-					wp_update_user(
-						[
-							'ID'        => $user->ID,
-							'user_pass' => $this->get_value( 'new_password' ),
-						]
-					);
+					// Update email.
+					if ( $this->get_value( 'email' ) !== $user->user_email ) {
+						wp_update_user(
+							[
+								'ID'         => $user->ID,
+								'user_email' => $this->get_value( 'email' ),
+							]
+						);
+					}
+
+					// Change password.
+					if ( '' !== $this->get_value( 'new_password' ) ) {
+						wp_update_user(
+							[
+								'ID'        => $user->ID,
+								'user_pass' => $this->get_value( 'new_password' ),
+							]
+						);
+					}
 				}
 			}
 		}

@@ -68,4 +68,41 @@ var hivepress = {
 			});
 		}
 	});
+
+	// File upload
+	hivepress.getObject('file-upload').each(function() {
+		var field = $(this),
+			selectLabel = field.closest('label'),
+			selectButton = selectLabel.find('button').first(),
+			messageContainer = $('<div />').insertBefore(selectLabel),
+			responseContainer = selectLabel.parent().children('div').first();
+
+		field.fileupload({
+			url: hpCoreFrontendData.apiURL + 'hivepress/v1/files',
+			formData: {
+				form: field.closest('form').data('name'),
+				field: field.attr('name'),
+			},
+			dataType: 'json',
+			start: function() {
+				field.prop('disabled', true);
+
+				selectButton.prop('disabled', true);
+				selectButton.attr('data-state', 'loading');
+			},
+			stop: function() {
+				field.prop('disabled', false);
+
+				selectButton.prop('disabled', false);
+				selectButton.attr('data-state', '');
+			},
+			done: function(e, data) {
+				if (data.result.hasOwnProperty('success')) {
+
+				}
+
+				console.log(data.result);
+			}
+		});
+	});
 })(jQuery);

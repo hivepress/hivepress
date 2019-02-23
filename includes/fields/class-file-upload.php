@@ -30,9 +30,25 @@ class File_Upload extends Field {
 	 * @return string
 	 */
 	public function render() {
+		// todo.
 		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
-		// todo.
+		$output .= '<label for="' . esc_attr( $this->get_name() ) . '">';
+
+		$output .= '<button type="button">' . esc_html__( 'Select File', 'hivepress' ) . '</button>';
+
+		$output .= ( new File(
+			[
+				'name'       => $this->get_name(),
+				'type'       => 'file',
+				'attributes' => [
+					'class' => 'hp-js-file-upload',
+				],
+			]
+		) )->render();
+
+		$output .= '</label>';
+
 		$output .= '</div>';
 
 		return $output;
