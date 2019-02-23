@@ -36,7 +36,7 @@ abstract class Controller {
 	 *
 	 * @var string
 	 */
-	private $url;
+	protected $url;
 
 	/**
 	 * Class constructor.

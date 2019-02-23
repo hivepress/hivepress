@@ -39,11 +39,11 @@ final class Core {
 	private $config = [];
 
 	/**
-	 * Array of component instances.
+	 * Array of HivePress objects.
 	 *
 	 * @var array
 	 */
-	private $components = [];
+	private $objects = [];
 
 	// Forbid cloning and duplicating instances.
 	private function __clone() {}
@@ -153,7 +153,7 @@ final class Core {
 		$this->load_textdomains();
 
 		// Set components.
-		$this->components = $this->get_components();
+		$this->objects['components'] = $this->get_components();
 	}
 
 	/**
@@ -217,22 +217,24 @@ final class Core {
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
-			$instances = [];
+			$object_type = substr( $name, strlen( 'get' ) + 1 );
 
-			$instance_type = substr( $name, strlen( 'get' ) + 1 );
+			if ( ! isset( $this->objects[ $object_type ] ) ) {
+				$this->objects[ $object_type ] = [];
 
-			foreach ( $this->dirs as $dir ) {
-				foreach ( glob( $dir . '/includes/' . $instance_type . '/*.php' ) as $filepath ) {
-					$instance_name  = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
-					$instance_class = '\HivePress\\' . $instance_type . '\\' . $instance_name;
+				foreach ( $this->dirs as $dir ) {
+					foreach ( glob( $dir . '/includes/' . $object_type . '/*.php' ) as $filepath ) {
+						$object_name  = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
+						$object_class = '\HivePress\\' . $object_type . '\\' . $object_name;
 
-					if ( ! ( new \ReflectionClass( $instance_class ) )->isAbstract() ) {
-						$instances[ $instance_name ] = new $instance_class();
+						if ( ! ( new \ReflectionClass( $object_class ) )->isAbstract() ) {
+							$this->objects[ $object_type ][ $object_name ] = new $object_class();
+						}
 					}
 				}
 			}
 
-			return $instances;
+			return $this->objects[ $object_type ];
 		}
 	}
 
@@ -277,6 +279,6 @@ final class Core {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		return hp_get_array_value( $this->components, $name );
+		return hp_get_array_value( $this->objects['components'], $name );
 	}
 }

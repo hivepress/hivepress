@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 final class Template {
 
 	/**
+	 * The current controller.
+	 *
+	 * @var object
+	 */
+	private $controller;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -92,7 +99,10 @@ final class Template {
 	 * @return string
 	 */
 	public function set_page_title( $parts ) {
-		// todo.
+		if ( isset( $this->controller ) && $this->controller->get_title() ) {
+			array_unshift( $parts, $this->controller->get_title() );
+		}
+
 		return $parts;
 	}
 
@@ -103,15 +113,26 @@ final class Template {
 	 * @return string
 	 */
 	public function set_page_template( $template ) {
-		// todo.
-		$controllers = hivepress()->get_controllers();
+		global $wp_query;
 
-		foreach ( $controllers as $controller ) {
+		foreach ( hivepress()->get_controllers() as $controller ) {
 			if ( $controller->match() ) {
+
+				// Set the current controller.
+				$this->controller = $controller;
+
+				// Set query variables.
+				if ( $controller->get_url() ) {
+					$wp_query->is_home = false;
+					$wp_query->is_404  = false;
+				}
+
+				// Render controller response.
 				get_header();
 				echo $controller->render();
 				get_footer();
-				die();
+
+				exit();
 			}
 		}
 
