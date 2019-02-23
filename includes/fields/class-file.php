@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
+	 * Multiple status.
+	 *
+	 * @var bool
+	 */
+	protected $multiple;
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

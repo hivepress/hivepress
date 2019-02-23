@@ -162,6 +162,8 @@ abstract class Field {
 
 	/**
 	 * Validates field value.
+	 *
+	 * @return bool
 	 */
 	public function validate() {
 		if ( $this->required && is_null( $this->value ) ) {

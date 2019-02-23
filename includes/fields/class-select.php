@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
+	 * Multiple status.
+	 *
+	 * @var bool
+	 */
+	protected $multiple;
+
+	/**
 	 * Field options.
 	 *
 	 * @var array

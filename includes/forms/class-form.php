@@ -269,6 +269,11 @@ abstract class Form {
 			$output .= $field->render();
 		}
 
+		// Render captcha.
+		if ( get_option( 'hp_recaptcha_site_key' ) && ( $this->captcha || in_array( $this->get_name(), (array) get_option( 'hp_recaptcha_forms' ), true ) ) ) {
+			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
+		}
+
 		// Render submit button.
 		$output .= '<button type="submit">' . esc_html__( 'Submit', 'hivepress' ) . '</button>';
 

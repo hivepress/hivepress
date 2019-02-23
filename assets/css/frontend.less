@@ -1,3 +1,13 @@
+/*--------------------------------------------------------------
+Mixins
+--------------------------------------------------------------*/
+.image-wrapper {
+	img {
+		display: block;
+		width: 100%;
+	}
+}
+
 .hp {
 	/*--------------------------------------------------------------
 	Forms
@@ -48,6 +58,37 @@
 					cursor: pointer;
 					opacity: 0;
 					direction: ltr;
+				}
+
+				> div:first-child {
+					&:not(:empty) {
+						margin-bottom: -2rem;
+						padding-bottom: 1rem;
+					}
+
+					> div {
+						position: relative;
+						margin-bottom: 2rem;
+						.image-wrapper;
+
+						&:not(:only-child) img {
+							cursor: move;
+						}
+
+						a {
+							position: absolute;
+							top: 0.5rem;
+							right: 1.5rem;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							width: 1.5rem;
+							height: 1.5rem;
+							text-decoration: none;
+							color: #fff;
+							background-color: rgba(0,0,0,.5);
+						}
+					}
 				}
 			}
 		}

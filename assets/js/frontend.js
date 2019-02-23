@@ -41,7 +41,7 @@ var hivepress = {
 		return data;
 	}
 
-	// Forms
+	// Form
 	hivepress.getObject('form').each(function() {
 		var form = $(this),
 			type = [];
@@ -50,7 +50,17 @@ var hivepress = {
 			type = form.data('type').split(' ');
 		}
 
+		if (type.includes('autosubmit')) {
+			form.on('change', function() {
+				form.submit();
+			});
+		}
+
 		if (form.attr('method') === 'POST') {
+			var captcha = form.find('.g-recaptcha'),
+				captchaId = $('.g-recaptcha').index(captcha.get(0)),
+				submitButton = form.find(':submit');
+
 			form.on('submit', function(e) {
 				$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + form.data('name'), $.extend(form.serializeObject(), {
 					'_wpnonce': hpCoreFrontendData.apiNonce,
@@ -59,6 +69,10 @@ var hivepress = {
 						if (response.success) {
 							if (response.redirect) {
 								window.location.reload(true);
+							} else {
+								if (typeof grecaptcha !== 'undefined' && captcha.length) {
+									grecaptcha.reset(captchaId);
+								}
 							}
 						}
 
@@ -80,10 +94,10 @@ var hivepress = {
 			responseContainer = selectLabel.parent().children('div').first();
 
 		field.fileupload({
-			url: hpCoreFrontendData.apiURL + 'hivepress/v1/files',
+			url: hpCoreFrontendData.apiURL + 'hivepress/v1/forms/file_upload',
 			formData: {
-				'form': field.closest('form').data('name'),
-				'field': field.attr('name'),
+				'form_name': field.closest('form').data('name'),
+				'field_name': field.attr('name'),
 				'_wpnonce': hpCoreFrontendData.apiNonce,
 			},
 			dataType: 'json',
@@ -101,11 +115,32 @@ var hivepress = {
 			},
 			done: function(e, data) {
 				if (data.result) {
-
+					if (data.result.success) {
+						if (field.prop('multiple')) {
+							responseContainer.append(data.result.response);
+						} else {
+							responseContainer.html(data.result.response);
+						}
+					} else {
+						// todo.
+					}
 				}
 
 				console.log(data.result);
 			}
+		});
+	});
+
+	// Sortable
+	hivepress.getObject('sortable').each(function() {
+		var container = $(this);
+
+		container.sortable({
+			stop: function() {
+				if (container.children().length > 1) {
+					// todo.
+				}
+			},
 		});
 	});
 })(jQuery);
