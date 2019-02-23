@@ -44,6 +44,9 @@ return [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
 		'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'data'   => [
+			'apiURL' => get_rest_url(),
+		],
 	],
 
 	'core_backend'     => [

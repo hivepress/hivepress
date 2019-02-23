@@ -84,55 +84,60 @@ class User_Register extends Form {
 	public function submit() {
 		parent::submit();
 
-		// Check username.
-		if ( isset( $values['username'] ) ) {
-			if ( sanitize_user( $values['username'], true ) !== $values['username'] ) {
-				$this->errors[] = esc_html__( 'Username contains invalid characters.', 'hivepress' );
-			} elseif ( username_exists( $values['username'] ) ) {
-				$this->errors[] = esc_html__( 'This username is already in use.', 'hivepress' );
-			}
-		}
+		if ( ! is_user_logged_in() ) {
 
-		// Check email.
-		if ( email_exists( $values['email'] ) ) {
-			$this->errors[] = esc_html__( 'This email is already registered.', 'hivepress' );
-		}
-
-		if ( empty( $this->errors ) ) {
-
-			// Get username.
-			list($username, $domain) = explode( '@', $values['email'] );
-
-			if ( isset( $values['username'] ) ) {
-				$username = $values['username'];
-			} else {
-				$username = sanitize_user( $username, true );
-
-				if ( empty( $username ) ) {
-					$username = 'user';
-				}
-
-				while ( username_exists( $username ) ) {
-					$username .= wp_rand( 1, 9 );
+			// Check username.
+			if ( $this->get_value( 'username' ) ) {
+				if ( sanitize_user( $this->get_value( 'username' ), true ) !== $this->get_value( 'username' ) ) {
+					$this->errors[] = esc_html__( 'Username contains invalid characters.', 'hivepress' );
+				} elseif ( username_exists( $this->get_value( 'username' ) ) ) {
+					$this->errors[] = esc_html__( 'This username is already in use.', 'hivepress' );
 				}
 			}
 
-			// Register user.
-			$user_id = wp_create_user( $username, $values['password'], $values['email'] );
+			// Check email.
+			if ( email_exists( $this->get_value( 'email' ) ) ) {
+				$this->errors[] = esc_html__( 'This email is already registered.', 'hivepress' );
+			}
 
-			if ( ! is_wp_error( $user_id ) ) {
+			if ( empty( $this->errors ) ) {
 
-				// Hide admin bar.
-				update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+				// Get username.
+				list($username, $domain) = explode( '@', $this->get_value( 'email' ) );
 
-				// Authenticate user.
-				wp_set_auth_cookie( $user_id, true );
+				if ( $this->get_value( 'username' ) ) {
+					$username = $this->get_value( 'username' );
+				} else {
+					$username = sanitize_user( $username, true );
 
-				// Send emails.
-				wp_new_user_notification( $user_id );
+					if ( empty( $username ) ) {
+						$username = 'user';
+					}
 
-				// todo send email.
+					while ( username_exists( $username ) ) {
+						$username .= wp_rand( 1, 9 );
+					}
+				}
+
+				// Register user.
+				$user_id = wp_create_user( $username, $this->get_value( 'password' ), $this->get_value( 'email' ) );
+
+				if ( ! is_wp_error( $user_id ) ) {
+
+					// Hide admin bar.
+					update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+
+					// Authenticate user.
+					wp_set_auth_cookie( $user_id, true );
+
+					// Send emails.
+					wp_new_user_notification( $user_id );
+
+					// todo send email.
+				}
 			}
 		}
+
+		return empty( $this->errors );
 	}
 }

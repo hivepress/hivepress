@@ -109,35 +109,37 @@ class User_Update extends Form {
 		}
 
 		// Update email and password.
-		if ( $values['email'] !== $user->user_email || '' !== $values['new_password'] ) {
+		if ( $this->get_value( 'email' ) !== $user->user_email || '' !== $this->get_value( 'new_password' ) ) {
 
 			// Check password.
-			if ( '' === $values['current_password'] ) {
+			if ( '' === $this->get_value( 'current_password' ) ) {
 				$this->errors[] = esc_html__( 'The current password is required.', 'hivepress' );
-			} elseif ( ! wp_check_password( $values['current_password'], $user->user_pass, $user->ID ) ) {
+			} elseif ( ! wp_check_password( $this->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
 				$this->errors[] = esc_html__( 'The current password is incorrect.', 'hivepress' );
 			} else {
 
 				// Update email.
-				if ( $values['email'] !== $user->user_email ) {
+				if ( $this->get_value( 'email' ) !== $user->user_email ) {
 					wp_update_user(
 						[
 							'ID'         => $user->ID,
-							'user_email' => $values['email'],
+							'user_email' => $this->get_value( 'email' ),
 						]
 					);
 				}
 
 				// Change password.
-				if ( '' !== $values['new_password'] ) {
+				if ( '' !== $this->get_value( 'new_password' ) ) {
 					wp_update_user(
 						[
 							'ID'        => $user->ID,
-							'user_pass' => $values['new_password'],
+							'user_pass' => $this->get_value( 'new_password' ),
 						]
 					);
 				}
 			}
 		}
+
+		return empty( $this->errors );
 	}
 }

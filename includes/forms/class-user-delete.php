@@ -47,12 +47,14 @@ class User_Delete extends Form {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
 		// Check password.
-		if ( ! wp_check_password( $values['password'], wp_get_current_user()->user_pass, get_current_user_id() ) ) {
+		if ( ! wp_check_password( $this->get_value( 'password' ), wp_get_current_user()->user_pass, get_current_user_id() ) ) {
 			$this->errors[] = esc_html__( 'Password is incorrect.', 'hivepress' );
 		} elseif ( ! current_user_can( 'manage_options' ) ) {
 
 			// Delete user.
 			wp_delete_user( get_current_user_id() );
 		}
+
+		return empty( $this->errors );
 	}
 }

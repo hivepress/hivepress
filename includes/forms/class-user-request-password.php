@@ -55,34 +55,39 @@ class User_Request_Password extends Form {
 	public function submit() {
 		parent::submit();
 
-		// Get user.
-		$user = false;
+		if ( ! is_user_logged_in() ) {
 
-		if ( is_email( $values['username'] ) ) {
-			$user = get_user_by( 'email', $values['username'] );
-		} else {
-			$user = get_user_by( 'login', $values['username'] );
-		}
+			// Get user.
+			$user = false;
 
-		if ( false !== $user ) {
-
-			// Get URL.
-			$url = add_query_arg(
-				[
-					'username' => $user->user_login,
-					'key'      => get_password_reset_key( $user ),
-				],
-				'todo reset page URL here'
-			);
-
-			// Send email.
-			// todo send email.
-		} else {
-			if ( is_email( $values['username'] ) ) {
-				$this->errors[] = esc_html__( "User with this email doesn't exist.", 'hivepress' );
+			if ( is_email( $this->get_value( 'username' ) ) ) {
+				$user = get_user_by( 'email', $this->get_value( 'username' ) );
 			} else {
-				$this->errors[] = esc_html__( "User with this username doesn't exist.", 'hivepress' );
+				$user = get_user_by( 'login', $this->get_value( 'username' ) );
+			}
+
+			if ( false !== $user ) {
+
+				// Get URL.
+				$url = add_query_arg(
+					[
+						'username' => $user->user_login,
+						'key'      => get_password_reset_key( $user ),
+					],
+					'todo reset page URL here'
+				);
+
+				// Send email.
+				// todo send email.
+			} else {
+				if ( is_email( $this->get_value( 'username' ) ) ) {
+					$this->errors[] = esc_html__( "User with this email doesn't exist.", 'hivepress' );
+				} else {
+					$this->errors[] = esc_html__( "User with this username doesn't exist.", 'hivepress' );
+				}
 			}
 		}
+
+		return empty( $this->errors );
 	}
 }

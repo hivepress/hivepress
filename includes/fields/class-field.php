@@ -64,7 +64,7 @@ abstract class Field {
 	 *
 	 * @var array
 	 */
-	private $errors = [];
+	protected $errors = [];
 
 	/**
 	 * Class constructor.
@@ -164,7 +164,11 @@ abstract class Field {
 	 * Validates field value.
 	 */
 	public function validate() {
-		return count( $this->get_errors() ) === 0;
+		if ( $this->required && is_null( $this->value ) ) {
+			$this->errors[] = hp_sanitize_html( sprintf( __( '%s is required.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' ) );
+		}
+
+		return empty( $this->errors );
 	}
 
 	/**

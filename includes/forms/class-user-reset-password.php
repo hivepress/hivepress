@@ -57,28 +57,33 @@ class User_Reset_Password extends Form {
 	public function submit() {
 		parent::submit();
 
-		// Get user.
-		$user = check_password_reset_key( $values['key'], $values['username'] );
+		if ( ! is_user_logged_in() ) {
 
-		if ( ! is_wp_error( $user ) ) {
+			// Get user.
+			$user = check_password_reset_key( $this->get_value( 'key' ), $this->get_value( 'username' ) );
 
-			// Reset password.
-			reset_password( $user, $values['password'] );
+			if ( ! is_wp_error( $user ) ) {
 
-			// Authenticate user.
-			wp_signon(
-				[
-					'user_login'    => $values['username'],
-					'user_password' => $values['password'],
-					'remember'      => true,
-				],
-				is_ssl()
-			);
+				// Reset password.
+				reset_password( $user, $this->get_value( 'password' ) );
 
-			// Send email.
-			wp_password_change_notification( $user );
-		} else {
-			$this->errors[] = esc_html__( 'Password reset link is expired or invalid.', 'hivepress' );
+				// Authenticate user.
+				wp_signon(
+					[
+						'user_login'    => $this->get_value( 'username' ),
+						'user_password' => $this->get_value( 'password' ),
+						'remember'      => true,
+					],
+					is_ssl()
+				);
+
+				// Send email.
+				wp_password_change_notification( $user );
+			} else {
+				$this->errors[] = esc_html__( 'Password reset link is expired or invalid.', 'hivepress' );
+			}
 		}
+
+		return empty( $this->errors );
 	}
 }

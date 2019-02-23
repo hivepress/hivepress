@@ -32,6 +32,13 @@ abstract class Form {
 	private $title;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	private $message;
+
+	/**
 	 * Form action.
 	 *
 	 * @var string
@@ -44,6 +51,13 @@ abstract class Form {
 	 * @var string
 	 */
 	private $method = 'POST';
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected $redirect;
 
 	/**
 	 * Form captcha.
@@ -71,7 +85,7 @@ abstract class Form {
 	 *
 	 * @var array
 	 */
-	private $errors = [];
+	protected $errors = [];
 
 	/**
 	 * Class constructor.
@@ -82,6 +96,17 @@ abstract class Form {
 
 		// Set name.
 		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+
+		// Set nonce.
+		if ( $this->get_method() === 'POST' ) {
+			$this->set_fields(
+				[
+					'nonce' => [
+						'type' => 'hidden',
+					],
+				]
+			);
+		}
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
@@ -146,12 +171,32 @@ abstract class Form {
 	 * @param array $fields Form fields.
 	 */
 	final public function set_fields( $fields ) {
-		$this->fields = [];
-
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
+
+			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
+			// Create field.
 			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+
+			// Set field value.
+			$values = $this->get_method() === 'POST' ? $_POST : $_GET;
+
+			if ( isset( $values[ $field_name ] ) && '' !== $values[ $field_name ] ) {
+				$this->fields[ $field_name ]->set_value( $values[ $field_name ] );
+			}
+		}
+	}
+
+	/**
+	 * Sets field value.
+	 *
+	 * @param string $name Field name.
+	 * @param mixed  $value Field value.
+	 */
+	final private function set_value( $name, $value ) {
+		if ( isset( $this->get_fields()[ $name ] ) ) {
+			$this->get_fields()[ $name ]->set_value( $value );
 		}
 	}
 
@@ -166,7 +211,44 @@ abstract class Form {
 		// Set class.
 		$attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $attributes, 'class' );
 
+		// Set name.
+		$attributes['data-name'] = $this->get_name();
+
 		return $attributes;
+	}
+
+	/**
+	 * Gets field value.
+	 *
+	 * @param string $name Field name.
+	 * @return mixed
+	 */
+	final private function get_value( $name ) {
+		if ( isset( $this->get_fields()[ $name ] ) ) {
+			return $this->get_fields()[ $name ]->get_value();
+		}
+	}
+
+	/**
+	 * Submits form values.
+	 */
+	public function submit() {
+
+		// Verify nonce.
+		// todo.
+		if ( $this->get_method() === 'POST' && ! wp_verify_nonce( wp_create_nonce( $this->get_name() ), $this->get_name() ) ) {
+			$this->errors[] = esc_html__( 'Nonce is invalid.', 'hivepress' );
+		} else {
+
+			// Validate fields.
+			foreach ( $this->get_fields() as $field ) {
+				if ( ! $field->validate() ) {
+					$this->errors = array_merge( $this->errors, $field->get_errors() );
+				}
+			}
+		}
+
+		return empty( $this->errors );
 	}
 
 	/**
@@ -177,22 +259,18 @@ abstract class Form {
 	public function render() {
 		$output = '<form action="' . esc_url( $this->get_action() ) . '" method="' . esc_attr( $this->get_method() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
+		// Set nonce value.
+		$this->set_value( 'nonce', wp_create_nonce( $this->get_name() ) );
+
+		// Render fields.
 		foreach ( $this->get_fields() as $field_name => $field ) {
 			$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 			$output .= $field->render();
 		}
 
+		// Render submit button.
 		$output .= '<button type="submit">' . esc_html__( 'Submit', 'hivepress' ) . '</button>';
-
-		if ( $this->get_method() === 'POST' ) {
-			$output .= ( new \HivePress\Fields\Hidden(
-				[
-					'name'    => '_wpnonce',
-					'default' => wp_create_nonce( $this->get_name() ),
-				]
-			) )->render();
-		}
 
 		$output .= '</form>';
 
