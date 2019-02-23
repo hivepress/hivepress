@@ -52,7 +52,9 @@ var hivepress = {
 
 		if (form.attr('method') === 'POST') {
 			form.on('submit', function(e) {
-				$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + form.data('name'), form.serializeObject(), function(response) {
+				$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + form.data('name'), $.extend(form.serializeObject(), {
+					'_wpnonce': hpCoreFrontendData.apiNonce,
+				}), function(response) {
 					if (response) {
 						if (response.success) {
 							if (response.redirect) {
