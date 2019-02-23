@@ -18,13 +18,6 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Controller {
 
 	/**
-	 * Class constructor.
-	 */
-	public function __construct() {
-
-	}
-
-	/**
 	 * Matches controller URL.
 	 *
 	 * @return bool

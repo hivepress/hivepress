@@ -1,6 +1,6 @@
 <?php
 /**
- * User login controller.
+ * User reset password controller.
  *
  * @package HivePress\Controllers
  */
@@ -11,18 +11,18 @@ namespace HivePress\Controllers;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User login controller class.
+ * User reset password controller class.
  *
- * @class User_Login
+ * @class User_Reset_Password
  */
-class User_Login extends Controller {
+class User_Reset_Password extends Controller {
 
 	/**
 	 * Controller URL.
 	 *
 	 * @var string
 	 */
-	protected $url = '^account/login/?$';
+	protected $url = '^account/reset-password/?$';
 
 	/**
 	 * Class constructor.
@@ -30,7 +30,7 @@ class User_Login extends Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->set_title( esc_html__( 'Sign In', 'hivepress' ) );
+		$this->set_title( esc_html__( 'Reset Password', 'hivepress' ) );
 	}
 
 	/**

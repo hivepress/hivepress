@@ -49,13 +49,10 @@ final class Template {
 				$rewrite_tags = array_filter( array_map( 'sanitize_title', array_map( 'current', $rewrite_tags ) ) );
 
 				// Get query string.
-				if ( empty( $rewrite_tags ) ) {
-					$rewrite_tag  = strtolower( ( new \ReflectionClass( $controller ) )->getShortName() );
-					$rewrite_tags = [ $rewrite_tag ];
+				$query_string = 'hp_controller=' . $controller->get_name();
 
-					$query_string = hp_prefix( $rewrite_tag ) . '=1';
-				} else {
-					$query_string = implode(
+				if ( ! empty( $rewrite_tags ) ) {
+					$query_string .= '&' . implode(
 						'&',
 						array_map(
 							function( $rewrite_tag ) {
@@ -75,6 +72,9 @@ final class Template {
 				}
 			}
 		}
+
+		// Add rewrite tag.
+		add_rewrite_tag( '%hp_controller%', '([^&]+)' );
 	}
 
 	/**

@@ -18,10 +18,33 @@ defined( 'ABSPATH' ) || exit;
 abstract class Controller {
 
 	/**
+	 * Controller name.
+	 *
+	 * @var string
+	 */
+	private $name;
+
+	/**
+	 * Controller title.
+	 *
+	 * @var string
+	 */
+	private $title;
+
+	/**
+	 * Controller URL.
+	 *
+	 * @var string
+	 */
+	private $url;
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
 
+		// Set name.
+		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 	}
 
 	/**
@@ -72,12 +95,17 @@ abstract class Controller {
 		}
 	}
 
+	// Forbid setting name.
+	final private function set_name() {}
+
 	/**
 	 * Matches controller URL.
 	 *
 	 * @return bool
 	 */
-	abstract public function match();
+	public function match() {
+		return get_query_var( 'hp_controller' ) === $this->get_name();
+	}
 
 	/**
 	 * Renders controller response.
