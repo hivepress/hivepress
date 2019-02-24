@@ -56,10 +56,10 @@ var hivepress = {
 
 		// todo.
 		//if (type.includes('submit')) {
-			$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
-				'nonce': button.data('nonce'),
-				'_wpnonce': hpCoreFrontendData.apiNonce,
-			}));
+		$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
+			'nonce': button.data('nonce'),
+			'_wpnonce': hpCoreFrontendData.apiNonce,
+		}));
 		//}
 
 		e.preventDefault();
@@ -86,23 +86,35 @@ var hivepress = {
 				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
-				$.post(form.attr('action'), $.extend(form.serializeObject(), {
-					'_wpnonce': hpCoreFrontendData.apiNonce,
-				}), function(response) {
-					if (response) {
-						// todo.
-						// if (response.success) {
-						// 	if (response.redirect) {
-						// 		window.location.reload(true);
-						// 	} else {
-						// 		if (typeof grecaptcha !== 'undefined' && captcha.length) {
-						// 			grecaptcha.reset(captchaId);
-						// 		}
-						// 	}
-						// }
-					}
+				// $.post(form.attr('action'), $.extend(form.serializeObject(), {
+				// 	'_wpnonce': hpCoreFrontendData.apiNonce,
+				// }), function(response) {
+				// 	if (response) {
+				// 		// todo.
+				// 		// if (response.success) {
+				// 		// 	if (response.redirect) {
+				// 		// 		window.location.reload(true);
+				// 		// 	} else {
+				// 		// 		if (typeof grecaptcha !== 'undefined' && captcha.length) {
+				// 		// 			grecaptcha.reset(captchaId);
+				// 		// 		}
+				// 		// 	}
+				// 		// }
+				// 	}
+				//
+				// 	console.log(response);
+				// });
 
-					console.log(response);
+				$.ajax({
+					url: form.attr('action'),
+					method: 'DELETE',
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+					},
+					data: form.serializeObject(),
+					complete: function(xhr) {
+						console.log(xhr.responseText);
+					},
 				});
 
 				e.preventDefault();

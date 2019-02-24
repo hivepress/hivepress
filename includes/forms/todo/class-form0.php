@@ -39,13 +39,6 @@ abstract class Form {
 	protected $captcha;
 
 	/**
-	 * Form errors.
-	 *
-	 * @var array
-	 */
-	protected $errors = [];
-
-	/**
 	 * Form response.
 	 *
 	 * @var string

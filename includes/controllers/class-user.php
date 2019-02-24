@@ -99,6 +99,43 @@ class User extends Controller {
 	 */
 	public function delete_user( $request ) {
 		// todo.
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+
+		// Check authorization.
+		if ( ! is_user_logged_in() ) {
+			return 123;
+			return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 401 ] );
+		}
+
+		// Get user.
+		$user = get_userdata( absint( $request->get_param( 'id' ) ) );
+
+		if ( false === $user ) {
+			return new \WP_Error( 'not_found', esc_html__( 'User not found', 'hivepress' ), [ 'status' => 404 ] );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) {
+			return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 403 ] );
+		}
+
+		// Check password.
+		if ( ! current_user_can( 'delete_users' ) ) {
+			$form = new \HivePress\Forms\User_Delete();
+
+			if ( ! $form->validate() ) {
+				return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 400 ] );
+			}
+
+			if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
+				return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 403 ] );
+			}
+		}
+
+		// Delete user.
+		wp_delete_user( $user->ID );
+
+		return new \WP_Rest_Response((object)[], 200);
 	}
 
 	/**

@@ -60,6 +60,13 @@ abstract class Form {
 	protected $fields = [];
 
 	/**
+	 * Form errors.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
