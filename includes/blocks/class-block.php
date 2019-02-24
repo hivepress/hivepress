@@ -22,14 +22,14 @@ abstract class Block {
 	 *
 	 * @var string
 	 */
-	private $title;
+	protected $title;
 
 	/**
 	 * Block attributes.
 	 *
 	 * @var array
 	 */
-	private $attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Class constructor.

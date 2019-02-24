@@ -22,7 +22,7 @@ class Container extends Block {
 	 *
 	 * @var array
 	 */
-	private $blocks = [];
+	protected $blocks = [];
 
 	/**
 	 * Sets inner blocks.

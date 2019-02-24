@@ -22,21 +22,21 @@ abstract class Field {
 	 *
 	 * @var string
 	 */
-	private $type;
+	protected $type;
 
 	/**
 	 * Field name.
 	 *
 	 * @var string
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * Field label.
 	 *
 	 * @var string
 	 */
-	private $label;
+	protected $label;
 
 	/**
 	 * Field value.
@@ -50,7 +50,7 @@ abstract class Field {
 	 *
 	 * @var bool
 	 */
-	private $required = false;
+	protected $required = false;
 
 	/**
 	 * Field attributes.

@@ -22,7 +22,7 @@ abstract class Controller {
 	 *
 	 * @var string
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * Controller routes.
