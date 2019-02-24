@@ -54,12 +54,13 @@ var hivepress = {
 			button.parent().remove();
 		}
 
-		if (type.includes('submit')) {
+		// todo.
+		//if (type.includes('submit')) {
 			$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
 				'nonce': button.data('nonce'),
 				'_wpnonce': hpCoreFrontendData.apiNonce,
 			}));
-		}
+		//}
 
 		e.preventDefault();
 	});
@@ -85,22 +86,23 @@ var hivepress = {
 				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
-				$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + form.data('name'), $.extend(form.serializeObject(), {
+				$.post(form.attr('action'), $.extend(form.serializeObject(), {
 					'_wpnonce': hpCoreFrontendData.apiNonce,
 				}), function(response) {
 					if (response) {
-						if (response.success) {
-							if (response.redirect) {
-								window.location.reload(true);
-							} else {
-								if (typeof grecaptcha !== 'undefined' && captcha.length) {
-									grecaptcha.reset(captchaId);
-								}
-							}
-						}
-
-						console.log(response);
+						// todo.
+						// if (response.success) {
+						// 	if (response.redirect) {
+						// 		window.location.reload(true);
+						// 	} else {
+						// 		if (typeof grecaptcha !== 'undefined' && captcha.length) {
+						// 			grecaptcha.reset(captchaId);
+						// 		}
+						// 	}
+						// }
 					}
+
+					console.log(response);
 				});
 
 				e.preventDefault();

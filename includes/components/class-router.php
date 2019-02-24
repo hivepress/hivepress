@@ -56,7 +56,7 @@ final class Router {
 					foreach ( $route['endpoints'] as $endpoint ) {
 						register_rest_route(
 							'hivepress/v1',
-							$route['path'] . hp_get_array_value( $endpoint, 'path', '' ),
+							$route['path'] . hp_get_array_value( $endpoint, 'path' ),
 							[
 								'methods'  => $endpoint['methods'],
 								'callback' => [ $controller, $endpoint['action'] ],

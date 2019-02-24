@@ -25,6 +25,9 @@ class Listing_Update extends Form {
 	public function __construct( $args = [] ) {
 		parent::__construct( $args );
 
+		// todo.
+		$this->set_action(get_rest_url(null, '/hivepress/v1/listings/1'));
+
 		// Set fields.
 		$this->set_fields(
 			[
@@ -55,12 +58,5 @@ class Listing_Update extends Form {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Submits form.
-	 */
-	public function submit() {
-		parent::submit();
 	}
 }

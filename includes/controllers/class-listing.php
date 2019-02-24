@@ -81,6 +81,7 @@ class Listing extends Controller {
 	 */
 	public function update_listing( $request ) {
 		// todo.
+		return [1,2,3];
 	}
 
 	/**
@@ -148,5 +149,26 @@ class Listing extends Controller {
 	 */
 	public function render_listings_page() {
 		// todo.
+		$output = '';
+
+		ob_start();
+		get_header();
+		$output .= ob_get_contents();
+		ob_end_clean();
+
+		$template = hivepress()->get_config( 'templates' )['listings'];
+
+		foreach ( $template['blocks'] as $block_name => $block ) {
+			$block_class = '\HivePress\Blocks\\' . $block['type'];
+
+			$output .= ( new $block_class( $block ) )->render();
+		}
+
+		ob_start();
+		get_footer();
+		$output .= ob_get_contents();
+		ob_end_clean();
+
+		return $output;
 	}
 }

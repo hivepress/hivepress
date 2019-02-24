@@ -127,6 +127,22 @@ abstract class Form {
 	final private function set_name() {}
 
 	/**
+	 * Sets form fields.
+	 *
+	 * @param array $fields Form fields.
+	 */
+	final public function set_fields( $fields ) {
+		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
+
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+			// Create field.
+			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+		}
+	}
+
+	/**
 	 * Gets field value.
 	 *
 	 * @param string $name Field name.
@@ -136,6 +152,19 @@ abstract class Form {
 		if ( isset( $this->fields[ $name ] ) ) {
 			return $this->fields[ $name ]->get_value();
 		}
+	}
+
+	/**
+	 * Gets form attributes.
+	 *
+	 * @return array
+	 */
+	public function get_attributes() {
+
+		// Set class.
+		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );
+
+		return $this->attributes;
 	}
 
 	/**
