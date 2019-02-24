@@ -108,6 +108,10 @@ function hp_html_attributes( $atts ) {
 	if ( is_array( $atts ) ) {
 		foreach ( $atts as $att_name => $att_value ) {
 			if ( ! is_null( $att_value ) ) {
+				if ( true === $att_value ) {
+					$att_value = $att_name;
+				}
+
 				$output .= esc_html( $att_name ) . '="' . esc_attr( trim( $att_value ) ) . '" ';
 			}
 		}

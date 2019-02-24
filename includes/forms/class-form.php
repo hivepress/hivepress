@@ -64,7 +64,7 @@ abstract class Form {
 	 *
 	 * @var bool
 	 */
-	private $captcha;
+	protected $captcha;
 
 	/**
 	 * Form attributes.
@@ -269,14 +269,32 @@ abstract class Form {
 	 * Submits form values.
 	 */
 	public function submit() {
+		if ( $this->get_method() === 'POST' ) {
 
-		// Verify nonce.
-		// todo.
-		if ( $this->get_method() === 'POST' && ! wp_verify_nonce( wp_create_nonce( $this->get_name() ), $this->get_name() ) ) {
-			$this->errors[] = esc_html__( 'Nonce is invalid.', 'hivepress' );
-		} else {
+			// Verify nonce.
+			// todo.
+			if ( ! wp_verify_nonce( wp_create_nonce( $this->get_name() ), $this->get_name() ) ) {
+				$this->errors[] = esc_html__( 'Nonce is invalid.', 'hivepress' );
+			} elseif ( get_option( 'hp_recaptcha_secret_key' ) && ( $this->captcha || in_array( $this->get_name(), (array) get_option( 'hp_recaptcha_forms' ), true ) ) ) {
 
-			// Validate fields.
+				// Verify captcha.
+				$response = wp_remote_get(
+					'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
+						[
+							'secret'   => get_option( 'hp_recaptcha_secret_key' ),
+							'response' => hp_get_array_value( $_POST, 'g-recaptcha-response' ),
+						]
+					)
+				);
+
+				if ( is_wp_error( $response ) || ! hp_get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
+					$this->errors[] = esc_html__( 'Captcha is invalid.', 'hivepress' );
+				}
+			}
+		}
+
+		// Validate fields.
+		if ( empty( $this->errors ) ) {
 			foreach ( $this->get_fields() as $field ) {
 				if ( ! $field->validate() ) {
 					$this->errors = array_merge( $this->errors, $field->get_errors() );

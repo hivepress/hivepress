@@ -22,73 +22,11 @@ final class Form {
 	 */
 	public function __construct() {
 
-		// Register API routes.
-		add_action( 'rest_api_init', [ $this, 'register_api_routes' ] );
-
 		// Set field options.
 		add_filter( 'hivepress/fields/field/args', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	}
-
-	/**
-	 * Registers API routes.
-	 */
-	public function register_api_routes() {
-
-		// Submit form.
-		register_rest_route(
-			'hivepress/v1',
-			'/forms/(?P<name>[a-z_]+)',
-			[
-				'methods'  => 'POST',
-				'callback' => [ $this, 'submit_form' ],
-			]
-		);
-	}
-
-	/**
-	 * Submits form.
-	 *
-	 * @param WP_REST_Request $request API request.
-	 * @return mixed
-	 */
-	public function submit_form( $request ) {
-		$response = null;
-
-		// Get form class.
-		$form_class = '\HivePress\Forms\\' . $request->get_param( 'name' );
-
-		if ( class_exists( $form_class ) ) {
-
-			// Create form.
-			$form = new $form_class();
-
-			// Submit form.
-			if ( $form->submit() ) {
-				$response = [
-					'success'  => true,
-					'redirect' => $form->get_redirect(),
-					'message'  => $form->get_message(),
-					'response' => $form->get_response(),
-				];
-			} else {
-				$response = [
-					'success' => false,
-					'errors'  => $form->get_errors(),
-				];
-
-				// todo
-				$response['values'] = [];
-
-				foreach ( $form->get_fields() as $field ) {
-					$response['values'][ $field->get_name() ] = $field->get_value();
-				}
-			}
-		}
-
-		return $response;
 	}
 
 	/**

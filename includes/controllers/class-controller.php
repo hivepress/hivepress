@@ -25,18 +25,11 @@ abstract class Controller {
 	private $name;
 
 	/**
-	 * Controller title.
+	 * Controller routes.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private $title;
-
-	/**
-	 * Controller URL.
-	 *
-	 * @var string
-	 */
-	protected $url;
+	protected $routes = [];
 
 	/**
 	 * Class constructor.
@@ -97,20 +90,4 @@ abstract class Controller {
 
 	// Forbid setting name.
 	final private function set_name() {}
-
-	/**
-	 * Matches controller URL.
-	 *
-	 * @return bool
-	 */
-	public function match() {
-		return get_query_var( 'hp_controller' ) === $this->get_name();
-	}
-
-	/**
-	 * Renders controller response.
-	 *
-	 * @return string
-	 */
-	abstract public function render();
 }
