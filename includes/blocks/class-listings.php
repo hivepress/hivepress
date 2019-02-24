@@ -35,9 +35,9 @@ class Listings extends Block {
 	 * @return string
 	 */
 	public function render() {
+		// todo.
 		$output = '<div class="hp-listings"><div class="hp-row">';
 
-		// todo.
 		while ( have_posts() ) {
 			the_post();
 
