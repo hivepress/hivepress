@@ -181,3 +181,13 @@ function hp_get_post_id( $args ) {
 
 	return absint( reset( $post_ids ) );
 }
+
+/**
+ * Gets REST API URL.
+ *
+ * @param string $path URL path.
+ * @return string
+ */
+function hp_get_rest_url( $path ) {
+	return get_rest_url( null, 'hivepress/v1' . $path );
+}

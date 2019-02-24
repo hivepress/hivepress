@@ -27,6 +27,30 @@ class User extends Controller {
 		$this->set_routes(
 			[
 				[
+					'path'      => '/users',
+					'rest'      => true,
+					'endpoints' => [
+						[
+							'path'    => '/(?P<id>\d+)',
+							'methods' => 'GET',
+							'action'  => 'get_user',
+						],
+
+						[
+							'path'    => '/(?P<id>\d+)',
+							'methods' => 'POST',
+							'action'  => 'update_user',
+						],
+
+						[
+							'path'    => '/(?P<id>\d+)',
+							'methods' => 'DELETE',
+							'action'  => 'delete_user',
+						],
+					],
+				],
+
+				[
 					'title'  => esc_html__( 'Sign In', 'hivepress' ),
 					'path'   => '/account/login',
 					'action' => 'render_login_page',
@@ -45,6 +69,36 @@ class User extends Controller {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Gets user.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return mixed
+	 */
+	public function get_user( $request ) {
+		// todo.
+	}
+
+	/**
+	 * Updates user.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return mixed
+	 */
+	public function update_user( $request ) {
+		// todo.
+	}
+
+	/**
+	 * Deletes user.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return mixed
+	 */
+	public function delete_user( $request ) {
+		// todo.
 	}
 
 	/**

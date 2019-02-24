@@ -81,7 +81,6 @@ class Listing extends Controller {
 	 */
 	public function update_listing( $request ) {
 		// todo.
-		return [1,2,3];
 	}
 
 	/**
