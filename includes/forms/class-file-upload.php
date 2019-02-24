@@ -69,7 +69,7 @@ class File_Upload extends Form {
 					if ( $field->validate() ) {
 
 						// Upload file.
-						$attachment_id = media_handle_upload( $this->get_value( 'field_name' ) );
+						$attachment_id = media_handle_upload( $this->get_value( 'field_name' ), 0 );
 
 						if ( ! is_wp_error( $attachment_id ) ) {
 							$this->set_response( $field->render_file( $attachment_id ) );

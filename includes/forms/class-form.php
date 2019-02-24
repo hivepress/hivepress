@@ -71,7 +71,7 @@ abstract class Form {
 	 *
 	 * @var array
 	 */
-	private $attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Form fields.
@@ -86,6 +86,13 @@ abstract class Form {
 	 * @var array
 	 */
 	protected $errors = [];
+
+	/**
+	 * Form response.
+	 *
+	 * @var string
+	 */
+	private $response;
 
 	/**
 	 * Class constructor.
@@ -171,6 +178,10 @@ abstract class Form {
 	 * @param array $fields Form fields.
 	 */
 	final public function set_fields( $fields ) {
+
+		// Get field values.
+		$values = $this->get_method() === 'POST' ? $_POST : $_GET;
+
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Get field class.
@@ -180,10 +191,21 @@ abstract class Form {
 			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 
 			// Set field value.
-			$values = $this->get_method() === 'POST' ? $_POST : $_GET;
-
 			if ( isset( $values[ $field_name ] ) && '' !== $values[ $field_name ] ) {
 				$this->fields[ $field_name ]->set_value( $values[ $field_name ] );
+			}
+		}
+	}
+
+	/**
+	 * Sets field values.
+	 *
+	 * @param array $values Field values.
+	 */
+	final public function set_values( $values ) {
+		foreach ( $values as $field_name => $value ) {
+			if ( isset( $this->fields[ $field_name ] ) && '' !== $value ) {
+				$this->fields[ $field_name ]->set_value( $value );
 			}
 		}
 	}
@@ -205,16 +227,30 @@ abstract class Form {
 	 *
 	 * @return array
 	 */
-	final public function get_attributes() {
-		$attributes = $this->attributes;
+	public function get_attributes() {
 
 		// Set class.
-		$attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $attributes, 'class' );
+		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );
 
 		// Set name.
-		$attributes['data-name'] = $this->get_name();
+		$this->attributes['data-name'] = $this->get_name();
 
-		return $attributes;
+		return $this->attributes;
+	}
+
+	/**
+	 * Gets field values.
+	 *
+	 * @return array
+	 */
+	final public function get_values() {
+		$values = [];
+
+		foreach ( $this->get_fields() as $field_name => $field ) {
+			$values[ $field_name ] = $field->get_value();
+		}
+
+		return $values;
 	}
 
 	/**
@@ -223,9 +259,9 @@ abstract class Form {
 	 * @param string $name Field name.
 	 * @return mixed
 	 */
-	final private function get_value( $name ) {
-		if ( isset( $this->get_fields()[ $name ] ) ) {
-			return $this->get_fields()[ $name ]->get_value();
+	final public function get_value( $name ) {
+		if ( isset( $this->fields[ $name ] ) ) {
+			return $this->fields[ $name ]->get_value();
 		}
 	}
 

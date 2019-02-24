@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class File_Delete
  */
-class File_Delete extends Form {
+class File_Delete extends Button {
 
 	/**
 	 * Class constructor.

@@ -41,6 +41,29 @@ var hivepress = {
 		return data;
 	}
 
+	// Button
+	$(document).on('click', hivepress.getSelector('button'), function(e) {
+		var button = $(this),
+			type = [];
+
+		if (typeof button.data('type') !== 'undefined') {
+			type = button.data('type').split(' ');
+		}
+
+		if (type.includes('remove')) {
+			button.parent().remove();
+		}
+
+		if (type.includes('submit')) {
+			$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
+				'nonce': button.data('nonce'),
+				'_wpnonce': hpCoreFrontendData.apiNonce,
+			}));
+		}
+
+		e.preventDefault();
+	});
+
 	// Form
 	hivepress.getObject('form').each(function() {
 		var form = $(this),
@@ -98,6 +121,7 @@ var hivepress = {
 			formData: {
 				'form_name': field.closest('form').data('name'),
 				'field_name': field.attr('name'),
+				'nonce': field.data('nonce'),
 				'_wpnonce': hpCoreFrontendData.apiNonce,
 			},
 			dataType: 'json',
@@ -133,12 +157,16 @@ var hivepress = {
 
 	// Sortable
 	hivepress.getObject('sortable').each(function() {
-		var container = $(this);
+		var container = $(this),
+			form = container.closest('form');
 
 		container.sortable({
 			stop: function() {
 				if (container.children().length > 1) {
-					// todo.
+					$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/file_sort', $.extend(form.serializeObject(), {
+						'nonce': container.data('nonce'),
+						'_wpnonce': hpCoreFrontendData.apiNonce,
+					}));
 				}
 			},
 		});

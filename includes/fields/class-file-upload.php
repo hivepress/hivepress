@@ -25,6 +25,13 @@ class File_Upload extends Field {
 	protected $multiple;
 
 	/**
+	 * File formats.
+	 *
+	 * @var array
+	 */
+	protected $file_formats;
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
@@ -39,6 +46,7 @@ class File_Upload extends Field {
 	public function validate() {
 		parent::validate();
 
+		// todo.
 		return empty( $this->errors );
 	}
 
@@ -51,7 +59,11 @@ class File_Upload extends Field {
 		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// Render files.
-		$output .= '<div class="hp-row ' . esc_attr( $this->multiple ? 'hp-js-sortable' : '' ) . '">';
+		if ( $this->get_multiple() ) {
+			$output .= '<div class="hp-row hp-js-sortable" data-nonce="' . esc_attr( wp_create_nonce( 'file_sort' ) ) . '">';
+		} else {
+			$output .= '<div class="hp-row">';
+		}
 
 		foreach ( (array) $this->get_value() as $attachment_id ) {
 			$output .= $this->render_file( $attachment_id );
@@ -66,10 +78,13 @@ class File_Upload extends Field {
 		// Render upload field.
 		$output .= ( new File(
 			[
-				'name'       => $this->get_name(),
-				'type'       => 'file',
-				'attributes' => [
-					'class' => 'hp-js-file-upload',
+				'name'         => $this->get_name(),
+				'type'         => 'file',
+				'multiple'     => $this->get_multiple(),
+				'file_formats' => $this->get_file_formats(),
+				'attributes'   => [
+					'class'      => 'hp-js-file-upload',
+					'data-nonce' => wp_create_nonce( 'file_upload' ),
 				],
 			]
 		) )->render();
@@ -93,7 +108,25 @@ class File_Upload extends Field {
 		$output .= wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
 		// Render remove button.
-		$output .= '<a href="#" class="hp-js-button" data-type="remove"><i class="hp-icon fas fa-times"></i></a>';
+		$output .= ( new \HivePress\Forms\File_Delete(
+			[
+				'caption'    => '<i class="hp-icon fas fa-times"></i>',
+				'attributes' => [
+					'data-type' => 'remove',
+				],
+				'values'     => [
+					'attachment_id' => $attachment_id,
+				],
+			]
+		) )->render();
+
+		// Render ID field.
+		$output .= ( new Hidden(
+			[
+				'name'    => 'attachment_ids[]',
+				'default' => $attachment_id,
+			]
+		) )->render();
 
 		$output .= '</div>';
 

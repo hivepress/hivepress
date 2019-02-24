@@ -57,7 +57,7 @@ abstract class Field {
 	 *
 	 * @var array
 	 */
-	private $attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Validation errors.

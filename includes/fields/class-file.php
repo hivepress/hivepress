@@ -25,10 +25,40 @@ class File extends Field {
 	protected $multiple;
 
 	/**
+	 * File formats.
+	 *
+	 * @var array
+	 */
+	protected $file_formats;
+
+	/**
+	 * Gets field attributes.
+	 *
+	 * @return array
+	 */
+	public function get_attributes() {
+		parent::get_attributes();
+
+		// Set multiple status.
+		if ( $this->get_multiple() ) {
+			$this->attributes['multiple'] = true;
+		}
+
+		// Set file formats.
+		if ( $this->get_file_formats() ) {
+			$this->attributes['accept'] = '.' . implode( ',.', $this->get_file_formats() );
+		}
+
+		return $this->attributes;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		// todo.
+		if ( ! is_null( $this->value ) ) {
+			$this->value = sanitize_text_field( $this->value );
+		}
 	}
 
 	/**

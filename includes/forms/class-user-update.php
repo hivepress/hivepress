@@ -29,11 +29,11 @@ class User_Update extends Form {
 		$this->set_fields(
 			[
 				'image'            => [
-					'label'      => esc_html__( 'Profile Image', 'hivepress' ),
-					'caption'    => esc_html__( 'Select Image', 'hivepress' ),
-					'type'       => 'file_upload',
-					'extensions' => [ 'jpg', 'jpeg', 'png' ],
-					'order'      => 10,
+					'label'        => esc_html__( 'Profile Image', 'hivepress' ),
+					'caption'      => esc_html__( 'Select Image', 'hivepress' ),
+					'type'         => 'file_upload',
+					'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+					'order'        => 10,
 				],
 
 				'first_name'       => [

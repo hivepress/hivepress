@@ -45,6 +45,19 @@ class File_Sort extends Form {
 	public function submit() {
 		parent::submit();
 
+		if ( is_user_logged_in() ) {
+
+			// Sort attachments.
+			foreach ( $this->get_value( 'attachment_ids' ) as $attachment_index => $attachment_id ) {
+				wp_update_post(
+					[
+						'ID'         => $attachment_id,
+						'menu_order' => $attachment_index,
+					]
+				);
+			}
+		}
+
 		return empty( $this->errors );
 	}
 }

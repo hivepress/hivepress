@@ -69,8 +69,9 @@ final class Form {
 			if ( $form->submit() ) {
 				$response = [
 					'success'  => true,
-					'message'  => $form->get_message(),
 					'redirect' => $form->get_redirect(),
+					'message'  => $form->get_message(),
+					'response' => $form->get_response(),
 				];
 			} else {
 				$response = [
@@ -78,11 +79,11 @@ final class Form {
 					'errors'  => $form->get_errors(),
 				];
 
-				//todo
-				$response['values']=[];
+				// todo
+				$response['values'] = [];
 
-				foreach($form->get_fields() as $field) {
-					$response['values'][$field->get_name()]=$field->get_value();
+				foreach ( $form->get_fields() as $field ) {
+					$response['values'][ $field->get_name() ] = $field->get_value();
 				}
 			}
 		}
