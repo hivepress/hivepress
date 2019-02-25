@@ -191,3 +191,29 @@ function hp_get_post_id( $args ) {
 function hp_get_rest_url( $path ) {
 	return get_rest_url( null, 'hivepress/v1' . $path );
 }
+
+/**
+ * Gets REST API error.
+ *
+ * @param int   $code Error code.
+ * @param array $errors Additional errors.
+ * @return WP_Rest_Response
+ */
+function hp_rest_error( $code, $errors = [] ) {
+	$error = [
+		'code' => $code,
+	];
+
+	if ( ! empty( $errors ) ) {
+		$error['errors'] = array_map(
+			function( $error ) {
+				return [
+					'message' => $error,
+				];
+			},
+			(array) $errors
+		);
+	}
+
+	return new WP_Rest_Response( $error, $code );
+}

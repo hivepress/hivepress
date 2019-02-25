@@ -32,12 +32,6 @@ class Listing extends Controller {
 					'endpoints' => [
 						[
 							'path'    => '/(?P<id>\d+)',
-							'methods' => 'GET',
-							'action'  => 'get_listing',
-						],
-
-						[
-							'path'    => '/(?P<id>\d+)',
 							'methods' => 'POST',
 							'action'  => 'update_listing',
 						],
@@ -61,16 +55,6 @@ class Listing extends Controller {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Gets listing.
-	 *
-	 * @param WP_REST_Request $request API request.
-	 * @return mixed
-	 */
-	public function get_listing( $request ) {
-		// todo.
 	}
 
 	/**

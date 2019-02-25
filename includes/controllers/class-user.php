@@ -31,9 +31,8 @@ class User extends Controller {
 					'rest'      => true,
 					'endpoints' => [
 						[
-							'path'    => '/(?P<id>\d+)',
-							'methods' => 'GET',
-							'action'  => 'get_user',
+							'methods' => 'POST',
+							'action'  => 'register_user',
 						],
 
 						[
@@ -72,13 +71,66 @@ class User extends Controller {
 	}
 
 	/**
-	 * Gets user.
+	 * Registers user.
 	 *
 	 * @param WP_REST_Request $request API request.
 	 * @return mixed
 	 */
-	public function get_user( $request ) {
-		// todo.
+	public function register_user( $request ) {
+
+		// Validate form.
+		$form = new \HivePress\Forms\User_Register();
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Check username.
+		if ( $form->get_value( 'username' ) ) {
+			if ( sanitize_user( $form->get_value( 'username' ), true ) !== $form->get_value( 'username' ) ) {
+				return hp_rest_error( 400, esc_html__( 'Username contains invalid characters.', 'hivepress' ) );
+			} elseif ( username_exists( $form->get_value( 'username' ) ) ) {
+				return hp_rest_error( 400, esc_html__( 'This username is already in use.', 'hivepress' ) );
+			}
+		}
+
+		// Check email.
+		if ( email_exists( $this->get_value( 'email' ) ) ) {
+			return hp_rest_error( 400, esc_html__( 'This email is already registered.', 'hivepress' ) );
+		}
+
+		// Get username.
+		list($username, $domain) = explode( '@', $this->get_value( 'email' ) );
+
+		if ( $this->get_value( 'username' ) ) {
+			$username = $this->get_value( 'username' );
+		} else {
+			$username = sanitize_user( $username, true );
+
+			if ( empty( $username ) ) {
+				$username = 'user';
+			}
+
+			while ( username_exists( $username ) ) {
+				$username .= wp_rand( 1, 9 );
+			}
+		}
+
+		// Register user.
+		$user_id = wp_create_user( $username, $this->get_value( 'password' ), $this->get_value( 'email' ) );
+
+		if ( ! is_wp_error( $user_id ) ) {
+
+			// Hide admin bar.
+			update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+
+			// Send emails.
+			wp_new_user_notification( $user_id );
+
+			// todo send email.
+		}
+
+		return new \WP_Rest_Response( null, 200 );
 	}
 
 	/**
@@ -88,7 +140,84 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function update_user( $request ) {
-		// todo.
+
+		// Check authorization.
+		if ( ! is_user_logged_in() ) {
+			return hp_rest_error( 401 );
+		}
+
+		// Get user.
+		$user = get_userdata( absint( $request->get_param( 'id' ) ) );
+
+		if ( false === $user ) {
+			return hp_rest_error( 404 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) && get_current_user_id() !== $user->ID ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = new \HivePress\Forms\User_Update();
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Update user.
+		$first_name   = $form->get_vaue( 'first_name' );
+		$last_name    = $form->get_vaue( 'last_name' );
+		$display_name = trim( $first_name . ' ' . $last_name );
+
+		update_user_meta( $user->ID, 'first_name', $first_name );
+		update_user_meta( $user->ID, 'last_name', $last_name );
+		update_user_meta( $user->ID, 'description', $form->get_value( 'description' ) );
+
+		if ( '' !== $display_name ) {
+			wp_update_user(
+				[
+					'ID'           => $user->ID,
+					'display_name' => $display_name,
+				]
+			);
+		}
+
+		if ( $form->get_value( 'email' ) !== $user->user_email || $form->get_value( 'new_password' ) ) {
+
+			// Check password.
+			if ( ! current_user_can( 'edit_users' ) ) {
+				if ( is_null( $form->get_value( 'current_password' ) ) ) {
+					return hp_rest_error( 403, esc_html__( 'Current password is required.', 'hivepress' ) );
+				}
+
+				if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
+					return hp_rest_error( 403, esc_html__( 'Current password is incorrect.', 'hivepress' ) );
+				}
+			}
+
+			// Update email.
+			if ( $form->get_value( 'email' ) !== $user->user_email ) {
+				wp_update_user(
+					[
+						'ID'         => $user->ID,
+						'user_email' => $form->get_value( 'email' ),
+					]
+				);
+			}
+
+			// Change password.
+			if ( $form->get_value( 'new_password' ) ) {
+				wp_update_user(
+					[
+						'ID'        => $user->ID,
+						'user_pass' => $form->get_value( 'new_password' ),
+					]
+				);
+			}
+		}
+
+		return new \WP_Rest_Response( null, 200 );
 	}
 
 	/**
@@ -98,25 +227,23 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function delete_user( $request ) {
-		// todo.
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
 		// Check authorization.
 		if ( ! is_user_logged_in() ) {
-			return 123;
-			return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 401 ] );
+			return hp_rest_error( 401 );
 		}
 
 		// Get user.
 		$user = get_userdata( absint( $request->get_param( 'id' ) ) );
 
 		if ( false === $user ) {
-			return new \WP_Error( 'not_found', esc_html__( 'User not found', 'hivepress' ), [ 'status' => 404 ] );
+			return hp_rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) {
-			return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 403 ] );
+		if ( ( current_user_can( 'delete_users' ) && get_current_user_id() === $user->ID ) || ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) ) {
+			return hp_rest_error( 403 );
 		}
 
 		// Check password.
@@ -124,18 +251,18 @@ class User extends Controller {
 			$form = new \HivePress\Forms\User_Delete();
 
 			if ( ! $form->validate() ) {
-				return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 400 ] );
+				return hp_rest_error( 400, $form->get_errors() );
 			}
 
 			if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
-				return new \WP_Error( 'not_found', esc_html__( 'todo', 'hivepress' ), [ 'status' => 403 ] );
+				return hp_rest_error( 403, esc_html__( 'Password is incorrect.', 'hivepress' ) );
 			}
 		}
 
 		// Delete user.
 		wp_delete_user( $user->ID );
 
-		return new \WP_Rest_Response((object)[], 200);
+		return new \WP_Rest_Response( null, 204 );
 	}
 
 	/**
