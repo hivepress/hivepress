@@ -190,7 +190,7 @@ class User extends Controller {
 		if ( $form->get_value( 'email' ) !== $user->user_email || $form->get_value( 'new_password' ) ) {
 
 			// Check password.
-			if ( ! current_user_can( 'edit_users' ) ) {
+			if ( get_current_user_id() === $user->ID ) {
 				if ( is_null( $form->get_value( 'current_password' ) ) ) {
 					return hp_rest_error( 403, esc_html__( 'Current password is required.', 'hivepress' ) );
 				}

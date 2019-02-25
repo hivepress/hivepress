@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
-	 * Multiple status.
+	 * Multiple property.
 	 *
 	 * @var bool
 	 */
@@ -37,15 +37,14 @@ class File extends Field {
 	 * @return array
 	 */
 	public function get_attributes() {
-		parent::get_attributes();
 
 		// Set multiple status.
-		if ( $this->get_multiple() ) {
+		if ( $this->multiple ) {
 			$this->attributes['multiple'] = true;
 		}
 
 		// Set file formats.
-		if ( $this->get_file_formats() ) {
+		if ( ! empty( $this->file_formats ) ) {
 			$this->attributes['accept'] = '.' . implode( ',.', $this->get_file_formats() );
 		}
 
@@ -55,11 +54,7 @@ class File extends Field {
 	/**
 	 * Sanitizes field value.
 	 */
-	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
-		}
-	}
+	protected function sanitize() {}
 
 	/**
 	 * Renders field HTML.

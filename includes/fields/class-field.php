@@ -46,7 +46,7 @@ abstract class Field {
 	protected $value;
 
 	/**
-	 * Value requirement.
+	 * Required property.
 	 *
 	 * @var bool
 	 */
@@ -73,16 +73,11 @@ abstract class Field {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Filter field arguments.
-		$args = apply_filters( 'hivepress/fields/field/args', $args );
-
 		// Set type.
 		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
-		// Set value.
-		if ( isset( $args['default'] ) ) {
-			$this->set_value( $args['default'] );
-		}
+		// Filter arguments.
+		$args = apply_filters( 'hivepress/fields/field/args', $args );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
@@ -156,6 +151,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Sets default field value.
+	 *
+	 * @param mixed $value Field value.
+	 */
+	final public function set_default( $value ) {
+		$this->set_value( $value );
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	abstract protected function sanitize();
@@ -167,7 +171,7 @@ abstract class Field {
 	 */
 	public function validate() {
 		if ( $this->required && is_null( $this->value ) ) {
-			$this->errors[] = hp_sanitize_html( sprintf( __( '%s is required.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' ) );
+			$this->errors[] = sprintf( esc_html__( '%s is required.', 'hivepress' ), $this->get_label() );
 		}
 
 		return empty( $this->errors );

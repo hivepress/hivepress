@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
-	 * Multiple status.
+	 * Multiple property.
 	 *
 	 * @var bool
 	 */
@@ -41,13 +41,13 @@ class Select extends Field {
 	}
 
 	/**
-	 * Validate field value.
+	 * Validates field value.
+	 *
+	 * @return bool
 	 */
 	public function validate() {
-		parent::validate();
-
-		if ( ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
-			$this->errors[] = hp_sanitize_html( sprintf( __( '%s contains invalid value.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' ) );
+		if ( parent::validate() && ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
+			$this->errors[] = sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->get_label() );
 		}
 
 		return empty( $this->errors );

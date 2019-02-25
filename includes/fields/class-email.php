@@ -18,11 +18,17 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
-	 * Maximum length.
+	 * Class constructor.
 	 *
-	 * @var int
+	 * @param array $args Field arguments.
 	 */
-	protected $max_length = 254;
+	public function __construct( $args = [] ) {
+
+		// Set maximum length.
+		$this->max_length = 254;
+
+		parent::__construct( $args );
+	}
 
 	// Forbid setting maximum length.
 	final private function set_max_length() {}
@@ -37,13 +43,13 @@ class Email extends Text {
 	}
 
 	/**
-	 * Validate field value.
+	 * Validates field value.
+	 *
+	 * @return bool
 	 */
 	public function validate() {
-		parent::validate();
-
-		if ( ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->errors[] = hp_sanitize_html( sprintf( __( '%s should be a valid email address.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>' ) );
+		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
+			$this->errors[] = sprintf( esc_html__( '%s should be a valid email address.', 'hivepress' ), $this->get_label() );
 		}
 
 		return empty( $this->errors );

@@ -18,11 +18,17 @@ defined( 'ABSPATH' ) || exit;
 class Password extends Text {
 
 	/**
-	 * Maximum length.
+	 * Class constructor.
 	 *
-	 * @var int
+	 * @param array $args Field arguments.
 	 */
-	protected $max_length = 64;
+	public function __construct( $args = [] ) {
+
+		// Set maximum length.
+		$this->max_length = 64;
+
+		parent::__construct( $args );
+	}
 
 	// Forbid setting maximum length.
 	final private function set_max_length() {}
@@ -30,9 +36,5 @@ class Password extends Text {
 	/**
 	 * Sanitizes field value.
 	 */
-	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_strip_all_tags( $this->value, true );
-		}
-	}
+	protected function sanitize() {}
 }

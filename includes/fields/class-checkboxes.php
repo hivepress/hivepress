@@ -18,11 +18,17 @@ defined( 'ABSPATH' ) || exit;
 class Checkboxes extends Select {
 
 	/**
-	 * Multiple status.
+	 * Class constructor.
 	 *
-	 * @var bool
+	 * @param array $args Field arguments.
 	 */
-	protected $multiple = true;
+	public function __construct( $args = [] ) {
+
+		// Set multiple property.
+		$this->multiple = true;
+
+		parent::__construct( $args );
+	}
 
 	// Forbid setting multiple status.
 	final private function set_multiple() {}

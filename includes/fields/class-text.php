@@ -39,6 +39,31 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * Gets field attributes.
+	 *
+	 * @return array
+	 */
+	public function get_attributes() {
+
+		// Set placeholder.
+		if ( ! is_null( $this->placeholder ) ) {
+			$this->attributes['placeholder'] = $this->get_placeholder();
+		}
+
+		// Set minimum length.
+		if ( ! is_null( $this->min_length ) ) {
+			$this->attributes['minlength'] = $this->get_min_length();
+		}
+
+		// Set maximum length.
+		if ( ! is_null( $this->max_length ) ) {
+			$this->attributes['maxlength'] = $this->get_max_length();
+		}
+
+		return $this->attributes;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
@@ -48,18 +73,18 @@ class Text extends Field {
 	}
 
 	/**
-	 * Validate field value.
+	 * Validates field value.
+	 *
+	 * @return bool
 	 */
 	public function validate() {
-		parent::validate();
-
-		if ( ! is_null( $this->value ) ) {
+		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
-				$this->errors[] = hp_sanitize_html( sprintf( __( '%1\$s should be at least %2\$s characters long.', 'hivepress' ), '<strong>' . $this->get_label() . '</strong>', number_format_i18n( $this->min_length ) ) );
+				$this->errors[] = sprintf( esc_html__( '%1\$s should be at least %2\$s characters long.', 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_length ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
-				$this->errors[] = hp_sanitize_html( sprintf( __( "%1\$s can't be longer than %2\$s characters.", 'hivepress' ), '<strong>' . $this->get_label() . '</strong>', number_format_i18n( $this->max_length ) ) );
+				$this->errors[] = sprintf( esc_html__( "%1\$s can't be longer than %2\$s characters.", 'hivepress' ), $this->get_label(), number_format_i18n( $this->max_length ) );
 			}
 		}
 
@@ -72,6 +97,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->get_type() ) . '" name="' . esc_attr( $this->get_name() ) . '" value="' . esc_attr( $this->get_value() ) . '" minlength="' . esc_attr( $this->get_min_length() ) . '" maxlength="' . esc_attr( $this->get_max_length() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( $this->get_type() ) . '" name="' . esc_attr( $this->get_name() ) . '" value="' . esc_attr( $this->get_value() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 	}
 }
