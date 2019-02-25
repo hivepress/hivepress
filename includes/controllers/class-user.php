@@ -85,6 +85,8 @@ class User extends Controller {
 		// Validate form.
 		$form = new \HivePress\Forms\User_Register();
 
+		$form->set_values( $request->get_params() );
+
 		if ( ! $form->validate() ) {
 			return hp_rest_error( 400, $form->get_errors() );
 		}
@@ -99,15 +101,15 @@ class User extends Controller {
 		}
 
 		// Check email.
-		if ( email_exists( $this->get_value( 'email' ) ) ) {
+		if ( email_exists( $form->get_value( 'email' ) ) ) {
 			return hp_rest_error( 400, esc_html__( 'This email is already registered.', 'hivepress' ) );
 		}
 
 		// Get username.
-		list($username, $domain) = explode( '@', $this->get_value( 'email' ) );
+		list($username, $domain) = explode( '@', $form->get_value( 'email' ) );
 
-		if ( $this->get_value( 'username' ) ) {
-			$username = $this->get_value( 'username' );
+		if ( $form->get_value( 'username' ) ) {
+			$username = $form->get_value( 'username' );
 		} else {
 			$username = sanitize_user( $username, true );
 
@@ -121,7 +123,7 @@ class User extends Controller {
 		}
 
 		// Register user.
-		$user_id = wp_create_user( $username, $this->get_value( 'password' ), $this->get_value( 'email' ) );
+		$user_id = wp_create_user( $username, $form->get_value( 'password' ), $form->get_value( 'email' ) );
 
 		if ( ! is_wp_error( $user_id ) ) {
 
@@ -164,6 +166,8 @@ class User extends Controller {
 
 		// Validate form.
 		$form = new \HivePress\Forms\User_Update();
+
+		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp_rest_error( 400, $form->get_errors() );
@@ -253,6 +257,8 @@ class User extends Controller {
 		// Check password.
 		if ( ! current_user_can( 'delete_users' ) ) {
 			$form = new \HivePress\Forms\User_Delete();
+
+			$form->set_values( $request->get_params() );
 
 			if ( ! $form->validate() ) {
 				return hp_rest_error( 400, $form->get_errors() );

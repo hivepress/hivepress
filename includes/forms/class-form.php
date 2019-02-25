@@ -171,6 +171,19 @@ abstract class Form {
 	}
 
 	/**
+	 * Sets field values.
+	 *
+	 * @param array $values Field values.
+	 */
+	final public function set_values( $values ) {
+		foreach ( $values as $field_name => $value ) {
+			if ( isset( $this->fields[ $field_name ] ) && '' !== $value ) {
+				$this->fields[ $field_name ]->set_value( $value );
+			}
+		}
+	}
+
+	/**
 	 * Gets field value.
 	 *
 	 * @param string $name Field name.

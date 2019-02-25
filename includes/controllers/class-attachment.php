@@ -69,6 +69,8 @@ class Attachment extends Controller {
 		// Validate form.
 		$form = new \HivePress\Forms\Attachment_Upload();
 
+		$form->set_values( $request->get_params() );
+
 		if ( ! $form->validate() ) {
 			return hp_rest_error( 400, $form->get_errors() );
 		}
