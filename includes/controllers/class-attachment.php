@@ -79,7 +79,7 @@ class Attachment extends Controller {
 		$attachment_id = media_handle_upload( $form->get_value( 'todo' ), 0 );
 
 		if ( is_wp_error( $attachment_id ) ) {
-			return hp_rest_error( 400, esc_html__( 'Error uploading file.', 'hivepress' ) );
+			return hp_rest_error( 400, esc_html__( 'Error uploading file', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response( null, 200 );

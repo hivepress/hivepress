@@ -235,7 +235,7 @@ abstract class Form {
 			);
 
 			if ( is_wp_error( $response ) || ! hp_get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
-				$this->errors[] = esc_html__( 'Captcha is invalid.', 'hivepress' );
+				$this->errors[] = esc_html__( 'Captcha is invalid', 'hivepress' );
 			}
 		}
 

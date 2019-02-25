@@ -49,7 +49,7 @@ class Email extends Text {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->errors[] = sprintf( esc_html__( '%s should be a valid email address.', 'hivepress' ), $this->get_label() );
+			$this->errors[] = sprintf( esc_html__( '%s should be a valid email address', 'hivepress' ), $this->get_label() );
 		}
 
 		return empty( $this->errors );

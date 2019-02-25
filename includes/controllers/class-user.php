@@ -36,6 +36,24 @@ class User extends Controller {
 							],
 
 							[
+								'path'    => '/todo',
+								'methods' => 'POST',
+								'action'  => 'login_user',
+							],
+
+							[
+								'path'    => '/todo2',
+								'methods' => 'POST',
+								'action'  => 'request_password',
+							],
+
+							[
+								'path'    => '/todo3',
+								'methods' => 'POST',
+								'action'  => 'reset_password',
+							],
+
+							[
 								'path'    => '/(?P<id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_user',
@@ -82,6 +100,11 @@ class User extends Controller {
 	 */
 	public function register_user( $request ) {
 
+		// Check authorization.
+		if ( is_user_logged_in() && ! current_user_can( 'create_users' ) ) {
+			return hp_rest_error( 403 );
+		}
+
 		// Validate form.
 		$form = new \HivePress\Forms\User_Register();
 
@@ -94,15 +117,15 @@ class User extends Controller {
 		// Check username.
 		if ( $form->get_value( 'username' ) ) {
 			if ( sanitize_user( $form->get_value( 'username' ), true ) !== $form->get_value( 'username' ) ) {
-				return hp_rest_error( 400, esc_html__( 'Username contains invalid characters.', 'hivepress' ) );
+				return hp_rest_error( 400, esc_html__( 'Username contains invalid characters', 'hivepress' ) );
 			} elseif ( username_exists( $form->get_value( 'username' ) ) ) {
-				return hp_rest_error( 400, esc_html__( 'This username is already in use.', 'hivepress' ) );
+				return hp_rest_error( 400, esc_html__( 'This username is already in use', 'hivepress' ) );
 			}
 		}
 
 		// Check email.
 		if ( email_exists( $form->get_value( 'email' ) ) ) {
-			return hp_rest_error( 400, esc_html__( 'This email is already registered.', 'hivepress' ) );
+			return hp_rest_error( 400, esc_html__( 'This email is already registered', 'hivepress' ) );
 		}
 
 		// Get username.
@@ -125,16 +148,166 @@ class User extends Controller {
 		// Register user.
 		$user_id = wp_create_user( $username, $form->get_value( 'password' ), $form->get_value( 'email' ) );
 
-		if ( ! is_wp_error( $user_id ) ) {
-
-			// Hide admin bar.
-			update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
-
-			// Send emails.
-			wp_new_user_notification( $user_id );
-
-			// todo send email.
+		if ( is_wp_error( $user_id ) ) {
+			return hp_rest_error( 400, esc_html__( 'Error registering user', 'hivepress' ) );
 		}
+
+		// Hide admin bar.
+		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+
+		// Send emails.
+		wp_new_user_notification( $user_id );
+
+		// todo send email.
+		// Authenticate user.
+		if ( ! is_user_logged_in() ) {
+			wp_set_auth_cookie( $user_id, true );
+		}
+
+		return new \WP_Rest_Response( null, 200 );
+	}
+
+	/**
+	 * Logins user.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function login_user( $request ) {
+
+		// Check authorization.
+		if ( is_user_logged_in() ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = new \HivePress\Forms\User_Login();
+
+		$form->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Set credentials.
+		$credentials = [
+			'user_password' => $form->get_value( 'password' ),
+			'remember'      => true,
+		];
+
+		if ( is_email( $form->get_value( 'username' ) ) ) {
+			$credentials['user_email'] = $form->get_value( 'username' );
+		} else {
+			$credentials['user_login'] = $form->get_value( 'username' );
+		}
+
+		// Authenticate user.
+		$user = wp_signon( $credentials, is_ssl() );
+
+		if ( is_wp_error( $user ) ) {
+			return hp_rest_error( 400, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
+		}
+
+		return new \WP_Rest_Response( null, 200 );
+	}
+
+	/**
+	 * Requests password.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function request_password( $request ) {
+
+		// Check authorization.
+		if ( is_user_logged_in() ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = new \HivePress\Forms\User_Request_Password();
+
+		$form->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Get user.
+		$user = false;
+
+		if ( is_email( $form->get_value( 'username' ) ) ) {
+			$user = get_user_by( 'email', $form->get_value( 'username' ) );
+		} else {
+			$user = get_user_by( 'login', $form->get_value( 'username' ) );
+		}
+
+		if ( false === $user ) {
+			if ( is_email( $form->get_value( 'username' ) ) ) {
+				return hp_rest_error( 404, esc_html__( "User with this email doesn't exist.", 'hivepress' ) );
+			} else {
+				return hp_rest_error( 404, esc_html__( "User with this username doesn't exist.", 'hivepress' ) );
+			}
+		}
+
+		// Get URL.
+		$url = add_query_arg(
+			[
+				'username' => $user->user_login,
+				'key'      => get_password_reset_key( $user ),
+			],
+			'todo'
+		);
+
+		// Send email.
+		// todo send email.
+		return new \WP_Rest_Response( null, 200 );
+	}
+
+	/**
+	 * Resets password.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function reset_password( $request ) {
+
+		// Check authorization.
+		if ( is_user_logged_in() ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = new \HivePress\Forms\User_Reset_Password();
+
+		$form->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Get user.
+		$user = check_password_reset_key( $form->get_value( 'key' ), $form->get_value( 'username' ) );
+
+		if ( is_wp_error( $user ) ) {
+			return hp_rest_error( 400, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );
+		}
+
+		// Reset password.
+		reset_password( $user, $form->get_value( 'password' ) );
+
+		// Authenticate user.
+		wp_signon(
+			[
+				'user_login'    => $form->get_value( 'username' ),
+				'user_password' => $form->get_value( 'password' ),
+				'remember'      => true,
+			],
+			is_ssl()
+		);
+
+		// Send email.
+		wp_password_change_notification( $user );
 
 		return new \WP_Rest_Response( null, 200 );
 	}
@@ -196,11 +369,11 @@ class User extends Controller {
 			// Check password.
 			if ( get_current_user_id() === $user->ID ) {
 				if ( is_null( $form->get_value( 'current_password' ) ) ) {
-					return hp_rest_error( 403, esc_html__( 'Current password is required.', 'hivepress' ) );
+					return hp_rest_error( 400, esc_html__( 'Current password is required', 'hivepress' ) );
 				}
 
 				if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
-					return hp_rest_error( 403, esc_html__( 'Current password is incorrect.', 'hivepress' ) );
+					return hp_rest_error( 400, esc_html__( 'Current password is incorrect', 'hivepress' ) );
 				}
 			}
 
@@ -250,12 +423,12 @@ class User extends Controller {
 		}
 
 		// Check permissions.
-		if ( ( current_user_can( 'delete_users' ) && get_current_user_id() === $user->ID ) || ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) ) {
+		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) {
 			return hp_rest_error( 403 );
 		}
 
 		// Check password.
-		if ( ! current_user_can( 'delete_users' ) ) {
+		if ( get_current_user_id() === $user->ID ) {
 			$form = new \HivePress\Forms\User_Delete();
 
 			$form->set_values( $request->get_params() );
@@ -265,7 +438,7 @@ class User extends Controller {
 			}
 
 			if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
-				return hp_rest_error( 403, esc_html__( 'Password is incorrect.', 'hivepress' ) );
+				return hp_rest_error( 400, esc_html__( 'Password is incorrect', 'hivepress' ) );
 			}
 		}
 

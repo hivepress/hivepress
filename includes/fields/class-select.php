@@ -47,7 +47,7 @@ class Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
-			$this->errors[] = sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->get_label() );
+			$this->errors[] = sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->get_label() );
 		}
 
 		return empty( $this->errors );

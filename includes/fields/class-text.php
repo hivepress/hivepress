@@ -80,11 +80,11 @@ class Text extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
-				$this->errors[] = sprintf( esc_html__( '%1\$s should be at least %2\$s characters long.', 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_length ) );
+				$this->errors[] = sprintf( esc_html__( '%1\$s should be at least %2\$s characters long', 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_length ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
-				$this->errors[] = sprintf( esc_html__( "%1\$s can't be longer than %2\$s characters.", 'hivepress' ), $this->get_label(), number_format_i18n( $this->max_length ) );
+				$this->errors[] = sprintf( esc_html__( "%1\$s can't be longer than %2\$s characters", 'hivepress' ), $this->get_label(), number_format_i18n( $this->max_length ) );
 			}
 		}
 
