@@ -23,50 +23,53 @@ class User extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set routes.
-		$args['routes'] = [
+		$args = array_replace_recursive(
 			[
-				'path'      => '/users',
-				'rest'      => true,
-				'endpoints' => [
+				'routes' => [
 					[
-						'methods' => 'POST',
-						'action'  => 'register_user',
+						'path'      => '/users',
+						'rest'      => true,
+						'endpoints' => [
+							[
+								'methods' => 'POST',
+								'action'  => 'register_user',
+							],
+
+							[
+								'path'    => '/(?P<id>\d+)',
+								'methods' => 'POST',
+								'action'  => 'update_user',
+							],
+
+							[
+								'path'    => '/(?P<id>\d+)',
+								'methods' => 'DELETE',
+								'action'  => 'delete_user',
+							],
+						],
 					],
 
 					[
-						'path'    => '/(?P<id>\d+)',
-						'methods' => 'POST',
-						'action'  => 'update_user',
+						'title'  => esc_html__( 'Sign In', 'hivepress' ),
+						'path'   => '/account/login',
+						'action' => 'render_login_page',
 					],
 
 					[
-						'path'    => '/(?P<id>\d+)',
-						'methods' => 'DELETE',
-						'action'  => 'delete_user',
+						'title'  => esc_html__( 'Reset Password', 'hivepress' ),
+						'path'   => '/account/reset-password',
+						'action' => 'render_password_page',
+					],
+
+					[
+						'title'  => esc_html__( 'My Settings', 'hivepress' ),
+						'path'   => '/account/settings',
+						'action' => 'render_settings_page',
 					],
 				],
 			],
-
-			[
-				'title'  => esc_html__( 'Sign In', 'hivepress' ),
-				'path'   => '/account/login',
-				'action' => 'render_login_page',
-			],
-
-			[
-				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-				'path'   => '/account/reset-password',
-				'action' => 'render_password_page',
-			],
-
-			[
-				'title'  => esc_html__( 'My Settings', 'hivepress' ),
-				'path'   => '/account/settings',
-				'action' => 'render_settings_page',
-			],
-		];
+			$args
+		);
 
 		parent::__construct( $args );
 	}

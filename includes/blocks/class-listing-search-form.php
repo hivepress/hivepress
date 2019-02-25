@@ -23,9 +23,12 @@ class Listing_Search_Form extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set title.
-		$args['title'] = esc_html__( 'Listing Search Form', 'hivepress' );
+		$args = array_replace_recursive(
+			[
+				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
+			],
+			$args
+		);
 
 		parent::__construct( $args );
 	}

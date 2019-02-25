@@ -23,9 +23,12 @@ class Listing_Categories extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set title.
-		$args['title'] = esc_html__( 'Listing Categories', 'hivepress' );
+		$args = array_replace_recursive(
+			[
+				'title' => esc_html__( 'Listing Categories', 'hivepress' ),
+			],
+			$args
+		);
 
 		parent::__construct( $args );
 	}

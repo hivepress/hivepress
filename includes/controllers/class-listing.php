@@ -23,37 +23,40 @@ class Listing extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set routes.
-		$args['routes'] = [
+		$args = array_replace_recursive(
 			[
-				'path'      => '/listings',
-				'rest'      => true,
-				'endpoints' => [
+				'routes' => [
 					[
-						'path'    => '/(?P<id>\d+)',
-						'methods' => 'POST',
-						'action'  => 'update_listing',
+						'path'      => '/listings',
+						'rest'      => true,
+						'endpoints' => [
+							[
+								'path'    => '/(?P<id>\d+)',
+								'methods' => 'POST',
+								'action'  => 'update_listing',
+							],
+
+							[
+								'path'    => '/(?P<id>\d+)',
+								'methods' => 'DELETE',
+								'action'  => 'delete_listing',
+							],
+						],
 					],
 
 					[
-						'path'    => '/(?P<id>\d+)',
-						'methods' => 'DELETE',
-						'action'  => 'delete_listing',
+						'rule'   => 'is_listing_page',
+						'action' => 'render_listing_page',
+					],
+
+					[
+						'rule'   => 'is_listings_page',
+						'action' => 'render_listings_page',
 					],
 				],
 			],
-
-			[
-				'rule'   => 'is_listing_page',
-				'action' => 'render_listing_page',
-			],
-
-			[
-				'rule'   => 'is_listings_page',
-				'action' => 'render_listings_page',
-			],
-		];
+			$args
+		);
 
 		parent::__construct( $args );
 	}
