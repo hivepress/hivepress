@@ -50,9 +50,7 @@ class File_Upload extends Form {
 		parent::submit();
 
 		if ( is_user_logged_in() ) {
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			require_once ABSPATH . 'wp-admin/includes/media.php';
+
 
 			// Get form class.
 			$form_class = '\HivePress\Forms\\' . $this->get_value( 'form_name' );
@@ -68,13 +66,12 @@ class File_Upload extends Form {
 				if ( ! is_null( $field ) && $field->get_type() === 'file_upload' ) {
 					if ( $field->validate() ) {
 
-						// Upload file.
-						$attachment_id = media_handle_upload( $this->get_value( 'field_name' ), 0 );
+
 
 						if ( ! is_wp_error( $attachment_id ) ) {
 							$this->set_response( $field->render_file( $attachment_id ) );
 						} else {
-							$this->errors[] = esc_html__( 'Error uploading file.', 'hivepress' );
+							$this->errors[] = ;
 						}
 					} else {
 						$this->errors = array_merge( $this->errors, $field->get_errors() );
@@ -82,7 +79,5 @@ class File_Upload extends Form {
 				}
 			}
 		}
-
-		return empty( $this->errors );
 	}
 }

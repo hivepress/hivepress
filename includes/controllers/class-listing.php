@@ -65,7 +65,7 @@ class Listing extends Controller {
 	 * Updates listing.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return mixed
+	 * @return WP_Rest_Response
 	 */
 	public function update_listing( $request ) {
 		// todo.
@@ -75,7 +75,7 @@ class Listing extends Controller {
 	 * Deletes listing.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return mixed
+	 * @return WP_Rest_Response
 	 */
 	public function delete_listing( $request ) {
 		// todo.

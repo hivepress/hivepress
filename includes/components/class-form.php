@@ -22,11 +22,32 @@ final class Form {
 	 */
 	public function __construct() {
 
+		// Set form captcha.
+		add_filter( 'hivepress/forms/form/args', [ $this, 'set_form_captcha' ] );
+
 		// Set field options.
 		add_filter( 'hivepress/fields/field/args', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+	}
+
+	/**
+	 * Sets form captcha.
+	 *
+	 * @param array $args Form arguments.
+	 * @return array
+	 */
+	public function set_form_captcha( $args ) {
+		if ( isset( $args['captcha'] ) ) {
+			if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && ( $args['captcha'] || in_array( $args['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) ) {
+				$args['captcha'] = true;
+			} else {
+				$args['captcha'] = false;
+			}
+		}
+
+		return $args;
 	}
 
 	/**

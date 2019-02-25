@@ -40,7 +40,7 @@ class Listing_Search_Form extends Block {
 	 */
 	public function render() {
 		// todo.
-		$form = new \HivePress\Forms\User_Delete();
+		$form = new \HivePress\Forms\User_Register();
 
 		return $form->render();
 	}

@@ -64,6 +64,7 @@ class User_Register extends Form {
 		$args = array_replace_recursive(
 			[
 				'title'   => esc_html__( 'Register User', 'hivepress' ),
+				'action'  => hp_get_rest_url( '/users' ),
 				'captcha' => false,
 				'fields'  => $fields,
 			],

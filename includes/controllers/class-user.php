@@ -78,7 +78,7 @@ class User extends Controller {
 	 * Registers user.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return mixed
+	 * @return WP_Rest_Response
 	 */
 	public function register_user( $request ) {
 
@@ -141,7 +141,7 @@ class User extends Controller {
 	 * Updates user.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return mixed
+	 * @return WP_Rest_Response
 	 */
 	public function update_user( $request ) {
 
@@ -228,7 +228,7 @@ class User extends Controller {
 	 * Deletes user.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return mixed
+	 * @return WP_Rest_Response
 	 */
 	public function delete_user( $request ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';

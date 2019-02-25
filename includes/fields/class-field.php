@@ -77,7 +77,7 @@ abstract class Field {
 		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/fields/field/args', $args );
+		$args = apply_filters( 'hivepress/fields/field/args', array_merge( $args, [ 'type' => $this->type ] ) );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {

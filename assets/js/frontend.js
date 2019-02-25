@@ -56,10 +56,10 @@ var hivepress = {
 
 		// todo.
 		//if (type.includes('submit')) {
-		$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
-			'nonce': button.data('nonce'),
-			'_wpnonce': hpCoreFrontendData.apiNonce,
-		}));
+		// $.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
+		// 	'nonce': button.data('nonce'),
+		// 	'_wpnonce': hpCoreFrontendData.apiNonce,
+		// }));
 		//}
 
 		e.preventDefault();
@@ -107,7 +107,7 @@ var hivepress = {
 
 				$.ajax({
 					url: form.attr('action'),
-					method: 'DELETE',
+					method: form.data('method'),
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
 					},

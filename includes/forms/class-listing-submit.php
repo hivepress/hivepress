@@ -49,6 +49,7 @@ class Listing_Submit extends Listing_Update {
 		$args = array_replace_recursive(
 			[
 				'title'   => esc_html__( 'Submit Listing', 'hivepress' ),
+				'action'  => hp_get_rest_url( '/listings' ),
 				'captcha' => false,
 				'fields'  => $fields,
 			],
