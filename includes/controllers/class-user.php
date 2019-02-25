@@ -19,55 +19,56 @@ class User extends Controller {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Controller arguments.
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct( $args = [] ) {
 
 		// Set routes.
-		$this->set_routes(
+		$args['routes'] = [
 			[
-				[
-					'path'      => '/users',
-					'rest'      => true,
-					'endpoints' => [
-						[
-							'methods' => 'POST',
-							'action'  => 'register_user',
-						],
+				'path'      => '/users',
+				'rest'      => true,
+				'endpoints' => [
+					[
+						'methods' => 'POST',
+						'action'  => 'register_user',
+					],
 
-						[
-							'path'    => '/(?P<id>\d+)',
-							'methods' => 'POST',
-							'action'  => 'update_user',
-						],
+					[
+						'path'    => '/(?P<id>\d+)',
+						'methods' => 'POST',
+						'action'  => 'update_user',
+					],
 
-						[
-							'path'    => '/(?P<id>\d+)',
-							'methods' => 'DELETE',
-							'action'  => 'delete_user',
-						],
+					[
+						'path'    => '/(?P<id>\d+)',
+						'methods' => 'DELETE',
+						'action'  => 'delete_user',
 					],
 				],
+			],
 
-				[
-					'title'  => esc_html__( 'Sign In', 'hivepress' ),
-					'path'   => '/account/login',
-					'action' => 'render_login_page',
-				],
+			[
+				'title'  => esc_html__( 'Sign In', 'hivepress' ),
+				'path'   => '/account/login',
+				'action' => 'render_login_page',
+			],
 
-				[
-					'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-					'path'   => '/account/reset-password',
-					'action' => 'render_password_page',
-				],
+			[
+				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
+				'path'   => '/account/reset-password',
+				'action' => 'render_password_page',
+			],
 
-				[
-					'title'  => esc_html__( 'My Settings', 'hivepress' ),
-					'path'   => '/account/settings',
-					'action' => 'render_settings_page',
-				],
-			]
-		);
+			[
+				'title'  => esc_html__( 'My Settings', 'hivepress' ),
+				'path'   => '/account/settings',
+				'action' => 'render_settings_page',
+			],
+		];
+
+		parent::__construct( $args );
 	}
 
 	/**

@@ -19,42 +19,43 @@ class Listing extends Controller {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Controller arguments.
 	 */
-	public function __construct() {
-		parent::__construct();
+	public function __construct( $args = [] ) {
 
 		// Set routes.
-		$this->set_routes(
+		$args['routes'] = [
 			[
-				[
-					'path'      => '/listings',
-					'rest'      => true,
-					'endpoints' => [
-						[
-							'path'    => '/(?P<id>\d+)',
-							'methods' => 'POST',
-							'action'  => 'update_listing',
-						],
+				'path'      => '/listings',
+				'rest'      => true,
+				'endpoints' => [
+					[
+						'path'    => '/(?P<id>\d+)',
+						'methods' => 'POST',
+						'action'  => 'update_listing',
+					],
 
-						[
-							'path'    => '/(?P<id>\d+)',
-							'methods' => 'DELETE',
-							'action'  => 'delete_listing',
-						],
+					[
+						'path'    => '/(?P<id>\d+)',
+						'methods' => 'DELETE',
+						'action'  => 'delete_listing',
 					],
 				],
+			],
 
-				[
-					'rule'   => 'is_listing_page',
-					'action' => 'render_listing_page',
-				],
+			[
+				'rule'   => 'is_listing_page',
+				'action' => 'render_listing_page',
+			],
 
-				[
-					'rule'   => 'is_listings_page',
-					'action' => 'render_listings_page',
-				],
-			]
-		);
+			[
+				'rule'   => 'is_listings_page',
+				'action' => 'render_listings_page',
+			],
+		];
+
+		parent::__construct( $args );
 	}
 
 	/**

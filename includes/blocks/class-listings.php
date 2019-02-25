@@ -23,10 +23,11 @@ class Listings extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		parent::__construct( $args );
 
 		// Set title.
-		$this->set_title( esc_html__( 'Listings', 'hivepress' ) );
+		$args['title'] = esc_html__( 'Listings', 'hivepress' );
+
+		parent::__construct( $args );
 	}
 
 	/**
