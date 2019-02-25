@@ -23,25 +23,21 @@ class Listing_Sort extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		parent::__construct( $args );
-
-		// Set fields.
-		$this->set_fields(
+		$args = array_replace_recursive(
 			[
-				'sort' => [
-					'label'   => esc_html__( 'Sort by', 'hivepress' ),
-					'type'    => 'select',
-					'options' => [],
-					'order'   => 10,
+				'method' => 'GET',
+				'fields' => [
+					'sort' => [
+						'label'   => esc_html__( 'Sort by', 'hivepress' ),
+						'type'    => 'select',
+						'options' => [],
+						'order'   => 10,
+					],
 				],
-			]
+			],
+			$args
 		);
-	}
 
-	/**
-	 * Submits form.
-	 */
-	public function submit() {
-		parent::submit();
+		parent::__construct( $args );
 	}
 }

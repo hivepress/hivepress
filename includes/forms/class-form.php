@@ -139,6 +139,8 @@ abstract class Form {
 	 * @param array $fields Form fields.
 	 */
 	final public function set_fields( $fields ) {
+		$this->fields = [];
+
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Get field class.
@@ -200,7 +202,7 @@ abstract class Form {
 		$output = '<form action="' . esc_url( $this->get_action() ) . '" method="' . esc_attr( $this->get_method() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// Render fields.
-		foreach ( $this->get_fields() as $field_name => $field ) {
+		foreach ( $this->get_fields() as $field ) {
 			$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 			$output .= $field->render();

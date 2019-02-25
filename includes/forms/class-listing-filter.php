@@ -23,13 +23,13 @@ class Listing_Filter extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		parent::__construct( $args );
-	}
+		$args = array_replace_recursive(
+			[
+				'method' => 'GET',
+			],
+			$args
+		);
 
-	/**
-	 * Submits form.
-	 */
-	public function submit() {
-		parent::submit();
+		parent::__construct( $args );
 	}
 }

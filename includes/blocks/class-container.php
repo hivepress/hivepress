@@ -33,8 +33,11 @@ class Container extends Block {
 		$this->blocks = [];
 
 		foreach ( $blocks as $block_name => $block_args ) {
+
+			// Get block class.
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
+			// Create block.
 			$this->blocks[ $block_name ] = new $block_class( $block_args );
 		}
 	}

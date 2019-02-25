@@ -1,6 +1,6 @@
 <?php
 /**
- * User delete form.
+ * Listing report form.
  *
  * @package HivePress\Forms
  */
@@ -11,11 +11,11 @@ namespace HivePress\Forms;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User delete form class.
+ * Listing report form class.
  *
- * @class User_Delete
+ * @class Listing_Report
  */
-class User_Delete extends Form {
+class Listing_Report extends Form {
 
 	/**
 	 * Class constructor.
@@ -25,13 +25,14 @@ class User_Delete extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
-				'method' => 'DELETE',
-				'fields' => [
-					'password' => [
-						'label'    => esc_html__( 'Password', 'hivepress' ),
-						'type'     => 'password',
-						'required' => true,
-						'order'    => 10,
+				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
+				'captcha' => false,
+				'fields'  => [
+					'reason' => [
+						'type'       => 'textarea',
+						'max_length' => 2048,
+						'required'   => true,
+						'order'      => 10,
 					],
 				],
 			],
