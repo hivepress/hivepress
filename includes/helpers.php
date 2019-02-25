@@ -215,5 +215,10 @@ function hp_rest_error( $code, $errors = [] ) {
 		);
 	}
 
-	return new WP_Rest_Response( $error, $code );
+	return new WP_Rest_Response(
+		[
+			'error' => $error,
+		],
+		$code
+	);
 }
