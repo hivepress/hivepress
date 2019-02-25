@@ -46,6 +46,13 @@ abstract class Form {
 	protected $method = 'POST';
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected $captcha;
+
+	/**
 	 * Form attributes.
 	 *
 	 * @var array

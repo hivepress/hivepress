@@ -32,22 +32,6 @@ abstract class Form {
 	protected $redirect;
 
 	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected $captcha;
-
-	/**
-	 * Form response.
-	 *
-	 * @var string
-	 */
-	private $response;
-
-
-
-	/**
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
@@ -71,8 +55,6 @@ abstract class Form {
 			$this->get_fields()[ $name ]->set_value( $value );
 		}
 	}
-
-
 
 	/**
 	 * Gets field values.
