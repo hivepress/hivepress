@@ -78,11 +78,11 @@ class Number extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
-				$this->errors[] = sprintf( esc_html__( "%1\$s can't be lower than %2\$s.", 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_value ) );
+				$this->errors[] = sprintf( esc_html__( "%1\$s can't be lower than %2\$s", 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_value ) );
 			}
 
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
-				$this->errors[] = sprintf( esc_html__( "%1\$s can't be greater than %2\$s.", 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_value ) );
+				$this->errors[] = sprintf( esc_html__( "%1\$s can't be greater than %2\$s", 'hivepress' ), $this->get_label(), number_format_i18n( $this->min_value ) );
 			}
 		}
 

@@ -244,9 +244,9 @@ class User extends Controller {
 
 		if ( false === $user ) {
 			if ( is_email( $form->get_value( 'username' ) ) ) {
-				return hp_rest_error( 404, esc_html__( "User with this email doesn't exist.", 'hivepress' ) );
+				return hp_rest_error( 404, esc_html__( "User with this email doesn't exist", 'hivepress' ) );
 			} else {
-				return hp_rest_error( 404, esc_html__( "User with this username doesn't exist.", 'hivepress' ) );
+				return hp_rest_error( 404, esc_html__( "User with this username doesn't exist", 'hivepress' ) );
 			}
 		}
 
