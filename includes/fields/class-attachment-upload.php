@@ -54,6 +54,8 @@ class Attachment_Upload extends Field {
 				[
 					'post_type'      => 'attachment',
 					'post__in'       => array_map( 'absint', (array) $this->value ),
+					'orderby'        => 'menu_order',
+					'order'          => 'ASC',
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
 				]
