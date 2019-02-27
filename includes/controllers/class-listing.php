@@ -68,7 +68,48 @@ class Listing extends Controller {
 	 * @return WP_Rest_Response
 	 */
 	public function update_listing( $request ) {
-		// todo.
+
+		// Check authorization.
+		if ( ! is_user_logged_in() ) {
+			return hp_rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = new \HivePress\Models\Listing( absint( $request->get_param( 'id' ) ) );
+
+		if ( $listing->get_id() === null ) {
+			return hp_rest_error( 404 );
+		}
+
+		// Check permissions.
+		// todo rename get_author to get_author_id?
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = new \HivePress\Forms\Listing_Update();
+
+		$form->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp_rest_error( 400, $form->get_errors() );
+		}
+
+		// Update listing.
+		// todo populate from form.
+		if ( ! $listing->save() ) {
+			return hp_rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
+		}
+
+		return new \WP_Rest_Response(
+			[
+				'data' => [
+					'id' => $listing->get_id(),
+				],
+			],
+			200
+		);
 	}
 
 	/**
@@ -78,7 +119,31 @@ class Listing extends Controller {
 	 * @return WP_Rest_Response
 	 */
 	public function delete_listing( $request ) {
-		// todo.
+
+		// Check authorization.
+		if ( ! is_user_logged_in() ) {
+			return hp_rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = new \HivePress\Models\Listing( absint( $request->get_param( 'id' ) ) );
+
+		if ( $listing->get_id() === null ) {
+			return hp_rest_error( 404 );
+		}
+
+		// Check permissions.
+		// todo rename get_author to get_author_id?
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+			return hp_rest_error( 403 );
+		}
+
+		// Delete listing.
+		if ( wp_delete_post( $listing->get_id(), true ) === false ) {
+			return hp_rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
+		}
+
+		return new \WP_Rest_Response( (object) [], 204 );
 	}
 
 	/**
