@@ -54,10 +54,11 @@ return [
 
 		'fields' => [
 			'image'                 => [
-				'label'   => esc_html__( 'Image', 'hivepress' ),
-				'caption' => esc_html__( 'Select Image', 'hivepress' ),
-				'type'    => 'file_select',
-				'order'   => 10,
+				'label'        => esc_html__( 'Image', 'hivepress' ),
+				'caption'      => esc_html__( 'Select Image', 'hivepress' ),
+				'type'         => 'attachment_select',
+				'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+				'order'        => 10,
 			],
 
 			'order'                 => [

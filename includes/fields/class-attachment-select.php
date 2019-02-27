@@ -1,6 +1,6 @@
 <?php
 /**
- * File select field.
+ * Attachment select field.
  *
  * @package HivePress\Fields
  */
@@ -11,11 +11,11 @@ namespace HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * File select field class.
+ * Attachment select field class.
  *
- * @class File_Select
+ * @class Attachment_Select
  */
-class File_Select extends Field {
+class Attachment_Select extends Field {
 
 	/**
 	 * Button caption.
@@ -69,7 +69,7 @@ class File_Select extends Field {
 		$output .= '<a href="#" class="hp-js-button" data-type="remove"><span class="dashicons dashicons-no-alt"></span></a>';
 		$output .= '</div>';
 
-		$output .= '<button type="button" class="button hp-js-button" data-type="file-select">' . esc_html( $this->get_caption() ) . '</button>';
+		$output .= '<button type="button" class="button hp-js-button" data-type="attachment-select">' . esc_html( $this->get_caption() ) . '</button>';
 
 		$output .= '</div>';
 

@@ -173,10 +173,6 @@ function hp_get_post_id( $args ) {
 		]
 	);
 
-	if ( hp_get_array_value( $args, 'post_status' ) === 'any' ) {
-		$args['post_status'] = [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ];
-	}
-
 	$post_ids = get_posts( $args );
 
 	return absint( reset( $post_ids ) );

@@ -29,7 +29,7 @@ class User_Update extends Form {
 					'image'            => [
 						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-						'type'         => 'file_upload',
+						'type'         => 'attachment_upload',
 						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
 						'order'        => 10,
 					],

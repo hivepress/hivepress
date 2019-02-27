@@ -100,7 +100,7 @@ class User extends Controller {
 	 */
 	public function register_user( $request ) {
 
-		// Check authorization.
+		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'create_users' ) ) {
 			return hp_rest_error( 403 );
 		}
@@ -182,7 +182,7 @@ class User extends Controller {
 	 */
 	public function login_user( $request ) {
 
-		// Check authorization.
+		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
 			return hp_rest_error( 403 );
 		}
@@ -237,7 +237,7 @@ class User extends Controller {
 	 */
 	public function request_password( $request ) {
 
-		// Check authorization.
+		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
 			return hp_rest_error( 403 );
 		}
@@ -287,7 +287,7 @@ class User extends Controller {
 	 */
 	public function reset_password( $request ) {
 
-		// Check authorization.
+		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
 			return hp_rest_error( 403 );
 		}
@@ -337,7 +337,7 @@ class User extends Controller {
 	 */
 	public function update_user( $request ) {
 
-		// Check authorization.
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp_rest_error( 401 );
 		}
@@ -434,7 +434,7 @@ class User extends Controller {
 	public function delete_user( $request ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
-		// Check authorization.
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp_rest_error( 401 );
 		}

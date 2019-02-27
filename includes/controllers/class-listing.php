@@ -69,7 +69,7 @@ class Listing extends Controller {
 	 */
 	public function update_listing( $request ) {
 
-		// Check authorization.
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp_rest_error( 401 );
 		}
@@ -120,7 +120,7 @@ class Listing extends Controller {
 	 */
 	public function delete_listing( $request ) {
 
-		// Check authorization.
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp_rest_error( 401 );
 		}
@@ -139,7 +139,7 @@ class Listing extends Controller {
 		}
 
 		// Delete listing.
-		if ( wp_delete_post( $listing->get_id(), true ) === false ) {
+		if ( ! $listing->delete() ) {
 			return hp_rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
 		}
 

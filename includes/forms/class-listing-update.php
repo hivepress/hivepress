@@ -45,7 +45,7 @@ class Listing_Update extends Form {
 					'images'      => [
 						'label'        => esc_html__( 'Images', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
-						'type'         => 'file_upload',
+						'type'         => 'attachment_upload',
 						'multiple'     => true,
 						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
 						'max_files'    => 10,
