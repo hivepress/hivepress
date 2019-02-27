@@ -54,13 +54,19 @@ var hivepress = {
 			button.parent().remove();
 		}
 
-		// todo.
-		//if (type.includes('submit')) {
-		// $.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/' + button.data('name'), $.extend(button.data('values'), {
-		// 	'nonce': button.data('nonce'),
-		// 	'_wpnonce': hpCoreFrontendData.apiNonce,
-		// }));
-		//}
+		if (type.includes('request')) {
+			$.ajax({
+				url: button.data('url'),
+				method: button.data('method'),
+				data: button.data('params'),
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+				},
+				complete: function(xhr) {
+					console.log(xhr.responseJSON);
+				},
+			});
+		}
 
 		e.preventDefault();
 	});
@@ -86,34 +92,21 @@ var hivepress = {
 				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
-				// $.post(form.attr('action'), $.extend(form.serializeObject(), {
-				// 	'_wpnonce': hpCoreFrontendData.apiNonce,
-				// }), function(response) {
-				// 	if (response) {
-				// 		// todo.
-				// 		// if (response.success) {
-				// 		// 	if (response.redirect) {
-				// 		// 		window.location.reload(true);
-				// 		// 	} else {
-				// 		// 		if (typeof grecaptcha !== 'undefined' && captcha.length) {
-				// 		// 			grecaptcha.reset(captchaId);
-				// 		// 		}
-				// 		// 	}
-				// 		// }
-				// 	}
-				//
-				// 	console.log(response);
-				// });
-
 				$.ajax({
 					url: form.attr('action'),
 					method: form.data('method'),
+					data: form.serializeObject(),
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
 					},
-					data: form.serializeObject(),
 					complete: function(xhr) {
-						console.log(xhr.responseText);
+						if (xhr.responseJSON.hasOwnProperty('data')) {
+							if (typeof grecaptcha !== 'undefined' && captcha.length) {
+								grecaptcha.reset(captchaId);
+							}
+						}
+
+						console.log(xhr.responseJSON);
 					},
 				});
 
@@ -131,14 +124,15 @@ var hivepress = {
 			responseContainer = selectLabel.parent().children('div').first();
 
 		field.fileupload({
-			url: hpCoreFrontendData.apiURL + 'hivepress/v1/forms/file_upload',
+			url: field.data('url'),
+			dataType: 'json',
+			paramName: 'file',
 			formData: {
-				'form_name': field.closest('form').data('name'),
-				'field_name': field.attr('name'),
-				'nonce': field.data('nonce'),
+				'form': field.closest('form').data('name'),
+				'field': field.attr('name'),
+				'render': true,
 				'_wpnonce': hpCoreFrontendData.apiNonce,
 			},
-			dataType: 'json',
 			start: function() {
 				field.prop('disabled', true);
 
@@ -152,15 +146,11 @@ var hivepress = {
 				selectButton.attr('data-state', '');
 			},
 			done: function(e, data) {
-				if (data.result) {
-					if (data.result.success) {
-						if (field.prop('multiple')) {
-							responseContainer.append(data.result.response);
-						} else {
-							responseContainer.html(data.result.response);
-						}
+				if (data.result.hasOwnProperty('data')) {
+					if (field.prop('multiple')) {
+						responseContainer.append(data.result.data.html);
 					} else {
-						// todo.
+						responseContainer.html(data.result.data.html);
 					}
 				}
 
@@ -177,10 +167,21 @@ var hivepress = {
 		container.sortable({
 			stop: function() {
 				if (container.children().length > 1) {
-					$.post(hpCoreFrontendData.apiURL + 'hivepress/v1/forms/file_sort', $.extend(form.serializeObject(), {
-						'nonce': container.data('nonce'),
-						'_wpnonce': hpCoreFrontendData.apiNonce,
-					}));
+					container.children().each(function(index) {
+						$.ajax({
+							url: $(this).data('url'),
+							method: 'POST',
+							data: {
+								'order': index,
+							},
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+							},
+							complete: function(xhr) {
+								console.log(xhr.responseText);
+							},
+						});
+					});
 				}
 			},
 		});

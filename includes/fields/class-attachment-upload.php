@@ -1,6 +1,6 @@
 <?php
 /**
- * File upload field.
+ * Attachment upload field.
  *
  * @package HivePress\Fields
  */
@@ -11,14 +11,21 @@ namespace HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * File upload field class.
+ * Attachment upload field class.
  *
- * @class File_Upload
+ * @class Attachment_Upload
  */
-class File_Upload extends Field {
+class Attachment_Upload extends Field {
 
 	/**
-	 * Multiple status.
+	 * Button caption.
+	 *
+	 * @var string
+	 */
+	protected $caption;
+
+	/**
+	 * Multiple property.
 	 *
 	 * @var bool
 	 */
@@ -39,18 +46,6 @@ class File_Upload extends Field {
 	}
 
 	/**
-	 * Validates field value.
-	 *
-	 * @return bool
-	 */
-	public function validate() {
-		parent::validate();
-
-		// todo.
-		return empty( $this->errors );
-	}
-
-	/**
 	 * Renders field HTML.
 	 *
 	 * @return string
@@ -60,20 +55,20 @@ class File_Upload extends Field {
 
 		// Render files.
 		if ( $this->get_multiple() ) {
-			$output .= '<div class="hp-row hp-js-sortable" data-nonce="' . esc_attr( wp_create_nonce( 'file_sort' ) ) . '">';
+			$output .= '<div class="hp-row hp-js-sortable">';
 		} else {
 			$output .= '<div class="hp-row">';
 		}
 
 		foreach ( (array) $this->get_value() as $attachment_id ) {
-			$output .= $this->render_file( $attachment_id );
+			$output .= $this->render_attachment( $attachment_id );
 		}
 
 		$output .= '</div>';
 		$output .= '<label for="' . esc_attr( $this->get_name() ) . '">';
 
 		// Render upload button.
-		$output .= '<button type="button">' . esc_html__( 'Select File', 'hivepress' ) . '</button>';
+		$output .= '<button type="button">' . esc_html( $this->get_caption() ) . '</button>';
 
 		// Render upload field.
 		$output .= ( new File(
@@ -83,8 +78,8 @@ class File_Upload extends Field {
 				'multiple'     => $this->get_multiple(),
 				'file_formats' => $this->get_file_formats(),
 				'attributes'   => [
-					'class'      => 'hp-js-file-upload',
-					'data-nonce' => wp_create_nonce( 'file_upload' ),
+					'class'    => 'hp-js-file-upload',
+					'data-url' => hp_get_rest_url( '/attachments' ),
 				],
 			]
 		) )->render();
@@ -96,37 +91,25 @@ class File_Upload extends Field {
 	}
 
 	/**
-	 * Renders file HTML.
+	 * Renders attachment HTML.
 	 *
 	 * @param int $attachment_id Attachment ID.
 	 * @return string
 	 */
-	public function render_file( $attachment_id ) {
-		$output = '<div class="hp-col-sm-2 hp-col-xs-4">';
+	public function render_attachment( $attachment_id ) {
+		$output = '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hp_get_rest_url( '/attachments/' . $attachment_id ) ) . '">';
 
 		// Render image.
 		$output .= wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
 		// Render remove button.
-		$output .= ( new \HivePress\Forms\File_Delete(
-			[
-				'caption'    => '<i class="hp-icon fas fa-times"></i>',
-				'attributes' => [
-					'data-type' => 'remove',
-				],
-				'values'     => [
-					'attachment_id' => $attachment_id,
-				],
-			]
-		) )->render();
-
-		// Render ID field.
-		$output .= ( new Hidden(
-			[
-				'name'    => 'attachment_ids[]',
-				'default' => $attachment_id,
-			]
-		) )->render();
+		$output .= '<a href="#" class="hp-js-button" data-type="remove request" data-url="' . esc_url( hp_get_rest_url( '/attachments/' . $attachment_id ) ) . '" data-method="DELETE" data-params="' . esc_attr(
+			wp_json_encode(
+				[
+					'id' => $attachment_id,
+				]
+			)
+		) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 		$output .= '</div>';
 

@@ -203,12 +203,15 @@ abstract class Form {
 	public function get_attributes() {
 
 		// Set method.
-		$this->attributes['method']      = $this->method;
-		$this->attributes['data-method'] = $this->method;
+		$this->attributes['method']      = $this->get_method();
+		$this->attributes['data-method'] = $this->get_method();
 
-		if ( ! in_array( $this->method, [ 'GET', 'POST' ], true ) ) {
+		if ( ! in_array( $this->get_method(), [ 'GET', 'POST' ], true ) ) {
 			$this->attributes['method'] = 'POST';
 		}
+
+		// Set name.
+		$this->attributes['data-name'] = $this->get_name();
 
 		// Set class.
 		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );

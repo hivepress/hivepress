@@ -271,14 +271,4 @@ final class Core {
 
 		return $this->config[ $name ];
 	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 * @return mixed
-	 */
-	public function __get( $name ) {
-		return hp_get_array_value( $this->objects['components'], $name );
-	}
 }

@@ -31,9 +31,8 @@ class Attachment_Select extends Field {
 		if ( ! is_null( $this->value ) ) {
 			$attachment_id = hp_get_post_id(
 				[
-					'post_type'   => 'attachment',
-					'post_status' => 'any',
-					'post__in'    => [ absint( $this->value ) ],
+					'post_type' => 'attachment',
+					'post__in'  => [ absint( $this->value ) ],
 				]
 			);
 
@@ -69,7 +68,7 @@ class Attachment_Select extends Field {
 		$output .= '<a href="#" class="hp-js-button" data-type="remove"><span class="dashicons dashicons-no-alt"></span></a>';
 		$output .= '</div>';
 
-		$output .= '<button type="button" class="button hp-js-button" data-type="attachment-select">' . esc_html( $this->get_caption() ) . '</button>';
+		$output .= '<button type="button" class="button hp-js-button" data-type="file-select">' . esc_html( $this->get_caption() ) . '</button>';
 
 		$output .= '</div>';
 
