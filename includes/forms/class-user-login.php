@@ -26,6 +26,7 @@ class User_Login extends Form {
 		$args = array_replace_recursive(
 			[
 				'title'   => esc_html__( 'Login User', 'hivepress' ),
+				'action'  => hp_get_rest_url( '/users/login' ),
 				'captcha' => false,
 				'fields'  => [
 					'username' => [

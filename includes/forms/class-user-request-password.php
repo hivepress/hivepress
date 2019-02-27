@@ -26,6 +26,7 @@ class User_Request_Password extends Form {
 		$args = array_replace_recursive(
 			[
 				'title'   => esc_html__( 'Reset Password', 'hivepress' ),
+				'action'  => hp_get_rest_url( '/users/request-password' ),
 				'captcha' => false,
 				'fields'  => [
 					'username' => [

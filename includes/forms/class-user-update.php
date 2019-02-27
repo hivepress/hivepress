@@ -62,7 +62,7 @@ class User_Update extends Form {
 						'order'    => 50,
 					],
 
-					'new_password'     => [
+					'password'     => [
 						'label'      => esc_html__( 'New Password', 'hivepress' ),
 						'type'       => 'password',
 						'min_length' => 6,

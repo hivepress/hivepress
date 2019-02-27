@@ -25,6 +25,7 @@ class User_Reset_Password extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				'action' => hp_get_rest_url( '/users/reset-password' ),
 				'fields' => [
 					'password' => [
 						'label'      => esc_html__( 'New Password', 'hivepress' ),

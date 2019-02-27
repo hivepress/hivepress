@@ -40,8 +40,7 @@ class Listing_Search_Form extends Block {
 	 */
 	public function render() {
 		// todo.
-		$form = new \HivePress\Forms\User_Request_Password();
-		$form->set_action(hp_get_rest_url('/users/todo2'));
+		$form = new \HivePress\Forms\User_Register();
 
 		return $form->render();
 	}
