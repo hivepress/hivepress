@@ -63,7 +63,7 @@ var hivepress = {
 					xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
 				},
 				complete: function(xhr) {
-					console.log(xhr.responseJSON);
+					console.log(xhr.responseText);
 				},
 			});
 		}
@@ -106,7 +106,7 @@ var hivepress = {
 							}
 						}
 
-						console.log(xhr.responseJSON);
+						console.log(xhr.responseText);
 					},
 				});
 
@@ -128,8 +128,10 @@ var hivepress = {
 			dataType: 'json',
 			paramName: 'file',
 			formData: {
-				'form': field.closest('form').data('name'),
-				'field': field.attr('name'),
+				'form_name': field.closest('form').data('name'),
+				'field_name': field.attr('name'),
+				// todo
+				'parent_id': 163,
 				'render': true,
 				'_wpnonce': hpCoreFrontendData.apiNonce,
 			},

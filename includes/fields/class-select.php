@@ -22,7 +22,7 @@ class Select extends Field {
 	 *
 	 * @var bool
 	 */
-	protected $multiple;
+	protected $multiple = false;
 
 	/**
 	 * Field options.

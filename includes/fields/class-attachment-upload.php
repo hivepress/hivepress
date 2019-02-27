@@ -29,7 +29,14 @@ class Attachment_Upload extends Field {
 	 *
 	 * @var bool
 	 */
-	protected $multiple;
+	protected $multiple = false;
+
+	/**
+	 * Maximum files.
+	 *
+	 * @var int
+	 */
+	protected $max_files;
 
 	/**
 	 * File formats.
@@ -42,7 +49,22 @@ class Attachment_Upload extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		// todo.
+		if ( ! is_null( $this->value ) && [] !== $this->value ) {
+			$attachment_ids = get_posts(
+				[
+					'post_type'      => 'attachment',
+					'post__in'       => array_map( 'absint', (array) $this->value ),
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				]
+			);
+
+			if ( ! empty( $attachment_ids ) ) {
+				$this->value = $attachment_ids;
+			} else {
+				$this->value = null;
+			}
+		}
 	}
 
 	/**

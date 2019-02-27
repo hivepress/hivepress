@@ -22,7 +22,7 @@ class File extends Field {
 	 *
 	 * @var bool
 	 */
-	protected $multiple;
+	protected $multiple = false;
 
 	/**
 	 * File formats.

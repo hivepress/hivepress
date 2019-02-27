@@ -73,24 +73,94 @@ class Attachment extends Controller {
 		}
 
 		// Get form.
-		$form = hp_get_array_value( hivepress()->get_forms(), $request->get_param( 'form' ) );
+		$form = hp_get_array_value( hivepress()->get_forms(), $request->get_param( 'form_name' ) );
 
-		if ( is_null( $form ) ) {
+		if ( is_null( $form ) && ! current_user_can( 'upload_files' ) ) {
 			return hp_rest_error( 400 );
 		}
 
 		// Get field.
-		$field = hp_get_array_value( $form->get_fields(), $request->get_param( 'field' ) );
+		$field = null;
 
-		if ( is_null( $field ) ) {
-			return hp_rest_error( 400 );
+		if ( ! is_null( $form ) ) {
+			$field = hp_get_array_value( $form->get_fields(), $request->get_param( 'field_name' ) );
+
+			if ( is_null( $field ) && ! current_user_can( 'upload_files' ) ) {
+				return hp_rest_error( 400 );
+			}
+		}
+
+		// Get parameters.
+		$parent_id = absint( $request->get_param( 'parent_id' ) );
+		$order     = absint( $request->get_param( 'order' ) );
+
+		if ( ! is_null( $field ) ) {
+			$parent_id = hp_get_post_id(
+				[
+					'post_type'   => 'any',
+					'post_status' => [ 'auto-draft', 'draft', 'publish' ],
+					'post__in'    => [ absint( $request->get_param( 'parent_id' ) ) ],
+					'author'      => get_current_user_id(),
+				]
+			);
+
+			// Get attachment IDs.
+			$attachment_ids = get_posts(
+				[
+					'post_type'      => 'attachment',
+					'post_parent'    => $parent_id,
+					'author'         => get_current_user_id(),
+					'meta_key'       => 'hp_field_name',
+					'meta_value'     => $field->get_name(),
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				]
+			);
+
+			// Check attachment quantity.
+			if ( $field->get_multiple() && count( $attachment_ids ) >= absint( $field->get_max_files() ) ) {
+				return hp_rest_error( 400, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), numer_format_i18n( $field->get_max_files() ) ) );
+			}
+
+			// Check file format.
+			$file_type    = wp_check_filetype( wp_unslash( $_FILES['file']['name'] ) );
+			$file_formats = array_map( 'strtoupper', $field->get_file_formats() );
+
+			if ( ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+				return hp_rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_extensions ) ) );
+			}
+
+			if ( $field->get_multiple() ) {
+
+				// Get order.
+				$order = count( $attachment_ids );
+			} else {
+
+				// Delete attachments.
+				foreach ( $attachment_ids as $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
+			}
 		}
 
 		// Upload attachment.
-		$attachment_id = media_handle_upload( 'file', 0 );
+		$attachment_id = media_handle_upload( 'file', $parent_id );
 
 		if ( is_wp_error( $attachment_id ) ) {
 			return hp_rest_error( 400, $attachment_id->get_error_messages() );
+		}
+
+		// Update attachment.
+		wp_update_post(
+			[
+				'ID'          => $attachment_id,
+				'post_parent' => $parent_id,
+				'menu_order'  => $order,
+			]
+		);
+
+		if ( ! is_null( $field ) ) {
+			update_post_meta( $attachment_id, 'hp_field_name', $field->get_name() );
 		}
 
 		// Render attachment.

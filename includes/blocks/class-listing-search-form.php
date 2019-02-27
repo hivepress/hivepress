@@ -41,6 +41,18 @@ class Listing_Search_Form extends Block {
 	public function render() {
 		// todo.
 		$form = new \HivePress\Forms\Listing_Update();
+		$form->set_values(
+			[
+				'images' => get_posts(
+					[
+						'post_type'      => 'attachment',
+						'post_parent'    => 163,
+						'fields'         => 'ids',
+						'posts_per_page' => -1,
+					]
+				),
+			]
+		);
 
 		return $form->render();
 	}
