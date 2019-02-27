@@ -119,7 +119,7 @@ class Attachment extends Controller {
 
 			// Check attachment quantity.
 			if ( $field->get_multiple() && count( $attachment_ids ) >= absint( $field->get_max_files() ) ) {
-				return hp_rest_error( 400, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), numer_format_i18n( $field->get_max_files() ) ) );
+				return hp_rest_error( 400, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $field->get_max_files() ) ) );
 			}
 
 			// Check file format.

@@ -82,8 +82,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
-		// todo rename get_author to get_author_id?
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
 
@@ -133,8 +132,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
-		// todo rename get_author to get_author_id?
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
 
