@@ -7,6 +7,9 @@
 
 namespace HivePress\Controllers;
 
+use HivePress\Models as Models;
+use HivePress\Forms as Forms;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -75,7 +78,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = \HivePress\Models\Listing::get( $request->get_param( 'id' ) );
+		$listing = Models\Listing::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp_rest_error( 404 );
@@ -87,7 +90,7 @@ class Listing extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\Listing_Update();
+		$form = new Forms\Listing_Update();
 
 		$form->set_values( $request->get_params() );
 
@@ -128,7 +131,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = \HivePress\Models\Listing::get( $request->get_param( 'id' ) );
+		$listing = Models\Listing::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp_rest_error( 404 );

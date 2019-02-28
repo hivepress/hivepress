@@ -7,6 +7,9 @@
 
 namespace HivePress\Controllers;
 
+use HivePress\Models as Models;
+use HivePress\Forms as Forms;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -106,7 +109,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\User_Register();
+		$form = new Forms\User_Register();
 
 		$form->set_values( $request->get_params() );
 
@@ -188,7 +191,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\User_Login();
+		$form = new Forms\User_Login();
 
 		$form->set_values( $request->get_params() );
 
@@ -243,7 +246,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\User_Request_Password();
+		$form = new Forms\User_Request_Password();
 
 		$form->set_values( $request->get_params() );
 
@@ -293,7 +296,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\User_Reset_Password();
+		$form = new Forms\User_Reset_Password();
 
 		$form->set_values( $request->get_params() );
 
@@ -355,7 +358,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new \HivePress\Forms\User_Update();
+		$form = new Forms\User_Update();
 
 		$form->set_values( $request->get_params() );
 
@@ -453,7 +456,7 @@ class User extends Controller {
 
 		// Check password.
 		if ( get_current_user_id() === $user->ID ) {
-			$form = new \HivePress\Forms\User_Delete();
+			$form = new Forms\User_Delete();
 
 			$form->set_values( $request->get_params() );
 
