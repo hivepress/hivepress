@@ -1,6 +1,6 @@
 <?php
 /**
- * Comment model.
+ * Term model.
  *
  * @package HivePress\Models
  */
@@ -11,11 +11,11 @@ namespace HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Comment model class.
+ * Term model class.
  *
- * @class Comment
+ * @class Term
  */
-abstract class Comment extends Model {
+abstract class Term extends Model {
 
 	/**
 	 * Saves instance to the database.
@@ -25,11 +25,6 @@ abstract class Comment extends Model {
 	public function save() {
 		$data = [];
 		$meta = [];
-
-		// Get ID.
-		if ( $this->get_id() ) {
-			$data['comment_ID'] = $this->get_id();
-		}
 
 		// Get field values.
 		foreach ( $this->get_fields() as $field_name => $field ) {
@@ -44,22 +39,22 @@ abstract class Comment extends Model {
 			}
 		}
 
-		// Create or update comment.
+		// Create or update term.
 		if ( empty( $this->errors ) ) {
 			if ( $this->get_id() === null ) {
-				$this->id = wp_insert_comment( $data );
+				$this->id = wp_insert_term( uniqid(), hp_prefix( $this->get_name() ), $data );
 
-				if ( $this->get_id() === false ) {
+				if ( is_wp_error( $this->id ) ) {
 					$this->id = null;
 
 					return false;
 				}
-			} elseif ( wp_update_comment( $data ) === 0 ) {
+			} elseif ( is_wp_error( wp_update_term( $this->get_id(), hp_prefix( $this->get_name() ), $data ) ) ) {
 				return false;
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_comment_meta( $this->get_id(), $meta_key, $meta_value );
+				update_term_meta( $this->get_id(), $meta_key, $meta_value );
 			}
 
 			return true;
@@ -74,6 +69,6 @@ abstract class Comment extends Model {
 	 * @return bool
 	 */
 	public function delete() {
-		return $this->get_id() && wp_delete_comment( $this->get_id(), true ) !== false;
+		return $this->get_id() && wp_delete_term( $this->get_id(), hp_prefix( $this->get_name() ) ) !== false;
 	}
 }

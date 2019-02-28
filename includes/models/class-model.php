@@ -46,6 +46,13 @@ abstract class Model {
 	protected $aliases = [];
 
 	/**
+	 * Instance errors.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
