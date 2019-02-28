@@ -33,3 +33,8 @@ function hivepress() {
 
 // Initialize HivePress.
 hivepress();
+
+// todo.
+add_action('init', function() {
+	var_dump(\HivePress\Models\Listing::get(163));die();
+});

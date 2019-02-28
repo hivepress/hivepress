@@ -23,15 +23,11 @@ abstract class Comment extends Model {
 	 * @return bool
 	 */
 	public function save() {
+
+		// Get field values.
 		$data = [];
 		$meta = [];
 
-		// Get ID.
-		if ( $this->get_id() ) {
-			$data['comment_ID'] = $this->get_id();
-		}
-
-		// Get field values.
 		foreach ( $this->get_fields() as $field_name => $field ) {
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, $this->get_aliases(), true ) ) {
@@ -54,7 +50,7 @@ abstract class Comment extends Model {
 
 					return false;
 				}
-			} elseif ( wp_update_comment( $data ) === 0 ) {
+			} elseif ( wp_update_comment( array_merge( $data, [ 'comment_ID' => $this->get_id() ] ) ) === 0 ) {
 				return false;
 			}
 

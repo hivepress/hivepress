@@ -1,6 +1,6 @@
 <?php
 /**
- * Term model.
+ * User model.
  *
  * @package HivePress\Models
  */
@@ -11,11 +11,33 @@ namespace HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Term model class.
+ * User model class.
  *
- * @class Term
+ * @class User
  */
-abstract class Term extends Model {
+class User extends Model {
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Model arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = array_replace_recursive(
+			[
+				'fields'  => [
+					// todo.
+				],
+				'aliases' => [
+					'user_login' => 'username',
+					'user_email' => 'email',
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
 
 	/**
 	 * Saves instance to the database.
@@ -40,22 +62,22 @@ abstract class Term extends Model {
 			}
 		}
 
-		// Create or update term.
+		// Create or update user.
 		if ( empty( $this->errors ) ) {
 			if ( $this->get_id() === null ) {
-				$this->id = wp_insert_term( uniqid(), hp_prefix( $this->get_name() ), $data );
+				$this->id = wp_insert_user( $data );
 
 				if ( is_wp_error( $this->get_id() ) ) {
 					$this->id = null;
 
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_term( $this->get_id(), hp_prefix( $this->get_name() ), $data ) ) ) {
+			} elseif ( is_wp_error( wp_update_user( array_merge( $data, [ 'ID' => $this->get_id() ] ) ) ) ) {
 				return false;
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_term_meta( $this->get_id(), $meta_key, $meta_value );
+				update_user_meta( $this->get_id(), $meta_key, $meta_value );
 			}
 
 			return true;
@@ -70,6 +92,6 @@ abstract class Term extends Model {
 	 * @return bool
 	 */
 	public function delete() {
-		return $this->get_id() && wp_delete_term( $this->get_id(), hp_prefix( $this->get_name() ) ) !== false;
+		return $this->get_id() && wp_delete_user( $this->get_id() );
 	}
 }

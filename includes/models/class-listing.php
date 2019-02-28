@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Post {
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function __init( $args = [] ) {
 		$args = array_replace_recursive(
 			[
 				'fields'  => [
@@ -48,6 +48,6 @@ class Listing extends Post {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::__init( $args );
 	}
 }

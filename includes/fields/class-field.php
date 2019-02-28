@@ -106,7 +106,7 @@ abstract class Field {
 			$method = reset( $prefixes );
 			$arg    = substr( $name, strlen( $method ) + 1 );
 
-			return call_user_func_array( [ $this, $method ], array_merge( [ $arg ], $args ) );
+			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
 	}
 
@@ -116,7 +116,7 @@ abstract class Field {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private function set( $name, $value ) {
+	final private function set_property( $name, $value ) {
 		if ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
 		}
@@ -127,7 +127,7 @@ abstract class Field {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private function get( $name ) {
+	final private function get_property( $name ) {
 		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}

@@ -28,7 +28,7 @@ class Template extends Block {
 		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'path' ) . '.php' );
 
 		if ( '' === $filepath ) {
-			foreach ( array_reverse( hivepress()->get_dirs() ) as $dir ) {
+			foreach ( hivepress()->get_dirs() as $dir ) {
 				if ( file_exists( $dir . '/templates/' . $this->get_attribute( 'path' ) . '.php' ) ) {
 					$filepath = $dir . '/templates/' . $this->get_attribute( 'path' ) . '.php';
 

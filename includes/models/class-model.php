@@ -22,7 +22,21 @@ abstract class Model {
 	 *
 	 * @var string
 	 */
-	protected $name;
+	protected static $name;
+
+	/**
+	 * Model fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
+	 * Model aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
 
 	/**
 	 * Instance ID.
@@ -32,18 +46,11 @@ abstract class Model {
 	protected $id;
 
 	/**
-	 * Instance fields.
+	 * Instance values.
 	 *
 	 * @var array
 	 */
-	protected $fields = [];
-
-	/**
-	 * Instance aliases.
-	 *
-	 * @var array
-	 */
-	protected $aliases = [];
+	protected $values = [];
 
 	/**
 	 * Instance errors.
@@ -53,19 +60,28 @@ abstract class Model {
 	protected $errors = [];
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function __init( $args = [] ) {
 
 		// Set name.
-		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		self::$name = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+			call_user_func_array( [ static::class, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $values Instance values.
+	 */
+	public function __construct( $values ) {
+		$this->fill( $values );
 	}
 
 	/**
@@ -74,7 +90,7 @@ abstract class Model {
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
 	 */
-	final public function __call( $name, $args ) {
+	final public static function __callStatic( $name, $args ) {
 		$prefixes = array_filter(
 			[
 				'set',
@@ -89,7 +105,7 @@ abstract class Model {
 			$method = reset( $prefixes );
 			$arg    = substr( $name, strlen( $method ) + 1 );
 
-			return call_user_func_array( [ $this, $method ], array_merge( [ $arg ], $args ) );
+			return call_user_func_array( [ static::class, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
 	}
 
@@ -99,9 +115,9 @@ abstract class Model {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private function set( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
+	final private static function set_property( $name, $value ) {
+		if ( property_exists( static::class, $name ) ) {
+			self::$$name = $value;
 		}
 	}
 
@@ -110,23 +126,23 @@ abstract class Model {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private function get( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return $this->$name;
+	final private static function get_property( $name ) {
+		if ( property_exists( static::class, $name ) ) {
+			return self::$$name;
 		}
 	}
 
 	// Forbid setting name and ID.
-	final private function set_name() {}
-	final private function set_id() {}
+	final private static function set_name() {}
+	final private static function set_id() {}
 
 	/**
 	 * Sets model fields.
 	 *
 	 * @param array $fields Model fields.
 	 */
-	final public function set_fields( $fields ) {
-		$this->fields = [];
+	final public static function set_fields( $fields ) {
+		self::$fields = [];
 
 		foreach ( $fields as $field_name => $field_args ) {
 
@@ -134,7 +150,22 @@ abstract class Model {
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
 			// Create field.
-			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+		}
+	}
+
+	/**
+	 * Sets instance field values.
+	 *
+	 * @param array $values Field values.
+	 */
+	public function fill( $values ) {
+		foreach ( $values as $field_name => $value ) {
+			if ( isset( self::$fields[ $field_name ] ) ) {
+				self::$fields[ $field_name ]->set_value( $value );
+				$this->values[ $field_name ] = self::$fields[ $field_name ]->get_value();
+				self::$fields[ $field_name ]->set_value( null );
+			}
 		}
 	}
 

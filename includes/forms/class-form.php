@@ -113,7 +113,7 @@ abstract class Form {
 			$method = reset( $prefixes );
 			$arg    = substr( $name, strlen( $method ) + 1 );
 
-			return call_user_func_array( [ $this, $method ], array_merge( [ $arg ], $args ) );
+			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
 	}
 
@@ -123,7 +123,7 @@ abstract class Form {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private function set( $name, $value ) {
+	final private function set_property( $name, $value ) {
 		if ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
 		}
@@ -134,7 +134,7 @@ abstract class Form {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private function get( $name ) {
+	final private function get_property( $name ) {
 		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}
@@ -177,7 +177,7 @@ abstract class Form {
 	 */
 	final public function set_values( $values ) {
 		foreach ( $values as $field_name => $value ) {
-			if ( isset( $this->fields[ $field_name ] ) && '' !== $value ) {
+			if ( isset( $this->fields[ $field_name ] ) ) {
 				$this->fields[ $field_name ]->set_value( $value );
 			}
 		}
