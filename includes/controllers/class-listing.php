@@ -75,14 +75,14 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = new \HivePress\Models\Listing( absint( $request->get_param( 'id' ) ) );
+		$listing = \HivePress\Models\Listing::get( $request->get_param( 'id' ) );
 
-		if ( $listing->get_id() === null ) {
+		if ( is_null( $listing ) ) {
 			return hp_rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
 
@@ -96,7 +96,8 @@ class Listing extends Controller {
 		}
 
 		// Update listing.
-		// todo populate from form.
+		$listing->fill( $form->get_values() );
+
 		if ( ! $listing->save() ) {
 			return hp_rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
 		}
@@ -104,7 +105,9 @@ class Listing extends Controller {
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $listing->get_id(),
+					// 'id' => $listing->get_id(),
+					// todo.
+					'id' => 'todo',
 				],
 			],
 			200
@@ -125,14 +128,14 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = new \HivePress\Models\Listing( absint( $request->get_param( 'id' ) ) );
+		$listing = \HivePress\Models\Listing::get( $request->get_param( 'id' ) );
 
-		if ( $listing->get_id() === null ) {
+		if ( is_null( $listing ) ) {
 			return hp_rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
 

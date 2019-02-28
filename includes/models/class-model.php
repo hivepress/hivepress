@@ -43,7 +43,8 @@ abstract class Model {
 	 *
 	 * @var int
 	 */
-	protected $id;
+	// todo.
+	public $id;
 
 	/**
 	 * Instance values.
@@ -134,7 +135,6 @@ abstract class Model {
 
 	// Forbid setting name and ID.
 	final private static function set_name() {}
-	final private static function set_id() {}
 
 	/**
 	 * Sets model fields.

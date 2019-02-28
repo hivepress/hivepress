@@ -196,6 +196,21 @@ abstract class Form {
 	}
 
 	/**
+	 * Gets field values.
+	 *
+	 * @return array
+	 */
+	final public function get_values() {
+		$values = [];
+
+		foreach ( $this->get_fields() as $field_name => $field ) {
+			$values[ $field_name ] = $field->get_value();
+		}
+
+		return $values;
+	}
+
+	/**
 	 * Gets form attributes.
 	 *
 	 * @return array
@@ -220,7 +235,7 @@ abstract class Form {
 	}
 
 	/**
-	 * Validates form values.
+	 * Validates field values.
 	 *
 	 * @return bool
 	 */

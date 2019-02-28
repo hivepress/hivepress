@@ -29,6 +29,7 @@ abstract class Post extends Model {
 		$alias_data = get_post( absint( $id ), ARRAY_A );
 
 		if ( ! is_null( $alias_data ) && hp_prefix( self::get_name() ) === $alias_data['post_type'] ) {
+			$values = [];
 
 			// Get alias meta.
 			$alias_meta = get_post_meta( $alias_data['ID'] );
@@ -36,14 +37,17 @@ abstract class Post extends Model {
 			// Get field values.
 			foreach ( self::get_fields() as $field_name => $field ) {
 				if ( in_array( $field_name, self::get_aliases(), true ) ) {
-					$data[ $field_name ] = hp_get_array_value( $alias_data, array_search( $field_name, self::get_aliases(), true ) );
+					$values[ $field_name ] = hp_get_array_value( $alias_data, array_search( $field_name, self::get_aliases(), true ) );
 				} else {
-					$data[ $field_name ] = hp_get_array_value( $alias_meta, hp_prefix( $field_name ) );
+					$values[ $field_name ] = hp_get_array_value( $alias_meta, hp_prefix( $field_name ) );
 				}
 			}
 
 			// Create and fill instance.
-			$instance = new static( $data );
+			$instance = new static( $values );
+
+			// todo.
+			$instance->id = absint( $id );
 
 			return $instance;
 		}
@@ -63,6 +67,8 @@ abstract class Post extends Model {
 		$meta = [];
 
 		foreach ( self::get_fields() as $field_name => $field ) {
+			$field->set_value( hp_get_array_value( $this->values, $field_name ) );
+
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, self::get_aliases(), true ) ) {
 					$data[ array_search( $field_name, self::get_aliases(), true ) ] = $field->get_value();
@@ -70,26 +76,28 @@ abstract class Post extends Model {
 					$meta[ hp_prefix( $field_name ) ] = $field->get_value();
 				}
 			} else {
-				$this->errors = array_merge( $this->get_errors, $field->get_errors() );
+				$this->errors = array_merge( $this->errors, $field->get_errors() );
 			}
+
+			$field->set_value( null );
 		}
 
 		// Create or update post.
 		if ( empty( $this->errors ) ) {
-			if ( $this->get_id() === null ) {
+			if ( is_null( $this->id ) ) {
 				$this->id = wp_insert_post( $data );
 
-				if ( $this->get_id() === 0 ) {
+				if ( 0 === $this->id ) {
 					$this->id = null;
 
 					return false;
 				}
-			} elseif ( wp_update_post( array_merge( $data, [ 'ID' => $this->get_id() ] ) ) === 0 ) {
+			} elseif ( wp_update_post( array_merge( $data, [ 'ID' => $this->id ] ) ) === 0 ) {
 				return false;
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_post_meta( $this->get_id(), $meta_key, $meta_value );
+				update_post_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -104,6 +112,6 @@ abstract class Post extends Model {
 	 * @return bool
 	 */
 	public function delete() {
-		return $this->get_id() && wp_delete_post( $this->get_id(), true ) !== false;
+		return $this->id && wp_delete_post( $this->id, true ) !== false;
 	}
 }
