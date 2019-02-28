@@ -25,6 +25,8 @@ class Listing_Update extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				// todo.
+				'action' => hp_get_rest_url( '/listings/163' ),
 				'fields' => [
 					'title'       => [
 						'label'      => esc_html__( 'Title', 'hivepress' ),

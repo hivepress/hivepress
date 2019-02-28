@@ -18,18 +18,18 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model {
 
 	/**
-	 * Instance ID.
-	 *
-	 * @var int
-	 */
-	protected $id;
-
-	/**
 	 * Model name.
 	 *
 	 * @var string
 	 */
 	protected $name;
+
+	/**
+	 * Instance ID.
+	 *
+	 * @var int
+	 */
+	protected $id;
 
 	/**
 	 * Instance fields.
@@ -109,8 +109,9 @@ abstract class Model {
 		}
 	}
 
-	// Forbid setting name.
+	// Forbid setting name and ID.
 	final private function set_name() {}
+	final private function set_id() {}
 
 	/**
 	 * Sets model fields.

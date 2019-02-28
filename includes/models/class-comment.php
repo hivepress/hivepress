@@ -32,6 +32,6 @@ abstract class Comment extends Model {
 	 * @return bool
 	 */
 	public function delete() {
-		return wp_delete_comment( $this->get_id(), true ) !== false;
+		return $this->get_id() && wp_delete_comment( $this->get_id(), true ) !== false;
 	}
 }

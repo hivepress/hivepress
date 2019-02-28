@@ -41,8 +41,8 @@ class Listing extends Post {
 					],
 				],
 				'aliases' => [
-					'title'       => 'post_title',
-					'description' => 'post_content',
+					'post_title'   => 'title',
+					'post_content' => 'description',
 				],
 			],
 			$args
