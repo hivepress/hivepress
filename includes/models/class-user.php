@@ -18,25 +18,43 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = array_replace_recursive(
 			[
 				'fields'  => [
-					// todo.
+					'username' => [
+						'label'      => esc_html__( 'Username', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 60,
+						'required'   => true,
+					],
+
+					'email'    => [
+						'label'    => esc_html__( 'Email', 'hivepress' ),
+						'type'     => 'email',
+						'required' => true,
+					],
+
+					'password' => [
+						'label'    => esc_html__( 'Password', 'hivepress' ),
+						'type'     => 'password',
+						'required' => true,
+					],
 				],
 				'aliases' => [
 					'user_login' => 'username',
 					'user_email' => 'email',
+					'user_pass'  => 'password',
 				],
 			],
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**
@@ -44,40 +62,42 @@ class User extends Model {
 	 *
 	 * @return bool
 	 */
-	public function save() {
+	final public function save() {
 
-		// Get field values.
+		// Alias instance values.
 		$data = [];
 		$meta = [];
 
-		foreach ( $this->get_fields() as $field_name => $field ) {
+		foreach ( self::$fields as $field_name => $field ) {
+			$field->set_value( hp_get_array_value( $this->values, $field_name ) );
+
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, $this->get_aliases(), true ) ) {
-					$data[ array_search( $field_name, $this->get_aliases(), true ) ] = $field->get_value();
+				if ( in_array( $field_name, self::$aliases, true ) ) {
+					$data[ array_search( $field_name, self::$aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ hp_prefix( $field_name ) ] = $field->get_value();
 				}
 			} else {
-				$this->errors = array_merge( $this->errors, $field->get_errors() );
+				$this->set_errors( array_merge( $this->errors, $field->get_errors() ) );
 			}
 		}
 
-		// Create or update user.
+		// Create or update instance.
 		if ( empty( $this->errors ) ) {
-			if ( $this->get_id() === null ) {
-				$this->id = wp_insert_user( $data );
+			if ( is_null( $this->id ) ) {
+				$id = wp_insert_user( $data );
 
-				if ( is_wp_error( $this->get_id() ) ) {
-					$this->id = null;
-
+				if ( ! is_wp_error( $id ) ) {
+					$this->set_id( $id );
+				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_user( array_merge( $data, [ 'ID' => $this->get_id() ] ) ) ) ) {
+			} elseif ( is_wp_error( wp_update_user( array_merge( $data, [ 'ID' => $this->id ] ) ) ) ) {
 				return false;
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_user_meta( $this->get_id(), $meta_key, $meta_value );
+				update_user_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -91,7 +111,7 @@ class User extends Model {
 	 *
 	 * @return bool
 	 */
-	public function delete() {
-		return $this->get_id() && wp_delete_user( $this->get_id() );
+	final public function delete() {
+		return $this->id && wp_delete_user( $this->id );
 	}
 }

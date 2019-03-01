@@ -41,59 +41,36 @@ abstract class Controller {
 		// Set name.
 		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
+		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
 	}
 
 	/**
-	 * Routes methods.
+	 * Sets controller routes.
 	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
+	 * @param array $routes Controller routes.
 	 */
-	final public function __call( $name, $args ) {
-		$prefixes = array_filter(
-			[
-				'set',
-				'get',
-			],
-			function( $prefix ) use ( $name ) {
-				return strpos( $name, $prefix . '_' ) === 0;
-			}
-		);
-
-		if ( ! empty( $prefixes ) ) {
-			$method = reset( $prefixes );
-			$arg    = substr( $name, strlen( $method ) + 1 );
-
-			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
-		}
+	final private function set_routes( $routes ) {
+		$this->routes = $routes;
 	}
 
 	/**
-	 * Sets property.
+	 * Gets controller routes.
 	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
+	 * @return array
 	 */
-	final private function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
-		}
+	final public function get_routes() {
+		return $this->routes;
 	}
 
 	/**
-	 * Gets property.
+	 * Gets controller name.
 	 *
-	 * @param string $name Property name.
+	 * @return string
 	 */
-	final private function get_property( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return $this->$name;
-		}
+	final public function get_name() {
+		return $this->name;
 	}
-
-	// Forbid setting name.
-	final private function set_name() {}
 }
