@@ -22,7 +22,7 @@ class Listing extends Post {
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function __init( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = array_replace_recursive(
 			[
 				'fields'  => [
@@ -48,6 +48,6 @@ class Listing extends Post {
 			$args
 		);
 
-		parent::__init( $args );
+		parent::init( $args );
 	}
 }

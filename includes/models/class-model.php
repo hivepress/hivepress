@@ -43,8 +43,7 @@ abstract class Model {
 	 *
 	 * @var int
 	 */
-	// todo.
-	public $id;
+	protected $id;
 
 	/**
 	 * Instance values.
@@ -65,7 +64,7 @@ abstract class Model {
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function __init( $args = [] ) {
+	public static function init( $args = [] ) {
 
 		// Set name.
 		self::$name = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
@@ -77,12 +76,30 @@ abstract class Model {
 	}
 
 	/**
-	 * Class constructor.
+	 * Sets model fields.
 	 *
-	 * @param array $values Instance values.
+	 * @param array $fields Model fields.
 	 */
-	public function __construct( $values ) {
-		$this->fill( $values );
+	final private static function set_fields( $fields ) {
+		self::$fields = [];
+
+		foreach ( $fields as $field_name => $field_args ) {
+
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+			// Create field.
+			self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+		}
+	}
+
+	/**
+	 * Sets model aliases.
+	 *
+	 * @param array $aliases Model aliases.
+	 */
+	final private static function set_aliases( $aliases ) {
+		self::$aliases = $aliases;
 	}
 
 	/**
@@ -91,7 +108,7 @@ abstract class Model {
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
 	 */
-	final public static function __callStatic( $name, $args ) {
+	final public function __call( $name, $args ) {
 		$prefixes = array_filter(
 			[
 				'set',
@@ -106,7 +123,7 @@ abstract class Model {
 			$method = reset( $prefixes );
 			$arg    = substr( $name, strlen( $method ) + 1 );
 
-			return call_user_func_array( [ static::class, $method . '_property' ], array_merge( [ $arg ], $args ) );
+			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
 	}
 
@@ -116,9 +133,11 @@ abstract class Model {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private static function set_property( $name, $value ) {
-		if ( property_exists( static::class, $name ) ) {
-			self::$$name = $value;
+	final private function set_property( $name, $value ) {
+		if ( isset( self::$fields[ $name ] ) ) {
+			$field = self::$fields[ $name ];
+			$field->set_value( $value );
+			$this->values[ $name ] = $field->get_value();
 		}
 	}
 
@@ -127,45 +146,47 @@ abstract class Model {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private static function get_property( $name ) {
-		if ( property_exists( static::class, $name ) ) {
-			return self::$$name;
-		}
-	}
-
-	// Forbid setting name and ID.
-	final private static function set_name() {}
-
-	/**
-	 * Sets model fields.
-	 *
-	 * @param array $fields Model fields.
-	 */
-	final public static function set_fields( $fields ) {
-		self::$fields = [];
-
-		foreach ( $fields as $field_name => $field_args ) {
-
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-			// Create field.
-			self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+	final private function get_property( $name ) {
+		if ( isset( $this->values[ $name ] ) ) {
+			return $this->values[ $name ];
 		}
 	}
 
 	/**
-	 * Sets instance field values.
+	 * Sets instance ID.
 	 *
-	 * @param array $values Field values.
+	 * @param int $id Instance ID.
 	 */
-	public function fill( $values ) {
+	final protected function set_id( $id ) {
+		$this->id = absint( $id );
+	}
+
+	/**
+	 * Sets instance errors.
+	 *
+	 * @param array $errors Instance errors.
+	 */
+	final protected function set_errors( $errors ) {
+		$this->errors = $errors;
+	}
+
+	/**
+	 * Gets instance errors.
+	 *
+	 * @return array
+	 */
+	final public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
+	 * Sets instance values.
+	 *
+	 * @param array $values Instance values.
+	 */
+	final public function fill( $values ) {
 		foreach ( $values as $field_name => $value ) {
-			if ( isset( self::$fields[ $field_name ] ) ) {
-				self::$fields[ $field_name ]->set_value( $value );
-				$this->values[ $field_name ] = self::$fields[ $field_name ]->get_value();
-				self::$fields[ $field_name ]->set_value( null );
-			}
+			call_user_func_array( [ $this, 'set_' . $field_name ], [ $value ] );
 		}
 	}
 

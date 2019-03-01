@@ -23,31 +23,36 @@ abstract class Post extends Model {
 	 * @param int $id Instance ID.
 	 * @return mixed
 	 */
-	public static function get( $id ) {
+	final public static function get( $id ) {
 
 		// Get alias data.
-		$alias_data = get_post( absint( $id ), ARRAY_A );
+		$data = get_post( absint( $id ), ARRAY_A );
 
-		if ( ! is_null( $alias_data ) && hp_prefix( self::get_name() ) === $alias_data['post_type'] ) {
+		if ( ! is_null( $data ) && hp_prefix( self::$name ) === $data['post_type'] ) {
 			$values = [];
 
 			// Get alias meta.
-			$alias_meta = get_post_meta( $alias_data['ID'] );
+			$meta = array_map(
+				function( $meta_values ) {
+					return reset( $meta_values );
+				},
+				get_post_meta( $data['ID'] )
+			);
 
-			// Get field values.
-			foreach ( self::get_fields() as $field_name => $field ) {
-				if ( in_array( $field_name, self::get_aliases(), true ) ) {
-					$values[ $field_name ] = hp_get_array_value( $alias_data, array_search( $field_name, self::get_aliases(), true ) );
+			// Get instance values.
+			foreach ( array_keys( self::$fields ) as $field_name ) {
+				if ( in_array( $field_name, self::$aliases, true ) ) {
+					$values[ $field_name ] = hp_get_array_value( $data, array_search( $field_name, self::$aliases, true ) );
 				} else {
-					$values[ $field_name ] = hp_get_array_value( $alias_meta, hp_prefix( $field_name ) );
+					$values[ $field_name ] = hp_get_array_value( $meta, hp_prefix( $field_name ) );
 				}
 			}
 
 			// Create and fill instance.
-			$instance = new static( $values );
+			$instance = new static();
 
-			// todo.
-			$instance->id = absint( $id );
+			$instance->set_id( $data['ID'] );
+			$instance->fill( $values );
 
 			return $instance;
 		}
@@ -60,36 +65,34 @@ abstract class Post extends Model {
 	 *
 	 * @return bool
 	 */
-	public function save() {
+	final public function save() {
 
-		// Get field values.
+		// Alias instance values.
 		$data = [];
 		$meta = [];
 
-		foreach ( self::get_fields() as $field_name => $field ) {
+		foreach ( self::$fields as $field_name => $field ) {
 			$field->set_value( hp_get_array_value( $this->values, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, self::get_aliases(), true ) ) {
-					$data[ array_search( $field_name, self::get_aliases(), true ) ] = $field->get_value();
+				if ( in_array( $field_name, self::$aliases, true ) ) {
+					$data[ array_search( $field_name, self::$aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ hp_prefix( $field_name ) ] = $field->get_value();
 				}
 			} else {
-				$this->errors = array_merge( $this->errors, $field->get_errors() );
+				$this->set_errors( array_merge( $this->errors, $field->get_errors() ) );
 			}
-
-			$field->set_value( null );
 		}
 
-		// Create or update post.
+		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$this->id = wp_insert_post( $data );
+				$id = wp_insert_post( $data );
 
-				if ( 0 === $this->id ) {
-					$this->id = null;
-
+				if ( 0 !== $id ) {
+					$this->set_id( $id );
+				} else {
 					return false;
 				}
 			} elseif ( wp_update_post( array_merge( $data, [ 'ID' => $this->id ] ) ) === 0 ) {
@@ -111,7 +114,7 @@ abstract class Post extends Model {
 	 *
 	 * @return bool
 	 */
-	public function delete() {
+	final public function delete() {
 		return $this->id && wp_delete_post( $this->id, true ) !== false;
 	}
 }

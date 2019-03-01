@@ -101,8 +101,8 @@ final class Core {
 				if ( file_exists( $filepath ) ) {
 					require_once $filepath;
 
-					if ( method_exists( $class, '__init' ) ) {
-						call_user_func( [ $class, '__init' ] );
+					if ( method_exists( $class, 'init' ) && ( new \ReflectionMethod( $class, 'init' ) )->isStatic() ) {
+						call_user_func( [ $class, 'init' ] );
 					}
 
 					break;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Template block.
+ * Element block.
  *
  * @package HivePress\Blocks
  */
@@ -11,11 +11,11 @@ namespace HivePress\Blocks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Template block class.
+ * Element block class.
  *
- * @class Template
+ * @class Element
  */
-class Template extends Block {
+class Element extends Block {
 
 	/**
 	 * Renders block HTML.
@@ -24,7 +24,7 @@ class Template extends Block {
 	 */
 	public function render() {
 
-		// Get template path.
+		// Get file path.
 		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'path' ) . '.php' );
 
 		if ( '' === $filepath ) {
@@ -37,7 +37,7 @@ class Template extends Block {
 			}
 		}
 
-		// Render template.
+		// Render element.
 		ob_start();
 
 		include $filepath;

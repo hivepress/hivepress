@@ -1,6 +1,6 @@
 <?php
 /**
- * Media component.
+ * Asset component.
  *
  * @package HivePress\Components
  */
@@ -11,11 +11,11 @@ namespace HivePress\Components;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Media component class.
+ * Asset component class.
  *
- * @class Media
+ * @class Asset
  */
-final class Media {
+final class Asset {
 
 	/**
 	 * Class constructor.
