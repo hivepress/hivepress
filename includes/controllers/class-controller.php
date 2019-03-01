@@ -48,6 +48,15 @@ abstract class Controller {
 	}
 
 	/**
+	 * Gets controller name.
+	 *
+	 * @return string
+	 */
+	final public function get_name() {
+		return $this->name;
+	}
+
+	/**
 	 * Sets controller routes.
 	 *
 	 * @param array $routes Controller routes.
@@ -63,14 +72,5 @@ abstract class Controller {
 	 */
 	final public function get_routes() {
 		return $this->routes;
-	}
-
-	/**
-	 * Gets controller name.
-	 *
-	 * @return string
-	 */
-	final public function get_name() {
-		return $this->name;
 	}
 }

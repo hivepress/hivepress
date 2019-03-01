@@ -162,6 +162,15 @@ abstract class Model {
 	}
 
 	/**
+	 * Gets instance ID.
+	 *
+	 * @return mixed
+	 */
+	final public function get_id() {
+		return $this->id;
+	}
+
+	/**
 	 * Sets instance errors.
 	 *
 	 * @param array $errors Instance errors.

@@ -85,6 +85,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
+		// todo add author_id and status fields to model.
 		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
@@ -108,9 +109,7 @@ class Listing extends Controller {
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					// 'id' => $listing->get_id(),
-					// todo.
-					'id' => 'todo',
+					'id' => $listing->get_id(),
 				],
 			],
 			200
@@ -138,6 +137,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
+		// todo add fields to model.
 		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp_rest_error( 403 );
 		}
