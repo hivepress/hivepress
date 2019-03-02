@@ -149,28 +149,30 @@ class User extends Controller {
 		}
 
 		// Register user.
-		$user_id = wp_create_user( $username, $form->get_value( 'password' ), $form->get_value( 'email' ) );
+		$user = new Models\User();
 
-		if ( is_wp_error( $user_id ) ) {
+		$user->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
+
+		if ( ! $user->save() ) {
 			return hp_rest_error( 400, esc_html__( 'Error registering user', 'hivepress' ) );
 		}
 
 		// Hide admin bar.
-		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+		update_user_meta( $user->get_id(), 'show_admin_bar_front', 'false' );
 
 		// Send emails.
-		wp_new_user_notification( $user_id );
+		wp_new_user_notification( $user->get_id() );
 
 		// todo send email.
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
-			wp_set_auth_cookie( $user_id, true );
+			wp_set_auth_cookie( $user->get_id(), true );
 		}
 
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $user_id,
+					'id' => $user->get_id(),
 				],
 			],
 			201
@@ -209,12 +211,12 @@ class User extends Controller {
 		}
 
 		if ( false === $user ) {
-			return hp_rest_error( 404, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
+			return hp_rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
 		}
 
 		// Check password.
 		if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
-			return hp_rest_error( 404, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
+			return hp_rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
 		}
 
 		// Authenticate user.
@@ -308,7 +310,7 @@ class User extends Controller {
 		$user = check_password_reset_key( $form->get_value( 'key' ), $form->get_value( 'username' ) );
 
 		if ( is_wp_error( $user ) ) {
-			return hp_rest_error( 404, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );
+			return hp_rest_error( 401, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );
 		}
 
 		// Reset password.
@@ -346,14 +348,14 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = get_userdata( absint( $request->get_param( 'id' ) ) );
+		$user = Models\User::get( $request->get_param( 'id' ) );
 
-		if ( false === $user ) {
+		if ( is_null( $user ) ) {
 			return hp_rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_users' ) && get_current_user_id() !== $user->ID ) {
+		if ( ! current_user_can( 'edit_users' ) && get_current_user_id() !== $user->get_id() ) {
 			return hp_rest_error( 403 );
 		}
 
@@ -366,62 +368,28 @@ class User extends Controller {
 			return hp_rest_error( 400, $form->get_errors() );
 		}
 
-		// Update user.
-		$first_name   = $form->get_vaue( 'first_name' );
-		$last_name    = $form->get_vaue( 'last_name' );
-		$display_name = trim( $first_name . ' ' . $last_name );
+		// Check password.
+		if ( get_current_user_id() === $user->get_id() && ( $form->get_value( 'email' ) !== $user->get_email() || $form->get_value( 'password' ) ) ) {
+			if ( $form->get_value( 'current_password' ) === null ) {
+				return hp_rest_error( 400, esc_html__( 'Current password is required', 'hivepress' ) );
+			}
 
-		update_user_meta( $user->ID, 'first_name', $first_name );
-		update_user_meta( $user->ID, 'last_name', $last_name );
-		update_user_meta( $user->ID, 'description', $form->get_value( 'description' ) );
-
-		if ( '' !== $display_name ) {
-			wp_update_user(
-				[
-					'ID'           => $user->ID,
-					'display_name' => $display_name,
-				]
-			);
+			if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->get_password(), $user->get_id() ) ) {
+				return hp_rest_error( 401, esc_html__( 'Current password is incorrect', 'hivepress' ) );
+			}
 		}
 
-		if ( $form->get_value( 'email' ) !== $user->user_email || $form->get_value( 'password' ) ) {
+		// Update user.
+		$user->fill( $form->get_values() );
 
-			// Check password.
-			if ( get_current_user_id() === $user->ID ) {
-				if ( $form->get_value( 'current_password' ) === null ) {
-					return hp_rest_error( 400, esc_html__( 'Current password is required', 'hivepress' ) );
-				}
-
-				if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->user_pass, $user->ID ) ) {
-					return hp_rest_error( 401, esc_html__( 'Current password is incorrect', 'hivepress' ) );
-				}
-			}
-
-			// Update email.
-			if ( $form->get_value( 'email' ) !== $user->user_email ) {
-				wp_update_user(
-					[
-						'ID'         => $user->ID,
-						'user_email' => $form->get_value( 'email' ),
-					]
-				);
-			}
-
-			// Change password.
-			if ( $form->get_value( 'password' ) ) {
-				wp_update_user(
-					[
-						'ID'        => $user->ID,
-						'user_pass' => $form->get_value( 'password' ),
-					]
-				);
-			}
+		if ( ! $user->save() ) {
+			return hp_rest_error( 400, esc_html__( 'Error updateing user', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $user->ID,
+					'id' => $user->get_id(),
 				],
 			],
 			200
@@ -435,7 +403,6 @@ class User extends Controller {
 	 * @return WP_Rest_Response
 	 */
 	public function delete_user( $request ) {
-		require_once ABSPATH . 'wp-admin/includes/user.php';
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -443,19 +410,19 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = get_userdata( absint( $request->get_param( 'id' ) ) );
+		$user = Models\User::get( $request->get_param( 'id' ) );
 
-		if ( false === $user ) {
+		if ( is_null( $user ) ) {
 			return hp_rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->ID ) {
+		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->get_id() ) {
 			return hp_rest_error( 403 );
 		}
 
 		// Check password.
-		if ( get_current_user_id() === $user->ID ) {
+		if ( get_current_user_id() === $user->get_id() ) {
 			$form = new Forms\User_Delete();
 
 			$form->set_values( $request->get_params() );
@@ -464,13 +431,13 @@ class User extends Controller {
 				return hp_rest_error( 400, $form->get_errors() );
 			}
 
-			if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
+			if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
 				return hp_rest_error( 401, esc_html__( 'Password is incorrect', 'hivepress' ) );
 			}
 		}
 
 		// Delete user.
-		if ( ! wp_delete_user( $user->ID ) ) {
+		if ( ! $user->delete() ) {
 			return hp_rest_error( 400, esc_html__( 'Error deleting user', 'hivepress' ) );
 		}
 

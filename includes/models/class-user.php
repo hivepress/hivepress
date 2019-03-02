@@ -112,6 +112,8 @@ class User extends Model {
 	 * @return bool
 	 */
 	final public function delete() {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+
 		return $this->id && wp_delete_user( $this->id );
 	}
 }
