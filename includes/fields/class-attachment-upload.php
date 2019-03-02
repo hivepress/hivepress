@@ -46,6 +46,33 @@ class Attachment_Upload extends Field {
 	protected $file_formats;
 
 	/**
+	 * Sets field caption.
+	 *
+	 * @param string $caption Button caption.
+	 */
+	final protected function set_caption( $caption ) {
+		$this->caption = $caption;
+	}
+
+	/**
+	 * Sets multiple property.
+	 *
+	 * @param bool $multiple Multiple property.
+	 */
+	final protected function set_multiple( $multiple ) {
+		$this->multiple = boolval( $multiple );
+	}
+
+	/**
+	 * Sets file formats.
+	 *
+	 * @param int $file_formats File formats.
+	 */
+	final protected function set_file_formats( $file_formats ) {
+		$this->file_formats = (array) $file_formats;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

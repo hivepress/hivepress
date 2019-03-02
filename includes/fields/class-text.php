@@ -39,6 +39,24 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * Sets minimum length.
+	 *
+	 * @param int $min_length Minimum length.
+	 */
+	final protected function set_min_length( $min_length ) {
+		$this->min_length = absint( $min_length );
+	}
+
+	/**
+	 * Sets maximum length.
+	 *
+	 * @param int $max_length Maximum length.
+	 */
+	final protected function set_max_length( $max_length ) {
+		$this->max_length = absint( $max_length );
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array
