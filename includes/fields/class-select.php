@@ -32,6 +32,24 @@ class Select extends Field {
 	protected $options = [];
 
 	/**
+	 * Sets multiple property.
+	 *
+	 * @param bool $multiple Multiple property.
+	 */
+	final protected function set_multiple( $multiple ) {
+		$this->multiple = boolval( $multiple );
+	}
+
+	/**
+	 * Sets field options.
+	 *
+	 * @param array $options Field options.
+	 */
+	final protected function set_options( $options ) {
+		$this->options = (array) $options;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

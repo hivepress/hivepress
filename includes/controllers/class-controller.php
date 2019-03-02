@@ -39,12 +39,21 @@ abstract class Controller {
 	public function __construct( $args = [] ) {
 
 		// Set name.
-		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Sets controller name.
+	 *
+	 * @param string $name Controller name.
+	 */
+	final protected function set_name( $name ) {
+		$this->name = $name;
 	}
 
 	/**

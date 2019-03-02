@@ -39,6 +39,24 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
+	 * Sets minimum value.
+	 *
+	 * @param int $min_value Minimum value.
+	 */
+	final protected function set_min_value( $min_value ) {
+		$this->min_value = absint( $min_value );
+	}
+
+	/**
+	 * Sets maximum value.
+	 *
+	 * @param int $max_value Maximum value.
+	 */
+	final protected function set_max_value( $max_value ) {
+		$this->max_value = absint( $max_value );
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array

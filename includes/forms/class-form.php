@@ -81,17 +81,24 @@ abstract class Form {
 	public function __construct( $args = [] ) {
 
 		// Set name.
-		$this->name = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/forms/form/args', array_merge( $args, [ 'name' => $this->name ] ) );
-
-		unset( $args['name'] );
+		$args = apply_filters( 'hivepress/forms/form/args', $args );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Sets form name.
+	 *
+	 * @param string $name Form name.
+	 */
+	final protected function set_name( $name ) {
+		$this->name = $name;
 	}
 
 	/**

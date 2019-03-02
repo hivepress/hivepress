@@ -74,17 +74,33 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 
 		// Set type.
-		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		$args['type'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/fields/field/args', array_merge( $args, [ 'type' => $this->type ] ) );
-
-		unset( $args['type'] );
+		$args = apply_filters( 'hivepress/fields/field/args', $args );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Sets field name.
+	 *
+	 * @param string $name Field name.
+	 */
+	final protected function set_name( $name ) {
+		$this->name = $name;
+	}
+
+	/**
+	 * Sets field label.
+	 *
+	 * @param string $label Field label.
+	 */
+	final protected function set_label( $label ) {
+		$this->label = $label;
 	}
 
 	/**
@@ -108,6 +124,15 @@ abstract class Field {
 	 */
 	final protected function set_default( $value ) {
 		$this->set_value( $value );
+	}
+
+	/**
+	 * Sets required property.
+	 *
+	 * @param bool $required Required property.
+	 */
+	final protected function set_required( $required ) {
+		$this->required = boolval( $required );
 	}
 
 	/**
@@ -140,7 +165,7 @@ abstract class Field {
 	 */
 	public function validate() {
 		if ( $this->required && is_null( $this->value ) ) {
-			$this->errors[] = sprintf( esc_html__( '%s is required', 'hivepress' ), $this->label );
+			$this->add_errors( [ sprintf( esc_html__( '%s is required', 'hivepress' ), $this->label ) ] );
 		}
 
 		return empty( $this->errors );

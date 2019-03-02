@@ -67,12 +67,21 @@ abstract class Model {
 	public static function init( $args = [] ) {
 
 		// Set name.
-		self::$name = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ static::class, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Sets model name.
+	 *
+	 * @param string $name Model name.
+	 */
+	final protected static function set_name( $name ) {
+		self::$name = $name;
 	}
 
 	/**

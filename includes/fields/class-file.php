@@ -32,6 +32,24 @@ class File extends Field {
 	protected $file_formats;
 
 	/**
+	 * Sets multiple property.
+	 *
+	 * @param bool $multiple Multiple property.
+	 */
+	final protected function set_multiple( $multiple ) {
+		$this->multiple = boolval( $multiple );
+	}
+
+	/**
+	 * Sets file formats.
+	 *
+	 * @param array $file_formats File formats.
+	 */
+	final protected function set_file_formats( $file_formats ) {
+		$this->file_formats = (array) $file_formats;
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array

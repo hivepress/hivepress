@@ -25,6 +25,15 @@ class Attachment_Select extends Field {
 	protected $caption;
 
 	/**
+	 * Sets field caption.
+	 *
+	 * @param string $caption Field caption.
+	 */
+	final protected function set_caption( $caption ) {
+		$this->caption = $caption;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
