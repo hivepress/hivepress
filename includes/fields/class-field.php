@@ -74,62 +74,16 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 
 		// Set type.
-		$args['type'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		$this->type = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/fields/field/args', $args );
+		$args = apply_filters( 'hivepress/fields/field/args', array_merge( $args, [ 'type' => $this->type ] ) );
+
+		unset( $args['type'] );
 
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
-		}
-	}
-
-	/**
-	 * Routes methods.
-	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
-	 */
-	final public function __call( $name, $args ) {
-		$prefixes = array_filter(
-			[
-				'set',
-				'get',
-			],
-			function( $prefix ) use ( $name ) {
-				return strpos( $name, $prefix . '_' ) === 0;
-			}
-		);
-
-		if ( ! empty( $prefixes ) ) {
-			$method = reset( $prefixes );
-			$arg    = substr( $name, strlen( $method ) + 1 );
-
-			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
-		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
-		}
-	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 */
-	final protected function get_property( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return $this->$name;
 		}
 	}
 
@@ -154,6 +108,15 @@ abstract class Field {
 	 */
 	final protected function set_default( $value ) {
 		$this->set_value( $value );
+	}
+
+	/**
+	 * Gets field attributes.
+	 *
+	 * @return array
+	 */
+	protected function get_attributes() {
+		return $this->attributes;
 	}
 
 	/**
