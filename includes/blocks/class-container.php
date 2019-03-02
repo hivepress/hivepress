@@ -29,7 +29,7 @@ class Container extends Block {
 	 *
 	 * @param mixed $blocks Inner blocks.
 	 */
-	final public function set_blocks( $blocks ) {
+	final protected function set_blocks( $blocks ) {
 		$this->blocks = [];
 
 		foreach ( $blocks as $block_name => $block_args ) {
@@ -50,6 +50,7 @@ class Container extends Block {
 	public function render() {
 		$output = '<' . esc_attr( $this->get_attribute( 'tag' ) ) . ' ' . hp_html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
 
+		// Render inner blocks.
 		foreach ( $this->blocks as $block ) {
 			$output .= $block->render();
 		}

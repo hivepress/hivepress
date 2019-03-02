@@ -39,8 +39,6 @@ class Listing_Categories extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = 'todo';
-
-		return $output;
+		// todo.
 	}
 }

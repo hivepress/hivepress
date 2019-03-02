@@ -37,57 +37,29 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
 	}
 
 	/**
-	 * Routes methods.
+	 * Sets block title.
 	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
+	 * @param string $title Block title.
 	 */
-	final public function __call( $name, $args ) {
-		$prefixes = array_filter(
-			[
-				'set',
-				'get',
-			],
-			function( $prefix ) use ( $name ) {
-				return strpos( $name, $prefix . '_' ) === 0;
-			}
-		);
-
-		if ( ! empty( $prefixes ) ) {
-			$method = reset( $prefixes );
-			$arg    = substr( $name, strlen( $method ) + 1 );
-
-			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
-		}
+	final protected function set_title( $title ) {
+		$this->title = $title;
 	}
 
 	/**
-	 * Sets property.
+	 * Gets block title.
 	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
+	 * @return string
 	 */
-	final protected function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
-		}
-	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 */
-	final protected function get_property( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return $this->$name;
-		}
+	final public function get_title() {
+		return $this->title;
 	}
 
 	/**
@@ -95,8 +67,8 @@ abstract class Block {
 	 *
 	 * @param mixed $name Attribute name.
 	 */
-	final public function get_attribute( $name ) {
-		return hp_get_array_value( $this->get_attributes(), $name );
+	final protected function get_attribute( $name ) {
+		return hp_get_array_value( $this->attributes, $name );
 	}
 
 	/**

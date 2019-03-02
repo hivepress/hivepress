@@ -43,7 +43,7 @@ class Listing_Search_Form extends Block {
 		$form = new \HivePress\Forms\User_Register();
 		$form->set_values(
 			[
-				'images' => get_posts(
+				'image_ids' => get_posts(
 					[
 						'post_type'      => 'attachment',
 						'post_parent'    => 163,
