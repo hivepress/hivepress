@@ -79,9 +79,13 @@ abstract class Field {
 		// Filter arguments.
 		$args = apply_filters( 'hivepress/fields/field/args', $args );
 
+		// todo remove.
+		unset( $args['type'] );
+		unset( $args['order'] );
+
 		// Set properties.
-		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+		foreach ( $args as $name => $value ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 	}
 
@@ -133,6 +137,15 @@ abstract class Field {
 	 */
 	final protected function set_required( $required ) {
 		$this->required = boolval( $required );
+	}
+
+	/**
+	 * Sets field attributes.
+	 *
+	 * @param array $attributes Field attributes.
+	 */
+	final protected function set_attributes( $attributes ) {
+		$this->attributes = (array) $attributes;
 	}
 
 	/**

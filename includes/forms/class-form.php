@@ -87,8 +87,8 @@ abstract class Form {
 		$args = apply_filters( 'hivepress/forms/form/args', $args );
 
 		// Set properties.
-		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+		foreach ( $args as $name => $value ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 	}
 

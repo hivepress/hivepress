@@ -38,9 +38,13 @@ abstract class Block {
 	 */
 	public function __construct( $args = [] ) {
 
+		// todo remove.
+		unset( $args['type'] );
+		unset( $args['order'] );
+
 		// Set properties.
-		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+		foreach ( $args as $name => $value ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 	}
 
@@ -60,6 +64,15 @@ abstract class Block {
 	 */
 	final public function get_title() {
 		return $this->title;
+	}
+
+	/**
+	 * Sets block attributes.
+	 *
+	 * @param array $attributes Block attributes.
+	 */
+	final protected function set_attributes( $attributes ) {
+		$this->attributes = (array) $attributes;
 	}
 
 	/**

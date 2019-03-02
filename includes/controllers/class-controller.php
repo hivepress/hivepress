@@ -42,8 +42,8 @@ abstract class Controller {
 		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Set properties.
-		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
+		foreach ( $args as $name => $value ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 	}
 

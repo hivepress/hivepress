@@ -70,8 +70,8 @@ abstract class Model {
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
 		// Set properties.
-		foreach ( $args as $arg_name => $arg_value ) {
-			call_user_func_array( [ static::class, 'set_' . $arg_name ], [ $arg_value ] );
+		foreach ( $args as $name => $value ) {
+			call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
 		}
 	}
 
@@ -117,7 +117,7 @@ abstract class Model {
 	 * @param array $aliases Model aliases.
 	 */
 	final protected static function set_aliases( $aliases ) {
-		self::$aliases = $aliases;
+		self::$aliases = (array) $aliases;
 	}
 
 	/**
