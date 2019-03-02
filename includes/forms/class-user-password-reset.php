@@ -1,6 +1,6 @@
 <?php
 /**
- * User reset password form.
+ * User password reset form.
  *
  * @package HivePress\Forms
  */
@@ -11,11 +11,11 @@ namespace HivePress\Forms;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User reset password form class.
+ * User password reset form class.
  *
- * @class User_Reset_Password
+ * @class User_Password_Reset
  */
-class User_Reset_Password extends Form {
+class User_Password_Reset extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -25,22 +25,19 @@ class User_Reset_Password extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				'model'  => 'user',
 				'action' => hp_get_rest_url( '/users/reset-password' ),
 				'fields' => [
-					'password' => [
-						'label'      => esc_html__( 'New Password', 'hivepress' ),
-						'type'       => 'password',
-						'min_length' => 6,
-						'required'   => true,
-						'order'      => 10,
+					'password'           => [
+						'label' => esc_html__( 'New Password', 'hivepress' ),
+						'order' => 10,
 					],
 
-					'username' => [
-						'type'     => 'hidden',
-						'required' => true,
+					'username'           => [
+						'type' => 'hidden',
 					],
 
-					'key'      => [
+					'password_reset_key' => [
 						'type'     => 'hidden',
 						'required' => true,
 					],

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Update
  */
-class User_Update extends Form {
+class User_Update extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -25,48 +25,32 @@ class User_Update extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				'model'  => 'user',
 				'fields' => [
-					'image'            => [
-						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
-						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-						'type'         => 'attachment_upload',
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
-						'order'        => 10,
+					'image_id'         => [
+						'order' => 10,
 					],
 
 					'first_name'       => [
-						'label'      => esc_html__( 'First Name', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 64,
-						'order'      => 20,
+						'order' => 20,
 					],
 
 					'last_name'        => [
-						'label'      => esc_html__( 'Last Name', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 64,
-						'order'      => 30,
+						'order' => 30,
 					],
 
 					'description'      => [
-						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
-						'type'       => 'textarea',
-						'max_length' => 2048,
-						'order'      => 40,
+						'order' => 40,
 					],
 
 					'email'            => [
-						'label'    => esc_html__( 'Email', 'hivepress' ),
-						'type'     => 'email',
-						'required' => true,
-						'order'    => 50,
+						'order' => 50,
 					],
 
-					'password'     => [
-						'label'      => esc_html__( 'New Password', 'hivepress' ),
-						'type'       => 'password',
-						'min_length' => 6,
-						'order'      => 60,
+					'password'         => [
+						'label'    => esc_html__( 'New Password', 'hivepress' ),
+						'required' => false,
+						'order'    => 60,
 					],
 
 					'current_password' => [

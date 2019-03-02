@@ -94,6 +94,15 @@ abstract class Model {
 	}
 
 	/**
+	 * Gets instance fields.
+	 *
+	 * @return array
+	 */
+	final public static function get_fields() {
+		return self::$fields;
+	}
+
+	/**
 	 * Sets model aliases.
 	 *
 	 * @param array $aliases Model aliases.

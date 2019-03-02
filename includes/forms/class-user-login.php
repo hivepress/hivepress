@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Login
  */
-class User_Login extends Form {
+class User_Login extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -25,11 +25,11 @@ class User_Login extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
-				'title'   => esc_html__( 'Login User', 'hivepress' ),
-				'action'  => hp_get_rest_url( '/users/login' ),
-				'captcha' => false,
-				'fields'  => [
-					'username' => [
+				'title'  => esc_html__( 'Login User', 'hivepress' ),
+				'model'  => 'user',
+				'action' => hp_get_rest_url( '/users/login' ),
+				'fields' => [
+					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 254,
@@ -37,11 +37,8 @@ class User_Login extends Form {
 						'order'      => 10,
 					],
 
-					'password' => [
-						'label'    => esc_html__( 'Password', 'hivepress' ),
-						'type'     => 'password',
-						'required' => true,
-						'order'    => 20,
+					'password'          => [
+						'order' => 20,
 					],
 				],
 			],

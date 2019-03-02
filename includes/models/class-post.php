@@ -88,7 +88,7 @@ abstract class Post extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( $data );
+				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp_prefix( self::$name ) ] ) );
 
 				if ( 0 !== $id ) {
 					$this->set_id( $id );

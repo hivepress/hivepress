@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Delete
  */
-class User_Delete extends Form {
+class User_Delete extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -25,13 +25,11 @@ class User_Delete extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				'model'  => 'user',
 				'method' => 'DELETE',
 				'fields' => [
 					'password' => [
-						'label'    => esc_html__( 'Password', 'hivepress' ),
-						'type'     => 'password',
-						'required' => true,
-						'order'    => 10,
+						'order' => 10,
 					],
 				],
 			],

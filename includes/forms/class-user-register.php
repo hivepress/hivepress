@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Register
  */
-class User_Register extends Form {
+class User_Register extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -27,18 +27,11 @@ class User_Register extends Form {
 		// Set fields.
 		$fields = [
 			'email'    => [
-				'label'    => esc_html__( 'Email', 'hivepress' ),
-				'type'     => 'email',
-				'required' => true,
-				'order'    => 10,
+				'order' => 10,
 			],
 
 			'password' => [
-				'label'      => esc_html__( 'Password', 'hivepress' ),
-				'type'       => 'password',
-				'min_length' => 6,
-				'required'   => true,
-				'order'      => 20,
+				'order' => 20,
 			],
 		];
 
@@ -63,10 +56,10 @@ class User_Register extends Form {
 		// Set arguments.
 		$args = array_replace_recursive(
 			[
-				'title'   => esc_html__( 'Register User', 'hivepress' ),
-				'action'  => hp_get_rest_url( '/users' ),
-				'captcha' => false,
-				'fields'  => $fields,
+				'title'  => esc_html__( 'Register User', 'hivepress' ),
+				'model'  => 'user',
+				'action' => hp_get_rest_url( '/users' ),
+				'fields' => $fields,
 			],
 			$args
 		);

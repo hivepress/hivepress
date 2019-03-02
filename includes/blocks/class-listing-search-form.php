@@ -40,7 +40,7 @@ class Listing_Search_Form extends Block {
 	 */
 	public function render() {
 		// todo.
-		$form = new \HivePress\Forms\Listing_Update();
+		$form = new \HivePress\Forms\User_Register();
 		$form->set_values(
 			[
 				'images' => get_posts(

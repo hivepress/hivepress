@@ -86,10 +86,39 @@ abstract class Form {
 		// Filter arguments.
 		$args = apply_filters( 'hivepress/forms/form/args', array_merge( $args, [ 'name' => $this->name ] ) );
 
+		unset( $args['name'] );
+
 		// Set properties.
 		foreach ( $args as $arg_name => $arg_value ) {
 			call_user_func_array( [ $this, 'set_' . $arg_name ], [ $arg_value ] );
 		}
+	}
+
+	/**
+	 * Sets form title.
+	 *
+	 * @param string $title Form title.
+	 */
+	final private function set_title( $title ) {
+		$this->title = $title;
+	}
+
+	/**
+	 * Gets form title.
+	 *
+	 * @return string
+	 */
+	final public function get_title() {
+		return $this->title;
+	}
+
+	/**
+	 * Sets form action.
+	 *
+	 * @param string $action Form action.
+	 */
+	final private function set_action( $action ) {
+		$this->action = $action;
 	}
 
 	/**
@@ -102,11 +131,20 @@ abstract class Form {
 	}
 
 	/**
+	 * Sets form captcha.
+	 *
+	 * @param string $captcha Form captcha.
+	 */
+	final private function set_captcha( $captcha ) {
+		$this->captcha = boolval( $captcha );
+	}
+
+	/**
 	 * Sets form fields.
 	 *
 	 * @param array $fields Form fields.
 	 */
-	final private function set_fields( $fields ) {
+	protected function set_fields( $fields ) {
 		$this->fields = [];
 
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
@@ -120,6 +158,24 @@ abstract class Form {
 	}
 
 	/**
+	 * Sets form errors.
+	 *
+	 * @param array $errors Form errors.
+	 */
+	final private function set_errors( $errors ) {
+		$this->errors = $errors;
+	}
+
+	/**
+	 * Gets form errors.
+	 *
+	 * @return array
+	 */
+	final public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
@@ -129,18 +185,6 @@ abstract class Form {
 			if ( isset( $this->fields[ $field_name ] ) ) {
 				$this->fields[ $field_name ]->set_value( $value );
 			}
-		}
-	}
-
-	/**
-	 * Gets field value.
-	 *
-	 * @param string $name Field name.
-	 * @return mixed
-	 */
-	final public function get_value( $name ) {
-		if ( isset( $this->fields[ $name ] ) ) {
-			return $this->fields[ $name ]->get_value();
 		}
 	}
 
@@ -160,25 +204,42 @@ abstract class Form {
 	}
 
 	/**
+	 * Gets field value.
+	 *
+	 * @param string $name Field name.
+	 * @return mixed
+	 */
+	final public function get_value( $name ) {
+		if ( isset( $this->fields[ $name ] ) ) {
+			return $this->fields[ $name ]->get_value();
+		}
+	}
+
+	/**
 	 * Gets form attributes.
 	 *
 	 * @return array
 	 */
-	public function get_attributes() {
+	final private function get_attributes() {
 
-		// Set method.
-		$this->attributes['method']      = $this->get_method();
-		$this->attributes['data-method'] = $this->get_method();
-
-		if ( ! in_array( $this->get_method(), [ 'GET', 'POST' ], true ) ) {
-			$this->attributes['method'] = 'POST';
+		// Set action.
+		if ( strpos( $this->action, hp_get_rest_url() ) === 0 ) {
+			$this->attributes['action']   = '';
+			$this->attributes['data-url'] = $this->action;
+		} else {
+			$this->attributes['action'] = $this->action;
 		}
 
-		// Set name.
-		$this->attributes['data-name'] = $this->get_name();
+		// Set method.
+		if ( ! in_array( $this->method, [ 'GET', 'POST' ], true ) ) {
+			$this->attributes['method']      = 'POST';
+			$this->attributes['data-method'] = $this->method;
+		} else {
+			$this->attributes['method'] = $this->method;
+		}
 
 		// Set class.
-		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->get_name() ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );
+		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->name ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );
 
 		return $this->attributes;
 	}
@@ -188,7 +249,7 @@ abstract class Form {
 	 *
 	 * @return bool
 	 */
-	public function validate() {
+	final public function validate() {
 
 		// Verify captcha.
 		if ( $this->captcha ) {
@@ -223,7 +284,7 @@ abstract class Form {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	final public function render() {
 		$output = '<form ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// Render fields.

@@ -204,10 +204,10 @@ class User extends Controller {
 		// Get user.
 		$user = false;
 
-		if ( is_email( $form->get_value( 'username' ) ) ) {
-			$user = get_user_by( 'email', $form->get_value( 'username' ) );
+		if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
+			$user = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
 		} else {
-			$user = get_user_by( 'login', $form->get_value( 'username' ) );
+			$user = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
 		}
 
 		if ( false === $user ) {
@@ -248,7 +248,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Request_Password();
+		$form = new Forms\User_Password_Request();
 
 		$form->set_values( $request->get_params() );
 
@@ -259,14 +259,14 @@ class User extends Controller {
 		// Get user.
 		$user = false;
 
-		if ( is_email( $form->get_value( 'username' ) ) ) {
-			$user = get_user_by( 'email', $form->get_value( 'username' ) );
+		if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
+			$user = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
 		} else {
-			$user = get_user_by( 'login', $form->get_value( 'username' ) );
+			$user = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
 		}
 
 		if ( false === $user ) {
-			if ( is_email( $form->get_value( 'username' ) ) ) {
+			if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
 				return hp_rest_error( 404, esc_html__( "User with this email doesn't exist", 'hivepress' ) );
 			} else {
 				return hp_rest_error( 404, esc_html__( "User with this username doesn't exist", 'hivepress' ) );
@@ -298,7 +298,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Reset_Password();
+		$form = new Forms\User_Password_Reset();
 
 		$form->set_values( $request->get_params() );
 
@@ -307,7 +307,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = check_password_reset_key( $form->get_value( 'key' ), $form->get_value( 'username' ) );
+		$user = check_password_reset_key( $form->get_value( 'password_reset_key' ), $form->get_value( 'username' ) );
 
 		if ( is_wp_error( $user ) ) {
 			return hp_rest_error( 401, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );

@@ -26,25 +26,52 @@ class User extends Model {
 		$args = array_replace_recursive(
 			[
 				'fields'  => [
-					'username' => [
+					'username'    => [
 						'label'      => esc_html__( 'Username', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 60,
 						'required'   => true,
 					],
 
-					'email'    => [
+					'email'       => [
 						'label'    => esc_html__( 'Email', 'hivepress' ),
 						'type'     => 'email',
 						'required' => true,
 					],
 
-					'password' => [
-						'label'    => esc_html__( 'Password', 'hivepress' ),
-						'type'     => 'password',
-						'required' => true,
+					'password'    => [
+						'label'      => esc_html__( 'Password', 'hivepress' ),
+						'type'       => 'password',
+						'min_length' => 8,
+						'required'   => true,
+					],
+
+					'first_name'  => [
+						'label'      => esc_html__( 'First Name', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 64,
+					],
+
+					'last_name'   => [
+						'label'      => esc_html__( 'Last Name', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 64,
+					],
+
+					'description' => [
+						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
+						'type'       => 'textarea',
+						'max_length' => 2048,
+					],
+
+					'image_id'    => [
+						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
 					],
 				],
+
 				'aliases' => [
 					'user_login' => 'username',
 					'user_email' => 'email',

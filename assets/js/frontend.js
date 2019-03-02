@@ -86,15 +86,26 @@ var hivepress = {
 			});
 		}
 
+		// todo.
 		if (form.attr('method') === 'POST') {
-			var captcha = form.find('.g-recaptcha'),
+			var url = form.attr('action'),
+				method = form.attr('method'),
+				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
 
+			if (form.data('url')) {
+				url = form.data('url');
+			}
+
+			if (form.data('method')) {
+				method = form.data('method');
+			}
+
 			form.on('submit', function(e) {
 				$.ajax({
-					url: form.attr('action'),
-					method: form.data('method'),
+					url: url,
+					method: method,
 					data: form.serializeObject(),
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);

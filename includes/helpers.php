@@ -184,7 +184,7 @@ function hp_get_post_id( $args ) {
  * @param string $path URL path.
  * @return string
  */
-function hp_get_rest_url( $path ) {
+function hp_get_rest_url( $path = '' ) {
 	return get_rest_url( null, 'hivepress/v1' . $path );
 }
 

@@ -39,12 +39,8 @@ final class Form {
 	 * @return array
 	 */
 	public function set_form_captcha( $args ) {
-		if ( isset( $args['captcha'] ) ) {
-			if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && ( $args['captcha'] || in_array( $args['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) ) {
-				$args['captcha'] = true;
-			} else {
-				$args['captcha'] = false;
-			}
+		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $args['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
+			$args['captcha'] = true;
 		}
 
 		return $args;

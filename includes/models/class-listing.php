@@ -40,6 +40,7 @@ class Listing extends Post {
 						'required'   => true,
 					],
 				],
+
 				'aliases' => [
 					'post_title'   => 'title',
 					'post_content' => 'description',
