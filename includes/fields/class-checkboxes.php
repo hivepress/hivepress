@@ -31,7 +31,7 @@ class Checkboxes extends Select {
 	}
 
 	// Forbid setting multiple status.
-	final private function set_multiple() {}
+	final protected function set_multiple() {}
 
 	/**
 	 * Renders field HTML.

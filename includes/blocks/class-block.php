@@ -73,7 +73,7 @@ abstract class Block {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private function set_property( $name, $value ) {
+	final protected function set_property( $name, $value ) {
 		if ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
 		}
@@ -84,7 +84,7 @@ abstract class Block {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private function get_property( $name ) {
+	final protected function get_property( $name ) {
 		if ( property_exists( $this, $name ) ) {
 			return $this->$name;
 		}

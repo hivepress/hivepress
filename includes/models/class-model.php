@@ -80,7 +80,7 @@ abstract class Model {
 	 *
 	 * @param array $fields Model fields.
 	 */
-	final private static function set_fields( $fields ) {
+	final protected static function set_fields( $fields ) {
 		self::$fields = [];
 
 		foreach ( $fields as $field_name => $field_args ) {
@@ -107,7 +107,7 @@ abstract class Model {
 	 *
 	 * @param array $aliases Model aliases.
 	 */
-	final private static function set_aliases( $aliases ) {
+	final protected static function set_aliases( $aliases ) {
 		self::$aliases = $aliases;
 	}
 
@@ -142,7 +142,7 @@ abstract class Model {
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
 	 */
-	final private function set_property( $name, $value ) {
+	final protected function set_property( $name, $value ) {
 		if ( isset( self::$fields[ $name ] ) ) {
 			$field = self::$fields[ $name ];
 			$field->set_value( $value );
@@ -155,7 +155,7 @@ abstract class Model {
 	 *
 	 * @param string $name Property name.
 	 */
-	final private function get_property( $name ) {
+	final protected function get_property( $name ) {
 		if ( isset( $this->values[ $name ] ) ) {
 			return $this->values[ $name ];
 		}

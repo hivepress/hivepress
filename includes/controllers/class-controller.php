@@ -61,7 +61,7 @@ abstract class Controller {
 	 *
 	 * @param array $routes Controller routes.
 	 */
-	final private function set_routes( $routes ) {
+	final protected function set_routes( $routes ) {
 		$this->routes = $routes;
 	}
 

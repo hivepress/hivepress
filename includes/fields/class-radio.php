@@ -31,7 +31,7 @@ class Radio extends Select {
 	}
 
 	// Forbid setting multiple property.
-	final private function set_multiple() {}
+	final protected function set_multiple() {}
 
 	/**
 	 * Renders field HTML.

@@ -39,6 +39,15 @@ class Listing extends Post {
 						'max_length' => 10240,
 						'required'   => true,
 					],
+
+					'image_ids'   => [
+						'label'        => esc_html__( 'Images', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'multiple'     => true,
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+						'max_files'    => 10,
+					],
 				],
 
 				'aliases' => [

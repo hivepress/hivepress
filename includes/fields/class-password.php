@@ -31,7 +31,7 @@ class Password extends Text {
 	}
 
 	// Forbid setting maximum length.
-	final private function set_max_length() {}
+	final protected function set_max_length() {}
 
 	/**
 	 * Sanitizes field value.

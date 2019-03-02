@@ -99,7 +99,7 @@ abstract class Form {
 	 *
 	 * @param string $title Form title.
 	 */
-	final private function set_title( $title ) {
+	final protected function set_title( $title ) {
 		$this->title = $title;
 	}
 
@@ -117,7 +117,7 @@ abstract class Form {
 	 *
 	 * @param string $action Form action.
 	 */
-	final private function set_action( $action ) {
+	final protected function set_action( $action ) {
 		$this->action = $action;
 	}
 
@@ -126,7 +126,7 @@ abstract class Form {
 	 *
 	 * @param string $method Form method.
 	 */
-	final private function set_method( $method ) {
+	final protected function set_method( $method ) {
 		$this->method = strtoupper( $method );
 	}
 
@@ -135,7 +135,7 @@ abstract class Form {
 	 *
 	 * @param string $captcha Form captcha.
 	 */
-	final private function set_captcha( $captcha ) {
+	final protected function set_captcha( $captcha ) {
 		$this->captcha = boolval( $captcha );
 	}
 
@@ -162,7 +162,7 @@ abstract class Form {
 	 *
 	 * @param array $errors Form errors.
 	 */
-	final private function set_errors( $errors ) {
+	final protected function set_errors( $errors ) {
 		$this->errors = $errors;
 	}
 
@@ -220,7 +220,7 @@ abstract class Form {
 	 *
 	 * @return array
 	 */
-	final private function get_attributes() {
+	final protected function get_attributes() {
 
 		// Set action.
 		if ( strpos( $this->action, hp_get_rest_url() ) === 0 ) {

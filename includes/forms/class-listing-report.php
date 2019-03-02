@@ -25,9 +25,8 @@ class Listing_Report extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
-				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
-				'captcha' => false,
-				'fields'  => [
+				'title'  => esc_html__( 'Report Listing', 'hivepress' ),
+				'fields' => [
 					'reason' => [
 						'type'       => 'textarea',
 						'max_length' => 2048,

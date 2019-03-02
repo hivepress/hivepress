@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Delete
  */
-class Listing_Delete extends Form {
+class Listing_Delete extends Model_Form {
 
 	/**
 	 * Class constructor.
@@ -25,6 +25,7 @@ class Listing_Delete extends Form {
 	public function __construct( $args = [] ) {
 		$args = array_replace_recursive(
 			[
+				'model'  => 'listing',
 				'method' => 'DELETE',
 			],
 			$args
