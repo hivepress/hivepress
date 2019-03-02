@@ -158,12 +158,12 @@ abstract class Form {
 	}
 
 	/**
-	 * Sets form errors.
+	 * Adds form errors.
 	 *
 	 * @param array $errors Form errors.
 	 */
-	final protected function set_errors( $errors ) {
-		$this->errors = $errors;
+	final protected function add_errors( $errors ) {
+		$this->errors = array_merge( $this->errors, $errors );
 	}
 
 	/**
@@ -263,7 +263,7 @@ abstract class Form {
 			);
 
 			if ( is_wp_error( $response ) || ! hp_get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
-				$this->set_errors( array_merge( $this->errors, esc_html__( 'Captcha is invalid', 'hivepress' ) ) );
+				$this->add_errors( [ esc_html__( 'Captcha is invalid', 'hivepress' ) ] );
 			}
 		}
 
@@ -271,7 +271,7 @@ abstract class Form {
 		if ( empty( $this->errors ) ) {
 			foreach ( $this->fields as $field ) {
 				if ( ! $field->validate() ) {
-					$this->set_errors( array_merge( $this->errors, $field->get_errors() ) );
+					$this->add_errors( $field->get_errors() );
 				}
 			}
 		}

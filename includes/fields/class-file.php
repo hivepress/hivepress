@@ -36,16 +36,16 @@ class File extends Field {
 	 *
 	 * @return array
 	 */
-	public function get_attributes() {
+	final protected function get_attributes() {
 
-		// Set multiple status.
+		// Set multiple property.
 		if ( $this->multiple ) {
 			$this->attributes['multiple'] = true;
 		}
 
 		// Set file formats.
 		if ( ! empty( $this->file_formats ) ) {
-			$this->attributes['accept'] = '.' . implode( ',.', $this->get_file_formats() );
+			$this->attributes['accept'] = '.' . implode( ',.', $this->file_formats );
 		}
 
 		return $this->attributes;
@@ -62,6 +62,6 @@ class File extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->get_type() ) . '" name="' . esc_attr( $this->get_name() ) . '" value="' . esc_attr( $this->get_value() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 	}
 }

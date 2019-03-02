@@ -25,13 +25,10 @@ class Checkboxes extends Select {
 	public function __construct( $args = [] ) {
 
 		// Set multiple property.
-		$this->multiple = true;
+		$args['multiple'] = true;
 
 		parent::__construct( $args );
 	}
-
-	// Forbid setting multiple status.
-	final protected function set_multiple() {}
 
 	/**
 	 * Renders field HTML.
@@ -41,10 +38,10 @@ class Checkboxes extends Select {
 	public function render() {
 		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
-		foreach ( $this->get_options() as $option_value => $option_label ) {
+		foreach ( $this->options as $option_value => $option_label ) {
 			$output .= ( new Checkbox(
 				[
-					'name'    => $this->get_name() . '_' . $option_value,
+					'name'    => $this->name . '_' . $option_value,
 					'caption' => $option_label,
 				]
 			) )->render();

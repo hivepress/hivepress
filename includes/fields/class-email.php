@@ -25,13 +25,10 @@ class Email extends Text {
 	public function __construct( $args = [] ) {
 
 		// Set maximum length.
-		$this->max_length = 254;
+		$args['max_length'] = 254;
 
 		parent::__construct( $args );
 	}
-
-	// Forbid setting maximum length.
-	final protected function set_max_length() {}
 
 	/**
 	 * Sanitizes field value.
@@ -49,7 +46,7 @@ class Email extends Text {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->errors[] = sprintf( esc_html__( '%s should be a valid email address', 'hivepress' ), $this->get_label() );
+			$this->add_errors( [ sprintf( esc_html__( '%s should be a valid email address', 'hivepress' ), $this->label ) ] );
 		}
 
 		return empty( $this->errors );

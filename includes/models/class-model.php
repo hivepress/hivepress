@@ -180,12 +180,12 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets instance errors.
+	 * Adds instance errors.
 	 *
 	 * @param array $errors Instance errors.
 	 */
-	final protected function set_errors( $errors ) {
-		$this->errors = $errors;
+	final protected function add_errors( $errors ) {
+		$this->errors = array_merge( $this->errors, $errors );
 	}
 
 	/**

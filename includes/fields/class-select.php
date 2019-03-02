@@ -47,7 +47,7 @@ class Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
-			$this->errors[] = sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->get_label() );
+			$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
 		}
 
 		return empty( $this->errors );
@@ -59,10 +59,10 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->get_name() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
-		foreach ( $this->get_options() as $option_value => $option_label ) {
-			$output .= '<option value="' . esc_attr( $option_value ) . '" ' . selected( $this->get_value(), $option_value, false ) . '>' . esc_html( $option_label ) . '</option>';
+		foreach ( $this->options as $option_value => $option_label ) {
+			$output .= '<option value="' . esc_attr( $option_value ) . '" ' . selected( $this->value, $option_value, false ) . '>' . esc_html( $option_label ) . '</option>';
 		}
 
 		$output .= '</select>';

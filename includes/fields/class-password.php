@@ -25,13 +25,10 @@ class Password extends Text {
 	public function __construct( $args = [] ) {
 
 		// Set maximum length.
-		$this->max_length = 64;
+		$args['max_length'] = 64;
 
 		parent::__construct( $args );
 	}
-
-	// Forbid setting maximum length.
-	final protected function set_max_length() {}
 
 	/**
 	 * Sanitizes field value.

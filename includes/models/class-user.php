@@ -105,7 +105,7 @@ class User extends Model {
 					$meta[ hp_prefix( $field_name ) ] = $field->get_value();
 				}
 			} else {
-				$this->set_errors( array_merge( $this->errors, $field->get_errors() ) );
+				$this->add_errors( $field->get_errors() );
 			}
 		}
 

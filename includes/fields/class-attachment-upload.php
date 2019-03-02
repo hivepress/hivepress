@@ -78,29 +78,29 @@ class Attachment_Upload extends Field {
 		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// Render files.
-		if ( $this->get_multiple() ) {
+		if ( $this->multiple ) {
 			$output .= '<div class="hp-row hp-js-sortable">';
 		} else {
 			$output .= '<div class="hp-row">';
 		}
 
-		foreach ( (array) $this->get_value() as $attachment_id ) {
+		foreach ( (array) $this->value as $attachment_id ) {
 			$output .= $this->render_attachment( $attachment_id );
 		}
 
 		$output .= '</div>';
-		$output .= '<label for="' . esc_attr( $this->get_name() ) . '">';
+		$output .= '<label for="' . esc_attr( $this->name ) . '">';
 
 		// Render upload button.
-		$output .= '<button type="button">' . esc_html( $this->get_caption() ) . '</button>';
+		$output .= '<button type="button">' . esc_html( $this->caption ) . '</button>';
 
 		// Render upload field.
 		$output .= ( new File(
 			[
-				'name'         => $this->get_name(),
+				'name'         => $this->name,
 				'type'         => 'file',
-				'multiple'     => $this->get_multiple(),
-				'file_formats' => $this->get_file_formats(),
+				'multiple'     => $this->multiple,
+				'file_formats' => $this->file_formats,
 				'attributes'   => [
 					'class'    => 'hp-js-file-upload',
 					'data-url' => hp_get_rest_url( '/attachments' ),
