@@ -50,7 +50,7 @@ abstract class Form {
 	 *
 	 * @var bool
 	 */
-	protected $captcha;
+	protected $captcha = false;
 
 	/**
 	 * Form attributes.
@@ -93,62 +93,11 @@ abstract class Form {
 	}
 
 	/**
-	 * Routes methods.
-	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
-	 */
-	final public function __call( $name, $args ) {
-		$prefixes = array_filter(
-			[
-				'set',
-				'get',
-			],
-			function( $prefix ) use ( $name ) {
-				return strpos( $name, $prefix . '_' ) === 0;
-			}
-		);
-
-		if ( ! empty( $prefixes ) ) {
-			$method = reset( $prefixes );
-			$arg    = substr( $name, strlen( $method ) + 1 );
-
-			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
-		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final private function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
-		}
-	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 */
-	final private function get_property( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return $this->$name;
-		}
-	}
-
-	// Forbid setting name.
-	final private function set_name() {}
-
-	/**
 	 * Sets form method.
 	 *
 	 * @param string $method Form method.
 	 */
-	final public function set_method( $method ) {
+	final private function set_method( $method ) {
 		$this->method = strtoupper( $method );
 	}
 
@@ -157,7 +106,7 @@ abstract class Form {
 	 *
 	 * @param array $fields Form fields.
 	 */
-	final public function set_fields( $fields ) {
+	final private function set_fields( $fields ) {
 		$this->fields = [];
 
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
@@ -203,7 +152,7 @@ abstract class Form {
 	final public function get_values() {
 		$values = [];
 
-		foreach ( $this->get_fields() as $field_name => $field ) {
+		foreach ( $this->fields as $field_name => $field ) {
 			$values[ $field_name ] = $field->get_value();
 		}
 
@@ -242,7 +191,7 @@ abstract class Form {
 	public function validate() {
 
 		// Verify captcha.
-		if ( $this->get_captcha() ) {
+		if ( $this->captcha ) {
 			$response = wp_remote_get(
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
@@ -253,15 +202,15 @@ abstract class Form {
 			);
 
 			if ( is_wp_error( $response ) || ! hp_get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
-				$this->errors[] = esc_html__( 'Captcha is invalid', 'hivepress' );
+				$this->set_errors( array_merge( $this->errors, esc_html__( 'Captcha is invalid', 'hivepress' ) ) );
 			}
 		}
 
 		// Validate fields.
 		if ( empty( $this->errors ) ) {
-			foreach ( $this->get_fields() as $field ) {
+			foreach ( $this->fields as $field ) {
 				if ( ! $field->validate() ) {
-					$this->errors = array_merge( $this->errors, $field->get_errors() );
+					$this->set_errors( array_merge( $this->errors, $field->get_errors() ) );
 				}
 			}
 		}
@@ -275,17 +224,17 @@ abstract class Form {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<form action="' . esc_url( $this->get_action() ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<form ' . hp_html_attributes( $this->get_attributes() ) . '>';
 
 		// Render fields.
-		foreach ( $this->get_fields() as $field ) {
+		foreach ( $this->fields as $field ) {
 			$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 			$output .= $field->render();
 		}
 
 		// Render captcha.
-		if ( $this->get_captcha() ) {
+		if ( $this->captcha ) {
 			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
 		}
 
