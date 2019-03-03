@@ -101,7 +101,7 @@ abstract class Form {
 	final protected function set_property( $name, $value ) {
 		if ( property_exists( $this, $name ) ) {
 			if ( method_exists( $this, 'set_' . $name ) ) {
-				$this->$name = call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+				call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 			} else {
 				$this->$name = $value;
 			}

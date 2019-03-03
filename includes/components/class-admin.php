@@ -296,7 +296,7 @@ final class Admin {
 		// Create field.
 		$field = new $field_class( $args );
 
-		$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $args['type'] ) ] );
+		$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 		// Render field.
 		echo $field->render();
@@ -616,7 +616,7 @@ final class Admin {
 				// Create field.
 				$field = new $field_class( array_merge( $field_args, [ 'name' => hp_prefix( $field_id ) ] ) );
 
-				$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field_args['type'] ) ] );
+				$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 				// Get field value.
 				$value = get_post_meta( $post->ID, hp_prefix( $field_id ), true );
@@ -736,7 +736,7 @@ final class Admin {
 					// Create field.
 					$field = new $field_class( array_merge( $field_args, [ 'name' => hp_prefix( $field_id ) ] ) );
 
-					$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field_args['type'] ) ] );
+					$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
 
 					if ( ! is_object( $term ) ) {
 						$output .= '<div class="form-field">';

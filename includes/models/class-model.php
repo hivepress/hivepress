@@ -84,7 +84,7 @@ abstract class Model {
 	final protected static function set_static_property( $name, $value ) {
 		if ( property_exists( static::class, $name ) ) {
 			if ( method_exists( static::class, 'set_' . $name ) ) {
-				static::$$name = call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
+				call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
 			} else {
 				static::$$name = $value;
 			}

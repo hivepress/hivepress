@@ -94,11 +94,20 @@ abstract class Field {
 	final protected function set_property( $name, $value ) {
 		if ( property_exists( $this, $name ) ) {
 			if ( method_exists( $this, 'set_' . $name ) ) {
-				$this->$name = call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+				call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 			} else {
 				$this->$name = $value;
 			}
 		}
+	}
+
+	/**
+	 * Gets field type.
+	 *
+	 * @return string
+	 */
+	final public function get_type() {
+		return $this->type;
 	}
 
 	/**
@@ -110,6 +119,15 @@ abstract class Field {
 		$this->value = $value;
 
 		$this->sanitize();
+	}
+
+	/**
+	 * Gets field value.
+	 *
+	 * @return mixed
+	 */
+	final public function get_value() {
+		return $this->value;
 	}
 
 	/**
@@ -131,12 +149,30 @@ abstract class Field {
 	}
 
 	/**
+	 * Sets field attributes.
+	 *
+	 * @param array $attributes Field attributes.
+	 */
+	final public function set_attributes( $attributes ) {
+		$this->attributes = $attributes;
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array
 	 */
 	protected function get_attributes() {
 		return $this->attributes;
+	}
+
+	/**
+	 * Gets field errors.
+	 *
+	 * @return array
+	 */
+	final public function get_errors() {
+		return $this->errors;
 	}
 
 	/**

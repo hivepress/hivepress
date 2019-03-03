@@ -49,13 +49,13 @@ class Listing extends Controller {
 					],
 
 					[
-						'rule'   => 'is_listing_page',
-						'action' => 'render_listing_page',
+						'rule'   => 'is_listings_page',
+						'action' => 'render_listings_page',
 					],
 
 					[
-						'rule'   => 'is_listings_page',
-						'action' => 'render_listings_page',
+						'rule'   => 'is_listing_page',
+						'action' => 'render_listing_page',
 					],
 				],
 			]
@@ -151,24 +151,6 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Checks listing page.
-	 *
-	 * @return bool
-	 */
-	public function is_listing_page() {
-		return is_singular( 'hp_listing' );
-	}
-
-	/**
-	 * Renders listing page.
-	 *
-	 * @return string
-	 */
-	public function render_listing_page() {
-		// todo.
-	}
-
-	/**
 	 * Checks listings page.
 	 *
 	 * @return bool
@@ -191,12 +173,12 @@ class Listing extends Controller {
 		$output .= ob_get_contents();
 		ob_end_clean();
 
-		$template = hivepress()->get_config( 'templates' )['listings'];
+		$template = hivepress()->get_config( 'templates' )['listings_page'];
 
-		foreach ( $template['blocks'] as $block_name => $block ) {
-			$block_class = '\HivePress\Blocks\\' . $block['type'];
+		foreach ( $template['blocks'] as $block_name => $block_args ) {
+			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-			$output .= ( new $block_class( $block ) )->render();
+			$output .= ( new $block_class( $block_args ) )->render();
 		}
 
 		ob_start();
@@ -205,5 +187,23 @@ class Listing extends Controller {
 		ob_end_clean();
 
 		return $output;
+	}
+
+	/**
+	 * Checks listing page.
+	 *
+	 * @return bool
+	 */
+	public function is_listing_page() {
+		return is_singular( 'hp_listing' );
+	}
+
+	/**
+	 * Renders listing page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_page() {
+		// todo.
 	}
 }
