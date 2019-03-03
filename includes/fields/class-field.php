@@ -46,13 +46,6 @@ abstract class Field {
 	protected $value;
 
 	/**
-	 * Required property.
-	 *
-	 * @var bool
-	 */
-	protected $required = false;
-
-	/**
 	 * Field attributes.
 	 *
 	 * @var array
@@ -67,6 +60,13 @@ abstract class Field {
 	protected $errors = [];
 
 	/**
+	 * Required property.
+	 *
+	 * @var bool
+	 */
+	protected $required = false;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.
@@ -79,32 +79,26 @@ abstract class Field {
 		// Filter arguments.
 		$args = apply_filters( 'hivepress/fields/field/args', $args );
 
-		// todo remove.
-		unset( $args['type'] );
-		unset( $args['order'] );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+			$this->set_property( $name, $value );
 		}
 	}
 
 	/**
-	 * Sets field name.
+	 * Sets property.
 	 *
-	 * @param string $name Field name.
+	 * @param string $name Property name.
+	 * @param mixed  $value Property value.
 	 */
-	final protected function set_name( $name ) {
-		$this->name = $name;
-	}
-
-	/**
-	 * Sets field label.
-	 *
-	 * @param string $label Field label.
-	 */
-	final protected function set_label( $label ) {
-		$this->label = $label;
+	final protected function set_property( $name, $value ) {
+		if ( property_exists( $this, $name ) ) {
+			if ( method_exists( $this, 'set_' . $name ) ) {
+				$this->$name = call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+			} else {
+				$this->$name = $value;
+			}
+		}
 	}
 
 	/**
@@ -113,11 +107,8 @@ abstract class Field {
 	 * @param mixed $value Field value.
 	 */
 	final public function set_value( $value ) {
-
-		// Set value.
 		$this->value = $value;
 
-		// Sanitize value.
 		$this->sanitize();
 	}
 
@@ -131,21 +122,12 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets required property.
+	 * Adds field errors.
 	 *
-	 * @param bool $required Required property.
+	 * @param array $errors Field errors.
 	 */
-	final protected function set_required( $required ) {
-		$this->required = boolval( $required );
-	}
-
-	/**
-	 * Sets field attributes.
-	 *
-	 * @param array $attributes Field attributes.
-	 */
-	final protected function set_attributes( $attributes ) {
-		$this->attributes = (array) $attributes;
+	final protected function add_errors( $errors ) {
+		$this->errors = array_merge( $this->errors, $errors );
 	}
 
 	/**
@@ -155,15 +137,6 @@ abstract class Field {
 	 */
 	protected function get_attributes() {
 		return $this->attributes;
-	}
-
-	/**
-	 * Adds field errors.
-	 *
-	 * @param array $errors Field errors.
-	 */
-	final protected function add_errors( $errors ) {
-		$this->errors = array_merge( $this->errors, $errors );
 	}
 
 	/**
