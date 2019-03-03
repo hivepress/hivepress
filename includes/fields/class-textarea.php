@@ -1,6 +1,6 @@
 <?php
 /**
- * Hidden field.
+ * Textarea field.
  *
  * @package HivePress\Fields
  */
@@ -11,18 +11,18 @@ namespace HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Hidden field class.
+ * Textarea field class.
  *
- * @class Hidden
+ * @class Textarea
  */
-class Hidden extends Field {
+class Textarea extends Text {
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
+			$this->value = sanitize_textarea_field( $this->value );
 		}
 	}
 
@@ -32,6 +32,6 @@ class Hidden extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		return '<textarea name="' . esc_attr( $this->name ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>' . esc_textarea( $this->value ) . '</textarea>';
 	}
 }
