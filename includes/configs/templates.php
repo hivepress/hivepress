@@ -15,17 +15,16 @@ return [
 				'type'  => 'listing_search_form',
 				'order' => 10,
 			],
-			'page_content'        => [
+			'page_container'      => [
 				'type'       => 'container',
 				'order'      => 20,
 				'attributes' => [
-					'tag'        => 'div',
 					'attributes' => [
 						'class' => 'hp-row',
 					],
 				],
 				'blocks'     => [
-					'page_aside' => [
+					'page_sidebar' => [
 						'type'       => 'container',
 						'order'      => 10,
 						'attributes' => [
@@ -36,7 +35,7 @@ return [
 						],
 						'blocks'     => [],
 					],
-					'page_main'  => [
+					'page_content' => [
 						'type'       => 'container',
 						'order'      => 20,
 						'attributes' => [
@@ -46,9 +45,9 @@ return [
 							],
 						],
 						'blocks'     => [
-							'listings' => [
-								'type'  => 'listings',
-								'order' => 20,
+							'listing_search_results' => [
+								'type'  => 'container',
+								'order' => 10,
 							],
 						],
 					],

@@ -9,6 +9,11 @@
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'knockout'         => [
+		'handle' => 'knockout',
+		'src'    => HP_CORE_URL . '/assets/js/knockout.js',
+	],
+
 	'iframe_transport' => [
 		'handle' => 'iframe-transport',
 		'src'    => HP_CORE_URL . '/assets/js/jquery.iframe-transport.min.js',

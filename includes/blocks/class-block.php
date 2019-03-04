@@ -70,13 +70,22 @@ abstract class Block {
 	}
 
 	/**
+	 * Gets block attributes.
+	 *
+	 * @return array
+	 */
+	protected function get_attributes() {
+		return $this->attributes;
+	}
+
+	/**
 	 * Gets block attribute.
 	 *
 	 * @param string $name Attribute name.
 	 * @return mixed
 	 */
 	final protected function get_attribute( $name ) {
-		return hp_get_array_value( $this->attributes, $name );
+		return hp_get_array_value( $this->get_attributes(), $name );
 	}
 
 	/**

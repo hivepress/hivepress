@@ -43,6 +43,20 @@ class Container extends Block {
 	}
 
 	/**
+	 * Gets block attributes.
+	 *
+	 * @return array
+	 */
+	protected function get_attributes() {
+		return array_replace_recursive(
+			[
+				'tag' => 'div',
+			],
+			$this->attributes
+		);
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
