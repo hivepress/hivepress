@@ -59,7 +59,7 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->name ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . '" ' . html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
 			$output .= '<option value="' . esc_attr( $value ) . '" ' . selected( $this->value, $value, false ) . '>' . esc_html( $label ) . '</option>';

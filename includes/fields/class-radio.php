@@ -36,7 +36,7 @@ class Radio extends Select {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
 			$output .= '<label for="' . esc_attr( $this->name . '_' . $value ) . '"><input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name . '_' . $value ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';

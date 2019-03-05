@@ -134,7 +134,7 @@ abstract class Form {
 	protected function set_fields( $fields ) {
 		$this->fields = [];
 
-		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
+		foreach ( sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
@@ -208,27 +208,28 @@ abstract class Form {
 	 * @return array
 	 */
 	final protected function get_attributes() {
+		$attributes = [];
 
 		// Set action.
-		if ( strpos( $this->action, hp_get_rest_url() ) === 0 ) {
-			$this->attributes['action']   = '';
-			$this->attributes['data-url'] = $this->action;
+		if ( strpos( $this->action, get_rest_url() ) === 0 ) {
+			$attributes['action']   = '';
+			$attributes['data-url'] = $this->action;
 		} else {
-			$this->attributes['action'] = $this->action;
+			$attributes['action'] = $this->action;
 		}
 
 		// Set method.
 		if ( ! in_array( $this->method, [ 'GET', 'POST' ], true ) ) {
-			$this->attributes['method']      = 'POST';
-			$this->attributes['data-method'] = $this->method;
+			$attributes['method']      = 'POST';
+			$attributes['data-method'] = $this->method;
 		} else {
-			$this->attributes['method'] = $this->method;
+			$attributes['method'] = $this->method;
 		}
 
 		// Set class.
-		$this->attributes['class'] = 'hp-form hp-form--' . esc_attr( str_replace( '_', '-', $this->name ) ) . ' hp-js-form ' . hp_get_array_value( $this->attributes, 'class' );
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . esc_attr( str_replace( '_', '-', $this->name ) ) ];
 
-		return $this->attributes;
+		return merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -244,12 +245,12 @@ abstract class Form {
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
 						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => hp_get_array_value( $_REQUEST, 'g-recaptcha-response' ),
+						'response' => get_array_value( $_REQUEST, 'g-recaptcha-response' ),
 					]
 				)
 			);
 
-			if ( is_wp_error( $response ) || ! hp_get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
+			if ( is_wp_error( $response ) || ! get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
 				$this->add_errors( [ esc_html__( 'Captcha is invalid', 'hivepress' ) ] );
 			}
 		}
@@ -272,13 +273,13 @@ abstract class Form {
 	 * @return string
 	 */
 	final public function render() {
-		$output = '<form ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<form ' . html_attributes( $this->get_attributes() ) . '>';
 
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';
 
 		foreach ( $this->fields as $field ) {
-			$field->set_attributes( [ 'class' => 'hp-form__field hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] );
+			$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
 
 			$output .= $field->render();
 		}

@@ -26,7 +26,7 @@ class Listing extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'routes' => [
@@ -74,20 +74,20 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp_rest_error( 401 );
+			return rest_error( 401 );
 		}
 
 		// Get listing.
 		$listing = Models\Listing::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $listing ) ) {
-			return hp_rest_error( 404 );
+			return rest_error( 404 );
 		}
 
 		// Check permissions.
 		// todo add author_id and status fields to model.
 		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
-			return hp_rest_error( 403 );
+			return rest_error( 403 );
 		}
 
 		// Validate form.
@@ -96,14 +96,14 @@ class Listing extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return hp_rest_error( 400, $form->get_errors() );
+			return rest_error( 400, $form->get_errors() );
 		}
 
 		// Update listing.
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp_rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
+			return rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response(
@@ -126,25 +126,25 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp_rest_error( 401 );
+			return rest_error( 401 );
 		}
 
 		// Get listing.
 		$listing = Models\Listing::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $listing ) ) {
-			return hp_rest_error( 404 );
+			return rest_error( 404 );
 		}
 
 		// Check permissions.
 		// todo add fields to model.
 		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
-			return hp_rest_error( 403 );
+			return rest_error( 403 );
 		}
 
 		// Delete listing.
 		if ( ! $listing->delete() ) {
-			return hp_rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
+			return rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );
@@ -178,7 +178,7 @@ class Listing extends Controller {
 		foreach ( $template['blocks'] as $block_name => $block_args ) {
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-			$output .= ( new $block_class( $block_args ) )->render();
+			$output .= ( new $block_class( array_merge( $block_args, [ 'name' => $block_name ] ) ) )->render();
 		}
 
 		ob_start();

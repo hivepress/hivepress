@@ -36,7 +36,7 @@ class Checkboxes extends Select {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
 			$output .= ( new Checkbox(

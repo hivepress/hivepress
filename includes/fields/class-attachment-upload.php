@@ -88,7 +88,7 @@ class Attachment_Upload extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . html_attributes( $this->get_attributes() ) . '>';
 
 		// Render attachments.
 		if ( $this->multiple ) {
@@ -117,8 +117,8 @@ class Attachment_Upload extends Field {
 				'multiple'     => $this->multiple,
 				'file_formats' => $this->file_formats,
 				'attributes'   => [
-					'class'    => 'hp-js-file-upload',
-					'data-url' => hp_get_rest_url( '/attachments' ),
+					'class'    => [ 'hp-js-file-upload' ],
+					'data-url' => get_rest_url( '/attachments' ),
 				],
 			]
 		) )->render();
@@ -136,13 +136,13 @@ class Attachment_Upload extends Field {
 	 * @return string
 	 */
 	public function render_attachment( $attachment_id ) {
-		$output = '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hp_get_rest_url( '/attachments/' . $attachment_id ) ) . '">';
+		$output = '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( get_rest_url( '/attachments/' . $attachment_id ) ) . '">';
 
 		// Render attachment image.
 		$output .= wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
 		// Render remove button.
-		$output .= '<a href="#" class="hp-js-button" data-type="remove request" data-url="' . esc_url( hp_get_rest_url( '/attachments/' . $attachment_id ) ) . '" data-method="DELETE"><i class="hp-icon fas fa-times"></i></a>';
+		$output .= '<a href="#" class="hp-js-button" data-type="remove request" data-url="' . esc_url( get_rest_url( '/attachments/' . $attachment_id ) ) . '" data-method="DELETE"><i class="hp-icon fas fa-times"></i></a>';
 		$output .= '</div>';
 
 		return $output;

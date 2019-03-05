@@ -23,11 +23,11 @@ class User_Password_Request extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-				'action' => hp_get_rest_url( '/users/request-password' ),
+				'action' => get_rest_url( '/users/request-password' ),
 				'fields' => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),

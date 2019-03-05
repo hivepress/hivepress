@@ -38,9 +38,9 @@ abstract class Model_Form extends Form {
 		// Get model fields.
 		$model_fields = $model_class::get_fields();
 
-		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
+		foreach ( sort_array( $fields ) as $field_name => $field_args ) {
 			if ( isset( $model_fields[ $field_name ] ) ) {
-				$field_args = hp_merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
+				$field_args = merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
 			}
 
 			// Get field class.

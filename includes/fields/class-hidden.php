@@ -32,6 +32,6 @@ class Hidden extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . html_attributes( $this->get_attributes() ) . '>';
 	}
 }

@@ -23,7 +23,7 @@ class User_Update extends Model_Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'model'  => 'user',

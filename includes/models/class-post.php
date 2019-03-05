@@ -28,7 +28,7 @@ abstract class Post extends Model {
 		// Get alias data.
 		$data = get_post( absint( $id ), ARRAY_A );
 
-		if ( ! is_null( $data ) && hp_prefix( self::$name ) === $data['post_type'] ) {
+		if ( ! is_null( $data ) && prefix( self::$name ) === $data['post_type'] ) {
 			$values = [];
 
 			// Get alias meta.
@@ -42,9 +42,9 @@ abstract class Post extends Model {
 			// Get instance values.
 			foreach ( array_keys( self::$fields ) as $field_name ) {
 				if ( in_array( $field_name, self::$aliases, true ) ) {
-					$values[ $field_name ] = hp_get_array_value( $data, array_search( $field_name, self::$aliases, true ) );
+					$values[ $field_name ] = get_array_value( $data, array_search( $field_name, self::$aliases, true ) );
 				} else {
-					$values[ $field_name ] = hp_get_array_value( $meta, hp_prefix( $field_name ) );
+					$values[ $field_name ] = get_array_value( $meta, prefix( $field_name ) );
 				}
 			}
 
@@ -72,7 +72,7 @@ abstract class Post extends Model {
 		$meta = [];
 
 		foreach ( self::$fields as $field_name => $field ) {
-			$field->set_value( hp_get_array_value( $this->values, $field_name ) );
+			$field->set_value( get_array_value( $this->values, $field_name ) );
 
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, self::$aliases, true ) ) {
@@ -88,7 +88,7 @@ abstract class Post extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp_prefix( self::$name ) ] ) );
+				$id = wp_insert_post( array_merge( $data, [ 'post_type' => prefix( self::$name ) ] ) );
 
 				if ( 0 !== $id ) {
 					$this->set_id( $id );
@@ -100,7 +100,7 @@ abstract class Post extends Model {
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_post_meta( $this->id, hp_prefix( $meta_key ), $meta_value );
+				update_post_meta( $this->id, prefix( $meta_key ), $meta_value );
 			}
 
 			return true;

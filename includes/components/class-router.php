@@ -52,11 +52,11 @@ final class Router {
 	public function register_api_routes() {
 		foreach ( hivepress()->get_controllers() as $controller ) {
 			foreach ( $controller->get_routes() as $route ) {
-				if ( hp_get_array_value( $route, 'rest', false ) ) {
+				if ( get_array_value( $route, 'rest', false ) ) {
 					foreach ( $route['endpoints'] as $endpoint ) {
 						register_rest_route(
 							'hivepress/v1',
-							$route['path'] . hp_get_array_value( $endpoint, 'path' ),
+							$route['path'] . get_array_value( $endpoint, 'path' ),
 							[
 								'methods'  => $endpoint['methods'],
 								'callback' => [ $controller, $endpoint['action'] ],
@@ -74,7 +74,7 @@ final class Router {
 	public function add_rewrite_rules() {
 		foreach ( hivepress()->get_controllers() as $controller ) {
 			foreach ( $controller->get_routes() as $route ) {
-				if ( ! hp_get_array_value( $route, 'rest', false ) && isset( $route['path'] ) ) {
+				if ( ! get_array_value( $route, 'rest', false ) && isset( $route['path'] ) ) {
 
 					// Get rewrite tags.
 					preg_match_all( '/<([a-z_]+)>/i', $route['path'], $rewrite_tags );
@@ -93,7 +93,7 @@ final class Router {
 							'&',
 							array_map(
 								function( $rewrite_tag ) {
-									return hp_prefix( $rewrite_tag ) . '={$matches[' . $rewrite_tag . ']}';
+									return prefix( $rewrite_tag ) . '={$matches[' . $rewrite_tag . ']}';
 								},
 								$rewrite_tags
 							)
@@ -105,7 +105,7 @@ final class Router {
 
 					// Add rewrite tags.
 					foreach ( $rewrite_tags as $rewrite_tag ) {
-						add_rewrite_tag( '%' . hp_prefix( $rewrite_tag ) . '%', '([^&]+)' );
+						add_rewrite_tag( '%' . prefix( $rewrite_tag ) . '%', '([^&]+)' );
 					}
 				}
 			}
@@ -153,7 +153,7 @@ final class Router {
 
 		foreach ( hivepress()->get_controllers() as $controller ) {
 			foreach ( $controller->get_routes() as $route ) {
-				if ( ! hp_get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && $controller_name === $controller->get_name() && $action_name === $route['action'] ) || ( isset( $route['rule'] ) && call_user_func( [ $controller, $route['rule'] ] ) ) ) ) {
+				if ( ! get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && $controller_name === $controller->get_name() && $action_name === $route['action'] ) || ( isset( $route['rule'] ) && call_user_func( [ $controller, $route['rule'] ] ) ) ) ) {
 
 					// Set the current route.
 					$this->route = $route;

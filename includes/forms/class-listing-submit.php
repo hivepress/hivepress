@@ -28,7 +28,7 @@ class Listing_Submit extends Listing_Update {
 		$fields = [];
 
 		// Add terms checkbox.
-		$page_id = hp_get_post_id(
+		$page_id = get_post_id(
 			[
 				'post_type'   => 'page',
 				'post_status' => 'publish',
@@ -38,7 +38,7 @@ class Listing_Submit extends Listing_Update {
 
 		if ( 0 !== $page_id ) {
 			$fields['terms'] = [
-				'caption'  => sprintf( hp_sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
+				'caption'  => sprintf( sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
 				'type'     => 'checkbox',
 				'required' => true,
 				'order'    => 100,
@@ -46,7 +46,7 @@ class Listing_Submit extends Listing_Update {
 		}
 
 		// Set arguments.
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Submit Listing', 'hivepress' ),

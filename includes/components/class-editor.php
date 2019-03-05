@@ -106,7 +106,7 @@ final class Editor {
 	 */
 	public function enqueue_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {
-			if ( hp_get_array_value( $style, 'editor', false ) ) {
+			if ( get_array_value( $style, 'editor', false ) ) {
 				add_editor_style( $style['src'] );
 			}
 		}

@@ -42,7 +42,7 @@ class Attachment_Select extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$attachment_id = hp_get_post_id(
+			$attachment_id = get_post_id(
 				[
 					'post_type' => 'attachment',
 					'post__in'  => [ absint( $this->value ) ],
@@ -63,7 +63,7 @@ class Attachment_Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output  = '<div ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		$output  = '<div ' . html_attributes( $this->get_attributes() ) . '>';
 		$output .= '<div>';
 
 		if ( ! is_null( $this->value ) ) {

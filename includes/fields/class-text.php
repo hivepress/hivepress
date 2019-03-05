@@ -61,7 +61,7 @@ class Text extends Field {
 			$attributes['maxlength'] = $this->max_length;
 		}
 
-		return hp_merge_arrays( $attributes, parent::get_attributes() );
+		return merge_arrays( parent::get_attributes(), $attributes );
 	}
 
 	/**
@@ -98,6 +98,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp_html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . html_attributes( $this->get_attributes() ) . '>';
 	}
 }

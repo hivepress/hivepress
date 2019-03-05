@@ -163,7 +163,7 @@ abstract class Model {
 	 * @param string $name Property name.
 	 */
 	final protected function get_property( $name ) {
-		return hp_get_array_value( $this->values, $name );
+		return get_array_value( $this->values, $name );
 	}
 
 	/**

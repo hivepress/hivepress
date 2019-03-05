@@ -52,9 +52,9 @@ defined( 'ABSPATH' ) || exit;
 				<div class="column-downloaded"><?php printf( esc_html__( 'Version %s', 'hivepress' ), $addon->version ); ?></div>
 				<div class="column-compatibility">
 					<?php if ( version_compare( substr( get_bloginfo( 'version' ), 0, strlen( $addon->requires ) ), $addon->requires ) >= 0 ) : ?>
-					<span class="compatibility-compatible"><?php echo hp_sanitize_html( __( '<strong>Compatible</strong> with your version of WordPress', 'hivepress' ) ); ?></span>
+					<span class="compatibility-compatible"><?php echo sanitize_html( __( '<strong>Compatible</strong> with your version of WordPress', 'hivepress' ) ); ?></span>
 					<?php else : ?>
-					<span class="compatibility-incompatible"><?php echo hp_sanitize_html( __( '<strong>Incompatible</strong> with your version of WordPress', 'hivepress' ) ); ?></span>
+					<span class="compatibility-incompatible"><?php echo sanitize_html( __( '<strong>Incompatible</strong> with your version of WordPress', 'hivepress' ) ); ?></span>
 					<?php endif; ?>
 				</div>
 			</div>

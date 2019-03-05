@@ -23,7 +23,7 @@ class Listing_Report extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Report Listing', 'hivepress' ),

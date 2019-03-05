@@ -25,7 +25,7 @@ return [
 				'order'      => 20,
 				'attributes' => [
 					'attributes' => [
-						'class' => 'hp-row',
+						'class' => [ 'hp-row' ],
 					],
 				],
 				'blocks'     => [
@@ -35,7 +35,7 @@ return [
 						'attributes' => [
 							'tag'        => 'aside',
 							'attributes' => [
-								'class' => 'hp-col-sm-4 hp-col-xs-12',
+								'class' => [ 'hp-col-sm-4', 'hp-col-xs-12' ],
 							],
 						],
 						'blocks'     => [],
@@ -46,7 +46,7 @@ return [
 						'attributes' => [
 							'tag'        => 'main',
 							'attributes' => [
-								'class' => 'hp-col-sm-8 hp-col-xs-12',
+								'class' => [ 'hp-col-sm-8', 'hp-col-xs-12' ],
 							],
 						],
 						'blocks'     => [

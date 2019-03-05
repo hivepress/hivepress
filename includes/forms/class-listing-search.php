@@ -23,7 +23,7 @@ class Listing_Search extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'method' => 'GET',

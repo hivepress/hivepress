@@ -5,6 +5,8 @@
  * @package HivePress
  */
 
+namespace HivePress\Helpers;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -14,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @param mixed $names Names to prefix.
  * @return mixed
  */
-function hp_prefix( $names ) {
+function prefix( $names ) {
 	$prefixed = '';
 
 	if ( is_array( $names ) ) {
@@ -37,7 +39,7 @@ function hp_prefix( $names ) {
  * @param mixed $names Names to unprefix.
  * @return mixed
  */
-function hp_unprefix( $names ) {
+function unprefix( $names ) {
 	$unprefixed = '';
 
 	if ( is_array( $names ) ) {
@@ -62,7 +64,7 @@ function hp_unprefix( $names ) {
  * @param mixed  $default Default value.
  * @return mixed
  */
-function hp_get_array_value( $array, $key, $default = null ) {
+function get_array_value( $array, $key, $default = null ) {
 	$value = $default;
 
 	if ( is_array( $array ) && isset( $array[ $key ] ) ) {
@@ -79,7 +81,7 @@ function hp_get_array_value( $array, $key, $default = null ) {
  * @param array $keys Keys to search.
  * @return mixed
  */
-function hp_search_array_value( $array, $keys ) {
+function search_array_value( $array, $keys ) {
 	$keys = (array) $keys;
 
 	foreach ( $keys as $key ) {
@@ -92,7 +94,7 @@ function hp_search_array_value( $array, $keys ) {
 		} else {
 			foreach ( $array as $subarray ) {
 				if ( is_array( $subarray ) ) {
-					$value = hp_search_array_value( $subarray, $keys );
+					$value = search_array_value( $subarray, $keys );
 
 					if ( ! is_null( $value ) ) {
 						return $value;
@@ -113,7 +115,7 @@ function hp_search_array_value( $array, $keys ) {
  * @param array $array Source array.
  * @return array
  */
-function hp_sort_array( $array ) {
+function sort_array( $array ) {
 	$sorted = [];
 
 	foreach ( $array as $key => $value ) {
@@ -136,7 +138,7 @@ function hp_sort_array( $array ) {
  *
  * @return array
  */
-function hp_merge_arrays() {
+function merge_arrays() {
 	$merged = [];
 
 	foreach ( func_get_args() as $array ) {
@@ -148,7 +150,7 @@ function hp_merge_arrays() {
 					$merged[ $key ] = $value;
 				}
 			} else {
-				$merged[ $key ] = hp_merge_arrays( $merged[ $key ], $value );
+				$merged[ $key ] = merge_arrays( $merged[ $key ], $value );
 			}
 		}
 	}
@@ -162,7 +164,7 @@ function hp_merge_arrays() {
  * @param array $atts Array of attributes.
  * @return string
  */
-function hp_html_attributes( $atts ) {
+function html_attributes( $atts ) {
 	$output = '';
 
 	if ( is_array( $atts ) ) {
@@ -186,7 +188,7 @@ function hp_html_attributes( $atts ) {
  * @param string $html HTML to sanitize.
  * @return string
  */
-function hp_sanitize_html( $html ) {
+function sanitize_html( $html ) {
 	$tags = [
 		'strong' => [],
 		'a'      => [
@@ -208,7 +210,7 @@ function hp_sanitize_html( $html ) {
  * @param string $text Text to be processed.
  * @return string
  */
-function hp_replace_placeholders( $placeholders, $text ) {
+function replace_placeholders( $placeholders, $text ) {
 	foreach ( $placeholders as $name => $value ) {
 		if ( ! is_array( $value ) ) {
 			$text = str_replace( '%' . $name . '%', $value, $text );
@@ -224,7 +226,7 @@ function hp_replace_placeholders( $placeholders, $text ) {
  * @param array $args Post arguments.
  * @return int
  */
-function hp_get_post_id( $args ) {
+function get_post_id( $args ) {
 	$args = array_merge(
 		$args,
 		[
@@ -244,7 +246,7 @@ function hp_get_post_id( $args ) {
  * @param string $path URL path.
  * @return string
  */
-function hp_get_rest_url( $path = '' ) {
+function get_rest_url( $path = '' ) {
 	return get_rest_url( null, 'hivepress/v1' . $path );
 }
 
@@ -255,7 +257,7 @@ function hp_get_rest_url( $path = '' ) {
  * @param array $errors Additional errors.
  * @return WP_Rest_Response
  */
-function hp_rest_error( $code, $errors = [] ) {
+function rest_error( $code, $errors = [] ) {
 	$error = [
 		'code' => $code,
 	];

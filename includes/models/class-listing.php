@@ -23,7 +23,7 @@ class Listing extends Post {
 	 * @param array $args Model arguments.
 	 */
 	public static function init( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'fields'  => [

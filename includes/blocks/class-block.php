@@ -25,6 +25,13 @@ abstract class Block {
 	protected $title;
 
 	/**
+	 * Block name.
+	 *
+	 * @var string
+	 */
+	protected $name;
+
+	/**
 	 * Block attributes.
 	 *
 	 * @var array
@@ -75,7 +82,14 @@ abstract class Block {
 	 * @return array
 	 */
 	protected function get_attributes() {
-		return $this->attributes;
+		$attributes = [
+			'attributes' => [
+				'class'     => [ 'hp-block' ],
+				'data-name' => $this->name,
+			],
+		];
+
+		return merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -85,7 +99,7 @@ abstract class Block {
 	 * @return mixed
 	 */
 	final protected function get_attribute( $name ) {
-		return hp_get_array_value( $this->get_attributes(), $name );
+		return get_array_value( $this->get_attributes(), $name );
 	}
 
 	/**

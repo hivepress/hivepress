@@ -23,7 +23,7 @@ class Listing_Search_Form extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp_merge_arrays(
+		$args = merge_arrays(
 			$args,
 			[
 				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
