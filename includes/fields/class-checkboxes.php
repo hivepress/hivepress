@@ -7,6 +7,8 @@
 
 namespace HivePress\Fields;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +38,7 @@ class Checkboxes extends Select {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
 			$output .= ( new Checkbox(

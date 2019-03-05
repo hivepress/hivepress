@@ -7,6 +7,8 @@
 
 namespace HivePress\Forms;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -134,7 +136,7 @@ abstract class Form {
 	protected function set_fields( $fields ) {
 		$this->fields = [];
 
-		foreach ( sort_array( $fields ) as $field_name => $field_args ) {
+		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
@@ -229,7 +231,7 @@ abstract class Form {
 		// Set class.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . esc_attr( str_replace( '_', '-', $this->name ) ) ];
 
-		return merge_arrays( $this->attributes, $attributes );
+		return hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -245,12 +247,12 @@ abstract class Form {
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
 						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => get_array_value( $_REQUEST, 'g-recaptcha-response' ),
+						'response' => hp\get_array_value( $_REQUEST, 'g-recaptcha-response' ),
 					]
 				)
 			);
 
-			if ( is_wp_error( $response ) || ! get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
+			if ( is_wp_error( $response ) || ! hp\get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
 				$this->add_errors( [ esc_html__( 'Captcha is invalid', 'hivepress' ) ] );
 			}
 		}
@@ -273,7 +275,7 @@ abstract class Form {
 	 * @return string
 	 */
 	final public function render() {
-		$output = '<form ' . html_attributes( $this->get_attributes() ) . '>';
+		$output = '<form ' . hp\html_attributes( $this->get_attributes() ) . '>';
 
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';

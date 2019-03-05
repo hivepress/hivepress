@@ -7,6 +7,7 @@
 
 namespace HivePress\Controllers;
 
+use HivePress\Helpers as hp;
 use HivePress\Models as Models;
 use HivePress\Forms as Forms;
 
@@ -26,7 +27,7 @@ class User extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'routes' => [
@@ -105,7 +106,7 @@ class User extends Controller {
 
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'create_users' ) ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
@@ -114,21 +115,21 @@ class User extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return rest_error( 400, $form->get_errors() );
+			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Check username.
 		if ( $form->get_value( 'username' ) ) {
 			if ( sanitize_user( $form->get_value( 'username' ), true ) !== $form->get_value( 'username' ) ) {
-				return rest_error( 400, esc_html__( 'Username contains invalid characters', 'hivepress' ) );
+				return hp\rest_error( 400, esc_html__( 'Username contains invalid characters', 'hivepress' ) );
 			} elseif ( username_exists( $form->get_value( 'username' ) ) ) {
-				return rest_error( 400, esc_html__( 'This username is already in use', 'hivepress' ) );
+				return hp\rest_error( 400, esc_html__( 'This username is already in use', 'hivepress' ) );
 			}
 		}
 
 		// Check email.
 		if ( email_exists( $form->get_value( 'email' ) ) ) {
-			return rest_error( 400, esc_html__( 'This email is already registered', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'This email is already registered', 'hivepress' ) );
 		}
 
 		// Get username.
@@ -154,7 +155,7 @@ class User extends Controller {
 		$user->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
 
 		if ( ! $user->save() ) {
-			return rest_error( 400, esc_html__( 'Error registering user', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error registering user', 'hivepress' ) );
 		}
 
 		// Hide admin bar.
@@ -189,7 +190,7 @@ class User extends Controller {
 
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
@@ -198,7 +199,7 @@ class User extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return rest_error( 400, $form->get_errors() );
+			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
@@ -211,12 +212,12 @@ class User extends Controller {
 		}
 
 		if ( false === $user ) {
-			return rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
+			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
 		}
 
 		// Check password.
 		if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
-			return rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
+			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect', 'hivepress' ) );
 		}
 
 		// Authenticate user.
@@ -244,7 +245,7 @@ class User extends Controller {
 
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
@@ -253,7 +254,7 @@ class User extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return rest_error( 400, $form->get_errors() );
+			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
@@ -267,9 +268,9 @@ class User extends Controller {
 
 		if ( false === $user ) {
 			if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
-				return rest_error( 404, esc_html__( "User with this email doesn't exist", 'hivepress' ) );
+				return hp\rest_error( 404, esc_html__( "User with this email doesn't exist", 'hivepress' ) );
 			} else {
-				return rest_error( 404, esc_html__( "User with this username doesn't exist", 'hivepress' ) );
+				return hp\rest_error( 404, esc_html__( "User with this username doesn't exist", 'hivepress' ) );
 			}
 		}
 
@@ -294,7 +295,7 @@ class User extends Controller {
 
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
@@ -303,14 +304,14 @@ class User extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return rest_error( 400, $form->get_errors() );
+			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
 		$user = check_password_reset_key( $form->get_value( 'password_reset_key' ), $form->get_value( 'username' ) );
 
 		if ( is_wp_error( $user ) ) {
-			return rest_error( 401, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );
+			return hp\rest_error( 401, esc_html__( 'Password reset key is expired or invalid', 'hivepress' ) );
 		}
 
 		// Reset password.
@@ -344,19 +345,19 @@ class User extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return rest_error( 401 );
+			return hp\rest_error( 401 );
 		}
 
 		// Get user.
 		$user = Models\User::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $user ) ) {
-			return rest_error( 404 );
+			return hp\rest_error( 404 );
 		}
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_users' ) && get_current_user_id() !== $user->get_id() ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
@@ -365,17 +366,17 @@ class User extends Controller {
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
-			return rest_error( 400, $form->get_errors() );
+			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Check password.
 		if ( get_current_user_id() === $user->get_id() && ( $form->get_value( 'email' ) !== $user->get_email() || $form->get_value( 'password' ) ) ) {
 			if ( $form->get_value( 'current_password' ) === null ) {
-				return rest_error( 400, esc_html__( 'Current password is required', 'hivepress' ) );
+				return hp\rest_error( 400, esc_html__( 'Current password is required', 'hivepress' ) );
 			}
 
 			if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->get_password(), $user->get_id() ) ) {
-				return rest_error( 401, esc_html__( 'Current password is incorrect', 'hivepress' ) );
+				return hp\rest_error( 401, esc_html__( 'Current password is incorrect', 'hivepress' ) );
 			}
 		}
 
@@ -383,7 +384,7 @@ class User extends Controller {
 		$user->fill( $form->get_values() );
 
 		if ( ! $user->save() ) {
-			return rest_error( 400, esc_html__( 'Error updating user', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error updating user', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response(
@@ -406,19 +407,19 @@ class User extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return rest_error( 401 );
+			return hp\rest_error( 401 );
 		}
 
 		// Get user.
 		$user = Models\User::get( $request->get_param( 'id' ) );
 
 		if ( is_null( $user ) ) {
-			return rest_error( 404 );
+			return hp\rest_error( 404 );
 		}
 
 		// Check permissions.
 		if ( ! current_user_can( 'delete_users' ) && get_current_user_id() !== $user->get_id() ) {
-			return rest_error( 403 );
+			return hp\rest_error( 403 );
 		}
 
 		// Check password.
@@ -428,17 +429,17 @@ class User extends Controller {
 			$form->set_values( $request->get_params() );
 
 			if ( ! $form->validate() ) {
-				return rest_error( 400, $form->get_errors() );
+				return hp\rest_error( 400, $form->get_errors() );
 			}
 
 			if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
-				return rest_error( 401, esc_html__( 'Password is incorrect', 'hivepress' ) );
+				return hp\rest_error( 401, esc_html__( 'Password is incorrect', 'hivepress' ) );
 			}
 		}
 
 		// Delete user.
 		if ( ! $user->delete() ) {
-			return rest_error( 400, esc_html__( 'Error deleting user', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error deleting user', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );

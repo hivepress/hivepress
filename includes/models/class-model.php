@@ -7,6 +7,8 @@
 
 namespace HivePress\Models;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -163,7 +165,7 @@ abstract class Model {
 	 * @param string $name Property name.
 	 */
 	final protected function get_property( $name ) {
-		return get_array_value( $this->values, $name );
+		return hp\get_array_value( $this->values, $name );
 	}
 
 	/**

@@ -7,6 +7,8 @@
 
 namespace HivePress\Components;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -106,7 +108,7 @@ final class Editor {
 	 */
 	public function enqueue_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {
-			if ( get_array_value( $style, 'editor', false ) ) {
+			if ( hp\get_array_value( $style, 'editor', false ) ) {
 				add_editor_style( $style['src'] );
 			}
 		}

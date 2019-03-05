@@ -7,6 +7,8 @@
 
 namespace HivePress\Models;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +25,7 @@ class Listing extends Post {
 	 * @param array $args Model arguments.
 	 */
 	public static function init( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'fields'  => [

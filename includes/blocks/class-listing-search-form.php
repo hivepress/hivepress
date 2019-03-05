@@ -7,6 +7,8 @@
 
 namespace HivePress\Blocks;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +25,7 @@ class Listing_Search_Form extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),

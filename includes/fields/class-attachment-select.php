@@ -7,6 +7,8 @@
 
 namespace HivePress\Fields;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +44,7 @@ class Attachment_Select extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$attachment_id = get_post_id(
+			$attachment_id = hp\get_post_id(
 				[
 					'post_type' => 'attachment',
 					'post__in'  => [ absint( $this->value ) ],
@@ -63,7 +65,7 @@ class Attachment_Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output  = '<div ' . html_attributes( $this->get_attributes() ) . '>';
+		$output  = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
 		$output .= '<div>';
 
 		if ( ! is_null( $this->value ) ) {

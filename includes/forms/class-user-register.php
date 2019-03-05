@@ -7,6 +7,8 @@
 
 namespace HivePress\Forms;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +38,7 @@ class User_Register extends Model_Form {
 		];
 
 		// Add terms checkbox.
-		$page_id = get_post_id(
+		$page_id = hp\get_post_id(
 			[
 				'post_type'   => 'page',
 				'post_status' => 'publish',
@@ -46,7 +48,7 @@ class User_Register extends Model_Form {
 
 		if ( 0 !== $page_id ) {
 			$fields['terms'] = [
-				'caption'  => sprintf( sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
+				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
 				'type'     => 'checkbox',
 				'required' => true,
 				'order'    => 100,
@@ -54,12 +56,12 @@ class User_Register extends Model_Form {
 		}
 
 		// Set arguments.
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Register User', 'hivepress' ),
 				'model'  => 'user',
-				'action' => get_rest_url( '/users' ),
+				'action' => hp\get_rest_url( '/users' ),
 				'fields' => $fields,
 			]
 		);

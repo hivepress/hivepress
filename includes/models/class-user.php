@@ -7,6 +7,8 @@
 
 namespace HivePress\Models;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +25,7 @@ class User extends Model {
 	 * @param array $args Model arguments.
 	 */
 	public static function init( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'fields'  => [
@@ -96,7 +98,7 @@ class User extends Model {
 		$meta = [];
 
 		foreach ( self::$fields as $field_name => $field ) {
-			$field->set_value( get_array_value( $this->values, $field_name ) );
+			$field->set_value( hp\get_array_value( $this->values, $field_name ) );
 
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, self::$aliases, true ) ) {
@@ -124,7 +126,7 @@ class User extends Model {
 			}
 
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_user_meta( $this->id, prefix( $meta_key ), $meta_value );
+				update_user_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
 			}
 
 			return true;

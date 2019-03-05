@@ -247,7 +247,7 @@ function get_post_id( $args ) {
  * @return string
  */
 function get_rest_url( $path = '' ) {
-	return get_rest_url( null, 'hivepress/v1' . $path );
+	return \get_rest_url( null, 'hivepress/v1' . $path );
 }
 
 /**

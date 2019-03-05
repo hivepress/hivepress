@@ -7,6 +7,8 @@
 
 namespace HivePress\Controllers;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +25,7 @@ class Block extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'routes' => [
@@ -54,24 +56,24 @@ class Block extends Controller {
 	public function get_block( $request ) {
 
 		// Check authentication.
-		$nonce = get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
+		$nonce = hp\get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
 
 		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
-			return rest_error( 401 );
+			return hp\rest_error( 401 );
 		}
 
 		// Get template.
-		$template_args = get_array_value( hivepress()->get_config( 'templates' ), str_replace( '-', '_', $request->get_param( 'template_name' ) ) );
+		$template_args = hp\get_array_value( hivepress()->get_config( 'templates' ), str_replace( '-', '_', $request->get_param( 'template_name' ) ) );
 
 		if ( is_null( $template_args ) ) {
-			return rest_error( 404 );
+			return hp\rest_error( 404 );
 		}
 
 		// Get block.
-		$block_args = search_array_value( $template_args, [ 'blocks', str_replace( '-', '_', $request->get_param( 'block_name' ) ) ] );
+		$block_args = hp\search_array_value( $template_args, [ 'blocks', str_replace( '-', '_', $request->get_param( 'block_name' ) ) ] );
 
 		if ( is_null( $block_args ) ) {
-			return rest_error( 404 );
+			return hp\rest_error( 404 );
 		}
 
 		// Render block.

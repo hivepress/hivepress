@@ -7,6 +7,8 @@
 
 namespace HivePress\Components;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +44,7 @@ final class Asset {
 	 */
 	public function add_image_sizes() {
 		foreach ( hivepress()->get_config( 'image_sizes' ) as $image_size => $image_size_args ) {
-			add_image_size( prefix( $image_size ), $image_size_args['width'], get_array_value( $image_size_args, 'height', 9999 ), get_array_value( $image_size_args, 'crop', false ) );
+			add_image_size( hp\prefix( $image_size ), $image_size_args['width'], hp\get_array_value( $image_size_args, 'height', 9999 ), hp\get_array_value( $image_size_args, 'crop', false ) );
 		}
 	}
 
@@ -58,13 +60,13 @@ final class Asset {
 		$styles = array_filter(
 			$styles,
 			function( $style ) {
-				return ! is_admin() xor get_array_value( $style, 'admin', false );
+				return ! is_admin() xor hp\get_array_value( $style, 'admin', false );
 			}
 		);
 
 		// Enqueue styles.
 		foreach ( $styles as $style ) {
-			wp_enqueue_style( $style['handle'], $style['src'], get_array_value( $style, 'deps', [] ), get_array_value( $style, 'version', HP_CORE_VERSION ) );
+			wp_enqueue_style( $style['handle'], $style['src'], hp\get_array_value( $style, 'deps', [] ), hp\get_array_value( $style, 'version', HP_CORE_VERSION ) );
 		}
 	}
 
@@ -80,13 +82,13 @@ final class Asset {
 		$scripts = array_filter(
 			$scripts,
 			function( $script ) {
-				return ! is_admin() xor get_array_value( $script, 'admin', false );
+				return ! is_admin() xor hp\get_array_value( $script, 'admin', false );
 			}
 		);
 
 		// Enqueue scripts.
 		foreach ( $scripts as $script ) {
-			wp_enqueue_script( $script['handle'], $script['src'], get_array_value( $script, 'deps', [] ), get_array_value( $script, 'version', HP_CORE_VERSION ), get_array_value( $script, 'in_footer', true ) );
+			wp_enqueue_script( $script['handle'], $script['src'], hp\get_array_value( $script, 'deps', [] ), hp\get_array_value( $script, 'version', HP_CORE_VERSION ), hp\get_array_value( $script, 'in_footer', true ) );
 
 			// Add script data.
 			if ( isset( $script['data'] ) ) {

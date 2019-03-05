@@ -7,6 +7,8 @@
 
 namespace HivePress\Fields;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -52,6 +54,6 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<label for="' . esc_attr( $this->name ) . '"><input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . checked( $this->value, true, false ) . ' ' . html_attributes( $this->get_attributes() ) . '><span>' . sanitize_html( $this->get_caption() ) . '</span></label>';
+		return '<label for="' . esc_attr( $this->name ) . '"><input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . checked( $this->value, true, false ) . ' ' . hp\html_attributes( $this->get_attributes() ) . '><span>' . hp\sanitize_html( $this->get_caption() ) . '</span></label>';
 	}
 }

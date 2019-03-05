@@ -7,6 +7,8 @@
 
 namespace HivePress\Components;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -50,7 +52,7 @@ final class Debug {
 		foreach ( array_filter(
 			$styles,
 			function( $style ) {
-				return ! is_admin() xor get_array_value( $style, 'admin', false );
+				return ! is_admin() xor hp\get_array_value( $style, 'admin', false );
 			}
 		) as $style_name => $style ) {
 			if ( isset( $style['src'] ) && ( strpos( $style['src'], 'backend.min.css' ) || strpos( $style['src'], 'frontend.min.css' ) ) ) {

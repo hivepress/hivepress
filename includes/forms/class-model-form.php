@@ -7,6 +7,8 @@
 
 namespace HivePress\Forms;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -38,9 +40,9 @@ abstract class Model_Form extends Form {
 		// Get model fields.
 		$model_fields = $model_class::get_fields();
 
-		foreach ( sort_array( $fields ) as $field_name => $field_args ) {
+		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 			if ( isset( $model_fields[ $field_name ] ) ) {
-				$field_args = merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
+				$field_args = hp\merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
 			}
 
 			// Get field class.

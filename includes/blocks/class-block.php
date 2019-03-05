@@ -7,6 +7,8 @@
 
 namespace HivePress\Blocks;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -89,7 +91,7 @@ abstract class Block {
 			],
 		];
 
-		return merge_arrays( $this->attributes, $attributes );
+		return hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -99,7 +101,7 @@ abstract class Block {
 	 * @return mixed
 	 */
 	final protected function get_attribute( $name ) {
-		return get_array_value( $this->get_attributes(), $name );
+		return hp\get_array_value( $this->get_attributes(), $name );
 	}
 
 	/**

@@ -7,6 +7,8 @@
 
 namespace HivePress\Blocks;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -48,7 +50,7 @@ class Container extends Block {
 	 * @return array
 	 */
 	protected function get_attributes() {
-		return merge_arrays(
+		return hp\merge_arrays(
 			[
 				'tag' => 'div',
 			],
@@ -62,7 +64,7 @@ class Container extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<' . esc_attr( $this->get_attribute( 'tag' ) ) . ' ' . html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+		$output = '<' . esc_attr( $this->get_attribute( 'tag' ) ) . ' ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
 
 		// Render inner blocks.
 		foreach ( $this->blocks as $block ) {

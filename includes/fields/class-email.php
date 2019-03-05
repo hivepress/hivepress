@@ -7,6 +7,8 @@
 
 namespace HivePress\Fields;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 

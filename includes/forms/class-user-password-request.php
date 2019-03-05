@@ -7,6 +7,8 @@
 
 namespace HivePress\Forms;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,11 +25,11 @@ class User_Password_Request extends Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-				'action' => get_rest_url( '/users/request-password' ),
+				'action' => hp\get_rest_url( '/users/request-password' ),
 				'fields' => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),

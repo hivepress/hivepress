@@ -7,6 +7,8 @@
 
 namespace HivePress\Forms;
 
+use HivePress\Helpers as hp;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -23,12 +25,12 @@ class User_Login extends Model_Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = merge_arrays(
+		$args = hp\merge_arrays(
 			$args,
 			[
 				'title'  => esc_html__( 'Login User', 'hivepress' ),
 				'model'  => 'user',
-				'action' => get_rest_url( '/users/login' ),
+				'action' => hp\get_rest_url( '/users/login' ),
 				'fields' => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
