@@ -28,13 +28,19 @@ class Listing_Search extends Form {
 		$args = hp\merge_arrays(
 			$args,
 			[
+				'action' => home_url( '/' ),
 				'method' => 'GET',
 				'fields' => [
-					's' => [
+					's'         => [
 						'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
 						'type'        => 'search',
 						'max_length'  => 256,
 						'order'       => 10,
+					],
+
+					'post_type' => [
+						'type'    => 'hidden',
+						'default' => 'hp_listing',
 					],
 				],
 			]

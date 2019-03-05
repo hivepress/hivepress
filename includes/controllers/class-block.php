@@ -82,7 +82,7 @@ class Block extends Controller {
 		if ( $request->get_param( 'render' ) ) {
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-			$data['html'] = ( new $block_class( $block_args ) )->render();
+			$data['html'] = ( new $block_class( hp\merge_arrays( [ 'attributes' => $request->get_params() ], $block_args ) ) )->render();
 		}
 
 		return new \WP_Rest_Response(

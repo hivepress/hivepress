@@ -16,6 +16,11 @@ return [
 		'src'    => HP_CORE_URL . '/assets/js/knockout.js',
 	],
 
+	'serializejson'    => [
+		'handle' => 'serializejson',
+		'src'    => HP_CORE_URL . '/assets/js/jquery.serializejson.min.js',
+	],
+
 	'iframe_transport' => [
 		'handle' => 'iframe-transport',
 		'src'    => HP_CORE_URL . '/assets/js/jquery.iframe-transport.min.js',
@@ -45,7 +50,7 @@ return [
 	'core_frontend'    => [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'jquery', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'jquery', 'knockout', 'serializejson', 'fileupload', 'jquery-ui-sortable', 'fancybox', 'slick', 'sticky-sidebar' ],
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
 			'apiNonce' => wp_create_nonce( 'wp_rest' ),

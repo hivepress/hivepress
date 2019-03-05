@@ -25,6 +25,6 @@ class Listing_Search_Results extends Block {
 	 * @return string
 	 */
 	public function render() {
-		return '<div class="todo">todo' . wp_rand( 1, 9 ) . '</div>';
+		return '<div class="todo hp-block">todo' . $this->get_attribute( 's' ) . '</div>';
 	}
 }
