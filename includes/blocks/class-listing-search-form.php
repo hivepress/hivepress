@@ -23,7 +23,7 @@ class Listing_Search_Form extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = array_replace_recursive(
+		$args = hp_merge_arrays(
 			$args,
 			[
 				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
@@ -39,7 +39,7 @@ class Listing_Search_Form extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$form = new \HivePress\Forms\Listing_Search();
+		$form = new \HivePress\Forms\Listing_Search( $this->get_attributes() );
 
 		$form->set_values( $_GET );
 

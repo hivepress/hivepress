@@ -73,6 +73,41 @@ function hp_get_array_value( $array, $key, $default = null ) {
 }
 
 /**
+ * Searches array item value by keys.
+ *
+ * @param array $array Source array.
+ * @param array $keys Keys to search.
+ * @return mixed
+ */
+function hp_search_array_value( $array, $keys ) {
+	$keys = (array) $keys;
+
+	foreach ( $keys as $key ) {
+		if ( isset( $array[ $key ] ) ) {
+			if ( end( $keys ) === $key ) {
+				return $array[ $key ];
+			} elseif ( is_array( $array[ $key ] ) ) {
+				$array = $array[ $key ];
+			}
+		} else {
+			foreach ( $array as $subarray ) {
+				if ( is_array( $subarray ) ) {
+					$value = hp_search_array_value( $subarray, $keys );
+
+					if ( ! is_null( $value ) ) {
+						return $value;
+					}
+				}
+			}
+
+			break;
+		}
+	}
+
+	return null;
+}
+
+/**
  * Sorts array by custom order.
  *
  * @param array $array Source array.
@@ -97,6 +132,31 @@ function hp_sort_array( $array ) {
 }
 
 /**
+ * Merges arrays with mixed values.
+ *
+ * @return array
+ */
+function hp_merge_arrays() {
+	$merged = [];
+
+	foreach ( func_get_args() as $array ) {
+		foreach ( $array as $key => $value ) {
+			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
+				if ( is_numeric( $key ) ) {
+					$merged[] = $value;
+				} else {
+					$merged[ $key ] = $value;
+				}
+			} else {
+				$merged[ $key ] = hp_merge_arrays( $merged[ $key ], $value );
+			}
+		}
+	}
+
+	return $merged;
+}
+
+/**
  * Renders HTML attributes.
  *
  * @param array $atts Array of attributes.
@@ -106,14 +166,14 @@ function hp_html_attributes( $atts ) {
 	$output = '';
 
 	if ( is_array( $atts ) ) {
-		foreach ( $atts as $att_name => $att_value ) {
-			if ( ! is_null( $att_value ) ) {
-				if ( true === $att_value ) {
-					$att_value = $att_name;
-				}
-
-				$output .= esc_html( $att_name ) . '="' . esc_attr( trim( $att_value ) ) . '" ';
+		foreach ( $atts as $name => $value ) {
+			if ( true === $value ) {
+				$value = $name;
+			} elseif ( is_array( $value ) ) {
+				$value = implode( ' ', $value );
 			}
+
+			$output .= esc_attr( $name ) . '="' . esc_attr( trim( $value ) ) . '" ';
 		}
 	}
 
@@ -149,9 +209,9 @@ function hp_sanitize_html( $html ) {
  * @return string
  */
 function hp_replace_placeholders( $placeholders, $text ) {
-	foreach ( $placeholders as $placeholder_name => $placeholder_value ) {
-		if ( ! is_array( $placeholder_value ) ) {
-			$text = str_replace( '%' . $placeholder_name . '%', $placeholder_value, $text );
+	foreach ( $placeholders as $name => $value ) {
+		if ( ! is_array( $value ) ) {
+			$text = str_replace( '%' . $name . '%', $value, $text );
 		}
 	}
 

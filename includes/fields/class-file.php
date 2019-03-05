@@ -37,18 +37,19 @@ class File extends Field {
 	 * @return array
 	 */
 	protected function get_attributes() {
+		$attributes = [];
 
 		// Set multiple property.
 		if ( $this->multiple ) {
-			$this->attributes['multiple'] = true;
+			$attributes['multiple'] = true;
 		}
 
 		// Set file formats.
 		if ( ! empty( $this->file_formats ) ) {
-			$this->attributes['accept'] = '.' . implode( ',.', $this->file_formats );
+			$attributes['accept'] = '.' . implode( ',.', $this->file_formats );
 		}
 
-		return $this->attributes;
+		return hp_merge_arrays( $attributes, parent::get_attributes() );
 	}
 
 	/**

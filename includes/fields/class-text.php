@@ -44,23 +44,24 @@ class Text extends Field {
 	 * @return array
 	 */
 	protected function get_attributes() {
+		$attributes = [];
 
 		// Set placeholder.
 		if ( ! is_null( $this->placeholder ) ) {
-			$this->attributes['placeholder'] = $this->placeholder;
+			$attributes['placeholder'] = $this->placeholder;
 		}
 
 		// Set minimum length.
 		if ( ! is_null( $this->min_length ) ) {
-			$this->attributes['minlength'] = $this->min_length;
+			$attributes['minlength'] = $this->min_length;
 		}
 
 		// Set maximum length.
 		if ( ! is_null( $this->max_length ) ) {
-			$this->attributes['maxlength'] = $this->max_length;
+			$attributes['maxlength'] = $this->max_length;
 		}
 
-		return $this->attributes;
+		return hp_merge_arrays( $attributes, parent::get_attributes() );
 	}
 
 	/**

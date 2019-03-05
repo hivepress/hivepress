@@ -40,7 +40,7 @@ abstract class Model_Form extends Form {
 
 		foreach ( hp_sort_array( $fields ) as $field_name => $field_args ) {
 			if ( isset( $model_fields[ $field_name ] ) ) {
-				$field_args = array_replace_recursive( $model_fields[ $field_name ]->get_args(), $field_args );
+				$field_args = hp_merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
 			}
 
 			// Get field class.

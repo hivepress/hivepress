@@ -48,11 +48,11 @@ class Container extends Block {
 	 * @return array
 	 */
 	protected function get_attributes() {
-		return array_replace_recursive(
+		return hp_merge_arrays(
 			[
 				'tag' => 'div',
 			],
-			$this->attributes
+			parent::get_attributes()
 		);
 	}
 

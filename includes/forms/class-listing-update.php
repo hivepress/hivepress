@@ -23,7 +23,7 @@ class Listing_Update extends Model_Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = array_replace_recursive(
+		$args = hp_merge_arrays(
 			$args,
 			[
 				'model'  => 'listing',

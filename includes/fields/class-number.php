@@ -44,21 +44,22 @@ class Number extends Field {
 	 * @return array
 	 */
 	protected function get_attributes() {
+		$attributes = [];
 
 		// Set step.
-		$this->attributes['step'] = 1 / pow( 10, $this->decimals );
+		$attributes['step'] = 1 / pow( 10, $this->decimals );
 
 		// Set minimum value.
 		if ( ! is_null( $this->min_value ) ) {
-			$this->attributes['min'] = $this->min_value;
+			$attributes['min'] = $this->min_value;
 		}
 
 		// Set maximum value.
 		if ( ! is_null( $this->max_value ) ) {
-			$this->attributes['max'] = $this->max_value;
+			$attributes['max'] = $this->max_value;
 		}
 
-		return $this->attributes;
+		return hp_merge_arrays( $attributes, parent::get_attributes() );
 	}
 
 	/**

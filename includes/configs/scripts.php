@@ -35,11 +35,6 @@ return [
 		'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
 	],
 
-	'select2'          => [
-		'handle' => 'select2',
-		'src'    => HP_CORE_URL . '/assets/js/select2.min.js',
-	],
-
 	'sticky_sidebar'   => [
 		'handle' => 'sticky-sidebar',
 		'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',

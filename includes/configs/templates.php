@@ -12,8 +12,13 @@ return [
 	'listings_page' => [
 		'blocks' => [
 			'listing_search_form' => [
-				'type'  => 'listing_search_form',
-				'order' => 10,
+				'type'       => 'listing_search_form',
+				'order'      => 10,
+				'attributes' => [
+					'attributes' => [
+						'data-bind' => 'submit: renderBlock',
+					],
+				],
 			],
 			'page_container'      => [
 				'type'       => 'container',
@@ -46,7 +51,7 @@ return [
 						],
 						'blocks'     => [
 							'listing_search_results' => [
-								'type'  => 'container',
+								'type'  => 'listing_search_results',
 								'order' => 10,
 							],
 						],

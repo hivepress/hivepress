@@ -26,7 +26,7 @@ class Listing extends Controller {
 	 * @param array $args Controller arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = array_replace_recursive(
+		$args = hp_merge_arrays(
 			$args,
 			[
 				'routes' => [

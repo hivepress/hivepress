@@ -23,7 +23,7 @@ class Listings extends Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = array_replace_recursive(
+		$args = hp_merge_arrays(
 			$args,
 			[
 				'title' => esc_html__( 'Listings', 'hivepress' ),

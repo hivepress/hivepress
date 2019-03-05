@@ -23,7 +23,7 @@ class Listing extends Post {
 	 * @param array $args Model arguments.
 	 */
 	public static function init( $args = [] ) {
-		$args = array_replace_recursive(
+		$args = hp_merge_arrays(
 			$args,
 			[
 				'fields'  => [
