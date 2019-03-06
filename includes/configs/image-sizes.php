@@ -10,4 +10,10 @@ use HivePress\Helpers as hp;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-return [];
+return [
+	'portrait_small' => [
+		'width'  => 400,
+		'height' => 267,
+		'crop'   => true,
+	],
+];
