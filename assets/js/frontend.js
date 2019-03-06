@@ -4,7 +4,7 @@
 	var TodoModel = function() {
 		this.renderBlock = function(element) {
 			var object = $(element),
-				container = $('.todo');
+				container = $('[data-name=listing_search_results]');
 
 			if (object.is('form')) {
 				object.find(':submit').prop('disabled', true).attr('data-state', 'loading');

@@ -289,10 +289,13 @@ final class Core {
 			}
 
 			// Filter configuration.
+			$config = apply_filters( 'hivepress/' . $path, $config );
+
+			// Set configuration.
 			if ( ! is_null( $name ) ) {
-				$this->config[ $type ][ $name ] = apply_filters( 'hivepress/' . $path, $config );
+				$this->config[ $type ][ $name ] = $config;
 			} else {
-				$this->config[ $type ] = apply_filters( 'hivepress/' . $path, $config );
+				$this->config[ $type ] = $config;
 			}
 		}
 

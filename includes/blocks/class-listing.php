@@ -17,4 +17,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing
  */
-class Listing extends Template {}
+class Listing extends Template {
+
+	// todo.
+	public function render() {
+		$this->attributes['listing'] = \HivePress\Models\Listing::get( get_the_ID() );
+
+		return parent::render();
+	}
+}

@@ -33,5 +33,12 @@ return [
 				'file_path' => 'listing/description',
 			],
 		],
+		'images'      => [
+			'type'       => 'element',
+			'order'      => 40,
+			'attributes' => [
+				'file_path' => 'listing/images',
+			],
+		],
 	],
 ];

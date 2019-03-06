@@ -42,6 +42,9 @@ class Element extends Block {
 
 		// Render element.
 		if ( '' !== $filepath ) {
+			// todo.
+			extract( $this->attributes );
+
 			ob_start();
 
 			include $filepath;

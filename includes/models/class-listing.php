@@ -53,4 +53,38 @@ class Listing extends Post {
 
 		parent::init( $args );
 	}
+
+	/**
+	 * Gets image IDs.
+	 *
+	 * @return array
+	 */
+	final public function get_image_ids() {
+		$image_ids = wp_list_pluck( get_attached_media( 'image', $this->get_id() ), 'ID' );
+
+		if ( has_post_thumbnail( $this->get_id() ) ) {
+			array_unshift( $image_ids, get_post_thumbnail_id( $this->get_id() ) );
+		}
+
+		return array_unique( $image_ids );
+	}
+
+	/**
+	 * Gets image URLs.
+	 *
+	 * @return array
+	 */
+	final public function get_image_urls() {
+		$image_urls = [];
+
+		foreach ( $this->get_image_ids() as $image_id ) {
+			$urls = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+
+			if ( false !== $urls ) {
+				$image_urls[ $image_id ] = reset( $urls );
+			}
+		}
+
+		return $image_urls;
+	}
 }

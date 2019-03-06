@@ -32,7 +32,7 @@ return [
 					],
 					'blocks'     => [
 						'listing_todo' => [
-							'type'       => 'template',
+							'type'       => 'listing',
 							'order'      => 10,
 							'attributes' => [
 								'template_name' => 'listing_todo',
