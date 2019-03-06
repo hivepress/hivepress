@@ -25,6 +25,7 @@ class Element extends Block {
 	 * @return string
 	 */
 	public function render() {
+		$output = '';
 
 		// Get file path.
 		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'file_path' ) . '.php' );
@@ -40,12 +41,14 @@ class Element extends Block {
 		}
 
 		// Render element.
-		ob_start();
+		if ( '' !== $filepath ) {
+			ob_start();
 
-		include $filepath;
-		$output = ob_get_contents();
+			include $filepath;
+			$output .= ob_get_contents();
 
-		ob_end_clean();
+			ob_end_clean();
+		}
 
 		return $output;
 	}

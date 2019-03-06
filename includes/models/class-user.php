@@ -65,14 +65,6 @@ class User extends Model {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 					],
-
-					// todo move to form.
-					'image_id'    => [
-						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
-						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-						'type'         => 'attachment_upload',
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
-					],
 				],
 
 				'aliases' => [

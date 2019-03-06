@@ -28,13 +28,19 @@ class Listing_Sort extends Form {
 		$args = hp\merge_arrays(
 			$args,
 			[
+				'action' => home_url( '/' ),
 				'method' => 'GET',
 				'fields' => [
-					'sort' => [
+					'sort'      => [
 						'label'   => esc_html__( 'Sort by', 'hivepress' ),
 						'type'    => 'select',
 						'options' => [],
 						'order'   => 10,
+					],
+
+					'post_type' => [
+						'type'    => 'hidden',
+						'default' => 'hp_listing',
 					],
 				],
 			]

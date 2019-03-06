@@ -45,7 +45,7 @@ class Listings extends Block {
 		$query = new \WP_Query(
 			[
 				'post_type'      => 'hp_listing',
-				'posts_per_page' => -1,
+				'posts_per_page' => 2,
 			]
 		);
 

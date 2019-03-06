@@ -34,7 +34,7 @@ class Container extends Block {
 	final protected function set_blocks( $blocks ) {
 		$this->blocks = [];
 
-		foreach ( $blocks as $block_name => $block_args ) {
+		foreach ( hp\sort_array( $blocks ) as $block_name => $block_args ) {
 
 			// Get block class.
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];

@@ -31,7 +31,7 @@ class Template extends Block {
 		$template_args = hivepress()->get_config( 'templates/' . $this->get_attribute( 'template_name' ) );
 
 		if ( ! is_null( $template_args ) ) {
-			foreach ( $template_args['blocks'] as $block_name => $block_args ) {
+			foreach ( hp\sort_array( $template_args['blocks'] ) as $block_name => $block_args ) {
 
 				// Get block class.
 				$block_class = '\HivePress\Blocks\\' . $block_args['type'];

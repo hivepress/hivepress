@@ -189,6 +189,8 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_page() {
+		the_post();
+
 		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
 		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listing_page' ] ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();

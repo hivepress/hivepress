@@ -28,7 +28,14 @@ class Listing_Filter extends Form {
 		$args = hp\merge_arrays(
 			$args,
 			[
+				'action' => home_url( '/' ),
 				'method' => 'GET',
+				'fields' => [
+					'post_type' => [
+						'type'    => 'hidden',
+						'default' => 'hp_listing',
+					],
+				],
 			]
 		);
 

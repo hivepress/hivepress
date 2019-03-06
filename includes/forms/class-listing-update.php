@@ -30,12 +30,22 @@ class Listing_Update extends Model_Form {
 			[
 				'model'  => 'listing',
 				'fields' => [
+					'image_ids'   => [
+						'label'        => esc_html__( 'Images', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'multiple'     => true,
+						'max_files'    => 10,
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+						'order'        => 10,
+					],
+
 					'title'       => [
-						'order' => 10,
+						'order' => 20,
 					],
 
 					'description' => [
-						'order' => 20,
+						'order' => 30,
 					],
 				],
 			]

@@ -30,6 +30,14 @@ class User_Update extends Model_Form {
 			[
 				'model'  => 'user',
 				'fields' => [
+					'image_id'         => [
+						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+						'order'        => 10,
+					],
+
 					'first_name'       => [
 						'order' => 20,
 					],
