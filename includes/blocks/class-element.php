@@ -27,12 +27,12 @@ class Element extends Block {
 	public function render() {
 
 		// Get file path.
-		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'path' ) . '.php' );
+		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'file_path' ) . '.php' );
 
 		if ( '' === $filepath ) {
 			foreach ( hivepress()->get_dirs() as $dir ) {
-				if ( file_exists( $dir . '/templates/' . $this->get_attribute( 'path' ) . '.php' ) ) {
-					$filepath = $dir . '/templates/' . $this->get_attribute( 'path' ) . '.php';
+				if ( file_exists( $dir . '/templates/' . $this->get_attribute( 'file_path' ) . '.php' ) ) {
+					$filepath = $dir . '/templates/' . $this->get_attribute( 'file_path' ) . '.php';
 
 					break;
 				}

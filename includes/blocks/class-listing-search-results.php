@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Search_Results
  */
-class Listing_Search_Results extends Block {
+class Listing_Search_Results extends Container {
 
 	/**
 	 * Renders block HTML.
@@ -25,6 +25,7 @@ class Listing_Search_Results extends Block {
 	 * @return string
 	 */
 	public function render() {
-		return '<div class="todo hp-block">todo' . $this->get_attribute( 's' ) . '</div>';
+		// todo.
+		return parent::render();
 	}
 }

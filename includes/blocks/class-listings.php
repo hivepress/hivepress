@@ -42,10 +42,17 @@ class Listings extends Block {
 	 */
 	public function render() {
 		// todo.
+		$query = new \WP_Query(
+			[
+				'post_type'      => 'hp_listing',
+				'posts_per_page' => -1,
+			]
+		);
+
 		$output = '<div class="hp-listings"><div class="hp-row">';
 
-		while ( have_posts() ) {
-			the_post();
+		while ( $query->have_posts() ) {
+			$query->the_post();
 
 			$output .= '<div class="hp-col-sm-6 hp-col-xs-12">' . ( new Listing() )->render() . '</div>';
 		}

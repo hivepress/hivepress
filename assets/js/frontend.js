@@ -27,6 +27,7 @@
 					container.removeAttr('data-state');
 
 					console.log(xhr.responseText);
+					window.history.replaceState({}, null, object.attr('action') + '?' + $.param(object.serializeJSON()));
 					container.replaceWith(xhr.responseJSON.data.html);
 				},
 			});

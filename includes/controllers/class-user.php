@@ -8,8 +8,9 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
-use HivePress\Models as Models;
-use HivePress\Forms as Forms;
+use HivePress\Models;
+use HivePress\Forms;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;

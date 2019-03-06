@@ -8,8 +8,9 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
-use HivePress\Models as Models;
-use HivePress\Forms as Forms;
+use HivePress\Models;
+use HivePress\Forms;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -166,26 +167,9 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_page() {
-		// todo.
-		$output = '';
-
-		ob_start();
-		get_header();
-		$output .= ob_get_contents();
-		ob_end_clean();
-
-		$template = hivepress()->get_config( 'templates' )['listings_page'];
-
-		foreach ( $template['blocks'] as $block_name => $block_args ) {
-			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
-
-			$output .= ( new $block_class( array_merge( $block_args, [ 'name' => $block_name ] ) ) )->render();
-		}
-
-		ob_start();
-		get_footer();
-		$output .= ob_get_contents();
-		ob_end_clean();
+		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listings_page' ] ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
 
 		return $output;
 	}
@@ -205,6 +189,10 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_page() {
-		// todo.
+		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listing_page' ] ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
+
+		return $output;
 	}
 }

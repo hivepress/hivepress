@@ -258,25 +258,44 @@ final class Core {
 	/**
 	 * Gets configuration.
 	 *
-	 * @param string $name Configuration name.
+	 * @param string $path Configuration path.
 	 * @return array
 	 */
-	public function get_config( $name ) {
-		if ( ! isset( $this->config[ $name ] ) ) {
-			$config = [];
+	public function get_config( $path ) {
 
+		// Get type and name.
+		$type = $path;
+		$name = null;
+
+		if ( strpos( $path, '/' ) !== false ) {
+			list($type, $name) = explode( '/', $path );
+		}
+
+		// Get existing configuration.
+		$config = hp\get_array_value( $this->config, $type );
+
+		if ( ! is_null( $name ) ) {
+			$config = hp\get_array_value( $config, $name );
+		}
+
+		// Get new configuration.
+		if ( is_null( $config ) ) {
 			foreach ( $this->dirs as $dir ) {
-				$filepath = $dir . '/includes/configs/' . str_replace( '_', '-', $name ) . '.php';
+				$filepath = $dir . '/includes/configs/' . str_replace( '_', '-', $path ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
-					$config = array_merge( $config, include $filepath );
+					$config = hp\merge_arrays( (array) $config, include $filepath );
 				}
 			}
 
 			// Filter configuration.
-			$this->config[ $name ] = apply_filters( 'hivepress/' . $name, $config );
+			if ( ! is_null( $name ) ) {
+				$this->config[ $type ][ $name ] = apply_filters( 'hivepress/' . $path, $config );
+			} else {
+				$this->config[ $type ] = apply_filters( 'hivepress/' . $path, $config );
+			}
 		}
 
-		return $this->config[ $name ];
+		return $config;
 	}
 }
