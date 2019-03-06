@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing view full template.
+ * Listing view summary template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -16,8 +16,9 @@ return [
 			'type'       => 'container',
 			'order'      => 10,
 			'attributes' => [
+				'tag'        => 'article',
 				'attributes' => [
-					'class' => [ 'hp-listing hp-listing--view-summary' ],
+					'class' => [ 'hp-listing', 'hp-listing--view-summary' ],
 				],
 			],
 			'blocks'     => [
@@ -25,6 +26,7 @@ return [
 					'type'       => 'container',
 					'order'      => 10,
 					'attributes' => [
+						'tag'        => 'header',
 						'attributes' => [
 							'class' => [ 'hp-listing__header' ],
 						],
@@ -32,7 +34,7 @@ return [
 					'blocks'     => [
 						'image' => [
 							'type'       => 'element',
-							'order'      => 30,
+							'order'      => 10,
 							'attributes' => [
 								'file_path' => 'listing/view-summary/image',
 							],
@@ -41,23 +43,23 @@ return [
 				],
 				'content' => [
 					'type'       => 'container',
-					'order'      => 10,
+					'order'      => 20,
 					'attributes' => [
 						'attributes' => [
 							'class' => [ 'hp-listing__content' ],
 						],
 					],
 					'blocks'     => [
-						'title'      => [
+						'title'   => [
 							'type'       => 'element',
 							'order'      => 10,
 							'attributes' => [
 								'file_path' => 'listing/view-summary/title',
 							],
 						],
-						'summary'    => [
+						'summary' => [
 							'type'       => 'container',
-							'order'      => 10,
+							'order'      => 20,
 							'attributes' => [
 								'attributes' => [
 									'class' => [ 'hp-listing__summary' ],
@@ -66,7 +68,7 @@ return [
 							'blocks'     => [
 								'category' => [
 									'type'       => 'element',
-									'order'      => 15,
+									'order'      => 10,
 									'attributes' => [
 										'file_path' => 'listing/category',
 									],
@@ -80,18 +82,18 @@ return [
 								],
 							],
 						],
-						'attributes' => [
+						'details' => [
 							'type'       => 'container',
-							'order'      => 10,
+							'order'      => 30,
 							'attributes' => [
 								'attributes' => [
-									'class' => [ 'hp-listing__attributes', 'hp-listing__attributes--secondary' ],
+									'class' => [ 'hp-listing__details' ],
 								],
 							],
 							'blocks'     => [
-								'attributes' => [
+								'attributes_secondary' => [
 									'type'       => 'element',
-									'order'      => 20,
+									'order'      => 10,
 									'attributes' => [
 										'file_path' => 'listing/view-summary/attributes-secondary',
 									],
@@ -102,37 +104,38 @@ return [
 				],
 				'footer'  => [
 					'type'       => 'container',
-					'order'      => 10,
+					'order'      => 30,
 					'attributes' => [
+						'tag'        => 'footer',
 						'attributes' => [
 							'class' => [ 'hp-listing__footer' ],
 						],
 					],
 					'blocks'     => [
-						'attributes' => [
+						'properties'      => [
 							'type'       => 'container',
 							'order'      => 10,
 							'attributes' => [
 								'attributes' => [
-									'class' => [ 'hp-listing__attributes', 'hp-listing__attributes--primary' ],
+									'class' => [ 'hp-listing__properties' ],
 								],
 							],
 							'blocks'     => [
-								'attributes' => [
+								'attributes_primary' => [
 									'type'       => 'element',
-									'order'      => 20,
+									'order'      => 10,
 									'attributes' => [
 										'file_path' => 'listing/view-summary/attributes-primary',
 									],
 								],
 							],
 						],
-						'actions'    => [
+						'actions_primary' => [
 							'type'       => 'container',
-							'order'      => 10,
+							'order'      => 20,
 							'attributes' => [
 								'attributes' => [
-									'class' => [ 'hp-listing__actions' ],
+									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 								],
 							],
 						],

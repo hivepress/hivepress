@@ -2,4 +2,4 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-todo
+<div class="hp-listing__category">todo</div>

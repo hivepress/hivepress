@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -121,6 +120,76 @@ Mixins
 				top: 0;
 				bottom: 0;
 				background-color: rgba(255,255,255,.5);
+			}
+		}
+	}
+	/*--------------------------------------------------------------
+	Listings
+	--------------------------------------------------------------*/
+	&-listing {
+		&--view-summary {
+			margin-bottom: 2rem;
+		}
+
+		&--view-summary &__content,
+		&--view-summary &__header {
+			margin-bottom: 1rem;
+		}
+
+		&--view-summary &__footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		&--view-summary &__summary {
+			margin-bottom: 0.5rem;
+		}
+
+		&--view-summary &__actions,
+		&--view-summary &__attributes--primary,
+		&--view-summary &__properties {
+			display: flex;
+			align-items: center;
+		}
+
+		&__image,
+		&__images {
+			.image-wrapper;
+		}
+
+		&__title {
+			margin: 0 0 0.5rem;
+
+			a {
+				text-decoration: none;
+				color: inherit;
+			}
+		}
+
+		&__date {
+			font-size: 80%;
+			display: block;
+		}
+
+		&--view-summary &__attributes--primary &__attribute {
+			font-size: 120%;
+
+			&:not(:first-child) {
+				margin-left: 1rem;
+			}
+		}
+
+		&--view-summary &__actions--primary &__action {
+			opacity: 0.5;
+
+			&:hover,
+			&[data-state=active] {
+				opacity: 1;
+			}
+
+			&:not(:first-child) {
+				margin-left: 1rem;
 			}
 		}
 	}

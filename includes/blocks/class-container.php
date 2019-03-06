@@ -41,6 +41,7 @@ class Container extends Block {
 
 			// todo.
 			$attributes = $this->attributes;
+			unset( $attributes['tag'] );
 			unset( $attributes['attributes'] );
 
 			// Create block.
