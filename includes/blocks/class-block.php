@@ -86,8 +86,8 @@ abstract class Block {
 	protected function get_attributes() {
 		$attributes = [
 			'attributes' => [
-				'class'     => [ 'hp-block' ],
-				'data-name' => $this->name,
+				'class'      => [ 'hp-block', 'hp-block--' . str_replace( '_', '-', $this->name ) ],
+				'data-block' => $this->name,
 			],
 		];
 

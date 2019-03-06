@@ -39,8 +39,12 @@ class Container extends Block {
 			// Get block class.
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
+			// todo.
+			$attributes = $this->attributes;
+			unset( $attributes['attributes'] );
+
 			// Create block.
-			$this->blocks[ $block_name ] = new $block_class( array_merge( $block_args, [ 'name' => $block_name ] ) );
+			$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) );
 		}
 	}
 

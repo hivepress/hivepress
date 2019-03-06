@@ -42,11 +42,23 @@ class Listing extends Post {
 						'max_length' => 10240,
 						'required'   => true,
 					],
+
+					'status'      => [
+						'type'       => 'text',
+						'max_length' => 128,
+					],
+
+					'user_id'     => [
+						'type'      => 'number',
+						'min_value' => 0,
+					],
 				],
 
 				'aliases' => [
 					'post_title'   => 'title',
 					'post_content' => 'description',
+					'post_status'  => 'status',
+					'post_author'  => 'user_id',
 				],
 			]
 		);
@@ -86,5 +98,16 @@ class Listing extends Post {
 		}
 
 		return $image_urls;
+	}
+
+	/**
+	 * Gets attributes.
+	 *
+	 * @param string $area Area name.
+	 * @return array
+	 */
+	final public function get_attributes( $area ) {
+		// todo.
+		return [];
 	}
 }

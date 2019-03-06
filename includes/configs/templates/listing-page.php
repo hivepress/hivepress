@@ -31,11 +31,11 @@ return [
 						],
 					],
 					'blocks'     => [
-						'listing_todo' => [
+						'listing_view_full' => [
 							'type'       => 'listing',
 							'order'      => 10,
 							'attributes' => [
-								'template_name' => 'listing_todo',
+								'template_name' => 'listing_view_full',
 							],
 						],
 					],

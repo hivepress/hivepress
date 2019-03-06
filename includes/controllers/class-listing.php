@@ -87,8 +87,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
-		// todo add author_id and status fields to model.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -139,8 +138,7 @@ class Listing extends Controller {
 		}
 
 		// Check permissions.
-		// todo add fields to model.
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_author_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 

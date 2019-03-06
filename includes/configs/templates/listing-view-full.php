@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing todo template.
+ * Listing view full template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -16,7 +16,14 @@ return [
 			'type'       => 'element',
 			'order'      => 10,
 			'attributes' => [
-				'file_path' => 'listing/title',
+				'file_path' => 'listing/view-full/title',
+			],
+		],
+		'category'    => [
+			'type'       => 'element',
+			'order'      => 15,
+			'attributes' => [
+				'file_path' => 'listing/category',
 			],
 		],
 		'date'        => [
@@ -37,7 +44,7 @@ return [
 			'type'       => 'element',
 			'order'      => 40,
 			'attributes' => [
-				'file_path' => 'listing/images',
+				'file_path' => 'listing/view-full/images',
 			],
 		],
 	],

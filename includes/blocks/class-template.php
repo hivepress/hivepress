@@ -36,8 +36,12 @@ class Template extends Block {
 				// Get block class.
 				$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
+				// todo.
+				$attributes = $this->attributes;
+				unset( $attributes['attributes'] );
+
 				// Render block.
-				$output .= ( new $block_class( hp\merge_arrays( [ 'attributes' => $this->attributes ], $block_args, [ 'name' => $block_name ] ) ) )->render();
+				$output .= ( new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) ) )->render();
 			}
 		}
 

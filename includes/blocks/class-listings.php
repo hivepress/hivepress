@@ -45,7 +45,7 @@ class Listings extends Block {
 		$query = new \WP_Query(
 			[
 				'post_type'      => 'hp_listing',
-				'posts_per_page' => 2,
+				'posts_per_page' => -1,
 			]
 		);
 
@@ -54,7 +54,7 @@ class Listings extends Block {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 
-			$output .= '<div class="hp-col-sm-6 hp-col-xs-12">' . ( new Listing() )->render() . '</div>';
+			$output .= '<div class="hp-col-sm-6 hp-col-xs-12">' . ( new Listing( [ 'attributes' => [ 'template_name' => 'listing_view_summary' ] ] ) )->render() . '</div>';
 		}
 
 		$output .= '</div></div>';

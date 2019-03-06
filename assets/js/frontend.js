@@ -1,10 +1,53 @@
 (function($) {
 	'use strict';
 
+	/**
+	 * Gets jQuery component.
+	 */
+	function getComponent(name) {
+		return $('[data-component=' + name + ']');
+	}
+
+	// Slider
+	$(document).ready(function() {
+		getComponent('slider').each(function() {
+			var slider = $(this),
+				images = slider.find('img'),
+				image = images.wrap('<div />').parent().wrapAll('<div />').parent(),
+				nav = image.clone();
+			console.log(image.html());
+			if (images.length > 1) {
+				slider.html('');
+
+				image.appendTo(slider);
+				nav.appendTo(slider);
+
+				image.addClass('todo-image').slick({
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					adaptiveHeight: true,
+					infinite: false,
+					arrows: false,
+					asNavFor: nav,
+				});
+
+				nav.addClass('todo-nav').slick({
+					slidesToShow: Math.round(slider.width() / 125),
+					slidesToScroll: 1,
+					infinite: false,
+					focusOnSelect: true,
+					prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></a>',
+					nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></a>',
+					asNavFor: image,
+				});
+			}
+		});
+	});
+
 	var TodoModel = function() {
 		this.renderBlock = function(element) {
 			var object = $(element),
-				container = $('[data-name=listing_search_results]');
+				container = $('[data-block=listing_search_results]');
 
 			if (object.is('form')) {
 				object.find(':submit').prop('disabled', true).attr('data-state', 'loading');
