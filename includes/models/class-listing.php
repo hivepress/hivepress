@@ -90,7 +90,7 @@ class Listing extends Post {
 		$image_urls = [];
 
 		foreach ( $this->get_image_ids() as $image_id ) {
-			$urls = wp_get_attachment_image_src( $image_id, 'hp_portrait_large' );
+			$urls = wp_get_attachment_image_src( $image_id, 'hp_landscape_large' );
 
 			if ( false !== $urls ) {
 				$image_urls[ $image_id ] = reset( $urls );

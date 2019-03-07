@@ -11,15 +11,15 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'portrait_small' => [
+	'landscape_small' => [
 		'width'  => 400,
-		'height' => 267,
+		'height' => 300,
 		'crop'   => true,
 	],
 
-	'portrait_large' => [
+	'landscape_large' => [
 		'width'  => 800,
-		'height' => 533,
+		'height' => 600,
 		'crop'   => true,
 	],
 ];
