@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'title' => esc_html__( 'Textarea', 'hivepress' ),
+			]
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

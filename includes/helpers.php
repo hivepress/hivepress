@@ -204,6 +204,31 @@ function sanitize_html( $html ) {
 }
 
 /**
+ * Sanitizes key.
+ *
+ * @param string $text Text to sanitize.
+ * @return string
+ */
+function sanitize_key( $text ) {
+	$key = $text;
+
+	if ( function_exists( 'transliterator_transliterate' ) ) {
+		$key = transliterator_transliterate( 'Any-Latin; Latin-ASCII; Lower()', $key );
+	} else {
+		$key = strtolower( $key );
+	}
+
+	$key = preg_replace( '/[^a-z0-9]+/', '_', $key );
+	$key = ltrim( trim( $key, '_' ), '0..9' );
+
+	if ( '' === $key ) {
+		$key = md5( $text );
+	}
+
+	return $key;
+}
+
+/**
  * Replaces placeholders with values.
  *
  * @param array  $placeholders Array of placeholders.

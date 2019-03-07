@@ -86,7 +86,8 @@ abstract class Form {
 		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/forms/form/args', $args );
+		$args = apply_filters( 'hivepress/forms/form', $args );
+		$args = apply_filters( 'hivepress/forms/' . $args['name'], $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {

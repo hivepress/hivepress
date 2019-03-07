@@ -41,6 +41,22 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'title' => esc_html__( 'Text', 'hivepress' ),
+			]
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array

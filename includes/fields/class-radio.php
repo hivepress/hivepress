@@ -25,9 +25,13 @@ class Radio extends Select {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set multiple property.
-		$args['multiple'] = false;
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'title'    => esc_html__( 'Radio', 'hivepress' ),
+				'multiple' => false,
+			]
+		);
 
 		parent::__construct( $args );
 	}

@@ -27,6 +27,22 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'title' => esc_html__( 'Checkbox', 'hivepress' ),
+			]
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Gets checkbox caption.
 	 *
 	 * @return string

@@ -25,10 +25,10 @@ final class Form {
 	public function __construct() {
 
 		// Set form captcha.
-		add_filter( 'hivepress/forms/form/args', [ $this, 'set_form_captcha' ] );
+		add_filter( 'hivepress/forms/form', [ $this, 'set_form_captcha' ] );
 
 		// Set field options.
-		add_filter( 'hivepress/fields/field/args', [ $this, 'set_field_options' ] );
+		add_filter( 'hivepress/fields/field', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -109,6 +109,20 @@ final class Form {
 							$options[ $form_name ] = $form->get_title();
 						}
 					}
+
+					asort( $options );
+
+					break;
+
+				// Fields.
+				case 'fields':
+					foreach ( hivepress()->get_fields() as $field_name => $field ) {
+						if ( $field->get_title() ) {
+							$options[ $field_name ] = $field->get_title();
+						}
+					}
+
+					asort( $options );
 
 					break;
 			}

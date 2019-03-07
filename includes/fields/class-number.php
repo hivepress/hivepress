@@ -41,6 +41,22 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'title' => esc_html__( 'Number', 'hivepress' ),
+			]
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Gets field attributes.
 	 *
 	 * @return array

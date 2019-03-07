@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'listing_category' => [
-		'object_type' => 'listing',
+		'object_type' => [ 'listing', 'listing_attribute' ],
 
 		'args'        => [
 			'hierarchical' => true,

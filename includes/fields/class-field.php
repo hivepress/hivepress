@@ -27,6 +27,13 @@ abstract class Field {
 	protected $type;
 
 	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected $title;
+
+	/**
 	 * Field name.
 	 *
 	 * @var string
@@ -79,7 +86,7 @@ abstract class Field {
 		$args['type'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/fields/field/args', $args );
+		$args = apply_filters( 'hivepress/fields/field', $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -110,6 +117,15 @@ abstract class Field {
 	 */
 	final public function get_type() {
 		return $this->type;
+	}
+
+	/**
+	 * Gets field title.
+	 *
+	 * @return string
+	 */
+	final public function get_title() {
+		return $this->title;
 	}
 
 	/**
