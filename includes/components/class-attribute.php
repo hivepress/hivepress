@@ -31,12 +31,18 @@ final class Attribute {
 	 */
 	public function __construct() {
 
-		// todo.
-		add_action( 'wp_loaded', [ $this, 'init_attributes' ] );
+		// Register attributes.
+		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
+
+		if ( is_admin() ) {
+
+			// Disable quick edit.
+			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
+		}
 	}
 
 	// todo.
-	public function init_attributes() {
+	public function register_attributes() {
 
 		// Get attribute posts.
 		$attribute_posts = get_posts(
@@ -178,5 +184,20 @@ final class Attribute {
 		}
 
 		return absint( $category_id );
+	}
+
+	/**
+	 * Disables quick edit.
+	 *
+	 * @param array   $actions Post actions.
+	 * @param WP_Post $post Post object.
+	 * @return array
+	 */
+	public function disable_quick_edit( $actions, $post ) {
+		if ( hp\prefix( 'listing' ) === $post->post_type ) {
+			unset( $actions['inline hide-if-no-js'] );
+		}
+
+		return $actions;
 	}
 }
