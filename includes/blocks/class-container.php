@@ -45,7 +45,9 @@ class Container extends Block {
 			unset( $attributes['attributes'] );
 
 			// Create block.
-			$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) );
+			if ( class_exists( $block_class ) ) {
+				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) );
+			}
 		}
 	}
 

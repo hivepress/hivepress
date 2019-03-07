@@ -76,7 +76,7 @@ final class Attribute {
 			$attribute_args['edit_field'] = array_merge(
 				$field_args,
 				[
-					'type' => 'text',
+					'type' => sanitize_key( $attribute_post->hp_edit_field_type ),
 				]
 			);
 
@@ -84,7 +84,7 @@ final class Attribute {
 			$attribute_args['search_field'] = array_merge(
 				$field_args,
 				[
-					'type' => 'text',
+					'type' => sanitize_key( $attribute_post->hp_search_field_type ),
 				]
 			);
 

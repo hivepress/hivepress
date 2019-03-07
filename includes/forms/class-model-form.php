@@ -38,7 +38,11 @@ abstract class Model_Form extends Form {
 		$model_class = '\HivePress\Models\\' . $this->model;
 
 		// Get model fields.
-		$model_fields = $model_class::get_fields();
+		$model_fields = [];
+
+		if ( class_exists( $model_class ) ) {
+			$model_fields = $model_class::get_fields();
+		}
 
 		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 			if ( isset( $model_fields[ $field_name ] ) ) {
@@ -48,8 +52,11 @@ abstract class Model_Form extends Form {
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-			// Create field.
-			$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			if ( class_exists( $field_class ) ) {
+
+				// Create field.
+				$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			}
 		}
 	}
 }

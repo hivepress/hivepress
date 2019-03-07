@@ -25,15 +25,22 @@ class Form extends Block {
 	 * @return string
 	 */
 	public function render() {
+		$output = '';
 
 		// Get form class.
 		$form_class = '\HivePress\Forms\\' . $this->get_attribute( 'form_name' );
 
-		// Create form.
-		$form = new $form_class( $this->get_attributes() );
+		if ( class_exists( $form_class ) ) {
 
-		$form->set_values( $_GET );
+			// Create form.
+			$form = new $form_class( $this->get_attributes() );
 
-		return $form->render();
+			$form->set_values( $_GET );
+
+			// Render form.
+			$output .= $form->render();
+		}
+
+		return $output;
 	}
 }

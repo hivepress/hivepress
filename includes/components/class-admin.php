@@ -240,20 +240,23 @@ final class Admin {
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $setting['type'];
 
-			// Create field.
-			$field = new $field_class( $setting );
+			if ( class_exists( $field_class ) ) {
 
-			// Validate field.
-			$field->set_value( hp\get_array_value( $_POST, $setting_name ) );
+				// Create field.
+				$field = new $field_class( $setting );
 
-			if ( $field->validate() ) {
-				return $field->get_value();
-			} else {
-				foreach ( $field->get_errors() as $error ) {
-					add_settings_error( $setting_name, $setting_name, esc_html( $error ) );
+				// Validate field.
+				$field->set_value( hp\get_array_value( $_POST, $setting_name ) );
+
+				if ( $field->validate() ) {
+					return $field->get_value();
+				} else {
+					foreach ( $field->get_errors() as $error ) {
+						add_settings_error( $setting_name, $setting_name, esc_html( $error ) );
+					}
+
+					return get_option( $setting_name );
 				}
-
-				return get_option( $setting_name );
 			}
 		}
 
@@ -291,17 +294,23 @@ final class Admin {
 	 * @param array $args Field arguments.
 	 */
 	public function render_settings_field( $args ) {
+		$output = '';
 
 		// Get field class.
 		$field_class = '\HivePress\Fields\\' . $args['type'];
 
-		// Create field.
-		$field = new $field_class( $args );
+		if ( class_exists( $field_class ) ) {
 
-		$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
+			// Create field.
+			$field = new $field_class( $args );
 
-		// Render field.
-		echo $field->render();
+			$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
+
+			// Render field.
+			$output .= $field->render();
+		}
+
+		echo $output;
 	}
 
 	/**
@@ -580,16 +589,19 @@ final class Admin {
 						// Get field class.
 						$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-						// Create field.
-						$field = new $field_class( $field_args );
+						if ( class_exists( $field_class ) ) {
 
-						// Validate field.
-						$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
+							// Create field.
+							$field = new $field_class( $field_args );
 
-						if ( $field->validate() ) {
+							// Validate field.
+							$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
 
-							// Update meta value.
-							update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+							if ( $field->validate() ) {
+
+								// Update meta value.
+								update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+							}
 						}
 					}
 				}
@@ -625,34 +637,37 @@ final class Admin {
 				// Get field class.
 				$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-				// Create field.
-				$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+				if ( class_exists( $field_class ) ) {
 
-				$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
+					// Create field.
+					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
-				// Get field value.
-				$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+					$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
 
-				if ( '' === $value ) {
-					$value = null;
-				}
+					// Get field value.
+					$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
 
-				$field->set_value( $value );
+					if ( '' === $value ) {
+						$value = null;
+					}
 
-				if ( 'hidden' === $field_args['type'] ) {
+					$field->set_value( $value );
 
-					// Render field.
-					$output .= $field->render();
-				} else {
-					$output .= '<tr>';
+					if ( 'hidden' === $field_args['type'] ) {
 
-					// Render field label.
-					$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
+						// Render field.
+						$output .= $field->render();
+					} else {
+						$output .= '<tr>';
 
-					// Render field.
-					$output .= '<td>' . $field->render() . '</td>';
+						// Render field label.
+						$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
 
-					$output .= '</tr>';
+						// Render field.
+						$output .= '<td>' . $field->render() . '</td>';
+
+						$output .= '</tr>';
+					}
 				}
 			}
 
@@ -705,16 +720,19 @@ final class Admin {
 						// Get field class.
 						$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-						// Create field.
-						$field = new $field_class( $field_args );
+						if ( class_exists( $field_class ) ) {
 
-						// Validate field.
-						$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
+							// Create field.
+							$field = new $field_class( $field_args );
 
-						if ( $field->validate() ) {
+							// Validate field.
+							$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
 
-							// Update meta value.
-							update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+							if ( $field->validate() ) {
+
+								// Update meta value.
+								update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+							}
 						}
 					}
 				}
@@ -753,52 +771,55 @@ final class Admin {
 					// Get field class.
 					$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-					// Create field.
-					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+					if ( class_exists( $field_class ) ) {
 
-					$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
+						// Create field.
+						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
-					if ( ! is_object( $term ) ) {
-						$output .= '<div class="form-field">';
+						$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
 
-						// Render label.
-						$output .= '<label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+						if ( ! is_object( $term ) ) {
+							$output .= '<div class="form-field">';
 
-						// Render field.
-						$output .= $field->render();
+							// Render label.
+							$output .= '<label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label>';
 
-						// Render description.
-						if ( isset( $field_args['description'] ) ) {
-							$output .= '<p>' . esc_html( $field_args['description'] ) . '</p>';
+							// Render field.
+							$output .= $field->render();
+
+							// Render description.
+							if ( isset( $field_args['description'] ) ) {
+								$output .= '<p>' . esc_html( $field_args['description'] ) . '</p>';
+							}
+
+							$output .= '</div>';
+						} else {
+							$output .= '<tr class="form-field">';
+
+							// Render label.
+							$output .= '<th scope="row"><label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
+							$output .= '<td>';
+
+							// Get field value.
+							$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+
+							if ( '' === $value ) {
+								$value = null;
+							}
+
+							$field->set_value( $value );
+
+							// Render field.
+							$output .= $field->render();
+
+							// Render description.
+							if ( isset( $field_args['description'] ) ) {
+								$output .= '<p class="description">' . esc_html( $field_args['description'] ) . '</p>';
+							}
+
+							$output .= '</td>';
+							$output .= '</tr>';
 						}
-
-						$output .= '</div>';
-					} else {
-						$output .= '<tr class="form-field">';
-
-						// Render label.
-						$output .= '<th scope="row"><label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
-						$output .= '<td>';
-
-						// Get field value.
-						$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
-
-						if ( '' === $value ) {
-							$value = null;
-						}
-
-						$field->set_value( $value );
-
-						// Render field.
-						$output .= $field->render();
-
-						// Render description.
-						if ( isset( $field_args['description'] ) ) {
-							$output .= '<p class="description">' . esc_html( $field_args['description'] ) . '</p>';
-						}
-
-						$output .= '</td>';
-						$output .= '</tr>';
 					}
 				}
 			}

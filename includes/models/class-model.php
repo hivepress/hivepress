@@ -106,8 +106,11 @@ abstract class Model {
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-			// Create field.
-			self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			if ( class_exists( $field_class ) ) {
+
+				// Create field.
+				self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			}
 		}
 	}
 

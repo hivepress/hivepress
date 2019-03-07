@@ -41,7 +41,9 @@ class Template extends Block {
 				unset( $attributes['attributes'] );
 
 				// Render block.
-				$output .= ( new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) ) )->render();
+				if ( class_exists( $block_class ) ) {
+					$output .= ( new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) ) )->render();
+				}
 			}
 		}
 

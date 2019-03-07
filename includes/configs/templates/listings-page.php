@@ -36,7 +36,8 @@ return [
 					'attributes' => [
 						'tag'        => 'aside',
 						'attributes' => [
-							'class' => [ 'hp-col-sm-4', 'hp-col-xs-12' ],
+							'class'          => [ 'hp-col-sm-4', 'hp-col-xs-12' ],
+							'data-component' => 'sticky',
 						],
 					],
 					'blocks'     => [

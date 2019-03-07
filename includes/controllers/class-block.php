@@ -82,6 +82,10 @@ class Block extends Controller {
 		if ( $request->get_param( 'render' ) ) {
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
+			if ( ! class_exists( $block_class ) ) {
+				return hp\rest_error( 400, esc_html__( 'Error rendering block', 'hivepress' ) );
+			}
+
 			$data['html'] = ( new $block_class( hp\merge_arrays( [ 'attributes' => $request->get_params() ], $block_args ) ) )->render();
 		}
 

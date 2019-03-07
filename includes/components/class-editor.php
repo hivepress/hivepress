@@ -94,12 +94,16 @@ final class Editor {
 		if ( strpos( $name, 'render_' ) === 0 ) {
 
 			// Render block HTML.
+			$output = '';
+
 			$block_name  = substr( $name, strlen( 'render' ) + 1 );
 			$block_class = '\HivePress\Blocks\\' . $block_name;
 
-			$block = new $block_class( $args );
+			if ( class_exists( $block_class ) ) {
+				$output .= ( new $block_class( $args ) )->render();
+			}
 
-			return $block->render();
+			return $output;
 		}
 	}
 

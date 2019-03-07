@@ -21,14 +21,14 @@ return [
 		'title'  => esc_html__( 'Edit', 'hivepress' ),
 		'screen' => 'listing_attribute',
 		'fields' => [
-			'editable'   => [
+			'editable'        => [
 				'label'   => esc_html__( 'Editable', 'hivepress' ),
 				'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 10,
 			],
 
-			'edit_field' => [
+			'edit_field_type' => [
 				'label'    => esc_html__( 'Field Type', 'hivepress' ),
 				'type'     => 'select',
 				'options'  => 'fields',
@@ -42,28 +42,28 @@ return [
 		'title'  => esc_html__( 'Search', 'hivepress' ),
 		'screen' => 'listing_attribute',
 		'fields' => [
-			'searchable'   => [
+			'searchable'        => [
 				'label'   => esc_html__( 'Searchable', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 10,
 			],
 
-			'filterable'   => [
+			'filterable'        => [
 				'label'   => esc_html__( 'Filterable', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the filter form', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 20,
 			],
 
-			'sortable'     => [
+			'sortable'          => [
 				'label'   => esc_html__( 'Sortable', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the sort form', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 30,
 			],
 
-			'search_field' => [
+			'search_field_type' => [
 				'label'   => esc_html__( 'Field Type', 'hivepress' ),
 				'type'    => 'select',
 				'options' => 'fields',

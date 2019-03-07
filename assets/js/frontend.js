@@ -8,8 +8,22 @@
 		return $('[data-component=' + name + ']');
 	}
 
-	// Slider
 	$(document).ready(function() {
+
+		// Sticky
+		getComponent('sticky').each(function() {
+			var container = $(this),
+				spacing = 30 + $('#wpadminbar').height();
+
+			container.wrapInner('<div />');
+
+			container.children('div').stickySidebar({
+				topSpacing: spacing,
+				bottomSpacing: spacing,
+			});
+		});
+
+		// Slider
 		getComponent('slider').each(function() {
 			var slider = $(this),
 				images = slider.find('img'),
