@@ -222,7 +222,7 @@ function sanitize_key( $text ) {
 	$key = ltrim( trim( $key, '_' ), '0..9' );
 
 	if ( '' === $key ) {
-		$key = md5( $text );
+		$key = 'a' . substr( md5( $text ), 0, 31 );
 	}
 
 	return $key;

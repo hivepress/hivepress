@@ -88,7 +88,7 @@ final class Attribute {
 				]
 			);
 
-			$this->attributes[ hp\sanitize_key( $attribute_post->post_name ) ] = $attribute_args;
+			$this->attributes[ hp\sanitize_key( urldecode( $attribute_post->post_name ) ) ] = $attribute_args;
 		}
 
 		// todo.
