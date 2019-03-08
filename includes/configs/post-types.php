@@ -51,4 +51,24 @@ return [
 			'not_found_in_trash' => esc_html__( 'No Attributes Found in Trash', 'hivepress' ),
 		],
 	],
+
+	'vendor'            => [
+		'public'       => true,
+		'show_in_menu' => 'edit.php?post_type=hp_listing',
+		'supports'     => [ 'title', 'editor', 'thumbnail', 'author' ],
+		'rewrite'      => [ 'slug' => 'vendor' ],
+
+		'labels'       => [
+			'name'               => esc_html__( 'Vendors', 'hivepress' ),
+			'singular_name'      => esc_html__( 'Vendor', 'hivepress' ),
+			'add_new_item'       => esc_html__( 'Add New Vendor', 'hivepress' ),
+			'edit_item'          => esc_html__( 'Edit Vendor', 'hivepress' ),
+			'new_item'           => esc_html__( 'New Vendor', 'hivepress' ),
+			'view_item'          => esc_html__( 'View Vendor', 'hivepress' ),
+			'all_items'          => esc_html__( 'Vendors', 'hivepress' ),
+			'search_items'       => esc_html__( 'Search Vendors', 'hivepress' ),
+			'not_found'          => esc_html__( 'No Vendors Found', 'hivepress' ),
+			'not_found_in_trash' => esc_html__( 'No Vendors Found in Trash', 'hivepress' ),
+		],
+	],
 ];

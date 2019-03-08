@@ -86,7 +86,7 @@ final class Admin {
 	 */
 	public function register_taxonomies() {
 		foreach ( hivepress()->get_config( 'taxonomies' ) as $taxonomy => $taxonomy_args ) {
-			register_taxonomy( hp\prefix( $taxonomy ), hp\prefix( $taxonomy_args['object_type'] ), $taxonomy_args['args'] );
+			register_taxonomy( hp\prefix( $taxonomy ), hp\prefix( $taxonomy_args['object_type'] ), $taxonomy_args );
 		}
 	}
 

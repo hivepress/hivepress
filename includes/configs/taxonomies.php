@@ -12,11 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'listing_category' => [
-		'object_type' => [ 'listing', 'listing_attribute' ],
-
-		'args'        => [
-			'hierarchical' => true,
-			'rewrite'      => [ 'slug' => 'listing-category' ],
-		],
+		'object_type'       => [ 'listing', 'listing_attribute' ],
+		'hierarchical'      => true,
+		'show_admin_column' => true,
+		'rewrite'           => [ 'slug' => 'listing-category' ],
 	],
 ];

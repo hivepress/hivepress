@@ -82,7 +82,9 @@ final class Attribute {
 			$attribute_args['edit_field'] = array_merge(
 				$field_args,
 				[
-					'type' => sanitize_key( $attribute_post->hp_edit_field_type ),
+					'type'    => sanitize_key( $attribute_post->hp_edit_field_type ),
+					// todo.
+					'options' => [],
 				]
 			);
 
@@ -94,7 +96,32 @@ final class Attribute {
 				]
 			);
 
-			$this->attributes[ hp\sanitize_key( urldecode( $attribute_post->post_name ) ) ] = $attribute_args;
+			// Get attribute name.
+			$attribute_name = substr( hp\sanitize_key( urldecode( $attribute_post->post_name ) ), 0, 64 - strlen( hp\prefix( '' ) ) );
+
+			if ( isset( $attribute_args['edit_field']['options'] ) ) {
+				$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( 'listing' ) ) );
+			}
+
+			$this->attributes[ $attribute_name ] = $attribute_args;
+		}
+
+		// todo.
+		foreach ( $this->attributes as $attribute_name => $attribute ) {
+			if ( isset( $attribute['edit_field']['options'] ) ) {
+				register_taxonomy(
+					hp\prefix( 'listing_' . $attribute_name ),
+					hp\prefix( 'listing' ),
+					[
+						'label'        => 'todo',
+						'hierarchical' => true,
+						'public'       => false,
+						'show_ui'      => true,
+						'show_in_menu' => false,
+						'rewrite'      => false,
+					]
+				);
+			}
 		}
 
 		// todo.
@@ -103,35 +130,30 @@ final class Attribute {
 		add_filter( 'hivepress/forms/listing_search', [ $this, 'add_search_fields' ] );
 		add_filter( 'hivepress/forms/listing_filter', [ $this, 'add_search_fields' ] );
 		add_filter( 'hivepress/forms/listing_sort', [ $this, 'add_sort_options' ] );
+
+		// todo.
+		add_filter( 'hivepress/meta_boxes/listing_attribute_edit', [ $this, 'add_todo_fields' ] );
+		add_filter( 'hivepress/meta_boxes/listing_attribute_search', [ $this, 'add_todo2_fields' ] );
 	}
 
-	public function add_sort_options( $form ) {
+	public function add_todo_fields( $meta_box ) {
+		$meta_box['fields']['todo'] = [
+			'label' => 'todo',
+			'type'  => 'text',
+			'order' => 100,
+		];
 
-		// Add defaults.
-		if ( is_search() ) {
-			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
-		}
+		return $meta_box;
+	}
 
-		// Filter attributes.
-		$category_id = $this->get_category_id();
+	public function add_todo2_fields( $meta_box ) {
+		$meta_box['fields']['todo'] = [
+			'label' => 'todo',
+			'type'  => 'text',
+			'order' => 100,
+		];
 
-		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
-
-		// Add options.
-		foreach ( $this->attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
-			}
-		}
-
-		return $form;
+		return $meta_box;
 	}
 
 	/**
@@ -184,6 +206,41 @@ final class Attribute {
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( $attribute['searchable'] && 'listing_search' === $form['name'] ) || ( $attribute['filterable'] && 'listing_filter' === $form['name'] ) ) ) {
 				$form['fields'][ $attribute_name ] = $attribute['search_field'];
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Adds sort options.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_sort_options( $form ) {
+
+		// Add defaults.
+		if ( is_search() ) {
+			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
+		} else {
+			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
+		}
+
+		// Filter attributes.
+		$category_id = $this->get_category_id();
+
+		$attributes = array_filter(
+			$this->attributes,
+			function( $attribute ) use ( $category_id ) {
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
+			}
+		);
+
+		// Add options.
+		foreach ( $this->attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
+				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
 			}
 		}
 
