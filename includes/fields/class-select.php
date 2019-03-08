@@ -40,10 +40,10 @@ class Select extends Field {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title' => esc_html__( 'Select', 'hivepress' ),
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

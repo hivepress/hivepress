@@ -176,7 +176,7 @@ final class Attribute {
 
 		// Add fields.
 		foreach ( $this->attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( is_admin() && 'listing_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ 'listing_submit', 'listing_update' ], true ) ) ) ) {
+			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( is_admin() && 'listing_attributes' === $form['name'] && ! isset( $attribute['edit_field']['options'] ) ) || ( $attribute['editable'] && in_array( $form['name'], [ 'listing_submit', 'listing_update' ], true ) ) ) ) {
 				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}

@@ -47,10 +47,10 @@ class Text extends Field {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title' => esc_html__( 'Text', 'hivepress' ),
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

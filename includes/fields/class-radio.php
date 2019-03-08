@@ -26,9 +26,11 @@ class Radio extends Select {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
+			[
+				'title' => esc_html__( 'Radio', 'hivepress' ),
+			],
 			$args,
 			[
-				'title'    => esc_html__( 'Radio', 'hivepress' ),
 				'multiple' => false,
 			]
 		);

@@ -26,10 +26,10 @@ class Textarea extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title' => esc_html__( 'Textarea', 'hivepress' ),
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );
