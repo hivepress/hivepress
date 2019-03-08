@@ -45,12 +45,12 @@ function unprefix( $names ) {
 	if ( is_array( $names ) ) {
 		$unprefixed = array_map(
 			function( $name ) {
-				return str_replace( 'hp_', '', $name );
+				return preg_replace( '/^hp_/', '', $name );
 			},
 			$names
 		);
 	} else {
-		$unprefixed = str_replace( 'hp_', '', $names );
+		$unprefixed = preg_replace( '/^hp_/', '', $names );
 	}
 
 	return $unprefixed;
