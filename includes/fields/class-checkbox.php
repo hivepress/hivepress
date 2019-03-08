@@ -27,11 +27,11 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'title' => esc_html__( 'Checkbox', 'hivepress' ),
@@ -39,7 +39,7 @@ class Checkbox extends Field {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**
@@ -70,6 +70,6 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<label for="' . esc_attr( $this->name ) . '"><input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . checked( $this->value, true, false ) . ' ' . hp\html_attributes( $this->get_attributes() ) . '><span>' . hp\sanitize_html( $this->get_caption() ) . '</span></label>';
+		return '<label for="' . esc_attr( $this->name ) . '"><input type="' . esc_attr( self::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . checked( $this->value, true, false ) . ' ' . hp\html_attributes( $this->get_attributes() ) . '><span>' . hp\sanitize_html( $this->get_caption() ) . '</span></label>';
 	}
 }

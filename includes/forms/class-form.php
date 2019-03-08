@@ -285,7 +285,7 @@ abstract class Form {
 		$output .= '<div class="hp-form__fields">';
 
 		foreach ( $this->fields as $field ) {
-			$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field->get_type() ) ] ] );
+			$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field::get_type() ) ] ] );
 
 			$output .= $field->render();
 		}

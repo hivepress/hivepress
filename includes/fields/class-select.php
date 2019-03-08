@@ -34,11 +34,11 @@ class Select extends Field {
 	protected $multiple = false;
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'title' => esc_html__( 'Select', 'hivepress' ),
@@ -46,7 +46,7 @@ class Select extends Field {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**

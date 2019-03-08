@@ -41,11 +41,11 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'title' => esc_html__( 'Text', 'hivepress' ),
@@ -53,7 +53,7 @@ class Text extends Field {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**
@@ -116,6 +116,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( self::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
 	}
 }

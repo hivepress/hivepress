@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			$args,
 			[
@@ -32,7 +32,7 @@ class Listings extends Block {
 			]
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**

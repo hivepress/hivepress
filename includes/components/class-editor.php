@@ -43,11 +43,11 @@ final class Editor {
 		$blocks = [];
 
 		foreach ( hivepress()->get_blocks() as $block_name => $block ) {
-			if ( $block->get_title() ) {
+			if ( $block::get_title() ) {
 				$block_slug = str_replace( '_', '-', $block_name );
 
 				$blocks[ $block_name ] = [
-					'title'  => HP_CORE_NAME . ' ' . $block->get_title(),
+					'title'  => HP_CORE_NAME . ' ' . $block::get_title(),
 					'type'   => 'hivepress/' . $block_slug,
 					'script' => 'hp-block-' . $block_slug,
 				];

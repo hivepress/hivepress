@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'title' => esc_html__( 'Textarea', 'hivepress' ),
@@ -32,7 +32,7 @@ class Textarea extends Text {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**

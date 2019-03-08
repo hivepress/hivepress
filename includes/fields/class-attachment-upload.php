@@ -115,7 +115,6 @@ class Attachment_Upload extends Field {
 		$output .= ( new File(
 			[
 				'name'         => $this->name,
-				'type'         => 'file',
 				'multiple'     => $this->multiple,
 				'file_formats' => $this->file_formats,
 				'attributes'   => [

@@ -24,14 +24,14 @@ abstract class Field {
 	 *
 	 * @var string
 	 */
-	protected $type;
+	protected static $type;
 
 	/**
 	 * Field title.
 	 *
 	 * @var string
 	 */
-	protected $title;
+	protected static $title;
 
 	/**
 	 * Field name.
@@ -76,21 +76,54 @@ abstract class Field {
 	protected $required = false;
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public static function init( $args = [] ) {
+
+		// Set type.
+		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			self::set_static_property( $name, $value );
+		}
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set type.
-		$args['type'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
-
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/fields/field', $args );
+		// todo.
+		$args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => self::$type ] ) );
+
+		// todo.
+		unset( $args['type'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
+		}
+	}
+
+	/**
+	 * Sets static property.
+	 *
+	 * @param string $name Property name.
+	 * @param mixed  $value Property value.
+	 */
+	final protected static function set_static_property( $name, $value ) {
+		if ( property_exists( static::class, $name ) ) {
+			if ( method_exists( static::class, 'set_' . $name ) ) {
+				call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
+			} else {
+				static::$$name = $value;
+			}
 		}
 	}
 
@@ -115,8 +148,8 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	final public function get_type() {
-		return $this->type;
+	final public static function get_type() {
+		return self::$type;
 	}
 
 	/**
@@ -124,8 +157,8 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	final public function get_title() {
-		return $this->title;
+	final public static function get_title() {
+		return self::$title;
 	}
 
 	/**

@@ -20,15 +20,28 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'title' => esc_html__( 'Email', 'hivepress' ),
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'title' => esc_html__( 'Email', 'hivepress' ),
-			],
 			$args,
 			[
 				'max_length' => 254,
