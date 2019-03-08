@@ -38,6 +38,9 @@ final class Attribute {
 
 			// Disable quick edit.
 			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
+
+			// Remove meta boxes.
+			add_action( 'admin_notices', [ $this, 'remove_meta_boxes' ] );
 		}
 	}
 
@@ -275,5 +278,22 @@ final class Attribute {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Removes meta boxes.
+	 */
+	public function remove_meta_boxes() {
+		global $pagenow, $post;
+
+		if ( 'post.php' === $pagenow && hp\prefix( 'listing' ) === $post->post_type ) {
+			$category_ids = wp_get_post_terms( $post->ID, hp\prefix( 'listing_category' ), [ 'fields' => 'ids' ] );
+
+			foreach ( $this->attributes as $attribute_name => $attribute ) {
+				if ( isset( $attribute['edit_field']['options'] ) && ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0 ) {
+					remove_meta_box( hp\prefix( 'listing_' . $attribute_name ) . 'div', hp\prefix( 'listing' ), 'side' );
+				}
+			}
+		}
 	}
 }
