@@ -106,8 +106,27 @@ final class Attribute {
 	}
 
 	public function add_sort_options( $form ) {
+
+		// Add defaults.
+		if ( is_search() ) {
+			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
+		} else {
+			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
+		}
+
+		// Filter attributes.
+		$category_id = $this->get_category_id();
+
+		$attributes = array_filter(
+			$this->attributes,
+			function( $attribute ) use ( $category_id ) {
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
+			}
+		);
+
+		// Add options.
 		foreach ( $this->attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) ) {
+			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
 				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
 			}
 		}

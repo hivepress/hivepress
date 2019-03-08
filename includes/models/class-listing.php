@@ -84,13 +84,14 @@ class Listing extends Post {
 	/**
 	 * Gets image URLs.
 	 *
+	 * @param string $size Image size.
 	 * @return array
 	 */
-	final public function get_image_urls() {
+	final public function get_image_urls( $size = 'thumbnail' ) {
 		$image_urls = [];
 
 		foreach ( $this->get_image_ids() as $image_id ) {
-			$urls = wp_get_attachment_image_src( $image_id, 'hp_landscape_large' );
+			$urls = wp_get_attachment_image_src( $image_id, $size );
 
 			if ( false !== $urls ) {
 				$image_urls[ $image_id ] = reset( $urls );
