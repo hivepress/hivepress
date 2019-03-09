@@ -26,7 +26,6 @@ class User_Login extends Model_Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title'  => esc_html__( 'Login User', 'hivepress' ),
 				'model'  => 'user',
@@ -44,7 +43,8 @@ class User_Login extends Model_Form {
 						'order' => 20,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

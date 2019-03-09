@@ -26,11 +26,11 @@ class Listing_Delete extends Model_Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'model'  => 'listing',
 				'method' => 'DELETE',
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

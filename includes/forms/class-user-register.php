@@ -57,13 +57,13 @@ class User_Register extends Model_Form {
 
 		// Set arguments.
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title'  => esc_html__( 'Register User', 'hivepress' ),
 				'model'  => 'user',
 				'action' => hp\get_rest_url( '/users' ),
 				'fields' => $fields,
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

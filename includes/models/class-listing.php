@@ -47,7 +47,6 @@ class Listing extends Post {
 	 */
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'fields'  => [
 					'title'       => [
@@ -81,7 +80,8 @@ class Listing extends Post {
 					'post_status'  => 'status',
 					'post_author'  => 'user_id',
 				],
-			]
+			],
+			$args
 		);
 
 		parent::init( $args );

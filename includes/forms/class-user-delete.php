@@ -26,7 +26,6 @@ class User_Delete extends Model_Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'model'  => 'user',
 				'method' => 'DELETE',
@@ -35,7 +34,8 @@ class User_Delete extends Model_Form {
 						'order' => 10,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

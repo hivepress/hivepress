@@ -48,7 +48,11 @@ class Email extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Email', 'hivepress' ),
+				'title'    => esc_html__( 'Email', 'hivepress' ),
+				'settings' => [
+					'min_length' => null,
+					'max_length' => null,
+				],
 			],
 			$args
 		);
@@ -62,12 +66,9 @@ class Email extends Text {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			$args,
-			[
-				'max_length' => 254,
-			]
-		);
+
+		// Set maximum length.
+		$args['max_length'] = 254;
 
 		parent::__construct( $args );
 	}

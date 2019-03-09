@@ -29,7 +29,6 @@ class User extends Controller {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'routes' => [
 					[
@@ -91,7 +90,8 @@ class User extends Controller {
 						'action' => 'render_settings_page',
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

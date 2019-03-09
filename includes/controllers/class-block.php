@@ -26,7 +26,6 @@ class Block extends Controller {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'routes' => [
 					[
@@ -41,7 +40,8 @@ class Block extends Controller {
 						],
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

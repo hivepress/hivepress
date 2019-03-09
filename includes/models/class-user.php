@@ -47,7 +47,6 @@ class User extends Model {
 	 */
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'fields'  => [
 					'username'    => [
@@ -93,7 +92,8 @@ class User extends Model {
 					'user_email' => 'email',
 					'user_pass'  => 'password',
 				],
-			]
+			],
+			$args
 		);
 
 		parent::init( $args );

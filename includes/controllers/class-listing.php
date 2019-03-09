@@ -29,7 +29,6 @@ class Listing extends Controller {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'routes' => [
 					[
@@ -60,7 +59,8 @@ class Listing extends Controller {
 						'action' => 'render_listing_page',
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

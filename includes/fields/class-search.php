@@ -39,4 +39,20 @@ class Search extends Text {
 	 * @var string
 	 */
 	protected static $settings = [];
+
+	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'title' => null,
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
 }

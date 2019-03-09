@@ -48,7 +48,10 @@ class Checkboxes extends Select {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Checkboxes', 'hivepress' ),
+				'title'    => esc_html__( 'Checkboxes', 'hivepress' ),
+				'settings' => [
+					'multiple' => null,
+				],
 			],
 			$args
 		);
@@ -62,12 +65,9 @@ class Checkboxes extends Select {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			$args,
-			[
-				'multiple' => true,
-			]
-		);
+
+		// Set multiple property.
+		$args['multiple'] = true;
 
 		parent::__construct( $args );
 	}

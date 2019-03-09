@@ -33,10 +33,10 @@ class Listing_Categories extends Block {
 	 */
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title' => esc_html__( 'Listing Categories', 'hivepress' ),
-			]
+			],
+			$args
 		);
 
 		parent::init( $args );

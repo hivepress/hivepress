@@ -26,7 +26,6 @@ class User_Password_Reset extends Model_Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'model'  => 'user',
 				'action' => hp\get_rest_url( '/users/reset-password' ),
@@ -45,7 +44,8 @@ class User_Password_Reset extends Model_Form {
 						'required' => true,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

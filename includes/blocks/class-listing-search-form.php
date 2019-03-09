@@ -33,10 +33,10 @@ class Listing_Search_Form extends Block {
 	 */
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
-			]
+			],
+			$args
 		);
 
 		parent::init( $args );

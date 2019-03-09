@@ -26,7 +26,6 @@ class User_Password_Request extends Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 				'action' => hp\get_rest_url( '/users/request-password' ),
@@ -39,7 +38,8 @@ class User_Password_Request extends Form {
 						'order'      => 10,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

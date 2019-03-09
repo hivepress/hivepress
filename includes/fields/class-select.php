@@ -62,7 +62,15 @@ class Select extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Select', 'hivepress' ),
+				'title'    => esc_html__( 'Select', 'hivepress' ),
+				'settings' => [
+					'multiple' => [
+						'label'   => esc_html__( 'Multiple', 'hivepress' ),
+						'caption' => 'todo check if multiple',
+						'type'    => 'checkbox',
+						'order'   => 10,
+					],
+				],
 			],
 			$args
 		);

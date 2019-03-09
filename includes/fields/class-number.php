@@ -41,6 +41,13 @@ class Number extends Field {
 	protected static $settings = [];
 
 	/**
+	 * Field placeholder.
+	 *
+	 * @var string
+	 */
+	protected $placeholder;
+
+	/**
 	 * Decimals number.
 	 *
 	 * @var int
@@ -71,22 +78,31 @@ class Number extends Field {
 			[
 				'title'    => esc_html__( 'Number', 'hivepress' ),
 				'settings' => [
-					'decimals'  => [
+					'placeholder' => [
+						'label' => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'  => 'text',
+						'order' => 10,
+					],
+
+					'decimals'    => [
 						'label'     => esc_html__( 'Decimals', 'hivepress' ),
 						'type'      => 'number',
 						'default'   => 0,
 						'min_value' => 0,
 						'max_value' => 5,
+						'order'     => 20,
 					],
 
-					'min_value' => [
+					'min_value'   => [
 						'label' => esc_html__( 'Minimum Value', 'hivepress' ),
 						'type'  => 'number',
+						'order' => 30,
 					],
 
-					'max_value' => [
+					'max_value'   => [
 						'label' => esc_html__( 'Maximum Value', 'hivepress' ),
 						'type'  => 'number',
+						'order' => 40,
 					],
 				],
 			],

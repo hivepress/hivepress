@@ -26,7 +26,6 @@ class Listing_Report extends Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'title'  => esc_html__( 'Report Listing', 'hivepress' ),
 				'fields' => [
@@ -37,7 +36,8 @@ class Listing_Report extends Form {
 						'order'      => 10,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

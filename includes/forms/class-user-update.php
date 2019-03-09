@@ -26,7 +26,6 @@ class User_Update extends Model_Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'model'  => 'user',
 				'fields' => [
@@ -66,7 +65,8 @@ class User_Update extends Model_Form {
 						'order' => 70,
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );

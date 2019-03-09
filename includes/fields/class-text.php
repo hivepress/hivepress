@@ -69,7 +69,28 @@ class Text extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Text', 'hivepress' ),
+				'title'    => esc_html__( 'Text', 'hivepress' ),
+				'settings' => [
+					'placeholder' => [
+						'label' => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'  => 'text',
+						'order' => 10,
+					],
+
+					'min_length'  => [
+						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 0,
+						'order'     => 20,
+					],
+
+					'max_length'  => [
+						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+						'order'     => 30,
+					],
+				],
 			],
 			$args
 		);

@@ -55,7 +55,14 @@ class Checkbox extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Checkbox', 'hivepress' ),
+				'title'    => esc_html__( 'Checkbox', 'hivepress' ),
+				'settings' => [
+					'caption' => [
+						'label' => esc_html__( 'Caption', 'hivepress' ),
+						'type'  => 'text',
+						'order' => 10,
+					],
+				],
 			],
 			$args
 		);

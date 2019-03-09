@@ -26,7 +26,6 @@ class Listing_Filter extends Form {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			$args,
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
@@ -36,7 +35,8 @@ class Listing_Filter extends Form {
 						'default' => 'hp_listing',
 					],
 				],
-			]
+			],
+			$args
 		);
 
 		parent::__construct( $args );
