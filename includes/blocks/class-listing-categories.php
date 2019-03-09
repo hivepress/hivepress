@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Categories extends Block {
 
 	/**
+	 * Block title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
@@ -42,5 +49,6 @@ class Listing_Categories extends Block {
 	 */
 	public function render() {
 		// todo.
+		return '';
 	}
 }

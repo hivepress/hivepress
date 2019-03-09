@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Element extends Block {
 
 	/**
+	 * Block title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

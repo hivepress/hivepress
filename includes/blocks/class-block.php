@@ -49,7 +49,7 @@ abstract class Block {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			self::set_static_property( $name, $value );
+			static::set_static_property( $name, $value );
 		}
 	}
 
@@ -104,7 +104,7 @@ abstract class Block {
 	 * @return string
 	 */
 	final public static function get_title() {
-		return self::$title;
+		return static::$title;
 	}
 
 	/**

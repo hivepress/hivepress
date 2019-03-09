@@ -19,8 +19,20 @@ defined( 'ABSPATH' ) || exit;
  */
 class Listing extends Template {
 
-	// todo.
+	/**
+	 * Block title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
+	 * Renders block HTML.
+	 *
+	 * @return string
+	 */
 	public function render() {
+		// todo.
 		$this->attributes['listing'] = \HivePress\Models\Listing::get( get_the_ID() );
 
 		return parent::render();

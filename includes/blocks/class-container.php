@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Container extends Block {
 
 	/**
+	 * Block title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Inner blocks.
 	 *
 	 * @var array
