@@ -20,6 +20,27 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Post {
 
 	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
+	 * Model fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
+	 * Model aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.

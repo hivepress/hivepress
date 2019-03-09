@@ -20,6 +20,27 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
+	 * Model fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
+	 * Model aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.
@@ -89,12 +110,12 @@ class User extends Model {
 		$data = [];
 		$meta = [];
 
-		foreach ( self::$fields as $field_name => $field ) {
+		foreach ( static::$fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->values, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, self::$aliases, true ) ) {
-					$data[ array_search( $field_name, self::$aliases, true ) ] = $field->get_value();
+				if ( in_array( $field_name, static::$aliases, true ) ) {
+					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}

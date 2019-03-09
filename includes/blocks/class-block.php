@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 abstract class Block {
 
 	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Block name.
 	 *
 	 * @var string

@@ -20,27 +20,6 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
 	 * Instance ID.
 	 *
 	 * @var int
@@ -73,7 +52,7 @@ abstract class Model {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			self::set_static_property( $name, $value );
+			static::set_static_property( $name, $value );
 		}
 	}
 
@@ -99,7 +78,7 @@ abstract class Model {
 	 * @param array $fields Model fields.
 	 */
 	final protected static function set_fields( $fields ) {
-		self::$fields = [];
+		static::$fields = [];
 
 		foreach ( $fields as $field_name => $field_args ) {
 
@@ -109,7 +88,7 @@ abstract class Model {
 			if ( class_exists( $field_class ) ) {
 
 				// Create field.
-				self::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+				static::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 			}
 		}
 	}
@@ -120,7 +99,7 @@ abstract class Model {
 	 * @return array
 	 */
 	final public static function get_fields() {
-		return self::$fields;
+		return static::$fields;
 	}
 
 	/**
@@ -155,8 +134,8 @@ abstract class Model {
 	 * @param mixed  $value Property value.
 	 */
 	final protected function set_property( $name, $value ) {
-		if ( isset( self::$fields[ $name ] ) ) {
-			$field = self::$fields[ $name ];
+		if ( isset( static::$fields[ $name ] ) ) {
+			$field = static::$fields[ $name ];
 			$field->set_value( $value );
 			$this->values[ $name ] = $field->get_value();
 		}

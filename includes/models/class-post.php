@@ -30,7 +30,7 @@ abstract class Post extends Model {
 		// Get alias data.
 		$data = get_post( absint( $id ), ARRAY_A );
 
-		if ( ! is_null( $data ) && hp\prefix( self::$name ) === $data['post_type'] ) {
+		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['post_type'] ) {
 			$values = [];
 
 			// Get alias meta.
@@ -42,9 +42,9 @@ abstract class Post extends Model {
 			);
 
 			// Get instance values.
-			foreach ( array_keys( self::$fields ) as $field_name ) {
-				if ( in_array( $field_name, self::$aliases, true ) ) {
-					$values[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, self::$aliases, true ) );
+			foreach ( array_keys( static::$fields ) as $field_name ) {
+				if ( in_array( $field_name, static::$aliases, true ) ) {
+					$values[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
 				} else {
 					$values[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
 				}
@@ -73,12 +73,12 @@ abstract class Post extends Model {
 		$data = [];
 		$meta = [];
 
-		foreach ( self::$fields as $field_name => $field ) {
+		foreach ( static::$fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->values, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, self::$aliases, true ) ) {
-					$data[ array_search( $field_name, self::$aliases, true ) ] = $field->get_value();
+				if ( in_array( $field_name, static::$aliases, true ) ) {
+					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
@@ -90,7 +90,7 @@ abstract class Post extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp\prefix( self::$name ) ] ) );
+				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp\prefix( static::$name ) ] ) );
 
 				if ( 0 !== $id ) {
 					$this->set_id( $id );
