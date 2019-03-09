@@ -41,15 +41,236 @@ final class Attribute {
 		// Register attributes.
 		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
 
+		foreach ( $this->models as $model ) {
+
+			// Add field settings.
+			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ] );
+			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ] );
+
+			// Add search fields.
+			add_filter( 'hivepress/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
+
+			// Add sort options.
+			add_filter( 'hivepress/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+		}
+
 		if ( is_admin() ) {
 
 			// Disable quick edit.
 			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
 
-			// Remove meta boxes.
-			add_action( 'admin_notices', [ $this, 'remove_meta_boxes' ] );
+			// Remove taxonomy boxes.
+			add_action( 'admin_notices', [ $this, 'remove_taxonomy_boxes' ] );
 		}
 	}
+
+	/**
+	 * Adds field settings.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function add_field_settings( $meta_box ) {
+
+		// Get field context.
+		$field_context = explode( '_', $meta_box['name'] );
+		$field_context = end( $field_context );
+
+		// Get field type.
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
+
+		if ( '' !== $field_type ) {
+
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $field_type;
+
+			// Add settings.
+			if ( class_exists( $field_class ) ) {
+				foreach ( $field_class::get_settings() as $field_name => $field ) {
+					$meta_box['fields'][ $field_context . '_field_' . $field_name ] = array_merge( $field->get_args(), [ 'order' => 100 + hp\get_array_value( $field->get_args(), 'order', 10 ) ] );
+				}
+			}
+		}
+
+		return $meta_box;
+	}
+
+	/**
+	 * Adds search fields.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_search_fields( $form ) {
+
+		// Get model.
+		$model = explode( '_', $form['name'] );
+		$model = reset( $model );
+
+		// Filter attributes.
+		$category_id = $this->get_category_id( $model );
+
+		$attributes = array_filter(
+			$this->attributes,
+			function( $attribute ) use ( $model, $category_id ) {
+				return $attribute['model'] === $model && ( empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true ) );
+			}
+		);
+
+		// Add fields.
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) ) {
+				$form['fields'][ $attribute_name ] = $attribute['search_field'];
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Adds sort options.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_sort_options( $form ) {
+
+		// Add defaults.
+		if ( is_search() ) {
+			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
+		} else {
+			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
+		}
+
+		// Get model.
+		$model = explode( '_', $form['name'] );
+		$model = reset( $model );
+
+		// Filter attributes.
+		$category_id = $this->get_category_id( $model );
+
+		$attributes = array_filter(
+			$this->attributes,
+			function( $attribute ) use ( $model, $category_id ) {
+				return $attribute['model'] === $model && ( empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true ) );
+			}
+		);
+
+		// Add options.
+		foreach ( $this->attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
+				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Gets current category ID.
+	 *
+	 * @param string $model Model name.
+	 * @return int
+	 */
+	private function get_category_id( $model ) {
+		$category_id = hp\get_array_value( $_GET, 'category' );
+
+		if ( is_tax( hp\prefix( $model . '_category' ) ) ) {
+			$category_id = get_queried_object_id();
+		}
+
+		return absint( $category_id );
+	}
+
+	/**
+	 * Disables quick edit.
+	 *
+	 * @param array   $actions Post actions.
+	 * @param WP_Post $post Post object.
+	 * @return array
+	 */
+	public function disable_quick_edit( $actions, $post ) {
+		if ( in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
+			unset( $actions['inline hide-if-no-js'] );
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * Removes taxonomy boxes.
+	 */
+	public function remove_taxonomy_boxes() {
+		global $pagenow, $post;
+
+		if ( 'post.php' === $pagenow && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
+
+			// Get model.
+			$model = hp\unprefix( $post->post_type );
+
+			// Filter attributes.
+			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
+
+			$attributes = array_filter(
+				$this->attributes,
+				function( $attribute ) use ( $model, $category_ids ) {
+					return $attribute['model'] === $model && ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0;
+				}
+			);
+
+			// Remove meta boxes.
+			foreach ( array_keys( $attributes ) as $attribute_name ) {
+				remove_meta_box( $post->post_type . $attribute_name . 'div', $post->post_type, 'side' );
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// todo.
 	public function register_attributes() {
@@ -80,6 +301,7 @@ final class Attribute {
 				'searchable' => (bool) $attribute->hp_searchable,
 				'filterable' => (bool) $attribute->hp_filterable,
 				'sortable'   => (bool) $attribute->hp_sortable,
+				'model'      => $attribute_model,
 			];
 
 			// Get categories.
@@ -101,9 +323,7 @@ final class Attribute {
 			$attribute_args['edit_field'] = array_merge(
 				$field_args,
 				[
-					'type'    => sanitize_key( $attribute->hp_edit_field_type ),
-					// todo.
-					'options' => [],
+					'type' => sanitize_key( $attribute->hp_edit_field_type ),
 				]
 			);
 
@@ -145,45 +365,7 @@ final class Attribute {
 			add_filter( 'hivepress/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
 
 			add_filter( 'hivepress/forms/' . $model . '_update', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
-
-			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_todo_fields' ] );
-			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_todo2_fields' ] );
 		}
-	}
-
-	public function add_todo_fields( $meta_box ) {
-		$type = get_post_meta( get_the_ID(), 'hp_edit_field_type', true );
-
-		if ( $type ) {
-			$class = '\HivePress\Fields\\' . $type;
-
-			$order = 0;
-			foreach ( $class::get_settings() as $field_name => $field ) {
-				$meta_box['fields'][ 'edit_field_' . $field_name ] = array_merge(
-					$field->get_args(),
-					[
-						'order' => 100 + $order * 10,
-					]
-				);
-
-				$order++;
-			}
-		}
-
-		return $meta_box;
-	}
-
-	public function add_todo2_fields( $meta_box ) {
-		$meta_box['fields']['todo'] = [
-			'label' => 'todo',
-			'type'  => 'text',
-			'order' => 100,
-		];
-
-		return $meta_box;
 	}
 
 	/**
@@ -212,116 +394,5 @@ final class Attribute {
 		}
 
 		return $form;
-	}
-
-	/**
-	 * Adds search fields.
-	 *
-	 * @param array $form Form arguments.
-	 * @return array
-	 */
-	public function add_search_fields( $form ) {
-
-		// Filter attributes.
-		$category_id = $this->get_category_id();
-
-		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
-
-		// Add fields.
-		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( $attribute['searchable'] && 'listing_search' === $form['name'] ) || ( $attribute['filterable'] && 'listing_filter' === $form['name'] ) ) ) {
-				$form['fields'][ $attribute_name ] = $attribute['search_field'];
-			}
-		}
-
-		return $form;
-	}
-
-	/**
-	 * Adds sort options.
-	 *
-	 * @param array $form Form arguments.
-	 * @return array
-	 */
-	public function add_sort_options( $form ) {
-
-		// Add defaults.
-		if ( is_search() ) {
-			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
-		}
-
-		// Filter attributes.
-		$category_id = $this->get_category_id();
-
-		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
-
-		// Add options.
-		foreach ( $this->attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
-			}
-		}
-
-		return $form;
-	}
-
-	/**
-	 * Gets current category ID.
-	 *
-	 * @return int
-	 */
-	private function get_category_id() {
-		$category_id = hp\get_array_value( $_GET, 'category' );
-
-		if ( is_tax( hp\prefix( 'listing_category' ) ) ) {
-			$category_id = get_queried_object_id();
-		}
-
-		return absint( $category_id );
-	}
-
-	/**
-	 * Disables quick edit.
-	 *
-	 * @param array   $actions Post actions.
-	 * @param WP_Post $post Post object.
-	 * @return array
-	 */
-	public function disable_quick_edit( $actions, $post ) {
-		if ( in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
-			unset( $actions['inline hide-if-no-js'] );
-		}
-
-		return $actions;
-	}
-
-	/**
-	 * Removes meta boxes.
-	 */
-	public function remove_meta_boxes() {
-		global $pagenow, $post;
-
-		if ( 'post.php' === $pagenow && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
-			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
-
-			// todo below.
-			foreach ( $this->attributes as $attribute_name => $attribute ) {
-				if ( isset( $attribute['edit_field']['options'] ) && ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0 ) {
-					remove_meta_box( hp\prefix( 'listing_' . $attribute_name ) . 'div', hp\prefix( 'listing' ), 'side' );
-				}
-			}
-		}
 	}
 }
