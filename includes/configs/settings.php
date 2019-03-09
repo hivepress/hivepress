@@ -1,6 +1,6 @@
 <?php
 /**
- * Options configuration.
+ * Settings configuration.
  *
  * @package HivePress\Configs
  */

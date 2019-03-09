@@ -34,6 +34,13 @@ class Number extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Decimals number.
 	 *
 	 * @var int
@@ -62,7 +69,26 @@ class Number extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Number', 'hivepress' ),
+				'title'    => esc_html__( 'Number', 'hivepress' ),
+				'settings' => [
+					'decimals'  => [
+						'label'     => esc_html__( 'Decimals', 'hivepress' ),
+						'type'      => 'number',
+						'default'   => 0,
+						'min_value' => 0,
+						'max_value' => 5,
+					],
+
+					'min_value' => [
+						'label' => esc_html__( 'Minimum Value', 'hivepress' ),
+						'type'  => 'number',
+					],
+
+					'max_value' => [
+						'label' => esc_html__( 'Maximum Value', 'hivepress' ),
+						'type'  => 'number',
+					],
+				],
 			],
 			$args
 		);

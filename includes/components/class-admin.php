@@ -44,11 +44,11 @@ final class Admin {
 			add_filter( 'custom_menu_order', [ $this, 'order_pages' ] );
 			add_filter( 'menu_order', [ $this, 'order_pages' ] );
 
+			// Initialize settings.
+			add_action( 'hivepress/activate', [ $this, 'init_settings' ] );
+
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
-
-			// Add options.
-			add_action( 'hivepress/activate', [ $this, 'add_options' ] );
 
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
@@ -176,6 +176,21 @@ final class Admin {
 	}
 
 	/**
+	 * Initializes settings.
+	 */
+	public function init_settings() {
+		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
+			foreach ( $tab['sections'] as $section ) {
+				foreach ( $section['fields'] as $field_name => $field ) {
+					if ( isset( $field['default'] ) ) {
+						add_option( hp\prefix( $field_name ), $field['default'] );
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Registers settings.
 	 */
 	public function register_settings() {
@@ -184,7 +199,7 @@ final class Admin {
 		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) ) {
 
 			// Get current tab.
-			$tab = hp\get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+			$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
 
 			if ( ! is_null( $tab ) ) {
 				foreach ( hp\sort_array( $tab['sections'] ) as $section_name => $section ) {
@@ -193,12 +208,12 @@ final class Admin {
 					add_settings_section( $section_name, esc_html( hp\get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
 
 					// Register settings.
-					foreach ( hp\sort_array( $section['fields'] ) as $option_name => $option ) {
-						$option_name       = hp\prefix( $option_name );
-						$option['default'] = get_option( $option_name );
+					foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field ) {
+						$field_name       = hp\prefix( $field_name );
+						$field['default'] = get_option( $field_name );
 
-						add_settings_field( $option_name, esc_html( $option['label'] ) . $this->render_tooltip( hp\get_array_value( $option, 'description' ) ), [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $option, [ 'name' => $option_name ] ) );
-						register_setting( 'hp_settings', $option_name, [ $this, 'validate_' . hp\unprefix( $option_name ) ] );
+						add_settings_field( $field_name, esc_html( $field['label'] ) . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ), [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $field, [ 'name' => $field_name ] ) );
+						register_setting( 'hp_settings', $field_name, [ $this, 'validate_' . hp\unprefix( $field_name ) ] );
 					}
 				}
 			}
@@ -208,22 +223,22 @@ final class Admin {
 	/**
 	 * Validates setting.
 	 *
-	 * @param string $name Option name.
+	 * @param string $name Setting name.
 	 * @return mixed
 	 */
 	private function validate_setting( $name ) {
 
 		// Get current tab.
-		$tab = hp\get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+		$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
 
 		// Get setting.
 		$setting = false;
 
 		if ( ! is_null( $tab ) ) {
 			foreach ( $tab['sections'] as $section_name => $section ) {
-				foreach ( $section['fields'] as $option_name => $option ) {
-					if ( $option_name === $name ) {
-						$setting = $option;
+				foreach ( $section['fields'] as $field_name => $field ) {
+					if ( $field_name === $name ) {
+						$setting = $field;
 
 						break 2;
 					}
@@ -271,7 +286,7 @@ final class Admin {
 	public function render_settings_section( $args ) {
 
 		// Get current tab.
-		$tab = hp\get_array_value( hivepress()->get_config( 'options' ), $this->get_settings_tab() );
+		$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
 
 		if ( ! is_null( $tab ) ) {
 
@@ -323,7 +338,7 @@ final class Admin {
 			function( $section ) {
 				return hp\get_array_value( $section, 'title' );
 			},
-			hp\sort_array( hivepress()->get_config( 'options' ) )
+			hp\sort_array( hivepress()->get_config( 'settings' ) )
 		);
 	}
 
@@ -336,7 +351,7 @@ final class Admin {
 		$current_tab = false;
 
 		// Get all tabs.
-		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'options' ) ) );
+		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
 
 		$first_tab   = hp\get_array_value( $tabs, 0 );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
@@ -497,25 +512,10 @@ final class Admin {
 	}
 
 	/**
-	 * Adds options.
-	 */
-	public function add_options() {
-		foreach ( hivepress()->get_config( 'options' ) as $tab ) {
-			foreach ( $tab['sections'] as $section ) {
-				foreach ( $section['fields'] as $option_name => $option ) {
-					if ( isset( $option['default'] ) ) {
-						add_option( hp\prefix( $option_name ), $option['default'] );
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Registers post states.
 	 */
 	public function register_post_states() {
-		foreach ( hivepress()->get_config( 'options' ) as $tab ) {
+		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
 					if ( strpos( $field_name, 'page_' ) === 0 ) {

@@ -148,6 +148,27 @@ abstract class Field {
 	}
 
 	/**
+	 * Sets field settings.
+	 *
+	 * @param array $settings Field settings.
+	 */
+	final protected static function set_settings( $settings ) {
+		static::$settings = [];
+
+		foreach ( $settings as $field_name => $field_args ) {
+
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+			if ( class_exists( $field_class ) ) {
+
+				// Create field.
+				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			}
+		}
+	}
+
+	/**
 	 * Sets field value.
 	 *
 	 * @param mixed $value Field value.
