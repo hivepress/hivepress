@@ -18,7 +18,7 @@ return [
 	],
 
 	'listing_attribute_edit'    => [
-		'title'  => esc_html__( 'Edit', 'hivepress' ),
+		'title'  => esc_html__( 'Editing', 'hivepress' ),
 		'screen' => 'listing_attribute',
 		'fields' => [
 			'editable'        => [
