@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.

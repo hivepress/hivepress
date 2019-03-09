@@ -17,4 +17,19 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Search
  */
-class Search extends Text {}
+class Search extends Text {
+
+	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+}

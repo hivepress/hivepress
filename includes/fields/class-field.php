@@ -20,20 +20,6 @@ defined( 'ABSPATH' ) || exit;
 abstract class Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Field name.
 	 *
 	 * @var string
@@ -87,7 +73,7 @@ abstract class Field {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			self::set_static_property( $name, $value );
+			static::set_static_property( $name, $value );
 		}
 	}
 
@@ -100,7 +86,7 @@ abstract class Field {
 
 		// Filter arguments.
 		// todo.
-		$args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => self::$type ] ) );
+		$args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
 
 		// todo.
 		unset( $args['type'] );
@@ -149,7 +135,7 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_type() {
-		return self::$type;
+		return static::$type;
 	}
 
 	/**
@@ -158,7 +144,7 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_title() {
-		return self::$title;
+		return static::$title;
 	}
 
 	/**

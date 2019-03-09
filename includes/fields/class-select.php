@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Select options.
 	 *
 	 * @var array

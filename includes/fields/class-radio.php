@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Radio extends Select {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
@@ -60,7 +74,7 @@ class Radio extends Select {
 		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
-			$output .= '<label for="' . esc_attr( $this->name . '_' . $value ) . '"><input type="' . esc_attr( self::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name . '_' . $value ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+			$output .= '<label for="' . esc_attr( $this->name . '_' . $value ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name . '_' . $value ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
 		}
 
 		$output .= '</div>';

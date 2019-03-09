@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Number extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Decimals number.
 	 *
 	 * @var int
@@ -114,6 +128,6 @@ class Number extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( self::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
 	}
 }

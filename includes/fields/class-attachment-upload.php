@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Attachment_Upload extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Button caption.
 	 *
 	 * @var string
