@@ -34,6 +34,13 @@ class Password extends Text {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.

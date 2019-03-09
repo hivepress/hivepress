@@ -34,6 +34,13 @@ class Checkbox extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Checkbox caption.
 	 *
 	 * @var string

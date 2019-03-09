@@ -34,6 +34,13 @@ class Checkboxes extends Select {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.

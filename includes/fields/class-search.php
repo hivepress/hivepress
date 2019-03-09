@@ -32,4 +32,11 @@ class Search extends Text {
 	 * @var string
 	 */
 	protected static $title;
+
+	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
 }

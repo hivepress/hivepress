@@ -34,6 +34,13 @@ class File extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * File formats.
 	 *
 	 * @var array

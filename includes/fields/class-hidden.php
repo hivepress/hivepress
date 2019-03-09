@@ -34,6 +34,13 @@ class Hidden extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

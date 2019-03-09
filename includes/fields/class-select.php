@@ -34,6 +34,13 @@ class Select extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Select options.
 	 *
 	 * @var array

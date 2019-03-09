@@ -34,6 +34,13 @@ class Text extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Field placeholder.
 	 *
 	 * @var string

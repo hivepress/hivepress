@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 abstract class Field {
 
 	/**
+	 * Field arguments.
+	 *
+	 * @var array
+	 */
+	protected $args = [];
+
+	/**
 	 * Field name.
 	 *
 	 * @var string
@@ -86,15 +93,18 @@ abstract class Field {
 
 		// Filter arguments.
 		// todo.
-		$args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
+		$this->args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
 
 		// todo.
-		unset( $args['type'] );
+		unset( $this->args['type'] );
 
 		// Set properties.
-		foreach ( $args as $name => $value ) {
+		foreach ( $this->args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// todo.
+		$this->args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**
@@ -166,6 +176,24 @@ abstract class Field {
 				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 			}
 		}
+	}
+
+	/**
+	 * Gets field settings.
+	 *
+	 * @return array
+	 */
+	final public static function get_settings() {
+		return static::$settings;
+	}
+
+	/**
+	 * Gets field arguments.
+	 *
+	 * @return array
+	 */
+	final public function get_args() {
+		return $this->args;
 	}
 
 	/**

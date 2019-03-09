@@ -34,6 +34,13 @@ class Attachment_Select extends Field {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Button caption.
 	 *
 	 * @var string

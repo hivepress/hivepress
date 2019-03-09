@@ -155,11 +155,23 @@ final class Attribute {
 	}
 
 	public function add_todo_fields( $meta_box ) {
-		$meta_box['fields']['todo'] = [
-			'label' => 'todo',
-			'type'  => 'text',
-			'order' => 100,
-		];
+		$type = get_post_meta( get_the_ID(), 'hp_edit_field_type', true );
+
+		if ( $type ) {
+			$class = '\HivePress\Fields\\' . $type;
+
+			$order = 0;
+			foreach ( $class::get_settings() as $field_name => $field ) {
+				$meta_box['fields'][ 'edit_field_' . $field_name ] = array_merge(
+					$field->get_args(),
+					[
+						'order' => 100 + $order * 10,
+					]
+				);
+
+				$order++;
+			}
+		}
 
 		return $meta_box;
 	}
