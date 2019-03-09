@@ -158,9 +158,9 @@ final class Attribute {
 		);
 
 		// Add options.
-		foreach ( $this->attributes as $attribute_name => $attribute ) {
+		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name ] = 'todo';
+				$form['fields']['sort']['options'][ $attribute_name ] = $attribute['search_field']['label'];
 			}
 		}
 
@@ -387,7 +387,7 @@ final class Attribute {
 		);
 
 		// Add fields.
-		foreach ( $this->attributes as $attribute_name => $attribute ) {
+		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( is_admin() && 'listing_attributes' === $form['name'] && ! isset( $attribute['edit_field']['options'] ) ) || ( $attribute['editable'] && in_array( $form['name'], [ 'listing_submit', 'listing_update' ], true ) ) ) ) {
 				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
