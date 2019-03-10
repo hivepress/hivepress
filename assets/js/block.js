@@ -21,6 +21,48 @@ registerBlockType(hpBlock.type, {
 	edit: function(props) {
 		var controls = [];
 
+		for (var blockType in hpBlocks) {
+			if (hpBlocks[blockType].type === props.name) {
+				var block = hpBlocks[blockType];
+
+				for (var fieldName in block.settings) {
+					var field = block.settings[fieldName],
+						controlType = TextControl,
+						controlProps = {
+							id: block.type.replace('/', '-') + '-' + fieldName,
+							label: field.label,
+							value: props.attributes[fieldName],
+							onChange: (value) => {
+								var fieldName = event.target.id.split('-').pop(),
+									values = {};
+
+								values[fieldName] = value;
+
+								props.setAttributes(values);
+							},
+						};
+
+					if (field.type === 'number') {
+						controlProps.type = 'number';
+					} else if (field.type === 'select') {
+						controlType = SelectControl;
+						controlProps.options = [];
+
+						for (var optionName in field.options) {
+							controlProps.options.push({
+								label: decodeEntities(field.options[optionName]),
+								value: optionName,
+							});
+						}
+					}
+
+					controls.push(createElement(controlType, controlProps));
+				}
+
+				break;
+			}
+		}
+
 		return [
 			createElement(ServerSideRender, {
 				block: props.name,

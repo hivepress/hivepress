@@ -41,7 +41,14 @@ class Listings extends Block {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Listings', 'hivepress' ),
+				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'settings' => [
+					'todo' => [
+						'label'     => esc_html__( 'Todo', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+					],
+				],
 			],
 			$args
 		);

@@ -47,10 +47,25 @@ final class Editor {
 				$block_slug = str_replace( '_', '-', $block_name );
 
 				$blocks[ $block_name ] = [
-					'title'  => HP_CORE_NAME . ' ' . $block::get_title(),
-					'type'   => 'hivepress/' . $block_slug,
-					'script' => 'hp-block-' . $block_slug,
+					'title'      => HP_CORE_NAME . ' ' . $block::get_title(),
+					'type'       => 'hivepress/' . $block_slug,
+					'script'     => 'hp-block-' . $block_slug,
+					'attributes' => [],
+					'settings'   => [],
 				];
+
+				foreach ( $block::get_settings() as $field_name => $field ) {
+					$field_args = $field->get_args();
+
+					// Add attribute.
+					$blocks[ $block_name ]['attributes'][ $field_name ] = [
+						'type'    => 'string',
+						'default' => hp\get_array_value( $field_args, 'default' ),
+					];
+
+					// Add setting.
+					$blocks[ $block_name ]['settings'][ $field_name ] = $field_args;
+				}
 			}
 		}
 
@@ -68,7 +83,7 @@ final class Editor {
 					[
 						'editor_script'   => $block['script'],
 						'render_callback' => [ $this, 'render_' . $block_name ],
-						'attributes'      => [],
+						'attributes'      => $block['attributes'],
 					]
 				);
 			}
