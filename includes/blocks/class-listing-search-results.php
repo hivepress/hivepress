@@ -27,6 +27,13 @@ class Listing_Search_Results extends Container {
 	protected static $title;
 
 	/**
+	 * Block settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

@@ -11,6 +11,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'square_small'    => [
+		'width'  => 200,
+		'height' => 200,
+		'crop'   => true,
+	],
+
 	'landscape_small' => [
 		'width'  => 400,
 		'height' => 300,

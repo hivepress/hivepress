@@ -1,6 +1,6 @@
 <?php
 /**
- * Form block.
+ * Vendor block.
  *
  * @package HivePress\Blocks
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Form block class.
+ * Vendor block class.
  *
- * @class Form
+ * @class Vendor
  */
-class Form extends Block {
+class Vendor extends Template {
 
 	/**
 	 * Block title.
@@ -39,22 +39,13 @@ class Form extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '';
+		// todo.
+		$this->attributes['vendor'] = \HivePress\Models\Vendor::get( 265 );
 
-		// Get form class.
-		$form_class = '\HivePress\Forms\\' . $this->get_attribute( 'form_name' );
+		global $post;
+		$post=get_post(265);
+		setup_postdata($post);
 
-		if ( class_exists( $form_class ) ) {
-
-			// Create form.
-			$form = new $form_class( $this->get_attributes() );
-
-			$form->set_values( $_GET );
-
-			// Render form.
-			$output .= $form->render();
-		}
-
-		return $output;
+		return parent::render();
 	}
 }

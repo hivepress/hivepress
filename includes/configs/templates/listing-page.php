@@ -50,7 +50,24 @@ return [
 							'data-component' => 'sticky',
 						],
 					],
-					'blocks'     => [],
+					'blocks'     => [
+						'actions_primary' => [
+							'type'       => 'container',
+							'order'      => 10,
+							'attributes' => [
+								'attributes' => [
+									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
+								],
+							],
+						],
+						'vendor'          => [
+							'type'       => 'vendor',
+							'order'      => 20,
+							'attributes' => [
+								'template_name' => 'vendor_view_summary',
+							],
+						],
+					],
 				],
 			],
 		],

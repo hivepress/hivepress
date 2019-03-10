@@ -101,6 +101,36 @@ abstract class Block {
 	}
 
 	/**
+	 * Sets block settings.
+	 *
+	 * @param array $settings Block settings.
+	 */
+	final protected static function set_settings( $settings ) {
+		static::$settings = [];
+
+		foreach ( $settings as $field_name => $field_args ) {
+
+			// Get field class.
+			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+
+			if ( class_exists( $field_class ) ) {
+
+				// Create field.
+				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			}
+		}
+	}
+
+	/**
+	 * Gets block settings.
+	 *
+	 * @return array
+	 */
+	final public static function get_settings() {
+		return static::$settings;
+	}
+
+	/**
 	 * Gets block attributes.
 	 *
 	 * @return array
@@ -108,7 +138,6 @@ abstract class Block {
 	protected function get_attributes() {
 		$attributes = [
 			'attributes' => [
-				'class'      => [ 'hp-block', 'hp-block--' . str_replace( '_', '-', $this->name ) ],
 				'data-block' => $this->name,
 			],
 		];

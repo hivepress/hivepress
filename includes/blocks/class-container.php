@@ -27,6 +27,13 @@ class Container extends Block {
 	protected static $title;
 
 	/**
+	 * Block settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Inner blocks.
 	 *
 	 * @var array

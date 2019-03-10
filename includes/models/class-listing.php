@@ -72,6 +72,11 @@ class Listing extends Post {
 						'type'      => 'number',
 						'min_value' => 0,
 					],
+
+					'vendor_id'   => [
+						'type'      => 'number',
+						'min_value' => 0,
+					],
 				],
 
 				'aliases' => [
@@ -79,6 +84,7 @@ class Listing extends Post {
 					'post_content' => 'description',
 					'post_status'  => 'status',
 					'post_author'  => 'user_id',
+					'post_parent'  => 'vendor_id',
 				],
 			],
 			$args

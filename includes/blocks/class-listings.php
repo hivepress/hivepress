@@ -27,6 +27,13 @@ class Listings extends Block {
 	protected static $title;
 
 	/**
+	 * Block settings.
+	 *
+	 * @var string
+	 */
+	protected static $settings = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
