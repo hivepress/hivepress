@@ -80,6 +80,8 @@ class Listings extends Block {
 
 		$output .= '</div></div>';
 
+		wp_reset_postdata();
+
 		return $output;
 	}
 }

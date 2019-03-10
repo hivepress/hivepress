@@ -42,11 +42,11 @@ final class Editor {
 		// Get blocks.
 		$blocks = [];
 
-		foreach ( hivepress()->get_blocks() as $block_name => $block ) {
+		foreach ( hivepress()->get_blocks() as $block_type => $block ) {
 			if ( $block::get_title() ) {
-				$block_slug = str_replace( '_', '-', $block_name );
+				$block_slug = str_replace( '_', '-', $block_type );
 
-				$blocks[ $block_name ] = [
+				$blocks[ $block_type ] = [
 					'title'      => HP_CORE_NAME . ' ' . $block::get_title(),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hp-block-' . $block_slug,
@@ -58,20 +58,20 @@ final class Editor {
 					$field_args = $field->get_args();
 
 					// Add attribute.
-					$blocks[ $block_name ]['attributes'][ $field_name ] = [
+					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
 						'default' => hp\get_array_value( $field_args, 'default' ),
 					];
 
 					// Add setting.
-					$blocks[ $block_name ]['settings'][ $field_name ] = $field_args;
+					$blocks[ $block_type ]['settings'][ $field_name ] = $field_args;
 				}
 			}
 		}
 
 		// Register blocks.
 		if ( function_exists( 'register_block_type' ) ) {
-			foreach ( $blocks as $block_name => $block ) {
+			foreach ( $blocks as $block_type => $block ) {
 
 				// Register block script.
 				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
@@ -82,7 +82,7 @@ final class Editor {
 					$block['type'],
 					[
 						'editor_script'   => $block['script'],
-						'render_callback' => [ $this, 'render_' . $block_name ],
+						'render_callback' => [ $this, 'render_' . $block_type ],
 						'attributes'      => $block['attributes'],
 					]
 				);
@@ -94,8 +94,8 @@ final class Editor {
 		}
 
 		// Add shortcodes.
-		foreach ( array_keys( $blocks ) as $block_name ) {
-			add_shortcode( 'hivepress_' . $block_name, [ $this, 'render_' . $block_name ] );
+		foreach ( array_keys( $blocks ) as $block_type ) {
+			add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
 		}
 	}
 
@@ -111,11 +111,11 @@ final class Editor {
 			// Render block HTML.
 			$output = '';
 
-			$block_name  = substr( $name, strlen( 'render' ) + 1 );
-			$block_class = '\HivePress\Blocks\\' . $block_name;
+			$block_type  = substr( $name, strlen( 'render' ) + 1 );
+			$block_class = '\HivePress\Blocks\\' . $block_type;
 
 			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( $args ) )->render();
+				$output .= ( new $block_class( [ 'attributes' => reset( $args ) ] ) )->render();
 			}
 
 			return $output;

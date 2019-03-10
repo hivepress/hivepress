@@ -43,9 +43,13 @@ class Vendor extends Template {
 		$this->attributes['vendor'] = \HivePress\Models\Vendor::get( 265 );
 
 		global $post;
-		$post=get_post(265);
-		setup_postdata($post);
+		$post = get_post( 265 );
+		setup_postdata( $post );
 
-		return parent::render();
+		$output = parent::render();
+
+		wp_reset_postdata();
+
+		return $output;
 	}
 }
