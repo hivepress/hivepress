@@ -85,8 +85,12 @@ return [
 									],
 								],
 								'todo_loop'       => [
-									'type'  => 'listings',
-									'order' => 20,
+									'type'       => 'listings',
+									'order'      => 20,
+									'attributes' => [
+										'columns' => 2,
+										'number'  => 6,
+									],
 								],
 								'todo_pagination' => [
 									'type'       => 'element',
