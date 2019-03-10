@@ -75,10 +75,10 @@ class Listing_Categories extends Block {
 					'order'   => [
 						'label'   => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
-						'default' => 'date',
+						'default' => '',
 						'order'   => 40,
 						'options' => [
-							'date'  => esc_html__( 'Date', 'hivepress' ),
+							''      => '&mdash;',
 							'name'  => esc_html__( 'Name', 'hivepress' ),
 							'count' => esc_html__( 'Count', 'hivepress' ),
 						],
@@ -97,7 +97,54 @@ class Listing_Categories extends Block {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		return '';
+		$output = '';
+
+		// Get column width.
+		$columns      = absint( $this->get_attribute( 'columns' ) );
+		$column_width = 12;
+
+		if ( $columns > 0 && $columns <= 12 ) {
+			$column_width = round( $column_width / $columns );
+		}
+
+		// Set query arguments.
+		$query_args = [
+			'taxonomy'   => 'hp_listing_category',
+			'hide_empty' => false,
+			'number'     => absint( $this->get_attribute( 'number' ) ),
+			'parent'     => absint( $this->get_attribute( 'parent' ) ),
+		];
+
+		// Get order.
+		if ( 'name' === $this->get_attribute( 'order' ) ) {
+			$query_args['orderby'] = 'name';
+		} elseif ( 'count' === $this->get_attribute( 'order' ) ) {
+			$query_args['orderby'] = 'count';
+			$query_args['order']   = 'DESC';
+		} else {
+			$query_args['orderby']  = 'meta_value_num';
+			$query_args['order']    = 'ASC';
+			$query_args['meta_key'] = 'hp_order';
+		}
+
+		// Query categories.
+		$categories = get_terms( $query_args );
+
+		// Render categories.
+		if ( ! empty( $categories ) ) {
+			$output  = '<div ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+			$output .= '<div class="hp-row">';
+
+			foreach ( $categories as $category ) {
+				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+				$output .= ( new Listing_Category( [ 'attributes' => [ 'template_name' => 'listing_category_summary' ] ] ) )->render();
+				$output .= '</div>';
+			}
+
+			$output .= '</div>';
+			$output .= '</div>';
+		}
+
+		return $output;
 	}
 }

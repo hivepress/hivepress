@@ -39,9 +39,25 @@ class Listing extends Template {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		$this->attributes['listing'] = \HivePress\Models\Listing::get( get_the_ID() );
+		$output = '';
 
-		return parent::render();
+		// Get listing ID.
+		$listing_id = absint( $this->get_attribute( 'id' ) );
+
+		if ( 0 === $listing_id ) {
+			$listing_id = get_the_ID();
+		}
+
+		// Get listing.
+		$listing = \HivePress\Models\Listing::get( $listing_id );
+
+		if ( ! is_null( $listing ) ) {
+			$this->attributes['listing'] = $listing;
+
+			// Render listing.
+			$output = parent::render();
+		}
+
+		return $output;
 	}
 }

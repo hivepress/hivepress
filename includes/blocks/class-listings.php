@@ -137,7 +137,7 @@ class Listings extends Block {
 
 		// Render listings.
 		if ( $query->have_posts() ) {
-			$output  = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
+			$output  = '<div ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
 			$output .= '<div class="hp-row">';
 
 			while ( $query->have_posts() ) {
