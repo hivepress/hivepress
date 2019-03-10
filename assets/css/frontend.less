@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -107,7 +106,9 @@ Mixins
 			margin: 0 -.5rem;
 		}
 	}
-	// todo
+	/*--------------------------------------------------------------
+	Blocks
+	--------------------------------------------------------------*/
 	&-block {
 		&[data-state=loading] {
 			position: relative;
@@ -120,6 +121,7 @@ Mixins
 				right: 0;
 				top: 0;
 				bottom: 0;
+				z-index: 1;
 				background-color: rgba(255,255,255,.5);
 			}
 		}
@@ -129,12 +131,25 @@ Mixins
 	--------------------------------------------------------------*/
 	&-listing {
 		&--view-summary {
-			margin-bottom: 2rem;
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
 		}
 
 		&--view-summary &__content,
+		&--view-summary &__footer,
 		&--view-summary &__header {
-			margin-bottom: 1rem;
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		&--view-summary &__attributes--secondary,
+		&--view-summary &__summary,
+		&--view-summary &__title {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
 		}
 
 		&--view-summary &__footer {
@@ -143,15 +158,23 @@ Mixins
 			align-items: center;
 		}
 
-		&--view-summary &__summary {
-			margin-bottom: 0.5rem;
-		}
-
-		&--view-summary &__actions,
+		&--view-summary &__actions--primary,
 		&--view-summary &__attributes--primary,
 		&--view-summary &__properties {
 			display: flex;
 			align-items: center;
+		}
+
+		&--view-full &__actions--primary,
+		&--view-full &__attributes--secondary,
+		&--view-full &__description,
+		&--view-full &__images,
+		&--view-full &__properties,
+		&--view-full &__summary,
+		&--view-full &__title {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
 		}
 
 		&__image,
@@ -198,6 +221,7 @@ Mixins
 					line-height: 2rem;
 					color: #fff;
 					background-color: rgba(0,0,0,.5);
+					border-radius: 50%;
 					cursor: pointer;
 
 					&.slick-disabled {
@@ -216,7 +240,7 @@ Mixins
 		}
 
 		&__title {
-			margin: 0 0 0.5rem;
+			margin: 0;
 
 			a {
 				text-decoration: none;
@@ -232,8 +256,8 @@ Mixins
 		&--view-summary &__attributes--primary &__attribute {
 			font-size: 120%;
 
-			&:not(:first-child) {
-				margin-left: 1rem;
+			&:not(:last-child) {
+				margin-right: 1rem;
 			}
 		}
 
@@ -245,8 +269,8 @@ Mixins
 				opacity: 1;
 			}
 
-			&:not(:first-child) {
-				margin-left: 1rem;
+			&:not(:last-child) {
+				margin-right: 1rem;
 			}
 		}
 	}
@@ -255,16 +279,24 @@ Mixins
 	--------------------------------------------------------------*/
 	&-vendor {
 		&--view-summary {
-			margin-bottom: 2rem;
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
 		}
 
 		&--view-summary &__content,
+		&--view-summary &__footer,
 		&--view-summary &__header {
-			margin-bottom: 1rem;
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
 		}
 
-		&--view-summary &__summary {
-			margin-bottom: 0.5rem;
+		&--view-summary &__summary,
+		&--view-summary &__title {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
 		}
 
 		&__image {
@@ -272,8 +304,7 @@ Mixins
 		}
 
 		&__name {
-			margin: 0 0 0.5rem;
-			text-align: center;
+			margin: 0;
 
 			a {
 				text-decoration: none;
@@ -281,10 +312,43 @@ Mixins
 			}
 		}
 
+		&--view-summary &__name {
+			text-align: center;
+		}
+
 		&__date {
 			font-size: 80%;
 			display: block;
+		}
+
+		&--view-summary &__date {
 			text-align: center;
 		}
+	}
+	/*--------------------------------------------------------------
+	Pagination
+	--------------------------------------------------------------*/
+	&-pagination {
+		.nav-links {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			.page-numbers {
+				&:not(:last-child) {
+					margin-right: 1rem;
+				}
+
+				&:not(.prev):not(.next) {
+					font-size: 120%;
+				}
+			}
+		}
+	}
+	/*--------------------------------------------------------------
+	Icons
+	--------------------------------------------------------------*/
+	&-icon {
+		font-size: 16px;
 	}
 }

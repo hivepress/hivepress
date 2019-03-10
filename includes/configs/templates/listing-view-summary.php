@@ -50,14 +50,14 @@ return [
 						],
 					],
 					'blocks'     => [
-						'title'   => [
+						'title'                => [
 							'type'       => 'element',
 							'order'      => 10,
 							'attributes' => [
 								'file_path' => 'listing/view-summary/title',
 							],
 						],
-						'summary' => [
+						'summary'              => [
 							'type'       => 'container',
 							'order'      => 20,
 							'attributes' => [
@@ -82,22 +82,11 @@ return [
 								],
 							],
 						],
-						'details' => [
-							'type'       => 'container',
+						'attributes_secondary' => [
+							'type'       => 'element',
 							'order'      => 30,
 							'attributes' => [
-								'attributes' => [
-									'class' => [ 'hp-listing__details' ],
-								],
-							],
-							'blocks'     => [
-								'attributes_secondary' => [
-									'type'       => 'element',
-									'order'      => 10,
-									'attributes' => [
-										'file_path' => 'listing/view-summary/attributes-secondary',
-									],
-								],
+								'file_path' => 'listing/view-summary/attributes-secondary',
 							],
 						],
 					],
