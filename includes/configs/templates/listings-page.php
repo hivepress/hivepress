@@ -61,7 +61,7 @@ return [
 					],
 					'blocks'     => [
 						'listing_search_results' => [
-							'type'   => 'listing_search_results',
+							'type'   => 'container',
 							'order'  => 10,
 							'blocks' => [
 								'todo_topbar'     => [

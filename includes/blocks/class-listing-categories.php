@@ -41,7 +41,49 @@ class Listing_Categories extends Block {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Listing Categories', 'hivepress' ),
+				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
+				'settings' => [
+					'columns' => [
+						'label'   => esc_html__( 'Columns', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 3,
+						'order'   => 10,
+						'options' => [
+							2 => '2',
+							3 => '3',
+							4 => '4',
+						],
+					],
+
+					'number'  => [
+						'label'     => esc_html__( 'Number', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+						'default'   => 3,
+						'order'     => 20,
+					],
+
+					'parent'  => [
+						'label'    => esc_html__( 'Parent', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'default'  => '',
+						'order'    => 30,
+					],
+
+					'order'   => [
+						'label'   => esc_html__( 'Order', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 'date',
+						'order'   => 40,
+						'options' => [
+							'date'  => esc_html__( 'Date', 'hivepress' ),
+							'name'  => esc_html__( 'Name', 'hivepress' ),
+							'count' => esc_html__( 'Count', 'hivepress' ),
+						],
+					],
+				],
 			],
 			$args
 		);
