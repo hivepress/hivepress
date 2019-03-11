@@ -11,6 +11,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'parent' => 'listing_page',
 	'blocks' => [
 		'container' => [
 			'type'       => 'container',

@@ -135,6 +135,29 @@ abstract class Model {
 	}
 
 	/**
+	 * Sets property.
+	 *
+	 * @param string $name Property name.
+	 * @param mixed  $value Property value.
+	 */
+	final protected function set_property( $name, $value ) {
+		if ( isset( static::$fields[ $name ] ) ) {
+			$field = static::$fields[ $name ];
+			$field->set_value( $value );
+			$this->values[ $name ] = $field->get_value();
+		}
+	}
+
+	/**
+	 * Gets property.
+	 *
+	 * @param string $name Property name.
+	 */
+	final protected function get_property( $name ) {
+		return hp\get_array_value( $this->values, $name );
+	}
+
+	/**
 	 * Sets instance ID.
 	 *
 	 * @param int $id Instance ID.
