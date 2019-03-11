@@ -120,11 +120,12 @@ abstract class Block {
 	 * @return array
 	 */
 	protected function get_attributes() {
-		$attributes = [
-			'attributes' => [
-				'data-block' => $this->name,
-			],
-		];
+		$attributes = [];
+
+		// Set block name.
+		if ( $this->name ) {
+			$attributes['attributes']['data-block'] = $this->name;
+		}
 
 		return hp\merge_arrays( $this->attributes, $attributes );
 	}

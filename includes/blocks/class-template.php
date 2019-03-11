@@ -30,6 +30,13 @@ class Template extends Block {
 		// Get template.
 		$template_args = hivepress()->get_config( 'templates/' . $this->get_attribute( 'template_name' ) );
 
+		// todo.
+		if ( isset( $template_args['parent'] ) ) {
+			$parent_args = hivepress()->get_config( 'templates/' . $template_args['parent'] );
+			$parent_args['blocks']['container']['blocks']['content'] = hp\merge_arrays( $parent_args['blocks']['container']['blocks']['content'], $template_args['blocks']['content'] );
+			$template_args = $parent_args;
+		}
+
 		if ( ! is_null( $template_args ) ) {
 			foreach ( hp\sort_array( $template_args['blocks'] ) as $block_name => $block_args ) {
 

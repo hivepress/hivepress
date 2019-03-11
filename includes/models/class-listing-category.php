@@ -105,4 +105,33 @@ class Listing_Category extends Term {
 
 		return null;
 	}
+
+	/**
+	 * Gets count.
+	 *
+	 * @return int
+	 */
+	final public function get_count() {
+
+		// Get category IDs.
+		$category_ids = array_merge( absint( $this->id ), get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
+
+		// Get listing IDs.
+		$listing_ids = get_posts(
+			[
+				'post_type'      => 'hp_listing',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'posts_per_page' => -1,
+				'tax_query'      => [
+					[
+						'taxonomy' => hp\prefix( static::$name ),
+						'terms'    => $category_ids,
+					],
+				],
+			]
+		);
+
+		return count( $listing_ids );
+	}
 }

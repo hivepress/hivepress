@@ -1,6 +1,6 @@
 <?php
 /**
- * Vendor view summary template.
+ * Vendor block view template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -18,7 +18,7 @@ return [
 			'attributes' => [
 				'tag'        => 'article',
 				'attributes' => [
-					'class' => [ 'hp-vendor', 'hp-vendor--view-summary' ],
+					'class' => [ 'hp-vendor', 'hp-vendor--block-view' ],
 				],
 			],
 			'blocks'     => [
@@ -36,7 +36,7 @@ return [
 							'type'       => 'element',
 							'order'      => 10,
 							'attributes' => [
-								'file_path' => 'vendor/view-summary/image',
+								'file_path' => 'vendor/block/image',
 							],
 						],
 					],
@@ -54,7 +54,7 @@ return [
 							'type'       => 'element',
 							'order'      => 10,
 							'attributes' => [
-								'file_path' => 'vendor/view-summary/name',
+								'file_path' => 'vendor/block/name',
 							],
 						],
 						'summary' => [

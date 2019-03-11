@@ -195,7 +195,7 @@ class Listing extends Controller {
 		the_post();
 
 		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
-		$output .= ( new Blocks\Listing( [ 'attributes' => [ 'template_name' => 'listing_view_full' ] ] ) )->render();
+		$output .= ( new Blocks\Listing( [ 'attributes' => [ 'template_name' => 'listing_page_view' ] ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
 
 		return $output;
