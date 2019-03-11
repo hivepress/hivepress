@@ -36,7 +36,7 @@ class Attachment_Upload extends Field {
 	/**
 	 * Field settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 

@@ -36,7 +36,7 @@ class Search extends Text {
 	/**
 	 * Field settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 

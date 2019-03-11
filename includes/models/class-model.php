@@ -20,6 +20,27 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model {
 
 	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
+	 * Model fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
+	 * Model aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
 	 * Instance ID.
 	 *
 	 * @var int

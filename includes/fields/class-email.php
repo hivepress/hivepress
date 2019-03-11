@@ -36,7 +36,7 @@ class Email extends Text {
 	/**
 	 * Field settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 

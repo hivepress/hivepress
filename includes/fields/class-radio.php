@@ -36,7 +36,7 @@ class Radio extends Select {
 	/**
 	 * Field settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 

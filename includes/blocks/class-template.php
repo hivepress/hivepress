@@ -29,7 +29,7 @@ class Template extends Block {
 	/**
 	 * Block settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 

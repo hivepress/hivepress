@@ -29,7 +29,7 @@ class Listing extends Template {
 	/**
 	 * Block settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected static $settings = [];
 
