@@ -11,6 +11,7 @@ use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
 use HivePress\Blocks;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -156,9 +157,11 @@ class Listing extends Controller {
 	 * @return bool
 	 */
 	public function is_listings_page() {
-		// todo.
-		return false;
-		return is_page( absint( get_option( 'hp_page_listings' ) ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( get_object_taxonomies( 'hp_listing' ) );
+
+		// Get page ID.
+		$page_id = absint( get_option( 'hp_page_listings' ) );
+
+		return ( 0 !== $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( 'hp_listing_category' );
 	}
 
 	/**

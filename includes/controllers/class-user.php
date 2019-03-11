@@ -11,6 +11,7 @@ use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
 use HivePress\Blocks;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -172,7 +173,16 @@ class User extends Controller {
 		// Send emails.
 		wp_new_user_notification( $user->get_id() );
 
-		// todo send email.
+		( new Emails\User_Register(
+			[
+				'recipient' => $user->get_email(),
+				'tokens'    => [
+					'user_name'     => $user->get_name(),
+					'user_password' => $user->get_password(),
+				],
+			]
+		) )->send();
+
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
 			wp_set_auth_cookie( $user->get_id(), true );
@@ -296,7 +306,19 @@ class User extends Controller {
 			}
 		}
 
-		// todo send email.
+		// Send email.
+		$user = Models\User::get( $user->ID );
+
+		( new Emails\User_Password_Request(
+			[
+				'recipient' => $user->get_email(),
+				'tokens'    => [
+					'user_name'          => $user->get_name(),
+					'password_reset_url' => 'todo',
+				],
+			]
+		) )->send();
+
 		return new \WP_Rest_Response(
 			[
 				'data' => [

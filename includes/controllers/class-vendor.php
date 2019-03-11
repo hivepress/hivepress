@@ -11,6 +11,7 @@ use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
 use HivePress\Blocks;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
