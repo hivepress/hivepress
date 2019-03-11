@@ -8,6 +8,7 @@
 namespace HivePress\Models;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Model
  */
 abstract class Model {
+	use Traits\Mutator;
 
 	/**
 	 * Model name.
@@ -78,22 +80,6 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets static property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected static function set_static_property( $name, $value ) {
-		if ( property_exists( static::class, $name ) ) {
-			if ( method_exists( static::class, 'set_' . $name ) ) {
-				call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
-			} else {
-				static::$$name = $value;
-			}
-		}
-	}
-
-	/**
 	 * Sets model fields.
 	 *
 	 * @param array $fields Model fields.
@@ -146,29 +132,6 @@ abstract class Model {
 
 			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected function set_property( $name, $value ) {
-		if ( isset( static::$fields[ $name ] ) ) {
-			$field = static::$fields[ $name ];
-			$field->set_value( $value );
-			$this->values[ $name ] = $field->get_value();
-		}
-	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 */
-	final protected function get_property( $name ) {
-		return hp\get_array_value( $this->values, $name );
 	}
 
 	/**

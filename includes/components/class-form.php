@@ -25,10 +25,10 @@ final class Form {
 	public function __construct() {
 
 		// Set form captcha.
-		add_filter( 'hivepress/forms/form', [ $this, 'set_form_captcha' ] );
+		add_filter( 'hivepress/v1/forms/form', [ $this, 'set_form_captcha' ] );
 
 		// Set field options.
-		add_filter( 'hivepress/fields/field', [ $this, 'set_field_options' ] );
+		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );

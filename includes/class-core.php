@@ -129,7 +129,7 @@ final class Core {
 		if ( get_option( 'hp_core_activated' ) || count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
 
 			// Fires on HivePress activation.
-			do_action( 'hivepress/activate' );
+			do_action( 'hivepress/v1/activate' );
 
 			// Delete activation status.
 			if ( get_option( 'hp_core_activated' ) ) {
@@ -149,7 +149,7 @@ final class Core {
 	public function setup() {
 
 		// Set HivePress directories.
-		$this->dirs = apply_filters( 'hivepress/dirs', [ dirname( HP_CORE_FILE ) ] );
+		$this->dirs = apply_filters( 'hivepress/v1/dirs', [ dirname( HP_CORE_FILE ) ] );
 
 		// Define constants.
 		$this->define_constants();
@@ -289,7 +289,7 @@ final class Core {
 			}
 
 			// Filter configuration.
-			$config = apply_filters( 'hivepress/' . $path, $config );
+			$config = apply_filters( 'hivepress/v1/' . $path, $config );
 
 			// Set configuration.
 			if ( ! is_null( $name ) ) {

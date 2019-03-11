@@ -8,6 +8,7 @@
 namespace HivePress\Forms;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Form
  */
 abstract class Form {
+	use Traits\Mutator;
 
 	/**
 	 * Form name.
@@ -86,28 +88,12 @@ abstract class Form {
 		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/forms/form', $args );
-		$args = apply_filters( 'hivepress/forms/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/forms/form', $args );
+		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
-		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			if ( method_exists( $this, 'set_' . $name ) ) {
-				call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
-			} else {
-				$this->$name = $value;
-			}
 		}
 	}
 

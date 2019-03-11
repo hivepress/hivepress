@@ -20,20 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Template {
 
 	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Block settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

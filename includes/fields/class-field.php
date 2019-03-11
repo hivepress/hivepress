@@ -8,6 +8,7 @@
 namespace HivePress\Fields;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,28 @@ defined( 'ABSPATH' ) || exit;
  * @class Field
  */
 abstract class Field {
+	use Traits\Mutator;
+
+	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
+	 * Field title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
+	 * Field settings.
+	 *
+	 * @var array
+	 */
+	protected static $settings = [];
 
 	/**
 	 * Field arguments.
@@ -93,7 +116,7 @@ abstract class Field {
 
 		// Filter arguments.
 		// todo.
-		$this->args = apply_filters( 'hivepress/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
+		$this->args = apply_filters( 'hivepress/v1/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
 
 		// todo.
 		unset( $this->args['type'] );
@@ -105,38 +128,6 @@ abstract class Field {
 
 		// todo.
 		$this->args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-	}
-
-	/**
-	 * Sets static property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected static function set_static_property( $name, $value ) {
-		if ( property_exists( static::class, $name ) ) {
-			if ( method_exists( static::class, 'set_' . $name ) ) {
-				call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
-			} else {
-				static::$$name = $value;
-			}
-		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
-			if ( method_exists( $this, 'set_' . $name ) ) {
-				call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
-			} else {
-				$this->$name = $value;
-			}
-		}
 	}
 
 	/**

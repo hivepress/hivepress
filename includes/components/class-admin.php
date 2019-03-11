@@ -45,7 +45,7 @@ final class Admin {
 			add_filter( 'menu_order', [ $this, 'order_pages' ] );
 
 			// Initialize settings.
-			add_action( 'hivepress/activate', [ $this, 'init_settings' ] );
+			add_action( 'hivepress/v1/activate', [ $this, 'init_settings' ] );
 
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -556,7 +556,7 @@ final class Admin {
 			if ( hp\prefix( $meta_box['screen'] ) === $post_type ) {
 
 				// Filter arguments.
-				$meta_box = apply_filters( 'hivepress/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
+				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 				// Add meta box.
 				if ( ! empty( $meta_box['fields'] ) ) {
@@ -582,7 +582,7 @@ final class Admin {
 				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen, true ) ) ) {
 
 					// Filter arguments.
-					$meta_box = apply_filters( 'hivepress/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
+					$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 					foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
@@ -627,7 +627,7 @@ final class Admin {
 		if ( ! is_null( $meta_box ) ) {
 
 			// Filter arguments.
-			$meta_box = apply_filters( 'hivepress/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
+			$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 			// Render fields.
 			$output .= '<table class="form-table hp-form">';
@@ -713,7 +713,7 @@ final class Admin {
 				if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $term->taxonomy ) {
 
 					// Filter arguments.
-					$meta_box = apply_filters( 'hivepress/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
+					$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 					foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
@@ -764,7 +764,7 @@ final class Admin {
 			if ( ! is_array( $screen ) && taxonomy_exists( $screen ) && $screen === $taxonomy ) {
 
 				// Filter arguments.
-				$meta_box = apply_filters( 'hivepress/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
+				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 

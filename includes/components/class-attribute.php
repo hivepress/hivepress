@@ -44,20 +44,20 @@ final class Attribute {
 		foreach ( $this->models as $model ) {
 
 			// Add field settings.
-			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ] );
-			add_filter( 'hivepress/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ] );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ] );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ] );
 
 			// Add edit fields.
-			add_filter( 'hivepress/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_update', [ $this, 'add_edit_fields' ] );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ] );
 
 			// Add search fields.
-			add_filter( 'hivepress/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
 
 			// Add sort options.
-			add_filter( 'hivepress/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
 		}
 
 		if ( is_admin() ) {

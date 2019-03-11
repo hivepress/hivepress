@@ -27,20 +27,6 @@ class Hidden extends Field {
 	protected static $type;
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
