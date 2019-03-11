@@ -45,17 +45,20 @@ class Listing extends Template {
 		$listing_id = absint( $this->get_attribute( 'id' ) );
 
 		if ( 0 === $listing_id ) {
-			$listing_id = get_the_ID();
+			$listing_id = absint( get_the_ID() );
 		}
 
-		// Get listing.
-		$listing = \HivePress\Models\Listing::get( $listing_id );
+		if ( 0 !== $listing_id ) {
 
-		if ( ! is_null( $listing ) ) {
-			$this->attributes['listing'] = $listing;
+			// Get listing.
+			$listing = \HivePress\Models\Listing::get( $listing_id );
 
-			// Render listing.
-			$output = parent::render();
+			if ( ! is_null( $listing ) ) {
+				$this->attributes['listing'] = $listing;
+
+				// Render listing.
+				$output = parent::render();
+			}
 		}
 
 		return $output;

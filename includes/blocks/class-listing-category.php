@@ -39,7 +39,24 @@ class Listing_Category extends Template {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		return '';
+		$output = '';
+
+		// Get category ID.
+		$category_id = absint( $this->get_attribute( 'id' ) );
+
+		if ( 0 !== $category_id ) {
+
+			// Get category.
+			$category = \HivePress\Models\Listing_Category::get( $category_id );
+
+			if ( ! is_null( $category ) ) {
+				$this->attributes['category'] = $category;
+
+				// Render category.
+				$output = parent::render();
+			}
+		}
+
+		return $output;
 	}
 }

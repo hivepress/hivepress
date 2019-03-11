@@ -156,6 +156,8 @@ class Listing extends Controller {
 	 * @return bool
 	 */
 	public function is_listings_page() {
+		// todo.
+		return false;
 		return is_page( absint( get_option( 'hp_page_listings' ) ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( get_object_taxonomies( 'hp_listing' ) );
 	}
 

@@ -137,7 +137,16 @@ class Listing_Categories extends Block {
 
 			foreach ( $categories as $category ) {
 				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-				$output .= ( new Listing_Category( [ 'attributes' => [ 'template_name' => 'listing_category_summary' ] ] ) )->render();
+
+				$output .= ( new Listing_Category(
+					[
+						'attributes' => [
+							'id'            => $category->term_id,
+							'template_name' => 'listing_category_summary',
+						],
+					]
+				) )->render();
+
 				$output .= '</div>';
 			}
 

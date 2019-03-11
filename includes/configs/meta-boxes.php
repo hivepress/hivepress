@@ -103,7 +103,7 @@ return [
 		'screen' => 'listing_category',
 
 		'fields' => [
-			'image'                 => [
+			'image_id'              => [
 				'label'        => esc_html__( 'Image', 'hivepress' ),
 				'caption'      => esc_html__( 'Select Image', 'hivepress' ),
 				'type'         => 'attachment_select',
