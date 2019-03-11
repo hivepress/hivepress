@@ -1,6 +1,6 @@
 <?php
 /**
- * Vendor block view template.
+ * Listing category block view template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -19,7 +19,7 @@ return [
 			'attributes' => [
 				'tag'        => 'article',
 				'attributes' => [
-					'class' => [ 'hp-vendor', 'hp-vendor--block-view' ],
+					'class' => [ 'hp-listing-category', 'hp-listing-category--block-view' ],
 				],
 			],
 
@@ -31,7 +31,7 @@ return [
 					'attributes' => [
 						'tag'        => 'header',
 						'attributes' => [
-							'class' => [ 'hp-vendor__header' ],
+							'class' => [ 'hp-listing-category__header' ],
 						],
 					],
 
@@ -41,7 +41,7 @@ return [
 							'order'      => 10,
 
 							'attributes' => [
-								'file_path' => 'vendor/block/image',
+								'file_path' => 'listing-category/block/image',
 							],
 						],
 					],
@@ -53,39 +53,48 @@ return [
 
 					'attributes' => [
 						'attributes' => [
-							'class' => [ 'hp-vendor__content' ],
+							'class' => [ 'hp-listing-category__content' ],
 						],
 					],
 
 					'blocks'     => [
-						'name'    => [
+						'name'        => [
 							'type'       => 'element',
 							'order'      => 10,
 
 							'attributes' => [
-								'file_path' => 'vendor/block/name',
+								'file_path' => 'listing-category/block/name',
 							],
 						],
 
-						'summary' => [
+						'summary'     => [
 							'type'       => 'container',
 							'order'      => 20,
 
 							'attributes' => [
 								'attributes' => [
-									'class' => [ 'hp-vendor__summary' ],
+									'class' => [ 'hp-listing-category__summary' ],
 								],
 							],
 
 							'blocks'     => [
-								'date' => [
+								'count' => [
 									'type'       => 'element',
 									'order'      => 10,
 
 									'attributes' => [
-										'file_path' => 'vendor/date',
+										'file_path' => 'listing-category/count',
 									],
 								],
+							],
+						],
+
+						'description' => [
+							'type'       => 'element',
+							'order'      => 30,
+
+							'attributes' => [
+								'file_path' => 'listing-category/description',
 							],
 						],
 					],

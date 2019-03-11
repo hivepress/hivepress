@@ -114,7 +114,7 @@ class Listing_Category extends Term {
 	final public function get_count() {
 
 		// Get category IDs.
-		$category_ids = array_merge( absint( $this->id ), get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
+		$category_ids = array_merge( [ absint( $this->id ) ], get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
 
 		// Get listing IDs.
 		$listing_ids = get_posts(
