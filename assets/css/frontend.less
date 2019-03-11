@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -131,37 +130,37 @@ Mixins
 	Listings
 	--------------------------------------------------------------*/
 	&-listing {
-		&--view-summary {
+		&--block-view {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
 		}
 
-		&--view-summary &__content,
-		&--view-summary &__footer,
-		&--view-summary &__header {
+		&--block-view &__content,
+		&--block-view &__footer,
+		&--block-view &__header {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
 			}
 		}
 
-		&--view-summary &__attributes--secondary,
-		&--view-summary &__summary,
-		&--view-summary &__title {
+		&--block-view &__attributes--secondary,
+		&--block-view &__summary,
+		&--block-view &__title {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
 			}
 		}
 
-		&--view-summary &__footer {
+		&--block-view &__footer {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 		}
 
-		&--view-summary &__actions--primary,
-		&--view-summary &__attributes--primary,
-		&--view-summary &__properties {
+		&--block-view &__actions--primary,
+		&--block-view &__attributes--primary,
+		&--block-view &__properties {
 			display: flex;
 			align-items: center;
 		}
@@ -254,7 +253,7 @@ Mixins
 			display: block;
 		}
 
-		&--view-summary &__attributes--primary &__attribute {
+		&--block-view &__attributes--primary &__attribute {
 			font-size: 120%;
 
 			&:not(:last-child) {
@@ -262,7 +261,7 @@ Mixins
 			}
 		}
 
-		&--view-summary &__actions--primary &__action {
+		&--block-view &__actions--primary &__action {
 			opacity: 0.5;
 
 			&:hover,
@@ -279,22 +278,22 @@ Mixins
 	Vendors
 	--------------------------------------------------------------*/
 	&-vendor {
-		&--view-summary {
+		&--block-view {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
 		}
 
-		&--view-summary &__content,
-		&--view-summary &__footer,
-		&--view-summary &__header {
+		&--block-view &__content,
+		&--block-view &__footer,
+		&--block-view &__header {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
 			}
 		}
 
-		&--view-summary &__summary,
-		&--view-summary &__title {
+		&--block-view &__summary,
+		&--block-view &__title {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
 			}
@@ -313,7 +312,7 @@ Mixins
 			}
 		}
 
-		&--view-summary &__name {
+		&--block-view &__name {
 			text-align: center;
 		}
 
@@ -322,7 +321,7 @@ Mixins
 			display: block;
 		}
 
-		&--view-summary &__date {
+		&--block-view &__date {
 			text-align: center;
 		}
 	}
