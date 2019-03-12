@@ -30,6 +30,13 @@ class Listing_Filter extends Form {
 				'action' => home_url( '/' ),
 				'method' => 'GET',
 				'fields' => [
+					'category'  => [
+						'label'   => esc_html__( 'Category', 'hivepress' ),
+						'type'    => 'radio',
+						'options' => [],
+						'order'   => 10,
+					],
+
 					'post_type' => [
 						'type'    => 'hidden',
 						'default' => 'hp_listing',

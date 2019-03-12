@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -9,121 +8,34 @@ Mixins
 	}
 }
 
+.center-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .hp {
 	/*--------------------------------------------------------------
-	Forms
+	Icons
 	--------------------------------------------------------------*/
-	&-form {
-		margin: 0;
-
-		&__field {
-			&--email,
-			&--number,
-			&--password,
-			&--search,
-			&--select,
-			&--text,
-			&--textarea {
-				width: 100%;
-			}
-
-			input[type=checkbox],
-			input[type=radio] {
-				margin-right: 0.5rem;
-			}
-
-			&--textarea {
-				max-width: 100%;
-				min-height: 8rem;
-			}
-
-			&--attachment-upload {
-				&::after {
-					display: table;
-					clear: both;
-					content: '';
-				}
-
-				label {
-					position: relative;
-					float: left;
-					overflow: hidden;
-				}
-
-				input[type='file'] {
-					font-size: 200px !important;
-					position: absolute;
-					top: 0;
-					right: 0;
-					margin: 0;
-					cursor: pointer;
-					opacity: 0;
-					direction: ltr;
-				}
-
-				> div:first-child {
-					&:not(:empty) {
-						margin-bottom: -2rem;
-						padding-bottom: 1rem;
-					}
-
-					> div {
-						position: relative;
-						margin-bottom: 2rem;
-						.image-wrapper;
-
-						&:not(:only-child) img {
-							cursor: move;
-						}
-
-						a {
-							position: absolute;
-							top: 0.5rem;
-							right: 1.5rem;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							width: 1.5rem;
-							height: 1.5rem;
-							text-decoration: none;
-							color: #fff;
-							background-color: rgba(0,0,0,.5);
-						}
-					}
-				}
-			}
-		}
-
-		.g-recaptcha {
-			margin-bottom: 1.5rem;
-		}
+	&-icon {
+		font-size: 16px;
 	}
 	/*--------------------------------------------------------------
-	Listing search form
+	Pagination
 	--------------------------------------------------------------*/
-	&-form {
-		&--listing-search {
-			display: flex;
-			margin: 0 -.5rem;
-		}
-	}
-	/*--------------------------------------------------------------
-	Blocks
-	--------------------------------------------------------------*/
-	&-block {
-		&[data-state=loading] {
-			position: relative;
+	&-pagination {
+		.nav-links {
+			.center-container;
 
-			&::after {
-				content: '';
-				display: block;
-				position: absolute;
-				left: 0;
-				right: 0;
-				top: 0;
-				bottom: 0;
-				z-index: 1;
-				background-color: rgba(255,255,255,.5);
+			.page-numbers {
+				&:not(:last-child) {
+					margin-right: 1rem;
+				}
+
+				&:not(.prev):not(.next) {
+					font-size: 120%;
+				}
 			}
 		}
 	}
@@ -146,7 +58,7 @@ Mixins
 		}
 
 		&--view-block &__attributes--secondary,
-		&--view-block &__summary,
+		&--view-block &__details--primary,
 		&--view-block &__title {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
@@ -160,18 +72,17 @@ Mixins
 		}
 
 		&--view-block &__actions--primary,
-		&--view-block &__attributes--primary,
-		&--view-block &__properties {
+		&--view-block &__attributes--primary {
 			display: flex;
 			align-items: center;
 		}
 
 		&--view-page &__actions--primary,
+		&--view-page &__attributes--primary,
 		&--view-page &__attributes--secondary,
 		&--view-page &__description,
+		&--view-page &__details--primary,
 		&--view-page &__images,
-		&--view-page &__properties,
-		&--view-page &__summary,
 		&--view-page &__title {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
@@ -261,19 +172,6 @@ Mixins
 				margin-right: 1rem;
 			}
 		}
-
-		&--view-block &__actions--primary &__action {
-			opacity: 0.5;
-
-			&:hover,
-			&[data-state=active] {
-				opacity: 1;
-			}
-
-			&:not(:last-child) {
-				margin-right: 1rem;
-			}
-		}
 	}
 	/*--------------------------------------------------------------
 	Listing categories
@@ -293,8 +191,8 @@ Mixins
 		}
 
 		&--view-block &__description,
-		&--view-block &__summary,
-		&--view-block &__title {
+		&--view-block &__details--primary,
+		&--view-block &__name {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
 			}
@@ -313,16 +211,13 @@ Mixins
 			}
 		}
 
-		&--view-block &__name {
-			text-align: center;
-		}
-
 		&__count {
 			font-size: 80%;
 		}
 
 		&--view-block &__count,
-		&--view-block &__description {
+		&--view-block &__description,
+		&--view-block &__name {
 			text-align: center;
 		}
 	}
@@ -337,15 +232,14 @@ Mixins
 		}
 
 		&--view-block &__content,
-		&--view-block &__footer,
 		&--view-block &__header {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
 			}
 		}
 
-		&--view-block &__summary,
-		&--view-block &__title {
+		&--view-block &__details--primary,
+		&--view-block &__name {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
 			}
@@ -364,43 +258,100 @@ Mixins
 			}
 		}
 
-		&--view-block &__name {
-			text-align: center;
-		}
-
 		&__date {
 			font-size: 80%;
 			display: block;
 		}
 
-		&--view-block &__date {
+		&--view-block &__date,
+		&--view-block &__name {
 			text-align: center;
 		}
 	}
 	/*--------------------------------------------------------------
-	Pagination
+	Forms
 	--------------------------------------------------------------*/
-	&-pagination {
-		.nav-links {
-			display: flex;
-			justify-content: center;
-			align-items: center;
+	&-form {
+		margin: 0;
 
-			.page-numbers {
-				&:not(:last-child) {
-					margin-right: 1rem;
+		&__field {
+			&--email,
+			&--number,
+			&--password,
+			&--search,
+			&--select,
+			&--text,
+			&--textarea {
+				width: 100%;
+			}
+
+			input[type=checkbox],
+			input[type=radio] {
+				margin-right: 0.5rem;
+			}
+
+			&--textarea {
+				max-width: 100%;
+				min-height: 8rem;
+			}
+
+			&--attachment-upload {
+				&::after {
+					display: table;
+					clear: both;
+					content: '';
 				}
 
-				&:not(.prev):not(.next) {
-					font-size: 120%;
+				label {
+					position: relative;
+					float: left;
+					overflow: hidden;
+				}
+
+				input[type='file'] {
+					font-size: 200px !important;
+					position: absolute;
+					top: 0;
+					right: 0;
+					margin: 0;
+					cursor: pointer;
+					opacity: 0;
+					direction: ltr;
+				}
+
+				> div:first-child {
+					&:not(:empty) {
+						margin-bottom: -2rem;
+						padding-bottom: 1rem;
+					}
+
+					> div {
+						position: relative;
+						margin-bottom: 2rem;
+						.image-wrapper;
+
+						&:not(:only-child) img {
+							cursor: move;
+						}
+
+						a {
+							.center-container;
+							position: absolute;
+							top: 0.5rem;
+							right: 1.5rem;
+							width: 1.5rem;
+							height: 1.5rem;
+							text-decoration: none;
+							color: #fff;
+							background-color: rgba(0,0,0,.5);
+						}
+					}
 				}
 			}
 		}
-	}
-	/*--------------------------------------------------------------
-	Icons
-	--------------------------------------------------------------*/
-	&-icon {
-		font-size: 16px;
+
+		.g-recaptcha {
+			margin-bottom: 1.5rem;
+		}
 	}
 }
