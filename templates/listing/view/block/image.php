@@ -2,7 +2,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-<div class="hp-listing__images">
+<div class="hp-listing__image">
 	<a href="<?php the_permalink(); ?>">
 		<?php
 		if ( has_post_thumbnail() ) :

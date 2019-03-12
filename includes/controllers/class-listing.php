@@ -171,7 +171,7 @@ class Listing extends Controller {
 	 */
 	public function render_listings_page() {
 		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listings_page' ] ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listings_view_page' ] ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
 
 		return $output;

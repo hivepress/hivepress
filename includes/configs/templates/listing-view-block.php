@@ -36,12 +36,12 @@ return [
 					],
 
 					'blocks'     => [
-						'images' => [
+						'image' => [
 							'type'       => 'element',
 							'order'      => 10,
 
 							'attributes' => [
-								'file_path' => 'listing/view/block/images',
+								'file_path' => 'listing/view/block/image',
 							],
 						],
 					],
