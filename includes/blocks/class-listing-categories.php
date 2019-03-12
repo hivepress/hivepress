@@ -142,7 +142,7 @@ class Listing_Categories extends Block {
 					[
 						'attributes' => [
 							'id'            => $category->term_id,
-							'template_name' => 'listing_category_block_view',
+							'template_name' => 'listing_category_view_block',
 						],
 					]
 				) )->render();

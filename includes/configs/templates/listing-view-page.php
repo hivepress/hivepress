@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing page view template.
+ * Listing view page template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -11,11 +11,18 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'parent' => 'listing_page',
-
 	'blocks' => [
-		'content' => [
-			'blocks' => [
+		'container' => [
+			'type'       => 'container',
+			'order'      => 10,
+
+			'attributes' => [
+				'attributes' => [
+					'class' => [ 'hp-listing', 'hp-listing--view-page' ],
+				],
+			],
+
+			'blocks'     => [
 				'columns' => [
 					'type'       => 'container',
 					'order'      => 10,
@@ -34,7 +41,7 @@ return [
 							'attributes' => [
 								'tag'        => 'main',
 								'attributes' => [
-									'class' => [ 'hp-col-sm-8', 'hp-col-xs-12' ],
+									'class' => [ 'hp-listing__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 								],
 							],
 
@@ -44,17 +51,17 @@ return [
 									'order'      => 10,
 
 									'attributes' => [
-										'file_path' => 'listing/page/title',
+										'file_path' => 'listing/view/page/title',
 									],
 								],
 
-								'summary'              => [
+								'details_primary'      => [
 									'type'       => 'container',
 									'order'      => 20,
 
 									'attributes' => [
 										'attributes' => [
-											'class' => [ 'hp-listing__summary' ],
+											'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
 										],
 									],
 
@@ -64,7 +71,7 @@ return [
 											'order'      => 10,
 
 											'attributes' => [
-												'file_path' => 'listing/category',
+												'file_path' => 'listing/view/category',
 											],
 										],
 
@@ -73,7 +80,7 @@ return [
 											'order'      => 20,
 
 											'attributes' => [
-												'file_path' => 'listing/date',
+												'file_path' => 'listing/view/date',
 											],
 										],
 									],
@@ -84,7 +91,7 @@ return [
 									'order'      => 30,
 
 									'attributes' => [
-										'file_path' => 'listing/page/images',
+										'file_path' => 'listing/view/page/images',
 									],
 								],
 
@@ -93,7 +100,7 @@ return [
 									'order'      => 40,
 
 									'attributes' => [
-										'file_path' => 'listing/page/attributes-secondary',
+										'file_path' => 'listing/view/page/attributes-secondary',
 									],
 								],
 
@@ -102,7 +109,7 @@ return [
 									'order'      => 50,
 
 									'attributes' => [
-										'file_path' => 'listing/description',
+										'file_path' => 'listing/view/description',
 									],
 								],
 							],
@@ -115,35 +122,22 @@ return [
 							'attributes' => [
 								'tag'        => 'aside',
 								'attributes' => [
-									'class'          => [ 'hp-col-sm-4', 'hp-col-xs-12' ],
+									'class'          => [ 'hp-listing__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
 									'data-component' => 'sticky',
 								],
 							],
 
 							'blocks'     => [
-								'properties'      => [
-									'type'       => 'container',
+								'attributes_primary' => [
+									'type'       => 'element',
 									'order'      => 10,
 
 									'attributes' => [
-										'attributes' => [
-											'class' => [ 'hp-listing__properties' ],
-										],
-									],
-
-									'blocks'     => [
-										'attributes_primary' => [
-											'type'       => 'element',
-											'order'      => 10,
-
-											'attributes' => [
-												'file_path' => 'listing/page/attributes-primary',
-											],
-										],
+										'file_path' => 'listing/view/page/attributes-primary',
 									],
 								],
 
-								'actions_primary' => [
+								'actions_primary'    => [
 									'type'       => 'container',
 									'order'      => 20,
 
@@ -154,12 +148,12 @@ return [
 									],
 								],
 
-								'vendor'          => [
+								'vendor'             => [
 									'type'       => 'vendor',
 									'order'      => 30,
 
 									'attributes' => [
-										'template_name' => 'vendor_block_view',
+										'template_name' => 'vendor_view_block',
 									],
 								],
 							],

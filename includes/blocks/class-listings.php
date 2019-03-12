@@ -144,7 +144,7 @@ class Listings extends Block {
 				$query->the_post();
 
 				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-				$output .= ( new Listing( [ 'attributes' => [ 'template_name' => 'listing_block_view' ] ] ) )->render();
+				$output .= ( new Listing( [ 'attributes' => [ 'template_name' => 'listing_view_block' ] ] ) )->render();
 				$output .= '</div>';
 			}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing block view template.
+ * Listing view block template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -19,7 +19,7 @@ return [
 			'attributes' => [
 				'tag'        => 'article',
 				'attributes' => [
-					'class' => [ 'hp-listing', 'hp-listing--block-view' ],
+					'class' => [ 'hp-listing', 'hp-listing--view-block' ],
 				],
 			],
 
@@ -36,16 +36,17 @@ return [
 					],
 
 					'blocks'     => [
-						'image' => [
+						'images' => [
 							'type'       => 'element',
 							'order'      => 10,
 
 							'attributes' => [
-								'file_path' => 'listing/block/image',
+								'file_path' => 'listing/view/block/images',
 							],
 						],
 					],
 				],
+
 				'content' => [
 					'type'       => 'container',
 					'order'      => 20,
@@ -62,17 +63,17 @@ return [
 							'order'      => 10,
 
 							'attributes' => [
-								'file_path' => 'listing/block/title',
+								'file_path' => 'listing/view/block/title',
 							],
 						],
 
-						'summary'              => [
+						'details_primary'      => [
 							'type'       => 'container',
 							'order'      => 20,
 
 							'attributes' => [
 								'attributes' => [
-									'class' => [ 'hp-listing__summary' ],
+									'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
 								],
 							],
 
@@ -82,7 +83,7 @@ return [
 									'order'      => 10,
 
 									'attributes' => [
-										'file_path' => 'listing/category',
+										'file_path' => 'listing/view/category',
 									],
 								],
 
@@ -91,7 +92,7 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'file_path' => 'listing/date',
+										'file_path' => 'listing/view/date',
 									],
 								],
 							],
@@ -102,7 +103,7 @@ return [
 							'order'      => 30,
 
 							'attributes' => [
-								'file_path' => 'listing/block/attributes-secondary',
+								'file_path' => 'listing/view/block/attributes-secondary',
 							],
 						],
 					],
@@ -120,28 +121,16 @@ return [
 					],
 
 					'blocks'     => [
-						'properties'      => [
-							'type'       => 'container',
+						'attributes_primary' => [
+							'type'       => 'element',
 							'order'      => 10,
 
 							'attributes' => [
-								'attributes' => [
-									'class' => [ 'hp-listing__properties' ],
-								],
-							],
-
-							'blocks'     => [
-								'attributes_primary' => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'listing/block/attributes-primary',
-									],
-								],
+								'file_path' => 'listing/view/block/attributes-primary',
 							],
 						],
-						'actions_primary' => [
+
+						'actions_primary'    => [
 							'type'       => 'container',
 							'order'      => 20,
 
