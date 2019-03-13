@@ -80,16 +80,59 @@ class Checkboxes extends Select {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
 
-		foreach ( $this->options as $value => $label ) {
-			$output .= ( new Checkbox(
-				[
-					'name'    => $this->name . '_' . $value,
-					'caption' => $label,
-				]
-			) )->render();
-		}
+		// Render options.
+		$output .= $this->render_options();
 
 		$output .= '</div>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders field options.
+	 *
+	 * @param mixed $current Current value.
+	 * @return string
+	 */
+	protected function render_options( $current = null ) {
+		$output = '';
+
+		// Filter options.
+		$options = array_filter(
+			$this->options,
+			function( $option ) use ( $current ) {
+				$parent = hp\get_array_value( $option, 'parent' );
+
+				return ( is_null( $current ) && is_null( $parent ) ) || ( ! is_null( $current ) && $parent === $current );
+			}
+		);
+
+		// Render options.
+		if ( ! empty( $options ) ) {
+			$output .= '<ul>';
+
+			foreach ( $options as $value => $option ) {
+				$output .= '<li>';
+
+				// Get label.
+				$label = is_array( $option ) ? $option['label'] : $option;
+
+				// Render option.
+				$output .= ( new Checkbox(
+					[
+						'name'    => $this->name . '_' . $value,
+						'caption' => $label,
+					]
+				) )->render();
+
+				// Render child options.
+				$output .= $this->render_options( $value );
+
+				$output .= '</li>';
+			}
+
+			$output .= '</ul>';
+		}
 
 		return $output;
 	}

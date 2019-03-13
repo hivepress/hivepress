@@ -56,6 +56,9 @@ final class Attribute {
 			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
 
+			// Add category options.
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ] );
+
 			// Add sort options.
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
 		}
@@ -68,6 +71,7 @@ final class Attribute {
 			// Remove taxonomy boxes.
 			add_action( 'admin_notices', [ $this, 'remove_taxonomy_boxes' ] );
 		}
+
 	}
 
 	/**
@@ -270,6 +274,84 @@ final class Attribute {
 				$form['fields'][ $attribute_name ] = $attribute['search_field'];
 			}
 		}
+
+		return $form;
+	}
+
+	/**
+	 * Adds category options.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_category_options( $form ) {
+
+		// Get model.
+		$model = explode( '_', $form['name'] );
+		$model = reset( $model );
+
+		// Get category IDs.
+		$category_ids = [];
+
+		$category_id = $this->get_category_id( $model );
+
+		if ( 0 !== $category_id ) {
+
+			// Get parent categories.
+			$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
+
+			// Get child categories.
+			$category_ids = array_merge(
+				$category_ids,
+				get_terms(
+					hp\prefix( $model . '_category' ),
+					[
+						'parent' => $category_id,
+						'fields' => 'ids',
+					]
+				)
+			);
+		} else {
+
+			// Get top-level categories.
+			$category_ids = get_terms(
+				hp\prefix( $model . '_category' ),
+				[
+					'parent' => 0,
+					'fields' => 'ids',
+				]
+			);
+		}
+
+		// Get categories.
+		$categories = get_terms(
+			[
+				'taxonomy'   => hp\prefix( $model . '_category' ),
+				'include'    => $category_ids,
+				'hide_empty' => false,
+				'meta_key'   => 'hp_order',
+				'orderby'    => 'meta_value_num',
+				'order'      => 'ASC',
+			]
+		);
+
+		// Add options.
+		$options = [
+			0 => [
+				'label'  => esc_html__( 'All Categories', 'hivepress' ),
+				'parent' => null,
+			],
+		];
+
+		foreach ( $categories as $category ) {
+			$options[ $category->term_id ] = [
+				'label'  => $category->name,
+				'parent' => $category->parent,
+			];
+		}
+
+		// Set options.
+		$form['fields']['category']['options'] = $options;
 
 		return $form;
 	}
