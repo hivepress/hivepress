@@ -29,6 +29,7 @@ class User_Password_Request extends Form {
 			[
 				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 				'action' => hp\get_rest_url( '/users/request-password' ),
+
 				'fields' => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
@@ -37,6 +38,10 @@ class User_Password_Request extends Form {
 						'required'   => true,
 						'order'      => 10,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Send Email', 'hivepress' ),
 				],
 			],
 			$args

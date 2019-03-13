@@ -29,12 +29,22 @@ class Listing_Sort extends Form {
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
+				'button' => null,
+
 				'fields' => [
 					'sort'      => [
 						'label'   => esc_html__( 'Sort by', 'hivepress' ),
 						'type'    => 'select',
 						'options' => [],
 						'order'   => 10,
+					],
+
+					's'         => [
+						'type' => 'hidden',
+					],
+
+					'category'  => [
+						'type' => 'hidden',
 					],
 
 					'post_type' => [

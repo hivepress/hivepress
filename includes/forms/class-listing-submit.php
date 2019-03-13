@@ -52,6 +52,10 @@ class Listing_Submit extends Listing_Update {
 			[
 				'title'  => esc_html__( 'Submit Listing', 'hivepress' ),
 				'fields' => $fields,
+
+				'button' => [
+					'label' => esc_html__( 'Submit Listing', 'hivepress' ),
+				],
 			],
 			$args
 		);

@@ -28,6 +28,7 @@ class User_Update extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'model'  => 'user',
+
 				'fields' => [
 					'image_id'         => [
 						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
@@ -64,6 +65,10 @@ class User_Update extends Model_Form {
 						'type'  => 'password',
 						'order' => 70,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Update Settings', 'hivepress' ),
 				],
 			],
 			$args

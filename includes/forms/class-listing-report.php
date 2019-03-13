@@ -28,6 +28,7 @@ class Listing_Report extends Form {
 		$args = hp\merge_arrays(
 			[
 				'title'  => esc_html__( 'Report Listing', 'hivepress' ),
+
 				'fields' => [
 					'reason' => [
 						'type'       => 'textarea',
@@ -35,6 +36,10 @@ class Listing_Report extends Form {
 						'required'   => true,
 						'order'      => 10,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Report Listing', 'hivepress' ),
 				],
 			],
 			$args

@@ -29,10 +29,15 @@ class User_Delete extends Model_Form {
 			[
 				'model'  => 'user',
 				'method' => 'DELETE',
+
 				'fields' => [
 					'password' => [
 						'order' => 10,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Delete Account', 'hivepress' ),
 				],
 			],
 			$args

@@ -29,6 +29,7 @@ class Listing_Search extends Form {
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
+
 				'fields' => [
 					's'         => [
 						'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
@@ -41,6 +42,10 @@ class Listing_Search extends Form {
 						'type'    => 'hidden',
 						'default' => 'hp_listing',
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Search', 'hivepress' ),
 				],
 			],
 			$args

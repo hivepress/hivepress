@@ -30,6 +30,7 @@ class User_Login extends Model_Form {
 				'title'  => esc_html__( 'Login User', 'hivepress' ),
 				'model'  => 'user',
 				'action' => hp\get_rest_url( '/users/login' ),
+
 				'fields' => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
@@ -42,6 +43,10 @@ class User_Login extends Model_Form {
 					'password'          => [
 						'order' => 20,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Sign In', 'hivepress' ),
 				],
 			],
 			$args

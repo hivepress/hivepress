@@ -62,6 +62,10 @@ class User_Register extends Model_Form {
 				'model'  => 'user',
 				'action' => hp\get_rest_url( '/users' ),
 				'fields' => $fields,
+
+				'button' => [
+					'label' => esc_html__( 'Register', 'hivepress' ),
+				],
 			],
 			$args
 		);

@@ -38,10 +38,22 @@ class Listing_Filter extends Form {
 						'order'   => 10,
 					],
 
+					's'         => [
+						'type' => 'hidden',
+					],
+
+					'sort'      => [
+						'type' => 'hidden',
+					],
+
 					'post_type' => [
 						'type'    => 'hidden',
 						'default' => 'hp_listing',
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Filter', 'hivepress' ),
 				],
 			],
 			$args

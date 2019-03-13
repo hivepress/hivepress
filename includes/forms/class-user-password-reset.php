@@ -29,6 +29,7 @@ class User_Password_Reset extends Model_Form {
 			[
 				'model'  => 'user',
 				'action' => hp\get_rest_url( '/users/reset-password' ),
+
 				'fields' => [
 					'password'           => [
 						'label' => esc_html__( 'New Password', 'hivepress' ),
@@ -43,6 +44,10 @@ class User_Password_Reset extends Model_Form {
 						'type'     => 'hidden',
 						'required' => true,
 					],
+				],
+
+				'button' => [
+					'label' => esc_html__( 'Reset Password', 'hivepress' ),
 				],
 			],
 			$args
