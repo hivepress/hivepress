@@ -10,7 +10,19 @@
 
 	$(document).ready(function() {
 
-		// Sticky
+		// Modals
+		getComponent('modal').each(function() {
+			var url = '#' + $(this).attr('id');
+
+			$('a[href=' + url + ']').on('click', function() {
+				$.fancybox.close();
+				$.fancybox.open({
+					src: url,
+				});
+			});
+		});
+
+		// Stickies
 		getComponent('sticky').each(function() {
 			var container = $(this),
 				spacing = 30 + $('#wpadminbar').height();
@@ -23,7 +35,7 @@
 			});
 		});
 
-		// Slider
+		// Sliders
 		getComponent('slider').each(function() {
 			var container = $(this),
 				containerClass = container.attr('class').split(' ')[0],

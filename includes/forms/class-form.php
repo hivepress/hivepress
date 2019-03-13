@@ -326,20 +326,16 @@ abstract class Form {
 		$output .= '</div>';
 
 		// Render captcha.
-		$output .= '<div class="hp-form__captcha">';
-
 		if ( $this->captcha ) {
+			$output .= '<div class="hp-form__captcha">';
 			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
+			$output .= '</div>';
 		}
 
-		$output .= '</div>';
-
-		// Render actions.
+		// Render button.
 		if ( $this->button ) {
 			$output .= '<div class="hp-form__actions">';
-
 			$output .= $this->button->render();
-
 			$output .= '</div>';
 		}
 
