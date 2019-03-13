@@ -57,6 +57,13 @@ abstract class Form {
 	protected $captcha = false;
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected $button;
+
+	/**
 	 * Form attributes.
 	 *
 	 * @var array
@@ -91,6 +98,15 @@ abstract class Form {
 		$args = apply_filters( 'hivepress/v1/forms/form', $args );
 		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
 
+		// todo.
+		$args['button'] = array_merge(
+			[
+				'label' => esc_html__( 'Submit', 'hivepress' ),
+				'type'  => 'button',
+			],
+			hp\get_array_value( $args, 'button', [] )
+		);
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
@@ -113,6 +129,23 @@ abstract class Form {
 	 */
 	final protected function set_method( $method ) {
 		$this->method = strtoupper( $method );
+	}
+
+	/**
+	 * Sets form button.
+	 *
+	 * @param array $button_args Button arguments.
+	 */
+	protected function set_button( $button_args ) {
+
+		// Get button class.
+		$button_class = '\HivePress\Fields\\' . $button_args['type'];
+
+		if ( class_exists( $button_class ) ) {
+
+			// Create button.
+			$this->button = new $button_class( $button_args );
+		}
 	}
 
 	/**
@@ -288,8 +321,9 @@ abstract class Form {
 		$output .= '</div>';
 
 		// Render actions.
+		// todo.
 		$output .= '<div class="hp-form__actions">';
-		$output .= '<button type="submit">' . esc_html__( 'Submit', 'hivepress' ) . '</button>';
+		$output .= $this->button->render();
 		$output .= '</div>';
 
 		$output .= '</form>';
