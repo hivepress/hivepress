@@ -125,6 +125,17 @@ class Text extends Field {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_unslash( $this->value );
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

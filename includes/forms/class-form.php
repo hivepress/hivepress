@@ -279,12 +279,18 @@ abstract class Form {
 		$output .= '</div>';
 
 		// Render captcha.
+		$output .= '<div class="hp-form__captcha">';
+
 		if ( $this->captcha ) {
 			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
 		}
 
-		// Render submit button.
+		$output .= '</div>';
+
+		// Render actions.
+		$output .= '<div class="hp-form__actions">';
 		$output .= '<button type="submit">' . esc_html__( 'Submit', 'hivepress' ) . '</button>';
+		$output .= '</div>';
 
 		$output .= '</form>';
 

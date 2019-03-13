@@ -121,9 +121,18 @@ abstract class Field {
 		// todo.
 		unset( $this->args['type'] );
 
+		// todo.
+		$default = hp\get_array_value( $args, 'default' );
+		unset( $args['default'] );
+
 		// Set properties.
 		foreach ( $this->args as $name => $value ) {
 			$this->set_property( $name, $value );
+		}
+
+		// todo always last.
+		if ( ! is_null( $default ) ) {
+			$this->set_property( 'default', $default );
 		}
 
 		// todo.
@@ -195,6 +204,7 @@ abstract class Field {
 	final public function set_value( $value ) {
 		$this->value = $value;
 
+		$this->normalize();
 		$this->sanitize();
 	}
 
@@ -250,6 +260,15 @@ abstract class Field {
 	 */
 	final public function get_errors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		if ( '' === $this->value ) {
+			$this->value = null;
+		}
 	}
 
 	/**

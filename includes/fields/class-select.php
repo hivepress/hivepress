@@ -83,7 +83,11 @@ class Select extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
+			if ( $this->multiple ) {
+				$this->value = array_map( 'sanitize_text_field', $this->value );
+			} else {
+				$this->value = sanitize_text_field( $this->value );
+			}
 		}
 	}
 
@@ -93,8 +97,12 @@ class Select extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && ! in_array( $this->value, array_keys( $this->options ), true ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
+		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( array_map( 'strval', (array) $this->value ), array_map( 'strval', array_keys( $this->options ) ) ) ) === 0 ) {
+			if ( $this->multiple ) {
+				$this->add_errors( [ sprintf( esc_html__( '%s are invalid', 'hivepress' ), $this->label ) ] );
+			} else {
+				$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
+			}
 		}
 
 		return empty( $this->errors );

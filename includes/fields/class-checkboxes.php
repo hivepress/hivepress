@@ -115,13 +115,26 @@ class Checkboxes extends Select {
 				$output .= '<li>';
 
 				// Get label.
-				$label = is_array( $option ) ? $option['label'] : $option;
+				$label = $option;
+
+				if ( is_array( $option ) ) {
+					$label = $option['label'];
+				}
+
+				// Get default value.
+				$default = null;
+
+				if ( in_array( (string) $value, array_map( 'strval', (array) $this->value ), true ) ) {
+					$default = $value;
+				}
 
 				// Render option.
 				$output .= ( new Checkbox(
 					[
-						'name'    => $this->name . '_' . $value,
+						'name'    => $this->name . '[]',
 						'caption' => $label,
+						'toggle'  => $value,
+						'default' => $default,
 					]
 				) )->render();
 

@@ -115,10 +115,17 @@ class Radio extends Select {
 				$output .= '<li>';
 
 				// Get label.
-				$label = is_array( $option ) ? $option['label'] : $option;
+				$label = $option;
+
+				if ( is_array( $option ) ) {
+					$label = $option['label'];
+				}
+
+				// todo.
+				$id = $this->name . '_' . uniqid();
 
 				// Render option.
-				$output .= '<label for="' . esc_attr( $this->name . '_' . $value ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $this->name . '_' . $value ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+				$output .= '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
 
 				// Render child options.
 				$output .= $this->render_options( $value );
