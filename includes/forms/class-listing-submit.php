@@ -50,10 +50,11 @@ class Listing_Submit extends Listing_Update {
 		// Set arguments.
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Submit Listing', 'hivepress' ),
-				'fields' => $fields,
+				'title'    => esc_html__( 'Submit Listing', 'hivepress' ),
+				'redirect' => true,
+				'fields'   => $fields,
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Submit Listing', 'hivepress' ),
 				],
 			],

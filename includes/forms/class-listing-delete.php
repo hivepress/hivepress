@@ -27,10 +27,11 @@ class Listing_Delete extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'listing',
-				'method' => 'DELETE',
+				'model'    => 'listing',
+				'method'   => 'DELETE',
+				'redirect' => true,
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Delete Listing', 'hivepress' ),
 				],
 			],

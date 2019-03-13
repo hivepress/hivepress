@@ -27,10 +27,11 @@ class User_Password_Request extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-				'action' => hp\get_rest_url( '/users/request-password' ),
+				'title'   => esc_html__( 'Reset Password', 'hivepress' ),
+				'message' => esc_html__( 'Password reset email has been sent', 'hivepress' ),
+				'action'  => hp\get_rest_url( '/users/request-password' ),
 
-				'fields' => [
+				'fields'  => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
 						'type'       => 'text',
@@ -40,7 +41,7 @@ class User_Password_Request extends Form {
 					],
 				],
 
-				'button' => [
+				'button'  => [
 					'label' => esc_html__( 'Send Email', 'hivepress' ),
 				],
 			],

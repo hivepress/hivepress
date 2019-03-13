@@ -27,9 +27,10 @@ class Listing_Update extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'listing',
+				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
+				'model'   => 'listing',
 
-				'fields' => [
+				'fields'  => [
 					'image_ids'   => [
 						'label'        => esc_html__( 'Images', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
@@ -49,7 +50,7 @@ class Listing_Update extends Model_Form {
 					],
 				],
 
-				'button' => [
+				'button'  => [
 					'label' => esc_html__( 'Update Listing', 'hivepress' ),
 				],
 			],

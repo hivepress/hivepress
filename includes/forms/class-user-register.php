@@ -58,12 +58,13 @@ class User_Register extends Model_Form {
 		// Set arguments.
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Register User', 'hivepress' ),
-				'model'  => 'user',
-				'action' => hp\get_rest_url( '/users' ),
-				'fields' => $fields,
+				'title'    => esc_html__( 'Register User', 'hivepress' ),
+				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users' ),
+				'redirect' => true,
+				'fields'   => $fields,
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Register', 'hivepress' ),
 				],
 			],

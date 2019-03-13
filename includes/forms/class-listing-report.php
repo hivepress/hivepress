@@ -27,9 +27,10 @@ class Listing_Report extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Report Listing', 'hivepress' ),
+				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
+				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
 
-				'fields' => [
+				'fields'  => [
 					'reason' => [
 						'type'       => 'textarea',
 						'max_length' => 2048,
@@ -38,7 +39,7 @@ class Listing_Report extends Form {
 					],
 				],
 
-				'button' => [
+				'button'  => [
 					'label' => esc_html__( 'Report Listing', 'hivepress' ),
 				],
 			],

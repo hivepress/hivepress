@@ -27,16 +27,17 @@ class User_Delete extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'user',
-				'method' => 'DELETE',
+				'model'    => 'user',
+				'method'   => 'DELETE',
+				'redirect' => true,
 
-				'fields' => [
+				'fields'   => [
 					'password' => [
 						'order' => 10,
 					],
 				],
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Delete Account', 'hivepress' ),
 				],
 			],

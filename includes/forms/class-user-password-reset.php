@@ -27,10 +27,11 @@ class User_Password_Reset extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'user',
-				'action' => hp\get_rest_url( '/users/reset-password' ),
+				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users/reset-password' ),
+				'redirect' => true,
 
-				'fields' => [
+				'fields'   => [
 					'password'           => [
 						'label' => esc_html__( 'New Password', 'hivepress' ),
 						'order' => 10,
@@ -46,7 +47,7 @@ class User_Password_Reset extends Model_Form {
 					],
 				],
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Reset Password', 'hivepress' ),
 				],
 			],

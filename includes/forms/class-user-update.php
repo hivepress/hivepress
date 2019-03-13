@@ -27,9 +27,10 @@ class User_Update extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'user',
+				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
+				'model'   => 'user',
 
-				'fields' => [
+				'fields'  => [
 					'image_id'         => [
 						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
@@ -67,7 +68,7 @@ class User_Update extends Model_Form {
 					],
 				],
 
-				'button' => [
+				'button'  => [
 					'label' => esc_html__( 'Update Settings', 'hivepress' ),
 				],
 			],

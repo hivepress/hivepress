@@ -27,11 +27,12 @@ class User_Login extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Login User', 'hivepress' ),
-				'model'  => 'user',
-				'action' => hp\get_rest_url( '/users/login' ),
+				'title'    => esc_html__( 'Login User', 'hivepress' ),
+				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users/login' ),
+				'redirect' => true,
 
-				'fields' => [
+				'fields'   => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
 						'type'       => 'text',
@@ -45,7 +46,7 @@ class User_Login extends Model_Form {
 					],
 				],
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Sign In', 'hivepress' ),
 				],
 			],

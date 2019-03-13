@@ -36,6 +36,13 @@ abstract class Form {
 	protected $title;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected $message;
+
+	/**
 	 * Form action.
 	 *
 	 * @var string
@@ -48,6 +55,13 @@ abstract class Form {
 	 * @var string
 	 */
 	protected $method = 'POST';
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected $redirect = false;
 
 	/**
 	 * Form captcha.
@@ -321,10 +335,13 @@ abstract class Form {
 		$output .= '</div>';
 
 		// Render actions.
-		// todo.
-		$output .= '<div class="hp-form__actions">';
-		$output .= $this->button->render();
-		$output .= '</div>';
+		if ( $this->button ) {
+			$output .= '<div class="hp-form__actions">';
+
+			$output .= $this->button->render();
+
+			$output .= '</div>';
+		}
 
 		$output .= '</form>';
 
