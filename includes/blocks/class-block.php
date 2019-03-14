@@ -73,6 +73,9 @@ abstract class Block {
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
 	}
 
 	/**
@@ -115,11 +118,9 @@ abstract class Block {
 	}
 
 	/**
-	 * Gets block attributes.
-	 *
-	 * @return array
+	 * Bootstraps block properties.
 	 */
-	protected function get_attributes() {
+	protected function bootstrap() {
 		$attributes = [];
 
 		// Set block name.
@@ -127,7 +128,7 @@ abstract class Block {
 			$attributes['attributes']['data-block'] = $this->name;
 		}
 
-		return hp\merge_arrays( $this->attributes, $attributes );
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -137,7 +138,7 @@ abstract class Block {
 	 * @return mixed
 	 */
 	final protected function get_attribute( $name ) {
-		return hp\get_array_value( $this->get_attributes(), $name );
+		return hp\get_array_value( $this->attributes, $name );
 	}
 
 	/**

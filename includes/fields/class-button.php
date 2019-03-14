@@ -30,6 +30,6 @@ class Button extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<button type="submit" ' . hp\html_attributes( $this->get_attributes() ) . '>' . esc_html( $this->label ) . '</button>';
+		return '<button type="submit" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->label ) . '</button>';
 	}
 }

@@ -79,6 +79,22 @@ class Select extends Field {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+		$attributes = [];
+
+		// Set required property.
+		if ( $this->required ) {
+			$attributes['required'] = true;
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
+		parent::bootstrap();
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
@@ -114,7 +130,7 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
 			$output .= '<option value="' . esc_attr( $value ) . '" ' . selected( $this->value, $value, false ) . '>' . esc_html( $label ) . '</option>';

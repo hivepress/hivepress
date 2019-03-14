@@ -19,7 +19,7 @@ return [
 			'attributes' => [
 				'attributes' => [
 					'id'             => 'user_login_modal',
-					'class'          => 'hp-modal',
+					'class'          => [ 'hp-modal' ],
 					'data-component' => 'modal',
 				],
 			],
@@ -30,7 +30,10 @@ return [
 					'order'      => 10,
 
 					'attributes' => [
-						'form_name' => 'user_login',
+						'form_name'  => 'user_login',
+						'attributes' => [
+							'class' => [ 'hp-form--narrow' ],
+						],
 					],
 				],
 			],

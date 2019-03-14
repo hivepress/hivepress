@@ -130,10 +130,8 @@ abstract class Field {
 			$this->set_property( $name, $value );
 		}
 
-		// todo always last.
-		if ( ! is_null( $default ) ) {
-			$this->set_property( 'default', $default );
-		}
+		// Bootstrap properties.
+		$this->bootstrap();
 
 		// todo.
 		$this->args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
@@ -227,15 +225,6 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets default field value.
-	 *
-	 * @param mixed $value Field value.
-	 */
-	final protected function set_default( $value ) {
-		$this->set_value( $value );
-	}
-
-	/**
 	 * Adds field errors.
 	 *
 	 * @param array $errors Field errors.
@@ -245,30 +234,33 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets field attributes.
-	 *
-	 * @param array $attributes Field attributes.
-	 */
-	final public function set_attributes( $attributes ) {
-		$this->attributes = $attributes;
-	}
-
-	/**
-	 * Gets field attributes.
-	 *
-	 * @return array
-	 */
-	protected function get_attributes() {
-		return $this->attributes;
-	}
-
-	/**
 	 * Gets field errors.
 	 *
 	 * @return array
 	 */
 	final public function get_errors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+
+		// Set class.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
+			]
+		);
+
+		// Set default value.
+		$default = hp\get_array_value( $this->args, 'default' );
+
+		if ( ! is_null( $default ) ) {
+			$this->set_value( $default );
+		}
 	}
 
 	/**

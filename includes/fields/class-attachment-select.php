@@ -34,16 +34,16 @@ class Attachment_Select extends Field {
 	protected $caption;
 
 	/**
-	 * Gets button caption.
-	 *
-	 * @return string
+	 * Bootstraps field properties.
 	 */
-	protected function get_caption() {
+	protected function bootstrap() {
+
+		// Set caption.
 		if ( is_null( $this->caption ) ) {
-			return esc_html__( 'Select File', 'hivepress' );
+			$this->caption = esc_html__( 'Select File', 'hivepress' );
 		}
 
-		return $this->caption;
+		parent::bootstrap();
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Attachment_Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output  = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output  = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<div>';
 
 		if ( ! is_null( $this->value ) ) {
@@ -89,7 +89,7 @@ class Attachment_Select extends Field {
 		$output .= '<a href="#" class="hp-js-button" data-type="remove"><span class="dashicons dashicons-no-alt"></span></a>';
 		$output .= '</div>';
 
-		$output .= '<button type="button" class="button hp-js-button" data-type="file-select">' . esc_html( $this->get_caption() ) . '</button>';
+		$output .= '<button type="button" class="button hp-js-button" data-type="file-select">' . esc_html( $this->caption ) . '</button>';
 		$output .= '</div>';
 
 		return $output;

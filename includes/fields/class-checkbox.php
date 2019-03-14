@@ -78,16 +78,21 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Gets checkbox caption.
-	 *
-	 * @return string
+	 * Bootstraps field properties.
 	 */
-	protected function get_caption() {
+	protected function bootstrap() {
+
+		// Set caption.
 		if ( is_null( $this->caption ) ) {
-			return $this->label;
+			$this->caption = $this->label;
 		}
 
-		return $this->caption;
+		// Set required property.
+		if ( $this->required ) {
+			$attributes['required'] = true;
+		}
+
+		parent::bootstrap();
 	}
 
 	/**
@@ -112,6 +117,6 @@ class Checkbox extends Field {
 		// todo.
 		$id = $this->name . '_' . uniqid();
 
-		return '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->toggle ) . '" ' . checked( $this->value, $this->toggle, false ) . ' ' . hp\html_attributes( $this->get_attributes() ) . '><span>' . hp\sanitize_html( $this->get_caption() ) . '</span></label>';
+		return '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->toggle ) . '" ' . checked( $this->value, $this->toggle, false ) . ' ' . hp\html_attributes( $this->attributes ) . '><span>' . hp\sanitize_html( $this->caption ) . '</span></label>';
 	}
 }

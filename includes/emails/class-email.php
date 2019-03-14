@@ -74,20 +74,21 @@ abstract class Email {
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
 	}
 
 	/**
-	 * Gets email headers.
-	 *
-	 * @return array
+	 * Bootstraps email properties.
 	 */
-	final protected function get_headers() {
+	protected function bootstrap() {
 		$headers = [];
 
 		// Set content type.
 		$headers['Content-Type'] = 'text/html; charset=UTF-8';
 
-		return hp\merge_arrays( $this->headers, $headers );
+		$this->headers = hp\merge_arrays( $this->headers, $headers );
 	}
 
 	/**
@@ -104,8 +105,8 @@ abstract class Email {
 				function( $name, $value ) {
 					return $name . ': ' . $value;
 				},
-				array_keys( $this->get_headers() ),
-				$this->get_headers()
+				array_keys( $this->headers ),
+				$this->headers
 			),
 			$this->attachments
 		);

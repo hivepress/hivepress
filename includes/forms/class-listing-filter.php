@@ -32,7 +32,6 @@ class Listing_Filter extends Form {
 
 				'fields' => [
 					'category'  => [
-						'label'   => esc_html__( 'Category', 'hivepress' ),
 						'type'    => 'radio',
 						'options' => [],
 						'order'   => 10,

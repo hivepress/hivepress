@@ -128,6 +128,9 @@ abstract class Form {
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
 	}
 
 	/**
@@ -245,17 +248,15 @@ abstract class Form {
 	}
 
 	/**
-	 * Gets form attributes.
-	 *
-	 * @return array
+	 * Bootstraps form properties.
 	 */
-	final protected function get_attributes() {
+	final protected function bootstrap() {
 		$attributes = [];
 
 		// Set action.
 		if ( strpos( $this->action, get_rest_url() ) === 0 ) {
-			$attributes['action']   = '';
-			$attributes['data-url'] = $this->action;
+			$attributes['action']      = '';
+			$attributes['data-action'] = $this->action;
 		} else {
 			$attributes['action'] = $this->action;
 		}
@@ -271,7 +272,10 @@ abstract class Form {
 		// Set class.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
 
-		return hp\merge_arrays( $this->attributes, $attributes );
+		// Set component.
+		$attributes['data-component'] = 'form';
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -315,7 +319,7 @@ abstract class Form {
 	 * @return string
 	 */
 	final public function render() {
-		$output = '<form ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';
@@ -329,7 +333,6 @@ abstract class Form {
 			}
 
 			// Render field.
-			$field->set_attributes( [ 'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $field::get_type() ) ] ] );
 			$output .= $field->render();
 
 			$output .= '</div>';

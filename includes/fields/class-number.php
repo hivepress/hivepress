@@ -113,11 +113,9 @@ class Number extends Field {
 	}
 
 	/**
-	 * Gets field attributes.
-	 *
-	 * @return array
+	 * Bootstraps field properties.
 	 */
-	protected function get_attributes() {
+	protected function bootstrap() {
 		$attributes = [];
 
 		// Set step.
@@ -133,7 +131,14 @@ class Number extends Field {
 			$attributes['max'] = $this->max_value;
 		}
 
-		return hp\merge_arrays( parent::get_attributes(), $attributes );
+		// Set required property.
+		if ( $this->required ) {
+			$attributes['required'] = true;
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
+		parent::bootstrap();
 	}
 
 	/**
@@ -170,6 +175,6 @@ class Number extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

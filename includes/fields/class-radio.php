@@ -73,12 +73,19 @@ class Radio extends Select {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+		Field::bootstrap();
+	}
+
+	/**
 	 * Renders field HTML.
 	 *
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render options.
 		$output .= $this->render_options();

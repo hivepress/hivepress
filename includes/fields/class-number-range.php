@@ -61,13 +61,10 @@ class Number_Range extends Number {
 	}
 
 	/**
-	 * Gets field attributes.
-	 *
-	 * @return array
+	 * Bootstraps field properties.
 	 */
-	protected function get_attributes() {
-		// todo.
-		return $this->attributes;
+	protected function bootstrap() {
+		Field::bootstrap();
 	}
 
 	/**
@@ -92,7 +89,7 @@ class Number_Range extends Number {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Get values.
 		$values = (array) $this->value;
@@ -103,6 +100,7 @@ class Number_Range extends Number {
 			'decimals'  => $this->decimals,
 			'min_value' => $this->min_value,
 			'max_value' => $this->max_value,
+			'required'  => $this->required,
 		];
 
 		$output .= ( new Number(

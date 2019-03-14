@@ -319,8 +319,6 @@ final class Admin {
 			// Create field.
 			$field = new $field_class( $args );
 
-			$field->set_attributes( [ 'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $field::get_type() ) ] ] );
-
 			// Render field.
 			$output .= $field->render();
 		}
@@ -642,8 +640,6 @@ final class Admin {
 					// Create field.
 					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
-					$field->set_attributes( [ 'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $field::get_type() ) ] ] );
-
 					// Get field value.
 					$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
 
@@ -775,8 +771,6 @@ final class Admin {
 
 						// Create field.
 						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
-
-						$field->set_attributes( [ 'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $field::get_type() ) ] ] );
 
 						if ( ! is_object( $term ) ) {
 							$output .= '<div class="form-field">';

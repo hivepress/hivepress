@@ -64,6 +64,6 @@ class Textarea extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->get_attributes() ) . '>' . esc_textarea( $this->value ) . '</textarea>';
+		return '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( $this->value ) . '</textarea>';
 	}
 }

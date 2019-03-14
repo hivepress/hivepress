@@ -33,7 +33,7 @@ class Form extends Block {
 		if ( class_exists( $form_class ) ) {
 
 			// Create form.
-			$form = new $form_class( $this->get_attributes() );
+			$form = new $form_class( $this->attributes );
 
 			$form->set_values( $_GET );
 

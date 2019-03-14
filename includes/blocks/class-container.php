@@ -52,17 +52,19 @@ class Container extends Block {
 	}
 
 	/**
-	 * Gets block attributes.
-	 *
-	 * @return array
+	 * Bootstraps block properties.
 	 */
-	protected function get_attributes() {
-		return hp\merge_arrays(
-			[
-				'tag' => 'div',
-			],
-			parent::get_attributes()
-		);
+	protected function bootstrap() {
+		$attributes = [];
+
+		// Set container tag.
+		if ( ! isset( $this->attributes['tag'] ) ) {
+			$this->attributes['tag'] = 'div';
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
+		parent::bootstrap();
 	}
 
 	/**

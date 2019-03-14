@@ -55,16 +55,20 @@ class Attachment_Upload extends Field {
 	protected $max_files;
 
 	/**
-	 * Gets button caption.
-	 *
-	 * @return string
+	 * Bootstraps field properties.
 	 */
-	protected function get_caption() {
+	protected function bootstrap() {
+
+		// Set caption.
 		if ( is_null( $this->caption ) ) {
-			return esc_html__( 'Select File', 'hivepress' );
+			if ( $this->multiple ) {
+				$this->caption = esc_html__( 'Select Files', 'hivepress' );
+			} else {
+				$this->caption = esc_html__( 'Select File', 'hivepress' );
+			}
 		}
 
-		return $this->caption;
+		parent::bootstrap();
 	}
 
 	/**
@@ -97,7 +101,7 @@ class Attachment_Upload extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render attachments.
 		if ( $this->multiple ) {
@@ -116,7 +120,7 @@ class Attachment_Upload extends Field {
 		$output .= '<label for="' . esc_attr( $this->name ) . '">';
 
 		// Render upload button.
-		$output .= '<button type="button">' . esc_html( $this->get_caption() ) . '</button>';
+		$output .= '<button type="button">' . esc_html( $this->caption ) . '</button>';
 
 		// Render upload field.
 		$output .= ( new File(
