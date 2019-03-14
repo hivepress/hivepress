@@ -17,7 +17,10 @@ return [
 			'order'      => 10,
 
 			'attributes' => [
-				'tag' => 'header',
+				'tag'        => 'header',
+				'attributes' => [
+					'class' => 'hp-page__header',
+				],
 			],
 
 			'blocks'     => [
@@ -46,7 +49,7 @@ return [
 					'attributes' => [
 						'tag'        => 'aside',
 						'attributes' => [
-							'class'          => [ 'hp-col-sm-4', 'hp-col-xs-12' ],
+							'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
 							'data-component' => 'sticky',
 						],
 					],
@@ -57,7 +60,10 @@ return [
 							'order'      => 10,
 
 							'attributes' => [
-								'form_name' => 'listing_filter',
+								'form_name'  => 'listing_filter',
+								'attributes' => [
+									'class' => [ 'hp-form--narrow' ],
+								],
 							],
 						],
 					],
@@ -70,7 +76,7 @@ return [
 					'attributes' => [
 						'tag'        => 'main',
 						'attributes' => [
-							'class' => [ 'hp-col-sm-8', 'hp-col-xs-12' ],
+							'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 						],
 					],
 

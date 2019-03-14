@@ -197,6 +197,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field label.
+	 *
+	 * @return string
+	 */
+	final public function get_label() {
+		return $this->label;
+	}
+
+	/**
 	 * Sets field value.
 	 *
 	 * @param mixed $value Field value.

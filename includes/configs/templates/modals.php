@@ -1,6 +1,6 @@
 <?php
 /**
- * Footer template.
+ * Modals template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -33,13 +33,6 @@ return [
 						'form_name' => 'user_login',
 					],
 				],
-			],
-		],
-
-		'todo'             => [
-			'type'       => 'element',
-			'attributes' => [
-				'file_path' => 'footer',
 			],
 		],
 	],

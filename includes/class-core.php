@@ -89,7 +89,7 @@ final class Core {
 	 * @param string $class Class name.
 	 */
 	public function autoload( $class ) {
-		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
+		$parts = explode( '\\', hp\sanitize_slug( $class ) );
 
 		if ( count( $parts ) > 1 && reset( $parts ) === 'hivepress' ) {
 			$filename = 'class-' . end( $parts ) . '.php';
@@ -211,7 +211,7 @@ final class Core {
 	private function load_textdomains() {
 		foreach ( $this->dirs as $dir ) {
 			$basename   = basename( $dir );
-			$textdomain = str_replace( '_', '-', $basename );
+			$textdomain = hp\sanitize_slug( $basename );
 
 			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
 		}
@@ -281,7 +281,7 @@ final class Core {
 		// Get new configuration.
 		if ( is_null( $config ) ) {
 			foreach ( $this->dirs as $dir ) {
-				$filepath = $dir . '/includes/configs/' . str_replace( '_', '-', $path ) . '.php';
+				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $path ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
 					$config = hp\merge_arrays( (array) $config, include $filepath );

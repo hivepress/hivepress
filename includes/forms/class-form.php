@@ -115,8 +115,11 @@ abstract class Form {
 		// todo.
 		$args['button'] = array_merge(
 			[
-				'label' => esc_html__( 'Submit', 'hivepress' ),
-				'type'  => 'button',
+				'label'      => esc_html__( 'Submit', 'hivepress' ),
+				'type'       => 'button',
+				'attributes' => [
+					'class' => [ 'hp-form__button' ],
+				],
 			],
 			hp\get_array_value( $args, 'button', [] )
 		);
@@ -266,7 +269,7 @@ abstract class Form {
 		}
 
 		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . esc_attr( str_replace( '_', '-', $this->name ) ) ];
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
 
 		return hp\merge_arrays( $this->attributes, $attributes );
 	}
@@ -318,9 +321,18 @@ abstract class Form {
 		$output .= '<div class="hp-form__fields">';
 
 		foreach ( $this->fields as $field ) {
-			$field->set_attributes( [ 'class' => [ 'hp-form__field', 'hp-form__field--' . str_replace( '_', '-', $field::get_type() ) ] ] );
+			$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_type() ) ) . '">';
 
+			// Render label.
+			if ( $field->get_label() ) {
+				$output .= '<label for="todo" class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
+			}
+
+			// Render field.
+			$field->set_attributes( [ 'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $field::get_type() ) ] ] );
 			$output .= $field->render();
+
+			$output .= '</div>';
 		}
 
 		$output .= '</div>';

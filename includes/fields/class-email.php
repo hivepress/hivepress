@@ -49,6 +49,7 @@ class Email extends Text {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Email', 'hivepress' ),
+
 				'settings' => [
 					'min_length' => null,
 					'max_length' => null,

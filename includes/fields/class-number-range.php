@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Number_Range
  */
-class Number_Range extends Field {
+class Number_Range extends Number {
 
 	/**
 	 * Field type.
@@ -48,7 +48,11 @@ class Number_Range extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Number Range', 'hivepress' ),
+				'title'    => esc_html__( 'Number Range', 'hivepress' ),
+
+				'settings' => [
+					'placeholder' => null,
+				],
 			],
 			$args
 		);
@@ -57,9 +61,28 @@ class Number_Range extends Field {
 	}
 
 	/**
+	 * Gets field attributes.
+	 *
+	 * @return array
+	 */
+	protected function get_attributes() {
+		// todo.
+		return $this->attributes;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
+		// todo.
+	}
+
+	/**
+	 * Validates field value.
+	 *
+	 * @return bool
+	 */
+	public function validate() {
 		// todo.
 	}
 
@@ -71,22 +94,35 @@ class Number_Range extends Field {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->get_attributes() ) . '>';
 
+		// Get values.
+		$values = (array) $this->value;
+
 		// Render fields.
-		// todo.
+		$field_args = [
+			'name'      => $this->name . '[]',
+			'decimals'  => $this->decimals,
+			'min_value' => $this->min_value,
+			'max_value' => $this->max_value,
+		];
+
 		$output .= ( new Number(
-			[
-				'placeholder' => esc_html__( 'Min', 'hivepress' ),
-				'name'        => $this->name . '[]',
-				'default'     => null,
-			]
+			array_merge(
+				$field_args,
+				[
+					'placeholder' => esc_html__( 'Min', 'hivepress' ),
+					'default'     => reset( $values ),
+				]
+			)
 		) )->render();
 
 		$output .= ( new Number(
-			[
-				'placeholder' => esc_html__( 'Max', 'hivepress' ),
-				'name'        => $this->name . '[]',
-				'default'     => null,
-			]
+			array_merge(
+				$field_args,
+				[
+					'placeholder' => esc_html__( 'Max', 'hivepress' ),
+					'default'     => end( $values ),
+				]
+			)
 		) )->render();
 
 		$output .= '</div>';

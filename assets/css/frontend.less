@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -13,6 +12,12 @@ Mixins
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.unstyled-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 .hp {
@@ -30,6 +35,106 @@ Mixins
 		width: 24rem;
 	}
 	/*--------------------------------------------------------------
+	Forms
+	--------------------------------------------------------------*/
+	&-form {
+		margin: 0;
+
+		&--wide {
+			display: flex;
+			margin: 0 -.5rem;
+		}
+
+		&__actions,
+		&__captcha,
+		&__fields {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+		}
+
+		&--wide &__actions,
+		&--wide &__fields {
+			margin: 0;
+		}
+
+		&--wide &__fields {
+			display: flex;
+		}
+
+		&--wide &__field,
+		&--wide &__fields {
+			flex: 1;
+		}
+
+		&--wide &__button,
+		&--wide &__field {
+			margin: 0 0.5rem;
+		}
+
+		&--narrow &__button {
+			width: 100%;
+		}
+
+		&__field {
+			&--hidden {
+				display: none;
+			}
+		}
+	}
+
+	&-field {
+		&--email,
+		&--number,
+		&--password,
+		&--search,
+		&--select,
+		&--text,
+		&--textarea {
+			width: 100%;
+		}
+
+		&--textarea {
+			max-width: 100%;
+			min-height: 8rem;
+		}
+
+		&--checkboxes,
+		&--radio {
+			ul {
+				.unstyled-list;
+
+				ul {
+					margin: 0.5rem 0 0 1.5rem;
+				}
+
+				li {
+					margin: 0;
+
+					&:not(:last-child) {
+						margin-bottom: 0.5rem;
+					}
+				}
+			}
+		}
+
+		&--number-range {
+			display: flex;
+			margin: 0 -.5rem;
+
+			input[type=number] {
+				width: 100%;
+				margin: 0 0.5rem;
+				flex: 1;
+			}
+		}
+
+		input[type=checkbox],
+		input[type=radio] {
+			margin-right: 0.5rem;
+		}
+	}
+	/*--------------------------------------------------------------
 	Pagination
 	--------------------------------------------------------------*/
 	&-pagination {
@@ -44,6 +149,16 @@ Mixins
 				&:not(.prev):not(.next) {
 					font-size: 120%;
 				}
+			}
+		}
+	}
+	/*--------------------------------------------------------------
+	Pages
+	--------------------------------------------------------------*/
+	&-page {
+		&__header {
+			&:not(:last-child) {
+				margin-bottom: 3rem;
 			}
 		}
 	}
@@ -280,29 +395,7 @@ Mixins
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
-		margin: 0;
-
 		&__field {
-			&--email,
-			&--number,
-			&--password,
-			&--search,
-			&--select,
-			&--text,
-			&--textarea {
-				width: 100%;
-			}
-
-			input[type=checkbox],
-			input[type=radio] {
-				margin-right: 0.5rem;
-			}
-
-			&--textarea {
-				max-width: 100%;
-				min-height: 8rem;
-			}
-
 			&--attachment-upload {
 				&::after {
 					display: table;
@@ -356,10 +449,6 @@ Mixins
 					}
 				}
 			}
-		}
-
-		.g-recaptcha {
-			margin-bottom: 1.5rem;
 		}
 	}
 }

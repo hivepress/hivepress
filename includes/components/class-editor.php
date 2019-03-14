@@ -44,7 +44,7 @@ final class Editor {
 
 		foreach ( hivepress()->get_blocks() as $block_type => $block ) {
 			if ( $block::get_title() ) {
-				$block_slug = str_replace( '_', '-', $block_type );
+				$block_slug = hp\sanitize_slug( $block_type );
 
 				$blocks[ $block_type ] = [
 					'title'      => HP_CORE_NAME . ' ' . $block::get_title(),
