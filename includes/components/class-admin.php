@@ -392,9 +392,14 @@ final class Admin {
 
 				// Filter extensions.
 				$extensions = array_filter(
-					$api->plugins,
-					function( $plugin ) {
-						return 'hivepress' !== $plugin->slug;
+					array_map(
+						function( $extension ) {
+							return (array) $extension;
+						},
+						$api->plugins
+					),
+					function( $extension ) {
+						return 'hivepress' !== $extension['slug'];
 					}
 				);
 
@@ -407,7 +412,7 @@ final class Admin {
 		foreach ( $extensions as $index => $extension ) {
 
 			// Get path and status.
-			$extension_path   = $extension->slug . '/' . $extension->slug . '.php';
+			$extension_path   = $extension['slug'] . '/' . $extension['slug'] . '.php';
 			$extension_status = install_plugin_install_status( $extension );
 
 			// Set activation status.
@@ -426,8 +431,8 @@ final class Admin {
 
 			unset( $extension_status['version'] );
 
-			$extensions[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $extension->name );
-			$extensions[ $index ]       = (object) array_merge( (array) $extension, $extension_status );
+			$extensions[ $index ]['name'] = str_replace( HP_CORE_NAME . ' ', '', $extension['name'] );
+			$extensions[ $index ]         = array_merge( $extension, $extension_status );
 		}
 
 		// Filter extensions.
@@ -435,7 +440,7 @@ final class Admin {
 			$extensions = array_filter(
 				$extensions,
 				function( $extension ) use ( $status ) {
-					return 'installed' === $status && 'install' !== $extension->status;
+					return 'installed' === $status && 'install' !== $extension['status'];
 				}
 			);
 		}
@@ -471,7 +476,7 @@ final class Admin {
 			array_filter(
 				$extensions,
 				function( $extension ) {
-					return 'install' !== $extension->status;
+					return 'install' !== $extension['status'];
 				}
 			)
 		);
