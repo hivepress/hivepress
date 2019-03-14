@@ -321,6 +321,9 @@ abstract class Form {
 	final public function render() {
 		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
 
+		// Render messages.
+		$output .= '<div class="hp-form__messages"></div>';
+
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';
 

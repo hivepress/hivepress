@@ -310,3 +310,15 @@ function rest_error( $code, $errors = [] ) {
 		$code
 	);
 }
+
+/**
+ * Gets current page number.
+ *
+ * @return int
+ */
+function get_current_page() {
+	$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
+
+	return absint( $page );
+}

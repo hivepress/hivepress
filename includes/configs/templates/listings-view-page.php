@@ -93,12 +93,8 @@ return [
 
 							'blocks'     => [
 								'result_count' => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'result-count',
-									],
+									'type'  => 'result_count',
+									'order' => 10,
 								],
 
 								'sort_form'    => [
