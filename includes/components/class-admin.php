@@ -102,7 +102,7 @@ final class Admin {
 		// Add pages.
 		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
 		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
-		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Add-ons', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Add-ons', 'hivepress' ), 'manage_options', 'hp_addons', [ $this, 'render_addons' ] );
+		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Extensions', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
 
 	/**
@@ -160,10 +160,10 @@ final class Admin {
 				if ( 'settings' === $template_name ) {
 					$tabs        = $this->get_settings_tabs();
 					$current_tab = $this->get_settings_tab();
-				} elseif ( 'addons' === $template_name ) {
-					$tabs        = $this->get_addons_tabs();
-					$current_tab = $this->get_addons_tab();
-					$addons      = $this->get_addons( $current_tab );
+				} elseif ( 'extensions' === $template_name ) {
+					$tabs        = $this->get_extensions_tabs();
+					$current_tab = $this->get_extensions_tab();
+					$extensions  = $this->get_extensions( $current_tab );
 				}
 
 				include $template_path;
@@ -363,19 +363,19 @@ final class Admin {
 	}
 
 	/**
-	 * Gets add-ons.
+	 * Gets extensions.
 	 *
-	 * @param string $status Add-ons status.
+	 * @param string $status Extensions status.
 	 * @return array
 	 */
-	private function get_addons( $status = 'all' ) {
+	private function get_extensions( $status = 'all' ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
-		// Get cached add-ons.
-		$addons = get_transient( 'hp_addons' );
+		// Get cached extensions.
+		$extensions = get_transient( 'hp_extensions' );
 
-		if ( false === $addons ) {
-			$addons = [];
+		if ( false === $extensions ) {
+			$extensions = [];
 
 			// Query plugins.
 			$api = plugins_api(
@@ -390,65 +390,65 @@ final class Admin {
 
 			if ( ! is_wp_error( $api ) ) {
 
-				// Filter add-ons.
-				$addons = array_filter(
+				// Filter extensions.
+				$extensions = array_filter(
 					$api->plugins,
 					function( $plugin ) {
 						return 'hivepress' !== $plugin->slug;
 					}
 				);
 
-				// Cache add-ons.
-				set_transient( 'hp_addons', $addons, DAY_IN_SECONDS );
+				// Cache extensions.
+				set_transient( 'hp_extensions', $extensions, DAY_IN_SECONDS );
 			}
 		}
 
-		// Set add-on statuses.
-		foreach ( $addons as $index => $addon ) {
+		// Set extension statuses.
+		foreach ( $extensions as $index => $extension ) {
 
 			// Get path and status.
-			$addon_path   = $addon->slug . '/' . $addon->slug . '.php';
-			$addon_status = install_plugin_install_status( $addon );
+			$extension_path   = $extension->slug . '/' . $extension->slug . '.php';
+			$extension_status = install_plugin_install_status( $extension );
 
 			// Set activation status.
-			if ( ! in_array( $addon_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $addon_path ) ) {
-				$addon_status['status'] = 'activate';
-				$addon_status['url']    = admin_url(
+			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
+				$extension_status['status'] = 'activate';
+				$extension_status['url']    = admin_url(
 					'plugins.php?' . http_build_query(
 						[
 							'action'   => 'activate',
-							'plugin'   => $addon_path,
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $addon_path ),
+							'plugin'   => $extension_path,
+							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $extension_path ),
 						]
 					)
 				);
 			}
 
-			unset( $addon_status['version'] );
+			unset( $extension_status['version'] );
 
-			$addons[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $addon->name );
-			$addons[ $index ]       = (object) array_merge( (array) $addon, $addon_status );
+			$extensions[ $index ]->name = str_replace( HP_CORE_NAME . ' ', '', $extension->name );
+			$extensions[ $index ]       = (object) array_merge( (array) $extension, $extension_status );
 		}
 
-		// Filter add-ons.
+		// Filter extensions.
 		if ( 'all' !== $status ) {
-			$addons = array_filter(
-				$addons,
-				function( $addon ) use ( $status ) {
-					return 'installed' === $status && 'install' !== $addon->status;
+			$extensions = array_filter(
+				$extensions,
+				function( $extension ) use ( $status ) {
+					return 'installed' === $status && 'install' !== $extension->status;
 				}
 			);
 		}
 
-		return $addons;
+		return $extensions;
 	}
 
 	/**
-	 * Gets add-ons tabs.
+	 * Gets extensions tabs.
 	 *
 	 * @return array
 	 */
-	private function get_addons_tabs() {
+	private function get_extensions_tabs() {
 
 		// Set tabs.
 		$tabs = [
@@ -462,16 +462,16 @@ final class Admin {
 			],
 		];
 
-		// Get add-ons.
-		$addons = $this->get_addons();
+		// Get extensions.
+		$extensions = $this->get_extensions();
 
 		// Set tab counts.
-		$tabs['all']['count']       = count( $addons );
+		$tabs['all']['count']       = count( $extensions );
 		$tabs['installed']['count'] = count(
 			array_filter(
-				$addons,
-				function( $addon ) {
-					return 'install' !== $addon->status;
+				$extensions,
+				function( $extension ) {
+					return 'install' !== $extension->status;
 				}
 			)
 		);
@@ -488,18 +488,18 @@ final class Admin {
 	}
 
 	/**
-	 * Gets current add-ons tab.
+	 * Gets current extensions tab.
 	 *
 	 * @return mixed
 	 */
-	private function get_addons_tab() {
+	private function get_extensions_tab() {
 		$current_tab = false;
 
 		// Get all tabs.
-		$tabs = array_keys( $this->get_addons_tabs() );
+		$tabs = array_keys( $this->get_extensions_tabs() );
 
 		$first_tab   = hp\get_array_value( $tabs, 0 );
-		$current_tab = hp\get_array_value( $_GET, 'addon_status', $first_tab );
+		$current_tab = hp\get_array_value( $_GET, 'extension_status', $first_tab );
 
 		// Set the default tab.
 		if ( ! in_array( $current_tab, $tabs, true ) ) {
