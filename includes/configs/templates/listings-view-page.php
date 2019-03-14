@@ -82,10 +82,16 @@ return [
 
 					'blocks'     => [
 						'topbar'     => [
-							'type'   => 'container',
-							'order'  => 10,
+							'type'       => 'container',
+							'order'      => 10,
 
-							'blocks' => [
+							'attributes' => [
+								'attributes' => [
+									'class' => 'hp-page__topbar',
+								],
+							],
+
+							'blocks'     => [
 								'result_count' => [
 									'type'       => 'element',
 									'order'      => 10,

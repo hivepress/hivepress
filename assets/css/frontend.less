@@ -1,6 +1,7 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
+
 .image-wrapper {
 	img {
 		display: block;
@@ -77,6 +78,10 @@ Mixins
 		}
 
 		&__field {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+
 			&--hidden {
 				display: none;
 			}
@@ -158,7 +163,17 @@ Mixins
 	&-page {
 		&__header {
 			&:not(:last-child) {
-				margin-bottom: 3rem;
+				margin-bottom: 4rem;
+			}
+		}
+
+		&__topbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			&:not(:last-child) {
+				margin-bottom: 2rem;
 			}
 		}
 	}
