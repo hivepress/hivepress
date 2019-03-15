@@ -22,6 +22,42 @@
 			});
 		});
 
+		// Forms.
+		getComponent('form').each(function() {
+			var form = $(this),
+				messageContainer = form.children('div').first(),
+				captcha = form.find('.g-recaptcha'),
+				captchaId = $('.g-recaptcha').index(captcha.get(0)),
+				submitButton = form.find(':submit');
+
+			form.on('submit', function(e) {
+				submitButton.prop('disabled', true);
+				submitButton.attr('data-state', 'loading');
+
+				if (form.data('action')) {
+					$.ajax({
+						url: form.data('action'),
+						method: form.data('method') ? form.data('method') : form.attr('method'),
+						data: form.serializeJSON(),
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+						},
+						complete: function(xhr) {
+							if (xhr.responseJSON.hasOwnProperty('data')) {
+								if (typeof grecaptcha !== 'undefined' && captcha.length) {
+									grecaptcha.reset(captchaId);
+								}
+							}
+
+							console.log(xhr.responseText);
+						},
+					});
+
+					e.preventDefault();
+				}
+			});
+		});
+
 		// Stickies
 		getComponent('sticky').each(function() {
 			var container = $(this),
