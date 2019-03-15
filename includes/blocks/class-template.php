@@ -45,7 +45,7 @@ class Template extends Block {
 
 				// Render block.
 				if ( class_exists( $block_class ) ) {
-					$output .= ( new $block_class( hp\merge_arrays( [ 'values' => $this->values ], $block_args, [ 'name' => $block_name ] ) ) )->render();
+					$output .= ( new $block_class( hp\merge_arrays( $this->context, $block_args, [ 'name' => $block_name ] ) ) )->render();
 				}
 			}
 		}

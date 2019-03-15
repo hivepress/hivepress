@@ -33,8 +33,8 @@ class Modal extends Container {
 						'file_path' => 'modal/title',
 						'order'     => 5,
 
-						'values'    => [
-							'title' => hp\get_array_value( $args, 'title' ),
+						'context'   => [
+							'title' => 'todo',
 						],
 					],
 				],

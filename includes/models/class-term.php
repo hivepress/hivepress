@@ -31,7 +31,7 @@ abstract class Term extends Model {
 		$data = get_term( absint( $id ), hp\prefix( static::$name ), ARRAY_A );
 
 		if ( ! is_null( $data ) ) {
-			$values = [];
+			$attributes = [];
 
 			// Get alias meta.
 			$meta = array_map(
@@ -41,12 +41,12 @@ abstract class Term extends Model {
 				get_term_meta( $data['term_id'] )
 			);
 
-			// Get instance values.
+			// Get instance attributes.
 			foreach ( array_keys( static::$fields ) as $field_name ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$values[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
+					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
 				} else {
-					$values[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
 				}
 			}
 
@@ -54,7 +54,7 @@ abstract class Term extends Model {
 			$instance = new static();
 
 			$instance->set_id( $data['term_id'] );
-			$instance->fill( $values );
+			$instance->fill( $attributes );
 
 			return $instance;
 		}
@@ -69,12 +69,12 @@ abstract class Term extends Model {
 	 */
 	final public function save() {
 
-		// Alias instance values.
+		// Alias instance attributes.
 		$data = [];
 		$meta = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->values, $field_name ) );
+			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {

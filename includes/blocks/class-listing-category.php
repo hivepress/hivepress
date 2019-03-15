@@ -43,7 +43,7 @@ class Listing_Category extends Template {
 			$category = \HivePress\Models\Listing_Category::get( $category_id );
 
 			if ( ! is_null( $category ) ) {
-				$this->values['category'] = $category;
+				$this->set_category( $category );
 
 				// Render category.
 				$output = parent::render();

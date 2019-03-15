@@ -43,11 +43,11 @@ abstract class Block {
 	protected $name;
 
 	/**
-	 * Block values.
+	 * Block context.
 	 *
 	 * @var array
 	 */
-	protected $values = [];
+	protected $context = [];
 
 	/**
 	 * Class initializer.
@@ -149,10 +149,12 @@ abstract class Block {
 	 * @param mixed  $value Property value.
 	 */
 	final protected function set_property( $name, $value ) {
-		if ( property_exists( $this, $name ) ) {
+		if ( method_exists( $this, 'set_' . $name ) ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+		} elseif ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
 		} else {
-			$this->values[ $name ] = $value;
+			$this->context[ $name ] = $value;
 		}
 	}
 
@@ -162,7 +164,7 @@ abstract class Block {
 	 * @param string $name Property name.
 	 */
 	final protected function get_property( $name ) {
-		return hp\get_array_value( $this->values, $name );
+		return hp\get_array_value( $this->context, $name );
 	}
 
 	/**

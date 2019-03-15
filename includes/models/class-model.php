@@ -50,11 +50,11 @@ abstract class Model {
 	protected $id;
 
 	/**
-	 * Instance values.
+	 * Instance attributes.
 	 *
 	 * @var array
 	 */
-	protected $values = [];
+	protected $attributes = [];
 
 	/**
 	 * Instance errors.
@@ -144,7 +144,7 @@ abstract class Model {
 		if ( isset( static::$fields[ $name ] ) ) {
 			$field = static::$fields[ $name ];
 			$field->set_value( $value );
-			$this->values[ $name ] = $field->get_value();
+			$this->attributes[ $name ] = $field->get_value();
 		}
 	}
 
@@ -154,7 +154,7 @@ abstract class Model {
 	 * @param string $name Property name.
 	 */
 	final protected function get_property( $name ) {
-		return hp\get_array_value( $this->values, $name );
+		return hp\get_array_value( $this->attributes, $name );
 	}
 
 	/**
@@ -194,13 +194,13 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets instance values.
+	 * Sets instance attributes.
 	 *
-	 * @param array $values Instance values.
+	 * @param array $attributes Instance attributes.
 	 */
-	final public function fill( $values ) {
-		foreach ( $values as $field_name => $value ) {
-			call_user_func_array( [ $this, 'set_' . $field_name ], [ $value ] );
+	final public function fill( $attributes ) {
+		foreach ( $attributes as $name => $value ) {
+			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 	}
 

@@ -106,12 +106,12 @@ class User extends Model {
 	 */
 	final public function save() {
 
-		// Alias instance values.
+		// Alias instance attributes.
 		$data = [];
 		$meta = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->values, $field_name ) );
+			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {

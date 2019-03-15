@@ -41,7 +41,7 @@ class Form extends Block {
 
 			// Create form.
 			// todo.
-			$form = new $form_class( $this->values );
+			$form = new $form_class( $this->context );
 
 			$form->set_values( $_GET );
 

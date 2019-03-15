@@ -50,7 +50,7 @@ class Element extends Block {
 		// Render element.
 		if ( '' !== $filepath ) {
 			// todo.
-			extract( $this->values );
+			extract( $this->context );
 
 			ob_start();
 

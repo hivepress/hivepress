@@ -55,7 +55,7 @@ class Container extends Block {
 
 			// Create block.
 			if ( class_exists( $block_class ) ) {
-				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'values' => $this->values ], $block_args, [ 'name' => $block_name ] ) );
+				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( $this->context, $block_args, [ 'name' => $block_name ] ) );
 			}
 		}
 	}

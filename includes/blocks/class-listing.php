@@ -47,7 +47,7 @@ class Listing extends Template {
 			$listing = \HivePress\Models\Listing::get( $listing_id );
 
 			if ( ! is_null( $listing ) ) {
-				$this->values['listing'] = $listing;
+				$this->set_listing( $listing );
 
 				// Render listing.
 				$output = parent::render();
