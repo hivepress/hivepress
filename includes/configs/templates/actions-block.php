@@ -22,10 +22,16 @@ return [
 			],
 
 			'blocks'     => [
-				'todo' => [
+				'todo'  => [
 					'type'      => 'element',
-					'file_path' => 'user/login-link',
+					'file_path' => 'user/account-link',
 					'order'     => 10,
+				],
+
+				'todo2' => [
+					'type'      => 'element',
+					'file_path' => 'listing/submit-button',
+					'order'     => 20,
 				],
 			],
 		],
