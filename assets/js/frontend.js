@@ -45,6 +45,9 @@
 							xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
 						},
 						complete: function(xhr) {
+							submitButton.prop('disabled', false);
+							submitButton.attr('data-state', '');
+
 							if (xhr.responseJSON.hasOwnProperty('data')) {
 								if (typeof grecaptcha !== 'undefined' && captcha.length) {
 									grecaptcha.reset(captchaId);

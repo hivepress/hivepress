@@ -308,7 +308,7 @@ function rest_error( $code, $errors = [] ) {
 		);
 	}
 
-	return new WP_Rest_Response(
+	return new \WP_Rest_Response(
 		[
 			'error' => $error,
 		],
