@@ -26,6 +26,8 @@ final class Template {
 
 		// todo.
 		add_action( 'storefront_header', [ $this, 'render_menu' ], 31 );
+
+		// Render modals.
 		add_action( 'wp_footer', [ $this, 'render_modals' ] );
 	}
 
@@ -34,7 +36,10 @@ final class Template {
 		echo ( new \HivePress\Blocks\Template( [ 'attributes' => [ 'template_name' => 'menu' ] ] ) )->render();
 	}
 
+	/**
+	 * Renders modals.
+	 */
 	public function render_modals() {
-		echo ( new \HivePress\Blocks\Template( [ 'attributes' => [ 'template_name' => 'modals' ] ] ) )->render();
+		echo ( new \HivePress\Blocks\Template( [ 'attributes' => [ 'template_name' => 'modals_block' ] ] ) )->render();
 	}
 }

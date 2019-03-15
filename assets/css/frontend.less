@@ -1,6 +1,7 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
+
 .image-wrapper {
 	img {
 		display: block;
@@ -201,6 +202,7 @@ Mixins
 
 		&--view-block &__attributes--secondary,
 		&--view-block &__details--primary,
+		&--view-block &__image,
 		&--view-block &__title {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
@@ -334,6 +336,7 @@ Mixins
 
 		&--view-block &__description,
 		&--view-block &__details--primary,
+		&--view-block &__image,
 		&--view-block &__name {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
@@ -381,9 +384,18 @@ Mixins
 		}
 
 		&--view-block &__details--primary,
+		&--view-block &__image,
 		&--view-block &__name {
 			&:not(:last-child) {
 				margin-bottom: 0.5rem;
+			}
+		}
+
+		&--view-page &__details--primary,
+		&--view-page &__image,
+		&--view-page &__name {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
 			}
 		}
 
@@ -395,9 +407,11 @@ Mixins
 			}
 		}
 
-		&--view-block &__image {
+		&--view-block &__image,
+		&--view-page &__image {
 			width: 10rem;
-			margin: 0 auto;
+			margin-left: auto;
+			margin-right: auto;
 		}
 
 		&__name {
@@ -415,7 +429,9 @@ Mixins
 		}
 
 		&--view-block &__date,
-		&--view-block &__name {
+		&--view-block &__name,
+		&--view-page &__date,
+		&--view-page &__name {
 			text-align: center;
 		}
 	}
