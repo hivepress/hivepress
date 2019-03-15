@@ -47,11 +47,15 @@ class Element extends Block {
 			}
 		}
 
-		// Render element.
 		if ( '' !== $filepath ) {
-			// todo.
+
+			// Extract context.
+			unset( $this->context['filepath'] );
+			unset( $this->context['output'] );
+
 			extract( $this->context );
 
+			// Render element.
 			ob_start();
 
 			include $filepath;

@@ -24,22 +24,24 @@ final class Template {
 	 */
 	public function __construct() {
 
-		// todo.
-		add_action( 'storefront_header', [ $this, 'render_menu' ], 31 );
+		// Render actions.
+		add_action( 'storefront_header', [ $this, 'render_actions' ], 31 );
 
 		// Render modals.
 		add_action( 'wp_footer', [ $this, 'render_modals' ] );
 	}
 
-	// todo.
-	public function render_menu() {
-		echo ( new \HivePress\Blocks\Template( [ 'attributes' => [ 'template_name' => 'menu' ] ] ) )->render();
+	/**
+	 * Renders actions.
+	 */
+	public function render_actions() {
+		echo ( new \HivePress\Blocks\Template( [ 'template_name' => 'actions_block' ] ) )->render();
 	}
 
 	/**
 	 * Renders modals.
 	 */
 	public function render_modals() {
-		echo ( new \HivePress\Blocks\Template( [ 'attributes' => [ 'template_name' => 'modals_block' ] ] ) )->render();
+		echo ( new \HivePress\Blocks\Template( [ 'template_name' => 'modals_block' ] ) )->render();
 	}
 }

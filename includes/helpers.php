@@ -10,11 +10,6 @@ namespace HivePress\Helpers;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// todo.
-function sanitize_slug( $text ) {
-	return str_replace( '_', '-', strtolower( $text ) );
-}
-
 /**
  * Adds HivePress prefix.
  *
@@ -206,6 +201,16 @@ function sanitize_html( $html ) {
 	];
 
 	return wp_kses( $html, $tags );
+}
+
+/**
+ * Sanitizes slug.
+ *
+ * @param string $text Text to sanitize.
+ * @return string
+ */
+function sanitize_slug( $text ) {
+	return str_replace( '_', '-', strtolower( $text ) );
 }
 
 /**

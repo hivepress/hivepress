@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Search_Form
  */
-class Listing_Search_Form extends Block {
+class Listing_Search_Form extends Form {
 
 	/**
 	 * Block title.
@@ -25,13 +25,6 @@ class Listing_Search_Form extends Block {
 	 * @var string
 	 */
 	protected static $title;
-
-	/**
-	 * Block settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
 
 	/**
 	 * Class initializer.
@@ -50,16 +43,18 @@ class Listing_Search_Form extends Block {
 	}
 
 	/**
-	 * Renders block HTML.
+	 * Class constructor.
 	 *
-	 * @return string
+	 * @param array $args Block arguments.
 	 */
-	public function render() {
-		// todo add class.
-		$form = new \HivePress\Forms\Listing_Search();
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'form_name' => 'listing_search',
+			],
+			$args
+		);
 
-		$form->set_values( $_GET );
-
-		return $form->render();
+		parent::__construct( $args );
 	}
 }

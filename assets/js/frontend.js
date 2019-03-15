@@ -14,11 +14,13 @@
 		getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
-			$('a[href=' + url + ']').on('click', function() {
+			$('a[href=' + url + ']').on('click', function(e) {
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
 				});
+
+				e.preventDefault();
 			});
 		});
 

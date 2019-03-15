@@ -1,6 +1,6 @@
 <?php
 /**
- * Menu template.
+ * Actions block template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -12,15 +12,22 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
+		// todo.
 		'container' => [
 			'type'       => 'container',
 			'order'      => 10,
 
 			'attributes' => [
-				'class' => 'hp-menu',
+				'class' => 'hp-actions',
 			],
 
-			'blocks'     => [],
+			'blocks'     => [
+				'todo' => [
+					'type'      => 'element',
+					'file_path' => 'user/login-link',
+					'order'     => 10,
+				],
+			],
 		],
 	],
 ];

@@ -332,7 +332,7 @@ abstract class Form {
 
 			// Render label.
 			if ( $field->get_label() ) {
-				$output .= '<label for="todo" class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
+				$output .= '<label class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
 			}
 
 			// Render field.
