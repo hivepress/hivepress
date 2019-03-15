@@ -43,11 +43,11 @@ abstract class Block {
 	protected $name;
 
 	/**
-	 * Block attributes.
+	 * Block values.
 	 *
 	 * @var array
 	 */
-	protected $attributes = [];
+	protected $values = [];
 
 	/**
 	 * Class initializer.
@@ -118,27 +118,58 @@ abstract class Block {
 	}
 
 	/**
-	 * Bootstraps block properties.
+	 * Routes methods.
+	 *
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
 	 */
-	protected function bootstrap() {
-		$attributes = [];
+	final public function __call( $name, $args ) {
+		$prefixes = array_filter(
+			[
+				'set',
+				'get',
+			],
+			function( $prefix ) use ( $name ) {
+				return strpos( $name, $prefix . '_' ) === 0;
+			}
+		);
 
-		// Set block name.
-		if ( $this->name ) {
-			$attributes['attributes']['data-block'] = $this->name;
+		if ( ! empty( $prefixes ) ) {
+			$method = reset( $prefixes );
+			$arg    = substr( $name, strlen( $method ) + 1 );
+
+			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
-	 * Gets block attribute.
+	 * Sets property.
 	 *
-	 * @param string $name Attribute name.
-	 * @return mixed
+	 * @param string $name Property name.
+	 * @param mixed  $value Property value.
 	 */
-	final protected function get_attribute( $name ) {
-		return hp\get_array_value( $this->attributes, $name );
+	final protected function set_property( $name, $value ) {
+		if ( property_exists( $this, $name ) ) {
+			$this->$name = $value;
+		} else {
+			$this->values[ $name ] = $value;
+		}
+	}
+
+	/**
+	 * Gets property.
+	 *
+	 * @param string $name Property name.
+	 */
+	final protected function get_property( $name ) {
+		return hp\get_array_value( $this->values, $name );
+	}
+
+	/**
+	 * Bootstraps block properties.
+	 */
+	protected function bootstrap() {
+		// todo.
 	}
 
 	/**

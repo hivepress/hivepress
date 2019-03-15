@@ -17,9 +17,7 @@ return [
 			'order'      => 10,
 
 			'attributes' => [
-				'attributes' => [
-					'class' => [ 'hp-listing', 'hp-listing--view-page' ],
-				],
+				'class' => [ 'hp-listing', 'hp-listing--view-page' ],
 			],
 
 			'blocks'     => [
@@ -28,31 +26,24 @@ return [
 					'order'      => 10,
 
 					'attributes' => [
-						'attributes' => [
-							'class' => [ 'hp-row' ],
-						],
+						'class' => [ 'hp-row' ],
 					],
 
 					'blocks'     => [
 						'content' => [
 							'type'       => 'container',
+							'tag'        => 'main',
 							'order'      => 10,
 
 							'attributes' => [
-								'tag'        => 'main',
-								'attributes' => [
-									'class' => [ 'hp-listing__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
-								],
+								'class' => [ 'hp-listing__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 							],
 
 							'blocks'     => [
 								'title'                => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'listing/view/page/title',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/page/title',
+									'order'     => 10,
 								],
 
 								'details_primary'      => [
@@ -60,81 +51,59 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'attributes' => [
-											'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
-										],
+										'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
 									],
 
 									'blocks'     => [
 										'category' => [
-											'type'       => 'element',
-											'order'      => 10,
-
-											'attributes' => [
-												'file_path' => 'listing/view/category',
-											],
+											'type'      => 'element',
+											'file_path' => 'listing/view/category',
+											'order'     => 10,
 										],
 
 										'date'     => [
-											'type'       => 'element',
-											'order'      => 20,
-
-											'attributes' => [
-												'file_path' => 'listing/view/date',
-											],
+											'type'      => 'element',
+											'file_path' => 'listing/view/date',
+											'order'     => 20,
 										],
 									],
 								],
 
 								'images'               => [
-									'type'       => 'element',
-									'order'      => 30,
-
-									'attributes' => [
-										'file_path' => 'listing/view/page/images',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/page/images',
+									'order'     => 30,
 								],
 
 								'attributes_secondary' => [
-									'type'       => 'element',
-									'order'      => 40,
-
-									'attributes' => [
-										'file_path' => 'listing/view/page/attributes-secondary',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/page/attributes-secondary',
+									'order'     => 40,
 								],
 
 								'description'          => [
-									'type'       => 'element',
-									'order'      => 50,
-
-									'attributes' => [
-										'file_path' => 'listing/view/description',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/description',
+									'order'     => 50,
 								],
 							],
 						],
 
 						'sidebar' => [
 							'type'       => 'container',
+							'tag'        => 'aside',
 							'order'      => 20,
 
 							'attributes' => [
-								'tag'        => 'aside',
-								'attributes' => [
-									'class'          => [ 'hp-listing__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-									'data-component' => 'sticky',
-								],
+								'class'          => [ 'hp-listing__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+								'data-component' => 'sticky',
 							],
 
 							'blocks'     => [
 								'attributes_primary' => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'listing/view/page/attributes-primary',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/page/attributes-primary',
+									'order'     => 10,
 								],
 
 								'actions_primary'    => [
@@ -142,19 +111,14 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'attributes' => [
-											'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
-										],
+										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 									],
 								],
 
 								'vendor'             => [
-									'type'       => 'vendor',
-									'order'      => 30,
-
-									'attributes' => [
-										'template_name' => 'vendor_view_block',
-									],
+									'type'          => 'vendor',
+									'template_name' => 'vendor_view_block',
+									'order'         => 30,
 								],
 							],
 						],

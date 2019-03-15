@@ -14,35 +14,28 @@ return [
 	'blocks' => [
 		'container' => [
 			'type'       => 'container',
+			'tag'        => 'article',
 			'order'      => 10,
 
 			'attributes' => [
-				'tag'        => 'article',
-				'attributes' => [
-					'class' => [ 'hp-vendor', 'hp-vendor--view-block' ],
-				],
+				'class' => [ 'hp-vendor', 'hp-vendor--view-block' ],
 			],
 
 			'blocks'     => [
 				'header'  => [
 					'type'       => 'container',
+					'tag'        => 'header',
 					'order'      => 10,
 
 					'attributes' => [
-						'tag'        => 'header',
-						'attributes' => [
-							'class' => [ 'hp-vendor__header' ],
-						],
+						'class' => [ 'hp-vendor__header' ],
 					],
 
 					'blocks'     => [
 						'image' => [
-							'type'       => 'element',
-							'order'      => 10,
-
-							'attributes' => [
-								'file_path' => 'vendor/view/block/image',
-							],
+							'type'      => 'element',
+							'file_path' => 'vendor/view/block/image',
+							'order'     => 10,
 						],
 					],
 				],
@@ -52,19 +45,14 @@ return [
 					'order'      => 20,
 
 					'attributes' => [
-						'attributes' => [
-							'class' => [ 'hp-vendor__content' ],
-						],
+						'class' => [ 'hp-vendor__content' ],
 					],
 
 					'blocks'     => [
 						'name'            => [
-							'type'       => 'element',
-							'order'      => 10,
-
-							'attributes' => [
-								'file_path' => 'vendor/view/block/name',
-							],
+							'type'      => 'element',
+							'file_path' => 'vendor/view/block/name',
+							'order'     => 10,
 						],
 
 						'details_primary' => [
@@ -72,19 +60,14 @@ return [
 							'order'      => 20,
 
 							'attributes' => [
-								'attributes' => [
-									'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
-								],
+								'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
 							],
 
 							'blocks'     => [
 								'date' => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'vendor/view/date',
-									],
+									'type'      => 'element',
+									'file_path' => 'vendor/view/date',
+									'order'     => 10,
 								],
 							],
 						],

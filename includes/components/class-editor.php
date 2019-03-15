@@ -115,7 +115,7 @@ final class Editor {
 			$block_class = '\HivePress\Blocks\\' . $block_type;
 
 			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( [ 'attributes' => reset( $args ) ] ) )->render();
+				$output .= ( new $block_class( reset( $args ) ) )->render();
 			}
 
 			return $output;

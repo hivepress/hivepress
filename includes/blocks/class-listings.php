@@ -34,6 +34,34 @@ class Listings extends Block {
 	protected static $settings = [];
 
 	/**
+	 * Columns number.
+	 *
+	 * @var int
+	 */
+	protected $columns;
+
+	/**
+	 * Listings number.
+	 *
+	 * @var int
+	 */
+	protected $number;
+
+	/**
+	 * Listings category.
+	 *
+	 * @var int
+	 */
+	protected $category;
+
+	/**
+	 * Listings order.
+	 *
+	 * @var string
+	 */
+	protected $order;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
@@ -100,7 +128,7 @@ class Listings extends Block {
 		$output = '';
 
 		// Get column width.
-		$columns      = absint( $this->get_attribute( 'columns' ) );
+		$columns      = absint( $this->columns );
 		$column_width = 12;
 
 		if ( $columns > 0 && $columns <= 12 ) {
@@ -111,24 +139,24 @@ class Listings extends Block {
 		$query_args = [
 			'post_type'      => 'hp_listing',
 			'post_status'    => 'publish',
-			'posts_per_page' => absint( $this->get_attribute( 'number' ) ),
+			'posts_per_page' => absint( $this->number ),
 		];
 
 		// Get category.
-		if ( $this->get_attribute( 'category' ) ) {
+		if ( $this->category ) {
 			$query_args['tax_query'] = [
 				[
 					'taxonomy' => 'hp_listing_category',
-					'terms'    => [ absint( $this->get_attribute( 'category' ) ) ],
+					'terms'    => [ absint( $this->category ) ],
 				],
 			];
 		}
 
 		// Get order.
-		if ( 'title' === $this->get_attribute( 'order' ) ) {
+		if ( 'title' === $this->order ) {
 			$query_args['orderby'] = 'title';
 			$query_args['order']   = 'ASC';
-		} elseif ( 'random' === $this->get_attribute( 'order' ) ) {
+		} elseif ( 'random' === $this->order ) {
 			$query_args['orderby'] = 'rand';
 		}
 
@@ -137,14 +165,14 @@ class Listings extends Block {
 
 		// Render listings.
 		if ( $query->have_posts() ) {
-			$output  = '<div ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+			$output  = '<div class="todo">';
 			$output .= '<div class="hp-row">';
 
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
 				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-				$output .= ( new Listing( [ 'attributes' => [ 'template_name' => 'listing_view_block' ] ] ) )->render();
+				$output .= ( new Listing( [ 'template_name' => 'listing_view_block' ] ) )->render();
 				$output .= '</div>';
 			}
 

@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class Container extends Block {
 
 	/**
+	 * Container tag.
+	 *
+	 * @var string
+	 */
+	protected $tag = 'div';
+
+	/**
+	 * Container attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Inner blocks.
 	 *
 	 * @var array
@@ -39,14 +53,9 @@ class Container extends Block {
 			// Get block class.
 			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-			// todo.
-			$attributes = $this->attributes;
-			unset( $attributes['tag'] );
-			unset( $attributes['attributes'] );
-
 			// Create block.
 			if ( class_exists( $block_class ) ) {
-				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) );
+				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'values' => $this->values ], $block_args, [ 'name' => $block_name ] ) );
 			}
 		}
 	}
@@ -55,16 +64,7 @@ class Container extends Block {
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {
-		$attributes = [];
-
-		// Set container tag.
-		if ( ! isset( $this->attributes['tag'] ) ) {
-			$this->attributes['tag'] = 'div';
-		}
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
-
-		parent::bootstrap();
+		// todo.
 	}
 
 	/**
@@ -73,14 +73,14 @@ class Container extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<' . esc_attr( $this->get_attribute( 'tag' ) ) . ' ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+		$output = '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render inner blocks.
 		foreach ( $this->blocks as $block ) {
 			$output .= $block->render();
 		}
 
-		$output .= '</' . esc_attr( $this->get_attribute( 'tag' ) ) . '>';
+		$output .= '</' . esc_attr( $this->tag ) . '>';
 
 		return $output;
 	}

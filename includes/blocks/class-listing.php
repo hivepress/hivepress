@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Template {
 
 	/**
+	 * Listing ID.
+	 *
+	 * @var int
+	 */
+	protected $id;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -28,7 +35,7 @@ class Listing extends Template {
 		$output = '';
 
 		// Get listing ID.
-		$listing_id = absint( $this->get_attribute( 'id' ) );
+		$listing_id = absint( $this->id );
 
 		if ( 0 === $listing_id ) {
 			$listing_id = absint( get_the_ID() );
@@ -40,7 +47,7 @@ class Listing extends Template {
 			$listing = \HivePress\Models\Listing::get( $listing_id );
 
 			if ( ! is_null( $listing ) ) {
-				$this->attributes['listing'] = $listing;
+				$this->values['listing'] = $listing;
 
 				// Render listing.
 				$output = parent::render();

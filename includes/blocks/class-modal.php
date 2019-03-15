@@ -29,12 +29,12 @@ class Modal extends Container {
 			[
 				'blocks' => [
 					'title' => [
-						'type'       => 'element',
-						'order'      => 5,
+						'type'      => 'element',
+						'file_path' => 'modal/title',
+						'order'     => 5,
 
-						'attributes' => [
-							'file_path' => 'modal/title',
-							'title'     => hp\get_array_value( $args, 'title' ),
+						'values'    => [
+							'title' => hp\get_array_value( $args, 'title' ),
 						],
 					],
 				],
@@ -54,11 +54,9 @@ class Modal extends Container {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'attributes' => [
-					'id'             => $this->name,
-					'class'          => [ 'hp-modal' ],
-					'data-component' => 'modal',
-				],
+				'id'             => $this->name,
+				'class'          => [ 'hp-modal' ],
+				'data-component' => 'modal',
 			]
 		);
 

@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Template extends Block {
 
 	/**
+	 * Template name.
+	 *
+	 * @var string
+	 */
+	protected $template_name;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -28,14 +35,7 @@ class Template extends Block {
 		$output = '';
 
 		// Get template.
-		$template_args = hivepress()->get_config( 'templates/' . $this->get_attribute( 'template_name' ) );
-
-		// todo.
-		if ( isset( $template_args['parent'] ) ) {
-			$parent_args = hivepress()->get_config( 'templates/' . $template_args['parent'] );
-			$parent_args['blocks']['container']['blocks']['content'] = hp\merge_arrays( $parent_args['blocks']['container']['blocks']['content'], $template_args['blocks']['content'] );
-			$template_args = $parent_args;
-		}
+		$template_args = hivepress()->get_config( 'templates/' . $this->template_name );
 
 		if ( ! is_null( $template_args ) ) {
 			foreach ( hp\sort_array( $template_args['blocks'] ) as $block_name => $block_args ) {
@@ -43,13 +43,9 @@ class Template extends Block {
 				// Get block class.
 				$block_class = '\HivePress\Blocks\\' . $block_args['type'];
 
-				// todo.
-				$attributes = $this->attributes;
-				unset( $attributes['attributes'] );
-
 				// Render block.
 				if ( class_exists( $block_class ) ) {
-					$output .= ( new $block_class( hp\merge_arrays( [ 'attributes' => $attributes ], $block_args, [ 'name' => $block_name ] ) ) )->render();
+					$output .= ( new $block_class( hp\merge_arrays( [ 'values' => $this->values ], $block_args, [ 'name' => $block_name ] ) ) )->render();
 				}
 			}
 		}

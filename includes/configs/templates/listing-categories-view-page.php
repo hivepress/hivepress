@@ -13,14 +13,11 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'blocks' => [
 		'header'  => [
-			'type'       => 'container',
-			'order'      => 10,
+			'type'   => 'container',
+			'tag'    => 'header',
+			'order'  => 10,
 
-			'attributes' => [
-				'tag' => 'header',
-			],
-
-			'blocks'     => [
+			'blocks' => [
 				'search_form' => [
 					'type'  => 'listing_search_form',
 					'order' => 10,
@@ -29,21 +26,15 @@ return [
 		],
 
 		'content' => [
-			'type'       => 'container',
-			'order'      => 20,
+			'type'   => 'container',
+			'tag'    => 'main',
+			'order'  => 20,
 
-			'attributes' => [
-				'tag' => 'main',
-			],
-
-			'blocks'     => [
+			'blocks' => [
 				'results' => [
-					'type'       => 'listing_categories',
-					'order'      => 10,
-
-					'attributes' => [
-						'columns' => 3,
-					],
+					'type'    => 'listing_categories',
+					'columns' => 3,
+					'order'   => 10,
 				],
 			],
 		],

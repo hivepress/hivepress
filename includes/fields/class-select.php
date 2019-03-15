@@ -66,7 +66,7 @@ class Select extends Field {
 				'settings' => [
 					'multiple' => [
 						'label'   => esc_html__( 'Multiple', 'hivepress' ),
-						'caption' => 'todo check if multiple',
+						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
 						'order'   => 10,
 					],

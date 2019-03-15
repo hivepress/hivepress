@@ -14,66 +14,51 @@ return [
 	'blocks' => [
 		// todo.
 		'user_login_modal'            => [
-			'type'       => 'modal',
+			'type'   => 'modal',
+			'title'  => esc_html__( 'Sign In', 'hivepress' ),
 
-			'attributes' => [
-				'title' => esc_html__( 'Sign In', 'hivepress' ),
-			],
-
-			'blocks'     => [
+			'blocks' => [
 				'user_login_form' => [
 					'type'       => 'form',
+					'form_name'  => 'user_login',
 					'order'      => 10,
 
 					'attributes' => [
-						'form_name'  => 'user_login',
-						'attributes' => [
-							'class' => [ 'hp-form--narrow' ],
-						],
+						'class' => [ 'hp-form--narrow' ],
 					],
 				],
 			],
 		],
 
 		'user_register_modal'         => [
-			'type'       => 'modal',
+			'type'   => 'modal',
+			'title'  => esc_html__( 'Register', 'hivepress' ),
 
-			'attributes' => [
-				'title' => esc_html__( 'Register', 'hivepress' ),
-			],
-
-			'blocks'     => [
+			'blocks' => [
 				'user_register_form' => [
 					'type'       => 'form',
+					'form_name'  => 'user_register',
 					'order'      => 10,
 
 					'attributes' => [
-						'form_name'  => 'user_register',
-						'attributes' => [
-							'class' => [ 'hp-form--narrow' ],
-						],
+						'class' => [ 'hp-form--narrow' ],
 					],
 				],
 			],
 		],
 
 		'user_password_request_modal' => [
-			'type'       => 'modal',
+			'type'   => 'modal',
+			'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 
-			'attributes' => [
-				'title' => esc_html__( 'Reset Password', 'hivepress' ),
-			],
-
-			'blocks'     => [
+			'blocks' => [
 				'user_password_request_form' => [
 					'type'       => 'form',
+					'form_name'  => 'user_password_request',
 					'order'      => 10,
 
 					'attributes' => [
-						'form_name'  => 'user_password_request',
-						'attributes' => [
-							'class' => [ 'hp-form--narrow' ],
-						],
+						'class' => [ 'hp-form--narrow' ],
 					],
 				],
 			],

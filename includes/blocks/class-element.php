@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Element extends Block {
 
 	/**
+	 * File path.
+	 *
+	 * @var string
+	 */
+	protected $file_path;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -28,12 +35,12 @@ class Element extends Block {
 		$output = '';
 
 		// Get file path.
-		$filepath = locate_template( 'hivepress/' . $this->get_attribute( 'file_path' ) . '.php' );
+		$filepath = locate_template( 'hivepress/' . $this->file_path . '.php' );
 
 		if ( '' === $filepath ) {
 			foreach ( hivepress()->get_dirs() as $dir ) {
-				if ( file_exists( $dir . '/templates/' . $this->get_attribute( 'file_path' ) . '.php' ) ) {
-					$filepath = $dir . '/templates/' . $this->get_attribute( 'file_path' ) . '.php';
+				if ( file_exists( $dir . '/templates/' . $this->file_path . '.php' ) ) {
+					$filepath = $dir . '/templates/' . $this->file_path . '.php';
 
 					break;
 				}
@@ -43,7 +50,7 @@ class Element extends Block {
 		// Render element.
 		if ( '' !== $filepath ) {
 			// todo.
-			extract( $this->attributes );
+			extract( $this->values );
 
 			ob_start();
 

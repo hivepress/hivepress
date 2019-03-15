@@ -14,35 +14,28 @@ return [
 	'blocks' => [
 		'container' => [
 			'type'       => 'container',
+			'tag'        => 'article',
 			'order'      => 10,
 
 			'attributes' => [
-				'tag'        => 'article',
-				'attributes' => [
-					'class' => [ 'hp-listing', 'hp-listing--view-block' ],
-				],
+				'class' => [ 'hp-listing', 'hp-listing--view-block' ],
 			],
 
 			'blocks'     => [
 				'header'  => [
 					'type'       => 'container',
+					'tag'        => 'header',
 					'order'      => 10,
 
 					'attributes' => [
-						'tag'        => 'header',
-						'attributes' => [
-							'class' => [ 'hp-listing__header' ],
-						],
+						'class' => [ 'hp-listing__header' ],
 					],
 
 					'blocks'     => [
 						'image' => [
-							'type'       => 'element',
-							'order'      => 10,
-
-							'attributes' => [
-								'file_path' => 'listing/view/block/image',
-							],
+							'type'      => 'element',
+							'file_path' => 'listing/view/block/image',
+							'order'     => 10,
 						],
 					],
 				],
@@ -52,19 +45,14 @@ return [
 					'order'      => 20,
 
 					'attributes' => [
-						'attributes' => [
-							'class' => [ 'hp-listing__content' ],
-						],
+						'class' => [ 'hp-listing__content' ],
 					],
 
 					'blocks'     => [
 						'title'                => [
-							'type'       => 'element',
-							'order'      => 10,
-
-							'attributes' => [
-								'file_path' => 'listing/view/block/title',
-							],
+							'type'      => 'element',
+							'file_path' => 'listing/view/block/title',
+							'order'     => 10,
 						],
 
 						'details_primary'      => [
@@ -72,62 +60,46 @@ return [
 							'order'      => 20,
 
 							'attributes' => [
-								'attributes' => [
-									'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
-								],
+								'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
 							],
 
 							'blocks'     => [
 								'category' => [
-									'type'       => 'element',
-									'order'      => 10,
-
-									'attributes' => [
-										'file_path' => 'listing/view/category',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/category',
+									'order'     => 10,
 								],
 
 								'date'     => [
-									'type'       => 'element',
-									'order'      => 20,
-
-									'attributes' => [
-										'file_path' => 'listing/view/date',
-									],
+									'type'      => 'element',
+									'file_path' => 'listing/view/date',
+									'order'     => 20,
 								],
 							],
 						],
 
 						'attributes_secondary' => [
-							'type'       => 'element',
-							'order'      => 30,
-
-							'attributes' => [
-								'file_path' => 'listing/view/block/attributes-secondary',
-							],
+							'type'      => 'element',
+							'file_path' => 'listing/view/block/attributes-secondary',
+							'order'     => 30,
 						],
 					],
 				],
 
 				'footer'  => [
 					'type'       => 'container',
+					'tag'        => 'footer',
 					'order'      => 30,
 
 					'attributes' => [
-						'tag'        => 'footer',
-						'attributes' => [
-							'class' => [ 'hp-listing__footer' ],
-						],
+						'class' => [ 'hp-listing__footer' ],
 					],
 
 					'blocks'     => [
 						'attributes_primary' => [
-							'type'       => 'element',
-							'order'      => 10,
-
-							'attributes' => [
-								'file_path' => 'listing/view/block/attributes-primary',
-							],
+							'type'      => 'element',
+							'file_path' => 'listing/view/block/attributes-primary',
+							'order'     => 10,
 						],
 
 						'actions_primary'    => [
@@ -135,9 +107,7 @@ return [
 							'order'      => 20,
 
 							'attributes' => [
-								'attributes' => [
-									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
-								],
+								'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 							],
 						],
 					],

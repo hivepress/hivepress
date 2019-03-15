@@ -20,24 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Result_Count extends Block {
 
 	/**
-	 * Bootstraps block properties.
-	 */
-	protected function bootstrap() {
-
-		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'attributes' => [
-					'class' => [ 'hp-result-count' ],
-				],
-			]
-		);
-
-		parent::bootstrap();
-	}
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -48,7 +30,7 @@ class Result_Count extends Block {
 		$output = '';
 
 		if ( $wp_query->found_posts > 0 ) {
-			$output = '<div ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+			$output = '<div class="hp-result-count">';
 
 			// Get first result.
 			$first_result = 1;

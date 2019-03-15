@@ -14,13 +14,11 @@ return [
 	'blocks' => [
 		'header'  => [
 			'type'       => 'container',
+			'tag'        => 'header',
 			'order'      => 10,
 
 			'attributes' => [
-				'tag'        => 'header',
-				'attributes' => [
-					'class' => 'hp-page__header',
-				],
+				'class' => 'hp-page__header',
 			],
 
 			'blocks'     => [
@@ -36,34 +34,28 @@ return [
 			'order'      => 20,
 
 			'attributes' => [
-				'attributes' => [
-					'class' => [ 'hp-row' ],
-				],
+				'class' => [ 'hp-row' ],
 			],
 
 			'blocks'     => [
 				'sidebar' => [
 					'type'       => 'container',
+					'tag'        => 'aside',
 					'order'      => 10,
 
 					'attributes' => [
-						'tag'        => 'aside',
-						'attributes' => [
-							'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-							'data-component' => 'sticky',
-						],
+						'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+						'data-component' => 'sticky',
 					],
 
 					'blocks'     => [
 						'filter_form' => [
 							'type'       => 'form',
+							'form_name'  => 'listing_filter',
 							'order'      => 10,
 
 							'attributes' => [
-								'form_name'  => 'listing_filter',
-								'attributes' => [
-									'class' => [ 'hp-form--narrow' ],
-								],
+								'class' => [ 'hp-form--narrow' ],
 							],
 						],
 					],
@@ -71,13 +63,11 @@ return [
 
 				'content' => [
 					'type'       => 'container',
+					'tag'        => 'main',
 					'order'      => 20,
 
 					'attributes' => [
-						'tag'        => 'main',
-						'attributes' => [
-							'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
-						],
+						'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 					],
 
 					'blocks'     => [
@@ -86,9 +76,7 @@ return [
 							'order'      => 10,
 
 							'attributes' => [
-								'attributes' => [
-									'class' => 'hp-page__topbar',
-								],
+								'class' => 'hp-page__topbar',
 							],
 
 							'blocks'     => [
@@ -98,32 +86,23 @@ return [
 								],
 
 								'sort_form'    => [
-									'type'       => 'form',
-									'order'      => 20,
-
-									'attributes' => [
-										'form_name' => 'listing_sort',
-									],
+									'type'      => 'form',
+									'form_name' => 'listing_sort',
+									'order'     => 20,
 								],
 							],
 						],
 
 						'results'    => [
-							'type'       => 'listings',
-							'order'      => 20,
-
-							'attributes' => [
-								'columns' => 2,
-							],
+							'type'    => 'listings',
+							'columns' => 2,
+							'order'   => 20,
 						],
 
 						'pagination' => [
-							'type'       => 'element',
-							'order'      => 30,
-
-							'attributes' => [
-								'file_path' => 'pagination',
-							],
+							'type'      => 'element',
+							'file_path' => 'pagination',
+							'order'     => 30,
 						],
 					],
 				],

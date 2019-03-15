@@ -86,7 +86,7 @@ class Block extends Controller {
 				return hp\rest_error( 400, esc_html__( 'Error rendering block', 'hivepress' ) );
 			}
 
-			$data['html'] = ( new $block_class( hp\merge_arrays( [ 'attributes' => $request->get_params() ], $block_args ) ) )->render();
+			$data['html'] = ( new $block_class( hp\merge_arrays( $request->get_params(), $block_args ) ) )->render();
 		}
 
 		return new \WP_Rest_Response(

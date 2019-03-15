@@ -55,7 +55,8 @@ class Listing_Search_Form extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$form = new \HivePress\Forms\Listing_Search( hp\merge_arrays( $this->attributes, [ 'attributes' => [ 'class' => [ 'hp-form--wide' ] ] ] ) );
+		// todo add class.
+		$form = new \HivePress\Forms\Listing_Search();
 
 		$form->set_values( $_GET );
 

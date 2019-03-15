@@ -170,15 +170,15 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_page() {
-		$output = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
 		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( is_tax() && get_term_meta( get_queried_object_id(), 'hp_display_subcategories', true ) ) ) {
-			$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listing_categories_view_page' ] ] ) )->render();
+			$output .= ( new Blocks\Template( [ 'template_name' => 'listing_categories_view_page' ] ) )->render();
 		} else {
-			$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'listings_view_page' ] ] ) )->render();
+			$output .= ( new Blocks\Template( [ 'template_name' => 'listings_view_page' ] ) )->render();
 		}
 
-		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
 	}
@@ -200,9 +200,9 @@ class Listing extends Controller {
 	public function render_listing_page() {
 		the_post();
 
-		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
-		$output .= ( new Blocks\Listing( [ 'attributes' => [ 'template_name' => 'listing_view_page' ] ] ) )->render();
-		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Listing( [ 'template_name' => 'listing_view_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
 	}

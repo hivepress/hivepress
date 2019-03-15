@@ -26,7 +26,7 @@ class Vendor extends Template {
 	 */
 	public function render() {
 		// todo.
-		$this->attributes['vendor'] = \HivePress\Models\Vendor::get( 265 );
+		$this->values['vendor'] = \HivePress\Models\Vendor::get( 265 );
 
 		global $post;
 		$post = get_post( 265 );

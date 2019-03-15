@@ -61,9 +61,9 @@ class Vendor extends Controller {
 	public function render_vendor_page() {
 		the_post();
 
-		$output  = ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'header' ] ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'attributes' => [ 'template_name' => 'vendor_page' ] ] ) )->render();
-		$output .= ( new Blocks\Element( [ 'attributes' => [ 'file_path' => 'footer' ] ] ) )->render();
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'vendor_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
 	}

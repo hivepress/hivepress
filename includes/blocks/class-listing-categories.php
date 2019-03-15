@@ -34,6 +34,34 @@ class Listing_Categories extends Block {
 	protected static $settings = [];
 
 	/**
+	 * Columns number.
+	 *
+	 * @var int
+	 */
+	protected $columns;
+
+	/**
+	 * Listing categories number.
+	 *
+	 * @var int
+	 */
+	protected $number;
+
+	/**
+	 * Listing category parent.
+	 *
+	 * @var int
+	 */
+	protected $parent;
+
+	/**
+	 * Listing categories order.
+	 *
+	 * @var string
+	 */
+	protected $order;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
@@ -100,7 +128,7 @@ class Listing_Categories extends Block {
 		$output = '';
 
 		// Get column width.
-		$columns      = absint( $this->get_attribute( 'columns' ) );
+		$columns      = absint( $this->columns );
 		$column_width = 12;
 
 		if ( $columns > 0 && $columns <= 12 ) {
@@ -111,14 +139,14 @@ class Listing_Categories extends Block {
 		$query_args = [
 			'taxonomy'   => 'hp_listing_category',
 			'hide_empty' => false,
-			'number'     => absint( $this->get_attribute( 'number' ) ),
-			'parent'     => absint( $this->get_attribute( 'parent' ) ),
+			'number'     => absint( $this->number ),
+			'parent'     => absint( $this->parent ),
 		];
 
 		// Get order.
-		if ( 'name' === $this->get_attribute( 'order' ) ) {
+		if ( 'name' === $this->order ) {
 			$query_args['orderby'] = 'name';
-		} elseif ( 'count' === $this->get_attribute( 'order' ) ) {
+		} elseif ( 'count' === $this->order ) {
 			$query_args['orderby'] = 'count';
 			$query_args['order']   = 'DESC';
 		} else {
@@ -132,7 +160,7 @@ class Listing_Categories extends Block {
 
 		// Render categories.
 		if ( ! empty( $categories ) ) {
-			$output  = '<div ' . hp\html_attributes( $this->get_attribute( 'attributes' ) ) . '>';
+			$output  = '<div class="todo">';
 			$output .= '<div class="hp-row">';
 
 			foreach ( $categories as $category ) {
@@ -140,10 +168,8 @@ class Listing_Categories extends Block {
 
 				$output .= ( new Listing_Category(
 					[
-						'attributes' => [
-							'id'            => $category->term_id,
-							'template_name' => 'listing_category_view_block',
-						],
+						'id'            => $category->term_id,
+						'template_name' => 'listing_category_view_block',
 					]
 				) )->render();
 
