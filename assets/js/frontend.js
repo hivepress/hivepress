@@ -59,13 +59,32 @@
 				});
 
 				carousel.addClass(containerClass + '-carousel').slick({
-					slidesToShow: Math.round(container.width() / 125),
+					slidesToShow: 6,
 					slidesToScroll: 1,
 					infinite: false,
 					focusOnSelect: true,
 					prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
 					nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
 					asNavFor: slider,
+					responsive: [{
+							breakpoint: 1025,
+							settings: {
+								slidesToShow: 5,
+							},
+						},
+						{
+							breakpoint: 769,
+							settings: {
+								slidesToShow: 4,
+							},
+						},
+						{
+							breakpoint: 481,
+							settings: {
+								slidesToShow: 3,
+							},
+						},
+					],
 				});
 			}
 		});
