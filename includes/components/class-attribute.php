@@ -47,6 +47,9 @@ final class Attribute {
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ] );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ] );
 
+			// Add model fields.
+			add_filter( 'hivepress/v1/models/' . $model, [ $this, 'add_model_fields' ] );
+
 			// Add edit fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
 			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ] );
@@ -105,11 +108,13 @@ final class Attribute {
 
 			// Set defaults.
 			$attribute_args = [
-				'model'      => $attribute_model,
-				'editable'   => (bool) $attribute->hp_editable,
-				'searchable' => (bool) $attribute->hp_searchable,
-				'filterable' => (bool) $attribute->hp_filterable,
-				'sortable'   => (bool) $attribute->hp_sortable,
+				'model'          => $attribute_model,
+				'display_areas'  => (array) $attribute->hp_display_areas,
+				'display_format' => $attribute->hp_display_format,
+				'editable'       => (bool) $attribute->hp_editable,
+				'searchable'     => (bool) $attribute->hp_searchable,
+				'filterable'     => (bool) $attribute->hp_filterable,
+				'sortable'       => (bool) $attribute->hp_sortable,
 			];
 
 			// Get categories.
@@ -213,6 +218,38 @@ final class Attribute {
 		}
 
 		return $meta_box;
+	}
+
+	/**
+	 * Adds model fields.
+	 *
+	 * @param array $model Model arguments.
+	 * @return array
+	 */
+	public function add_model_fields( $model ) {
+
+		// Filter attributes.
+		$attributes = array_filter(
+			$this->attributes,
+			function( $attribute ) use ( $model ) {
+				return $attribute['model'] === $model['name'];
+			}
+		);
+
+		// Add fields.
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $model['fields'][ $attribute_name ] ) ) {
+				$model['fields'][ $attribute_name ] = array_merge(
+					$attribute['edit_field'],
+					[
+						'display_areas'  => $attribute['display_areas'],
+						'display_format' => $attribute['display_format'],
+					]
+				);
+			}
+		}
+
+		return $model;
 	}
 
 	/**

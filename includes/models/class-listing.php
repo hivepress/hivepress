@@ -138,7 +138,7 @@ class Listing extends Post {
 		$fields = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
-			if ( hp\get_array_value( $field->get_args(), 'display_area' ) === $area ) {
+			if ( in_array( $area, hp\get_array_value( $field->get_args(), 'display_areas', [] ), true ) ) {
 				$fields[ $field_name ] = new \HivePress\Fields\Text(
 					[
 						'label'   => $field->get_label(),

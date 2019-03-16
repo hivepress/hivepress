@@ -82,10 +82,10 @@ return [
 				'type'        => 'checkboxes',
 				'order'       => 10,
 				'options'     => [
-					'block_primary'   => esc_html__( 'Block (primary)', 'hivepress' ),
-					'block_secondary' => esc_html__( 'Block (secondary)', 'hivepress' ),
-					'page_primary'    => esc_html__( 'Page (primary)', 'hivepress' ),
-					'page_secondary'  => esc_html__( 'Page (secondary)', 'hivepress' ),
+					'view_block_primary'   => esc_html__( 'Block (primary)', 'hivepress' ),
+					'view_block_secondary' => esc_html__( 'Block (secondary)', 'hivepress' ),
+					'view_page_primary'    => esc_html__( 'Page (primary)', 'hivepress' ),
+					'view_page_secondary'  => esc_html__( 'Page (secondary)', 'hivepress' ),
 				],
 			],
 
