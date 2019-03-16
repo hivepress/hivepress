@@ -537,32 +537,38 @@ final class Attribute {
 		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
 
 		// Sort results.
-		$sort_form = new \HivePress\Forms\Listing_Sort();
+		$form_class = '\HivePress\Forms\\' . $model . '_sort';
 
-		$sort_form->set_values( $_GET );
+		if ( class_exists( $form_class ) ) {
 
-		if ( $sort_form->validate() ) {
+			// Create form.
+			$form = new $form_class();
 
-			// Get sort order.
-			$sort_param = $sort_form->get_value( 'sort' );
-			$sort_order = null;
+			$form->set_values( $_GET );
 
-			if ( strpos( $sort_param, '__' ) !== false ) {
-				list($sort_param, $sort_order) = explode( '__', $sort_param );
-			}
+			if ( $form->validate() ) {
 
-			// Set sort order.
-			if ( isset( $attributes[ $sort_param ] ) ) {
-				$query->set( 'meta_key', hp\prefix( $sort_param ) );
+				// Get sort order.
+				$sort_param = $form->get_value( 'sort' );
+				$sort_order = null;
 
-				if ( ! is_null( $sort_order ) ) {
-					$query->set( 'orderby', 'meta_value_num' );
-					$query->set( 'order', strtoupper( $sort_order ) );
-				} else {
-					$query->set( 'orderby', 'meta_value' );
+				if ( strpos( $sort_param, '__' ) !== false ) {
+					list($sort_param, $sort_order) = explode( '__', $sort_param );
 				}
-			} else {
-				$query->set( 'orderby', $sort_param );
+
+				// Set sort order.
+				if ( isset( $attributes[ $sort_param ] ) ) {
+					$query->set( 'meta_key', hp\prefix( $sort_param ) );
+
+					if ( ! is_null( $sort_order ) ) {
+						$query->set( 'orderby', 'meta_value_num' );
+						$query->set( 'order', strtoupper( $sort_order ) );
+					} else {
+						$query->set( 'orderby', 'meta_value' );
+					}
+				} else {
+					$query->set( 'orderby', $sort_param );
+				}
 			}
 		}
 
