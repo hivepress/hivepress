@@ -163,6 +163,10 @@ class Listings extends Block {
 		// Query listings.
 		$query = new \WP_Query( $query_args );
 
+		// todo remove.
+		global $wp_query;
+		$query = $wp_query;
+
 		// Render listings.
 		if ( $query->have_posts() ) {
 			$output  = '<div class="todo">';

@@ -95,6 +95,10 @@ class Listing extends Controller {
 		// Validate form.
 		$form = new Forms\Listing_Update();
 
+		if ( $listing->get_status() === 'auto-draft' ) {
+			$form = new Forms\Listing_Submit();
+		}
+
 		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
