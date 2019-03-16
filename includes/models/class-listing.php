@@ -129,11 +129,30 @@ class Listing extends Post {
 	}
 
 	/**
-	 * Gets todos.
+	 * Gets display fields.
 	 *
+	 * @param string $area Area name.
 	 * @return array
 	 */
-	final public function get_todos() {
-		return static::$fields;
+	final public function get_display_fields( $area ) {
+		$fields = [];
+
+		foreach ( static::$fields as $field_name => $field ) {
+			if ( hp\get_array_value( $field->get_args(), 'display_area' ) === $area ) {
+				$fields[ $field_name ] = new \HivePress\Fields\Text(
+					[
+						'label'   => $field->get_label(),
+						'default' => hp\replace_placeholders(
+							[
+								'value' => hp\get_array_value( $this->attributes, $field_name ),
+							],
+							hp\get_array_value( $field->get_args(), 'display_format', '%value%' )
+						),
+					]
+				);
+			}
+		}
+
+		return $fields;
 	}
 }

@@ -142,9 +142,8 @@ abstract class Model {
 	 */
 	final protected function set_property( $name, $value ) {
 		if ( isset( static::$fields[ $name ] ) ) {
-			$field = static::$fields[ $name ];
-			$field->set_value( $value );
-			$this->attributes[ $name ] = $field->get_value();
+			static::$fields[ $name ]->set_value( $value );
+			$this->attributes[ $name ] = static::$fields[ $name ]->get_value();
 		}
 	}
 

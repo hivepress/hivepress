@@ -2,15 +2,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( $listing->get_todos() ) :
+if ( $listing->get_display_fields( 'view_block_secondary' ) ) :
 	?>
 	<div class="hp-listing__attributes hp-listing__attributes--secondary">
 		<div class="hp-row">
-			<?php foreach ( $listing::get_fields() as $todo ) : ?>
+			<?php foreach ( $listing->get_display_fields( 'view_block_secondary' ) as $field ) : ?>
 				<div class="hp-col-lg-6 hp-col-xs-12">
 					<div class="hp-listing__attribute">
-						<strong><?php echo esc_html( $todo->get_label() ); ?>:</strong>
-						<span><?php echo esc_html( $todo->get_value() ); ?></span>
+						<strong><?php echo esc_html( $field->get_label() ); ?>:</strong>
+						<span><?php echo esc_html( $field->get_value() ); ?></span>
 					</div>
 				</div>
 			<?php endforeach; ?>
