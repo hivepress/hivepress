@@ -512,16 +512,19 @@ final class Attribute {
 		}
 
 		// Check model.
-		$model = hp\unprefix( hp\get_array_value( $query->query_vars, 'post_type' ) );
+		$model = null;
 
-		if ( ! in_array( $model, $this->models, true ) ) {
-			return;
+		foreach ( $this->models as $current_model ) {
+			$page_id = absint( get_option( hp\prefix( 'page_' . $current_model . 's' ) ) );
+
+			if ( ( 0 !== $page_id && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $current_model ) ) || is_tax( hp\prefix( $current_model . '_category' ) ) ) {
+				$model = $current_model;
+
+				break;
+			}
 		}
 
-		// Check page.
-		$page_id = absint( get_option( hp\prefix( 'page_' . $model . 's' ) ) );
-
-		if ( ( 0 === $page_id || ! is_page( $page_id ) ) && ! is_post_type_archive( hp\prefix( $model ) ) && ! is_tax( hp\prefix( $model . '_category' ) ) ) {
+		if ( is_null( $model ) ) {
 			return;
 		}
 
