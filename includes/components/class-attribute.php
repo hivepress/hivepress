@@ -55,6 +55,7 @@ final class Attribute {
 			// Add search fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ] );
 
 			// Add category options.
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ] );
@@ -270,8 +271,12 @@ final class Attribute {
 
 		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) ) {
-				$form['fields'][ $attribute_name ] = $attribute['search_field'];
+			if ( ! isset( $form['fields'][ $attribute_name ] ) ) {
+				if ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) {
+					$form['fields'][ $attribute_name ] = $attribute['search_field'];
+				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
+					$form['fields'][ $attribute_name ] = array_merge( $attribute['search_field'], [ 'type' => 'hidden' ] );
+				}
 			}
 		}
 

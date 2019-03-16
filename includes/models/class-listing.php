@@ -129,13 +129,11 @@ class Listing extends Post {
 	}
 
 	/**
-	 * Gets attributes.
+	 * Gets todos.
 	 *
-	 * @param string $area Area name.
 	 * @return array
 	 */
-	final public function get_attributes( $area ) {
-		// todo.
-		return [];
+	final public function get_todos() {
+		return static::$fields;
 	}
 }
