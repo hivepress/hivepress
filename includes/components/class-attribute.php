@@ -433,7 +433,8 @@ final class Attribute {
 		// Add options.
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name ] = $attribute['search_field']['label'];
+				$form['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
+				$form['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
 			}
 		}
 
