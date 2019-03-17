@@ -19,13 +19,8 @@ return [
 
 			'blocks' => [
 				'user_login_form' => [
-					'type'       => 'form',
-					'form_name'  => 'user_login',
-					'order'      => 10,
-
-					'attributes' => [
-						'class' => [ 'hp-form--narrow' ],
-					],
+					'type'  => 'user_login_form',
+					'order' => 10,
 				],
 			],
 		],

@@ -24,18 +24,34 @@ final class Template {
 	 */
 	public function __construct() {
 
-		// Render actions.
-		add_action( 'storefront_header', [ $this, 'render_actions' ], 31 );
+		if ( ! is_admin() ) {
 
-		// Render modals.
-		add_action( 'wp_footer', [ $this, 'render_modals' ] );
+			// Add theme class.
+			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
+
+			// Render menu.
+			add_action( 'storefront_header', [ $this, 'render_menu' ], 31 );
+
+			// Render modals.
+			add_action( 'wp_footer', [ $this, 'render_modals' ] );
+		}
 	}
 
 	/**
-	 * Renders actions.
+	 * Adds theme class.
+	 *
+	 * @param array $classes Body classes.
+	 * @return array
 	 */
-	public function render_actions() {
-		echo ( new \HivePress\Blocks\Template( [ 'template_name' => 'actions_block' ] ) )->render();
+	public function add_theme_class( $classes ) {
+		return array_merge( $classes, [ 'hp-theme--' . sanitize_key( get_template() ) ] );
+	}
+
+	/**
+	 * Renders menu.
+	 */
+	public function render_menu() {
+		echo ( new \HivePress\Blocks\Template( [ 'template_name' => 'menu_block' ] ) )->render();
 	}
 
 	/**

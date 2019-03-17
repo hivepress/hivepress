@@ -278,11 +278,21 @@ abstract class Form {
 			$attributes['method'] = $this->method;
 		}
 
-		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
+		// Set message.
+		if ( $this->message ) {
+			$attributes['data-message'] = $this->message;
+		}
+
+		// Set redirect.
+		if ( $this->redirect ) {
+			$attributes['data-redirect'] = $this->redirect;
+		}
 
 		// Set component.
 		$attributes['data-component'] = 'form';
+
+		// Set class.
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}

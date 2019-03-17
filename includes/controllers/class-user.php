@@ -503,6 +503,11 @@ class User extends Controller {
 	 */
 	public function render_login_page() {
 		// todo.
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'user_login_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
 	}
 
 	/**

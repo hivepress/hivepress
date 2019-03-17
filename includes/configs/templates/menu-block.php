@@ -1,6 +1,6 @@
 <?php
 /**
- * Actions block template.
+ * Menu block template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -18,7 +18,7 @@ return [
 			'order'      => 10,
 
 			'attributes' => [
-				'class' => 'hp-actions',
+				'class' => 'hp-menu',
 			],
 
 			'blocks'     => [

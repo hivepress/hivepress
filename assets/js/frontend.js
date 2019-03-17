@@ -24,15 +24,22 @@
 			});
 		});
 
+		// Links
+		getComponent('link').on('click', function() {
+			window.location.href = $(this).data('url');
+		});
+
 		// Forms.
 		getComponent('form').each(function() {
 			var form = $(this),
 				messageContainer = form.children('div').first(),
+				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
 
 			form.on('submit', function(e) {
+				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 				submitButton.prop('disabled', true);
 				submitButton.attr('data-state', 'loading');
 
@@ -45,16 +52,34 @@
 							xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
 						},
 						complete: function(xhr) {
+							var response = xhr.responseJSON;
+
 							submitButton.prop('disabled', false);
 							submitButton.attr('data-state', '');
 
-							if (xhr.responseJSON.hasOwnProperty('data')) {
+							if (response.hasOwnProperty('data')) {
 								if (typeof grecaptcha !== 'undefined' && captcha.length) {
 									grecaptcha.reset(captchaId);
 								}
+
+								if (form.data('message')) {
+									messageContainer.addClass(messageClass + '--success').html('todo').show();
+								}
+
+								if (form.data('redirect')) {
+									window.location.reload(true);
+								}
+							} else if (response.hasOwnProperty('error')) {
+								messageContainer.addClass(messageClass + '--error').html('todo').show();
 							}
 
-							console.log(xhr.responseText);
+							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
+								$('html, body').animate({
+									scrollTop: form.offset().top,
+								}, 500);
+							}
+
+							console.log(response);
 						},
 					});
 

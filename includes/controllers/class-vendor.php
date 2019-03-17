@@ -33,8 +33,8 @@ class Vendor extends Controller {
 			[
 				'routes' => [
 					[
-						'rule'   => 'is_vendor_page',
-						'action' => 'render_vendor_page',
+						'rule'   => 'is_vendor_view_page',
+						'action' => 'render_vendor_view_page',
 					],
 				],
 			],
@@ -45,20 +45,20 @@ class Vendor extends Controller {
 	}
 
 	/**
-	 * Checks vendor page.
+	 * Checks vendor view page.
 	 *
 	 * @return bool
 	 */
-	public function is_vendor_page() {
+	public function is_vendor_view_page() {
 		return is_singular( 'hp_vendor' );
 	}
 
 	/**
-	 * Renders vendor page.
+	 * Renders vendor view page.
 	 *
 	 * @return string
 	 */
-	public function render_vendor_page() {
+	public function render_vendor_view_page() {
 		the_post();
 
 		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();

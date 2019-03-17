@@ -26,10 +26,15 @@ return [
 					'order'      => 10,
 
 					'attributes' => [
-						'class' => [ 'hp-col-sm-8', 'hp-col-sm-offset-2', 'hp-col-xs-12' ],
+						'class' => [ 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
 					],
 
-					'blocks'     => [],
+					'blocks'     => [
+						'user_login_form' => [
+							'type'  => 'user_login_form',
+							'order' => 10,
+						],
+					],
 				],
 			],
 		],

@@ -51,13 +51,13 @@ class Listing extends Controller {
 					],
 
 					[
-						'rule'   => 'is_listings_page',
-						'action' => 'render_listings_page',
+						'rule'   => 'is_listings_view_page',
+						'action' => 'render_listings_view_page',
 					],
 
 					[
-						'rule'   => 'is_listing_page',
-						'action' => 'render_listing_page',
+						'rule'   => 'is_listing_view_page',
+						'action' => 'render_listing_view_page',
 					],
 				],
 			],
@@ -156,11 +156,11 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Checks listings page.
+	 * Checks listings view page.
 	 *
 	 * @return bool
 	 */
-	public function is_listings_page() {
+	public function is_listings_view_page() {
 
 		// Get page ID.
 		$page_id = absint( get_option( 'hp_page_listings' ) );
@@ -169,11 +169,11 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listings page.
+	 * Renders listings view page.
 	 *
 	 * @return string
 	 */
-	public function render_listings_page() {
+	public function render_listings_view_page() {
 		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
 		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( is_tax() && get_term_meta( get_queried_object_id(), 'hp_display_subcategories', true ) ) ) {
@@ -188,20 +188,20 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Checks listing page.
+	 * Checks listing view page.
 	 *
 	 * @return bool
 	 */
-	public function is_listing_page() {
+	public function is_listing_view_page() {
 		return is_singular( 'hp_listing' );
 	}
 
 	/**
-	 * Renders listing page.
+	 * Renders listing view page.
 	 *
 	 * @return string
 	 */
-	public function render_listing_page() {
+	public function render_listing_view_page() {
 		the_post();
 
 		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
