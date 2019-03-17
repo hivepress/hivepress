@@ -57,4 +57,20 @@ class Listing_Search_Form extends Form {
 
 		parent::__construct( $args );
 	}
+
+	/**
+	 * Bootstraps block properties.
+	 */
+	protected function bootstrap() {
+
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-form--wide' ],
+			]
+		);
+
+		parent::bootstrap();
+	}
 }

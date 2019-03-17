@@ -152,6 +152,15 @@ abstract class Form {
 	}
 
 	/**
+	 * Gets form method.
+	 *
+	 * @return string
+	 */
+	final public function get_method() {
+		return $this->method;
+	}
+
+	/**
 	 * Sets form button.
 	 *
 	 * @param array $button_args Button arguments.

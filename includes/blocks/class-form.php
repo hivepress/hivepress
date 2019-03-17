@@ -27,6 +27,13 @@ class Form extends Block {
 	protected $form_name;
 
 	/**
+	 * Form attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -40,10 +47,13 @@ class Form extends Block {
 		if ( class_exists( $form_class ) ) {
 
 			// Create form.
-			// todo.
-			$form = new $form_class( $this->context );
+			$form = new $form_class( [ 'attributes' => $this->attributes ] );
 
-			$form->set_values( $_GET );
+			if ( $form->get_method() === 'POST' ) {
+				$form->set_values( $_POST );
+			} elseif ( $form->get_method() === 'GET' ) {
+				$form->set_values( $_GET );
+			}
 
 			// Render form.
 			$output .= $form->render();
