@@ -63,14 +63,24 @@
 								}
 
 								if (form.data('message')) {
-									messageContainer.addClass(messageClass + '--success').html('todo').show();
+									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
 
 								if (form.data('redirect')) {
 									window.location.reload(true);
 								}
 							} else if (response.hasOwnProperty('error')) {
-								messageContainer.addClass(messageClass + '--error').html('todo').show();
+								if (response.error.hasOwnProperty('errors')) {
+									$.each(response.error.errors, function(index, error) {
+										messageContainer.append('<div>' + error.message + '</div>');
+									});
+								} else if (response.error.hasOwnProperty('message')) {
+									messageContainer.html('<div>' + response.error.message + '</div>');
+								}
+
+								if (!messageContainer.is(':empty')) {
+									messageContainer.addClass(messageClass + '--error').show();
+								}
 							}
 
 							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
