@@ -15,8 +15,7 @@ return [
 		// todo.
 		'user_login_modal'            => [
 			'type'   => 'modal',
-			//'title'  => esc_html__( 'Sign In', 'hivepress' ),
-
+			// 'title'  => esc_html__( 'Sign In', 'hivepress' ),
 			'blocks' => [
 				'user_login_form' => [
 					'type'  => 'user_login_form',
@@ -27,8 +26,7 @@ return [
 
 		'user_register_modal'         => [
 			'type'   => 'modal',
-			//'title'  => esc_html__( 'Register', 'hivepress' ),
-
+			// 'title'  => esc_html__( 'Register', 'hivepress' ),
 			'blocks' => [
 				'user_register_form' => [
 					'type'       => 'form',
@@ -44,15 +42,15 @@ return [
 
 		'user_password_request_modal' => [
 			'type'   => 'modal',
-			//'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-
+			// 'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 			'blocks' => [
 				'user_password_request_form' => [
-					'type'       => 'form',
-					'form_name'  => 'user_password_request',
-					'order'      => 10,
+					'type'             => 'form',
+					'form_name'        => 'user_password_request',
+					'form_description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
+					'order'            => 10,
 
-					'attributes' => [
+					'attributes'       => [
 						'class' => [ 'hp-form--narrow' ],
 					],
 				],

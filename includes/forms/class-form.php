@@ -36,6 +36,13 @@ abstract class Form {
 	protected $title;
 
 	/**
+	 * Form description.
+	 *
+	 * @var string
+	 */
+	protected $description;
+
+	/**
 	 * Form message.
 	 *
 	 * @var string
@@ -339,6 +346,11 @@ abstract class Form {
 	 */
 	final public function render() {
 		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Render description.
+		if ( $this->description ) {
+			$output .= '<div class="hp-form__description">' . hp\sanitize_html( $this->description ) . '</div>';
+		}
 
 		// Render messages.
 		$output .= '<div class="hp-form__messages"></div>';
