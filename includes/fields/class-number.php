@@ -142,6 +142,17 @@ class Number extends Field {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( ! is_numeric( $this->value ) ) {
+			$this->value = null;
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

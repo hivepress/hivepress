@@ -18,7 +18,7 @@ return [
 			'order'      => 10,
 
 			'attributes' => [
-				'class' => 'hp-page__header',
+				'class' => [ 'hp-page__header' ],
 			],
 
 			'blocks'     => [
@@ -76,7 +76,7 @@ return [
 							'order'      => 10,
 
 							'attributes' => [
-								'class' => 'hp-page__topbar',
+								'class' => [ 'hp-page__topbar' ],
 							],
 
 							'blocks'     => [
@@ -86,9 +86,13 @@ return [
 								],
 
 								'sort_form'    => [
-									'type'      => 'form',
-									'form_name' => 'listing_sort',
-									'order'     => 20,
+									'type'       => 'form',
+									'form_name'  => 'listing_sort',
+									'order'      => 20,
+
+									'attributes' => [
+										'class' => [ 'hp-form--pivot' ],
+									],
 								],
 							],
 						],

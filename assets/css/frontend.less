@@ -135,9 +135,20 @@ Mixins
 			}
 		}
 
+		&--pivot &__field {
+			display: flex;
+			margin: 0;
+			align-items: center;
+		}
+
 		&__label {
-			display:block;
-			margin-bottom:0.5rem;
+			display: block;
+			margin-bottom: 0.5rem;
+		}
+
+		&--pivot &__label {
+			margin: 0 0.5rem 0 0;
+			white-space: nowrap;
 		}
 	}
 
@@ -171,6 +182,10 @@ Mixins
 
 					&:not(:last-child) {
 						margin-bottom: 0.5rem;
+					}
+
+					label {
+						cursor: pointer;
 					}
 				}
 			}

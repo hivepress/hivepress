@@ -119,18 +119,6 @@ abstract class Form {
 		$args = apply_filters( 'hivepress/v1/forms/form', $args );
 		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
 
-		// todo.
-		$args['button'] = array_merge(
-			[
-				'label'      => esc_html__( 'Submit', 'hivepress' ),
-				'type'       => 'button',
-				'attributes' => [
-					'class' => [ 'hp-form__button' ],
-				],
-			],
-			hp\get_array_value( $args, 'button', [] )
-		);
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
@@ -165,23 +153,6 @@ abstract class Form {
 	 */
 	final public function get_method() {
 		return $this->method;
-	}
-
-	/**
-	 * Sets form button.
-	 *
-	 * @param array $button_args Button arguments.
-	 */
-	protected function set_button( $button_args ) {
-
-		// Get button class.
-		$button_class = '\HivePress\Fields\\' . $button_args['type'];
-
-		if ( class_exists( $button_class ) ) {
-
-			// Create button.
-			$this->button = new $button_class( $button_args );
-		}
 	}
 
 	/**
@@ -301,6 +272,22 @@ abstract class Form {
 		// Set class.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
 
+		// Set button.
+		if ( ! is_null( $this->button ) ) {
+			$this->button = new \HivePress\Fields\Button(
+				hp\merge_arrays(
+					[
+						'label'      => esc_html__( 'Submit', 'hivepress' ),
+						'type'       => 'button',
+						'attributes' => [
+							'class' => [ 'hp-form__button' ],
+						],
+					],
+					(array) $this->button
+				)
+			);
+		}
+
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
@@ -359,17 +346,21 @@ abstract class Form {
 		$output .= '<div class="hp-form__fields">';
 
 		foreach ( $this->fields as $field ) {
-			$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_type() ) ) . '">';
+			if ( $field::get_type() !== 'hidden' ) {
+				$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_type() ) ) . '">';
 
-			// Render label.
-			if ( $field->get_label() ) {
-				$output .= '<label class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
+				// Render label.
+				if ( $field->get_label() ) {
+					$output .= '<label class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
+				}
 			}
 
 			// Render field.
 			$output .= $field->render();
 
-			$output .= '</div>';
+			if ( $field::get_type() !== 'hidden' ) {
+				$output .= '</div>';
+			}
 		}
 
 		$output .= '</div>';
