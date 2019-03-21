@@ -169,13 +169,13 @@ class Listings extends Block {
 
 		// Render listings.
 		if ( $query->have_posts() ) {
-			$output  = '<div class="todo">';
+			$output  = '<div class="hp-grid">';
 			$output .= '<div class="hp-row">';
 
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
-				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+				$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 				$output .= ( new Listing( [ 'template_name' => 'listing_view_block' ] ) )->render();
 				$output .= '</div>';
 			}
