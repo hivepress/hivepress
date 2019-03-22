@@ -70,6 +70,10 @@ class Select extends Field {
 						'type'    => 'checkbox',
 						'order'   => 10,
 					],
+
+					'options'  => [
+						'type' => 'hidden',
+					],
 				],
 			],
 			$args

@@ -167,12 +167,12 @@ final class Attribute {
 			// Get attribute name.
 			$attribute_name = substr( hp\sanitize_key( urldecode( $attribute->post_name ) ), 0, 64 - strlen( hp\prefix( '' ) ) );
 
-			if ( isset( $attribute_args['edit_field']['options'] ) ) {
+			if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
 				$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $attribute_model ) ) );
 			}
 
 			// Register taxonomy.
-			if ( isset( $attribute_args['edit_field']['options'] ) ) {
+			if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
 				register_taxonomy(
 					hp\prefix( $attribute_model . '_' . $attribute_name ),
 					hp\prefix( $attribute_model ),
@@ -279,7 +279,7 @@ final class Attribute {
 
 		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! isset( $attribute['edit_field']['options'] ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
+			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $attribute['edit_field'] ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
 				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}

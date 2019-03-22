@@ -138,15 +138,27 @@ class Listing extends Post {
 		$fields = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
-			if ( in_array( $area, hp\get_array_value( $field->get_args(), 'display_areas', [] ), true ) ) {
+			$field_args = $field->get_args();
+
+			if ( in_array( $area, hp\get_array_value( $field_args, 'display_areas', [] ), true ) ) {
+
+				// Get value.
+				$field_value    = hp\get_array_value( $this->attributes, $field_name );
+				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
+
+				if ( array_key_exists( 'options', $field_args ) && taxonomy_exists( $field_taxonomy ) ) {
+					$field_value = implode( ', ', wp_get_post_terms( $this->id, $field_taxonomy, [ 'fields' => 'names' ] ) );
+				}
+
+				// Create field.
 				$fields[ $field_name ] = new \HivePress\Fields\Text(
 					[
 						'label'   => $field->get_label(),
 						'default' => hp\replace_placeholders(
 							[
-								'value' => hp\get_array_value( $this->attributes, $field_name ),
+								'value' => $field_value,
 							],
-							hp\get_array_value( $field->get_args(), 'display_format', '%value%' )
+							hp\get_array_value( $field_args, 'display_format', '%value%' )
 						),
 					]
 				);
