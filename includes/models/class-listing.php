@@ -147,21 +147,35 @@ class Listing extends Post {
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
 				if ( array_key_exists( 'options', $field_args ) && taxonomy_exists( $field_taxonomy ) ) {
-					$field_value = implode( ', ', wp_get_post_terms( $this->id, $field_taxonomy, [ 'fields' => 'names' ] ) );
+					$field_terms = wp_get_post_terms( $this->id, $field_taxonomy, [ 'fields' => 'names' ] );
+
+					if ( ! empty( $field_terms ) ) {
+						$field_value = implode( ', ', $field_terms );
+					}
+				}
+
+				if ( is_bool( $field_value ) ) {
+					if ( $field_value ) {
+						$field_value = esc_html__( 'Yes', 'hivepress' );
+					} else {
+						$field_value = esc_html__( 'No', 'hivepress' );
+					}
 				}
 
 				// Create field.
-				$fields[ $field_name ] = new \HivePress\Fields\Text(
-					[
-						'label'   => $field->get_label(),
-						'default' => hp\replace_placeholders(
-							[
-								'value' => $field_value,
-							],
-							hp\get_array_value( $field_args, 'display_format', '%value%' )
-						),
-					]
-				);
+				if ( ! is_null( $field_value ) ) {
+					$fields[ $field_name ] = new \HivePress\Fields\Text(
+						[
+							'label'   => $field->get_label(),
+							'default' => hp\replace_placeholders(
+								[
+									'value' => $field_value,
+								],
+								hp\get_array_value( $field_args, 'display_format', '%value%' )
+							),
+						]
+					);
+				}
 			}
 		}
 
