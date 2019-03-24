@@ -30,6 +30,14 @@ return [
 						'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
 						'data-component' => 'sticky',
 					],
+
+					'blocks'     => [
+						'menu' => [
+							'type'      => 'menu',
+							'menu_name' => 'todo',
+							'order'     => 10,
+						],
+					],
 				],
 
 				'content' => [

@@ -59,6 +59,18 @@ class Listing extends Controller {
 						'rule'   => 'is_listing_view_page',
 						'action' => 'render_listing_view_page',
 					],
+
+					[
+						'title'  => esc_html__( 'My Listings', 'hivepress' ),
+						'path'   => '/account/listings',
+						'action' => 'render_listings_edit_page',
+					],
+
+					[
+						'title'  => esc_html__( 'Edit Listing', 'hivepress' ),
+						'path'   => '/account/listings/(?P<todo>\d+)',
+						'action' => 'render_listing_edit_page',
+					],
 				],
 			],
 			$args
@@ -206,6 +218,41 @@ class Listing extends Controller {
 
 		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 		$output .= ( new Blocks\Listing( [ 'template_name' => 'listing_view_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
+	}
+
+	/**
+	 * Renders listings edit page.
+	 *
+	 * @return string
+	 */
+	public function render_listings_edit_page() {
+		query_posts(
+			[
+				'post_type'      => hp\prefix( 'listing' ),
+				'post_status'    => [ 'draft', 'pending', 'publish' ],
+				'author'         => get_current_user_id(),
+				'posts_per_page' => -1,
+			]
+		);
+
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'listings_edit_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
+	}
+
+	/**
+	 * Renders listing edit page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_edit_page() {
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_edit_page' ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
