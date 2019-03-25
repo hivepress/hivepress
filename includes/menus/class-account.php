@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Account extends Menu {
 
 	/**
+	 * Menu name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
 	 * Menu items.
 	 *
 	 * @var array
@@ -35,7 +42,12 @@ class Account extends Menu {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'items' => [ 'todo' ],
+				'items' => [
+					[
+						'route' => 'todo',
+						'order' => 10,
+					],
+				],
 			],
 			$args
 		);

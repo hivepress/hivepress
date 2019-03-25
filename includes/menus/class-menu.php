@@ -22,6 +22,13 @@ abstract class Menu {
 	use Traits\Mutator;
 
 	/**
+	 * Menu name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
 	 * Menu items.
 	 *
 	 * @var array
@@ -41,6 +48,9 @@ abstract class Menu {
 	 * @param array $args Menu arguments.
 	 */
 	public static function init( $args = [] ) {
+
+		// Set name.
+		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -71,7 +81,7 @@ abstract class Menu {
 		$attributes = [];
 
 		// Set class.
-		$attributes['class'] = [ 'hp-menu' ];
+		$attributes['class'] = [ 'hp-menu', 'hp-menu--' . hp\sanitize_slug( static::$name ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
