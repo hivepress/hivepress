@@ -1,6 +1,6 @@
 <?php
 /**
- * User login page template.
+ * User password reset page template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -30,8 +30,8 @@ return [
 					],
 
 					'blocks'     => [
-						'login_form' => [
-							'type'  => 'user_login_form',
+						'password_reset_form' => [
+							'type'  => 'user_password_reset_form',
 							'order' => 10,
 						],
 					],

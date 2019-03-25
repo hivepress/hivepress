@@ -33,12 +33,7 @@ class Menu extends Block {
 	 */
 	public function render() {
 		// todo.
-		$output = '<nav class="widget widget_nav_menu">
-<ul>
-<li><a href="http://localhost/hivepress/account/listings/">My Listings</a></li>
-<li><a href="http://localhost/hivepress/account/settings/">My Settings</a></li>
-</ul>
-		</nav>';
+		$output = ( new \HivePress\Menus\Account() )->render();
 
 		return $output;
 	}

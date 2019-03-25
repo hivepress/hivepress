@@ -502,7 +502,6 @@ class User extends Controller {
 	 * @return string
 	 */
 	public function render_login_page() {
-		// todo.
 		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 		$output .= ( new Blocks\Template( [ 'template_name' => 'user_login_page' ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
@@ -516,7 +515,11 @@ class User extends Controller {
 	 * @return string
 	 */
 	public function render_password_page() {
-		// todo.
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'user_password_reset_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
 	}
 
 	/**
