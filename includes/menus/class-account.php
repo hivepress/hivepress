@@ -44,8 +44,19 @@ class Account extends Menu {
 			[
 				'items' => [
 					[
-						'route' => 'todo',
+						'route' => 'listing/todo',
 						'order' => 10,
+					],
+
+					[
+						'route' => 'user/settings',
+						'order' => 20,
+					],
+
+					[
+						'label' => esc_html__( 'Sign Out', 'hivepress' ),
+						'url'   => wp_logout_url( home_url() ),
+						'order' => 100,
 					],
 				],
 			],

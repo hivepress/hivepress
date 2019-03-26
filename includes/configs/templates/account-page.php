@@ -33,9 +33,13 @@ return [
 
 					'blocks'     => [
 						'menu' => [
-							'type'      => 'menu',
-							'menu_name' => 'todo',
-							'order'     => 10,
+							'type'       => 'menu',
+							'menu_name'  => 'account',
+							'order'      => 10,
+
+							'attributes' => [
+								'class' => [ 'widget', 'widget_nav_menu' ],
+							],
 						],
 					],
 				],

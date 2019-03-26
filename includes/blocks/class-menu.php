@@ -27,13 +27,31 @@ class Menu extends Block {
 	protected $menu_name;
 
 	/**
+	 * Menu attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		$output = ( new \HivePress\Menus\Account() )->render();
+		$output = '';
+
+		// Get menu class.
+		$menu_class = '\HivePress\Menus\\' . $this->menu_name;
+
+		if ( class_exists( $menu_class ) ) {
+
+			// Create menu.
+			$menu = new $menu_class( [ 'attributes' => $this->attributes ] );
+
+			// Render menu.
+			$output .= $menu->render();
+		}
 
 		return $output;
 	}

@@ -90,7 +90,7 @@ abstract class Model {
 	final protected static function set_fields( $fields ) {
 		static::$fields = [];
 
-		foreach ( $fields as $field_name => $field_args ) {
+		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Get field class.
 			$field_class = '\HivePress\Fields\\' . $field_args['type'];

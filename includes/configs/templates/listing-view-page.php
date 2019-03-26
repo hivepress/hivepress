@@ -111,7 +111,7 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
+										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'widget' ],
 									],
 								],
 
@@ -119,6 +119,10 @@ return [
 									'type'          => 'vendor',
 									'template_name' => 'vendor_view_block',
 									'order'         => 30,
+
+									'attributes'    => [
+										'class' => [ 'widget' ],
+									],
 								],
 							],
 						],

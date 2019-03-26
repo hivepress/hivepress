@@ -75,6 +75,30 @@ abstract class Menu {
 	}
 
 	/**
+	 * Sets menu items.
+	 *
+	 * @param array $items Menu items.
+	 */
+	final protected static function set_items( $items ) {
+		static::$items = [];
+
+		foreach ( hp\sort_array( $items ) as $item_name => $item ) {
+
+			// Set label.
+			if ( ! isset( $item['label'] ) ) {
+				$item['label'] = 'todo';
+			}
+
+			// Set URL.
+			if ( ! isset( $item['url'] ) ) {
+				$item['url'] = 'todo';
+			}
+
+			static::$items[ $item_name ] = $item;
+		}
+	}
+
+	/**
 	 * Bootstraps menu properties.
 	 */
 	protected function bootstrap() {
@@ -97,8 +121,10 @@ abstract class Menu {
 		if ( ! empty( static::$items ) ) {
 			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
 
-			foreach ( static::$items as $item ) {
-				$output .= '<li><a href="#">Todo</a></li>';
+			foreach ( static::$items as $item_name => $item ) {
+				$output .= '<li class="hp-menu__item hp-menu__item--' . esc_attr( hp\sanitize_slug( $item_name ) ) . '">';
+				$output .= '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
+				$output .= '</li>';
 			}
 
 			$output .= '</ul></nav>';

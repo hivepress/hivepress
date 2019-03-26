@@ -18,7 +18,7 @@ return [
 			'order'      => 10,
 
 			'attributes' => [
-				'class' => [ 'hp-menu' ],
+				'class' => [ 'hp-menu', 'hp-menu--main' ],
 			],
 
 			'blocks'     => [

@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -208,13 +207,15 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
-	Menu
+	Menus
 	--------------------------------------------------------------*/
 	&-menu {
-		display: flex;
-		align-items: center;
+		&--main {
+			display: flex;
+			align-items: center;
+		}
 
-		&__item {
+		&--main &__item {
 			&:not(:last-child) {
 				margin-right: 1.5rem;
 			}
@@ -557,7 +558,7 @@ Mixins
 		}
 	}
 
-	&-theme--storefront &-menu {
+	&-theme--storefront &-menu--main {
 		float: right;
 		margin-left: 1.5rem;
 		@media only screen and (max-width:48em) {
