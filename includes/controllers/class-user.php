@@ -88,21 +88,24 @@ class User extends Controller {
 					],
 
 					'login_user'     => [
-						'title'  => esc_html__( 'Sign In', 'hivepress' ),
-						'path'   => '/account/login',
-						'action' => 'render_login_page',
+						'title'    => esc_html__( 'Sign In', 'hivepress' ),
+						'path'     => '/account/login',
+						'redirect' => 'redirect_login_page',
+						'action'   => 'render_login_page',
 					],
 
 					'reset_password' => [
-						'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-						'path'   => '/account/reset-password',
-						'action' => 'render_password_page',
+						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
+						'path'     => '/account/reset-password',
+						'redirect' => 'redirect_password_page',
+						'action'   => 'render_password_page',
 					],
 
 					'edit_settings'  => [
-						'title'  => esc_html__( 'My Settings', 'hivepress' ),
-						'path'   => '/account/settings',
-						'action' => 'render_settings_page',
+						'title'    => esc_html__( 'My Settings', 'hivepress' ),
+						'path'     => '/account/settings',
+						'redirect' => 'redirect_settings_page',
+						'action'   => 'render_settings_page',
 					],
 				],
 			],
@@ -511,6 +514,15 @@ class User extends Controller {
 	}
 
 	/**
+	 * Redirects login page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_login_page() {
+		// todo.
+	}
+
+	/**
 	 * Renders login page.
 	 *
 	 * @return string
@@ -524,6 +536,15 @@ class User extends Controller {
 	}
 
 	/**
+	 * Redirects password page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_password_page() {
+		// todo.
+	}
+
+	/**
 	 * Renders password page.
 	 *
 	 * @return string
@@ -534,6 +555,15 @@ class User extends Controller {
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
+	}
+
+	/**
+	 * Redirects settings page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_settings_page() {
+		// todo.
 	}
 
 	/**

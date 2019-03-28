@@ -105,6 +105,11 @@ abstract class Menu {
 						if ( ! isset( $item['url'] ) ) {
 							$item['url'] = $controller::get_url( $route_name );
 						}
+
+						// Set current.
+						if ( get_query_var( 'hp_controller' ) === $controller_name && get_query_var( 'hp_action' ) === hp\get_array_value( $route, 'action' ) ) {
+							$item['current'] = true;
+						}
 					}
 				}
 			}
@@ -137,7 +142,7 @@ abstract class Menu {
 			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
 
 			foreach ( static::$items as $item_name => $item ) {
-				$output .= '<li class="hp-menu__item hp-menu__item--' . esc_attr( hp\sanitize_slug( $item_name ) ) . '">';
+				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $item, 'current', false ) ? 'hp-menu__item--current' : '' ) . '">';
 				$output .= '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
 				$output .= '</li>';
 			}

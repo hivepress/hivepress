@@ -152,7 +152,7 @@ final class Router {
 
 		foreach ( hivepress()->get_controllers() as $controller ) {
 			foreach ( $controller::get_routes() as $route ) {
-				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && $controller_name === $controller::get_name() && $action_name === $route['action'] ) || ( isset( $route['rule'] ) && call_user_func( [ $controller, $route['rule'] ] ) ) ) ) {
+				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && $controller_name === $controller::get_name() && $action_name === $route['action'] ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
 
 					// Set the current route.
 					$this->route = $route;

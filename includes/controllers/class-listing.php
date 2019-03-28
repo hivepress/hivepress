@@ -65,25 +65,27 @@ class Listing extends Controller {
 					],
 
 					'view_listings' => [
-						'rule'   => 'is_listings_view_page',
+						'match'  => 'is_listings_view_page',
 						'action' => 'render_listings_view_page',
 					],
 
 					'view_listing'  => [
-						'rule'   => 'is_listing_view_page',
+						'match'  => 'is_listing_view_page',
 						'action' => 'render_listing_view_page',
 					],
 
 					'edit_listings' => [
-						'title'  => esc_html__( 'My Listings', 'hivepress' ),
-						'path'   => '/account/listings',
-						'action' => 'render_listings_edit_page',
+						'title'    => esc_html__( 'My Listings', 'hivepress' ),
+						'path'     => '/account/listings',
+						'redirect' => 'redirect_listings_edit_page',
+						'action'   => 'render_listings_edit_page',
 					],
 
 					'edit_listing'  => [
-						'title'  => esc_html__( 'Edit Listing', 'hivepress' ),
-						'path'   => '/account/listings/(?P<todo>\d+)',
-						'action' => 'render_listing_edit_page',
+						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
+						'path'     => '/account/listings/(?P<todo>\d+)',
+						'redirect' => 'redirect_listing_edit_page',
+						'action'   => 'render_listing_edit_page',
 					],
 				],
 			],
@@ -182,7 +184,7 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Checks listings view page.
+	 * Matches listings view page.
 	 *
 	 * @return bool
 	 */
@@ -195,7 +197,7 @@ class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listings view page.
+	 * Matches listings view page.
 	 *
 	 * @return string
 	 */
@@ -238,6 +240,15 @@ class Listing extends Controller {
 	}
 
 	/**
+	 * Redirects listings edit page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listings_edit_page() {
+		// todo.
+	}
+
+	/**
 	 * Renders listings edit page.
 	 *
 	 * @return string
@@ -257,6 +268,15 @@ class Listing extends Controller {
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
+	}
+
+	/**
+	 * Redirects listing edit page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_edit_page() {
+		// todo.
 	}
 
 	/**

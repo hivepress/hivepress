@@ -47,7 +47,7 @@ class Vendor extends Controller {
 			[
 				'routes' => [
 					'view_vendor' => [
-						'rule'   => 'is_vendor_view_page',
+						'match'  => 'is_vendor_view_page',
 						'action' => 'render_vendor_view_page',
 					],
 				],
@@ -59,7 +59,7 @@ class Vendor extends Controller {
 	}
 
 	/**
-	 * Checks vendor view page.
+	 * Matches vendor view page.
 	 *
 	 * @return bool
 	 */
