@@ -43,17 +43,17 @@ class Account extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					[
-						'route' => 'listing/todo',
+					'edit_listings' => [
+						'route' => 'listing/edit_listings',
 						'order' => 10,
 					],
 
-					[
-						'route' => 'user/settings',
+					'edit_settings' => [
+						'route' => 'user/edit_settings',
 						'order' => 20,
 					],
 
-					[
+					'logout_user'   => [
 						'label' => esc_html__( 'Sign Out', 'hivepress' ),
 						'url'   => wp_logout_url( home_url() ),
 						'order' => 100,

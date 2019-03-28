@@ -83,15 +83,30 @@ abstract class Menu {
 		static::$items = [];
 
 		foreach ( hp\sort_array( $items ) as $item_name => $item ) {
+			if ( isset( $item['route'] ) ) {
+				list($controller_name, $route_name) = explode( '/', $item['route'] );
 
-			// Set label.
-			if ( ! isset( $item['label'] ) ) {
-				$item['label'] = 'todo';
-			}
+				// Get controller.
+				$controller = hp\get_array_value( hivepress()->get_controllers(), $controller_name );
 
-			// Set URL.
-			if ( ! isset( $item['url'] ) ) {
-				$item['url'] = 'todo';
+				if ( ! is_null( $controller ) ) {
+
+					// Get route.
+					$route = hp\get_array_value( $controller::get_routes(), $route_name );
+
+					if ( ! is_null( $route ) ) {
+
+						// Set label.
+						if ( ! isset( $item['label'] ) ) {
+							$item['label'] = hp\get_array_value( $route, 'title' );
+						}
+
+						// Set URL.
+						if ( ! isset( $item['url'] ) ) {
+							$item['url'] = $controller::get_url( $route_name );
+						}
+					}
+				}
 			}
 
 			static::$items[ $item_name ] = $item;

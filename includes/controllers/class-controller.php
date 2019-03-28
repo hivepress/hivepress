@@ -154,7 +154,7 @@ abstract class Controller {
 			$url_structure = $wp_rewrite->get_page_permastruct();
 
 			if ( false !== $url_structure ) {
-				$url = $route['path'];
+				$url = rtrim( $route['path'], '/' ) . '/';
 
 				foreach ( static::get_url_params( $route_name ) as $param ) {
 					$url = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)/i', $query[ $param ], $url );

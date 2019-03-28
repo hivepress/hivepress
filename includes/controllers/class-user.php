@@ -87,19 +87,19 @@ class User extends Controller {
 						],
 					],
 
-					[
+					'login_user'     => [
 						'title'  => esc_html__( 'Sign In', 'hivepress' ),
 						'path'   => '/account/login',
 						'action' => 'render_login_page',
 					],
 
-					[
+					'reset_password' => [
 						'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 						'path'   => '/account/reset-password',
 						'action' => 'render_password_page',
 					],
 
-					[
+					'edit_settings'  => [
 						'title'  => esc_html__( 'My Settings', 'hivepress' ),
 						'path'   => '/account/settings',
 						'action' => 'render_settings_page',

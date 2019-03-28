@@ -46,7 +46,7 @@ class Vendor extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					[
+					'view_vendor' => [
 						'rule'   => 'is_vendor_view_page',
 						'action' => 'render_vendor_view_page',
 					],

@@ -64,23 +64,23 @@ class Listing extends Controller {
 						],
 					],
 
-					[
+					'view_listings' => [
 						'rule'   => 'is_listings_view_page',
 						'action' => 'render_listings_view_page',
 					],
 
-					[
+					'view_listing'  => [
 						'rule'   => 'is_listing_view_page',
 						'action' => 'render_listing_view_page',
 					],
 
-					[
+					'edit_listings' => [
 						'title'  => esc_html__( 'My Listings', 'hivepress' ),
 						'path'   => '/account/listings',
 						'action' => 'render_listings_edit_page',
 					],
 
-					'todo' => [
+					'edit_listing'  => [
 						'title'  => esc_html__( 'Edit Listing', 'hivepress' ),
 						'path'   => '/account/listings/(?P<todo>\d+)',
 						'action' => 'render_listing_edit_page',
