@@ -78,11 +78,32 @@ final class Router {
 			foreach ( $controller::get_routes() as $route_name => $route ) {
 				if ( ! hp\get_array_value( $route, 'rest', false ) && isset( $route['path'] ) ) {
 
+					// Get URL query.
+					$query = $controller::get_url_query( $route_name );
+
+					// Get query string.
+					$query_string = http_build_query(
+						array_combine(
+							hp\prefix( array_keys( $query ) ),
+							array_map(
+								function( $param, $value ) {
+									if ( ! in_array( $param, [ 'controller', 'action' ], true ) ) {
+										$value = '{$matches[' . hp\prefix( $param ) . ']}';
+									}
+
+									return $value;
+								},
+								array_keys( $query ),
+								$query
+							)
+						)
+					);
+
 					// Add rewrite rule.
-					add_rewrite_rule( '^' . ltrim( $route['path'], '/' ) . '/?$', 'index.php?' . $controller::get_query_string( $route_name ), 'top' );
+					add_rewrite_rule( '^' . ltrim( $route['path'], '/' ) . '/?$', 'index.php?' . $query_string, 'top' );
 
 					// Add rewrite tags.
-					foreach ( $controller::get_query_params( $route_name ) as $rewrite_tag ) {
+					foreach ( $controller::get_url_params( $route_name ) as $rewrite_tag ) {
 						add_rewrite_tag( '%' . hp\prefix( $rewrite_tag ) . '%', '([^&]+)' );
 					}
 				}

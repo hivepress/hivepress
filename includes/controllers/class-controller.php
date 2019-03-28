@@ -70,92 +70,97 @@ abstract class Controller {
 	}
 
 	/**
-	 * Gets route query string.
+	 * Gets URL parameters.
 	 *
-	 * @param string $route_name
-	 * @return string
+	 * @param string $route_name Route name.
+	 * @return array
 	 */
-	final public static function get_query_params( $route_name ) {
-		$query_params = [];
+	final public static function get_url_params( $route_name ) {
+		$params = [];
 
 		// Get route.
-		$route = hp\hp_get_array_value( static::$routes, $route_name );
+		$route = hp\get_array_value( static::$routes, $route_name );
 
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
 
-			preg_match_all( '/<([a-z_]+)>/i', $route['path'], $rewrite_tags );
+			// Get parameters.
+			preg_match_all( '/<([a-z_]+)>/i', $route['path'], $params );
 
-			$rewrite_tags = array_filter( array_map( 'sanitize_title', array_map( 'current', $rewrite_tags ) ) );
+			// Filter parameters.
+			$params = array_filter( array_map( 'sanitize_title', array_map( 'current', $params ) ) );
 		}
 
-		return $query_params;
+		return $params;
 	}
 
 	/**
-	 * Gets route query string.
+	 * Gets URL query.
 	 *
-	 * @param string $route_name
-	 * @return string
+	 * @param string $route_name Route name.
+	 * @return array
 	 */
-	final public static function get_query_string( $route_name ) {
-		$query_string = '';
+	final public static function get_url_query( $route_name ) {
+		$query = [];
 
 		// Get route.
-		$route = hp\hp_get_array_value( static::$routes, $route_name );
+		$route = hp\get_array_value( static::$routes, $route_name );
 
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
 
-			// Get rewrite tags.
-			preg_match_all( '/<([a-z_]+)>/i', $route['path'], $rewrite_tags );
+			// Set controller.
+			$query['controller'] = static::$name;
 
-			$rewrite_tags = array_filter( array_map( 'sanitize_title', array_map( 'current', $rewrite_tags ) ) );
-
-			// Get query string.
-			$query_string = 'hp_controller=' . static::$name;
-
+			// Set action.
 			if ( isset( $route['action'] ) ) {
-				$query_string .= '&hp_action=' . $route['action'];
+				$query['action'] = $route['action'];
 			}
 
-			if ( ! empty( $rewrite_tags ) ) {
-				$query_string .= '&' . implode(
-					'&',
-					array_map(
-						function( $rewrite_tag ) {
-							return hp\prefix( $rewrite_tag ) . '={$matches[' . $rewrite_tag . ']}';
-						},
-						$rewrite_tags
-					)
-				);
+			// Set parameters.
+			foreach ( static::get_url_params( $route_name ) as $param ) {
+				if ( ! in_array( $param, [ 'controller', 'action' ], true ) ) {
+					$query[ $param ] = null;
+				}
 			}
 		}
 
-		return $query_string;
+		return $query;
 	}
 
 	/**
 	 * Gets route URL.
 	 *
-	 * @param string $route_name
+	 * @param string $route_name Route name.
+	 * @param array  $query URL query.
 	 * @return string
 	 */
-	final public static function get_url( $route_name ) {
+	final public static function get_url( $route_name, $query = [] ) {
 		global $wp_rewrite;
 
 		$url = '';
 
 		// Get route.
-		$route = hp\hp_get_array_value( static::$routes, $route_name );
+		$route = hp\get_array_value( static::$routes, $route_name );
 
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
+
+			// Set URL query.
+			foreach ( static::get_url_query( $route_name ) as $param => $value ) {
+				if ( in_array( $param, [ 'controller', 'action' ], true ) || ! isset( $query[ $param ] ) ) {
+					$query[ $param ] = $value;
+				}
+			}
 
 			// Get URL structure.
 			$url_structure = $wp_rewrite->get_page_permastruct();
 
 			if ( false !== $url_structure ) {
 				$url = $route['path'];
-			} else {
 
+				foreach ( static::get_url_params( $route_name ) as $param ) {
+					$url = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)/i', $query[ $param ], $url );
+				}
+			} else {
+				$url = http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
 			}
 		}
 

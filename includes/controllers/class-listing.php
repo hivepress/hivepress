@@ -80,7 +80,7 @@ class Listing extends Controller {
 						'action' => 'render_listings_edit_page',
 					],
 
-					[
+					'todo' => [
 						'title'  => esc_html__( 'Edit Listing', 'hivepress' ),
 						'path'   => '/account/listings/(?P<todo>\d+)',
 						'action' => 'render_listing_edit_page',
