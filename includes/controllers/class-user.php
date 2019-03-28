@@ -24,11 +24,25 @@ defined( 'ABSPATH' ) || exit;
 class User extends Controller {
 
 	/**
-	 * Class constructor.
+	 * Controller name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
+	 * Controller routes.
+	 *
+	 * @var array
+	 */
+	protected static $routes = [];
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -95,7 +109,7 @@ class User extends Controller {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 
 	/**
