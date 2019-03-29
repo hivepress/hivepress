@@ -82,20 +82,21 @@ final class Router {
 					$query = $controller::get_url_query( $route_name );
 
 					// Get query string.
-					$query_string = http_build_query(
-						array_combine(
-							hp\prefix( array_keys( $query ) ),
-							array_map(
-								function( $param, $value ) {
-									if ( 'route' !== $param ) {
-										$value = '{$matches[' . hp\prefix( $param ) . ']}';
-									}
+					$query_string = implode(
+						'&',
+						array_map(
+							function( $param, $value ) use ( $query ) {
+								if ( 'route' !== $param ) {
+									$index = array_search( $param, array_keys( $query ), true );
+									$value = '$matches[' . $index . ']';
+								} else {
+									$value = rawurlencode( $value );
+								}
 
-									return $value;
-								},
-								array_keys( $query ),
-								$query
-							)
+								return hp\prefix( $param ) . '=' . $value;
+							},
+							array_keys( $query ),
+							$query
 						)
 					);
 

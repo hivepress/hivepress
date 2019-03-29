@@ -83,7 +83,7 @@ class Listing extends Controller {
 
 					'edit_listing'  => [
 						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
-						'path'     => '/account/listings/(?P<todo>\d+)',
+						'path'     => '/account/listings/(?P<listing_id>\d+)',
 						'redirect' => 'redirect_listing_edit_page',
 						'action'   => 'render_listing_edit_page',
 					],
@@ -245,7 +245,11 @@ class Listing extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_listings_edit_page() {
-		// todo.
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return User::get_url( 'login_user' );
+		}
 	}
 
 	/**
@@ -276,7 +280,20 @@ class Listing extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_listing_edit_page() {
-		// todo.
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return User::get_url( 'login_user' );
+		}
+
+		// Get listing.
+		$listing = Models\Listing::get( get_query_var( 'hp_listing_id' ) );
+
+		if ( is_null( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
+			return self::get_url( 'edit_listings' );
+		}
+
+		return false;
 	}
 
 	/**
