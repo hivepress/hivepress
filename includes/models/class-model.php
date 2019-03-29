@@ -117,6 +117,7 @@ abstract class Model {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @return mixed
 	 */
 	final public function __call( $name, $args ) {
 		$prefixes = array_filter(

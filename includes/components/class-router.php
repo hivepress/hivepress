@@ -146,9 +146,9 @@ final class Router {
 	public function set_page_template( $template ) {
 		global $wp_query;
 
-		foreach ( hivepress()->get_controllers() as $controller ) {
+		foreach ( hivepress()->get_controllers() as $controller_name => $controller ) {
 			foreach ( $controller::get_routes() as $route_name => $route ) {
-				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller::get_name() . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
+				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
 
 					// Set the current route.
 					$this->route = $route;
@@ -185,5 +185,24 @@ final class Router {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Gets page URL.
+	 *
+	 * @param string $route_path Route path.
+	 * @return mixed
+	 */
+	public function get_url( $route_path ) {
+		list($controller_name, $route_name) = explode( '/', $route_path );
+
+		// Get controller.
+		$controller = hp\get_array_value( hivepress()->get_controllers(), $controller_name );
+
+		if ( ! is_null( $controller ) ) {
+			return $controller::get_url( $route_name );
+		}
+
+		return null;
 	}
 }

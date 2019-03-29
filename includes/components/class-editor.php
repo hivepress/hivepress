@@ -104,6 +104,7 @@ final class Editor {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @return mixed
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'render_' ) === 0 ) {

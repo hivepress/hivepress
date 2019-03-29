@@ -131,12 +131,11 @@ abstract class Controller {
 	final public static function get_url( $route_name, $query = [] ) {
 		global $wp_rewrite;
 
-		$url = '';
-
 		// Get route.
 		$route = hp\get_array_value( static::$routes, $route_name );
 
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
+			$url = '';
 
 			// Set URL query.
 			foreach ( static::get_url_query( $route_name ) as $param => $value ) {
@@ -157,8 +156,10 @@ abstract class Controller {
 			} else {
 				$url = '?' . http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
 			}
+
+			return home_url( $url );
 		}
 
-		return home_url( $url );
+		return null;
 	}
 }

@@ -247,6 +247,16 @@ final class Core {
 	}
 
 	/**
+	 * Routes properties.
+	 *
+	 * @param string $name Property name.
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		return hp\get_array_value( $this->get_components(), $name );
+	}
+
+	/**
 	 * Gets HivePress directories.
 	 *
 	 * @return array

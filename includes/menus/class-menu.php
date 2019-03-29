@@ -107,7 +107,7 @@ abstract class Menu {
 						}
 
 						// Set current.
-						if ( get_query_var( 'hp_controller' ) === $controller_name && get_query_var( 'hp_action' ) === hp\get_array_value( $route, 'action' ) ) {
+						if ( get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) {
 							$item['current'] = true;
 						}
 					}
