@@ -324,14 +324,18 @@ class User extends Controller {
 		}
 
 		// Send email.
-		$user = Models\User::get( $user->ID );
-
 		( new Emails\User_Password_Request(
 			[
-				'recipient' => $user->get_email(),
+				'recipient' => $user->user_email,
 				'tokens'    => [
-					'user_name'          => $user->get_name(),
-					'password_reset_url' => 'todo',
+					'user_name'          => $user->display_name,
+					'password_reset_url' => add_query_arg(
+						[
+							'username'           => $user->user_login,
+							'password_reset_key' => get_password_reset_key( $user ),
+						],
+						self::get_url( 'reset_password' )
+					),
 				],
 			]
 		) )->send();
@@ -519,7 +523,11 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_login_page() {
-		// todo.
+		if ( is_user_logged_in() ) {
+			return self::get_url( 'edit_settings' );
+		}
+
+		return false;
 	}
 
 	/**
@@ -541,7 +549,11 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_password_page() {
-		// todo.
+		if ( is_user_logged_in() ) {
+			return self::get_url( 'edit_settings' );
+		}
+
+		return false;
 	}
 
 	/**
@@ -563,7 +575,11 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_settings_page() {
-		// todo.
+		if ( ! is_user_logged_in() ) {
+			return self::get_url( 'login_user' );
+		}
+
+		return false;
 	}
 
 	/**

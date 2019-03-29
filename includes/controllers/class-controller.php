@@ -107,17 +107,12 @@ abstract class Controller {
 
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
 
-			// Set controller.
-			$query['controller'] = static::$name;
-
-			// Set action.
-			if ( isset( $route['action'] ) ) {
-				$query['action'] = $route['action'];
-			}
+			// Set route.
+			$query['route'] = static::$name . '/' . $route_name;
 
 			// Set parameters.
 			foreach ( static::get_url_params( $route_name ) as $param ) {
-				if ( ! in_array( $param, [ 'controller', 'action' ], true ) ) {
+				if ( 'route' !== $param ) {
 					$query[ $param ] = null;
 				}
 			}
@@ -145,7 +140,7 @@ abstract class Controller {
 
 			// Set URL query.
 			foreach ( static::get_url_query( $route_name ) as $param => $value ) {
-				if ( in_array( $param, [ 'controller', 'action' ], true ) || ! isset( $query[ $param ] ) ) {
+				if ( 'route' === $param || ! isset( $query[ $param ] ) ) {
 					$query[ $param ] = $value;
 				}
 			}
@@ -153,14 +148,14 @@ abstract class Controller {
 			// Get URL structure.
 			$url_structure = $wp_rewrite->get_page_permastruct();
 
-			if ( false !== $url_structure ) {
+			if ( ! empty( $url_structure ) ) {
 				$url = rtrim( $route['path'], '/' ) . '/';
 
 				foreach ( static::get_url_params( $route_name ) as $param ) {
 					$url = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)/i', $query[ $param ], $url );
 				}
 			} else {
-				$url = http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
+				$url = '?' . http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
 			}
 		}
 

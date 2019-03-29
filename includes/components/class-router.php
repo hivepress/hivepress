@@ -87,7 +87,7 @@ final class Router {
 							hp\prefix( array_keys( $query ) ),
 							array_map(
 								function( $param, $value ) {
-									if ( ! in_array( $param, [ 'controller', 'action' ], true ) ) {
+									if ( 'route' !== $param ) {
 										$value = '{$matches[' . hp\prefix( $param ) . ']}';
 									}
 
@@ -110,9 +110,8 @@ final class Router {
 			}
 		}
 
-		// Add rewrite tags.
-		add_rewrite_tag( '%hp_controller%', '([^&]+)' );
-		add_rewrite_tag( '%hp_action%', '([^&]+)' );
+		// Add route tag.
+		add_rewrite_tag( '%hp_route%', '([^&]+)' );
 	}
 
 	/**
@@ -146,13 +145,9 @@ final class Router {
 	public function set_page_template( $template ) {
 		global $wp_query;
 
-		// Get controller and action.
-		$controller_name = get_query_var( 'hp_controller' );
-		$action_name     = get_query_var( 'hp_action' );
-
 		foreach ( hivepress()->get_controllers() as $controller ) {
-			foreach ( $controller::get_routes() as $route ) {
-				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && $controller_name === $controller::get_name() && $action_name === $route['action'] ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
+			foreach ( $controller::get_routes() as $route_name => $route ) {
+				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller::get_name() . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
 
 					// Set the current route.
 					$this->route = $route;
@@ -163,10 +158,27 @@ final class Router {
 						$wp_query->is_404  = false;
 					}
 
-					// Render page template.
-					echo call_user_func( [ $controller, $route['action'] ] );
+					// Redirect page.
+					if ( isset( $route['redirect'] ) ) {
+						$redirect = call_user_func( [ $controller, $route['redirect'] ] );
 
-					exit();
+						if ( ! empty( $redirect ) ) {
+							if ( is_bool( $redirect ) ) {
+								$redirect = home_url( '/' );
+							}
+
+							wp_safe_redirect( $redirect );
+
+							exit();
+						}
+					}
+
+					// Render page.
+					if ( isset( $route['action'] ) ) {
+						echo call_user_func( [ $controller, $route['action'] ] );
+
+						exit();
+					}
 				}
 			}
 		}
