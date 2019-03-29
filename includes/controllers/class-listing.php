@@ -93,6 +93,11 @@ class Listing extends Controller {
 						'path'     => '/submit-listing',
 						'redirect' => 'redirect_listing_submit_page',
 					],
+
+					'submit_details' => [
+						'title' => esc_html__( 'Add Details', 'hivepress' ),
+						'path'  => '/submit-listing/details',
+					],
 				],
 			],
 			$args

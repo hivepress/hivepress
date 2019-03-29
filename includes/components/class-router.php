@@ -205,4 +205,13 @@ final class Router {
 
 		return null;
 	}
+
+	/**
+	 * Gets page title.
+	 *
+	 * @return mixed
+	 */
+	public function get_title() {
+		return hp\get_array_value( $this->route, 'title' );
+	}
 }

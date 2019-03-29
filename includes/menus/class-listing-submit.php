@@ -42,8 +42,8 @@ class Listing_Submit extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					'todo' => [
-						'route' => 'listing/edit_listings',
+					'submit_details' => [
+						'route' => 'listing/submit_details',
 						'order' => 10,
 					],
 				],

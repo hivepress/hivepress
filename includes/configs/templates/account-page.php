@@ -52,6 +52,14 @@ return [
 					'attributes' => [
 						'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 					],
+
+					'blocks'     => [
+						'title' => [
+							'type'      => 'element',
+							'file_path' => 'page/title',
+							'order'     => 5,
+						],
+					],
 				],
 			],
 		],
