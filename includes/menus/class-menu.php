@@ -119,6 +119,15 @@ abstract class Menu {
 	}
 
 	/**
+	 * Gets menu items.
+	 *
+	 * @return array
+	 */
+	final public static function get_items() {
+		return static::$items;
+	}
+
+	/**
 	 * Bootstraps menu properties.
 	 */
 	protected function bootstrap() {

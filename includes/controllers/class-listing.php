@@ -10,6 +10,7 @@ namespace HivePress\Controllers;
 use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
+use HivePress\Menus;
 use HivePress\Blocks;
 use HivePress\Emails;
 
@@ -64,28 +65,33 @@ class Listing extends Controller {
 						],
 					],
 
-					'view_listings' => [
+					'view_listings'  => [
 						'match'  => 'is_listings_view_page',
 						'action' => 'render_listings_view_page',
 					],
 
-					'view_listing'  => [
+					'view_listing'   => [
 						'match'  => 'is_listing_view_page',
 						'action' => 'render_listing_view_page',
 					],
 
-					'edit_listings' => [
+					'edit_listings'  => [
 						'title'    => esc_html__( 'My Listings', 'hivepress' ),
 						'path'     => '/account/listings',
 						'redirect' => 'redirect_listings_edit_page',
 						'action'   => 'render_listings_edit_page',
 					],
 
-					'edit_listing'  => [
+					'edit_listing'   => [
 						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
 						'path'     => '/account/listings/(?P<listing_id>\d+)',
 						'redirect' => 'redirect_listing_edit_page',
 						'action'   => 'render_listing_edit_page',
+					],
+
+					'submit_listing' => [
+						'path'     => '/submit-listing',
+						'redirect' => 'redirect_listing_submit_page',
 					],
 				],
 			],
@@ -307,5 +313,22 @@ class Listing extends Controller {
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
+	}
+
+	/**
+	 * Redirects listing submit page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_submit_page() {
+
+		// Get menu items.
+		$items = Menus\Listing_Submit::get_items();
+
+		if ( ! empty( $items ) ) {
+			return reset( $items )['url'];
+		}
+
+		return false;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Account menu.
+ * Listing submit menu.
  *
  * @package HivePress\Menus
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Account menu class.
+ * Listing submit menu class.
  *
- * @class Account
+ * @class Listing_Submit
  */
-class Account extends Menu {
+class Listing_Submit extends Menu {
 
 	/**
 	 * Menu name.
@@ -42,20 +42,9 @@ class Account extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					'edit_listings' => [
+					'todo' => [
 						'route' => 'listing/edit_listings',
 						'order' => 10,
-					],
-
-					'edit_settings' => [
-						'route' => 'user/edit_settings',
-						'order' => 20,
-					],
-
-					'logout_user'   => [
-						'label' => esc_html__( 'Sign Out', 'hivepress' ),
-						'url'   => wp_logout_url( home_url() ),
-						'order' => 100,
 					],
 				],
 			],
