@@ -101,6 +101,11 @@ class User extends Controller {
 						'action'   => 'render_password_page',
 					],
 
+					'account'        => [
+						'path'     => '/account',
+						'redirect' => 'redirect_account_page',
+					],
+
 					'edit_settings'  => [
 						'title'    => esc_html__( 'My Settings', 'hivepress' ),
 						'path'     => '/account/settings',
@@ -524,7 +529,7 @@ class User extends Controller {
 	 */
 	public function redirect_login_page() {
 		if ( is_user_logged_in() ) {
-			return self::get_url( 'edit_settings' );
+			return self::get_url( 'account' );
 		}
 
 		return false;
@@ -550,7 +555,7 @@ class User extends Controller {
 	 */
 	public function redirect_password_page() {
 		if ( is_user_logged_in() ) {
-			return self::get_url( 'edit_settings' );
+			return self::get_url( 'account' );
 		}
 
 		return false;
@@ -570,13 +575,30 @@ class User extends Controller {
 	}
 
 	/**
+	 * Redirects accunt page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_account_page() {
+
+		// Get menu items.
+		$items = Menus\Account::get_items();
+
+		if ( ! empty( $items ) ) {
+			return reset( $items )['url'];
+		}
+
+		return false;
+	}
+
+	/**
 	 * Redirects settings page.
 	 *
 	 * @return mixed
 	 */
 	public function redirect_settings_page() {
 		if ( ! is_user_logged_in() ) {
-			return self::get_url( 'login_user' );
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), self::get_url( 'login_user' ) );
 		}
 
 		return false;

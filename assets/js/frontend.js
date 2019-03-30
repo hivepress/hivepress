@@ -67,7 +67,11 @@
 								}
 
 								if (form.data('redirect')) {
-									window.location.reload(true);
+									if (form.data('redirect') === true) {
+										window.location.reload(true);
+									} else {
+										window.location.replace(form.data('redirect'));
+									}
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {

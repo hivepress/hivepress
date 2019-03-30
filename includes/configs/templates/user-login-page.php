@@ -30,6 +30,12 @@ return [
 					],
 
 					'blocks'     => [
+						'title'      => [
+							'type'      => 'element',
+							'file_path' => 'page/title',
+							'order'     => 5,
+						],
+
 						'login_form' => [
 							'type'  => 'user_login_form',
 							'order' => 10,

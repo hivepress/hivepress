@@ -286,6 +286,23 @@ function get_rest_url( $path = '' ) {
 }
 
 /**
+ * Gets current URL.
+ *
+ * @return string
+ */
+function get_current_url() {
+	global $wp;
+
+	$query_string = '';
+
+	if ( ! empty( $_GET ) ) {
+		$query_string = '/?' . http_build_query( $_GET );
+	}
+
+	return home_url( $wp->request . $query_string );
+}
+
+/**
  * Gets REST API error.
  *
  * @param int   $code Error code.

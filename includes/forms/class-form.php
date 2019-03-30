@@ -263,7 +263,13 @@ abstract class Form {
 
 		// Set redirect.
 		if ( $this->redirect ) {
-			$attributes['data-redirect'] = $this->redirect;
+			$redirect = hp\get_array_value( $_REQUEST, 'redirect', 'true' );
+
+			if ( ( strpos( $redirect, 'http://' ) === 0 || strpos( $redirect, 'https://' ) === 0 ) && wp_validate_redirect( $redirect ) ) {
+				$attributes['data-redirect'] = esc_url( $redirect );
+			} else {
+				$attributes['data-redirect'] = 'true';
+			}
 		}
 
 		// Set component.

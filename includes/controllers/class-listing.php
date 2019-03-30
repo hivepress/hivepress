@@ -95,15 +95,17 @@ class Listing extends Controller {
 					],
 
 					'submit_details'  => [
-						'title'  => esc_html__( 'Add Details', 'hivepress' ),
-						'path'   => '/submit-listing/details',
-						'action' => 'render_listing_submit_details_page',
+						'title'    => esc_html__( 'Add Details', 'hivepress' ),
+						'path'     => '/submit-listing/details',
+						'redirect' => 'redirect_listing_submit_details_page',
+						'action'   => 'render_listing_submit_details_page',
 					],
 
 					'submit_complete' => [
-						'title'  => esc_html__( 'Listing Submitted', 'hivepress' ),
-						'path'   => '/submit-listing/complete',
-						'action' => 'render_listing_submit_complete_page',
+						'title'    => esc_html__( 'Listing Submitted', 'hivepress' ),
+						'path'     => '/submit-listing/complete',
+						'redirect' => 'redirect_listing_submit_complete_page',
+						'action'   => 'render_listing_submit_complete_page',
 					],
 				],
 			],
@@ -266,7 +268,7 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return User::get_url( 'login_user' );
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 	}
 
@@ -301,7 +303,7 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return User::get_url( 'login_user' );
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 
 		// Get listing.
@@ -345,6 +347,19 @@ class Listing extends Controller {
 	}
 
 	/**
+	 * Redirects listing submit details page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_submit_details_page() {
+		if ( ! is_user_logged_in() ) {
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+		}
+
+		return false;
+	}
+
+	/**
 	 * Renders listing submit details page.
 	 *
 	 * @return string
@@ -355,6 +370,19 @@ class Listing extends Controller {
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
+	}
+
+	/**
+	 * Redirects listing submit complete page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_submit_complete_page() {
+		if ( ! is_user_logged_in() ) {
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+		}
+
+		return false;
 	}
 
 	/**
