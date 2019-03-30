@@ -165,14 +165,12 @@ final class Attribute {
 			}
 
 			// Get attribute name.
-			$attribute_name = substr( hp\sanitize_key( urldecode( $attribute->post_name ) ), 0, 64 - strlen( hp\prefix( '' ) ) );
+			$attribute_name = substr( hp\sanitize_key( urldecode( $attribute->post_name ) ), 0, 32 - strlen( hp\prefix( '' ) ) );
 
 			if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
-				$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $attribute_model ) ) );
-			}
+				$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $attribute_model ) . '_' ) );
 
-			// Register taxonomy.
-			if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+				// Register taxonomy.
 				register_taxonomy(
 					hp\prefix( $attribute_model . '_' . $attribute_name ),
 					hp\prefix( $attribute_model ),
@@ -185,6 +183,12 @@ final class Attribute {
 						'rewrite'      => false,
 					]
 				);
+
+				// Set field options.
+				foreach ( $field_contexts as $field_context ) {
+					$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
+					$attribute_args[ $field_context . '_field' ]['taxonomy'] = hp\prefix( $attribute_model . '_' . $attribute_name );
+				}
 			}
 
 			// Add attribute.
