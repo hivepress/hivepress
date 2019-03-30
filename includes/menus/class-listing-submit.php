@@ -27,6 +27,13 @@ class Listing_Submit extends Menu {
 	protected static $name;
 
 	/**
+	 * Chained property.
+	 *
+	 * @var bool
+	 */
+	protected static $chained = false;
+
+	/**
 	 * Menu items.
 	 *
 	 * @var array
@@ -41,10 +48,16 @@ class Listing_Submit extends Menu {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'items' => [
-					'submit_details' => [
+				'chained' => true,
+				'items'   => [
+					'submit_details'  => [
 						'route' => 'listing/submit_details',
 						'order' => 10,
+					],
+
+					'submit_complete' => [
+						'route' => 'listing/submit_complete',
+						'order' => 20,
 					],
 				],
 			],

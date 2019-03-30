@@ -29,6 +29,13 @@ abstract class Menu {
 	protected static $name;
 
 	/**
+	 * Chained property.
+	 *
+	 * @var bool
+	 */
+	protected static $chained = false;
+
+	/**
 	 * Menu items.
 	 *
 	 * @var array
@@ -72,6 +79,15 @@ abstract class Menu {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Checks chained property.
+	 *
+	 * @return bool
+	 */
+	final public static function is_chained() {
+		return static::$chained;
 	}
 
 	/**

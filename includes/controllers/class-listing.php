@@ -65,38 +65,45 @@ class Listing extends Controller {
 						],
 					],
 
-					'view_listings'  => [
+					'view_listings'   => [
 						'match'  => 'is_listings_view_page',
 						'action' => 'render_listings_view_page',
 					],
 
-					'view_listing'   => [
+					'view_listing'    => [
 						'match'  => 'is_listing_view_page',
 						'action' => 'render_listing_view_page',
 					],
 
-					'edit_listings'  => [
+					'edit_listings'   => [
 						'title'    => esc_html__( 'My Listings', 'hivepress' ),
 						'path'     => '/account/listings',
 						'redirect' => 'redirect_listings_edit_page',
 						'action'   => 'render_listings_edit_page',
 					],
 
-					'edit_listing'   => [
+					'edit_listing'    => [
 						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
 						'path'     => '/account/listings/(?P<listing_id>\d+)',
 						'redirect' => 'redirect_listing_edit_page',
 						'action'   => 'render_listing_edit_page',
 					],
 
-					'submit_listing' => [
+					'submit_listing'  => [
 						'path'     => '/submit-listing',
 						'redirect' => 'redirect_listing_submit_page',
 					],
 
-					'submit_details' => [
-						'title' => esc_html__( 'Add Details', 'hivepress' ),
-						'path'  => '/submit-listing/details',
+					'submit_details'  => [
+						'title'  => esc_html__( 'Add Details', 'hivepress' ),
+						'path'   => '/submit-listing/details',
+						'action' => 'render_listing_submit_details_page',
+					],
+
+					'submit_complete' => [
+						'title'  => esc_html__( 'Listing Submitted', 'hivepress' ),
+						'path'   => '/submit-listing/complete',
+						'action' => 'render_listing_submit_complete_page',
 					],
 				],
 			],
@@ -335,5 +342,31 @@ class Listing extends Controller {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Renders listing submit details page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_submit_details_page() {
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_details_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
+	}
+
+	/**
+	 * Renders listing submit complete page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_submit_complete_page() {
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_complete_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
 	}
 }

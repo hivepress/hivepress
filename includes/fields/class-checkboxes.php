@@ -106,7 +106,7 @@ class Checkboxes extends Select {
 
 		// Filter options.
 		$options = array_filter(
-			$this->options,
+			(array) $this->options,
 			function( $option ) use ( $current ) {
 				$parent = hp\get_array_value( $option, 'parent' );
 

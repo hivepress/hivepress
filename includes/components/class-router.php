@@ -159,6 +159,37 @@ final class Router {
 						$wp_query->is_404  = false;
 					}
 
+					// Redirect menu.
+					foreach ( hivepress()->get_menus() as $menu ) {
+						if ( $menu::is_chained() && in_array( $controller_name . '/' . $route_name, wp_list_pluck( $menu::get_items(), 'route' ), true ) ) {
+							foreach ( $menu::get_items() as $item ) {
+								if ( $item['route'] !== $controller_name . '/' . $route_name ) {
+									list($chained_controller_name, $chained_route_name) = explode( '/', $item['route'] );
+
+									// Get controller.
+									$chained_controller = hp\get_array_value( hivepress()->get_controllers(), $chained_controller_name );
+
+									if ( ! is_null( $chained_controller ) ) {
+
+										// Get route.
+										$chained_route = hp\get_array_value( $chained_controller::get_routes(), $chained_route_name );
+
+										// Redirect page.
+										if ( ! is_null( $chained_route ) && isset( $chained_route['redirect'] ) && ! call_user_func( [ $chained_controller, $chained_route['redirect'] ] ) ) {
+											wp_safe_redirect( $chained_controller::get_url( $chained_route_name ) );
+
+											exit();
+										}
+									}
+								} else {
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+
 					// Redirect page.
 					if ( isset( $route['redirect'] ) ) {
 						$redirect = call_user_func( [ $controller, $route['redirect'] ] );
@@ -180,6 +211,8 @@ final class Router {
 
 						exit();
 					}
+
+					break 2;
 				}
 			}
 		}
