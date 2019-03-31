@@ -94,6 +94,13 @@ class Listing extends Controller {
 						'redirect' => 'redirect_listing_submit_page',
 					],
 
+					'submit_category' => [
+						'title'    => esc_html__( 'Select Category', 'hivepress' ),
+						'path'     => '/submit-listing/category/(?P<listing_category_id>\d+)',
+						'redirect' => 'redirect_listing_submit_category_page',
+						'action'   => 'render_listing_submit_category_page',
+					],
+
 					'submit_details'  => [
 						'title'    => esc_html__( 'Add Details', 'hivepress' ),
 						'path'     => '/submit-listing/details',
@@ -336,14 +343,98 @@ class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_page() {
 
-		// Get menu items.
-		$items = Menus\Listing_Submit::get_items();
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+		}
 
-		if ( ! empty( $items ) ) {
-			return reset( $items )['url'];
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'auto-draft',
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		if ( 0 === $listing_id ) {
+
+			// Add listing.
+			$listing_id = wp_insert_post(
+				[
+					'post_type'   => 'hp_listing',
+					'post_status' => 'auto-draft',
+					'post_author' => get_current_user_id(),
+				]
+			);
+		}
+
+		// Get menu items.
+		$menu_items = Menus\Listing_Submit::get_items();
+
+		if ( ! empty( $menu_items ) ) {
+			return reset( $menu_items )['url'];
 		}
 
 		return false;
+	}
+
+	/**
+	 * Redirects listing submit category page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_submit_category_page() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+		}
+
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'auto-draft',
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		if ( 0 === $listing_id ) {
+			return self::get_url( 'submit_listing' );
+		}
+
+		// Get category.
+		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), hp\prefix( 'listing_category' ) );
+
+		if ( ! is_null( $category ) && ! is_wp_error( $category ) ) {
+
+			// Get category IDs.
+			$category_ids = get_term_children( $category->term_id, hp\prefix( 'listing_category' ) );
+
+			if ( empty( $category_ids ) ) {
+
+				// Set category.
+				wp_set_post_terms( $listing_id, [ $category->term_id ], hp\prefix( 'listing_category' ) );
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders listing submit category page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_submit_category_page() {
+		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_category_page' ] ) )->render();
+		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
+
+		return $output;
 	}
 
 	/**
@@ -352,6 +443,8 @@ class Listing extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_listing_submit_details_page() {
+
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
@@ -378,6 +471,8 @@ class Listing extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_listing_submit_complete_page() {
+
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}

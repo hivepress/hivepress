@@ -34,6 +34,13 @@ class Listing_Categories extends Block {
 	protected static $settings = [];
 
 	/**
+	 * Template name.
+	 *
+	 * @var string
+	 */
+	protected $template_name;
+
+	/**
 	 * Columns number.
 	 *
 	 * @var int
@@ -120,6 +127,19 @@ class Listing_Categories extends Block {
 	}
 
 	/**
+	 * Bootstraps block properties.
+	 */
+	protected function bootstrap() {
+
+		// Set template name.
+		if ( ! isset( $this->template_name ) ) {
+			$this->template_name = 'listing_category_view_block';
+		}
+
+		parent::bootstrap();
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -169,7 +189,7 @@ class Listing_Categories extends Block {
 				$output .= ( new Listing_Category(
 					[
 						'id'            => $category->term_id,
-						'template_name' => 'listing_category_view_block',
+						'template_name' => $this->template_name,
 					]
 				) )->render();
 

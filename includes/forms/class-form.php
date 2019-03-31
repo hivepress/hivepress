@@ -263,9 +263,9 @@ abstract class Form {
 
 		// Set redirect.
 		if ( $this->redirect ) {
-			$redirect = hp\get_array_value( $_REQUEST, 'redirect', 'true' );
+			$redirect = hp\get_array_value( $_GET, 'redirect', 'true' );
 
-			if ( ( strpos( $redirect, 'http://' ) === 0 || strpos( $redirect, 'https://' ) === 0 ) && wp_validate_redirect( $redirect ) ) {
+			if ( hp\validate_redirect( $redirect ) ) {
 				$attributes['data-redirect'] = esc_url( $redirect );
 			} else {
 				$attributes['data-redirect'] = 'true';
@@ -310,7 +310,7 @@ abstract class Form {
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
 						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => hp\get_array_value( $_REQUEST, 'g-recaptcha-response' ),
+						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
 					]
 				)
 			);

@@ -278,11 +278,11 @@ function get_post_id( $args ) {
 /**
  * Gets REST API URL.
  *
- * @param string $path URL path.
- * @return string
+ * @param string $url Redirect URL.
+ * @return bool
  */
-function get_rest_url( $path = '' ) {
-	return \get_rest_url( null, 'hivepress/v1' . $path );
+function validate_redirect( $url ) {
+	return wp_validate_redirect( $url ) && ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 );
 }
 
 /**
@@ -300,6 +300,16 @@ function get_current_url() {
 	}
 
 	return home_url( $wp->request . $query_string );
+}
+
+/**
+ * Gets REST API URL.
+ *
+ * @param string $path URL path.
+ * @return string
+ */
+function get_rest_url( $path = '' ) {
+	return \get_rest_url( null, 'hivepress/v1' . $path );
 }
 
 /**

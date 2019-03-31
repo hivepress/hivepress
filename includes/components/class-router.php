@@ -224,16 +224,17 @@ final class Router {
 	 * Gets page URL.
 	 *
 	 * @param string $route_path Route path.
+	 * @param array  $query URL query.
 	 * @return mixed
 	 */
-	public function get_url( $route_path ) {
+	public function get_url( $route_path, $query = [] ) {
 		list($controller_name, $route_name) = explode( '/', $route_path );
 
 		// Get controller.
 		$controller = hp\get_array_value( hivepress()->get_controllers(), $controller_name );
 
 		if ( ! is_null( $controller ) ) {
-			return $controller::get_url( $route_name );
+			return $controller::get_url( $route_name, $query );
 		}
 
 		return null;

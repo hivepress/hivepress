@@ -10,6 +10,7 @@ namespace HivePress\Controllers;
 use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
+use HivePress\Menus;
 use HivePress\Blocks;
 use HivePress\Emails;
 
@@ -336,8 +337,8 @@ class User extends Controller {
 					'user_name'          => $user->display_name,
 					'password_reset_url' => add_query_arg(
 						[
-							'username'           => $user->user_login,
-							'password_reset_key' => get_password_reset_key( $user ),
+							'username'           => rawurlencode( $user->user_login ),
+							'password_reset_key' => rawurlencode( get_password_reset_key( $user ) ),
 						],
 						self::get_url( 'reset_password' )
 					),
@@ -529,7 +530,13 @@ class User extends Controller {
 	 */
 	public function redirect_login_page() {
 		if ( is_user_logged_in() ) {
-			return self::get_url( 'account' );
+			$redirect = hp\get_array_value( $_GET, 'redirect', self::get_url( 'account' ) );
+
+			if ( hp\validate_redirect( $redirect ) ) {
+				return esc_url( $redirect );
+			} else {
+				return true;
+			}
 		}
 
 		return false;
@@ -581,11 +588,16 @@ class User extends Controller {
 	 */
 	public function redirect_account_page() {
 
-		// Get menu items.
-		$items = Menus\Account::get_items();
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), self::get_url( 'login_user' ) );
+		}
 
-		if ( ! empty( $items ) ) {
-			return reset( $items )['url'];
+		// Get menu items.
+		$menu_items = Menus\Account::get_items();
+
+		if ( ! empty( $menu_items ) ) {
+			return reset( $menu_items )['url'];
 		}
 
 		return false;
@@ -597,6 +609,8 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_settings_page() {
+
+		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), self::get_url( 'login_user' ) );
 		}
