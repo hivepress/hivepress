@@ -50,19 +50,24 @@ class Listing_Submit extends Menu {
 			[
 				'chained' => true,
 				'items'   => [
+					'submit_listing'  => [
+						'route' => 'listing/submit_listing',
+						'order' => 10,
+					],
+
 					'submit_category' => [
 						'route' => 'listing/submit_category',
-						'order' => 10,
+						'order' => 20,
 					],
 
 					'submit_details'  => [
 						'route' => 'listing/submit_details',
-						'order' => 20,
+						'order' => 30,
 					],
 
 					'submit_complete' => [
 						'route' => 'listing/submit_complete',
-						'order' => 30,
+						'order' => 40,
 					],
 				],
 			],

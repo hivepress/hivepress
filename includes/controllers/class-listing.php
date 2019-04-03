@@ -369,11 +369,8 @@ class Listing extends Controller {
 			);
 		}
 
-		// Get menu items.
-		$menu_items = Menus\Listing_Submit::get_items();
-
-		if ( ! empty( $menu_items ) ) {
-			return reset( $menu_items )['url'];
+		if ( 0 !== $listing_id ) {
+			return true;
 		}
 
 		return false;
@@ -400,8 +397,8 @@ class Listing extends Controller {
 			]
 		);
 
-		if ( 0 === $listing_id ) {
-			return self::get_url( 'submit_listing' );
+		if ( has_term( '', hp\prefix( 'listing_category' ), $listing_id ) ) {
+			return null;
 		}
 
 		// Get category.

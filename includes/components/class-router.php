@@ -160,28 +160,51 @@ final class Router {
 					}
 
 					// Redirect menu.
+					$menu_redirect = null;
+
 					foreach ( hivepress()->get_menus() as $menu ) {
 						if ( $menu::is_chained() && in_array( $controller_name . '/' . $route_name, wp_list_pluck( $menu::get_items(), 'route' ), true ) ) {
-							foreach ( $menu::get_items() as $item ) {
-								if ( $item['route'] !== $controller_name . '/' . $route_name ) {
-									list($chained_controller_name, $chained_route_name) = explode( '/', $item['route'] );
+							$menu_items = $menu::get_items();
+
+							foreach ( $menu_items as $menu_item ) {
+
+								// Check current item.
+								$menu_item_current = ( $menu_item['route'] === $controller_name . '/' . $route_name );
+
+								if ( $menu_item_current ) {
+
+									// Get next item.
+									$menu_item = next( $menu_items );
+								}
+
+								if ( ! empty( $menu_item ) ) {
+									list($menu_controller_name, $menu_route_name) = explode( '/', $menu_item['route'] );
 
 									// Get controller.
-									$chained_controller = hp\get_array_value( hivepress()->get_controllers(), $chained_controller_name );
+									$menu_controller = hp\get_array_value( hivepress()->get_controllers(), $menu_controller_name );
 
-									if ( ! is_null( $chained_controller ) ) {
+									if ( ! is_null( $menu_controller ) ) {
 
 										// Get route.
-										$chained_route = hp\get_array_value( $chained_controller::get_routes(), $chained_route_name );
+										$menu_route = hp\get_array_value( $menu_controller::get_routes(), $menu_route_name );
 
-										// Redirect page.
-										if ( ! is_null( $chained_route ) && isset( $chained_route['redirect'] ) && ! call_user_func( [ $chained_controller, $chained_route['redirect'] ] ) ) {
-											wp_safe_redirect( $chained_controller::get_url( $chained_route_name ) );
+										if ( ! is_null( $menu_route ) ) {
+											if ( $menu_item_current ) {
 
-											exit();
+												// Get menu redirect.
+												$menu_redirect = $menu_controller::get_url( $menu_route_name );
+											} elseif ( isset( $menu_route['redirect'] ) && call_user_func( [ $menu_controller, $menu_route['redirect'] ] ) === false ) {
+
+												// Redirect menu item.
+												wp_safe_redirect( $menu_controller::get_url( $menu_route_name ) );
+
+												exit();
+											}
 										}
 									}
-								} else {
+								}
+
+								if ( $menu_item_current ) {
 									break;
 								}
 							}
@@ -197,6 +220,10 @@ final class Router {
 						if ( ! empty( $redirect ) ) {
 							if ( is_bool( $redirect ) ) {
 								$redirect = home_url( '/' );
+
+								if ( ! is_null( $menu_redirect ) ) {
+									$redirect = $menu_redirect;
+								}
 							}
 
 							wp_safe_redirect( $redirect );
