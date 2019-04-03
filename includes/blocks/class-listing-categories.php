@@ -136,6 +136,11 @@ class Listing_Categories extends Block {
 			$this->template_name = 'listing_category_view_block';
 		}
 
+		// Set category ID.
+		if ( ! isset( $this->parent ) ) {
+			$this->parent = $this->get_listing_category_id();
+		}
+
 		parent::bootstrap();
 	}
 

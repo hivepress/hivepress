@@ -369,6 +369,7 @@ class Listing extends Controller {
 			);
 		}
 
+		// Check listing.
 		if ( 0 !== $listing_id ) {
 			return true;
 		}
@@ -397,10 +398,6 @@ class Listing extends Controller {
 			]
 		);
 
-		if ( has_term( '', hp\prefix( 'listing_category' ), $listing_id ) ) {
-			return null;
-		}
-
 		// Get category.
 		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), hp\prefix( 'listing_category' ) );
 
@@ -418,6 +415,11 @@ class Listing extends Controller {
 			}
 		}
 
+		// Check category.
+		if ( has_term( '', hp\prefix( 'listing_category' ), $listing_id ) ) {
+			return null;
+		}
+
 		return false;
 	}
 
@@ -427,8 +429,15 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_category_page() {
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_category_page' ] ) )->render();
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name'       => 'listing_submit_category_page',
+				'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
@@ -472,6 +481,31 @@ class Listing extends Controller {
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+		}
+
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'pending',
+				'author'      => get_current_user_id(),
+				'post__in'    => [ absint( get_query_var( 'hp_listing_id' ) ) ],
+			]
+		);
+
+		if ( 0 === $listing_id ) {
+			$listing_id = hp\get_post_id(
+				[
+					'post_type'   => 'hp_listing',
+					'post_status' => 'pending',
+					'author'      => get_current_user_id(),
+				]
+			);
+		}
+
+		// Check listing.
+		if ( 0 === $listing_id ) {
+			return true;
 		}
 
 		return false;

@@ -164,9 +164,10 @@ final class Router {
 
 					foreach ( hivepress()->get_menus() as $menu ) {
 						if ( $menu::is_chained() && in_array( $controller_name . '/' . $route_name, wp_list_pluck( $menu::get_items(), 'route' ), true ) ) {
-							$menu_items = $menu::get_items();
+							$menu_items      = $menu::get_items();
+							$menu_item_names = array_keys( $menu_items );
 
-							foreach ( $menu_items as $menu_item ) {
+							foreach ( $menu_items as $menu_item_name => $menu_item ) {
 
 								// Check current item.
 								$menu_item_current = ( $menu_item['route'] === $controller_name . '/' . $route_name );
@@ -174,7 +175,7 @@ final class Router {
 								if ( $menu_item_current ) {
 
 									// Get next item.
-									$menu_item = next( $menu_items );
+									$menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
 								}
 
 								if ( ! empty( $menu_item ) ) {
