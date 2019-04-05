@@ -45,9 +45,13 @@ class Form extends Block {
 		$form_class = '\HivePress\Forms\\' . $this->form_name;
 
 		if ( class_exists( $form_class ) ) {
+			$form_args = [];
+
+			// Set attributes.
+			$form_args['attributes'] = $this->attributes;
 
 			// Create form.
-			$form = new $form_class( [ 'attributes' => $this->attributes ] );
+			$form = new $form_class( $form_args );
 
 			if ( $form->get_method() === 'POST' ) {
 				$form->set_values( $_POST );

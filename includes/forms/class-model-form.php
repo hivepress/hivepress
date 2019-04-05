@@ -20,11 +20,18 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model_Form extends Form {
 
 	/**
-	 * Form model.
+	 * Model name.
 	 *
 	 * @var string
 	 */
 	protected $model;
+
+	/**
+	 * Instance ID.
+	 *
+	 * @var int
+	 */
+	protected $id;
 
 	/**
 	 * Sets form fields.
@@ -58,5 +65,26 @@ abstract class Model_Form extends Form {
 				$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 			}
 		}
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	final protected function bootstrap() {
+
+		// Set action.
+		if ( isset( $this->action ) ) {
+			$this->action = rtrim(
+				hp\replace_placeholders(
+					[
+						'id' => $this->id,
+					],
+					$this->action
+				),
+				'/'
+			);
+		}
+
+		parent::bootstrap();
 	}
 }

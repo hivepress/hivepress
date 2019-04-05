@@ -237,7 +237,7 @@ abstract class Form {
 	/**
 	 * Bootstraps form properties.
 	 */
-	final protected function bootstrap() {
+	protected function bootstrap() {
 		$attributes = [];
 
 		// Set action.
