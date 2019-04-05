@@ -26,7 +26,7 @@ abstract class Form {
 	 *
 	 * @var string
 	 */
-	protected $name;
+	protected static $name;
 
 	/**
 	 * Form title.
@@ -106,18 +106,37 @@ abstract class Form {
 	protected $errors = [];
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public static function init( $args = [] ) {
+
+		// Set name.
+		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			static::set_static_property( $name, $value );
+		}
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( $this ) )->getShortName() );
+		// todo.
+		$args['name'] = static::$name;
 
 		// Filter arguments.
 		$args = apply_filters( 'hivepress/v1/forms/form', $args );
 		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
+
+		// todo.
+		unset( $args['name'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -276,7 +295,7 @@ abstract class Form {
 		$attributes['data-component'] = 'form';
 
 		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( $this->name ) ];
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::$name ) ];
 
 		// Set button.
 		if ( ! is_null( $this->button ) ) {

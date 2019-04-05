@@ -20,6 +20,36 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Update extends Model_Form {
 
 	/**
+	 * Form name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected static $model;
+
+	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
@@ -28,7 +58,6 @@ class Listing_Update extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
-				'model'   => 'listing',
 				'action'  => hp\get_rest_url( '/listings/%id%' ),
 
 				'fields'  => [

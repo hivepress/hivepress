@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Filter extends Form {
 
 	/**
+	 * Form name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.

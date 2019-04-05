@@ -47,6 +47,11 @@ class Form extends Block {
 		if ( class_exists( $form_class ) ) {
 			$form_args = [];
 
+			// Set model ID.
+			if ( method_exists( $form_class, 'get_model' ) ) {
+				$form_args['id'] = call_user_func( [ $this, 'get_' . $form_class::get_model() . '_id' ] );
+			}
+
 			// Set attributes.
 			$form_args['attributes'] = $this->attributes;
 

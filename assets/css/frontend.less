@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -204,11 +203,17 @@ Mixins
 
 		&--checkbox {
 			margin-right: 0.5rem;
+
+			&,
+			& + span {
+				cursor: pointer;
+			}
 		}
 
 		input[type=checkbox],
 		input[type=radio] {
 			margin-right: 0.5rem;
+			cursor: pointer;
 		}
 	}
 	/*--------------------------------------------------------------

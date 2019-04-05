@@ -24,7 +24,7 @@ abstract class Model_Form extends Form {
 	 *
 	 * @var string
 	 */
-	protected $model;
+	protected static $model;
 
 	/**
 	 * Instance ID.
@@ -42,7 +42,7 @@ abstract class Model_Form extends Form {
 		$this->fields = [];
 
 		// Get model class.
-		$model_class = '\HivePress\Models\\' . $this->model;
+		$model_class = '\HivePress\Models\\' . static::$model;
 
 		// Get model fields.
 		$model_fields = [];
@@ -68,9 +68,19 @@ abstract class Model_Form extends Form {
 	}
 
 	/**
+	 * Gets model name.
+	 *
+	 * @return string
+	 */
+	final public static function get_model() {
+		return static::$model;
+	}
+
+	/**
 	 * Bootstraps form properties.
 	 */
-	final protected function bootstrap() {
+	protected function bootstrap() {
+		$attributes = [];
 
 		// Set action.
 		if ( isset( $this->action ) ) {
@@ -84,6 +94,13 @@ abstract class Model_Form extends Form {
 				'/'
 			);
 		}
+
+		// Set ID.
+		if ( isset( $this->id ) ) {
+			$attributes['data-id'] = $this->id;
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::bootstrap();
 	}
