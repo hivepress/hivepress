@@ -15,7 +15,13 @@ return [
 
 	'blocks' => [
 		'content' => [
-			'blocks' => [],
+			'blocks' => [
+				'complete_message' => [
+					'type'      => 'element',
+					'file_path' => 'listing/submit/complete-message',
+					'order'     => 10,
+				],
+			],
 		],
 	],
 ];

@@ -29,6 +29,7 @@ class Listing_Report extends Form {
 			[
 				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
 				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
+				'action'  => hp\get_rest_url( '/listings/%id%/report' ),
 
 				'fields'  => [
 					'reason' => [

@@ -29,6 +29,7 @@ class User_Update extends Model_Form {
 			[
 				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
 				'model'   => 'user',
+				'action'  => hp\get_rest_url( '/users/%id%' ),
 
 				'fields'  => [
 					'image_id'         => [

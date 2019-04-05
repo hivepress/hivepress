@@ -96,7 +96,7 @@ class Listing extends Controller {
 
 					'submit_category' => [
 						'title'    => esc_html__( 'Select Category', 'hivepress' ),
-						'path'     => '/submit-listing/category/(?P<listing_category_id>\d+)',
+						'path'     => '/submit-listing/category/?(?P<listing_category_id>\d+)?',
 						'redirect' => 'redirect_listing_submit_category_page',
 						'action'   => 'render_listing_submit_category_page',
 					],
@@ -232,7 +232,12 @@ class Listing extends Controller {
 		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
 		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( is_tax() && get_term_meta( get_queried_object_id(), 'hp_display_subcategories', true ) ) ) {
-			$output .= ( new Blocks\Template( [ 'template_name' => 'listing_categories_view_page' ] ) )->render();
+			$output .= ( new Blocks\Template(
+				[
+					'template_name'       => 'listing_categories_view_page',
+					'listing_category_id' => is_tax() ? get_queried_object_id() : null,
+				]
+			) )->render();
 		} else {
 			$output .= ( new Blocks\Template( [ 'template_name' => 'listings_view_page' ] ) )->render();
 		}
@@ -287,7 +292,7 @@ class Listing extends Controller {
 	public function render_listings_edit_page() {
 		query_posts(
 			[
-				'post_type'      => hp\prefix( 'listing' ),
+				'post_type'      => 'hp_listing',
 				'post_status'    => [ 'draft', 'pending', 'publish' ],
 				'author'         => get_current_user_id(),
 				'posts_per_page' => -1,
@@ -353,6 +358,7 @@ class Listing extends Controller {
 			[
 				'post_type'   => 'hp_listing',
 				'post_status' => 'auto-draft',
+				'post_parent' => null,
 				'author'      => get_current_user_id(),
 			]
 		);
@@ -389,34 +395,40 @@ class Listing extends Controller {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 
+		// Check categories.
+		if ( wp_count_terms( 'hp_listing_category', [ 'hide_empty' => false ] ) === 0 ) {
+			return true;
+		}
+
 		// Get listing ID.
 		$listing_id = hp\get_post_id(
 			[
 				'post_type'   => 'hp_listing',
 				'post_status' => 'auto-draft',
+				'post_parent' => null,
 				'author'      => get_current_user_id(),
 			]
 		);
 
 		// Get category.
-		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), hp\prefix( 'listing_category' ) );
+		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), 'hp_listing_category' );
 
 		if ( ! is_null( $category ) && ! is_wp_error( $category ) ) {
 
 			// Get category IDs.
-			$category_ids = get_term_children( $category->term_id, hp\prefix( 'listing_category' ) );
+			$category_ids = get_term_children( $category->term_id, 'hp_listing_category' );
 
 			if ( empty( $category_ids ) ) {
 
 				// Set category.
-				wp_set_post_terms( $listing_id, [ $category->term_id ], hp\prefix( 'listing_category' ) );
+				wp_set_post_terms( $listing_id, [ $category->term_id ], 'hp_listing_category' );
 
 				return true;
 			}
 		}
 
 		// Check category.
-		if ( has_term( '', hp\prefix( 'listing_category' ), $listing_id ) ) {
+		if ( has_term( '', 'hp_listing_category', $listing_id ) ) {
 			return null;
 		}
 
@@ -455,6 +467,21 @@ class Listing extends Controller {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'auto-draft',
+				'post_parent' => null,
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		// Check listing.
+		if ( '' !== get_the_title( $listing_id ) ) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -464,8 +491,27 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_details_page() {
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_details_page' ] ) )->render();
+
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'auto-draft',
+				'post_parent' => null,
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		// Render page.
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name' => 'listing_submit_details_page',
+				'listing_id'    => $listing_id,
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
@@ -487,25 +533,26 @@ class Listing extends Controller {
 		$listing_id = hp\get_post_id(
 			[
 				'post_type'   => 'hp_listing',
-				'post_status' => 'pending',
+				'post_status' => 'auto-draft',
+				'post_parent' => null,
 				'author'      => get_current_user_id(),
-				'post__in'    => [ absint( get_query_var( 'hp_listing_id' ) ) ],
 			]
 		);
 
-		if ( 0 === $listing_id ) {
-			$listing_id = hp\get_post_id(
-				[
-					'post_type'   => 'hp_listing',
-					'post_status' => 'pending',
-					'author'      => get_current_user_id(),
-				]
-			);
-		}
+		// Update listing.
+		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
 
-		// Check listing.
-		if ( 0 === $listing_id ) {
-			return true;
+		wp_update_post(
+			[
+				'ID'          => $listing_id,
+				'post_status' => $status,
+			]
+		);
+
+		if ( 'publish' === $status ) {
+			return get_permalink( $listing_id );
+		} else {
+			return null;
 		}
 
 		return false;
@@ -517,8 +564,27 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_complete_page() {
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_submit_complete_page' ] ) )->render();
+
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'pending',
+				'post_parent' => null,
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		// Render page.
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name' => 'listing_submit_complete_page',
+				'listing'       => Models\Listing::get( $listing_id ),
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;

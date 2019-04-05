@@ -151,8 +151,10 @@ abstract class Controller {
 				$url = $route['path'];
 
 				foreach ( static::get_url_params( $route_name ) as $param ) {
-					$url = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)/i', $query[ $param ], $url );
+					$url = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/i', $query[ $param ], $url );
 				}
+
+				$url = rtrim( str_replace( '/?', '/', $url ), '/' ) . '/';
 			} else {
 				$url = '?' . http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
 			}

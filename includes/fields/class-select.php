@@ -104,7 +104,7 @@ class Select extends Field {
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
 			if ( $this->multiple ) {
-				$this->value = array_map( 'sanitize_text_field', $this->value );
+				$this->value = array_map( 'sanitize_text_field', (array) $this->value );
 			} else {
 				$this->value = sanitize_text_field( $this->value );
 			}

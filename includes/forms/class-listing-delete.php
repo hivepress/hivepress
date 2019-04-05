@@ -28,6 +28,7 @@ class Listing_Delete extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'model'    => 'listing',
+				'action'   => hp\get_rest_url( '/listings/%id%' ),
 				'method'   => 'DELETE',
 				'redirect' => true,
 

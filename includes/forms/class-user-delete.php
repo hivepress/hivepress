@@ -28,6 +28,7 @@ class User_Delete extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users/%id%' ),
 				'method'   => 'DELETE',
 				'redirect' => true,
 

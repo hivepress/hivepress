@@ -42,7 +42,8 @@ class User_Login extends Model_Form {
 					],
 
 					'password'          => [
-						'order' => 20,
+						'min_length' => null,
+						'order'      => 20,
 					],
 				],
 

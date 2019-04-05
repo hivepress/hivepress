@@ -29,6 +29,7 @@ class Listing_Update extends Model_Form {
 			[
 				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
 				'model'   => 'listing',
+				'action'  => hp\get_rest_url( '/listings/%id%' ),
 
 				'fields'  => [
 					'image_ids'   => [

@@ -81,6 +81,7 @@ class Checkbox extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
+		$attributes = [];
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
@@ -91,6 +92,8 @@ class Checkbox extends Field {
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::bootstrap();
 	}

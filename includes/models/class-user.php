@@ -63,9 +63,10 @@ class User extends Model {
 					],
 
 					'password'    => [
-						'label'    => esc_html__( 'Password', 'hivepress' ),
-						'type'     => 'password',
-						'required' => true,
+						'label'      => esc_html__( 'Password', 'hivepress' ),
+						'type'       => 'password',
+						'min_length' => 8,
+						'required'   => true,
 					],
 
 					'first_name'  => [

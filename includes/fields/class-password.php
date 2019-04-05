@@ -56,9 +56,6 @@ class Password extends Text {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set minimum length.
-		$args['min_length'] = 8;
-
 		// Set maximum length.
 		$args['max_length'] = 64;
 
