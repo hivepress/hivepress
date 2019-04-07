@@ -10,7 +10,7 @@
 
 	$(document).ready(function() {
 
-		// Modals
+		// Modal
 		getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
@@ -24,12 +24,12 @@
 			});
 		});
 
-		// Links
+		// Link
 		getComponent('link').on('click', function() {
 			window.location.href = $(this).data('url');
 		});
 
-		// Forms.
+		// Form
 		getComponent('form').each(function() {
 			var form = $(this),
 				messageContainer = form.children('div').first(),
@@ -102,7 +102,81 @@
 			});
 		});
 
-		// Stickies
+		// File upload
+		getComponent('file-upload').each(function() {
+			var field = $(this),
+				selectLabel = field.closest('label'),
+				selectButton = selectLabel.find('button').first(),
+				messageContainer = $('<div />').insertBefore(selectLabel),
+				responseContainer = selectLabel.parent().children('div').first();
+
+			field.fileupload({
+				url: field.data('url'),
+				dataType: 'json',
+				paramName: 'file',
+				formData: {
+					// todo
+					'form_name': field.closest('form').data('name'),
+					'field_name': field.attr('name'),
+					'parent_id': field.closest('form').data('id'),
+					'render': true,
+					'_wpnonce': hpCoreFrontendData.apiNonce,
+				},
+				start: function() {
+					field.prop('disabled', true);
+
+					selectButton.prop('disabled', true);
+					selectButton.attr('data-state', 'loading');
+				},
+				stop: function() {
+					field.prop('disabled', false);
+
+					selectButton.prop('disabled', false);
+					selectButton.attr('data-state', '');
+				},
+				done: function(e, data) {
+					if (data.result.hasOwnProperty('data')) {
+						if (field.prop('multiple')) {
+							responseContainer.append(data.result.data.html);
+						} else {
+							responseContainer.html(data.result.data.html);
+						}
+					}
+
+					console.log(data.result);
+				}
+			});
+		});
+
+		// Sortable
+		getComponent('sortable').each(function() {
+			var container = $(this),
+				form = container.closest('form');
+
+			container.sortable({
+				stop: function() {
+					if (container.children().length > 1) {
+						container.children().each(function(index) {
+							$.ajax({
+								url: $(this).data('url'),
+								method: 'POST',
+								data: {
+									'order': index,
+								},
+								beforeSend: function(xhr) {
+									xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+								},
+								complete: function(xhr) {
+									console.log(xhr.responseText);
+								},
+							});
+						});
+					}
+				},
+			});
+		});
+
+		// Sticky
 		getComponent('sticky').each(function() {
 			var container = $(this),
 				spacing = 30 + $('#wpadminbar').height();
@@ -115,7 +189,7 @@
 			});
 		});
 
-		// Sliders
+		// Slider
 		getComponent('slider').each(function() {
 			var container = $(this),
 				containerClass = container.attr('class').split(' ')[0],
