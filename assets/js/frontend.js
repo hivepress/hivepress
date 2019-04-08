@@ -25,8 +25,10 @@
 		});
 
 		// Link
-		getComponent('link').on('click', function() {
+		getComponent('link').on('click', function(e) {
 			window.location.href = $(this).data('url');
+
+			e.preventDefault();
 		});
 
 		// Form
@@ -115,9 +117,8 @@
 				dataType: 'json',
 				paramName: 'file',
 				formData: {
-					// todo
-					'form_name': field.closest('form').data('name'),
-					'field_name': field.attr('name'),
+					'parent_model': field.closest('form').data('model'),
+					'parent_field': field.attr('name'),
 					'parent_id': field.closest('form').data('id'),
 					'render': true,
 					'_wpnonce': hpCoreFrontendData.apiNonce,

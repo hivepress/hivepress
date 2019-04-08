@@ -95,9 +95,27 @@ abstract class Model_Form extends Form {
 			);
 		}
 
+		// Set model.
+		if ( isset( static::$model ) ) {
+			$attributes['data-model'] = static::$model;
+		}
+
 		// Set ID.
 		if ( isset( $this->id ) ) {
 			$attributes['data-id'] = $this->id;
+		}
+
+		// Set values.
+		if ( isset( static::$model ) && isset( $this->id ) ) {
+			$model_class = '\HivePress\Models\\' . static::$model;
+
+			if ( class_exists( $model_class ) ) {
+				$instance = $model_class::get( $this->id );
+
+				if ( ! is_null( $instance ) ) {
+					$this->set_values( $instance->serialize() );
+				}
+			}
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );

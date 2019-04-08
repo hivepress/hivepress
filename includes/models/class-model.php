@@ -208,6 +208,25 @@ abstract class Model {
 	}
 
 	/**
+	 * Gets instance attributes.
+	 */
+	final public function serialize() {
+		$attributes = [];
+
+		foreach ( $this->attributes as $name => $value ) {
+			if ( is_null( $value ) && method_exists( $this, 'get_' . $name ) ) {
+				$value = call_user_func( [ $this, 'get_' . $name ] );
+			}
+
+			if ( ! is_null( $value ) ) {
+				$attributes[ $name ] = $value;
+			}
+		}
+
+		return $attributes;
+	}
+
+	/**
 	 * Saves instance to the database.
 	 *
 	 * @return bool

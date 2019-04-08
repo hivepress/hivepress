@@ -62,13 +62,7 @@ class Listing_Update extends Model_Form {
 
 				'fields'  => [
 					'image_ids'   => [
-						'label'        => esc_html__( 'Images', 'hivepress' ),
-						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
-						'type'         => 'attachment_upload',
-						'multiple'     => true,
-						'max_files'    => 10,
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
-						'order'        => 10,
+						'order' => 10,
 					],
 
 					'title'       => [

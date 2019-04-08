@@ -157,7 +157,11 @@ class Number extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$this->value = round( floatval( $this->value ), $this->decimals );
+			if ( $this->decimals > 0 ) {
+				$this->value = round( floatval( $this->value ), $this->decimals );
+			} else {
+				$this->value = intval( $this->value );
+			}
 		}
 	}
 

@@ -55,6 +55,33 @@ class Attachment_Upload extends Field {
 	protected $max_files;
 
 	/**
+	 * Gets file formats.
+	 *
+	 * @return array
+	 */
+	final public function get_file_formats() {
+		return $this->file_formats;
+	}
+
+	/**
+	 * Checks multiple property.
+	 *
+	 * @return bool
+	 */
+	final public function is_multiple() {
+		return $this->multiple;
+	}
+
+	/**
+	 * Gets maximum files.
+	 *
+	 * @return int
+	 */
+	final public function get_max_files() {
+		return absint( $this->max_files );
+	}
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {

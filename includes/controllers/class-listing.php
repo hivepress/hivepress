@@ -334,8 +334,15 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_edit_page() {
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'listing_edit_page' ] ) )->render();
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name' => 'listing_edit_page',
+				'listing_id'    => absint( get_query_var( 'hp_listing_id' ) ),
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;

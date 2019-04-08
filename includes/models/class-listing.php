@@ -68,6 +68,15 @@ class Listing extends Post {
 						'max_length' => 128,
 					],
 
+					'image_ids'   => [
+						'label'        => esc_html__( 'Images', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'multiple'     => true,
+						'max_files'    => 10,
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+					],
+
 					'user_id'     => [
 						'type'      => 'number',
 						'min_value' => 0,
@@ -99,10 +108,10 @@ class Listing extends Post {
 	 * @return array
 	 */
 	final public function get_image_ids() {
-		$image_ids = wp_list_pluck( get_attached_media( 'image', $this->get_id() ), 'ID' );
+		$image_ids = wp_list_pluck( get_attached_media( 'image', $this->id ), 'ID' );
 
-		if ( has_post_thumbnail( $this->get_id() ) ) {
-			array_unshift( $image_ids, get_post_thumbnail_id( $this->get_id() ) );
+		if ( has_post_thumbnail( $this->id ) ) {
+			array_unshift( $image_ids, get_post_thumbnail_id( $this->id ) );
 		}
 
 		return array_unique( $image_ids );

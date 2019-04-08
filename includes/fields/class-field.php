@@ -195,6 +195,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field name.
+	 *
+	 * @return string
+	 */
+	final public function get_name() {
+		return $this->name;
+	}
+
+	/**
 	 * Gets field label.
 	 *
 	 * @return string
