@@ -86,10 +86,10 @@ class Attachment_Select extends Field {
 			]
 		) )->render();
 
-		$output .= '<a href="#"><span class="dashicons dashicons-no-alt"></span></a>';
+		$output .= '<a href="#" data-component="file-remove"><span class="dashicons dashicons-no-alt"></span></a>';
 		$output .= '</div>';
 
-		$output .= '<button type="button" class="button">' . esc_html( $this->caption ) . '</button>';
+		$output .= '<button type="button" class="button" data-component="file-select">' . esc_html( $this->caption ) . '</button>';
 		$output .= '</div>';
 
 		return $output;

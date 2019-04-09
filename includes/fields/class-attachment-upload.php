@@ -85,6 +85,7 @@ class Attachment_Upload extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
+		$attributes = [];
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
@@ -94,6 +95,11 @@ class Attachment_Upload extends Field {
 				$this->caption = esc_html__( 'Select File', 'hivepress' );
 			}
 		}
+
+		// Set component.
+		$attributes['data-component'] = 'file-manager';
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::bootstrap();
 	}
@@ -106,7 +112,7 @@ class Attachment_Upload extends Field {
 			$attachment_ids = get_posts(
 				[
 					'post_type'      => 'attachment',
-					'post__in'       => array_map( 'absint', (array) $this->value ),
+					'post__in'       => array_merge( [ 0 ], array_map( 'absint', (array) $this->value ) ),
 					'orderby'        => 'menu_order',
 					'order'          => 'ASC',
 					'posts_per_page' => -1,
@@ -185,7 +191,7 @@ class Attachment_Upload extends Field {
 		$output .= wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
 		// Render remove button.
-		$output .= '<a href="#"><i class="hp-icon fas fa-times"></i></a>';
+		$output .= '<a href="#" data-component="file-delete"><i class="hp-icon fas fa-times"></i></a>';
 		$output .= '</div>';
 
 		return $output;

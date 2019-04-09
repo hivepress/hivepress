@@ -11,11 +11,6 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'knockout'         => [
-		'handle' => 'knockout',
-		'src'    => HP_CORE_URL . '/assets/js/knockout.js',
-	],
-
 	'serializejson'    => [
 		'handle' => 'serializejson',
 		'src'    => HP_CORE_URL . '/assets/js/jquery.serializejson.min.js',
@@ -50,7 +45,7 @@ return [
 	'core_frontend'    => [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'jquery', 'knockout', 'serializejson', 'fileupload', 'jquery-ui-sortable', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'jquery', 'serializejson', 'fileupload', 'jquery-ui-sortable', 'fancybox', 'slick', 'sticky-sidebar' ],
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
 			'apiNonce' => wp_create_nonce( 'wp_rest' ),

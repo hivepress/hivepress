@@ -94,8 +94,6 @@
 									scrollTop: form.offset().top,
 								}, 500);
 							}
-
-							console.log(response);
 						},
 					});
 
@@ -143,10 +141,25 @@
 							responseContainer.html(data.result.data.html);
 						}
 					}
-
-					console.log(data.result);
 				}
 			});
+		});
+
+		// File delete
+		getComponent('file-delete').on('click', function(e) {
+			var container = $(this).parent();
+
+			$.ajax({
+				url: container.data('url'),
+				method: 'DELETE',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+				},
+			});
+
+			container.remove();
+
+			e.preventDefault();
 		});
 
 		// Sortable
@@ -166,9 +179,6 @@
 								},
 								beforeSend: function(xhr) {
 									xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
-								},
-								complete: function(xhr) {
-									console.log(xhr.responseText);
 								},
 							});
 						});

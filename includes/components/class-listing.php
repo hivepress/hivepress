@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -26,6 +27,10 @@ final class Listing {
 
 		// Set vendor.
 		add_action( 'save_post_' . hp\prefix( 'listing' ), [ $this, 'set_vendor' ], 10, 2 );
+
+		// Set image.
+		add_action( 'add_attachment', [ $this, 'set_image' ] );
+		add_action( 'edit_attachment', [ $this, 'set_image' ] );
 	}
 
 	/**
@@ -80,6 +85,34 @@ final class Listing {
 					'post_parent' => $vendor_id,
 				]
 			);
+		}
+	}
+
+	/**
+	 * Sets image.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 */
+	public function set_image( $attachment_id ) {
+
+		// Get listing ID.
+		$listing_id = wp_get_post_parent_id( $attachment_id );
+
+		if ( get_post_type( $listing_id ) === hp\prefix( 'listing' ) ) {
+
+			// Get mime type.
+			$mime_type = get_post_mime_type( $attachment_id );
+
+			if ( in_array( $mime_type, [ 'image/jpeg', 'image/png' ], true ) ) {
+
+				// Get image IDs.
+				$image_ids = wp_list_pluck( get_attached_media( 'image', $listing_id ), 'ID' );
+
+				// Set image.
+				if ( ! empty( $image_ids ) ) {
+					set_post_thumbnail( $listing_id, reset( $image_ids ) );
+				}
+			}
 		}
 	}
 }
