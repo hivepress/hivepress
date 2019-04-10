@@ -33,7 +33,7 @@ abstract class Form {
 	 *
 	 * @var string
 	 */
-	protected $title;
+	protected static $title;
 
 	/**
 	 * Form description.
@@ -152,8 +152,8 @@ abstract class Form {
 	 *
 	 * @return string
 	 */
-	final public function get_title() {
-		return $this->title;
+	final public static function get_title() {
+		return static::$title;
 	}
 
 	/**

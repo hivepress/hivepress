@@ -27,6 +27,13 @@ class Listing_Submit extends Listing_Update {
 	protected static $name;
 
 	/**
+	 * Form title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.

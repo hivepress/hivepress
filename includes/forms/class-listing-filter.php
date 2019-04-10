@@ -27,6 +27,13 @@ class Listing_Filter extends Form {
 	protected static $name;
 
 	/**
+	 * Form title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.

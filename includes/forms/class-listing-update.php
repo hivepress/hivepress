@@ -27,6 +27,13 @@ class Listing_Update extends Model_Form {
 	protected static $name;
 
 	/**
+	 * Form title.
+	 *
+	 * @var string
+	 */
+	protected static $title;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
