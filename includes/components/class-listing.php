@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Models;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -31,6 +32,9 @@ final class Listing {
 		// Set image.
 		add_action( 'add_attachment', [ $this, 'set_image' ] );
 		add_action( 'edit_attachment', [ $this, 'set_image' ] );
+
+		// Update status.
+		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
 	}
 
 	/**
@@ -112,6 +116,48 @@ final class Listing {
 				if ( ! empty( $image_ids ) ) {
 					set_post_thumbnail( $listing_id, reset( $image_ids ) );
 				}
+			}
+		}
+	}
+
+	/**
+	 * Updates status.
+	 *
+	 * @param string  $new_status New status.
+	 * @param string  $old_status Old status.
+	 * @param WP_Post $listing Listing object.
+	 */
+	public function update_status( $new_status, $old_status, $listing ) {
+		if ( hp\prefix( 'listing' ) === $listing->post_type && 'pending' === $old_status ) {
+
+			// Get user.
+			$user = get_userdata( $listing->post_author );
+
+			if ( 'publish' === $new_status ) {
+
+				// Send approval email.
+				( new Emails\Listing_Approve(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+							'listing_url'   => get_permalink( $listing->ID ),
+						],
+					]
+				) )->send();
+			} elseif ( 'trash' === $new_status ) {
+
+				// Send rejection email.
+				( new Emails\Listing_Reject(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+						],
+					]
+				) )->send();
 			}
 		}
 	}

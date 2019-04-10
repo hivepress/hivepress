@@ -58,6 +58,12 @@ class Listing extends Controller {
 							],
 
 							[
+								'path'    => '/(?P<id>\d+)/report',
+								'methods' => 'POST',
+								'action'  => 'report_listing',
+							],
+
+							[
 								'path'    => '/(?P<id>\d+)',
 								'methods' => 'DELETE',
 								'action'  => 'delete_listing',
@@ -166,6 +172,57 @@ class Listing extends Controller {
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
 		}
+
+		return new \WP_Rest_Response(
+			[
+				'data' => [
+					'id' => $listing->get_id(),
+				],
+			],
+			200
+		);
+	}
+
+	/**
+	 * Reports listing.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function report_listing( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = Models\Listing::get( $request->get_param( 'id' ) );
+
+		if ( is_null( $listing ) || $listing->get_status() !== 'publish' ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Validate form.
+		$form = new Forms\Listing_Report();
+
+		$form->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp\rest_error( 400, $form->get_errors() );
+		}
+
+		// Send email.
+		( new Emails\Listing_Report(
+			[
+				'recipient' => get_option( 'admin_email' ),
+				'tokens'    => [
+					'listing_title' => $listing->get_title(),
+					'listing_url'   => get_permalink( $listing->get_id() ),
+					'report_reason' => $form->get_value( 'reason' ),
+				],
+			]
+		) )->send();
 
 		return new \WP_Rest_Response(
 			[
@@ -555,6 +612,17 @@ class Listing extends Controller {
 				'post_status' => $status,
 			]
 		);
+
+		// Send email.
+		( new Emails\Listing_Submit(
+			[
+				'recipient' => get_option( 'admin_email' ),
+				'tokens'    => [
+					'listing_title' => get_the_title( $listing_id ),
+					'listing_url'   => 'publish' === $status ? get_permalink( $listing_id ) : get_preview_post_link( $listing_id ),
+				],
+			]
+		) )->send();
 
 		if ( 'publish' === $status ) {
 			return get_permalink( $listing_id );
