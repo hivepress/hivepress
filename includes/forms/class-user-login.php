@@ -48,6 +48,7 @@ class User_Login extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'title' => esc_html__( 'Login User', 'hivepress' ),
 				'model' => 'user',
 			],
 			$args
@@ -64,7 +65,6 @@ class User_Login extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Login User', 'hivepress' ),
 				'action'   => hp\get_rest_url( '/users/login' ),
 				'redirect' => true,
 

@@ -34,6 +34,22 @@ class User_Password_Request extends Form {
 	protected static $title;
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'title' => esc_html__( 'Reset Password', 'hivepress' ),
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
@@ -41,7 +57,6 @@ class User_Password_Request extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'   => esc_html__( 'Reset Password', 'hivepress' ),
 				'message' => esc_html__( 'Password reset email has been sent', 'hivepress' ),
 				'action'  => hp\get_rest_url( '/users/request-password' ),
 
