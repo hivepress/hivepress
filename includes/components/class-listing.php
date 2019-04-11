@@ -48,7 +48,7 @@ final class Listing {
 		// Get vendor ID.
 		$vendor_id = hp\get_post_id(
 			[
-				'post_type'   => hp\prefix( 'vendor' ),
+				'post_type'   => 'hp_vendor',
 				'post_status' => 'any',
 				'post__in'    => [ absint( $listing->post_parent ) ],
 			]
@@ -62,7 +62,7 @@ final class Listing {
 			// Get vendor ID.
 			$vendor_id = hp\get_post_id(
 				[
-					'post_type'   => hp\prefix( 'vendor' ),
+					'post_type'   => 'hp_vendor',
 					'post_status' => 'any',
 					'author'      => $user_id,
 				]
@@ -75,7 +75,7 @@ final class Listing {
 					[
 						'post_title'   => get_userdata( $user_id )->display_name,
 						'post_content' => get_user_meta( $user_id, 'description', true ),
-						'post_type'    => hp\prefix( 'vendor' ),
+						'post_type'    => 'hp_vendor',
 						'post_status'  => 'publish',
 						'post_author'  => $user_id,
 					]

@@ -546,7 +546,7 @@ final class Attribute {
 		$model = null;
 
 		foreach ( $this->models as $current_model ) {
-			$page_id = absint( get_option( hp\prefix( 'page_' . $current_model . 's' ) ) );
+			$page_id = absint( get_option( 'hp_page_' . $current_model . 's' ) );
 
 			if ( ( 0 !== $page_id && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $current_model ) ) || is_tax( hp\prefix( $current_model . '_category' ) ) ) {
 				$model = $current_model;

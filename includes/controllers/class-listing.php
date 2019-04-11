@@ -370,6 +370,8 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
+
+		// Query listings.
 		query_posts(
 			[
 				'post_type'      => 'hp_listing',
@@ -379,6 +381,7 @@ class Listing extends Controller {
 			]
 		);
 
+		// Render page.
 		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 		$output .= ( new Blocks\Template( [ 'template_name' => 'listings_edit_page' ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();

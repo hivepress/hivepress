@@ -82,10 +82,16 @@ return [
 							],
 
 							'blocks'     => [
-								'listings' => [
+								'listings'   => [
 									'type'    => 'listings',
 									'columns' => 2,
 									'order'   => 10,
+								],
+
+								'pagination' => [
+									'type'      => 'element',
+									'file_path' => 'pagination',
+									'order'     => 20,
 								],
 							],
 						],
