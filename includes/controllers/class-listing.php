@@ -288,14 +288,25 @@ class Listing extends Controller {
 	public function render_listings_view_page() {
 		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
-		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( is_tax() && get_term_meta( get_queried_object_id(), 'hp_display_subcategories', true ) ) ) {
+		// Get category ID.
+		$category_id = absint( hp\get_array_value( $_GET, 'category' ) );
+
+		if ( is_tax() ) {
+			$category_id = get_queried_object_id();
+		}
+
+		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( 0 !== $category_id && get_term_meta( $category_id, 'hp_display_subcategories', true ) ) ) {
+
+			// Render categories.
 			$output .= ( new Blocks\Template(
 				[
 					'template_name'       => 'listing_categories_view_page',
-					'listing_category_id' => is_tax() ? get_queried_object_id() : null,
+					'listing_category_id' => 0 !== $category_id ? $category_id : null,
 				]
 			) )->render();
 		} else {
+
+			// Query listings.
 			if ( is_page() ) {
 				query_posts(
 					[
@@ -307,6 +318,7 @@ class Listing extends Controller {
 				);
 			}
 
+			// Render listings.
 			$output .= ( new Blocks\Template( [ 'template_name' => 'listings_view_page' ] ) )->render();
 		}
 
