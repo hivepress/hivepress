@@ -113,6 +113,33 @@ return [
 									'attributes' => [
 										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'widget' ],
 									],
+
+									'blocks'     => [
+										'listing_report_modal' => [
+											'type'   => 'modal',
+											// todo.
+											// 'title'  => esc_html__( 'Report Listing', 'hivepress' ),
+											'order'  => 5,
+
+											'blocks' => [
+												'report_form' => [
+													'type' => 'form',
+													'form_name' => 'listing_report',
+													'order' => 10,
+
+													'attributes' => [
+														'class' => [ 'hp-form--narrow' ],
+													],
+												],
+											],
+										],
+
+										'report_link' => [
+											'type'      => 'element',
+											'file_path' => 'listing/view/page/report-link',
+											'order'     => 10,
+										],
+									],
 								],
 
 								'vendor'             => [
