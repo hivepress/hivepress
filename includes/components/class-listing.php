@@ -27,7 +27,7 @@ final class Listing {
 	public function __construct() {
 
 		// Set vendor.
-		add_action( 'save_post_' . hp\prefix( 'listing' ), [ $this, 'set_vendor' ], 10, 2 );
+		add_action( 'save_post_' . 'hp_listing', [ $this, 'set_vendor' ], 10, 2 );
 
 		// Set image.
 		add_action( 'add_attachment', [ $this, 'set_image' ] );
@@ -102,7 +102,7 @@ final class Listing {
 		// Get listing ID.
 		$listing_id = wp_get_post_parent_id( $attachment_id );
 
-		if ( get_post_type( $listing_id ) === hp\prefix( 'listing' ) ) {
+		if ( get_post_type( $listing_id ) === 'hp_listing' ) {
 
 			// Get mime type.
 			$mime_type = get_post_mime_type( $attachment_id );
@@ -128,7 +128,7 @@ final class Listing {
 	 * @param WP_Post $listing Listing object.
 	 */
 	public function update_status( $new_status, $old_status, $listing ) {
-		if ( hp\prefix( 'listing' ) === $listing->post_type && 'pending' === $old_status ) {
+		if ( 'hp_listing' === $listing->post_type && 'pending' === $old_status ) {
 
 			// Get user.
 			$user = get_userdata( $listing->post_author );

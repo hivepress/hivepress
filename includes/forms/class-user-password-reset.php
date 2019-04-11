@@ -34,6 +34,13 @@ class User_Password_Reset extends Model_Form {
 	protected static $title;
 
 	/**
+	 * Form description.
+	 *
+	 * @var string
+	 */
+	protected static $description;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
@@ -48,7 +55,8 @@ class User_Password_Reset extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model' => 'user',
+				'description' => esc_html__( 'Please enter a new password below.', 'hivepress' ),
+				'model'       => 'user',
 			],
 			$args
 		);

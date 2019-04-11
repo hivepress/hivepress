@@ -296,6 +296,17 @@ class Listing extends Controller {
 				]
 			) )->render();
 		} else {
+			if ( is_page() ) {
+				query_posts(
+					[
+						'post_type'      => 'hp_listing',
+						'post_status'    => 'publish',
+						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+						'paged'          => hp\get_current_page(),
+					]
+				);
+			}
+
 			$output .= ( new Blocks\Template( [ 'template_name' => 'listings_view_page' ] ) )->render();
 		}
 

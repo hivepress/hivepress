@@ -40,7 +40,7 @@ abstract class Form {
 	 *
 	 * @var string
 	 */
-	protected $description;
+	protected static $description;
 
 	/**
 	 * Form message.
@@ -360,8 +360,8 @@ abstract class Form {
 		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render description.
-		if ( $this->description ) {
-			$output .= '<div class="hp-form__description">' . hp\sanitize_html( $this->description ) . '</div>';
+		if ( isset( static::$description ) ) {
+			$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
 		}
 
 		// Render messages.

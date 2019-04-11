@@ -34,6 +34,13 @@ class Listing_Delete extends Model_Form {
 	protected static $title;
 
 	/**
+	 * Form description.
+	 *
+	 * @var string
+	 */
+	protected static $description;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
@@ -48,7 +55,8 @@ class Listing_Delete extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model' => 'listing',
+				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
+				'model'       => 'listing',
 			],
 			$args
 		);
