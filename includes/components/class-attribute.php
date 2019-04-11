@@ -317,9 +317,35 @@ final class Attribute {
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form['fields'][ $attribute_name ] ) ) {
 				if ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) {
+
+					// Add field.
 					$form['fields'][ $attribute_name ] = $attribute['search_field'];
 				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
-					$form['fields'][ $attribute_name ] = array_merge( $attribute['search_field'], [ 'type' => 'hidden' ] );
+
+					// Get field class.
+					$field_class = '\HivePress\Fields\\' . $attribute['search_field']['type'];
+
+					if ( class_exists( $field_class ) ) {
+
+						// Create field.
+						$field = new $field_class( $attribute['search_field'] );
+
+						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
+
+						if ( $field->validate() ) {
+							$field_args  = array_merge( $attribute['search_field'], [ 'type' => 'hidden' ] );
+							$field_value = $field->get_value();
+
+							// Add field.
+							if ( is_array( $field_value ) ) {
+								foreach ( $field_value as $option_name => $option_value ) {
+									$form['fields'][ $attribute_name . '[' . $option_name . ']' ] = array_merge( $field_args, [ 'default' => $option_value ] );
+								}
+							} else {
+								$form['fields'][ $attribute_name ] = $field_args;
+							}
+						}
+					}
 				}
 			}
 		}
