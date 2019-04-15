@@ -45,6 +45,7 @@ class Attachment extends Controller {
 					[
 						'path'      => '/attachments',
 						'rest'      => true,
+
 						'endpoints' => [
 							[
 								'methods' => 'POST',

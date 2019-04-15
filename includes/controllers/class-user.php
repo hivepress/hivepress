@@ -50,6 +50,7 @@ class User extends Controller {
 					[
 						'path'      => '/users',
 						'rest'      => true,
+
 						'endpoints' => [
 							[
 								'methods' => 'POST',

@@ -50,6 +50,7 @@ class Listing extends Controller {
 					[
 						'path'      => '/listings',
 						'rest'      => true,
+
 						'endpoints' => [
 							[
 								'path'    => '/(?P<id>\d+)',
