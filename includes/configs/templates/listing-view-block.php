@@ -109,6 +109,13 @@ return [
 							'attributes' => [
 								'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 							],
+
+							'blocks'     => [
+								'todo' => [
+									'type'      => 'element',
+									'file_path' => 'todo',
+								],
+							],
 						],
 					],
 				],

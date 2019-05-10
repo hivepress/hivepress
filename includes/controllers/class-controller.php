@@ -45,6 +45,9 @@ abstract class Controller {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
+		// todo.
+		$args = apply_filters( 'hivepress/v1/controllers/' . $args['name'], $args );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
