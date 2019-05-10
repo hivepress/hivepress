@@ -363,6 +363,17 @@ class Listing extends Controller {
 		if ( ! is_user_logged_in() ) {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
+
+		// Check listings.
+		if ( hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => [ 'draft', 'pending', 'publish' ],
+				'author'      => get_current_user_id(),
+			]
+		) === 0 ) {
+			return true;
+		}
 	}
 
 	/**

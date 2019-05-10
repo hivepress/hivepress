@@ -26,6 +26,9 @@ final class Listing {
 	 */
 	public function __construct() {
 
+		// Add menu items.
+		add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+
 		// Set vendor.
 		add_action( 'save_post_' . 'hp_listing', [ $this, 'set_vendor' ], 10, 2 );
 
@@ -35,6 +38,29 @@ final class Listing {
 
 		// Update status.
 		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
+	}
+
+	/**
+	 * Adds menu items.
+	 *
+	 * @param array $menu Menu arguments.
+	 * @return array
+	 */
+	public function add_menu_items( $menu ) {
+		if ( hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => [ 'draft', 'pending', 'publish' ],
+				'author'      => get_current_user_id(),
+			]
+		) !== 0 ) {
+			$menu['items']['edit_listings'] = [
+				'route' => 'listing/edit_listings',
+				'order' => 10,
+			];
+		}
+
+		return $menu;
 	}
 
 	/**

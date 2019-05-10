@@ -42,14 +42,9 @@ class Account extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					'edit_listings' => [
-						'route' => 'listing/edit_listings',
-						'order' => 10,
-					],
-
 					'edit_settings' => [
 						'route' => 'user/edit_settings',
-						'order' => 20,
+						'order' => 50,
 					],
 
 					'logout_user'   => [
