@@ -62,6 +62,7 @@ class Listing_Report extends Form {
 
 				'fields'  => [
 					'reason' => [
+						'label'      => esc_html__( 'Reason', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,

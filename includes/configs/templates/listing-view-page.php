@@ -139,6 +139,17 @@ return [
 											'file_path' => 'listing/view/page/report-link',
 											'order'     => 10,
 										],
+
+										// todo
+										'todo'        => [
+											'type'       => 'form',
+											'form_name'  => 'message_send',
+											'order'      => 20,
+
+											'attributes' => [
+												'class' => [ 'hp-form--narrow' ],
+											],
+										],
 									],
 								],
 

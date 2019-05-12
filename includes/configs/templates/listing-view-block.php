@@ -112,8 +112,8 @@ return [
 
 							'blocks'     => [
 								'todo' => [
-									'type'      => 'element',
-									'file_path' => 'todo',
+									'type'  => 'listing_favorite',
+									'class' => [ 'hp-listing__action' ],
 								],
 							],
 						],
