@@ -28,7 +28,8 @@ abstract class Comment extends Model {
 	final public static function get( $id ) {
 
 		// Get alias data.
-		$data = get_comment( absint( $id ), ARRAY_A );
+		$id   = absint( $id );
+		$data = get_comment( $id, ARRAY_A );
 
 		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['comment_type'] ) {
 			$attributes = [];
