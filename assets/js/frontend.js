@@ -14,7 +14,7 @@
 		getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
-			$('a[href=' + url + ']').on('click', function(e) {
+			$('a[href=' + url + '], button[data-url=' + url + ']').on('click', function(e) {
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
@@ -74,6 +74,8 @@
 									} else {
 										window.location.replace(form.data('redirect'));
 									}
+								} else {
+									form.trigger('reset');
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {

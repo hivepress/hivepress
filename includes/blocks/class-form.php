@@ -27,6 +27,13 @@ class Form extends Block {
 	protected $form_name;
 
 	/**
+	 * Form values.
+	 *
+	 * @var array
+	 */
+	protected $values = [];
+
+	/**
 	 * Form attributes.
 	 *
 	 * @var array
@@ -59,9 +66,9 @@ class Form extends Block {
 			$form = new $form_class( $form_args );
 
 			if ( $form->get_method() === 'POST' ) {
-				$form->set_values( $_POST );
+				$form->set_values( array_merge( $this->values, $_POST ) );
 			} elseif ( $form->get_method() === 'GET' ) {
-				$form->set_values( $_GET );
+				$form->set_values( array_merge( $this->values, $_GET ) );
 			}
 
 			// Render form.

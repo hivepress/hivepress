@@ -9,14 +9,15 @@ use HivePress\Helpers as hp;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-// todo.
+
 return [
 	'blocks' => [
 		// todo.
 		'user_login_modal'            => [
-			'type'   => 'modal',
-			// 'title'  => esc_html__( 'Sign In', 'hivepress' ),
-			'blocks' => [
+			'type'        => 'modal',
+			'modal_title' => esc_html__( 'Sign In', 'hivepress' ),
+
+			'blocks'      => [
 				'user_login_form' => [
 					'type'  => 'user_login_form',
 					'order' => 10,
@@ -25,9 +26,10 @@ return [
 		],
 
 		'user_register_modal'         => [
-			'type'   => 'modal',
-			// 'title'  => esc_html__( 'Register', 'hivepress' ),
-			'blocks' => [
+			'type'        => 'modal',
+			'modal_title' => esc_html__( 'Register', 'hivepress' ),
+
+			'blocks'      => [
 				'user_register_form' => [
 					'type'       => 'form',
 					'form_name'  => 'user_register',
@@ -41,9 +43,10 @@ return [
 		],
 
 		'user_password_request_modal' => [
-			'type'   => 'modal',
-			// 'title'  => esc_html__( 'Reset Password', 'hivepress' ),
-			'blocks' => [
+			'type'        => 'modal',
+			'modal_title' => esc_html__( 'Reset Password', 'hivepress' ),
+
+			'blocks'      => [
 				'user_password_request_form' => [
 					'type'             => 'form',
 					'form_name'        => 'user_password_request',

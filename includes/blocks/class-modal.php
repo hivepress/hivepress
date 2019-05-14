@@ -20,30 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Modal extends Container {
 
 	/**
-	 * Class constructor.
+	 * Modal title.
 	 *
-	 * @param array $args Block arguments.
+	 * @var string
 	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'blocks' => [
-					'title' => [
-						'type'      => 'element',
-						'file_path' => 'modal/title',
-						'order'     => 5,
-
-						'context'   => [
-							'title' => 'todo',
-						],
-					],
-				],
-			],
-			$args
-		);
-
-		parent::__construct( $args );
-	}
+	protected $modal_title;
 
 	/**
 	 * Bootstraps block properties.
@@ -58,6 +39,21 @@ class Modal extends Container {
 				'class'          => [ 'hp-modal' ],
 				'data-component' => 'modal',
 			]
+		);
+
+		// Add title.
+		array_unshift(
+			$this->blocks,
+			new Element(
+				[
+					'type'      => 'element',
+					'file_path' => 'modal/title',
+
+					'context'   => [
+						'title' => $this->modal_title,
+					],
+				]
+			)
 		);
 
 		parent::bootstrap();
