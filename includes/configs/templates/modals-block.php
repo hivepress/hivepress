@@ -31,12 +31,20 @@ return [
 
 			'blocks'      => [
 				'user_register_form' => [
-					'type'       => 'form',
-					'form_name'  => 'user_register',
-					'order'      => 10,
+					'type'         => 'form',
+					'form_name'    => 'user_register',
+					'order'        => 10,
 
-					'attributes' => [
+					'attributes'   => [
 						'class' => [ 'hp-form--narrow' ],
+					],
+
+					'form_actions' => [
+						'login_link' => [
+							'type'      => 'element',
+							'file_path' => 'user/login-link',
+							'order'     => 10,
+						],
 					],
 				],
 			],

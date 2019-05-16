@@ -27,7 +27,21 @@ class User_Login_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form_name' => 'user_login',
+				'form_name'    => 'user_login',
+
+				'form_actions' => [
+					'register_link'         => [
+						'type'      => 'element',
+						'file_path' => 'user/register-link',
+						'order'     => 10,
+					],
+
+					'password_request_link' => [
+						'type'      => 'element',
+						'file_path' => 'user/password-request-link',
+						'order'     => 20,
+					],
+				],
 			],
 			$args
 		);

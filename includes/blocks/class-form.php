@@ -27,6 +27,13 @@ class Form extends Block {
 	protected $form_name;
 
 	/**
+	 * Form actions.
+	 *
+	 * @var string
+	 */
+	protected $form_actions;
+
+	/**
 	 * Form values.
 	 *
 	 * @var array
@@ -74,6 +81,9 @@ class Form extends Block {
 			// Render form.
 			$output .= $form->render();
 		}
+
+		// todo.
+		$output .= ( new Container( [ 'blocks' => $this->form_actions ] ) )->render();
 
 		return $output;
 	}

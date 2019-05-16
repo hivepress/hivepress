@@ -17,9 +17,17 @@ return [
 		'content' => [
 			'blocks' => [
 				'submit_form' => [
-					'type'      => 'form',
-					'form_name' => 'listing_submit',
-					'order'     => 10,
+					'type'         => 'form',
+					'form_name'    => 'listing_submit',
+					'order'        => 10,
+
+					'form_actions' => [
+						'category_change_link' => [
+							'type'      => 'element',
+							'file_path' => 'listing-category/submit/change-link',
+							'order'     => 10,
+						],
+					],
 				],
 			],
 		],
