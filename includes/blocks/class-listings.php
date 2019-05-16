@@ -34,6 +34,13 @@ class Listings extends Block {
 	protected static $settings = [];
 
 	/**
+	 * Template context.
+	 *
+	 * @var string
+	 */
+	protected $template_context;
+
+	/**
 	 * Columns number.
 	 *
 	 * @var int
@@ -169,19 +176,31 @@ class Listings extends Block {
 
 		// Render listings.
 		if ( $query->have_posts() ) {
-			$output  = '<div class="hp-grid">';
-			$output .= '<div class="hp-row">';
+			if ( 'edit' === $this->template_context ) {
+				$output = '<table class="hp-table">';
 
-			while ( $query->have_posts() ) {
-				$query->the_post();
+				while ( $query->have_posts() ) {
+					$query->the_post();
 
-				$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-				$output .= ( new Listing( [ 'template_name' => 'listing_view_block' ] ) )->render();
+					$output .= ( new Listing( [ 'template_name' => 'listing_edit_block' ] ) )->render();
+				}
+
+				$output .= '</table>';
+			} else {
+				$output  = '<div class="hp-grid">';
+				$output .= '<div class="hp-row">';
+
+				while ( $query->have_posts() ) {
+					$query->the_post();
+
+					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+					$output .= ( new Listing( [ 'template_name' => 'listing_view_block' ] ) )->render();
+					$output .= '</div>';
+				}
+
+				$output .= '</div>';
 				$output .= '</div>';
 			}
-
-			$output .= '</div>';
-			$output .= '</div>';
 		}
 
 		// Reset query.

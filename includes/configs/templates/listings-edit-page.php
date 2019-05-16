@@ -17,9 +17,9 @@ return [
 		'content' => [
 			'blocks' => [
 				'listings' => [
-					'type'    => 'listings',
-					'columns' => 2,
-					'order'   => 10,
+					'type'             => 'listings',
+					'template_context' => 'edit',
+					'order'            => 10,
 				],
 			],
 		],
