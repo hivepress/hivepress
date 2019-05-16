@@ -111,9 +111,16 @@ return [
 							],
 
 							'blocks'     => [
-								'todo' => [
+								'message_link' => [
+									'type'      => 'element',
+									'file_path' => 'message/send-link',
+									'order'     => 10,
+								],
+
+								'todo'         => [
 									'type'  => 'listing_favorite',
 									'class' => [ 'hp-listing__action' ],
+									'order' => 20,
 								],
 							],
 						],

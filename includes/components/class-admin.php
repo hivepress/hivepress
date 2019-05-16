@@ -400,7 +400,7 @@ final class Admin {
 						$api->plugins
 					),
 					function( $extension ) {
-						return 'hivepress' !== $extension['slug'];
+						return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-reviews', 'hivepress-marketplace' ], true );
 					}
 				);
 
