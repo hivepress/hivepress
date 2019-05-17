@@ -30,8 +30,11 @@ final class Form {
 		// Set field options.
 		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
 
-		// Enqueue scripts.
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		if ( ! is_admin() ) {
+
+			// Enqueue scripts.
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		}
 	}
 
 	/**

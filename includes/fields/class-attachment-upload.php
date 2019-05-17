@@ -85,7 +85,6 @@ class Attachment_Upload extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
-		$attributes = [];
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
@@ -95,11 +94,6 @@ class Attachment_Upload extends Field {
 				$this->caption = esc_html__( 'Select File', 'hivepress' );
 			}
 		}
-
-		// Set component.
-		$attributes['data-component'] = 'file-manager';
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::bootstrap();
 	}

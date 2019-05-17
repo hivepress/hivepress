@@ -194,6 +194,25 @@ final class Attribute {
 			// Add attribute.
 			$this->attributes[ $attribute_name ] = $attribute_args;
 		}
+
+		// Filter attributes.
+		$this->attributes = apply_filters( 'hivepress/v1/attributes', $this->attributes );
+
+		// Set defaults.
+		foreach ( $this->attributes as $attribute_name => $attribute_args ) {
+			$this->attributes[ $attribute_name ] = array_merge(
+				[
+					'display_areas'  => [],
+					'display_format' => '',
+					'editable'       => false,
+					'searchable'     => false,
+					'filterable'     => false,
+					'sortable'       => false,
+					'categories'     => [],
+				],
+				$attribute_args
+			);
+		}
 	}
 
 	/**

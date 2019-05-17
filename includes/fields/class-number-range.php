@@ -95,18 +95,11 @@ class Number_Range extends Number {
 		$values = (array) $this->value;
 
 		// Render fields.
-		$field_args = [
-			'name'      => $this->name . '[]',
-			'decimals'  => $this->decimals,
-			'min_value' => $this->min_value,
-			'max_value' => $this->max_value,
-			'required'  => $this->required,
-		];
-
 		$output .= ( new Number(
 			array_merge(
-				$field_args,
+				$this->args,
 				[
+					'name'        => $this->name . '[]',
 					'placeholder' => esc_html__( 'Min', 'hivepress' ),
 					'default'     => reset( $values ),
 				]
@@ -115,8 +108,9 @@ class Number_Range extends Number {
 
 		$output .= ( new Number(
 			array_merge(
-				$field_args,
+				$this->args,
 				[
+					'name'        => $this->name . '[]',
 					'placeholder' => esc_html__( 'Max', 'hivepress' ),
 					'default'     => end( $values ),
 				]
