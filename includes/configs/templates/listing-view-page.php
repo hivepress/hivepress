@@ -115,33 +115,9 @@ return [
 									],
 
 									'blocks'     => [
-										'message_send_modal' => [
-											'type'        => 'modal',
-											'modal_title' => esc_html__( 'Send Message', 'hivepress' ),
-											'order'       => 5,
-
-											'blocks'      => [
-												'message_form' => [
-													'type' => 'message_send_form',
-													'order' => 10,
-
-													'attributes' => [
-														'class' => [ 'hp-form--narrow' ],
-													],
-												],
-											],
-										],
-
-										'message_button' => [
-											'type'      => 'element',
-											'file_path' => 'message/send-button',
-											'order'     => 10,
-										],
-
 										'listing_report_modal' => [
 											'type'        => 'modal',
 											'modal_title' => esc_html__( 'Report Listing', 'hivepress' ),
-											'order'       => 15,
 
 											'blocks'      => [
 												'report_form' => [
@@ -156,7 +132,7 @@ return [
 											],
 										],
 
-										'report_link'    => [
+										'report_link' => [
 											'type'      => 'element',
 											'file_path' => 'listing/view/page/report-link',
 											'order'     => 20,

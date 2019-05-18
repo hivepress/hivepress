@@ -78,30 +78,7 @@ return [
 										'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
 									],
 
-									'blocks'     => [
-										'message_send_modal' => [
-											'type'        => 'modal',
-											'modal_title' => esc_html__( 'Send Message', 'hivepress' ),
-											'order'       => 5,
-
-											'blocks'      => [
-												'message_form' => [
-													'type' => 'message_send_form',
-													'order' => 10,
-
-													'attributes' => [
-														'class' => [ 'hp-form--narrow' ],
-													],
-												],
-											],
-										],
-
-										'message_button' => [
-											'type'      => 'element',
-											'file_path' => 'message/send-button',
-											'order'     => 10,
-										],
-									],
+									'blocks'     => [],
 								],
 							],
 						],
