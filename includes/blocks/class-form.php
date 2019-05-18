@@ -83,7 +83,7 @@ class Form extends Block {
 		}
 
 		// todo.
-		$output .= ( new Container( [ 'blocks' => $this->form_actions ] ) )->render();
+		// $output .= ( new Container( [ 'blocks' => $this->form_actions ] ) )->render();
 
 		return $output;
 	}

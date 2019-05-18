@@ -58,6 +58,12 @@ return [
 								'class' => [ 'hp-form--narrow', 'widget' ],
 							],
 						],
+
+						// todo.
+						'map'         => [
+							'type'  => 'map',
+							'order' => 20,
+						],
 					],
 				],
 

@@ -119,7 +119,7 @@ class Number extends Field {
 		$attributes = [];
 
 		// Set step.
-		$attributes['step'] = 1 / pow( 10, $this->decimals );
+		$attributes['step'] = sprintf( '%f', 1 / pow( 10, $this->decimals ) );
 
 		// Set minimum value.
 		if ( ! is_null( $this->min_value ) ) {

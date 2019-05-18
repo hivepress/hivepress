@@ -61,6 +61,7 @@ Mixins
 
 		&--wide {
 			display: flex;
+			align-items: flex-end;
 			margin: 0 -.5rem;
 		}
 
@@ -119,6 +120,12 @@ Mixins
 		&--wide &__button,
 		&--wide &__field {
 			margin: 0 0.5rem;
+		}
+
+		&--wide &__field {
+			&:not(:last-child) {
+				margin-bottom: 0;
+			}
 		}
 
 		&--narrow &__button {
