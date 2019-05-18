@@ -1,17 +1,20 @@
-(function($) {
-	'use strict';
+var hivepress = {
 
 	/**
-	 * Gets jQuery component.
+	 * Gets jQuery object.
 	 */
-	function getComponent(name) {
-		return $('[data-component=' + name + ']');
-	}
+	getComponent: function(name) {
+		return jQuery('[data-component=' + name + ']');
+	},
+};
+
+(function($) {
+	'use strict';
 
 	$(document).ready(function() {
 
 		// Modal
-		getComponent('modal').each(function() {
+		hivepress.getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
 			$('a[href=' + url + '], button[data-url=' + url + ']').on('click', function(e) {
@@ -25,14 +28,14 @@
 		});
 
 		// Link
-		getComponent('link').on('click', function(e) {
+		hivepress.getComponent('link').on('click', function(e) {
 			window.location.href = $(this).data('url');
 
 			e.preventDefault();
 		});
 
 		// Form
-		getComponent('form').each(function() {
+		hivepress.getComponent('form').each(function() {
 			var form = $(this),
 				messageContainer = form.children('div').first(),
 				messageClass = messageContainer.attr('class').split(' ')[0],
@@ -75,7 +78,8 @@
 										window.location.replace(form.data('redirect'));
 									}
 								} else {
-									form.trigger('reset');
+									// todo
+									// form.trigger('reset');
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
@@ -105,7 +109,7 @@
 		});
 
 		// File upload
-		getComponent('file-upload').each(function() {
+		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
@@ -148,7 +152,7 @@
 		});
 
 		// File delete
-		getComponent('file-delete').on('click', function(e) {
+		hivepress.getComponent('file-delete').on('click', function(e) {
 			var container = $(this).parent();
 
 			$.ajax({
@@ -165,7 +169,7 @@
 		});
 
 		// Sortable
-		getComponent('sortable').each(function() {
+		hivepress.getComponent('sortable').each(function() {
 			var container = $(this),
 				form = container.closest('form');
 
@@ -190,7 +194,7 @@
 		});
 
 		// Sticky
-		getComponent('sticky').each(function() {
+		hivepress.getComponent('sticky').each(function() {
 			var container = $(this),
 				spacing = 30 + $('#wpadminbar').height();
 
@@ -203,7 +207,7 @@
 		});
 
 		// Slider
-		getComponent('slider').each(function() {
+		hivepress.getComponent('slider').each(function() {
 			var container = $(this),
 				containerClass = container.attr('class').split(' ')[0],
 				images = container.find('img'),
