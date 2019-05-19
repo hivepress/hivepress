@@ -48,11 +48,11 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Toggle value.
+	 * Sample value.
 	 *
 	 * @var mixed
 	 */
-	protected $toggle = true;
+	protected $sample = true;
 
 	/**
 	 * Class initializer.
@@ -103,7 +103,7 @@ class Checkbox extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			if ( is_bool( $this->toggle ) ) {
+			if ( is_bool( $this->sample ) ) {
 				$this->value = boolval( $this->value );
 			} else {
 				$this->value = sanitize_text_field( $this->value );
@@ -120,6 +120,6 @@ class Checkbox extends Field {
 		// todo.
 		$id = $this->name . '_' . uniqid();
 
-		return '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->toggle ) . '" ' . checked( $this->value, $this->toggle, false ) . ' ' . hp\html_attributes( $this->attributes ) . '><span>' . hp\sanitize_html( $this->caption ) . '</span></label>';
+		return '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '><span>' . hp\sanitize_html( $this->caption ) . '</span></label>';
 	}
 }

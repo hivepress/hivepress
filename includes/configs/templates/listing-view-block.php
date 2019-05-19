@@ -110,13 +110,7 @@ return [
 								'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 							],
 
-							'blocks'     => [
-								'todo' => [
-									'type'  => 'listing_favorite',
-									'class' => [ 'hp-listing__action' ],
-									'order' => 20,
-								],
-							],
+							'blocks'     => [],
 						],
 					],
 				],

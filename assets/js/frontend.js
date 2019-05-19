@@ -108,6 +108,40 @@ var hivepress = {
 			});
 		});
 
+		// Switch
+		hivepress.getComponent('switch').each(function() {
+			var button = $(this);
+
+			button.on('click', function(e) {
+				var caption = button.attr('data-caption'),
+					label = button.find('span');
+
+				if (label.length) {
+					button.attr('data-caption', label.text());
+					label.text(caption);
+				} else {
+					button.attr('data-caption', button.attr('title'));
+					button.attr('title', caption);
+				}
+
+				if (button.attr('data-state') !== 'active') {
+					button.attr('data-state', 'active');
+				} else {
+					button.attr('data-state', '');
+				}
+
+				$.ajax({
+					url: button.data('url'),
+					method: 'POST',
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+					},
+				});
+
+				e.preventDefault();
+			});
+		});
+
 		// File upload
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),

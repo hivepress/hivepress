@@ -140,7 +140,7 @@ class Checkboxes extends Select {
 					[
 						'name'    => $this->name . '[]',
 						'caption' => $label,
-						'toggle'  => $value,
+						'sample'  => $value,
 						'default' => $default,
 					]
 				) )->render();
