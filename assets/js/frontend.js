@@ -108,8 +108,8 @@ var hivepress = {
 			});
 		});
 
-		// Switch
-		hivepress.getComponent('switch').each(function() {
+		// Toggle
+		hivepress.getComponent('toggle').each(function() {
 			var button = $(this);
 
 			button.on('click', function(e) {

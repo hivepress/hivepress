@@ -41,41 +41,52 @@ return [
 							],
 
 							'blocks'     => [
-								'image'           => [
-									'type'      => 'element',
-									'file_path' => 'vendor/view/page/image',
-									'order'     => 10,
-								],
-
-								'name'            => [
-									'type'      => 'element',
-									'file_path' => 'vendor/view/page/name',
-									'order'     => 20,
-								],
-
-								'details_primary' => [
+								'todo'            => [
 									'type'       => 'container',
-									'order'      => 30,
+									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
+										'class' => [ 'hp-vendor__todo', 'widget' ],
 									],
 
 									'blocks'     => [
-										'date' => [
+										'image'           => [
 											'type'      => 'element',
-											'file_path' => 'vendor/view/date',
+											'file_path' => 'vendor/view/page/image',
 											'order'     => 10,
+										],
+
+										'name'            => [
+											'type'      => 'element',
+											'file_path' => 'vendor/view/page/name',
+											'order'     => 20,
+										],
+
+										'details_primary' => [
+											'type'       => 'container',
+											'order'      => 30,
+
+											'attributes' => [
+												'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
+											],
+
+											'blocks'     => [
+												'date' => [
+													'type' => 'element',
+													'file_path' => 'vendor/view/date',
+													'order' => 10,
+												],
+											],
 										],
 									],
 								],
 
 								'actions_primary' => [
 									'type'       => 'container',
-									'order'      => 40,
+									'order'      => 20,
 
 									'attributes' => [
-										'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
+										'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'widget' ],
 									],
 
 									'blocks'     => [],

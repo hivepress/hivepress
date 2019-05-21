@@ -67,10 +67,14 @@ class Toggle extends Block {
 	protected function bootstrap() {
 		$attributes = [];
 
+		if ( ! $this->small ) {
+			$attributes['class'] = [ 'hp-link' ];
+		}
+
 		if ( is_user_logged_in() ) {
 			$attributes['href'] = '#';
 
-			$attributes['data-component'] = 'switch';
+			$attributes['data-component'] = 'toggle';
 			$attributes['data-url']       = $this->url;
 
 			if ( $this->active ) {

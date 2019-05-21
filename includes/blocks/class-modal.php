@@ -27,15 +27,29 @@ class Modal extends Container {
 	protected $modal_title;
 
 	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected $model;
+
+	/**
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {
+
+		// Get ID.
+		$id = $this->name;
+
+		if ( isset( $this->model ) ) {
+			$id .= '_' . get_the_ID();
+		}
 
 		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'id'             => $this->name,
+				'id'             => $id,
 				'class'          => [ 'hp-modal' ],
 				'data-component' => 'modal',
 			]

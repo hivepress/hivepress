@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -383,6 +382,12 @@ Mixins
 			align-items: center;
 		}
 
+		&--view-page &__actions--primary {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
 		&--view-page &__actions--primary,
 		&--view-page &__attributes--primary,
 		&--view-page &__attributes--secondary,
@@ -489,6 +494,34 @@ Mixins
 				margin-bottom: 1rem;
 			}
 		}
+
+		&--view-block &__actions--primary &__action {
+			opacity: 0.5;
+			text-decoration: none;
+
+			&:hover,
+			&[data-state=active] {
+				opacity: 1;
+			}
+
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
+		}
+
+		&--view-page &__actions--primary &__action {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
+		}
+
+		&--view-page &__actions--primary button&__action {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
 	}
 	/*--------------------------------------------------------------
 	Listing categories
@@ -572,6 +605,19 @@ Mixins
 			}
 		}
 
+		&--view-page &__actions--primary,
+		&--view-page &__todo {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+		}
+
+		&--view-page &__actions--primary {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
 		&__image {
 			.image-wrapper;
 
@@ -606,6 +652,20 @@ Mixins
 		&--view-page &__date,
 		&--view-page &__name {
 			text-align: center;
+		}
+
+		&--view-page &__actions--primary &__action {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
+		}
+
+		&--view-page &__actions--primary button&__action {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
 		}
 	}
 	/*--------------------------------------------------------------
