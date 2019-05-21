@@ -77,9 +77,8 @@ var hivepress = {
 									} else {
 										window.location.replace(form.data('redirect'));
 									}
-								} else {
-									// todo
-									// form.trigger('reset');
+								} else if (!form.is('[data-id]')) {
+									form.trigger('reset');
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
