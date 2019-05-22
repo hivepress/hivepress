@@ -71,42 +71,49 @@ return [
 					],
 
 					'blocks'     => [
-						'topbar'     => [
-							'type'       => 'container',
-							'order'      => 10,
+						'search_results' => [
+							'type'   => 'listing_search_results',
+							'order'  => 10,
 
-							'attributes' => [
-								'class' => [ 'hp-page__topbar' ],
-							],
-
-							'blocks'     => [
-								'result_count' => [
-									'type'  => 'result_count',
-									'order' => 10,
-								],
-
-								'sort_form'    => [
-									'type'       => 'form',
-									'form_name'  => 'listing_sort',
-									'order'      => 20,
+							'blocks' => [
+								'topbar'     => [
+									'type'       => 'container',
+									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-form--pivot' ],
+										'class' => [ 'hp-page__topbar' ],
+									],
+
+									'blocks'     => [
+										'result_count' => [
+											'type'  => 'result_count',
+											'order' => 10,
+										],
+
+										'sort_form'    => [
+											'type'       => 'form',
+											'form_name'  => 'listing_sort',
+											'order'      => 20,
+
+											'attributes' => [
+												'class' => [ 'hp-form--pivot' ],
+											],
+										],
 									],
 								],
+
+								'listings'   => [
+									'type'    => 'listings',
+									'columns' => 2,
+									'order'   => 20,
+								],
+
+								'pagination' => [
+									'type'      => 'element',
+									'file_path' => 'pagination',
+									'order'     => 30,
+								],
 							],
-						],
-
-						'results'    => [
-							'type'    => 'listings',
-							'columns' => 2,
-							'order'   => 20,
-						],
-
-						'pagination' => [
-							'type'      => 'element',
-							'file_path' => 'pagination',
-							'order'     => 30,
 						],
 					],
 				],

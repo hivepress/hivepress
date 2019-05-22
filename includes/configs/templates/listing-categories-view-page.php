@@ -39,7 +39,7 @@ return [
 			],
 
 			'blocks'     => [
-				'results' => [
+				'listing_categories' => [
 					'type'    => 'listing_categories',
 					'columns' => 3,
 					'order'   => 10,

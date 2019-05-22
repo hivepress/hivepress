@@ -16,7 +16,7 @@ return [
 	'blocks' => [
 		'content' => [
 			'blocks' => [
-				'results' => [
+				'listing_categories' => [
 					'type'          => 'listing_categories',
 					'template_name' => 'listing_category_submit_block',
 					'columns'       => 3,
