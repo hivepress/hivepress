@@ -77,8 +77,9 @@ class User_Password_Reset extends Model_Form {
 
 				'fields'   => [
 					'password'           => [
-						'label' => esc_html__( 'New Password', 'hivepress' ),
-						'order' => 10,
+						'label'    => esc_html__( 'New Password', 'hivepress' ),
+						'required' => true,
+						'order'    => 10,
 					],
 
 					'username'           => [

@@ -79,6 +79,7 @@ class User_Login extends Model_Form {
 
 					'password'          => [
 						'min_length' => null,
+						'required'   => true,
 						'order'      => 20,
 					],
 				],

@@ -66,4 +66,13 @@ class Password extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}
+
+	/**
+	 * Renders field HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+	}
 }

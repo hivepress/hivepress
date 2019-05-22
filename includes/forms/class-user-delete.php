@@ -78,7 +78,8 @@ class User_Delete extends Model_Form {
 
 				'fields'   => [
 					'password' => [
-						'order' => 10,
+						'required' => true,
+						'order'    => 10,
 					],
 				],
 

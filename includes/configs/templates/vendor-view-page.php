@@ -78,6 +78,12 @@ return [
 												],
 											],
 										],
+
+										'description'     => [
+											'type'      => 'element',
+											'file_path' => 'vendor/view/description',
+											'order'     => 40,
+										],
 									],
 								],
 

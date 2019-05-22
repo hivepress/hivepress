@@ -71,7 +71,8 @@ class User_Register extends Model_Form {
 			],
 
 			'password' => [
-				'order' => 20,
+				'required' => true,
+				'order'    => 20,
 			],
 		];
 

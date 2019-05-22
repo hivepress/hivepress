@@ -93,9 +93,8 @@ class User_Update extends Model_Form {
 					],
 
 					'password'         => [
-						'label'    => esc_html__( 'New Password', 'hivepress' ),
-						'required' => false,
-						'order'    => 60,
+						'label' => esc_html__( 'New Password', 'hivepress' ),
+						'order' => 60,
 					],
 
 					'current_password' => [
