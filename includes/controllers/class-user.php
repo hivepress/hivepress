@@ -625,8 +625,15 @@ class User extends Controller {
 	 * @return string
 	 */
 	public function render_settings_page() {
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'user_settings_page' ] ) )->render();
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name' => 'user_settings_page',
+				'user_id'       => get_current_user_id(),
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;

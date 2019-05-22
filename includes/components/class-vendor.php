@@ -26,30 +26,29 @@ final class Vendor {
 		if ( ! is_admin() ) {
 
 			// Disable redirect.
-			add_action( 'template_redirect', [ $this, 'disable_redirect' ], 1 );
+			add_action( 'template_redirect', [ $this, 'disable_page_redirect' ], 1 );
 
-			// Set title.
-			add_filter( 'document_title_parts', [ $this, 'set_title' ] );
+			// Set page title.
+			add_filter( 'hivepress/v1/controllers/vendor/routes/view_vendor', [ $this, 'set_page_title' ] );
 		}
 	}
 
 	/**
-	 * Disables redirect.
+	 * Disables page redirect.
 	 */
-	public function disable_redirect() {
+	public function disable_page_redirect() {
 		if ( is_singular( 'hp_vendor' ) ) {
 			remove_action( 'template_redirect', 'redirect_canonical' );
 		}
 	}
 
 	/**
-	 * Sets title.
+	 * Sets page title.
 	 *
-	 * @param array $parts Title parts.
-	 * @return string
+	 * @param array $route Route arguments.
+	 * @return array
 	 */
-	public function set_title( $parts ) {
-		// todo.
-		return $parts;
+	public function set_page_title( $route ) {
+		return array_merge( $route, [ 'title' => sprintf( esc_html__( 'Listings by %s', 'hivepress' ), get_the_title() ) ] );
 	}
 }

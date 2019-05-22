@@ -60,12 +60,12 @@ class Vendor extends Post {
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
-						'required'   => true,
 					],
 
 					'user_id'     => [
 						'type'      => 'number',
 						'min_value' => 0,
+						'required'  => true,
 					],
 				],
 

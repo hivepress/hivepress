@@ -61,13 +61,6 @@ class Container extends Block {
 	}
 
 	/**
-	 * Bootstraps block properties.
-	 */
-	protected function bootstrap() {
-		// todo.
-	}
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

@@ -101,6 +101,52 @@ class User extends Model {
 	}
 
 	/**
+	 * Gets instance by ID.
+	 *
+	 * @param int $id Instance ID.
+	 * @return mixed
+	 */
+	final public static function get( $id ) {
+
+		// Get alias data.
+		$data = get_userdata( absint( $id ) );
+
+		if ( false !== $data ) {
+			$attributes = [];
+
+			// Convert alias data.
+			$data = (array) $data;
+
+			// Get alias meta.
+			$meta = array_map(
+				function( $meta_values ) {
+					return reset( $meta_values );
+				},
+				get_user_meta( $data['ID'] )
+			);
+
+			// Get instance attributes.
+			foreach ( array_keys( static::$fields ) as $field_name ) {
+				if ( in_array( $field_name, static::$aliases, true ) ) {
+					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
+				} else {
+					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+				}
+			}
+
+			// Create and fill instance.
+			$instance = new static();
+
+			$instance->set_id( $data['ID'] );
+			$instance->fill( $attributes );
+
+			return $instance;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Saves instance to the database.
 	 *
 	 * @return bool

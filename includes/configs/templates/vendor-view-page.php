@@ -104,6 +104,12 @@ return [
 							],
 
 							'blocks'     => [
+								'title'      => [
+									'type'      => 'element',
+									'file_path' => 'page/title',
+									'order'     => 5,
+								],
+
 								'listings'   => [
 									'type'    => 'listings',
 									'columns' => 2,

@@ -27,13 +27,6 @@ class Form extends Block {
 	protected $form_name;
 
 	/**
-	 * Form actions.
-	 *
-	 * @var string
-	 */
-	protected $form_actions;
-
-	/**
 	 * Form values.
 	 *
 	 * @var array
@@ -46,6 +39,13 @@ class Form extends Block {
 	 * @var array
 	 */
 	protected $attributes = [];
+
+	/**
+	 * Form footer.
+	 *
+	 * @var array
+	 */
+	protected $form_footer = [];
 
 	/**
 	 * Renders block HTML.
@@ -69,6 +69,19 @@ class Form extends Block {
 			// Set attributes.
 			$form_args['attributes'] = $this->attributes;
 
+			// Render footer.
+			if ( ! empty( $this->form_footer ) ) {
+				$form_args['footer'] = '';
+
+				foreach ( hp\sort_array( $this->form_footer ) as $block_name => $block_args ) {
+					$block_class = '\HivePress\Blocks\\' . $block_args['type'];
+
+					if ( class_exists( $block_class ) ) {
+						$form_args['footer'] .= ( new $block_class( hp\merge_arrays( $block_args, [ 'name' => $block_name ] ) ) )->render();
+					}
+				}
+			}
+
 			// Create form.
 			$form = new $form_class( $form_args );
 
@@ -81,9 +94,6 @@ class Form extends Block {
 			// Render form.
 			$output .= $form->render();
 		}
-
-		// todo.
-		// $output .= ( new Container( [ 'blocks' => $this->form_actions ] ) )->render();
 
 		return $output;
 	}

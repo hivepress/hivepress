@@ -151,7 +151,7 @@ final class Router {
 				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
 
 					// Set the current route.
-					$this->route = $route;
+					$this->route = apply_filters( 'hivepress/v1/controllers/' . $controller_name . '/routes/' . $route_name, $route );
 
 					// Set query variables.
 					if ( isset( $route['path'] ) ) {

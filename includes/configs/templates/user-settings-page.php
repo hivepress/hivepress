@@ -35,16 +35,26 @@ return [
 				],
 
 				'update_form'       => [
-					'type'         => 'form',
-					'form_name'    => 'user_update',
-					'order'        => 10,
+					'type'        => 'form',
+					'form_name'   => 'user_update',
+					'order'       => 10,
 
-					// todo.
-					'form_actions' => [
-						'delete_link' => [
-							'type'      => 'element',
-							'file_path' => 'user/edit/delete-link',
-							'order'     => 10,
+					'form_footer' => [
+						'actions' => [
+							'type'       => 'container',
+							'order'      => 10,
+
+							'attributes' => [
+								'class' => [ 'hp-form__actions' ],
+							],
+
+							'blocks'     => [
+								'delete_link' => [
+									'type'      => 'element',
+									'file_path' => 'user/edit/delete-link',
+									'order'     => 10,
+								],
+							],
 						],
 					],
 				],

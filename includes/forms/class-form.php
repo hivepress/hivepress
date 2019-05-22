@@ -85,6 +85,13 @@ abstract class Form {
 	protected $button;
 
 	/**
+	 * Form footer.
+	 *
+	 * @var object
+	 */
+	protected $footer;
+
+	/**
 	 * Form attributes.
 	 *
 	 * @var array
@@ -397,11 +404,19 @@ abstract class Form {
 			$output .= '</div>';
 		}
 
-		// Render button.
-		if ( $this->button ) {
-			$output .= '<div class="hp-form__actions">';
-			$output .= $this->button->render();
-			$output .= '</div>';
+		// Render footer.
+		if ( isset( $this->button ) || isset( $this->footer ) ) {
+			$output .= '<footer class="hp-form__footer">';
+
+			if ( isset( $this->button ) ) {
+				$output .= $this->button->render();
+			}
+
+			if ( isset( $this->footer ) ) {
+				$output .= $this->footer;
+			}
+
+			$output .= '</footer>';
 		}
 
 		$output .= '</form>';

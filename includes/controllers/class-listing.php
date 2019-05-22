@@ -10,7 +10,6 @@ namespace HivePress\Controllers;
 use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Forms;
-use HivePress\Menus;
 use HivePress\Blocks;
 use HivePress\Emails;
 
