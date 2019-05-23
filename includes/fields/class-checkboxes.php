@@ -49,6 +49,7 @@ class Checkboxes extends Select {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Checkboxes', 'hivepress' ),
+
 				'settings' => [
 					'multiple' => null,
 				],

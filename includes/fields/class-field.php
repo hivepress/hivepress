@@ -97,6 +97,19 @@ abstract class Field {
 	 * @param array $args Field arguments.
 	 */
 	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'settings' => [
+					'required' => [
+						'label'   => esc_html__( 'Required', 'hivepress' ),
+						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
+						'type'    => 'checkbox',
+						'order'   => 5,
+					],
+				],
+			],
+			$args
+		);
 
 		// Set type.
 		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );

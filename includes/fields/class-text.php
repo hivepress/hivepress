@@ -70,6 +70,7 @@ class Text extends Field {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Text', 'hivepress' ),
+
 				'settings' => [
 					'placeholder' => [
 						'label' => esc_html__( 'Placeholder', 'hivepress' ),

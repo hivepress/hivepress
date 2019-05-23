@@ -25,7 +25,7 @@ return [
 				'label'   => esc_html__( 'Editable', 'hivepress' ),
 				'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 10,
+				'order'   => 1,
 			],
 
 			'edit_field_type' => [

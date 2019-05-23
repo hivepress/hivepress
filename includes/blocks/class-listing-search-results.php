@@ -30,7 +30,7 @@ class Listing_Search_Results extends Container {
 		if ( have_posts() ) {
 			$output .= parent::render();
 		} else {
-			$output .= 'todo no listings';
+			$output .= ( new Element( [ 'file_path' => 'no-results' ] ) )->render();
 		}
 
 		return $output;

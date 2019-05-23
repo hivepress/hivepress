@@ -49,6 +49,7 @@ class Radio extends Select {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Radio', 'hivepress' ),
+
 				'settings' => [
 					'multiple' => null,
 				],

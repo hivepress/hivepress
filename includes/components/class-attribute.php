@@ -238,7 +238,16 @@ final class Attribute {
 			// Add field settings.
 			if ( class_exists( $field_class ) ) {
 				foreach ( $field_class::get_settings() as $field_name => $field ) {
-					$meta_box['fields'][ $field_context . '_field_' . $field_name ] = array_merge( $field->get_args(), [ 'order' => 100 + hp\get_array_value( $field->get_args(), 'order', 10 ) ] );
+					if ( 'search' !== $field_context || 'required' !== $field_name ) {
+						$field_args = $field->get_args();
+
+						if ( 'required' !== $field_name ) {
+							$field_args['order'] = hp\get_array_value( $field_args, 'order', 10 ) + 100;
+						}
+
+						// Add field.
+						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
+					}
 				}
 			}
 		}

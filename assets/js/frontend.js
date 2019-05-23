@@ -29,7 +29,11 @@ var hivepress = {
 
 		// Link
 		hivepress.getComponent('link').on('click', function(e) {
-			window.location.href = $(this).data('url');
+			var url = $(this).data('url');
+
+			if (!url.startsWith('#')) {
+				window.location.href = url;
+			}
 
 			e.preventDefault();
 		});

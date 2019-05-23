@@ -63,6 +63,7 @@ class Select extends Field {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Select', 'hivepress' ),
+
 				'settings' => [
 					'multiple' => [
 						'label'   => esc_html__( 'Multiple', 'hivepress' ),

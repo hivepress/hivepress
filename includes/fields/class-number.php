@@ -77,6 +77,7 @@ class Number extends Field {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Number', 'hivepress' ),
+
 				'settings' => [
 					'placeholder' => [
 						'label' => esc_html__( 'Placeholder', 'hivepress' ),
