@@ -11,11 +11,10 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'blocks' => [
-		'container' => [
-			'type'       => 'container',
-			'order'      => 10,
+	'parent' => 'page',
 
+	'blocks' => [
+		'page_content' => [
 			'attributes' => [
 				'class' => [ 'hp-vendor', 'hp-vendor--view-page' ],
 			],

@@ -11,107 +11,113 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'parent' => 'page',
+
 	'blocks' => [
-		'header'  => [
-			'type'       => 'container',
-			'tag'        => 'header',
-			'order'      => 10,
-
-			'attributes' => [
-				'class' => [ 'hp-page__header' ],
-			],
-
-			'blocks'     => [
-				'search_form' => [
-					'type'  => 'listing_search_form',
-					'order' => 10,
-				],
-			],
-		],
-
-		'columns' => [
-			'type'       => 'container',
-			'order'      => 20,
-
-			'attributes' => [
-				'class' => [ 'hp-row' ],
-			],
-
-			'blocks'     => [
-				'sidebar' => [
+		'page_content' => [
+			'blocks' => [
+				'header'  => [
 					'type'       => 'container',
-					'tag'        => 'aside',
+					'tag'        => 'header',
 					'order'      => 10,
 
 					'attributes' => [
-						'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-						'data-component' => 'sticky',
+						'class' => [ 'hp-page__header' ],
 					],
 
 					'blocks'     => [
-						'filter_form' => [
-							'type'       => 'form',
-							'form_name'  => 'listing_filter',
-							'order'      => 10,
-
-							'attributes' => [
-								'class' => [ 'hp-form--narrow', 'widget' ],
-							],
+						'search_form' => [
+							'type'  => 'listing_search_form',
+							'order' => 10,
 						],
 					],
 				],
 
-				'content' => [
+				'columns' => [
 					'type'       => 'container',
-					'tag'        => 'main',
 					'order'      => 20,
 
 					'attributes' => [
-						'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+						'class' => [ 'hp-row' ],
 					],
 
 					'blocks'     => [
-						'search_results' => [
-							'type'   => 'listing_search_results',
-							'order'  => 10,
+						'sidebar' => [
+							'type'       => 'container',
+							'tag'        => 'aside',
+							'order'      => 10,
 
-							'blocks' => [
-								'topbar'     => [
-									'type'       => 'container',
+							'attributes' => [
+								'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+								'data-component' => 'sticky',
+							],
+
+							'blocks'     => [
+								'filter_form' => [
+									'type'       => 'form',
+									'form_name'  => 'listing_filter',
 									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-page__topbar' ],
+										'class' => [ 'hp-form--narrow', 'widget' ],
 									],
+								],
+							],
+						],
 
-									'blocks'     => [
-										'result_count' => [
-											'type'  => 'result_count',
-											'order' => 10,
-										],
+						'content' => [
+							'type'       => 'container',
+							'tag'        => 'main',
+							'order'      => 20,
 
-										'sort_form'    => [
-											'type'       => 'form',
-											'form_name'  => 'listing_sort',
-											'order'      => 20,
+							'attributes' => [
+								'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+							],
+
+							'blocks'     => [
+								'search_results' => [
+									'type'   => 'listing_search_results',
+									'order'  => 10,
+
+									'blocks' => [
+										'topbar'     => [
+											'type'       => 'container',
+											'order'      => 10,
 
 											'attributes' => [
-												'class' => [ 'hp-form--pivot' ],
+												'class' => [ 'hp-page__topbar' ],
+											],
+
+											'blocks'     => [
+												'result_count' => [
+													'type' => 'result_count',
+													'order' => 10,
+												],
+
+												'sort_form'    => [
+													'type' => 'form',
+													'form_name' => 'listing_sort',
+													'order' => 20,
+
+													'attributes' => [
+														'class' => [ 'hp-form--pivot' ],
+													],
+												],
 											],
 										],
+
+										'listings'   => [
+											'type'    => 'listings',
+											'columns' => 2,
+											'order'   => 20,
+										],
+
+										'pagination' => [
+											'type'      => 'element',
+											'file_path' => 'pagination',
+											'order'     => 30,
+										],
 									],
-								],
-
-								'listings'   => [
-									'type'    => 'listings',
-									'columns' => 2,
-									'order'   => 20,
-								],
-
-								'pagination' => [
-									'type'      => 'element',
-									'file_path' => 'pagination',
-									'order'     => 30,
 								],
 							],
 						],

@@ -22,6 +22,13 @@ abstract class Email {
 	use Traits\Mutator;
 
 	/**
+	 * Email name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
 	 * Email recipient.
 	 *
 	 * @var string
@@ -64,6 +71,22 @@ abstract class Email {
 	protected $attachments = [];
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Email arguments.
+	 */
+	public static function init( $args = [] ) {
+
+		// Set name.
+		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			static::set_static_property( $name, $value );
+		}
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
@@ -83,12 +106,21 @@ abstract class Email {
 	 * Bootstraps email properties.
 	 */
 	protected function bootstrap() {
-		$headers = [];
 
 		// Set content type.
-		$headers['Content-Type'] = 'text/html; charset=UTF-8';
+		$this->headers = hp\merge_arrays(
+			$this->headers,
+			[
+				'Content-Type' => 'text/html; charset=UTF-8',
+			]
+		);
 
-		$this->headers = hp\merge_arrays( $this->headers, $headers );
+		// Set body.
+		$body = get_option( 'hp_email_' . static::$name );
+
+		if ( ! empty( $body ) ) {
+			$this->body = $body;
+		}
 	}
 
 	/**

@@ -75,9 +75,7 @@ class Vendor extends Controller {
 	public function render_vendor_view_page() {
 		the_post();
 
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'vendor_view_page',
 				'vendor'        => Models\Vendor::get( get_the_ID() ),
@@ -92,9 +90,5 @@ class Vendor extends Controller {
 				),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 }

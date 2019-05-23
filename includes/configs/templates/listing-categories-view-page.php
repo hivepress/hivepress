@@ -11,38 +11,44 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'parent' => 'page',
+
 	'blocks' => [
-		'header'  => [
-			'type'       => 'container',
-			'tag'        => 'header',
-			'order'      => 10,
+		'page_content' => [
+			'blocks' => [
+				'header'  => [
+					'type'       => 'container',
+					'tag'        => 'header',
+					'order'      => 10,
 
-			'attributes' => [
-				'class' => [ 'hp-page__header' ],
-			],
+					'attributes' => [
+						'class' => [ 'hp-page__header' ],
+					],
 
-			'blocks'     => [
-				'search_form' => [
-					'type'  => 'listing_search_form',
-					'order' => 10,
+					'blocks'     => [
+						'search_form' => [
+							'type'  => 'listing_search_form',
+							'order' => 10,
+						],
+					],
 				],
-			],
-		],
 
-		'content' => [
-			'type'       => 'container',
-			'tag'        => 'main',
-			'order'      => 20,
+				'content' => [
+					'type'       => 'container',
+					'tag'        => 'main',
+					'order'      => 20,
 
-			'attributes' => [
-				'class' => [ 'hp-page__content' ],
-			],
+					'attributes' => [
+						'class' => [ 'hp-page__content' ],
+					],
 
-			'blocks'     => [
-				'listing_categories' => [
-					'type'    => 'listing_categories',
-					'columns' => 3,
-					'order'   => 10,
+					'blocks'     => [
+						'listing_categories' => [
+							'type'    => 'listing_categories',
+							'columns' => 3,
+							'order'   => 10,
+						],
+					],
 				],
 			],
 		],

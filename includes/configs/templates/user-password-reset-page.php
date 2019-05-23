@@ -11,34 +11,40 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'parent' => 'page',
+
 	'blocks' => [
-		'columns' => [
-			'type'       => 'container',
-			'order'      => 10,
-
-			'attributes' => [
-				'class' => [ 'hp-row' ],
-			],
-
-			'blocks'     => [
-				'content' => [
+		'page_content' => [
+			'blocks' => [
+				'columns' => [
 					'type'       => 'container',
 					'order'      => 10,
 
 					'attributes' => [
-						'class' => [ 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
+						'class' => [ 'hp-row' ],
 					],
 
 					'blocks'     => [
-						'title'               => [
-							'type'      => 'element',
-							'file_path' => 'page/title',
-							'order'     => 5,
-						],
+						'content' => [
+							'type'       => 'container',
+							'order'      => 10,
 
-						'password_reset_form' => [
-							'type'  => 'user_password_reset_form',
-							'order' => 10,
+							'attributes' => [
+								'class' => [ 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
+							],
+
+							'blocks'     => [
+								'title'               => [
+									'type'      => 'element',
+									'file_path' => 'page/title',
+									'order'     => 5,
+								],
+
+								'password_reset_form' => [
+									'type'  => 'user_password_reset_form',
+									'order' => 10,
+								],
+							],
 						],
 					],
 				],

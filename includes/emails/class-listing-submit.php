@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Email {
 
 	/**
+	 * Email name.
+	 *
+	 * @var string
+	 */
+	protected static $name;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.

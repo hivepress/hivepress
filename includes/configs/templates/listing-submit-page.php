@@ -11,17 +11,23 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'blocks' => [
-		'content' => [
-			'type'   => 'container',
-			'tag'    => 'main',
-			'order'  => 10,
+	'parent' => 'page',
 
+	'blocks' => [
+		'page_content' => [
 			'blocks' => [
-				'title' => [
-					'type'      => 'element',
-					'file_path' => 'page/title',
-					'order'     => 5,
+				'content' => [
+					'type'   => 'container',
+					'tag'    => 'main',
+					'order'  => 10,
+
+					'blocks' => [
+						'title' => [
+							'type'      => 'element',
+							'file_path' => 'page/title',
+							'order'     => 5,
+						],
+					],
 				],
 			],
 		],

@@ -286,7 +286,6 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_view_page() {
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
 		// Get category ID.
 		$category_id = absint( hp\get_array_value( $_GET, 'category' ) );
@@ -298,16 +297,16 @@ class Listing extends Controller {
 		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( 0 !== $category_id && get_term_meta( $category_id, 'hp_display_subcategories', true ) ) ) {
 
 			// Render categories.
-			$output .= ( new Blocks\Template(
+			return ( new Blocks\Template(
 				[
 					'template_name'       => 'listing_categories_view_page',
-					'listing_category_id' => 0 !== $category_id ? $category_id : null,
+					'listing_category_id' => $category_id,
 				]
 			) )->render();
 		} else {
 
 			// Render listings.
-			$output .= ( new Blocks\Template(
+			return ( new Blocks\Template(
 				[
 					'template_name' => 'listings_view_page',
 					'listing_query' => new \WP_Query(
@@ -321,10 +320,6 @@ class Listing extends Controller {
 				]
 			) )->render();
 		}
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -344,18 +339,12 @@ class Listing extends Controller {
 	public function render_listing_view_page() {
 		the_post();
 
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_view_page',
 				'listing'       => Models\Listing::get( get_the_ID() ),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -388,9 +377,7 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'listings_edit_page',
 				'listing_query' => new \WP_Query(
@@ -403,10 +390,6 @@ class Listing extends Controller {
 				),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -437,18 +420,12 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_edit_page() {
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_edit_page',
 				'listing_id'    => absint( get_query_var( 'hp_listing_id' ) ),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -551,18 +528,12 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_category_page() {
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name'       => 'listing_submit_category_page',
 				'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -601,30 +572,19 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_details_page() {
-
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
-
-		// Render page.
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_submit_details_page',
-				'listing_id'    => $listing_id,
+				'listing_id'    => hp\get_post_id(
+					[
+						'post_type'   => 'hp_listing',
+						'post_status' => 'auto-draft',
+						'post_parent' => null,
+						'author'      => get_current_user_id(),
+					]
+				),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 
 	/**
@@ -685,29 +645,20 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_complete_page() {
-
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'pending',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
-
-		// Render page.
-		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-
-		$output .= ( new Blocks\Template(
+		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_submit_complete_page',
-				'listing'       => Models\Listing::get( $listing_id ),
+				'listing'       => Models\Listing::get(
+					hp\get_post_id(
+						[
+							'post_type'   => 'hp_listing',
+							'post_status' => 'pending',
+							'post_parent' => null,
+							'author'      => get_current_user_id(),
+						]
+					)
+				),
 			]
 		) )->render();
-
-		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
-
-		return $output;
 	}
 }

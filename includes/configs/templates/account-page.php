@@ -11,53 +11,59 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'parent' => 'page',
+
 	'blocks' => [
-		'columns' => [
-			'type'       => 'container',
-			'order'      => 10,
-
-			'attributes' => [
-				'class' => [ 'hp-row' ],
-			],
-
-			'blocks'     => [
-				'sidebar' => [
+		'page_content' => [
+			'blocks' => [
+				'columns' => [
 					'type'       => 'container',
-					'tag'        => 'aside',
 					'order'      => 10,
 
 					'attributes' => [
-						'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-						'data-component' => 'sticky',
+						'class' => [ 'hp-row' ],
 					],
 
 					'blocks'     => [
-						'menu' => [
-							'type'       => 'menu',
-							'menu_name'  => 'account',
+						'sidebar' => [
+							'type'       => 'container',
+							'tag'        => 'aside',
 							'order'      => 10,
 
 							'attributes' => [
-								'class' => [ 'widget', 'widget_nav_menu' ],
+								'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+								'data-component' => 'sticky',
+							],
+
+							'blocks'     => [
+								'menu' => [
+									'type'       => 'menu',
+									'menu_name'  => 'account',
+									'order'      => 10,
+
+									'attributes' => [
+										'class' => [ 'widget', 'widget_nav_menu' ],
+									],
+								],
 							],
 						],
-					],
-				],
 
-				'content' => [
-					'type'       => 'container',
-					'tag'        => 'main',
-					'order'      => 20,
+						'content' => [
+							'type'       => 'container',
+							'tag'        => 'main',
+							'order'      => 20,
 
-					'attributes' => [
-						'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
-					],
+							'attributes' => [
+								'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+							],
 
-					'blocks'     => [
-						'title' => [
-							'type'      => 'element',
-							'file_path' => 'page/title',
-							'order'     => 5,
+							'blocks'     => [
+								'title' => [
+									'type'      => 'element',
+									'file_path' => 'page/title',
+									'order'     => 5,
+								],
+							],
 						],
 					],
 				],

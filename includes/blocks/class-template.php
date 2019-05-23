@@ -40,11 +40,17 @@ class Template extends Block {
 		if ( ! is_null( $template_args ) ) {
 
 			// Merge blocks.
-			if ( isset( $template_args['parent'] ) ) {
+			while ( isset( $template_args['parent'] ) ) {
 				$parent_args = hivepress()->get_config( 'templates/' . $template_args['parent'] );
+
+				unset( $template_args['parent'] );
 
 				if ( ! is_null( $parent_args ) ) {
 					$template_args['blocks'] = $this->merge_blocks( $parent_args['blocks'], $template_args['blocks'] );
+
+					if ( isset( $parent_args['parent'] ) ) {
+						$template_args['parent'] = $parent_args['parent'];
+					}
 				}
 			}
 

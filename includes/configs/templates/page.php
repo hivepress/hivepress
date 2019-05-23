@@ -1,6 +1,6 @@
 <?php
 /**
- * Modals block template.
+ * Page template.
  *
  * @package HivePress\Configs\Templates
  */
@@ -12,10 +12,30 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
+		'page_header'                 => [
+			'type'      => 'element',
+			'file_path' => 'header',
+			'order'     => 1,
+		],
+
+		'page_content'                => [
+			'type'   => 'page_container',
+			'order'  => 10,
+
+			'blocks' => [],
+		],
+
+		'page_footer'                 => [
+			'type'      => 'element',
+			'file_path' => 'footer',
+			'order'     => 1000,
+		],
+
 		// todo.
 		'user_login_modal'            => [
 			'type'        => 'modal',
 			'modal_title' => esc_html__( 'Sign In', 'hivepress' ),
+			'order'       => 999,
 
 			'blocks'      => [
 				'user_login_form' => [
@@ -28,6 +48,7 @@ return [
 		'user_register_modal'         => [
 			'type'        => 'modal',
 			'modal_title' => esc_html__( 'Register', 'hivepress' ),
+			'order'       => 999,
 
 			'blocks'      => [
 				'user_register_form' => [
@@ -64,6 +85,7 @@ return [
 		'user_password_request_modal' => [
 			'type'        => 'modal',
 			'modal_title' => esc_html__( 'Reset Password', 'hivepress' ),
+			'order'       => 999,
 
 			'blocks'      => [
 				'user_password_request_form' => [

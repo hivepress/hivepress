@@ -59,6 +59,10 @@ Mixins
 	&-form {
 		margin: 0;
 
+		&:not(:last-child) {
+			margin-bottom: 2rem;
+		}
+
 		&--wide {
 			display: flex;
 			align-items: flex-end;
@@ -725,6 +729,13 @@ Mixins
 				@media only screen and (max-width:48em) {
 					float: left;
 				}
+			}
+
+			div.content-area {
+				float: left;
+				width: 100%;
+				margin-right: 0;
+				margin-left: 0;
 			}
 		}
 	}
