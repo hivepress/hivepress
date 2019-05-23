@@ -8,6 +8,7 @@
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -38,7 +39,7 @@ class Listings extends Block {
 	 *
 	 * @var string
 	 */
-	protected $template_context;
+	protected $template_context = 'view';
 
 	/**
 	 * Columns number.
@@ -142,62 +143,77 @@ class Listings extends Block {
 			$column_width = round( $column_width / $columns );
 		}
 
-		// Set query arguments.
-		$query_args = [
-			'post_type'      => 'hp_listing',
-			'post_status'    => 'publish',
-			'posts_per_page' => absint( $this->number ),
-		];
+		// Get listing query.
+		$query = $this->get_listing_query();
 
-		// Get category.
-		if ( $this->category ) {
-			$query_args['tax_query'] = [
-				[
-					'taxonomy' => 'hp_listing_category',
-					'terms'    => [ absint( $this->category ) ],
-				],
-			];
+		if ( is_null( $query ) ) {
+
+				// Set query arguments.
+				$query_args = [
+					'post_type'      => 'hp_listing',
+					'post_status'    => 'publish',
+					'posts_per_page' => absint( $this->number ),
+				];
+
+				// Get category.
+				if ( $this->category ) {
+					$query_args['tax_query'] = [
+						[
+							'taxonomy' => 'hp_listing_category',
+							'terms'    => [ absint( $this->category ) ],
+						],
+					];
+				}
+
+				// Get order.
+				if ( 'title' === $this->order ) {
+					$query_args['orderby'] = 'title';
+					$query_args['order']   = 'ASC';
+				} elseif ( 'random' === $this->order ) {
+					$query_args['orderby'] = 'rand';
+				}
+
+				// Query listings.
+				$query = new \WP_Query( $query_args );
 		}
-
-		// Get order.
-		if ( 'title' === $this->order ) {
-			$query_args['orderby'] = 'title';
-			$query_args['order']   = 'ASC';
-		} elseif ( 'random' === $this->order ) {
-			$query_args['orderby'] = 'rand';
-		}
-
-		// Query listings.
-		$query = new \WP_Query( $query_args );
-
-		// todo remove.
-		global $wp_query;
-		$query = $wp_query;
 
 		// Render listings.
 		if ( $query->have_posts() ) {
 			if ( 'edit' === $this->template_context ) {
-				$output = '<table class="hp-table">';
+				$output .= '<table class="hp-table">';
+			} else {
+				$output .= '<div class="hp-grid">';
+				$output .= '<div class="hp-row">';
+			}
 
-				while ( $query->have_posts() ) {
-					$query->the_post();
+			while ( $query->have_posts() ) {
+				$query->the_post();
 
-					$output .= ( new Listing( [ 'template_name' => 'listing_edit_block' ] ) )->render();
+				// Get listing.
+				$listing = Models\Listing::get( get_the_ID() );
+
+				if ( ! is_null( $listing ) ) {
+					if ( 'edit' !== $this->template_context ) {
+						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+					}
+
+					// Render listing.
+					$output .= ( new Template(
+						[
+							'template_name' => 'listing_' . $this->template_context . '_block',
+							'listing'       => $listing,
+						]
+					) )->render();
+
+					if ( 'edit' !== $this->template_context ) {
+						$output .= '</div>';
+					}
 				}
+			}
 
+			if ( 'edit' === $this->template_context ) {
 				$output .= '</table>';
 			} else {
-				$output  = '<div class="hp-grid">';
-				$output .= '<div class="hp-row">';
-
-				while ( $query->have_posts() ) {
-					$query->the_post();
-
-					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-					$output .= ( new Listing( [ 'template_name' => 'listing_view_block' ] ) )->render();
-					$output .= '</div>';
-				}
-
 				$output .= '</div>';
 				$output .= '</div>';
 			}

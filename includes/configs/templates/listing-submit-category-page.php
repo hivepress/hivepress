@@ -17,10 +17,10 @@ return [
 		'content' => [
 			'blocks' => [
 				'listing_categories' => [
-					'type'          => 'listing_categories',
-					'template_name' => 'listing_category_submit_block',
-					'columns'       => 3,
-					'order'         => 10,
+					'type'             => 'listing_categories',
+					'template_context' => 'submit',
+					'columns'          => 3,
+					'order'            => 10,
 				],
 			],
 		],

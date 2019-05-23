@@ -8,6 +8,7 @@
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -34,11 +35,11 @@ class Listing_Categories extends Block {
 	protected static $settings = [];
 
 	/**
-	 * Template name.
+	 * Template context.
 	 *
 	 * @var string
 	 */
-	protected $template_name;
+	protected $template_context = 'view';
 
 	/**
 	 * Columns number.
@@ -131,11 +132,6 @@ class Listing_Categories extends Block {
 	 */
 	protected function bootstrap() {
 
-		// Set template name.
-		if ( ! isset( $this->template_name ) ) {
-			$this->template_name = 'listing_category_view_block';
-		}
-
 		// Set category ID.
 		if ( ! isset( $this->parent ) ) {
 			$this->parent = $this->get_listing_category_id();
@@ -185,20 +181,26 @@ class Listing_Categories extends Block {
 
 		// Render categories.
 		if ( ! empty( $categories ) ) {
-			$output  = '<div class="todo">';
+			$output  = '<div class="hp-grid">';
 			$output .= '<div class="hp-row">';
 
-			foreach ( $categories as $category ) {
-				$output .= '<div class="hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+			foreach ( $categories as $category_args ) {
 
-				$output .= ( new Listing_Category(
-					[
-						'id'            => $category->term_id,
-						'template_name' => $this->template_name,
-					]
-				) )->render();
+				// Get category.
+				$category = Models\Listing_Category::get( $category_args->term_id );
 
-				$output .= '</div>';
+				if ( ! is_null( $category ) ) {
+					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+
+					$output .= ( new Template(
+						[
+							'template_name' => 'listing_category_' . $this->template_context . '_block',
+							'category'      => $category,
+						]
+					) )->render();
+
+					$output .= '</div>';
+				}
 			}
 
 			$output .= '</div>';

@@ -306,20 +306,20 @@ class Listing extends Controller {
 			) )->render();
 		} else {
 
-			// Query listings.
-			if ( is_page() ) {
-				query_posts(
-					[
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-						'paged'          => hp\get_current_page(),
-					]
-				);
-			}
-
 			// Render listings.
-			$output .= ( new Blocks\Template( [ 'template_name' => 'listings_view_page' ] ) )->render();
+			$output .= ( new Blocks\Template(
+				[
+					'template_name' => 'listings_view_page',
+					'listing_query' => new \WP_Query(
+						[
+							'post_type'      => 'hp_listing',
+							'post_status'    => 'publish',
+							'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+							'paged'          => hp\get_current_page(),
+						]
+					),
+				]
+			) )->render();
 		}
 
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
@@ -344,8 +344,15 @@ class Listing extends Controller {
 	public function render_listing_view_page() {
 		the_post();
 
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Listing( [ 'template_name' => 'listing_view_page' ] ) )->render();
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
+
+		$output .= ( new Blocks\Template(
+			[
+				'template_name' => 'listing_view_page',
+				'listing'       => Models\Listing::get( get_the_ID() ),
+			]
+		) )->render();
+
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;
@@ -381,20 +388,22 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
+		$output = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
 
-		// Query listings.
-		query_posts(
+		$output .= ( new Blocks\Template(
 			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => [ 'draft', 'pending', 'publish' ],
-				'author'         => get_current_user_id(),
-				'posts_per_page' => -1,
+				'template_name' => 'listings_edit_page',
+				'listing_query' => new \WP_Query(
+					[
+						'post_type'      => 'hp_listing',
+						'post_status'    => [ 'draft', 'pending', 'publish' ],
+						'author'         => get_current_user_id(),
+						'posts_per_page' => -1,
+					]
+				),
 			]
-		);
+		) )->render();
 
-		// Render page.
-		$output  = ( new Blocks\Element( [ 'file_path' => 'header' ] ) )->render();
-		$output .= ( new Blocks\Template( [ 'template_name' => 'listings_edit_page' ] ) )->render();
 		$output .= ( new Blocks\Element( [ 'file_path' => 'footer' ] ) )->render();
 
 		return $output;

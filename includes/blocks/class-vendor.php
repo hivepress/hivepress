@@ -8,6 +8,7 @@
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -25,16 +26,31 @@ class Vendor extends Template {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		$this->set_vendor( \HivePress\Models\Vendor::get( 265 ) );
-
 		global $post;
-		$post = get_post( 265 );
-		setup_postdata( $post );
 
-		$output = parent::render();
+		$output = '';
 
-		wp_reset_postdata();
+		if ( is_singular( 'hp_listing' ) ) {
+
+			// Get vendor.
+			$vendor = Models\Vendor::get( wp_get_post_parent_id( get_the_ID() ) );
+
+			if ( ! is_null( $vendor ) ) {
+
+				// Set query.
+				$post = get_post( $vendor->get_id() );
+				setup_postdata( $post );
+
+				// Set vendor.
+				$this->set_vendor( $vendor );
+
+				// Render vendor.
+				$output .= parent::render();
+
+				// Reset query.
+				wp_reset_postdata();
+			}
+		}
 
 		return $output;
 	}
