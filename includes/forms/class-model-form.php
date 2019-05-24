@@ -85,7 +85,7 @@ abstract class Model_Form extends Form {
 		// Set action.
 		if ( isset( $this->action ) ) {
 			$this->action = rtrim(
-				hp\replace_placeholders(
+				hp\replace_tokens(
 					[
 						'id' => $this->id,
 					],

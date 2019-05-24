@@ -239,14 +239,14 @@ function sanitize_key( $text ) {
 }
 
 /**
- * Replaces placeholders with values.
+ * Replaces tokens with values.
  *
- * @param array  $placeholders Array of placeholders.
+ * @param array  $tokens Array of tokens.
  * @param string $text Text to be processed.
  * @return string
  */
-function replace_placeholders( $placeholders, $text ) {
-	foreach ( $placeholders as $name => $value ) {
+function replace_tokens( $tokens, $text ) {
+	foreach ( $tokens as $name => $value ) {
 		if ( ! is_array( $value ) ) {
 			$text = str_replace( '%' . $name . '%', $value, $text );
 		}

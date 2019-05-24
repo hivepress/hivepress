@@ -35,7 +35,7 @@ class Listing_Report extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Listing Reported', 'hivepress' ),
-				'body'    => hp_sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been reported for the following reason: %report_reason%', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been reported for the following reason: %report_reason%', 'hivepress' ) ),
 			],
 			$args
 		);

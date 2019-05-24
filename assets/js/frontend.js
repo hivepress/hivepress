@@ -41,7 +41,7 @@ var hivepress = {
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
-				messageContainer = form.children('div').first(),
+				messageContainer = form.find('[data-element=messages]'),
 				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),

@@ -40,6 +40,9 @@ final class Debug {
 
 		// Filter scripts.
 		add_action( 'hivepress/v1/scripts', [ $this, 'filter_scripts' ] );
+
+		// Log email.
+		add_filter( 'wp_mail', [ $this, 'log_email' ] );
 	}
 
 	/**
@@ -96,5 +99,17 @@ final class Debug {
 		}
 
 		return $scripts;
+	}
+
+	/**
+	 * Logs email.
+	 *
+	 * @param array $email Email arguments.
+	 * @return array
+	 */
+	public function log_email( $email ) {
+		error_log( $email['message'] );
+
+		return $email;
 	}
 }

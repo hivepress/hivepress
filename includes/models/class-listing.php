@@ -178,7 +178,7 @@ class Listing extends Post {
 					$fields[ $field_name ] = new \HivePress\Fields\Text(
 						[
 							'label'   => $field->get_label(),
-							'default' => hp\replace_placeholders(
+							'default' => hp\replace_tokens(
 								[
 									'value' => $field_value,
 								],

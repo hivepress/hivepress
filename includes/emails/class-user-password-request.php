@@ -35,7 +35,7 @@ class User_Password_Request extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Password Reset', 'hivepress' ),
-				'body'    => hp_sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
 			],
 			$args
 		);

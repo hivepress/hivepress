@@ -40,6 +40,15 @@ class User_Password_Reset_Form extends Form {
 	 */
 	protected function bootstrap() {
 
+		// Set values.
+		$this->values = array_merge(
+			$this->values,
+			[
+				'username'           => hp\get_array_value( $_GET, 'username' ),
+				'password_reset_key' => hp\get_array_value( $_GET, 'password_reset_key' ),
+			]
+		);
+
 		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
@@ -49,5 +58,22 @@ class User_Password_Reset_Form extends Form {
 		);
 
 		parent::bootstrap();
+	}
+
+	/**
+	 * Renders block HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		$output = '';
+
+		if ( ! is_wp_error( check_password_reset_key( $this->values['password_reset_key'], $this->values['username'] ) ) ) {
+			$output .= parent::render();
+		} else {
+			$output .= ( new Element( [ 'file_path' => 'user/password-reset-message' ] ) )->render();
+		}
+
+		return $output;
 	}
 }

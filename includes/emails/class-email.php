@@ -121,6 +121,8 @@ abstract class Email {
 		if ( ! empty( $body ) ) {
 			$this->body = $body;
 		}
+
+		$this->body = hp\replace_tokens( $this->tokens, $this->body );
 	}
 
 	/**

@@ -68,39 +68,10 @@ Mixins
 			margin: 0 -.5rem;
 		}
 
-		&__messages {
-			display: none;
-			border-left: 3px solid transparent;
-			background-color: rgba(0,0,0,0.04);
-			padding: 1rem 1.5rem;
-
-			&--info {
-				border-left-color: #00a0d2;
-			}
-
-			&--warning {
-				border-left-color: #ffb900;
-			}
-
-			&--error {
-				border-left-color: #dc3232;
-			}
-
-			&--success {
-				border-left-color: #46b450;
-			}
-
-			> div {
-				&:not(:last-child) {
-					margin-bottom: 0.5rem;
-				}
-			}
-		}
-
 		&__captcha,
 		&__fields,
 		&__footer,
-		&__messages {
+		&__header {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
@@ -152,6 +123,42 @@ Mixins
 		&--narrow &__actions,
 		&--narrow &__footer {
 			flex-direction: column;
+		}
+
+		&__description,
+		&__messages {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		&__messages {
+			display: none;
+			border-left: 3px solid transparent;
+			background-color: rgba(0,0,0,0.04);
+			padding: 1rem 1.5rem;
+
+			&--info {
+				border-left-color: #00a0d2;
+			}
+
+			&--warning {
+				border-left-color: #ffb900;
+			}
+
+			&--error {
+				border-left-color: #dc3232;
+			}
+
+			&--success {
+				border-left-color: #46b450;
+			}
+
+			> div {
+				&:not(:last-child) {
+					margin-bottom: 0.5rem;
+				}
+			}
 		}
 
 		&__field {

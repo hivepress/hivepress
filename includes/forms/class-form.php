@@ -85,9 +85,16 @@ abstract class Form {
 	protected $button;
 
 	/**
+	 * Form header.
+	 *
+	 * @var string
+	 */
+	protected $header;
+
+	/**
 	 * Form footer.
 	 *
-	 * @var object
+	 * @var string
 	 */
 	protected $footer;
 
@@ -366,13 +373,19 @@ abstract class Form {
 	final public function render() {
 		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
 
-		// Render description.
+		// Render header.
+		$output .= '<header class="hp-form__header">';
+
+		if ( isset( $this->header ) ) {
+			$output .= $this->header;
+		}
+
 		if ( isset( static::$description ) ) {
 			$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
 		}
 
-		// Render messages.
-		$output .= '<div class="hp-form__messages"></div>';
+		$output .= '<div class="hp-form__messages" data-element="messages"></div>';
+		$output .= '</header>';
 
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';
