@@ -819,7 +819,7 @@ msgstr ""
 
 #: includes/configs/meta-boxes.php:94
 msgid ""
-"Set the attribute display format, the following placeholders are available: "
+"Set the attribute display format, the following tokens are available: "
 "%value%."
 msgstr ""
 

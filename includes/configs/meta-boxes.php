@@ -91,7 +91,7 @@ return [
 
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format, the following placeholders are available: %value%.', 'hivepress' ),
+				'description' => esc_html__( 'Set the attribute display format, the following tokens are available: %value%.', 'hivepress' ),
 				'type'        => 'text',
 				'default'     => '%value%',
 				'order'       => 20,

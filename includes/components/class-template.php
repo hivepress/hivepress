@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -31,6 +32,9 @@ final class Template {
 
 			// Render menu.
 			add_action( 'storefront_header', [ $this, 'render_menu' ], 31 );
+
+			// Render modals.
+			add_action( 'wp_footer', [ $this, 'render_modals' ] );
 		}
 	}
 
@@ -48,6 +52,13 @@ final class Template {
 	 * Renders menu.
 	 */
 	public function render_menu() {
-		echo ( new \HivePress\Blocks\Template( [ 'template_name' => 'menu_block' ] ) )->render();
+		echo ( new Blocks\Template( [ 'template_name' => 'menu_block' ] ) )->render();
+	}
+
+	/**
+	 * Renders modals.
+	 */
+	public function render_modals() {
+		echo ( new Blocks\Template( [ 'template_name' => 'modals_block' ] ) )->render();
 	}
 }

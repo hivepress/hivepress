@@ -54,7 +54,7 @@ return [
 
 	'vendor'            => [
 		'public'       => true,
-		'show_in_menu' => 'edit.php?post_type=hp_listing',
+		'show_in_menu' => false,
 		'supports'     => [ 'title', 'editor', 'thumbnail', 'author' ],
 		'rewrite'      => [ 'slug' => 'vendor' ],
 
