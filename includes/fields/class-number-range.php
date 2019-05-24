@@ -68,10 +68,45 @@ class Number_Range extends Number {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		Field::normalize();
+
+		if ( is_array( $this->value ) && count( $this->value ) === 2 ) {
+			$this->value = array_map(
+				function( $value ) {
+					return is_numeric( $value ) ? $value : null;
+				},
+				$this->value
+			);
+
+			if ( [ null, null ] === $this->value ) {
+				$this->value = reset( $this->value );
+			}
+		} else {
+			$this->value = null;
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		// todo.
+		if ( ! is_null( $this->value ) ) {
+			if ( $this->decimals > 0 ) {
+				$decimals = $this->decimals;
+
+				$this->value = array_map(
+					function( $value ) use ( $decimals ) {
+						return round( floatval( $value ), $decimals );
+					},
+					$this->value
+				);
+			} else {
+				$this->value = array_map( 'intval', $this->value );
+			}
+		}
 	}
 
 	/**
@@ -80,7 +115,21 @@ class Number_Range extends Number {
 	 * @return bool
 	 */
 	public function validate() {
-		// todo.
+		if ( parent::validate() && ! is_null( $this->value ) ) {
+			if ( reset( $this->value ) > end( $this->value ) ) {
+				$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
+			}
+
+			if ( ! is_null( $this->min_value ) && ( reset( $this->value ) < $this->min_value || end( $this->value ) < $this->min_value ) ) {
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
+			}
+
+			if ( ! is_null( $this->max_value ) && ( reset( $this->value ) > $this->max_value || end( $this->value ) > $this->max_value ) ) {
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
+			}
+		}
+
+		return empty( $this->errors );
 	}
 
 	/**

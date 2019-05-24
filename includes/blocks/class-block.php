@@ -171,9 +171,7 @@ abstract class Block {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
-		// todo.
-	}
+	protected function bootstrap() {}
 
 	/**
 	 * Renders block HTML.

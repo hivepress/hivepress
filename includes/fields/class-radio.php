@@ -129,7 +129,7 @@ class Radio extends Select {
 					$label = $option['label'];
 				}
 
-				// todo.
+				// Get ID.
 				$id = $this->name . '_' . uniqid();
 
 				// Render option.

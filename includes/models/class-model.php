@@ -73,7 +73,7 @@ abstract class Model {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
-		// todo.
+		// Filter arguments.
 		$args = apply_filters( 'hivepress/v1/models/' . $args['name'], $args );
 
 		// Set properties.

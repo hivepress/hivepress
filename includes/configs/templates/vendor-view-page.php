@@ -40,12 +40,12 @@ return [
 							],
 
 							'blocks'     => [
-								'todo'            => [
+								'summary'         => [
 									'type'       => 'container',
 									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-vendor__todo', 'widget' ],
+										'class' => [ 'hp-vendor__summary', 'widget' ],
 									],
 
 									'blocks'     => [

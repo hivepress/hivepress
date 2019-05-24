@@ -89,6 +89,11 @@ class Checkbox extends Field {
 			$this->caption = $this->label;
 		}
 
+		// Set ID.
+		$id = explode( '[', $this->name );
+
+		$attributes['id'] = reset( $id ) . '_' . uniqid();
+
 		// Set required property.
 		if ( $this->required ) {
 			$attributes['required'] = true;
@@ -118,9 +123,6 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		// todo.
-		$id = $this->name . '_' . uniqid();
-
-		return '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '><span>' . hp\sanitize_html( $this->caption ) . '</span></label>';
+		return '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '><span>' . hp\sanitize_html( $this->caption ) . '</span></label>';
 	}
 }

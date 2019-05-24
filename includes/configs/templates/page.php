@@ -12,69 +12,78 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'page_header'                 => [
+		'page_header'  => [
 			'type'      => 'element',
 			'file_path' => 'header',
-			'order'     => 1,
+			'order'     => 10,
 		],
 
-		'page_content'                => [
+		'page_content' => [
 			'type'   => 'page_container',
-			'order'  => 10,
+			'order'  => 20,
 
-			'blocks' => [],
-		],
+			'blocks' => [
+				'user_login_modal'            => [
+					'type'        => 'modal',
+					'modal_title' => esc_html__( 'Sign In', 'hivepress' ),
 
-		'page_footer'                 => [
-			'type'      => 'element',
-			'file_path' => 'footer',
-			'order'     => 1000,
-		],
-
-		// todo.
-		'user_login_modal'            => [
-			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Sign In', 'hivepress' ),
-			'order'       => 999,
-
-			'blocks'      => [
-				'user_login_form' => [
-					'type'  => 'user_login_form',
-					'order' => 10,
-				],
-			],
-		],
-
-		'user_register_modal'         => [
-			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Register', 'hivepress' ),
-			'order'       => 999,
-
-			'blocks'      => [
-				'user_register_form' => [
-					'type'        => 'form',
-					'form_name'   => 'user_register',
-					'order'       => 10,
-
-					'attributes'  => [
-						'class' => [ 'hp-form--narrow' ],
+					'blocks'      => [
+						'user_login_form' => [
+							'type'  => 'user_login_form',
+							'order' => 10,
+						],
 					],
+				],
 
-					'form_footer' => [
-						'actions' => [
-							'type'       => 'container',
-							'order'      => 10,
+				'user_register_modal'         => [
+					'type'        => 'modal',
+					'modal_title' => esc_html__( 'Register', 'hivepress' ),
 
-							'attributes' => [
-								'class' => [ 'hp-form__actions' ],
+					'blocks'      => [
+						'user_register_form' => [
+							'type'        => 'form',
+							'form_name'   => 'user_register',
+							'order'       => 10,
+
+							'attributes'  => [
+								'class' => [ 'hp-form--narrow' ],
 							],
 
-							'blocks'     => [
-								'login_link' => [
-									'type'      => 'element',
-									'file_path' => 'user/login-link',
-									'order'     => 10,
+							'form_footer' => [
+								'actions' => [
+									'type'       => 'container',
+									'order'      => 10,
+
+									'attributes' => [
+										'class' => [ 'hp-form__actions' ],
+									],
+
+									'blocks'     => [
+										'login_link' => [
+											'type'      => 'element',
+											'file_path' => 'user/login-link',
+											'order'     => 10,
+										],
+									],
 								],
+							],
+						],
+					],
+				],
+
+				'user_password_request_modal' => [
+					'type'        => 'modal',
+					'modal_title' => esc_html__( 'Reset Password', 'hivepress' ),
+
+					'blocks'      => [
+						'user_password_request_form' => [
+							'type'             => 'form',
+							'form_name'        => 'user_password_request',
+							'form_description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
+							'order'            => 10,
+
+							'attributes'       => [
+								'class' => [ 'hp-form--narrow' ],
 							],
 						],
 					],
@@ -82,23 +91,10 @@ return [
 			],
 		],
 
-		'user_password_request_modal' => [
-			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Reset Password', 'hivepress' ),
-			'order'       => 999,
-
-			'blocks'      => [
-				'user_password_request_form' => [
-					'type'             => 'form',
-					'form_name'        => 'user_password_request',
-					'form_description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
-					'order'            => 10,
-
-					'attributes'       => [
-						'class' => [ 'hp-form--narrow' ],
-					],
-				],
-			],
+		'page_footer'  => [
+			'type'      => 'element',
+			'file_path' => 'footer',
+			'order'     => 30,
 		],
 	],
 ];

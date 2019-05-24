@@ -119,6 +119,11 @@ class Number extends Field {
 	protected function bootstrap() {
 		$attributes = [];
 
+		// Set placeholder.
+		if ( ! is_null( $this->placeholder ) ) {
+			$attributes['placeholder'] = $this->placeholder;
+		}
+
 		// Set step.
 		$attributes['step'] = sprintf( '%f', 1 / pow( 10, $this->decimals ) );
 

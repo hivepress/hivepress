@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		// todo.
 		'container' => [
 			'type'       => 'container',
 			'order'      => 10,
@@ -22,13 +21,13 @@ return [
 			],
 
 			'blocks'     => [
-				'todo'  => [
+				'user_account_link'     => [
 					'type'      => 'element',
 					'file_path' => 'user/account-link',
 					'order'     => 10,
 				],
 
-				'todo2' => [
+				'listing_submit_button' => [
 					'type'      => 'element',
 					'file_path' => 'listing/submit-button',
 					'order'     => 20,
