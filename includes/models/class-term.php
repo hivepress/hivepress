@@ -27,13 +27,13 @@ abstract class Term extends Model {
 	 */
 	final public static function get( $id ) {
 
-		// Get alias data.
+		// Get instance data.
 		$data = get_term( absint( $id ), hp\prefix( static::$name ), ARRAY_A );
 
 		if ( ! is_null( $data ) ) {
 			$attributes = [];
 
-			// Get alias meta.
+			// Get instance meta.
 			$meta = array_map(
 				function( $meta_values ) {
 					return reset( $meta_values );

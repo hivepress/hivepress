@@ -114,16 +114,16 @@ class User extends Model {
 	 */
 	final public static function get( $id ) {
 
-		// Get alias data.
+		// Get instance data.
 		$data = get_userdata( absint( $id ) );
 
 		if ( false !== $data ) {
 			$attributes = [];
 
-			// Convert alias data.
+			// Convert instance data.
 			$data = (array) $data->data;
 
-			// Get alias meta.
+			// Get instance meta.
 			$meta = array_map(
 				function( $meta_values ) {
 					return reset( $meta_values );

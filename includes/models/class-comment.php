@@ -27,14 +27,14 @@ abstract class Comment extends Model {
 	 */
 	final public static function get( $id ) {
 
-		// Get alias data.
+		// Get instance data.
 		$id   = absint( $id );
 		$data = get_comment( $id, ARRAY_A );
 
 		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['comment_type'] ) {
 			$attributes = [];
 
-			// Get alias meta.
+			// Get instance meta.
 			$meta = array_map(
 				function( $meta_values ) {
 					return reset( $meta_values );

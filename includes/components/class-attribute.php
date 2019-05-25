@@ -281,6 +281,10 @@ final class Attribute {
 						'display_format' => $attribute['display_format'],
 					]
 				);
+
+				if ( array_key_exists( 'options', $attribute['edit_field'] ) ) {
+					$model['relations'][ $model['name'] . '_' . $attribute_name ] = $attribute_name;
+				}
 			}
 		}
 

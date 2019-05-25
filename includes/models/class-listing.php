@@ -41,6 +41,13 @@ class Listing extends Post {
 	protected static $aliases = [];
 
 	/**
+	 * Model relations.
+	 *
+	 * @var array
+	 */
+	protected static $relations = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Model arguments.
@@ -158,7 +165,13 @@ class Listing extends Post {
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
 				if ( array_key_exists( 'options', $field_args ) && taxonomy_exists( $field_taxonomy ) ) {
-					$field_terms = wp_get_post_terms( $this->id, $field_taxonomy, [ 'fields' => 'names' ] );
+					$field_terms = get_terms(
+						[
+							'taxonomy' => $field_taxonomy,
+							'include'  => array_merge( (array) $field_value, [ 0 ] ),
+							'fields'   => 'names',
+						]
+					);
 
 					if ( ! empty( $field_terms ) ) {
 						$field_value = implode( ', ', $field_terms );

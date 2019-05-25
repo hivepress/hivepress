@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 abstract class Post extends Model {
 
 	/**
+	 * Model relations.
+	 *
+	 * @var array
+	 */
+	protected static $relations = [];
+
+	/**
 	 * Gets instance by ID.
 	 *
 	 * @param int $id Instance ID.
@@ -27,13 +34,13 @@ abstract class Post extends Model {
 	 */
 	final public static function get( $id ) {
 
-		// Get alias data.
+		// Get instance data.
 		$data = get_post( absint( $id ), ARRAY_A );
 
 		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['post_type'] ) {
 			$attributes = [];
 
-			// Get alias meta.
+			// Get instance meta.
 			$meta = array_map(
 				function( $meta_values ) {
 					return reset( $meta_values );
@@ -41,10 +48,19 @@ abstract class Post extends Model {
 				get_post_meta( $data['ID'] )
 			);
 
+			// Get instance terms.
+			$terms = [];
+
+			if ( ! empty( static::$relations ) ) {
+				$terms = wp_list_pluck( wp_get_post_terms( $data['ID'], hp\prefix( array_keys( static::$relations ) ) ), 'taxonomy', 'term_id' );
+			}
+
 			// Get instance attributes.
 			foreach ( array_keys( static::$fields ) as $field_name ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {
 					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
+				} elseif ( in_array( $field_name, static::$relations, true ) ) {
+					$attributes[ $field_name ] = array_keys( $terms, hp\prefix( array_search( $field_name, static::$relations, true ) ), true );
 				} else {
 					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
 				}
@@ -70,8 +86,9 @@ abstract class Post extends Model {
 	final public function save() {
 
 		// Alias instance attributes.
-		$data = [];
-		$meta = [];
+		$data  = [];
+		$meta  = [];
+		$terms = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
@@ -79,6 +96,8 @@ abstract class Post extends Model {
 			if ( $field->validate() ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {
 					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
+				} elseif ( in_array( $field_name, static::$relations, true ) ) {
+					$terms[ array_search( $field_name, static::$relations, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
@@ -101,8 +120,14 @@ abstract class Post extends Model {
 				return false;
 			}
 
+			// Update instance meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
 				update_post_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
+			}
+
+			// Update instance terms.
+			foreach ( $terms as $taxonomy => $term_ids ) {
+				wp_set_post_terms( $this->id, (array) $term_ids, hp\prefix( $taxonomy ) );
 			}
 
 			return true;
