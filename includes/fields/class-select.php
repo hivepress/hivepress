@@ -100,6 +100,17 @@ class Select extends Field {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( [] === $this->value ) {
+			$this->value = null;
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

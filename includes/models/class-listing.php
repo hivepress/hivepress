@@ -8,6 +8,7 @@
 namespace HivePress\Models;
 
 use HivePress\Helpers as hp;
+use HivePress\Fields;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -164,11 +165,11 @@ class Listing extends Post {
 				$field_value    = hp\get_array_value( $this->attributes, $field_name );
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
-				if ( array_key_exists( 'options', $field_args ) && taxonomy_exists( $field_taxonomy ) ) {
+				if ( array_key_exists( 'options', $field_args ) && ! is_null( $field_value ) ) {
 					$field_terms = get_terms(
 						[
 							'taxonomy' => $field_taxonomy,
-							'include'  => array_merge( (array) $field_value, [ 0 ] ),
+							'include'  => (array) $field_value,
 							'fields'   => 'names',
 						]
 					);
@@ -188,7 +189,7 @@ class Listing extends Post {
 
 				// Create field.
 				if ( ! is_null( $field_value ) ) {
-					$fields[ $field_name ] = new \HivePress\Fields\Text(
+					$fields[ $field_name ] = new Fields\Text(
 						[
 							'label'   => $field->get_label(),
 							'default' => hp\replace_tokens(

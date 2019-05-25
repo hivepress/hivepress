@@ -9,6 +9,7 @@ namespace HivePress\Forms;
 
 use HivePress\Helpers as hp;
 use HivePress\Traits;
+use HivePress\Fields;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -309,7 +310,7 @@ abstract class Form {
 
 		// Set button.
 		if ( ! is_null( $this->button ) ) {
-			$this->button = new \HivePress\Fields\Button(
+			$this->button = new Fields\Button(
 				hp\merge_arrays(
 					[
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
