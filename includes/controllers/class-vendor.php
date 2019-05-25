@@ -76,7 +76,7 @@ class Vendor extends Controller {
 		the_post();
 
 		// Query listings.
-		query_listings(
+		query_posts(
 			[
 				'post_type'      => 'hp_listing',
 				'post_status'    => 'publish',
