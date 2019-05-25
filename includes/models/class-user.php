@@ -85,6 +85,13 @@ class User extends Model {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 					],
+
+					'image_id'    => [
+						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
+						'type'         => 'attachment_upload',
+						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+					],
 				],
 
 				'aliases' => [
@@ -209,5 +216,24 @@ class User extends Model {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
 		return $this->id && wp_delete_user( $this->id );
+	}
+
+	/**
+	 * Gets image ID.
+	 *
+	 * @return mixed
+	 */
+	final public function get_image_id() {
+		$image_id = hp\get_post_id(
+			[
+				'post_type'   => 'attachment',
+				'post_parent' => 0,
+				'author'      => $this->id,
+				'meta_key'    => 'hp_parent_field',
+				'meta_value'  => 'image_id',
+			]
+		);
+
+		return 0 !== $image_id ? $image_id : null;
 	}
 }

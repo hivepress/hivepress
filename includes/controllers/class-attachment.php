@@ -104,17 +104,21 @@ class Attachment extends Controller {
 		}
 
 		// Get parent ID.
-		$parent_id = hp\get_post_id(
-			[
-				'post_type'   => hp\prefix( $request->get_param( 'parent_model' ) ),
-				'post_status' => [ 'auto-draft', 'draft', 'publish' ],
-				'post__in'    => [ absint( $request->get_param( 'parent_id' ) ) ],
-				'author'      => get_current_user_id(),
-			]
-		);
+		$parent_id = 0;
 
-		if ( 0 === $parent_id ) {
-			return hp\rest_error( 400 );
+		if ( $request->get_param( 'parent_model' ) !== 'user' ) {
+			$parent_id = hp\get_post_id(
+				[
+					'post_type'   => hp\prefix( $request->get_param( 'parent_model' ) ),
+					'post_status' => [ 'auto-draft', 'draft', 'publish' ],
+					'post__in'    => [ absint( $request->get_param( 'parent_id' ) ) ],
+					'author'      => get_current_user_id(),
+				]
+			);
+
+			if ( 0 === $parent_id ) {
+				return hp\rest_error( 400 );
+			}
 		}
 
 		// Get attachment IDs.

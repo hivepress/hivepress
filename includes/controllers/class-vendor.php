@@ -75,19 +75,21 @@ class Vendor extends Controller {
 	public function render_vendor_view_page() {
 		the_post();
 
+		// Query listings.
+		query_listings(
+			[
+				'post_type'      => 'hp_listing',
+				'post_status'    => 'publish',
+				'post_parent'    => get_the_ID(),
+				'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+				'paged'          => hp\get_current_page(),
+			]
+		);
+
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'vendor_view_page',
 				'vendor'        => Models\Vendor::get( get_the_ID() ),
-				'listing_query' => new \WP_Query(
-					[
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'post_parent'    => get_the_ID(),
-						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-						'paged'          => hp\get_current_page(),
-					]
-				),
 			]
 		) )->render();
 	}

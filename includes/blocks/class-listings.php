@@ -133,6 +133,8 @@ class Listings extends Block {
 	 * @return string
 	 */
 	public function render() {
+		global $wp_query;
+
 		$output = '';
 
 		// Get column width.
@@ -144,9 +146,9 @@ class Listings extends Block {
 		}
 
 		// Get listing query.
-		$query = $this->get_listing_query();
+		$query = $wp_query;
 
-		if ( is_null( $query ) ) {
+		if ( get_post_type() !== 'hp_listing' || is_single() ) {
 
 				// Set query arguments.
 				$query_args = [

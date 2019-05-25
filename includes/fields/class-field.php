@@ -128,26 +128,20 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 
 		// Filter arguments.
-		// todo.
-		$this->args = apply_filters( 'hivepress/v1/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
+		$args = apply_filters( 'hivepress/v1/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
 
-		// todo.
-		unset( $this->args['type'] );
+		// Set arguments.
+		$this->args = $args;
 
-		// todo.
-		$default = hp\get_array_value( $args, 'default' );
-		unset( $args['default'] );
+		unset( $args['type'] );
 
 		// Set properties.
-		foreach ( $this->args as $name => $value ) {
+		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
 
 		// Bootstrap properties.
 		$this->bootstrap();
-
-		// todo.
-		$this->args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**

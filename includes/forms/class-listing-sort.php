@@ -73,4 +73,20 @@ class Listing_Sort extends Form {
 
 		parent::__construct( $args );
 	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'data-submit' => 'true',
+			]
+		);
+
+		parent::bootstrap();
+	}
 }

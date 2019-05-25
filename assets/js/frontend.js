@@ -1,10 +1,17 @@
 var hivepress = {
 
 	/**
-	 * Gets jQuery object.
+	 * Gets component selector.
+	 */
+	getSelector: function(name) {
+		return '[data-component=' + name + ']';
+	},
+
+	/**
+	 * Gets component object.
 	 */
 	getComponent: function(name) {
-		return jQuery('[data-component=' + name + ']');
+		return jQuery(this.getSelector(name));
 	},
 };
 
@@ -46,6 +53,12 @@ var hivepress = {
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
+
+			if (form.data('submit') === true) {
+				form.on('change', function() {
+					form.submit();
+				});
+			}
 
 			form.on('submit', function(e) {
 				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
@@ -189,7 +202,7 @@ var hivepress = {
 		});
 
 		// File delete
-		hivepress.getComponent('file-delete').on('click', function(e) {
+		$(document).on('click', hivepress.getSelector('file-delete'), function(e) {
 			var container = $(this).parent();
 
 			$.ajax({

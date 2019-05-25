@@ -142,14 +142,10 @@ abstract class Form {
 	 */
 	public function __construct( $args = [] ) {
 
-		// todo.
-		$args['name'] = static::$name;
-
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/v1/forms/form', $args );
-		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/forms/form', array_merge( $args, [ 'name' => static::$name ] ) );
+		$args = apply_filters( 'hivepress/v1/forms/' . static::$name, array_merge( $args, [ 'name' => static::$name ] ) );
 
-		// todo.
 		unset( $args['name'] );
 
 		// Set properties.

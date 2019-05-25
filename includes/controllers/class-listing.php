@@ -305,18 +305,20 @@ class Listing extends Controller {
 			) )->render();
 		} else {
 
+			// Query listings.
+			query_posts(
+				[
+					'post_type'      => 'hp_listing',
+					'post_status'    => 'publish',
+					'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+					'paged'          => hp\get_current_page(),
+				]
+			);
+
 			// Render listings.
 			return ( new Blocks\Template(
 				[
 					'template_name' => 'listings_view_page',
-					'listing_query' => new \WP_Query(
-						[
-							'post_type'      => 'hp_listing',
-							'post_status'    => 'publish',
-							'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-							'paged'          => hp\get_current_page(),
-						]
-					),
 				]
 			) )->render();
 		}
@@ -377,19 +379,18 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
-		return ( new Blocks\Template(
+
+		// Query listings.
+		query_posts(
 			[
-				'template_name' => 'listings_edit_page',
-				'listing_query' => new \WP_Query(
-					[
-						'post_type'      => 'hp_listing',
-						'post_status'    => [ 'draft', 'pending', 'publish' ],
-						'author'         => get_current_user_id(),
-						'posts_per_page' => -1,
-					]
-				),
+				'post_type'      => 'hp_listing',
+				'post_status'    => [ 'draft', 'pending', 'publish' ],
+				'author'         => get_current_user_id(),
+				'posts_per_page' => -1,
 			]
-		) )->render();
+		);
+
+		return ( new Blocks\Template( [ 'template_name' => 'listings_edit_page' ] ) )->render();
 	}
 
 	/**
