@@ -83,13 +83,13 @@ abstract class Model_Form extends Form {
 		$attributes = [];
 
 		// Set action.
-		if ( isset( $this->action ) ) {
-			$this->action = rtrim(
+		if ( isset( static::$action ) ) {
+			static::$action = rtrim(
 				hp\replace_tokens(
 					[
 						'id' => $this->id,
 					],
-					$this->action
+					static::$action
 				),
 				'/'
 			);

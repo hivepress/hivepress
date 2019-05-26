@@ -30,7 +30,7 @@ final class Listing {
 		add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
 
 		// Set vendor.
-		add_action( 'save_post_' . 'hp_listing', [ $this, 'set_vendor' ], 10, 2 );
+		add_action( 'save_post_hp_listing', [ $this, 'set_vendor' ], 10, 2 );
 
 		// Set image.
 		add_action( 'add_attachment', [ $this, 'set_image' ] );
@@ -106,6 +106,26 @@ final class Listing {
 						'post_author'  => $user_id,
 					]
 				);
+
+				if ( 0 !== $vendor_id ) {
+
+					// Get image ID.
+					$image_id = hp\get_post_id(
+						[
+							'post_type'   => 'attachment',
+							'post_parent' => 0,
+							'author'      => $user_id,
+							'meta_key'    => 'hp_parent_field',
+							'meta_value'  => 'image_id',
+						]
+					);
+
+					if ( 0 !== $image_id ) {
+
+						// Update image.
+						set_post_thumbnail( $vendor_id, $image_id );
+					}
+				}
 			}
 
 			// Set vendor ID.

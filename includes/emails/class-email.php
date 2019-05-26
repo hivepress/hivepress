@@ -127,7 +127,7 @@ abstract class Email {
 		return wp_mail(
 			$this->recipient,
 			static::$subject,
-			static::$message,
+			static::$body,
 			array_map(
 				function( $name, $value ) {
 					return $name . ': ' . $value;

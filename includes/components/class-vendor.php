@@ -25,7 +25,11 @@ final class Vendor {
 	public function __construct() {
 
 		// Update vendor.
+		add_action( 'added_user_meta', [ $this, 'update_vendor' ], 10, 4 );
 		add_action( 'updated_user_meta', [ $this, 'update_vendor' ], 10, 4 );
+
+		// Update image.
+		add_action( 'added_post_meta', [ $this, 'update_image' ], 10, 4 );
 
 		if ( ! is_admin() ) {
 
@@ -82,6 +86,40 @@ final class Vendor {
 							'post_content' => get_user_meta( $user_id, 'description', true ),
 						]
 					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates image.
+	 *
+	 * @param int    $meta_id Meta ID.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $meta_key Meta key.
+	 * @param string $meta_value Meta value.
+	 */
+	public function update_image( $meta_id, $attachment_id, $meta_key, $meta_value ) {
+		if ( 'hp_parent_field' === $meta_key && 'image_id' === $meta_value ) {
+
+			// Get attachment.
+			$attachment = get_post( $attachment_id );
+
+			if ( 'attachment' === $attachment->post_type && 0 === $attachment->post_parent ) {
+
+				// Get vendor ID.
+				$vendor_id = hp\get_post_id(
+					[
+						'post_type'   => 'hp_vendor',
+						'post_status' => 'publish',
+						'author'      => $attachment->post_author,
+					]
+				);
+
+				if ( 0 !== $vendor_id ) {
+
+					// Update image.
+					set_post_thumbnail( $vendor_id, $attachment_id );
 				}
 			}
 		}
