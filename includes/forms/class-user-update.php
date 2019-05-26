@@ -27,6 +27,13 @@ class User_Update extends Model_Form {
 	protected static $name;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected static $message;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
@@ -41,6 +48,13 @@ class User_Update extends Model_Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -48,9 +62,10 @@ class User_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'user',
+				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
+				'model'   => 'user',
 
-				'fields' => [
+				'fields'  => [
 					'image_id'         => [
 						'order' => 10,
 					],
@@ -82,6 +97,10 @@ class User_Update extends Model_Form {
 						'order' => 70,
 					],
 				],
+
+				'button'  => [
+					'label' => esc_html__( 'Update Settings', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -97,12 +116,7 @@ class User_Update extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
-				'action'  => hp\get_rest_url( '/users/%id%' ),
-
-				'button'  => [
-					'label' => esc_html__( 'Update Settings', 'hivepress' ),
-				],
+				'action' => hp\get_rest_url( '/users/%id%' ),
 			],
 			$args
 		);

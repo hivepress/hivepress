@@ -41,11 +41,25 @@ class User_Login extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected static $captcha = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
 	 */
 	protected static $fields = [];
+
+	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
 
 	/**
 	 * Class initializer.
@@ -73,6 +87,10 @@ class User_Login extends Model_Form {
 						'order'      => 20,
 					],
 				],
+
+				'button' => [
+					'label' => esc_html__( 'Sign In', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -90,10 +108,6 @@ class User_Login extends Model_Form {
 			[
 				'action'   => hp\get_rest_url( '/users/login' ),
 				'redirect' => true,
-
-				'button'   => [
-					'label' => esc_html__( 'Sign In', 'hivepress' ),
-				],
 			],
 			$args
 		);

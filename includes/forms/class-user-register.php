@@ -41,11 +41,25 @@ class User_Register extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected static $captcha = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
 	 */
 	protected static $fields = [];
+
+	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
 
 	/**
 	 * Class initializer.
@@ -90,6 +104,10 @@ class User_Register extends Model_Form {
 				'title'  => esc_html__( 'Register User', 'hivepress' ),
 				'model'  => 'user',
 				'fields' => $fields,
+
+				'button' => [
+					'label' => esc_html__( 'Register', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -107,10 +125,6 @@ class User_Register extends Model_Form {
 			[
 				'action'   => hp\get_rest_url( '/users' ),
 				'redirect' => true,
-
-				'button'   => [
-					'label' => esc_html__( 'Register', 'hivepress' ),
-				],
 			],
 			$args
 		);

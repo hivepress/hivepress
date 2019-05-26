@@ -44,6 +44,13 @@ abstract class Form {
 	protected static $description;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected static $message;
+
+	/**
 	 * Form captcha.
 	 *
 	 * @var bool
@@ -58,11 +65,11 @@ abstract class Form {
 	protected static $fields = [];
 
 	/**
-	 * Form message.
+	 * Form button.
 	 *
-	 * @var string
+	 * @var object
 	 */
-	protected $message;
+	protected static $button;
 
 	/**
 	 * Form action.
@@ -84,13 +91,6 @@ abstract class Form {
 	 * @var mixed
 	 */
 	protected $redirect = false;
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected $button;
 
 	/**
 	 * Form header.
@@ -285,8 +285,8 @@ abstract class Form {
 		}
 
 		// Set message.
-		if ( $this->message ) {
-			$attributes['data-message'] = $this->message;
+		if ( static::$message ) {
+			$attributes['data-message'] = static::$message;
 		}
 
 		// Set redirect.
@@ -307,8 +307,8 @@ abstract class Form {
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::$name ) ];
 
 		// Set button.
-		if ( ! is_null( $this->button ) ) {
-			$this->button = new Fields\Button(
+		if ( ! is_null( static::$button ) ) {
+			static::$button = new Fields\Button(
 				hp\merge_arrays(
 					[
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
@@ -317,7 +317,7 @@ abstract class Form {
 							'class' => [ 'hp-form__button', 'alt' ],
 						],
 					],
-					(array) $this->button
+					(array) static::$button
 				)
 			);
 		}
@@ -333,7 +333,7 @@ abstract class Form {
 	final public function validate() {
 
 		// Verify captcha.
-		if ( $this->captcha ) {
+		if ( static::$captcha ) {
 			$response = wp_remote_get(
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
@@ -406,18 +406,18 @@ abstract class Form {
 		$output .= '</div>';
 
 		// Render captcha.
-		if ( $this->captcha ) {
+		if ( static::$captcha ) {
 			$output .= '<div class="hp-form__captcha">';
 			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
 			$output .= '</div>';
 		}
 
 		// Render footer.
-		if ( isset( $this->button ) || isset( $this->footer ) ) {
+		if ( isset( static::$button ) || isset( $this->footer ) ) {
 			$output .= '<footer class="hp-form__footer">';
 
-			if ( isset( $this->button ) ) {
-				$output .= $this->button->render();
+			if ( isset( static::$button ) ) {
+				$output .= static::$button->render();
 			}
 
 			if ( isset( $this->footer ) ) {

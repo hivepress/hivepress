@@ -48,6 +48,13 @@ class User_Delete extends Model_Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -63,6 +70,10 @@ class User_Delete extends Model_Form {
 						'required' => true,
 						'order'    => 10,
 					],
+				],
+
+				'button'      => [
+					'label' => esc_html__( 'Delete Account', 'hivepress' ),
 				],
 			],
 			$args
@@ -82,10 +93,6 @@ class User_Delete extends Model_Form {
 				'action'   => hp\get_rest_url( '/users/%id%' ),
 				'method'   => 'DELETE',
 				'redirect' => true,
-
-				'button'   => [
-					'label' => esc_html__( 'Delete Account', 'hivepress' ),
-				],
 			],
 			$args
 		);

@@ -34,6 +34,13 @@ class Listing_Sort extends Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -63,6 +70,8 @@ class Listing_Sort extends Form {
 						'default' => 'hp_listing',
 					],
 				],
+
+				'button' => null,
 			],
 			$args
 		);
@@ -80,7 +89,6 @@ class Listing_Sort extends Form {
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
-				'button' => null,
 			],
 			$args
 		);

@@ -27,6 +27,13 @@ class Listing_Update extends Model_Form {
 	protected static $name;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected static $message;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
@@ -41,6 +48,13 @@ class Listing_Update extends Model_Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -48,9 +62,10 @@ class Listing_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model'  => 'listing',
+				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
+				'model'   => 'listing',
 
-				'fields' => [
+				'fields'  => [
 					'image_ids'   => [
 						'order' => 10,
 					],
@@ -62,6 +77,10 @@ class Listing_Update extends Model_Form {
 					'description' => [
 						'order' => 30,
 					],
+				],
+
+				'button'  => [
+					'label' => esc_html__( 'Update Listing', 'hivepress' ),
 				],
 			],
 			$args
@@ -78,12 +97,7 @@ class Listing_Update extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
-				'action'  => hp\get_rest_url( '/listings/%id%' ),
-
-				'button'  => [
-					'label' => esc_html__( 'Update Listing', 'hivepress' ),
-				],
+				'action' => hp\get_rest_url( '/listings/%id%' ),
 			],
 			$args
 		);

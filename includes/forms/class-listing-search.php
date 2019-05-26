@@ -34,6 +34,13 @@ class Listing_Search extends Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -54,6 +61,10 @@ class Listing_Search extends Form {
 						'default' => 'hp_listing',
 					],
 				],
+
+				'button' => [
+					'label' => esc_html__( 'Search', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -71,10 +82,6 @@ class Listing_Search extends Form {
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
-
-				'button' => [
-					'label' => esc_html__( 'Search', 'hivepress' ),
-				],
 			],
 			$args
 		);

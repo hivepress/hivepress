@@ -48,6 +48,13 @@ class Listing_Delete extends Model_Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -58,6 +65,10 @@ class Listing_Delete extends Model_Form {
 				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
 				'model'       => 'listing',
 				'fields'      => [],
+
+				'button'      => [
+					'label' => esc_html__( 'Delete Listing', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -76,10 +87,6 @@ class Listing_Delete extends Model_Form {
 				'action'   => hp\get_rest_url( '/listings/%id%' ),
 				'method'   => 'DELETE',
 				'redirect' => true,
-
-				'button'   => [
-					'label' => esc_html__( 'Delete Listing', 'hivepress' ),
-				],
 			],
 			$args
 		);

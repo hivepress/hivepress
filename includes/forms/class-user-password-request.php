@@ -41,11 +41,32 @@ class User_Password_Request extends Form {
 	protected static $description;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected static $message;
+
+	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected static $captcha = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
 	 */
 	protected static $fields = [];
+
+	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
 
 	/**
 	 * Class initializer.
@@ -57,6 +78,7 @@ class User_Password_Request extends Form {
 			[
 				'title'       => esc_html__( 'Reset Password', 'hivepress' ),
 				'description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
+				'message'     => esc_html__( 'Password reset email has been sent', 'hivepress' ),
 
 				'fields'      => [
 					'username_or_email' => [
@@ -66,6 +88,10 @@ class User_Password_Request extends Form {
 						'required'   => true,
 						'order'      => 10,
 					],
+				],
+
+				'button'      => [
+					'label' => esc_html__( 'Send Email', 'hivepress' ),
 				],
 			],
 			$args
@@ -82,12 +108,7 @@ class User_Password_Request extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Password reset email has been sent', 'hivepress' ),
-				'action'  => hp\get_rest_url( '/users/request-password' ),
-
-				'button'  => [
-					'label' => esc_html__( 'Send Email', 'hivepress' ),
-				],
+				'action' => hp\get_rest_url( '/users/request-password' ),
 			],
 			$args
 		);

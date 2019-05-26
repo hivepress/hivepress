@@ -34,6 +34,13 @@ class Listing_Filter extends Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -61,6 +68,10 @@ class Listing_Filter extends Form {
 						'default' => 'hp_listing',
 					],
 				],
+
+				'button' => [
+					'label' => esc_html__( 'Filter', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -78,10 +89,6 @@ class Listing_Filter extends Form {
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
-
-				'button' => [
-					'label' => esc_html__( 'Filter', 'hivepress' ),
-				],
 			],
 			$args
 		);

@@ -48,6 +48,13 @@ class User_Password_Reset extends Model_Form {
 	protected static $fields = [];
 
 	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -74,6 +81,10 @@ class User_Password_Reset extends Model_Form {
 						'required' => true,
 					],
 				],
+
+				'button'      => [
+					'label' => esc_html__( 'Reset Password', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -91,10 +102,6 @@ class User_Password_Reset extends Model_Form {
 			[
 				'action'   => hp\get_rest_url( '/users/reset-password' ),
 				'redirect' => true,
-
-				'button'   => [
-					'label' => esc_html__( 'Reset Password', 'hivepress' ),
-				],
 			],
 			$args
 		);

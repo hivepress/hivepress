@@ -34,11 +34,32 @@ class Listing_Report extends Form {
 	protected static $title;
 
 	/**
+	 * Form message.
+	 *
+	 * @var string
+	 */
+	protected static $message;
+
+	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected static $captcha = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
 	 */
 	protected static $fields = [];
+
+	/**
+	 * Form button.
+	 *
+	 * @var object
+	 */
+	protected static $button;
 
 	/**
 	 * Class initializer.
@@ -48,9 +69,10 @@ class Listing_Report extends Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Report Listing', 'hivepress' ),
+				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
+				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
 
-				'fields' => [
+				'fields'  => [
 					'reason' => [
 						'label'      => esc_html__( 'Reason', 'hivepress' ),
 						'type'       => 'textarea',
@@ -58,6 +80,10 @@ class Listing_Report extends Form {
 						'required'   => true,
 						'order'      => 10,
 					],
+				],
+
+				'button'  => [
+					'label' => esc_html__( 'Report Listing', 'hivepress' ),
 				],
 			],
 			$args
@@ -74,12 +100,7 @@ class Listing_Report extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
-				'action'  => hp\get_rest_url( '/listings/%id%/report' ),
-
-				'button'  => [
-					'label' => esc_html__( 'Report Listing', 'hivepress' ),
-				],
+				'action' => hp\get_rest_url( '/listings/%id%/report' ),
 			],
 			$args
 		);
