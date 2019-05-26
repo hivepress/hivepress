@@ -41,6 +41,13 @@ class Listing_Report extends Form {
 	protected static $message;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form captcha.
 	 *
 	 * @var bool

@@ -41,6 +41,13 @@ class Listing_Update extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array

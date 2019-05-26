@@ -41,6 +41,13 @@ class User_Login extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form captcha.
 	 *
 	 * @var bool

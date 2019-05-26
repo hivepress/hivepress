@@ -41,6 +41,13 @@ class User_Delete extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -64,6 +71,7 @@ class User_Delete extends Model_Form {
 			[
 				'description' => esc_html__( 'Please enter your password below to permanently delete your account.', 'hivepress' ),
 				'model'       => 'user',
+				'method'      => 'DELETE',
 
 				'fields'      => [
 					'password' => [
@@ -91,7 +99,6 @@ class User_Delete extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'action'   => hp\get_rest_url( '/users/%id%' ),
-				'method'   => 'DELETE',
 				'redirect' => true,
 			],
 			$args

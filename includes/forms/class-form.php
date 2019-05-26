@@ -51,6 +51,13 @@ abstract class Form {
 	protected static $message;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form captcha.
 	 *
 	 * @var bool
@@ -77,13 +84,6 @@ abstract class Form {
 	 * @var string
 	 */
 	protected $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected $method = 'POST';
 
 	/**
 	 * Form redirect.
@@ -170,8 +170,8 @@ abstract class Form {
 	 *
 	 * @param string $method Form method.
 	 */
-	final protected function set_method( $method ) {
-		$this->method = strtoupper( $method );
+	final protected static function set_method( $method ) {
+		static::$method = strtoupper( $method );
 	}
 
 	/**
@@ -179,8 +179,8 @@ abstract class Form {
 	 *
 	 * @return string
 	 */
-	final public function get_method() {
-		return $this->method;
+	final public static function get_method() {
+		return static::$method;
 	}
 
 	/**
@@ -277,11 +277,11 @@ abstract class Form {
 		}
 
 		// Set method.
-		if ( ! in_array( $this->method, [ 'GET', 'POST' ], true ) ) {
+		if ( ! in_array( static::$method, [ 'GET', 'POST' ], true ) ) {
 			$attributes['method']      = 'POST';
-			$attributes['data-method'] = $this->method;
+			$attributes['data-method'] = static::$method;
 		} else {
-			$attributes['method'] = $this->method;
+			$attributes['method'] = static::$method;
 		}
 
 		// Set message.

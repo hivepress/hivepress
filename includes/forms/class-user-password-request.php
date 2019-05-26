@@ -48,6 +48,13 @@ class User_Password_Request extends Form {
 	protected static $message;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form captcha.
 	 *
 	 * @var bool

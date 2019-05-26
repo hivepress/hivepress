@@ -27,6 +27,13 @@ class Listing_Sort extends Form {
 	protected static $name;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -48,6 +55,9 @@ class Listing_Sort extends Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'method' => 'GET',
+				'button' => null,
+
 				'fields' => [
 					'sort'      => [
 						'label'    => esc_html__( 'Sort by', 'hivepress' ),
@@ -70,8 +80,6 @@ class Listing_Sort extends Form {
 						'default' => 'hp_listing',
 					],
 				],
-
-				'button' => null,
 			],
 			$args
 		);
@@ -88,7 +96,6 @@ class Listing_Sort extends Form {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
-				'method' => 'GET',
 			],
 			$args
 		);

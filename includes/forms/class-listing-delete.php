@@ -41,6 +41,13 @@ class Listing_Delete extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form method.
+	 *
+	 * @var string
+	 */
+	protected static $method = 'POST';
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -64,6 +71,7 @@ class Listing_Delete extends Model_Form {
 			[
 				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
 				'model'       => 'listing',
+				'method'      => 'DELETE',
 				'fields'      => [],
 
 				'button'      => [
@@ -85,7 +93,6 @@ class Listing_Delete extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'action'   => hp\get_rest_url( '/listings/%id%' ),
-				'method'   => 'DELETE',
 				'redirect' => true,
 			],
 			$args
