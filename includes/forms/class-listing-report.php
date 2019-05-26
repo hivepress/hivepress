@@ -41,6 +41,13 @@ class Listing_Report extends Form {
 	protected static $message;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -78,6 +85,7 @@ class Listing_Report extends Form {
 			[
 				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
 				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
+				'action'  => hp\get_rest_url( '/listings/%id%/report' ),
 
 				'fields'  => [
 					'reason' => [
@@ -97,21 +105,5 @@ class Listing_Report extends Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action' => hp\get_rest_url( '/listings/%id%/report' ),
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

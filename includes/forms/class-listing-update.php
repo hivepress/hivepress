@@ -41,6 +41,13 @@ class Listing_Update extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -71,6 +78,7 @@ class Listing_Update extends Model_Form {
 			[
 				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
 				'model'   => 'listing',
+				'action'  => hp\get_rest_url( '/listings/%id%' ),
 
 				'fields'  => [
 					'image_ids'   => [
@@ -94,21 +102,5 @@ class Listing_Update extends Model_Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action' => hp\get_rest_url( '/listings/%id%' ),
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

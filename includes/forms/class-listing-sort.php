@@ -27,6 +27,13 @@ class Listing_Sort extends Form {
 	protected static $name;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -55,6 +62,7 @@ class Listing_Sort extends Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'action' => home_url( '/' ),
 				'method' => 'GET',
 				'button' => null,
 
@@ -85,22 +93,6 @@ class Listing_Sort extends Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action' => home_url( '/' ),
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 
 	/**

@@ -51,6 +51,13 @@ abstract class Form {
 	protected static $message;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -65,6 +72,13 @@ abstract class Form {
 	protected static $captcha = false;
 
 	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected static $redirect = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -77,20 +91,6 @@ abstract class Form {
 	 * @var object
 	 */
 	protected static $button;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected $action;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected $redirect = false;
 
 	/**
 	 * Form header.
@@ -269,11 +269,11 @@ abstract class Form {
 		$attributes = [];
 
 		// Set action.
-		if ( strpos( $this->action, get_rest_url() ) === 0 ) {
+		if ( strpos( static::$action, get_rest_url() ) === 0 ) {
 			$attributes['action']      = '';
-			$attributes['data-action'] = $this->action;
+			$attributes['data-action'] = static::$action;
 		} else {
-			$attributes['action'] = $this->action;
+			$attributes['action'] = static::$action;
 		}
 
 		// Set method.
@@ -290,7 +290,7 @@ abstract class Form {
 		}
 
 		// Set redirect.
-		if ( $this->redirect ) {
+		if ( static::$redirect ) {
 			$redirect = hp\get_array_value( $_GET, 'redirect', 'true' );
 
 			if ( hp\validate_redirect( $redirect ) ) {

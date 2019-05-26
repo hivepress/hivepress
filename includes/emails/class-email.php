@@ -29,25 +29,25 @@ abstract class Email {
 	protected static $name;
 
 	/**
-	 * Email recipient.
-	 *
-	 * @var string
-	 */
-	protected $recipient;
-
-	/**
 	 * Email subject.
 	 *
 	 * @var string
 	 */
-	protected $subject;
+	protected static $subject;
 
 	/**
 	 * Email body.
 	 *
 	 * @var string
 	 */
-	protected $body;
+	protected static $body;
+
+	/**
+	 * Email recipient.
+	 *
+	 * @var string
+	 */
+	protected $recipient;
 
 	/**
 	 * Email tokens.
@@ -62,13 +62,6 @@ abstract class Email {
 	 * @var array
 	 */
 	protected $headers = [];
-
-	/**
-	 * Email attachments.
-	 *
-	 * @var array
-	 */
-	protected $attachments = [];
 
 	/**
 	 * Class initializer.
@@ -119,10 +112,10 @@ abstract class Email {
 		$body = get_option( 'hp_email_' . static::$name );
 
 		if ( ! empty( $body ) ) {
-			$this->body = $body;
+			static::$body = $body;
 		}
 
-		$this->body = hp\replace_tokens( $this->tokens, $this->body );
+		static::$body = hp\replace_tokens( $this->tokens, static::$body );
 	}
 
 	/**
@@ -133,16 +126,15 @@ abstract class Email {
 	public function send() {
 		return wp_mail(
 			$this->recipient,
-			$this->subject,
-			$this->body,
+			static::$subject,
+			static::$message,
 			array_map(
 				function( $name, $value ) {
 					return $name . ': ' . $value;
 				},
 				array_keys( $this->headers ),
 				$this->headers
-			),
-			$this->attachments
+			)
 		);
 	}
 }

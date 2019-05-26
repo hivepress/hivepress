@@ -41,6 +41,13 @@ class User_Login extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -53,6 +60,13 @@ class User_Login extends Model_Form {
 	 * @var bool
 	 */
 	protected static $captcha = false;
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected static $redirect = false;
 
 	/**
 	 * Form fields.
@@ -76,10 +90,12 @@ class User_Login extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Login User', 'hivepress' ),
-				'model'  => 'user',
+				'title'    => esc_html__( 'Login User', 'hivepress' ),
+				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users/login' ),
+				'redirect' => true,
 
-				'fields' => [
+				'fields'   => [
 					'username_or_email' => [
 						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
 						'type'       => 'text',
@@ -95,7 +111,7 @@ class User_Login extends Model_Form {
 					],
 				],
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Sign In', 'hivepress' ),
 				],
 			],
@@ -103,22 +119,5 @@ class User_Login extends Model_Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action'   => hp\get_rest_url( '/users/login' ),
-				'redirect' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

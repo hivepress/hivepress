@@ -41,11 +41,25 @@ class Listing_Delete extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
 	 */
 	protected static $method = 'POST';
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected static $redirect = false;
 
 	/**
 	 * Form fields.
@@ -71,7 +85,9 @@ class Listing_Delete extends Model_Form {
 			[
 				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
 				'model'       => 'listing',
+				'action'      => hp\get_rest_url( '/listings/%id%' ),
 				'method'      => 'DELETE',
+				'redirect'    => true,
 				'fields'      => [],
 
 				'button'      => [
@@ -82,22 +98,5 @@ class Listing_Delete extends Model_Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action'   => hp\get_rest_url( '/listings/%id%' ),
-				'redirect' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

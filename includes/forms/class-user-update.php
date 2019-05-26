@@ -41,6 +41,13 @@ class User_Update extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -71,6 +78,7 @@ class User_Update extends Model_Form {
 			[
 				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
 				'model'   => 'user',
+				'action'  => hp\get_rest_url( '/users/%id%' ),
 
 				'fields'  => [
 					'image_id'         => [
@@ -113,21 +121,5 @@ class User_Update extends Model_Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action' => hp\get_rest_url( '/users/%id%' ),
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

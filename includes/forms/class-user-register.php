@@ -41,6 +41,13 @@ class User_Register extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form action.
+	 *
+	 * @var string
+	 */
+	protected static $action;
+
+	/**
 	 * Form method.
 	 *
 	 * @var string
@@ -53,6 +60,13 @@ class User_Register extends Model_Form {
 	 * @var bool
 	 */
 	protected static $captcha = false;
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected static $redirect = false;
 
 	/**
 	 * Form fields.
@@ -108,11 +122,13 @@ class User_Register extends Model_Form {
 		// Set arguments.
 		$args = hp\merge_arrays(
 			[
-				'title'  => esc_html__( 'Register User', 'hivepress' ),
-				'model'  => 'user',
-				'fields' => $fields,
+				'title'    => esc_html__( 'Register User', 'hivepress' ),
+				'model'    => 'user',
+				'action'   => hp\get_rest_url( '/users' ),
+				'redirect' => true,
+				'fields'   => $fields,
 
-				'button' => [
+				'button'   => [
 					'label' => esc_html__( 'Register', 'hivepress' ),
 				],
 			],
@@ -120,22 +136,5 @@ class User_Register extends Model_Form {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'action'   => hp\get_rest_url( '/users' ),
-				'redirect' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

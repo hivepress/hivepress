@@ -27,11 +27,25 @@ class User_Password_Request extends Email {
 	protected static $name;
 
 	/**
-	 * Class constructor.
+	 * Email subject.
+	 *
+	 * @var string
+	 */
+	protected static $subject;
+
+	/**
+	 * Email body.
+	 *
+	 * @var string
+	 */
+	protected static $body;
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Password Reset', 'hivepress' ),
@@ -40,6 +54,6 @@ class User_Password_Request extends Email {
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 }

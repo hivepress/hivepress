@@ -27,19 +27,33 @@ class User_Register extends Email {
 	protected static $name;
 
 	/**
-	 * Class constructor.
+	 * Email subject.
+	 *
+	 * @var string
+	 */
+	protected static $subject;
+
+	/**
+	 * Email body.
+	 *
+	 * @var string
+	 */
+	protected static $body;
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Registration Complete', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 			],
 			$args
 		);
 
-		parent::__construct( $args );
+		parent::init( $args );
 	}
 }
