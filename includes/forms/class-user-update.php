@@ -27,18 +27,18 @@ class User_Update extends Model_Form {
 	protected static $name;
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Model name.
 	 *
 	 * @var string
 	 */
 	protected static $model;
+
+	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
 
 	/**
 	 * Class initializer.
@@ -48,26 +48,9 @@ class User_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model' => 'user',
-			],
-			$args
-		);
+				'model'  => 'user',
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
-				'action'  => hp\get_rest_url( '/users/%id%' ),
-
-				'fields'  => [
+				'fields' => [
 					'image_id'         => [
 						'order' => 10,
 					],
@@ -99,6 +82,23 @@ class User_Update extends Model_Form {
 						'order' => 70,
 					],
 				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'message' => esc_html__( 'Your settings have been updated', 'hivepress' ),
+				'action'  => hp\get_rest_url( '/users/%id%' ),
 
 				'button'  => [
 					'label' => esc_html__( 'Update Settings', 'hivepress' ),

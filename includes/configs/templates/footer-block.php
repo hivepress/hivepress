@@ -1,6 +1,6 @@
 <?php
 /**
- * Modals block template.
+ * Footer block template.
  *
  * @package HivePress\Configs\Templates
  */

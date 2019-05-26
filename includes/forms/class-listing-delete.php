@@ -27,13 +27,6 @@ class Listing_Delete extends Model_Form {
 	protected static $name;
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string
@@ -48,6 +41,13 @@ class Listing_Delete extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -57,6 +57,7 @@ class Listing_Delete extends Model_Form {
 			[
 				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
 				'model'       => 'listing',
+				'fields'      => [],
 			],
 			$args
 		);

@@ -27,13 +27,6 @@ class User_Password_Reset extends Model_Form {
 	protected static $name;
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string
@@ -48,6 +41,13 @@ class User_Password_Reset extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -57,6 +57,23 @@ class User_Password_Reset extends Model_Form {
 			[
 				'description' => esc_html__( 'Please enter a new password below.', 'hivepress' ),
 				'model'       => 'user',
+
+				'fields'      => [
+					'password'           => [
+						'label'    => esc_html__( 'New Password', 'hivepress' ),
+						'required' => true,
+						'order'    => 10,
+					],
+
+					'username'           => [
+						'type' => 'hidden',
+					],
+
+					'password_reset_key' => [
+						'type'     => 'hidden',
+						'required' => true,
+					],
+				],
 			],
 			$args
 		);
@@ -74,23 +91,6 @@ class User_Password_Reset extends Model_Form {
 			[
 				'action'   => hp\get_rest_url( '/users/reset-password' ),
 				'redirect' => true,
-
-				'fields'   => [
-					'password'           => [
-						'label'    => esc_html__( 'New Password', 'hivepress' ),
-						'required' => true,
-						'order'    => 10,
-					],
-
-					'username'           => [
-						'type' => 'hidden',
-					],
-
-					'password_reset_key' => [
-						'type'     => 'hidden',
-						'required' => true,
-					],
-				],
 
 				'button'   => [
 					'label' => esc_html__( 'Reset Password', 'hivepress' ),

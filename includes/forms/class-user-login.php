@@ -41,6 +41,13 @@ class User_Login extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -48,8 +55,24 @@ class User_Login extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Login User', 'hivepress' ),
-				'model' => 'user',
+				'title'  => esc_html__( 'Login User', 'hivepress' ),
+				'model'  => 'user',
+
+				'fields' => [
+					'username_or_email' => [
+						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 254,
+						'required'   => true,
+						'order'      => 10,
+					],
+
+					'password'          => [
+						'min_length' => null,
+						'required'   => true,
+						'order'      => 20,
+					],
+				],
 			],
 			$args
 		);
@@ -67,22 +90,6 @@ class User_Login extends Model_Form {
 			[
 				'action'   => hp\get_rest_url( '/users/login' ),
 				'redirect' => true,
-
-				'fields'   => [
-					'username_or_email' => [
-						'label'      => esc_html__( 'Username or Email', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 254,
-						'required'   => true,
-						'order'      => 10,
-					],
-
-					'password'          => [
-						'min_length' => null,
-						'required'   => true,
-						'order'      => 20,
-					],
-				],
 
 				'button'   => [
 					'label' => esc_html__( 'Sign In', 'hivepress' ),

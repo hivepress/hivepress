@@ -44,6 +44,20 @@ abstract class Form {
 	protected static $description;
 
 	/**
+	 * Form captcha.
+	 *
+	 * @var bool
+	 */
+	protected static $captcha = false;
+
+	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Form message.
 	 *
 	 * @var string
@@ -70,13 +84,6 @@ abstract class Form {
 	 * @var mixed
 	 */
 	protected $redirect = false;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected $captcha = false;
 
 	/**
 	 * Form button.
@@ -107,13 +114,6 @@ abstract class Form {
 	protected $attributes = [];
 
 	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected $fields = [];
-
-	/**
 	 * Form errors.
 	 *
 	 * @var array
@@ -130,6 +130,10 @@ abstract class Form {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
+		// Filter arguments.
+		$args = apply_filters( 'hivepress/v1/forms/form', $args );
+		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -142,12 +146,6 @@ abstract class Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Filter arguments.
-		$args = apply_filters( 'hivepress/v1/forms/form', array_merge( $args, [ 'name' => static::$name ] ) );
-		$args = apply_filters( 'hivepress/v1/forms/' . static::$name, array_merge( $args, [ 'name' => static::$name ] ) );
-
-		unset( $args['name'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -190,8 +188,8 @@ abstract class Form {
 	 *
 	 * @param array $fields Form fields.
 	 */
-	protected function set_fields( $fields ) {
-		$this->fields = [];
+	protected static function set_fields( $fields ) {
+		static::$fields = [];
 
 		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
@@ -201,7 +199,7 @@ abstract class Form {
 			if ( class_exists( $field_class ) ) {
 
 				// Create field.
-				$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+				static::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 			}
 		}
 	}
@@ -231,8 +229,8 @@ abstract class Form {
 	 */
 	final public function set_values( $values ) {
 		foreach ( $values as $field_name => $value ) {
-			if ( isset( $this->fields[ $field_name ] ) ) {
-				$this->fields[ $field_name ]->set_value( $value );
+			if ( isset( static::$fields[ $field_name ] ) ) {
+				static::$fields[ $field_name ]->set_value( $value );
 			}
 		}
 	}
@@ -245,7 +243,7 @@ abstract class Form {
 	final public function get_values() {
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( static::$fields as $field_name => $field ) {
 			$values[ $field_name ] = $field->get_value();
 		}
 
@@ -259,8 +257,8 @@ abstract class Form {
 	 * @return mixed
 	 */
 	final public function get_value( $name ) {
-		if ( isset( $this->fields[ $name ] ) ) {
-			return $this->fields[ $name ]->get_value();
+		if ( isset( static::$fields[ $name ] ) ) {
+			return static::$fields[ $name ]->get_value();
 		}
 	}
 
@@ -352,7 +350,7 @@ abstract class Form {
 
 		// Validate fields.
 		if ( empty( $this->errors ) ) {
-			foreach ( $this->fields as $field ) {
+			foreach ( static::$fields as $field ) {
 				if ( ! $field->validate() ) {
 					$this->add_errors( $field->get_errors() );
 				}
@@ -387,7 +385,7 @@ abstract class Form {
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';
 
-		foreach ( $this->fields as $field ) {
+		foreach ( static::$fields as $field ) {
 			if ( $field::get_type() !== 'hidden' ) {
 				$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_type() ) ) . '">';
 

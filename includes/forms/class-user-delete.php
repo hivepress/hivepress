@@ -27,13 +27,6 @@ class User_Delete extends Model_Form {
 	protected static $name;
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string
@@ -48,6 +41,13 @@ class User_Delete extends Model_Form {
 	protected static $model;
 
 	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
@@ -57,6 +57,13 @@ class User_Delete extends Model_Form {
 			[
 				'description' => esc_html__( 'Please enter your password below to permanently delete your account.', 'hivepress' ),
 				'model'       => 'user',
+
+				'fields'      => [
+					'password' => [
+						'required' => true,
+						'order'    => 10,
+					],
+				],
 			],
 			$args
 		);
@@ -75,13 +82,6 @@ class User_Delete extends Model_Form {
 				'action'   => hp\get_rest_url( '/users/%id%' ),
 				'method'   => 'DELETE',
 				'redirect' => true,
-
-				'fields'   => [
-					'password' => [
-						'required' => true,
-						'order'    => 10,
-					],
-				],
 
 				'button'   => [
 					'label' => esc_html__( 'Delete Account', 'hivepress' ),

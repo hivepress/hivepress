@@ -1,6 +1,6 @@
 <?php
 /**
- * Menu block template.
+ * Header block template.
  *
  * @package HivePress\Configs\Templates
  */

@@ -27,24 +27,20 @@ class Listing_Sort extends Form {
 	protected static $name;
 
 	/**
-	 * Form title.
+	 * Form fields.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $title;
+	protected static $fields = [];
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'action' => home_url( '/' ),
-				'method' => 'GET',
-				'button' => null,
-
 				'fields' => [
 					'sort'      => [
 						'label'    => esc_html__( 'Sort by', 'hivepress' ),
@@ -67,6 +63,24 @@ class Listing_Sort extends Form {
 						'default' => 'hp_listing',
 					],
 				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'action' => home_url( '/' ),
+				'method' => 'GET',
+				'button' => null,
 			],
 			$args
 		);

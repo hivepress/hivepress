@@ -34,27 +34,18 @@ class Listing_Submit extends Listing_Update {
 	protected static $title;
 
 	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
+	protected static $fields = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Form arguments.
 	 */
 	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'title' => esc_html__( 'Submit Listing', 'hivepress' ),
-			],
-			$args
-		);
-
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Form arguments.
-	 */
-	public function __construct( $args = [] ) {
 
 		// Set fields.
 		$fields = [];
@@ -80,9 +71,25 @@ class Listing_Submit extends Listing_Update {
 		// Set arguments.
 		$args = hp\merge_arrays(
 			[
+				'title'  => esc_html__( 'Submit Listing', 'hivepress' ),
+				'fields' => $fields,
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'message'  => null,
 				'redirect' => true,
-				'fields'   => $fields,
 
 				'button'   => [
 					'label' => esc_html__( 'Submit Listing', 'hivepress' ),

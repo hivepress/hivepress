@@ -30,11 +30,11 @@ final class Template {
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
 
-			// Render menu.
-			add_action( 'storefront_header', [ $this, 'render_menu' ], 31 );
+			// Render header.
+			add_action( 'storefront_header', [ $this, 'render_header' ], 31 );
 
-			// Render modals.
-			add_action( 'wp_footer', [ $this, 'render_modals' ] );
+			// Render footer.
+			add_action( 'wp_footer', [ $this, 'render_footer' ] );
 		}
 	}
 
@@ -49,16 +49,16 @@ final class Template {
 	}
 
 	/**
-	 * Renders menu.
+	 * Renders header.
 	 */
-	public function render_menu() {
-		echo ( new Blocks\Template( [ 'template_name' => 'menu_block' ] ) )->render();
+	public function render_header() {
+		echo ( new Blocks\Template( [ 'template_name' => 'header_block' ] ) )->render();
 	}
 
 	/**
-	 * Renders modals.
+	 * Renders footer.
 	 */
-	public function render_modals() {
-		echo ( new Blocks\Template( [ 'template_name' => 'modals_block' ] ) )->render();
+	public function render_footer() {
+		echo ( new Blocks\Template( [ 'template_name' => 'footer_block' ] ) )->render();
 	}
 }

@@ -38,8 +38,8 @@ abstract class Model_Form extends Form {
 	 *
 	 * @param array $fields Form fields.
 	 */
-	final protected function set_fields( $fields ) {
-		$this->fields = [];
+	final protected static function set_fields( $fields ) {
+		static::$fields = [];
 
 		// Get model class.
 		$model_class = '\HivePress\Models\\' . static::$model;
@@ -62,7 +62,7 @@ abstract class Model_Form extends Form {
 			if ( class_exists( $field_class ) ) {
 
 				// Create field.
-				$this->fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+				static::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
 			}
 		}
 	}
