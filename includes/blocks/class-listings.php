@@ -148,7 +148,7 @@ class Listings extends Block {
 		// Get listing query.
 		$query = $wp_query;
 
-		if ( get_post_type() !== 'hp_listing' || is_single() ) {
+		if ( is_single() || hp\get_array_value( $query->query, 'post_type' ) !== 'hp_listing' ) {
 
 				// Set query arguments.
 				$query_args = [

@@ -306,14 +306,16 @@ class Listing extends Controller {
 		} else {
 
 			// Query listings.
-			query_posts(
-				[
-					'post_type'      => 'hp_listing',
-					'post_status'    => 'publish',
-					'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-					'paged'          => hp\get_current_page(),
-				]
-			);
+			if ( is_page() ) {
+				query_posts(
+					[
+						'post_type'      => 'hp_listing',
+						'post_status'    => 'publish',
+						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+						'paged'          => hp\get_current_page(),
+					]
+				);
+			}
 
 			// Render listings.
 			return ( new Blocks\Template(
