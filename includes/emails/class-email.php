@@ -50,18 +50,18 @@ abstract class Email {
 	protected $recipient;
 
 	/**
-	 * Email tokens.
-	 *
-	 * @var array
-	 */
-	protected $tokens = [];
-
-	/**
 	 * Email headers.
 	 *
 	 * @var array
 	 */
 	protected $headers = [];
+
+	/**
+	 * Email tokens.
+	 *
+	 * @var array
+	 */
+	protected $tokens = [];
 
 	/**
 	 * Class initializer.
