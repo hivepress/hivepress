@@ -128,7 +128,7 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 
 		// Filter arguments.
-		$args = apply_filters( 'hivepress/v1/fields/field', array_merge( $args, [ 'type' => static::$type ] ) );
+		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::$type ] ) );
 
 		// Set arguments.
 		$this->args = $args;

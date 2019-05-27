@@ -28,7 +28,7 @@ final class Form {
 		add_filter( 'hivepress/v1/forms/form', [ $this, 'set_form_captcha' ] );
 
 		// Set field options.
-		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
+		add_filter( 'hivepress/v1/fields/field/args', [ $this, 'set_field_options' ] );
 
 		if ( ! is_admin() ) {
 
