@@ -304,8 +304,11 @@ final class Attribute {
 		$model = explode( '_', $form['name'] );
 		$model = reset( $model );
 
+		// Get instance ID.
+		$instance_id = get_query_var( 'hp_listing_id' ) ? absint( get_query_var( 'hp_listing_id' ) ) : get_the_ID();
+
 		// Filter attributes.
-		$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		$attributes = array_filter(
 			$this->attributes,

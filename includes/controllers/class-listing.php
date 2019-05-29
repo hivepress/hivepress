@@ -148,6 +148,8 @@ class Listing extends Controller {
 			return hp\rest_error( 404 );
 		}
 
+		set_query_var('hp_listing_id', $listing->get_id());
+
 		// Check permissions.
 		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
@@ -423,17 +425,10 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_edit_page() {
-		global $post;
-
-		// Set query.
-		$post = get_post( absint( get_query_var( 'hp_listing_id' ) ) );
-
-		setup_postdata( $post );
-
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_edit_page',
-				'listing_id'    => $post->ID,
+				'listing_id'    => absint( get_query_var( 'hp_listing_id' ) ),
 			]
 		) )->render();
 	}
