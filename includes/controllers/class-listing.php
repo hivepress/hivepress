@@ -52,19 +52,19 @@ class Listing extends Controller {
 
 						'endpoints' => [
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<listing_id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_listing',
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)/report',
+								'path'    => '/(?P<listing_id>\d+)/report',
 								'methods' => 'POST',
 								'action'  => 'report_listing',
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<listing_id>\d+)',
 								'methods' => 'DELETE',
 								'action'  => 'delete_listing',
 							],
@@ -142,7 +142,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'id' ) );
+		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp\rest_error( 404 );
@@ -197,7 +197,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'id' ) );
+		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) || $listing->get_status() !== 'publish' ) {
 			return hp\rest_error( 404 );
@@ -248,7 +248,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'id' ) );
+		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp\rest_error( 404 );

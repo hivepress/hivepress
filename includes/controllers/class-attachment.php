@@ -53,13 +53,13 @@ class Attachment extends Controller {
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<attachment_id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_attachment',
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<attachment_id>\d+)',
 								'methods' => 'DELETE',
 								'action'  => 'delete_attachment',
 							],
@@ -208,7 +208,7 @@ class Attachment extends Controller {
 		$attachment_id = hp\get_post_id(
 			[
 				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'id' ) ) ],
+				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
 				'author'    => get_current_user_id(),
 			]
 		);
@@ -254,7 +254,7 @@ class Attachment extends Controller {
 		$attachment_id = hp\get_post_id(
 			[
 				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'id' ) ) ],
+				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
 				'author'    => get_current_user_id(),
 			]
 		);

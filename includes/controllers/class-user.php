@@ -76,13 +76,13 @@ class User extends Controller {
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<user_id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_user',
 							],
 
 							[
-								'path'    => '/(?P<id>\d+)',
+								'path'    => '/(?P<user_id>\d+)',
 								'methods' => 'DELETE',
 								'action'  => 'delete_user',
 							],
@@ -428,7 +428,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get( $request->get_param( 'id' ) );
+		$user = Models\User::get( $request->get_param( 'user_id' ) );
 
 		if ( is_null( $user ) ) {
 			return hp\rest_error( 404 );
@@ -490,7 +490,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get( $request->get_param( 'id' ) );
+		$user = Models\User::get( $request->get_param( 'user_id' ) );
 
 		if ( is_null( $user ) ) {
 			return hp\rest_error( 404 );
