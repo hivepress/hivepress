@@ -649,11 +649,9 @@ final class Admin {
 					// Get field value.
 					$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
 
-					if ( '' === $value ) {
-						$value = null;
+					if ( '' !== $value ) {
+						$field->set_value( $value );
 					}
-
-					$field->set_value( $value );
 
 					if ( 'hidden' === $field_args['type'] ) {
 
