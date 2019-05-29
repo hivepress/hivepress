@@ -68,7 +68,7 @@ class Template extends Block {
 					'blocks'  => $template_args['blocks'],
 					'context' => $this->context,
 				]
-			) );
+			) )->render();
 		}
 
 		return $output;

@@ -78,6 +78,7 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
+		unset( $args['type'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
