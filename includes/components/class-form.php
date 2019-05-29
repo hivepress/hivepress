@@ -61,10 +61,6 @@ final class Form {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
-			if ( 'select' === $args['type'] ) {
-				$options = [ '' => '&mdash;' ];
-			}
-
 			switch ( $args['options'] ) {
 
 				// Posts.

@@ -94,6 +94,16 @@ class Select extends Field {
 			$attributes['required'] = true;
 		}
 
+		// Set multiple property.
+		if ( $this->multiple ) {
+			$attributes['multiple'] = true;
+		}
+
+		// Add default option.
+		if ( ! $this->multiple ) {
+			$this->options = [ '' => '&mdash;' ] + $this->options;
+		}
+
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::bootstrap();
