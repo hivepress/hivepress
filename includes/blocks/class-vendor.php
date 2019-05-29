@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Template {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

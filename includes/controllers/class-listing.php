@@ -148,7 +148,7 @@ class Listing extends Controller {
 			return hp\rest_error( 404 );
 		}
 
-		set_query_var('hp_listing_id', $listing->get_id());
+		set_query_var( 'hp_listing_id', $listing->get_id() );
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
@@ -301,8 +301,11 @@ class Listing extends Controller {
 			// Render categories.
 			return ( new Blocks\Template(
 				[
-					'template_name'       => 'listing_categories_view_page',
-					'listing_category_id' => $category_id,
+					'template_name' => 'listing_categories_view_page',
+
+					'context'       => [
+						'listing_category_id' => $category_id,
+					],
 				]
 			) )->render();
 		} else {
@@ -348,7 +351,10 @@ class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_view_page',
-				'listing'       => Models\Listing::get( get_the_ID() ),
+
+				'context'       => [
+					'listing' => Models\Listing::get( get_the_ID() ),
+				],
 			]
 		) )->render();
 	}
@@ -428,7 +434,10 @@ class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_edit_page',
-				'listing_id'    => absint( get_query_var( 'hp_listing_id' ) ),
+
+				'context'       => [
+					'listing_id' => absint( get_query_var( 'hp_listing_id' ) ),
+				],
 			]
 		) )->render();
 	}
@@ -535,8 +544,11 @@ class Listing extends Controller {
 	public function render_listing_submit_category_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name'       => 'listing_submit_category_page',
-				'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
+				'template_name' => 'listing_submit_category_page',
+
+				'context'       => [
+					'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
+				],
 			]
 		) )->render();
 	}
@@ -580,14 +592,17 @@ class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_submit_details_page',
-				'listing_id'    => hp\get_post_id(
-					[
-						'post_type'   => 'hp_listing',
-						'post_status' => 'auto-draft',
-						'post_parent' => null,
-						'author'      => get_current_user_id(),
-					]
-				),
+
+				'context'       => [
+					'listing_id' => hp\get_post_id(
+						[
+							'post_type'   => 'hp_listing',
+							'post_status' => 'auto-draft',
+							'post_parent' => null,
+							'author'      => get_current_user_id(),
+						]
+					),
+				],
 			]
 		) )->render();
 	}
@@ -653,16 +668,19 @@ class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_submit_complete_page',
-				'listing'       => Models\Listing::get(
-					hp\get_post_id(
-						[
-							'post_type'   => 'hp_listing',
-							'post_status' => 'pending',
-							'post_parent' => null,
-							'author'      => get_current_user_id(),
-						]
-					)
-				),
+
+				'context'       => [
+					'listing' => Models\Listing::get(
+						hp\get_post_id(
+							[
+								'post_type'   => 'hp_listing',
+								'post_status' => 'pending',
+								'post_parent' => null,
+								'author'      => get_current_user_id(),
+							]
+						)
+					),
+				],
 			]
 		) )->render();
 	}

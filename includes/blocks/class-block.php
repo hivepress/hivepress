@@ -22,6 +22,13 @@ abstract class Block {
 	use Traits\Mutator;
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Block title.
 	 *
 	 * @var string
@@ -55,6 +62,9 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public static function init( $args = [] ) {
+
+		// Set type.
+		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -115,57 +125,6 @@ abstract class Block {
 	 */
 	final public static function get_settings() {
 		return static::$settings;
-	}
-
-	/**
-	 * Routes methods.
-	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
-	 * @return mixed
-	 */
-	final public function __call( $name, $args ) {
-		$prefixes = array_filter(
-			[
-				'set',
-				'get',
-			],
-			function( $prefix ) use ( $name ) {
-				return strpos( $name, $prefix . '_' ) === 0;
-			}
-		);
-
-		if ( ! empty( $prefixes ) ) {
-			$method = reset( $prefixes );
-			$arg    = substr( $name, strlen( $method ) + 1 );
-
-			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
-		}
-	}
-
-	/**
-	 * Sets property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected function set_property( $name, $value ) {
-		if ( method_exists( $this, 'set_' . $name ) ) {
-			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
-		} elseif ( property_exists( $this, $name ) ) {
-			$this->$name = $value;
-		} else {
-			$this->context[ $name ] = $value;
-		}
-	}
-
-	/**
-	 * Gets property.
-	 *
-	 * @param string $name Property name.
-	 */
-	final protected function get_property( $name ) {
-		return hp\get_array_value( $this->context, $name );
 	}
 
 	/**

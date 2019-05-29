@@ -620,7 +620,10 @@ class User extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'user_settings_page',
-				'user_id'       => get_current_user_id(),
+
+				'context'       => [
+					'user_id' => get_current_user_id(),
+				],
 			]
 		) )->render();
 	}

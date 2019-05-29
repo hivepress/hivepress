@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Toggle extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Toggle icon.
 	 *
 	 * @var string
@@ -67,6 +74,7 @@ class Toggle extends Block {
 	protected function bootstrap() {
 		$attributes = [];
 
+		// Set attributes.
 		if ( ! $this->small ) {
 			$attributes['class'] = [ 'hp-link' ];
 		}

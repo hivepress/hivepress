@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Categories extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Block title.
 	 *
 	 * @var string
@@ -78,6 +85,7 @@ class Listing_Categories extends Block {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
+
 				'settings' => [
 					'columns' => [
 						'label'   => esc_html__( 'Columns', 'hivepress' ),
@@ -134,7 +142,7 @@ class Listing_Categories extends Block {
 
 		// Set category ID.
 		if ( ! isset( $this->parent ) ) {
-			$this->parent = $this->get_listing_category_id();
+			$this->parent = hp\get_array_value( $this->context, 'listing_category_id' );
 		}
 
 		parent::bootstrap();
@@ -195,7 +203,10 @@ class Listing_Categories extends Block {
 					$output .= ( new Template(
 						[
 							'template_name' => 'listing_category_' . $this->template_context . '_block',
-							'category'      => $category,
+
+							'context'       => [
+								'listing_category' => $category,
+							],
 						]
 					) )->render();
 

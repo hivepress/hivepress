@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Template extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Template name.
 	 *
 	 * @var string
@@ -54,16 +61,14 @@ class Template extends Block {
 				}
 			}
 
-			foreach ( hp\sort_array( $template_args['blocks'] ) as $block_name => $block_args ) {
-
-				// Get block class.
-				$block_class = '\HivePress\Blocks\\' . $block_args['type'];
-
-				// Render block.
-				if ( class_exists( $block_class ) ) {
-					$output .= ( new $block_class( hp\merge_arrays( $this->context, $block_args, [ 'name' => $block_name ] ) ) )->render();
-				}
-			}
+			// Render blocks.
+			$output .= ( new Container(
+				[
+					'tag'     => false,
+					'blocks'  => $template_args['blocks'],
+					'context' => $this->context,
+				]
+			) );
 		}
 
 		return $output;

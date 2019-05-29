@@ -20,11 +20,19 @@ defined( 'ABSPATH' ) || exit;
 class Page_Container extends Container {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {
 		$attributes = [];
 
+		// Set attributes.
 		switch ( get_template() ) {
 			case 'storefront':
 				$attributes['class'] = [ 'site-main' ];
@@ -45,6 +53,7 @@ class Page_Container extends Container {
 	public function render() {
 		$output = parent::render();
 
+		// Add container.
 		switch ( get_template() ) {
 			case 'storefront':
 				$output = '<div class="content-area">' . $output . '</div>';

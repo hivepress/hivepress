@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search_Results extends Container {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

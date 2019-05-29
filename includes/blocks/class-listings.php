@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Block title.
 	 *
 	 * @var string
@@ -78,6 +85,7 @@ class Listings extends Block {
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Listings', 'hivepress' ),
+
 				'settings' => [
 					'columns'  => [
 						'label'   => esc_html__( 'Columns', 'hivepress' ),
@@ -150,33 +158,33 @@ class Listings extends Block {
 
 		if ( is_single() || hp\get_array_value( $query->query, 'post_type' ) !== 'hp_listing' ) {
 
-				// Set query arguments.
-				$query_args = [
-					'post_type'      => 'hp_listing',
-					'post_status'    => 'publish',
-					'posts_per_page' => absint( $this->number ),
+			// Set query arguments.
+			$query_args = [
+				'post_type'      => 'hp_listing',
+				'post_status'    => 'publish',
+				'posts_per_page' => absint( $this->number ),
+			];
+
+			// Get category.
+			if ( $this->category ) {
+				$query_args['tax_query'] = [
+					[
+						'taxonomy' => 'hp_listing_category',
+						'terms'    => [ absint( $this->category ) ],
+					],
 				];
+			}
 
-				// Get category.
-				if ( $this->category ) {
-					$query_args['tax_query'] = [
-						[
-							'taxonomy' => 'hp_listing_category',
-							'terms'    => [ absint( $this->category ) ],
-						],
-					];
-				}
+			// Get order.
+			if ( 'title' === $this->order ) {
+				$query_args['orderby'] = 'title';
+				$query_args['order']   = 'ASC';
+			} elseif ( 'random' === $this->order ) {
+				$query_args['orderby'] = 'rand';
+			}
 
-				// Get order.
-				if ( 'title' === $this->order ) {
-					$query_args['orderby'] = 'title';
-					$query_args['order']   = 'ASC';
-				} elseif ( 'random' === $this->order ) {
-					$query_args['orderby'] = 'rand';
-				}
-
-				// Query listings.
-				$query = new \WP_Query( $query_args );
+			// Query listings.
+			$query = new \WP_Query( $query_args );
 		}
 
 		// Render listings.
@@ -203,7 +211,10 @@ class Listings extends Block {
 					$output .= ( new Template(
 						[
 							'template_name' => 'listing_' . $this->template_context . '_block',
-							'listing'       => $listing,
+
+							'context'       => [
+								'listing' => $listing,
+							],
 						]
 					) )->render();
 

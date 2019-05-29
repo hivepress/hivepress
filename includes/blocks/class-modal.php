@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Modal extends Container {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Modal title.
 	 *
 	 * @var string
@@ -62,10 +69,7 @@ class Modal extends Container {
 				[
 					'type'      => 'element',
 					'file_path' => 'modal/title',
-
-					'context'   => [
-						'title' => $this->modal_title,
-					],
+					'context'   => array_merge( $this->context, [ 'title' => $this->modal_title ] ),
 				]
 			)
 		);

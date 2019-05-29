@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Form extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Form name.
 	 *
 	 * @var string
@@ -61,9 +68,9 @@ class Form extends Block {
 		if ( class_exists( $form_class ) ) {
 			$form_args = [];
 
-			// Set model ID.
+			// Set instance ID.
 			if ( method_exists( $form_class, 'get_model' ) ) {
-				$form_args['id'] = call_user_func( [ $this, 'get_' . $form_class::get_model() . '_id' ] );
+				$form_args['id'] = hp\get_array_value( $this->context, $form_class::get_model() . '_id' );
 			}
 
 			// Set attributes.
@@ -71,23 +78,21 @@ class Form extends Block {
 
 			// Render footer.
 			if ( ! empty( $this->form_footer ) ) {
-				$form_args['footer'] = '';
-
-				foreach ( hp\sort_array( $this->form_footer ) as $block_name => $block_args ) {
-					$block_class = '\HivePress\Blocks\\' . $block_args['type'];
-
-					if ( class_exists( $block_class ) ) {
-						$form_args['footer'] .= ( new $block_class( hp\merge_arrays( $block_args, [ 'name' => $block_name ] ) ) )->render();
-					}
-				}
+				$form_args['footer'] = ( new Container(
+					[
+						'tag'     => false,
+						'blocks'  => $this->form_footer,
+						'context' => $this->context,
+					]
+				) )->render();
 			}
 
 			// Create form.
 			$form = new $form_class( $form_args );
 
-			if ( $form->get_method() === 'POST' ) {
+			if ( $form::get_method() === 'POST' ) {
 				$form->set_values( array_merge( $this->values, $_POST ) );
-			} elseif ( $form->get_method() === 'GET' ) {
+			} elseif ( $form::get_method() === 'GET' ) {
 				$form->set_values( array_merge( $this->values, $_GET ) );
 			}
 

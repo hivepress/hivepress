@@ -89,7 +89,10 @@ class Vendor extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'vendor_view_page',
-				'vendor'        => Models\Vendor::get( get_the_ID() ),
+
+				'context'       => [
+					'vendor' => Models\Vendor::get( get_the_ID() ),
+				],
 			]
 		) )->render();
 	}

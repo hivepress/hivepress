@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Container extends Block {
 
 	/**
+	 * Block type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Container tag.
 	 *
 	 * @var string
@@ -55,7 +62,7 @@ class Container extends Block {
 
 			// Create block.
 			if ( class_exists( $block_class ) ) {
-				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( $this->context, $block_args, [ 'name' => $block_name ] ) );
+				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'context' => $this->context ], $block_args, [ 'name' => $block_name ] ) );
 			}
 		}
 	}
@@ -66,14 +73,20 @@ class Container extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '';
+
+		if ( $this->tag ) {
+			$output .= '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		}
 
 		// Render inner blocks.
 		foreach ( $this->blocks as $block ) {
 			$output .= $block->render();
 		}
 
-		$output .= '</' . esc_attr( $this->tag ) . '>';
+		if ( $this->tag ) {
+			$output .= '</' . esc_attr( $this->tag ) . '>';
+		}
 
 		return $output;
 	}
