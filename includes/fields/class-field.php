@@ -112,7 +112,7 @@ abstract class Field {
 		);
 
 		// Set type.
-		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		$args = array_merge( [ 'type' => strtolower( ( new \ReflectionClass( static::class ) )->getShortName() ) ], $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
