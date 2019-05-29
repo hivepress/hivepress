@@ -39,6 +39,7 @@ class Vendor extends Template {
 
 				// Set query.
 				$post = get_post( $vendor->get_id() );
+
 				setup_postdata( $post );
 
 				// Set vendor.

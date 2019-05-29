@@ -423,10 +423,17 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_edit_page() {
+		global $post;
+
+		// Set query.
+		$post = get_post( absint( get_query_var( 'hp_listing_id' ) ) );
+
+		setup_postdata( $post );
+
 		return ( new Blocks\Template(
 			[
 				'template_name' => 'listing_edit_page',
-				'listing_id'    => absint( get_query_var( 'hp_listing_id' ) ),
+				'listing_id'    => $post->ID,
 			]
 		) )->render();
 	}

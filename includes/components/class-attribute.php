@@ -72,8 +72,8 @@ final class Attribute {
 			// Disable quick edit.
 			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
 
-			// Remove taxonomy boxes.
-			add_action( 'admin_notices', [ $this, 'remove_taxonomy_boxes' ] );
+			// Remove term boxes.
+			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
 		} else {
 
 			// Set search query.
@@ -277,6 +277,7 @@ final class Attribute {
 				$model['fields'][ $attribute_name ] = array_merge(
 					$attribute['edit_field'],
 					[
+						'required'       => false,
 						'display_areas'  => $attribute['display_areas'],
 						'display_format' => $attribute['display_format'],
 					]
@@ -535,9 +536,9 @@ final class Attribute {
 	}
 
 	/**
-	 * Removes taxonomy boxes.
+	 * Removes term boxes.
 	 */
-	public function remove_taxonomy_boxes() {
+	public function remove_term_boxes() {
 		global $pagenow, $post;
 
 		if ( 'post.php' === $pagenow && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
@@ -557,7 +558,7 @@ final class Attribute {
 
 			// Remove meta boxes.
 			foreach ( array_keys( $attributes ) as $attribute_name ) {
-				remove_meta_box( $post->post_type . $attribute_name . 'div', $post->post_type, 'side' );
+				remove_meta_box( $post->post_type . '_' . $attribute_name . 'div', $post->post_type, 'side' );
 			}
 		}
 	}
