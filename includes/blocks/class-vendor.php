@@ -50,7 +50,7 @@ class Vendor extends Template {
 				setup_postdata( $post );
 
 				// Set vendor.
-				$this->set_vendor( $vendor );
+				$this->context['vendor'] = $vendor;
 
 				// Render vendor.
 				$output .= parent::render();

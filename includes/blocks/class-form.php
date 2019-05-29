@@ -80,9 +80,9 @@ class Form extends Block {
 			if ( ! empty( $this->form_footer ) ) {
 				$form_args['footer'] = ( new Container(
 					[
+						'context' => $this->context,
 						'tag'     => false,
 						'blocks'  => $this->form_footer,
-						'context' => $this->context,
 					]
 				) )->render();
 			}

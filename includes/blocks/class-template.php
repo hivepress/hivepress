@@ -64,9 +64,9 @@ class Template extends Block {
 			// Render blocks.
 			$output .= ( new Container(
 				[
+					'context' => $this->context,
 					'tag'     => false,
 					'blocks'  => $template_args['blocks'],
-					'context' => $this->context,
 				]
 			) )->render();
 		}
