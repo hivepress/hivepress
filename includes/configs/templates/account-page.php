@@ -14,9 +14,9 @@ return [
 	'parent' => 'page',
 
 	'blocks' => [
-		'page_content' => [
+		'page_container' => [
 			'blocks' => [
-				'columns' => [
+				'page_columns' => [
 					'type'       => 'container',
 					'order'      => 10,
 
@@ -25,7 +25,7 @@ return [
 					],
 
 					'blocks'     => [
-						'sidebar' => [
+						'page_sidebar' => [
 							'type'       => 'container',
 							'tag'        => 'aside',
 							'order'      => 10,
@@ -36,9 +36,9 @@ return [
 							],
 
 							'blocks'     => [
-								'menu' => [
+								'account_menu' => [
 									'type'       => 'menu',
-									'menu'  => 'account',
+									'menu'       => 'account',
 									'order'      => 10,
 
 									'attributes' => [
@@ -48,7 +48,7 @@ return [
 							],
 						],
 
-						'content' => [
+						'page_content' => [
 							'type'       => 'container',
 							'tag'        => 'main',
 							'order'      => 20,
@@ -58,10 +58,10 @@ return [
 							],
 
 							'blocks'     => [
-								'title' => [
-									'type'      => 'element',
+								'page_title' => [
+									'type'     => 'element',
 									'filepath' => 'page/title',
-									'order'     => 5,
+									'order'    => 5,
 								],
 							],
 						],

@@ -14,9 +14,9 @@ return [
 	'parent' => 'page',
 
 	'blocks' => [
-		'page_content' => [
+		'page_container' => [
 			'blocks' => [
-				'header'  => [
+				'page_header'  => [
 					'type'       => 'container',
 					'tag'        => 'header',
 					'order'      => 10,
@@ -26,14 +26,14 @@ return [
 					],
 
 					'blocks'     => [
-						'search_form' => [
+						'listing_search_form' => [
 							'type'  => 'listing_search_form',
 							'order' => 10,
 						],
 					],
 				],
 
-				'content' => [
+				'page_content' => [
 					'type'       => 'container',
 					'tag'        => 'main',
 					'order'      => 20,

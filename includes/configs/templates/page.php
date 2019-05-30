@@ -18,7 +18,7 @@ return [
 			'order'     => 10,
 		],
 
-		'page_content' => [
+		'page_container' => [
 			'type'   => 'page_container',
 			'order'  => 20,
 

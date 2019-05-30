@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'container' => [
+		'main_menu' => [
 			'type'       => 'container',
 			'order'      => 10,
 
@@ -22,15 +22,15 @@ return [
 
 			'blocks'     => [
 				'user_account_link'     => [
-					'type'      => 'element',
+					'type'     => 'element',
 					'filepath' => 'user/account-link',
-					'order'     => 10,
+					'order'    => 10,
 				],
 
 				'listing_submit_button' => [
-					'type'      => 'element',
+					'type'     => 'element',
 					'filepath' => 'listing/submit-button',
-					'order'     => 20,
+					'order'    => 20,
 				],
 			],
 		],

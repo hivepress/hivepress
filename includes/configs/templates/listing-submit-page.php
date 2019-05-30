@@ -14,7 +14,7 @@ return [
 	'parent' => 'page',
 
 	'blocks' => [
-		'page_content' => [
+		'page_container' => [
 			'blocks' => [
 				'content' => [
 					'type'   => 'container',
