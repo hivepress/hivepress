@@ -14,12 +14,12 @@ return [
 	'parent' => 'account_page',
 
 	'blocks' => [
-		'content' => [
+		'page_content' => [
 			'blocks' => [
 				'listings' => [
-					'type'             => 'listings',
+					'type'     => 'listings',
 					'template' => 'edit',
-					'order'            => 10,
+					'order'    => 10,
 				],
 			],
 		],

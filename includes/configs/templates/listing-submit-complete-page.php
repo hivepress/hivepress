@@ -14,12 +14,12 @@ return [
 	'parent' => 'listing_submit_page',
 
 	'blocks' => [
-		'content' => [
+		'page_content' => [
 			'blocks' => [
-				'complete_message' => [
-					'type'      => 'element',
+				'listing_complete_message' => [
+					'type'     => 'element',
 					'filepath' => 'listing/submit/complete-message',
-					'order'     => 10,
+					'order'    => 10,
 				],
 			],
 		],

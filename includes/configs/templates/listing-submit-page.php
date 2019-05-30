@@ -16,16 +16,16 @@ return [
 	'blocks' => [
 		'page_container' => [
 			'blocks' => [
-				'content' => [
+				'page_content' => [
 					'type'   => 'container',
 					'tag'    => 'main',
 					'order'  => 10,
 
 					'blocks' => [
-						'title' => [
-							'type'      => 'element',
+						'page_title' => [
+							'type'     => 'element',
 							'filepath' => 'page/title',
-							'order'     => 5,
+							'order'    => 5,
 						],
 					],
 				],

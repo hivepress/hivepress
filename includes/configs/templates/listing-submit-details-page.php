@@ -14,15 +14,15 @@ return [
 	'parent' => 'listing_submit_page',
 
 	'blocks' => [
-		'content' => [
+		'page_content' => [
 			'blocks' => [
-				'submit_form' => [
-					'type'        => 'form',
+				'listing_submit_form' => [
+					'type'   => 'form',
 					'form'   => 'listing_submit',
-					'order'       => 10,
+					'order'  => 10,
 
 					'footer' => [
-						'actions' => [
+						'form_actions' => [
 							'type'       => 'container',
 							'order'      => 10,
 
@@ -31,10 +31,10 @@ return [
 							],
 
 							'blocks'     => [
-								'category_link' => [
-									'type'      => 'element',
+								'listing_category_link' => [
+									'type'     => 'element',
 									'filepath' => 'listing-category/submit/change-link',
-									'order'     => 10,
+									'order'    => 10,
 								],
 							],
 						],

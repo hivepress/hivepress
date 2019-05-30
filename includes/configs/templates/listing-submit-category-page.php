@@ -14,13 +14,13 @@ return [
 	'parent' => 'listing_submit_page',
 
 	'blocks' => [
-		'content' => [
+		'page_content' => [
 			'blocks' => [
 				'listing_categories' => [
-					'type'             => 'listing_categories',
+					'type'     => 'listing_categories',
 					'template' => 'submit',
-					'columns'          => 3,
-					'order'            => 10,
+					'columns'  => 3,
+					'order'    => 10,
 				],
 			],
 		],

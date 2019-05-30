@@ -16,7 +16,7 @@ return [
 	'blocks' => [
 		'page_container' => [
 			'blocks' => [
-				'header'  => [
+				'page_header'  => [
 					'type'       => 'container',
 					'tag'        => 'header',
 					'order'      => 10,
@@ -26,14 +26,14 @@ return [
 					],
 
 					'blocks'     => [
-						'search_form' => [
+						'listing_search_form' => [
 							'type'  => 'listing_search_form',
 							'order' => 10,
 						],
 					],
 				],
 
-				'columns' => [
+				'page_columns' => [
 					'type'       => 'container',
 					'order'      => 20,
 
@@ -42,7 +42,7 @@ return [
 					],
 
 					'blocks'     => [
-						'sidebar' => [
+						'page_sidebar' => [
 							'type'       => 'container',
 							'tag'        => 'aside',
 							'order'      => 10,
@@ -53,7 +53,7 @@ return [
 							],
 
 							'blocks'     => [
-								'filter_form' => [
+								'listing_filter_form' => [
 									'type'       => 'form',
 									'form'       => 'listing_filter',
 									'order'      => 10,
@@ -65,7 +65,7 @@ return [
 							],
 						],
 
-						'content' => [
+						'page_content' => [
 							'type'       => 'container',
 							'tag'        => 'main',
 							'order'      => 20,
@@ -75,12 +75,12 @@ return [
 							],
 
 							'blocks'     => [
-								'results' => [
+								'listing_results' => [
 									'type'   => 'results',
 									'order'  => 10,
 
 									'blocks' => [
-										'topbar'     => [
+										'page_topbar' => [
 											'type'       => 'container',
 											'order'      => 10,
 
@@ -89,12 +89,12 @@ return [
 											],
 
 											'blocks'     => [
-												'result_count' => [
+												'listing_result_count' => [
 													'type' => 'result_count',
 													'order' => 10,
 												],
 
-												'sort_form'    => [
+												'listing_sort_form'    => [
 													'type' => 'form',
 													'form' => 'listing_sort',
 													'order' => 20,
@@ -106,13 +106,13 @@ return [
 											],
 										],
 
-										'listings'   => [
+										'listings'    => [
 											'type'    => 'listings',
 											'columns' => 2,
 											'order'   => 20,
 										],
 
-										'pagination' => [
+										'listing_pagination' => [
 											'type'     => 'element',
 											'filepath' => 'pagination',
 											'order'    => 30,

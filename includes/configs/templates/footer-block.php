@@ -39,7 +39,7 @@ return [
 					],
 
 					'footer'     => [
-						'actions' => [
+						'form_actions' => [
 							'type'       => 'container',
 							'order'      => 10,
 

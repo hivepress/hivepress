@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'container' => [
+		'listing_container' => [
 			'type'       => 'container',
 			'tag'        => 'article',
 			'order'      => 10,
@@ -22,7 +22,7 @@ return [
 			],
 
 			'blocks'     => [
-				'header'  => [
+				'listing_header'  => [
 					'type'       => 'container',
 					'tag'        => 'header',
 					'order'      => 10,
@@ -32,15 +32,15 @@ return [
 					],
 
 					'blocks'     => [
-						'image' => [
-							'type'      => 'element',
+						'listing_image' => [
+							'type'     => 'element',
 							'filepath' => 'listing/view/block/image',
-							'order'     => 10,
+							'order'    => 10,
 						],
 					],
 				],
 
-				'content' => [
+				'listing_content' => [
 					'type'       => 'container',
 					'order'      => 20,
 
@@ -49,13 +49,13 @@ return [
 					],
 
 					'blocks'     => [
-						'title'                => [
-							'type'      => 'element',
+						'listing_title'                => [
+							'type'     => 'element',
 							'filepath' => 'listing/view/block/title',
-							'order'     => 10,
+							'order'    => 10,
 						],
 
-						'details_primary'      => [
+						'listing_details_primary'      => [
 							'type'       => 'container',
 							'order'      => 20,
 
@@ -64,29 +64,29 @@ return [
 							],
 
 							'blocks'     => [
-								'category' => [
-									'type'      => 'element',
+								'listing_category' => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/category',
-									'order'     => 10,
+									'order'    => 10,
 								],
 
-								'date'     => [
-									'type'      => 'element',
+								'listing_date'     => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/date',
-									'order'     => 20,
+									'order'    => 20,
 								],
 							],
 						],
 
-						'attributes_secondary' => [
-							'type'      => 'element',
+						'listing_attributes_secondary' => [
+							'type'     => 'element',
 							'filepath' => 'listing/view/block/attributes-secondary',
-							'order'     => 30,
+							'order'    => 30,
 						],
 					],
 				],
 
-				'footer'  => [
+				'listing_footer'  => [
 					'type'       => 'container',
 					'tag'        => 'footer',
 					'order'      => 30,
@@ -96,13 +96,13 @@ return [
 					],
 
 					'blocks'     => [
-						'attributes_primary' => [
-							'type'      => 'element',
+						'listing_attributes_primary' => [
+							'type'     => 'element',
 							'filepath' => 'listing/view/block/attributes-primary',
-							'order'     => 10,
+							'order'    => 10,
 						],
 
-						'actions_primary'    => [
+						'listing_actions_primary'    => [
 							'type'       => 'container',
 							'order'      => 20,
 

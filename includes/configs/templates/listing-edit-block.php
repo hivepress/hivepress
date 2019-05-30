@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'container' => [
+		'listing_container' => [
 			'type'       => 'container',
 			'tag'        => 'tr',
 			'order'      => 10,
@@ -22,25 +22,25 @@ return [
 			],
 
 			'blocks'     => [
-				'title'           => [
-					'type'      => 'element',
+				'listing_title'           => [
+					'type'     => 'element',
 					'filepath' => 'listing/edit/title',
-					'order'     => 10,
+					'order'    => 10,
 				],
 
-				'status'          => [
-					'type'      => 'element',
+				'listing_status'          => [
+					'type'     => 'element',
 					'filepath' => 'listing/edit/status',
-					'order'     => 20,
+					'order'    => 20,
 				],
 
-				'date'            => [
-					'type'      => 'element',
+				'listing_date'            => [
+					'type'     => 'element',
 					'filepath' => 'listing/edit/date',
-					'order'     => 30,
+					'order'    => 30,
 				],
 
-				'actions_primary' => [
+				'listing_actions_primary' => [
 					'type'       => 'container',
 					'tag'        => 'td',
 					'order'      => 40,
@@ -50,10 +50,10 @@ return [
 					],
 
 					'blocks'     => [
-						'view_link' => [
-							'type'      => 'element',
+						'listing_view_link' => [
+							'type'     => 'element',
 							'filepath' => 'listing/edit/view-link',
-							'order'     => 10,
+							'order'    => 10,
 						],
 					],
 				],

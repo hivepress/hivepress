@@ -20,7 +20,7 @@ return [
 			],
 
 			'blocks'     => [
-				'columns' => [
+				'page_columns' => [
 					'type'       => 'container',
 					'order'      => 10,
 
@@ -29,18 +29,18 @@ return [
 					],
 
 					'blocks'     => [
-						'sidebar' => [
+						'page_sidebar' => [
 							'type'       => 'container',
 							'tag'        => 'aside',
 							'order'      => 10,
 
 							'attributes' => [
-								'class'          => [ 'hp-vendor__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+								'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
 								'data-component' => 'sticky',
 							],
 
 							'blocks'     => [
-								'summary'         => [
+								'vendor_summary'         => [
 									'type'       => 'container',
 									'order'      => 10,
 
@@ -49,19 +49,19 @@ return [
 									],
 
 									'blocks'     => [
-										'image'           => [
-											'type'      => 'element',
+										'vendor_image' => [
+											'type'     => 'element',
 											'filepath' => 'vendor/view/page/image',
-											'order'     => 10,
+											'order'    => 10,
 										],
 
-										'name'            => [
-											'type'      => 'element',
+										'vendor_name'  => [
+											'type'     => 'element',
 											'filepath' => 'vendor/view/page/name',
-											'order'     => 20,
+											'order'    => 20,
 										],
 
-										'details_primary' => [
+										'vendor_details_primary' => [
 											'type'       => 'container',
 											'order'      => 30,
 
@@ -70,7 +70,7 @@ return [
 											],
 
 											'blocks'     => [
-												'date' => [
+												'vendor_date' => [
 													'type' => 'element',
 													'filepath' => 'vendor/view/date',
 													'order' => 10,
@@ -78,15 +78,15 @@ return [
 											],
 										],
 
-										'description'     => [
-											'type'      => 'element',
+										'vendor_description' => [
+											'type'     => 'element',
 											'filepath' => 'vendor/view/description',
-											'order'     => 40,
+											'order'    => 40,
 										],
 									],
 								],
 
-								'actions_primary' => [
+								'vendor_actions_primary' => [
 									'type'       => 'container',
 									'order'      => 20,
 
@@ -99,32 +99,32 @@ return [
 							],
 						],
 
-						'content' => [
+						'page_content' => [
 							'type'       => 'container',
 							'tag'        => 'main',
 							'order'      => 20,
 
 							'attributes' => [
-								'class' => [ 'hp-vendor__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+								'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 							],
 
 							'blocks'     => [
-								'title'      => [
-									'type'      => 'element',
+								'page_title'         => [
+									'type'     => 'element',
 									'filepath' => 'page/title',
-									'order'     => 5,
+									'order'    => 5,
 								],
 
-								'listings'   => [
+								'listings'           => [
 									'type'    => 'listings',
 									'columns' => 2,
 									'order'   => 10,
 								],
 
-								'pagination' => [
-									'type'      => 'element',
+								'listing_pagination' => [
+									'type'     => 'element',
 									'filepath' => 'pagination',
-									'order'     => 20,
+									'order'    => 20,
 								],
 							],
 						],

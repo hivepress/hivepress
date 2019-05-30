@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'container' => [
+		'vendor_container' => [
 			'type'       => 'container',
 			'tag'        => 'article',
 			'order'      => 10,
@@ -22,7 +22,7 @@ return [
 			],
 
 			'blocks'     => [
-				'header'  => [
+				'vendor_header'  => [
 					'type'       => 'container',
 					'tag'        => 'header',
 					'order'      => 10,
@@ -32,15 +32,15 @@ return [
 					],
 
 					'blocks'     => [
-						'image' => [
-							'type'      => 'element',
+						'vendor_image' => [
+							'type'     => 'element',
 							'filepath' => 'vendor/view/block/image',
-							'order'     => 10,
+							'order'    => 10,
 						],
 					],
 				],
 
-				'content' => [
+				'vendor_content' => [
 					'type'       => 'container',
 					'order'      => 20,
 
@@ -49,13 +49,13 @@ return [
 					],
 
 					'blocks'     => [
-						'name'            => [
-							'type'      => 'element',
+						'vendor_name'            => [
+							'type'     => 'element',
 							'filepath' => 'vendor/view/block/name',
-							'order'     => 10,
+							'order'    => 10,
 						],
 
-						'details_primary' => [
+						'vendor_details_primary' => [
 							'type'       => 'container',
 							'order'      => 20,
 
@@ -64,10 +64,10 @@ return [
 							],
 
 							'blocks'     => [
-								'date' => [
-									'type'      => 'element',
+								'vendor_date' => [
+									'type'     => 'element',
 									'filepath' => 'vendor/view/date',
-									'order'     => 10,
+									'order'    => 10,
 								],
 							],
 						],

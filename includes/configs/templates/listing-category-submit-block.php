@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'blocks' => [
-		'container' => [
+		'listing_category_container' => [
 			'type'       => 'container',
 			'tag'        => 'article',
 			'order'      => 10,
@@ -22,7 +22,7 @@ return [
 			],
 
 			'blocks'     => [
-				'header'  => [
+				'listing_category_header'  => [
 					'type'       => 'container',
 					'tag'        => 'header',
 					'order'      => 10,
@@ -32,15 +32,15 @@ return [
 					],
 
 					'blocks'     => [
-						'image' => [
-							'type'      => 'element',
+						'listing_category_image' => [
+							'type'     => 'element',
 							'filepath' => 'listing-category/submit/block/image',
-							'order'     => 10,
+							'order'    => 10,
 						],
 					],
 				],
 
-				'content' => [
+				'listing_category_content' => [
 					'type'       => 'container',
 					'order'      => 20,
 
@@ -49,13 +49,13 @@ return [
 					],
 
 					'blocks'     => [
-						'name'            => [
-							'type'      => 'element',
+						'listing_category_name'            => [
+							'type'     => 'element',
 							'filepath' => 'listing-category/submit/block/name',
-							'order'     => 10,
+							'order'    => 10,
 						],
 
-						'details_primary' => [
+						'listing_category_details_primary' => [
 							'type'       => 'container',
 							'order'      => 20,
 
@@ -64,18 +64,18 @@ return [
 							],
 
 							'blocks'     => [
-								'count' => [
-									'type'      => 'element',
+								'listing_category_count' => [
+									'type'     => 'element',
 									'filepath' => 'listing-category/submit/count',
-									'order'     => 10,
+									'order'    => 10,
 								],
 							],
 						],
 
-						'description'     => [
-							'type'      => 'element',
+						'listing_category_description'     => [
+							'type'     => 'element',
 							'filepath' => 'listing-category/submit/description',
-							'order'     => 30,
+							'order'    => 30,
 						],
 					],
 				],

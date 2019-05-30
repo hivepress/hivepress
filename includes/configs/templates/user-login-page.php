@@ -16,7 +16,7 @@ return [
 	'blocks' => [
 		'page_container' => [
 			'blocks' => [
-				'columns' => [
+				'page_columns' => [
 					'type'       => 'container',
 					'order'      => 10,
 
@@ -25,22 +25,22 @@ return [
 					],
 
 					'blocks'     => [
-						'content' => [
+						'page_content' => [
 							'type'       => 'container',
 							'order'      => 10,
 
 							'attributes' => [
-								'class' => [ 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
+								'class' => [ 'hp-page__content', 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
 							],
 
 							'blocks'     => [
-								'title'      => [
-									'type'      => 'element',
+								'page_title'      => [
+									'type'     => 'element',
 									'filepath' => 'page/title',
-									'order'     => 5,
+									'order'    => 5,
 								],
 
-								'login_form' => [
+								'user_login_form' => [
 									'type'  => 'user_login_form',
 									'order' => 10,
 								],

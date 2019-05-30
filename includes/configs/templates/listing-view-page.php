@@ -20,7 +20,7 @@ return [
 			],
 
 			'blocks'     => [
-				'columns' => [
+				'page_columns' => [
 					'type'       => 'container',
 					'order'      => 10,
 
@@ -29,23 +29,23 @@ return [
 					],
 
 					'blocks'     => [
-						'content' => [
+						'page_content' => [
 							'type'       => 'container',
 							'tag'        => 'main',
 							'order'      => 10,
 
 							'attributes' => [
-								'class' => [ 'hp-listing__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+								'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
 							],
 
 							'blocks'     => [
-								'title'                => [
-									'type'      => 'element',
+								'listing_title'           => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/page/title',
-									'order'     => 10,
+									'order'    => 10,
 								],
 
-								'details_primary'      => [
+								'listing_details_primary' => [
 									'type'       => 'container',
 									'order'      => 20,
 
@@ -54,58 +54,58 @@ return [
 									],
 
 									'blocks'     => [
-										'category' => [
-											'type'      => 'element',
+										'listing_category' => [
+											'type'     => 'element',
 											'filepath' => 'listing/view/category',
-											'order'     => 10,
+											'order'    => 10,
 										],
 
-										'date'     => [
-											'type'      => 'element',
+										'listing_date'     => [
+											'type'     => 'element',
 											'filepath' => 'listing/view/date',
-											'order'     => 20,
+											'order'    => 20,
 										],
 									],
 								],
 
-								'images'               => [
-									'type'      => 'element',
+								'listing_images'          => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/page/images',
-									'order'     => 30,
+									'order'    => 30,
 								],
 
-								'attributes_secondary' => [
-									'type'      => 'element',
+								'listing_attributes_secondary' => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/page/attributes-secondary',
-									'order'     => 40,
+									'order'    => 40,
 								],
 
-								'description'          => [
-									'type'      => 'element',
+								'listing_description'     => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/description',
-									'order'     => 50,
+									'order'    => 50,
 								],
 							],
 						],
 
-						'sidebar' => [
+						'page_sidebar' => [
 							'type'       => 'container',
 							'tag'        => 'aside',
 							'order'      => 20,
 
 							'attributes' => [
-								'class'          => [ 'hp-listing__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
+								'class'          => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
 								'data-component' => 'sticky',
 							],
 
 							'blocks'     => [
-								'attributes_primary' => [
-									'type'      => 'element',
+								'listing_attributes_primary' => [
+									'type'     => 'element',
 									'filepath' => 'listing/view/page/attributes-primary',
-									'order'     => 10,
+									'order'    => 10,
 								],
 
-								'actions_primary'    => [
+								'listing_actions_primary' => [
 									'type'       => 'container',
 									'order'      => 20,
 
@@ -115,11 +115,11 @@ return [
 
 									'blocks'     => [
 										'listing_report_modal' => [
-											'type'        => 'modal',
+											'type'    => 'modal',
 											'caption' => esc_html__( 'Report Listing', 'hivepress' ),
 
-											'blocks'      => [
-												'report_form' => [
+											'blocks'  => [
+												'listing_report_form' => [
 													'type' => 'form',
 													'form' => 'listing_report',
 													'order' => 10,
@@ -131,20 +131,20 @@ return [
 											],
 										],
 
-										'report_link' => [
-											'type'      => 'element',
+										'listing_report_link' => [
+											'type'     => 'element',
 											'filepath' => 'listing/view/page/report-link',
-											'order'     => 20,
+											'order'    => 20,
 										],
 									],
 								],
 
-								'vendor'             => [
-									'type'          => 'vendor',
-									'template' => 'vendor_view_block',
-									'order'         => 30,
+								'vendor'                  => [
+									'type'       => 'vendor',
+									'template'   => 'vendor_view_block',
+									'order'      => 30,
 
-									'attributes'    => [
+									'attributes' => [
 										'class' => [ 'widget' ],
 									],
 								],
