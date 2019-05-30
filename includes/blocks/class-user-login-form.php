@@ -34,9 +34,9 @@ class User_Login_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form_name'   => 'user_login',
+				'form'   => 'user_login',
 
-				'form_footer' => [
+				'footer' => [
 					'actions' => [
 						'type'       => 'container',
 						'order'      => 10,
@@ -47,15 +47,15 @@ class User_Login_Form extends Form {
 
 						'blocks'     => [
 							'register_link' => [
-								'type'      => 'element',
-								'file_path' => 'user/register-link',
-								'order'     => 10,
+								'type'     => 'element',
+								'filepath' => 'user/register-link',
+								'order'    => 10,
 							],
 
 							'password_link' => [
-								'type'      => 'element',
-								'file_path' => 'user/password-request-link',
-								'order'     => 20,
+								'type'     => 'element',
+								'filepath' => 'user/password-request-link',
+								'order'    => 20,
 							],
 						],
 					],

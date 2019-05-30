@@ -42,11 +42,11 @@ class Listing_Categories extends Block {
 	protected static $settings = [];
 
 	/**
-	 * Template context.
+	 * Template type.
 	 *
 	 * @var string
 	 */
-	protected $template_context = 'view';
+	protected $template = 'view';
 
 	/**
 	 * Columns number.
@@ -202,9 +202,9 @@ class Listing_Categories extends Block {
 
 					$output .= ( new Template(
 						[
-							'template_name' => 'listing_category_' . $this->template_context . '_block',
+							'template' => 'listing_category_' . $this->template . '_block',
 
-							'context'       => [
+							'context'  => [
 								'listing_category' => $category,
 							],
 						]

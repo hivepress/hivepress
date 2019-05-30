@@ -34,7 +34,7 @@ return [
 					'blocks'     => [
 						'image' => [
 							'type'      => 'element',
-							'file_path' => 'listing/view/block/image',
+							'filepath' => 'listing/view/block/image',
 							'order'     => 10,
 						],
 					],
@@ -51,7 +51,7 @@ return [
 					'blocks'     => [
 						'title'                => [
 							'type'      => 'element',
-							'file_path' => 'listing/view/block/title',
+							'filepath' => 'listing/view/block/title',
 							'order'     => 10,
 						],
 
@@ -66,13 +66,13 @@ return [
 							'blocks'     => [
 								'category' => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/category',
+									'filepath' => 'listing/view/category',
 									'order'     => 10,
 								],
 
 								'date'     => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/date',
+									'filepath' => 'listing/view/date',
 									'order'     => 20,
 								],
 							],
@@ -80,7 +80,7 @@ return [
 
 						'attributes_secondary' => [
 							'type'      => 'element',
-							'file_path' => 'listing/view/block/attributes-secondary',
+							'filepath' => 'listing/view/block/attributes-secondary',
 							'order'     => 30,
 						],
 					],
@@ -98,7 +98,7 @@ return [
 					'blocks'     => [
 						'attributes_primary' => [
 							'type'      => 'element',
-							'file_path' => 'listing/view/block/attributes-primary',
+							'filepath' => 'listing/view/block/attributes-primary',
 							'order'     => 10,
 						],
 

@@ -24,19 +24,19 @@ return [
 			'blocks'     => [
 				'title'           => [
 					'type'      => 'element',
-					'file_path' => 'listing/edit/title',
+					'filepath' => 'listing/edit/title',
 					'order'     => 10,
 				],
 
 				'status'          => [
 					'type'      => 'element',
-					'file_path' => 'listing/edit/status',
+					'filepath' => 'listing/edit/status',
 					'order'     => 20,
 				],
 
 				'date'            => [
 					'type'      => 'element',
-					'file_path' => 'listing/edit/date',
+					'filepath' => 'listing/edit/date',
 					'order'     => 30,
 				],
 
@@ -52,7 +52,7 @@ return [
 					'blocks'     => [
 						'view_link' => [
 							'type'      => 'element',
-							'file_path' => 'listing/edit/view-link',
+							'filepath' => 'listing/edit/view-link',
 							'order'     => 10,
 						],
 					],

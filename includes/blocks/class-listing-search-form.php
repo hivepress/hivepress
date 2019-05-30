@@ -57,7 +57,7 @@ class Listing_Search_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form_name' => 'listing_search',
+				'form' => 'listing_search',
 			],
 			$args
 		);

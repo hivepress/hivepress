@@ -31,7 +31,7 @@ class Menu extends Block {
 	 *
 	 * @var string
 	 */
-	protected $menu_name;
+	protected $menu;
 
 	/**
 	 * Menu attributes.
@@ -49,7 +49,7 @@ class Menu extends Block {
 		$output = '';
 
 		// Get menu class.
-		$menu_class = '\HivePress\Menus\\' . $this->menu_name;
+		$menu_class = '\HivePress\Menus\\' . $this->menu;
 
 		if ( class_exists( $menu_class ) ) {
 

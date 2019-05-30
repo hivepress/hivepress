@@ -36,7 +36,7 @@ return [
 							'blocks'     => [
 								'title'      => [
 									'type'      => 'element',
-									'file_path' => 'page/title',
+									'filepath' => 'page/title',
 									'order'     => 5,
 								],
 

@@ -18,7 +18,7 @@ return [
 			'blocks' => [
 				'listings' => [
 					'type'             => 'listings',
-					'template_context' => 'edit',
+					'template' => 'edit',
 					'order'            => 10,
 				],
 			],

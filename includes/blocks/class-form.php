@@ -31,7 +31,7 @@ class Form extends Block {
 	 *
 	 * @var string
 	 */
-	protected $form_name;
+	protected $form;
 
 	/**
 	 * Form values.
@@ -52,7 +52,7 @@ class Form extends Block {
 	 *
 	 * @var array
 	 */
-	protected $form_footer = [];
+	protected $footer = [];
 
 	/**
 	 * Renders block HTML.
@@ -63,7 +63,7 @@ class Form extends Block {
 		$output = '';
 
 		// Get form class.
-		$form_class = '\HivePress\Forms\\' . $this->form_name;
+		$form_class = '\HivePress\Forms\\' . $this->form;
 
 		if ( class_exists( $form_class ) ) {
 			$form_args = [];
@@ -77,12 +77,12 @@ class Form extends Block {
 			$form_args['attributes'] = $this->attributes;
 
 			// Render footer.
-			if ( ! empty( $this->form_footer ) ) {
+			if ( ! empty( $this->footer ) ) {
 				$form_args['footer'] = ( new Container(
 					[
 						'context' => $this->context,
 						'tag'     => false,
-						'blocks'  => $this->form_footer,
+						'blocks'  => $this->footer,
 					]
 				) )->render();
 			}

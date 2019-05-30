@@ -18,13 +18,13 @@ return [
 			'blocks' => [
 				'user_delete_modal' => [
 					'type'        => 'modal',
-					'modal_title' => esc_html__( 'Delete Account', 'hivepress' ),
+					'caption' => esc_html__( 'Delete Account', 'hivepress' ),
 					'order'       => 5,
 
 					'blocks'      => [
 						'delete_form' => [
 							'type'       => 'form',
-							'form_name'  => 'user_delete',
+							'form'  => 'user_delete',
 							'order'      => 10,
 
 							'attributes' => [
@@ -36,10 +36,10 @@ return [
 
 				'update_form'       => [
 					'type'        => 'form',
-					'form_name'   => 'user_update',
+					'form'   => 'user_update',
 					'order'       => 10,
 
-					'form_footer' => [
+					'footer' => [
 						'actions' => [
 							'type'       => 'container',
 							'order'      => 10,
@@ -51,7 +51,7 @@ return [
 							'blocks'     => [
 								'delete_link' => [
 									'type'      => 'element',
-									'file_path' => 'user/edit/delete-link',
+									'filepath' => 'user/edit/delete-link',
 									'order'     => 10,
 								],
 							],

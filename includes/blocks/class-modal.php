@@ -27,11 +27,11 @@ class Modal extends Container {
 	protected static $type;
 
 	/**
-	 * Modal title.
+	 * Modal caption.
 	 *
 	 * @var string
 	 */
-	protected $modal_title;
+	protected $caption;
 
 	/**
 	 * Model name.
@@ -67,9 +67,9 @@ class Modal extends Container {
 			$this->blocks,
 			new Element(
 				[
-					'type'      => 'element',
-					'file_path' => 'modal/title',
-					'context'   => array_merge( $this->context, [ 'title' => $this->modal_title ] ),
+					'type'     => 'element',
+					'filepath' => 'modal/title',
+					'context'  => array_merge( $this->context, [ 'title' => $this->caption ] ),
 				]
 			)
 		);

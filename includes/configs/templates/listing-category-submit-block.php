@@ -34,7 +34,7 @@ return [
 					'blocks'     => [
 						'image' => [
 							'type'      => 'element',
-							'file_path' => 'listing-category/submit/block/image',
+							'filepath' => 'listing-category/submit/block/image',
 							'order'     => 10,
 						],
 					],
@@ -51,7 +51,7 @@ return [
 					'blocks'     => [
 						'name'            => [
 							'type'      => 'element',
-							'file_path' => 'listing-category/submit/block/name',
+							'filepath' => 'listing-category/submit/block/name',
 							'order'     => 10,
 						],
 
@@ -66,7 +66,7 @@ return [
 							'blocks'     => [
 								'count' => [
 									'type'      => 'element',
-									'file_path' => 'listing-category/submit/count',
+									'filepath' => 'listing-category/submit/count',
 									'order'     => 10,
 								],
 							],
@@ -74,7 +74,7 @@ return [
 
 						'description'     => [
 							'type'      => 'element',
-							'file_path' => 'listing-category/submit/description',
+							'filepath' => 'listing-category/submit/description',
 							'order'     => 30,
 						],
 					],

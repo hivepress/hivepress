@@ -34,7 +34,7 @@ class User_Password_Reset_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form_name' => 'user_password_reset',
+				'form' => 'user_password_reset',
 			],
 			$args
 		);
@@ -78,7 +78,7 @@ class User_Password_Reset_Form extends Form {
 		if ( ! is_wp_error( check_password_reset_key( $this->values['password_reset_key'], $this->values['username'] ) ) ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Element( [ 'file_path' => 'user/password-reset-message' ] ) )->render();
+			$output .= ( new Element( [ 'filepath' => 'user/password-reset-message' ] ) )->render();
 		}
 
 		return $output;

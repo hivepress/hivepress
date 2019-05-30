@@ -55,7 +55,7 @@ return [
 							'blocks'     => [
 								'filter_form' => [
 									'type'       => 'form',
-									'form_name'  => 'listing_filter',
+									'form'       => 'listing_filter',
 									'order'      => 10,
 
 									'attributes' => [
@@ -75,8 +75,8 @@ return [
 							],
 
 							'blocks'     => [
-								'search_results' => [
-									'type'   => 'listing_search_results',
+								'results' => [
+									'type'   => 'results',
 									'order'  => 10,
 
 									'blocks' => [
@@ -96,7 +96,7 @@ return [
 
 												'sort_form'    => [
 													'type' => 'form',
-													'form_name' => 'listing_sort',
+													'form' => 'listing_sort',
 													'order' => 20,
 
 													'attributes' => [
@@ -113,9 +113,9 @@ return [
 										],
 
 										'pagination' => [
-											'type'      => 'element',
-											'file_path' => 'pagination',
-											'order'     => 30,
+											'type'     => 'element',
+											'filepath' => 'pagination',
+											'order'    => 30,
 										],
 									],
 								],

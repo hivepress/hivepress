@@ -38,7 +38,7 @@ return [
 							'blocks'     => [
 								'menu' => [
 									'type'       => 'menu',
-									'menu_name'  => 'account',
+									'menu'  => 'account',
 									'order'      => 10,
 
 									'attributes' => [
@@ -60,7 +60,7 @@ return [
 							'blocks'     => [
 								'title' => [
 									'type'      => 'element',
-									'file_path' => 'page/title',
+									'filepath' => 'page/title',
 									'order'     => 5,
 								],
 							],

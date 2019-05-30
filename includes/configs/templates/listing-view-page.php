@@ -41,7 +41,7 @@ return [
 							'blocks'     => [
 								'title'                => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/page/title',
+									'filepath' => 'listing/view/page/title',
 									'order'     => 10,
 								],
 
@@ -56,13 +56,13 @@ return [
 									'blocks'     => [
 										'category' => [
 											'type'      => 'element',
-											'file_path' => 'listing/view/category',
+											'filepath' => 'listing/view/category',
 											'order'     => 10,
 										],
 
 										'date'     => [
 											'type'      => 'element',
-											'file_path' => 'listing/view/date',
+											'filepath' => 'listing/view/date',
 											'order'     => 20,
 										],
 									],
@@ -70,19 +70,19 @@ return [
 
 								'images'               => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/page/images',
+									'filepath' => 'listing/view/page/images',
 									'order'     => 30,
 								],
 
 								'attributes_secondary' => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/page/attributes-secondary',
+									'filepath' => 'listing/view/page/attributes-secondary',
 									'order'     => 40,
 								],
 
 								'description'          => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/description',
+									'filepath' => 'listing/view/description',
 									'order'     => 50,
 								],
 							],
@@ -101,7 +101,7 @@ return [
 							'blocks'     => [
 								'attributes_primary' => [
 									'type'      => 'element',
-									'file_path' => 'listing/view/page/attributes-primary',
+									'filepath' => 'listing/view/page/attributes-primary',
 									'order'     => 10,
 								],
 
@@ -116,12 +116,12 @@ return [
 									'blocks'     => [
 										'listing_report_modal' => [
 											'type'        => 'modal',
-											'modal_title' => esc_html__( 'Report Listing', 'hivepress' ),
+											'caption' => esc_html__( 'Report Listing', 'hivepress' ),
 
 											'blocks'      => [
 												'report_form' => [
 													'type' => 'form',
-													'form_name' => 'listing_report',
+													'form' => 'listing_report',
 													'order' => 10,
 
 													'attributes' => [
@@ -133,7 +133,7 @@ return [
 
 										'report_link' => [
 											'type'      => 'element',
-											'file_path' => 'listing/view/page/report-link',
+											'filepath' => 'listing/view/page/report-link',
 											'order'     => 20,
 										],
 									],
@@ -141,7 +141,7 @@ return [
 
 								'vendor'             => [
 									'type'          => 'vendor',
-									'template_name' => 'vendor_view_block',
+									'template' => 'vendor_view_block',
 									'order'         => 30,
 
 									'attributes'    => [

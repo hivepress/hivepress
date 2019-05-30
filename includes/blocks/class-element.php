@@ -31,7 +31,7 @@ class Element extends Block {
 	 *
 	 * @var string
 	 */
-	protected $file_path;
+	protected $filepath;
 
 	/**
 	 * Renders block HTML.
@@ -42,12 +42,12 @@ class Element extends Block {
 		$output = '';
 
 		// Get file path.
-		$filepath = locate_template( 'hivepress/' . $this->file_path . '.php' );
+		$filepath = locate_template( 'hivepress/' . $this->filepath . '.php' );
 
 		if ( '' === $filepath ) {
 			foreach ( hivepress()->get_dirs() as $dir ) {
-				if ( file_exists( $dir . '/templates/' . $this->file_path . '.php' ) ) {
-					$filepath = $dir . '/templates/' . $this->file_path . '.php';
+				if ( file_exists( $dir . '/templates/' . $this->filepath . '.php' ) ) {
+					$filepath = $dir . '/templates/' . $this->filepath . '.php';
 
 					break;
 				}

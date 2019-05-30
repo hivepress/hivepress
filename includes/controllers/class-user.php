@@ -549,7 +549,7 @@ class User extends Controller {
 	 * @return string
 	 */
 	public function render_login_page() {
-		return ( new Blocks\Template( [ 'template_name' => 'user_login_page' ] ) )->render();
+		return ( new Blocks\Template( [ 'template' => 'user_login_page' ] ) )->render();
 	}
 
 	/**
@@ -571,7 +571,7 @@ class User extends Controller {
 	 * @return string
 	 */
 	public function render_password_page() {
-		return ( new Blocks\Template( [ 'template_name' => 'user_password_reset_page' ] ) )->render();
+		return ( new Blocks\Template( [ 'template' => 'user_password_reset_page' ] ) )->render();
 	}
 
 	/**
@@ -619,7 +619,7 @@ class User extends Controller {
 	public function render_settings_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'user_settings_page',
+				'template' => 'user_settings_page',
 
 				'context'       => [
 					'user_id' => get_current_user_id(),

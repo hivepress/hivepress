@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing search results block.
+ * Results block.
  *
  * @package HivePress\Blocks
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing search results block class.
+ * Results block class.
  *
- * @class Listing_Search_Results
+ * @class Results
  */
-class Listing_Search_Results extends Container {
+class Results extends Container {
 
 	/**
 	 * Block type.
@@ -37,7 +37,7 @@ class Listing_Search_Results extends Container {
 		if ( have_posts() ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Element( [ 'file_path' => 'no-results' ] ) )->render();
+			$output .= ( new Element( [ 'filepath' => 'no-results' ] ) )->render();
 		}
 
 		return $output;

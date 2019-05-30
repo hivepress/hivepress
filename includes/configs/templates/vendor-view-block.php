@@ -34,7 +34,7 @@ return [
 					'blocks'     => [
 						'image' => [
 							'type'      => 'element',
-							'file_path' => 'vendor/view/block/image',
+							'filepath' => 'vendor/view/block/image',
 							'order'     => 10,
 						],
 					],
@@ -51,7 +51,7 @@ return [
 					'blocks'     => [
 						'name'            => [
 							'type'      => 'element',
-							'file_path' => 'vendor/view/block/name',
+							'filepath' => 'vendor/view/block/name',
 							'order'     => 10,
 						],
 
@@ -66,7 +66,7 @@ return [
 							'blocks'     => [
 								'date' => [
 									'type'      => 'element',
-									'file_path' => 'vendor/view/date',
+									'filepath' => 'vendor/view/date',
 									'order'     => 10,
 								],
 							],

@@ -31,7 +31,7 @@ class Template extends Block {
 	 *
 	 * @var string
 	 */
-	protected $template_name;
+	protected $template;
 
 	/**
 	 * Renders block HTML.
@@ -42,7 +42,7 @@ class Template extends Block {
 		$output = '';
 
 		// Get template.
-		$template_args = hivepress()->get_config( 'templates/' . $this->template_name );
+		$template_args = hivepress()->get_config( 'templates/' . $this->template );
 
 		if ( ! is_null( $template_args ) ) {
 

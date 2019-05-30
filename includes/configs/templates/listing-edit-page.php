@@ -18,13 +18,13 @@ return [
 			'blocks' => [
 				'listing_delete_modal' => [
 					'type'        => 'modal',
-					'modal_title' => esc_html__( 'Delete Listing', 'hivepress' ),
+					'caption' => esc_html__( 'Delete Listing', 'hivepress' ),
 					'order'       => 5,
 
 					'blocks'      => [
 						'delete_form' => [
 							'type'       => 'form',
-							'form_name'  => 'listing_delete',
+							'form'  => 'listing_delete',
 							'order'      => 10,
 
 							'attributes' => [
@@ -36,10 +36,10 @@ return [
 
 				'update_form'          => [
 					'type'        => 'form',
-					'form_name'   => 'listing_update',
+					'form'   => 'listing_update',
 					'order'       => 10,
 
-					'form_footer' => [
+					'footer' => [
 						'actions' => [
 							'type'       => 'container',
 							'order'      => 10,
@@ -51,7 +51,7 @@ return [
 							'blocks'     => [
 								'delete_link' => [
 									'type'      => 'element',
-									'file_path' => 'listing/edit/delete-link',
+									'filepath' => 'listing/edit/delete-link',
 									'order'     => 10,
 								],
 							],

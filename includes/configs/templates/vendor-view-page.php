@@ -51,13 +51,13 @@ return [
 									'blocks'     => [
 										'image'           => [
 											'type'      => 'element',
-											'file_path' => 'vendor/view/page/image',
+											'filepath' => 'vendor/view/page/image',
 											'order'     => 10,
 										],
 
 										'name'            => [
 											'type'      => 'element',
-											'file_path' => 'vendor/view/page/name',
+											'filepath' => 'vendor/view/page/name',
 											'order'     => 20,
 										],
 
@@ -72,7 +72,7 @@ return [
 											'blocks'     => [
 												'date' => [
 													'type' => 'element',
-													'file_path' => 'vendor/view/date',
+													'filepath' => 'vendor/view/date',
 													'order' => 10,
 												],
 											],
@@ -80,7 +80,7 @@ return [
 
 										'description'     => [
 											'type'      => 'element',
-											'file_path' => 'vendor/view/description',
+											'filepath' => 'vendor/view/description',
 											'order'     => 40,
 										],
 									],
@@ -111,7 +111,7 @@ return [
 							'blocks'     => [
 								'title'      => [
 									'type'      => 'element',
-									'file_path' => 'page/title',
+									'filepath' => 'page/title',
 									'order'     => 5,
 								],
 
@@ -123,7 +123,7 @@ return [
 
 								'pagination' => [
 									'type'      => 'element',
-									'file_path' => 'pagination',
+									'filepath' => 'pagination',
 									'order'     => 20,
 								],
 							],

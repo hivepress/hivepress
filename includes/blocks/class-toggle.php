@@ -27,6 +27,13 @@ class Toggle extends Block {
 	protected static $type;
 
 	/**
+	 * Toggle view.
+	 *
+	 * @var string
+	 */
+	protected $view = 'link';
+
+	/**
 	 * Toggle icon.
 	 *
 	 * @var string
@@ -55,13 +62,6 @@ class Toggle extends Block {
 	protected $attributes = [];
 
 	/**
-	 * Small property.
-	 *
-	 * @var bool
-	 */
-	protected $small = false;
-
-	/**
 	 * Active property.
 	 *
 	 * @var bool
@@ -75,7 +75,7 @@ class Toggle extends Block {
 		$attributes = [];
 
 		// Set attributes.
-		if ( ! $this->small ) {
+		if ( 'link' === $this->view ) {
 			$attributes['class'] = [ 'hp-link' ];
 		}
 
@@ -89,13 +89,13 @@ class Toggle extends Block {
 				$attributes['data-caption'] = reset( $this->captions );
 				$attributes['data-state']   = 'active';
 
-				if ( $this->small ) {
+				if ( 'icon' === $this->view ) {
 					$attributes['title'] = end( $this->captions );
 				}
 			} else {
 				$attributes['data-caption'] = end( $this->captions );
 
-				if ( $this->small ) {
+				if ( 'icon' === $this->view ) {
 					$attributes['title'] = reset( $this->captions );
 				}
 			}
@@ -120,7 +120,7 @@ class Toggle extends Block {
 			$output .= '<i class="hp-icon fas fa-' . esc_attr( $this->icon ) . '"></i>';
 		}
 
-		if ( ! $this->small ) {
+		if ( 'icon' !== $this->view ) {
 			$output .= '<span>';
 
 			if ( $this->active ) {

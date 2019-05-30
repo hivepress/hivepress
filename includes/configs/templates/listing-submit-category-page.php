@@ -18,7 +18,7 @@ return [
 			'blocks' => [
 				'listing_categories' => [
 					'type'             => 'listing_categories',
-					'template_context' => 'submit',
+					'template' => 'submit',
 					'columns'          => 3,
 					'order'            => 10,
 				],

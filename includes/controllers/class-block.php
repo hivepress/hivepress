@@ -77,7 +77,7 @@ class Block extends Controller {
 		}
 
 		// Get template.
-		$template_args = hivepress()->get_config( 'templates/' . str_replace( '-', '_', $request->get_param( 'template_name' ) ) );
+		$template_args = hivepress()->get_config( 'templates/' . str_replace( '-', '_', $request->get_param( 'template' ) ) );
 
 		if ( is_null( $template_args ) ) {
 			return hp\rest_error( 404 );

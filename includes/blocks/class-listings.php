@@ -42,11 +42,11 @@ class Listings extends Block {
 	protected static $settings = [];
 
 	/**
-	 * Template context.
+	 * Template type.
 	 *
 	 * @var string
 	 */
-	protected $template_context = 'view';
+	protected $template = 'view';
 
 	/**
 	 * Columns number.
@@ -189,7 +189,7 @@ class Listings extends Block {
 
 		// Render listings.
 		if ( $query->have_posts() ) {
-			if ( 'edit' === $this->template_context ) {
+			if ( 'edit' === $this->template ) {
 				$output .= '<table class="hp-table">';
 			} else {
 				$output .= '<div class="hp-grid">';
@@ -203,28 +203,28 @@ class Listings extends Block {
 				$listing = Models\Listing::get( get_the_ID() );
 
 				if ( ! is_null( $listing ) ) {
-					if ( 'edit' !== $this->template_context ) {
+					if ( 'edit' !== $this->template ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 					}
 
 					// Render listing.
 					$output .= ( new Template(
 						[
-							'template_name' => 'listing_' . $this->template_context . '_block',
+							'template' => 'listing_' . $this->template . '_block',
 
-							'context'       => [
+							'context'  => [
 								'listing' => $listing,
 							],
 						]
 					) )->render();
 
-					if ( 'edit' !== $this->template_context ) {
+					if ( 'edit' !== $this->template ) {
 						$output .= '</div>';
 					}
 				}
 			}
 
-			if ( 'edit' === $this->template_context ) {
+			if ( 'edit' === $this->template ) {
 				$output .= '</table>';
 			} else {
 				$output .= '</div>';

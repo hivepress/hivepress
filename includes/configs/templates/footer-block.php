@@ -14,7 +14,7 @@ return [
 	'blocks' => [
 		'user_login_modal'            => [
 			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Sign In', 'hivepress' ),
+			'caption' => esc_html__( 'Sign In', 'hivepress' ),
 
 			'blocks'      => [
 				'user_login_form' => [
@@ -26,19 +26,19 @@ return [
 
 		'user_register_modal'         => [
 			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Register', 'hivepress' ),
+			'caption' => esc_html__( 'Register', 'hivepress' ),
 
 			'blocks'      => [
 				'user_register_form' => [
 					'type'        => 'form',
-					'form_name'   => 'user_register',
+					'form'   => 'user_register',
 					'order'       => 10,
 
 					'attributes'  => [
 						'class' => [ 'hp-form--narrow' ],
 					],
 
-					'form_footer' => [
+					'footer' => [
 						'actions' => [
 							'type'       => 'container',
 							'order'      => 10,
@@ -50,7 +50,7 @@ return [
 							'blocks'     => [
 								'login_link' => [
 									'type'      => 'element',
-									'file_path' => 'user/login-link',
+									'filepath' => 'user/login-link',
 									'order'     => 10,
 								],
 							],
@@ -62,12 +62,12 @@ return [
 
 		'user_password_request_modal' => [
 			'type'        => 'modal',
-			'modal_title' => esc_html__( 'Reset Password', 'hivepress' ),
+			'caption' => esc_html__( 'Reset Password', 'hivepress' ),
 
 			'blocks'      => [
 				'user_password_request_form' => [
 					'type'             => 'form',
-					'form_name'        => 'user_password_request',
+					'form'        => 'user_password_request',
 					'form_description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
 					'order'            => 10,
 

@@ -301,7 +301,7 @@ class Listing extends Controller {
 			// Render categories.
 			return ( new Blocks\Template(
 				[
-					'template_name' => 'listing_categories_view_page',
+					'template' => 'listing_categories_view_page',
 
 					'context'       => [
 						'listing_category_id' => $category_id,
@@ -325,7 +325,7 @@ class Listing extends Controller {
 			// Render listings.
 			return ( new Blocks\Template(
 				[
-					'template_name' => 'listings_view_page',
+					'template' => 'listings_view_page',
 				]
 			) )->render();
 		}
@@ -350,7 +350,7 @@ class Listing extends Controller {
 
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'listing_view_page',
+				'template' => 'listing_view_page',
 
 				'context'       => [
 					'listing' => Models\Listing::get( get_the_ID() ),
@@ -400,7 +400,7 @@ class Listing extends Controller {
 			]
 		);
 
-		return ( new Blocks\Template( [ 'template_name' => 'listings_edit_page' ] ) )->render();
+		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
 	}
 
 	/**
@@ -433,7 +433,7 @@ class Listing extends Controller {
 	public function render_listing_edit_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'listing_edit_page',
+				'template' => 'listing_edit_page',
 
 				'context'       => [
 					'listing_id' => absint( get_query_var( 'hp_listing_id' ) ),
@@ -544,7 +544,7 @@ class Listing extends Controller {
 	public function render_listing_submit_category_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'listing_submit_category_page',
+				'template' => 'listing_submit_category_page',
 
 				'context'       => [
 					'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
@@ -591,7 +591,7 @@ class Listing extends Controller {
 	public function render_listing_submit_details_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'listing_submit_details_page',
+				'template' => 'listing_submit_details_page',
 
 				'context'       => [
 					'listing_id' => hp\get_post_id(
@@ -667,7 +667,7 @@ class Listing extends Controller {
 	public function render_listing_submit_complete_page() {
 		return ( new Blocks\Template(
 			[
-				'template_name' => 'listing_submit_complete_page',
+				'template' => 'listing_submit_complete_page',
 
 				'context'       => [
 					'listing' => Models\Listing::get(

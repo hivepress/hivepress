@@ -52,13 +52,13 @@ final class Template {
 	 * Renders header.
 	 */
 	public function render_header() {
-		echo ( new Blocks\Template( [ 'template_name' => 'header_block' ] ) )->render();
+		echo ( new Blocks\Template( [ 'template' => 'header_block' ] ) )->render();
 	}
 
 	/**
 	 * Renders footer.
 	 */
 	public function render_footer() {
-		echo ( new Blocks\Template( [ 'template_name' => 'footer_block' ] ) )->render();
+		echo ( new Blocks\Template( [ 'template' => 'footer_block' ] ) )->render();
 	}
 }
