@@ -66,12 +66,11 @@ return [
 
 			'blocks'  => [
 				'user_password_request_form' => [
-					'type'        => 'form',
-					'form'        => 'user_password_request',
-					'description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
-					'order'       => 10,
+					'type'       => 'form',
+					'form'       => 'user_password_request',
+					'order'      => 10,
 
-					'attributes'  => [
+					'attributes' => [
 						'class' => [ 'hp-form--narrow' ],
 					],
 				],

@@ -48,13 +48,6 @@ class Form extends Block {
 	protected $attributes = [];
 
 	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected $description;
-
-	/**
 	 * Form footer.
 	 *
 	 * @var array
@@ -78,11 +71,6 @@ class Form extends Block {
 			// Set instance ID.
 			if ( method_exists( $form_class, 'get_model' ) ) {
 				$form_args['id'] = hp\get_array_value( $this->context, $form_class::get_model() . '_id' );
-			}
-
-			// Set description.
-			if ( isset( $this->description ) ) {
-				$form_args['description'] = $this->description;
 			}
 
 			// Set attributes.
