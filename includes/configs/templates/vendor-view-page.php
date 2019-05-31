@@ -123,7 +123,7 @@ return [
 
 								'listing_pagination' => [
 									'type'     => 'element',
-									'filepath' => 'pagination',
+									'filepath' => 'page/pagination',
 									'order'    => 20,
 								],
 							],

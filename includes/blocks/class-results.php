@@ -37,7 +37,7 @@ class Results extends Container {
 		if ( have_posts() ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Element( [ 'filepath' => 'no-results' ] ) )->render();
+			$output .= ( new Element( [ 'filepath' => 'page/no-results' ] ) )->render();
 		}
 
 		return $output;

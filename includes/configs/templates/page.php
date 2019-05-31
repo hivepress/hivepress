@@ -14,7 +14,7 @@ return [
 	'blocks' => [
 		'site_header'    => [
 			'type'     => 'element',
-			'filepath' => 'header',
+			'filepath' => 'page/header',
 			'order'    => 10,
 		],
 
@@ -27,7 +27,7 @@ return [
 
 		'site_footer'    => [
 			'type'     => 'element',
-			'filepath' => 'footer',
+			'filepath' => 'page/footer',
 			'order'    => 30,
 		],
 	],
