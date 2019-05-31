@@ -51,7 +51,7 @@ return [
 							'blocks'     => [
 								'listing_delete_link' => [
 									'type'     => 'element',
-									'filepath' => 'listing/edit/delete-link',
+									'filepath' => 'listing/edit/page/delete-link',
 									'order'    => 10,
 								],
 							],

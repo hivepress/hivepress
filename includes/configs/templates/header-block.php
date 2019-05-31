@@ -23,13 +23,13 @@ return [
 			'blocks'     => [
 				'user_account_link'     => [
 					'type'     => 'element',
-					'filepath' => 'user/account-link',
+					'filepath' => 'user/auth/account-link',
 					'order'    => 10,
 				],
 
 				'listing_submit_button' => [
 					'type'     => 'element',
-					'filepath' => 'listing/submit-button',
+					'filepath' => 'listing/submit/submit-button',
 					'order'    => 20,
 				],
 			],

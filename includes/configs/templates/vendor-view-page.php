@@ -80,7 +80,7 @@ return [
 
 										'vendor_description' => [
 											'type'     => 'element',
-											'filepath' => 'vendor/view/description',
+											'filepath' => 'vendor/view/page/description',
 											'order'    => 40,
 										],
 									],

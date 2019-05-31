@@ -31,9 +31,9 @@ return [
 							],
 
 							'blocks'     => [
-								'listing_category_link' => [
+								'listing_category_change_link' => [
 									'type'     => 'element',
-									'filepath' => 'listing-category/submit/change-link',
+									'filepath' => 'listing-category/submit/page/change-link',
 									'order'    => 10,
 								],
 							],

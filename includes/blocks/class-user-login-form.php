@@ -37,7 +37,7 @@ class User_Login_Form extends Form {
 				'form'   => 'user_login',
 
 				'footer' => [
-					'actions' => [
+					'form_actions' => [
 						'type'       => 'container',
 						'order'      => 10,
 
@@ -46,15 +46,15 @@ class User_Login_Form extends Form {
 						],
 
 						'blocks'     => [
-							'register_link' => [
+							'user_register_link'         => [
 								'type'     => 'element',
-								'filepath' => 'user/register-link',
+								'filepath' => 'user/auth/register-link',
 								'order'    => 10,
 							],
 
-							'password_link' => [
+							'user_password_request_link' => [
 								'type'     => 'element',
-								'filepath' => 'user/password-request-link',
+								'filepath' => 'user/auth/password-request-link',
 								'order'    => 20,
 							],
 						],

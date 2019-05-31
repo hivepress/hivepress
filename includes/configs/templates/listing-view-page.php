@@ -82,7 +82,7 @@ return [
 
 								'listing_description'     => [
 									'type'     => 'element',
-									'filepath' => 'listing/view/description',
+									'filepath' => 'listing/view/page/description',
 									'order'    => 50,
 								],
 							],

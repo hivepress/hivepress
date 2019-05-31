@@ -50,7 +50,7 @@ return [
 							'blocks'     => [
 								'user_login_link' => [
 									'type'     => 'element',
-									'filepath' => 'user/login-link',
+									'filepath' => 'user/auth/login-link',
 									'order'    => 10,
 								],
 							],
