@@ -49,33 +49,10 @@ return [
 					],
 
 					'blocks'     => [
-						'listing_category_name'            => [
+						'listing_category_name' => [
 							'type'     => 'element',
 							'filepath' => 'listing-category/submit/block/name',
 							'order'    => 10,
-						],
-
-						'listing_category_details_primary' => [
-							'type'       => 'container',
-							'order'      => 20,
-
-							'attributes' => [
-								'class' => [ 'hp-listing-category__details', 'hp-listing-category__details--primary' ],
-							],
-
-							'blocks'     => [
-								'listing_category_count' => [
-									'type'     => 'element',
-									'filepath' => 'listing-category/submit/count',
-									'order'    => 10,
-								],
-							],
-						],
-
-						'listing_category_description'     => [
-							'type'     => 'element',
-							'filepath' => 'listing-category/submit/description',
-							'order'    => 30,
 						],
 					],
 				],

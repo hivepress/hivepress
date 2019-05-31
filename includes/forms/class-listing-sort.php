@@ -68,11 +68,12 @@ class Listing_Sort extends Form {
 
 				'fields' => [
 					'sort'      => [
-						'label'    => esc_html__( 'Sort by', 'hivepress' ),
-						'type'     => 'select',
-						'options'  => [],
-						'required' => true,
-						'order'    => 10,
+						'label'       => esc_html__( 'Sort by', 'hivepress' ),
+						'type'        => 'select',
+						'placeholder' => null,
+						'options'     => [],
+						'required'    => true,
+						'order'       => 10,
 					],
 
 					's'         => [

@@ -21,7 +21,7 @@ return [
 				'order'  => 10,
 
 				'fields' => [
-					'page_listings'                       => [
+					'page_listings'                    => [
 						'label'       => esc_html__( 'Listings Page', 'hivepress' ),
 						'description' => esc_html__( 'Choose a page that displays all listings.', 'hivepress' ),
 						'type'        => 'select',
@@ -30,14 +30,14 @@ return [
 						'order'       => 10,
 					],
 
-					'page_listings_display_subcategories' => [
+					'page_listings_display_categories' => [
 						'label'   => esc_html__( 'Listings Page Display', 'hivepress' ),
-						'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
+						'caption' => esc_html__( 'Display categories', 'hivepress' ),
 						'type'    => 'checkbox',
 						'order'   => 20,
 					],
 
-					'listings_per_page'                   => [
+					'listings_per_page'                => [
 						'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
 						'type'      => 'number',
 						'default'   => 10,

@@ -1,17 +1,27 @@
-(function($) {
-	'use strict';
+var hivepress = {
 
 	/**
-	 * Gets jQuery component.
+	 * Gets component selector.
 	 */
-	function getComponent(name) {
-		return $('[data-component=' + name + ']');
-	}
+	getSelector: function(name) {
+		return '[data-component=' + name + ']';
+	},
+
+	/**
+	 * Gets component object.
+	 */
+	getComponent: function(name) {
+		return jQuery(this.getSelector(name));
+	},
+};
+
+(function($) {
+	'use strict';
 
 	$(document).ready(function() {
 
 		// File select
-		getComponent('file-select').on('click', function(e) {
+		hivepress.getComponent('file-select').on('click', function(e) {
 			var button = $(this),
 				container = button.parent().children('div').clone(),
 				frame = wp.media({
@@ -43,8 +53,11 @@
 		});
 
 		// File remove
-		getComponent('file-remove').on('click', function(e) {
-			$(this).parent().remove();
+		$(document).on('click', hivepress.getSelector('file-remove'), function(e) {
+			var container = $(this).parent();
+
+			container.find('img').remove();
+			container.find('input[type="hidden"]').val('');
 
 			e.preventDefault();
 		});

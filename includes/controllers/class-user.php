@@ -201,7 +201,7 @@ class User extends Controller {
 			[
 				'recipient' => $user->get_email(),
 				'tokens'    => [
-					'user_name'     => $user->get_name(),
+					'user_name'     => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
 					'user_password' => $user->get_password(),
 				],
 			]
@@ -400,9 +400,6 @@ class User extends Controller {
 		if ( ! is_user_logged_in() ) {
 			wp_set_auth_cookie( $user->ID, true );
 		}
-
-		// Send email.
-		wp_password_change_notification( $user );
 
 		return new \WP_Rest_Response(
 			[
@@ -621,7 +618,7 @@ class User extends Controller {
 			[
 				'template' => 'user_settings_page',
 
-				'context'       => [
+				'context'  => [
 					'user_id' => get_current_user_id(),
 				],
 			]

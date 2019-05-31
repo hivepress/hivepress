@@ -91,8 +91,9 @@ class User_Delete extends Model_Form {
 
 				'fields'      => [
 					'password' => [
-						'required' => true,
-						'order'    => 10,
+						'min_length' => null,
+						'required'   => true,
+						'order'      => 10,
 					],
 				],
 

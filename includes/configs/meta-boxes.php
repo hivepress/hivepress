@@ -42,25 +42,18 @@ return [
 		'title'  => esc_html__( 'Search', 'hivepress' ),
 		'screen' => 'listing_attribute',
 		'fields' => [
-			'searchable'        => [
+			'filterable'        => [
 				'label'   => esc_html__( 'Searchable', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 10,
 			],
 
-			'filterable'        => [
-				'label'   => esc_html__( 'Filterable', 'hivepress' ),
-				'caption' => esc_html__( 'Display in the filter form', 'hivepress' ),
-				'type'    => 'checkbox',
-				'order'   => 20,
-			],
-
 			'sortable'          => [
 				'label'   => esc_html__( 'Sortable', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the sort form', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 30,
+				'order'   => 20,
 			],
 
 			'search_field_type' => [

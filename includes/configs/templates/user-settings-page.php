@@ -14,7 +14,7 @@ return [
 	'parent' => 'account_page',
 
 	'blocks' => [
-		'page_container' => [
+		'page_content' => [
 			'blocks' => [
 				'user_delete_modal' => [
 					'type'    => 'modal',

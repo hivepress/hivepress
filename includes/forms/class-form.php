@@ -205,6 +205,28 @@ abstract class Form {
 	}
 
 	/**
+	 * Sets form button.
+	 *
+	 * @param array $button Button arguments.
+	 */
+	final protected static function set_button( $button ) {
+		if ( ! is_null( $button ) ) {
+			static::$button = new Fields\Button(
+				hp\merge_arrays(
+					[
+						'label'      => esc_html__( 'Submit', 'hivepress' ),
+						'type'       => 'button',
+						'attributes' => [
+							'class' => [ 'hp-form__button', 'alt' ],
+						],
+					],
+					$button
+				)
+			);
+		}
+	}
+
+	/**
 	 * Adds form errors.
 	 *
 	 * @param array $errors Form errors.
@@ -306,22 +328,6 @@ abstract class Form {
 		// Set class.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::$name ) ];
 
-		// Set button.
-		if ( ! is_null( static::$button ) ) {
-			static::$button = new Fields\Button(
-				hp\merge_arrays(
-					[
-						'label'      => esc_html__( 'Submit', 'hivepress' ),
-						'type'       => 'button',
-						'attributes' => [
-							'class' => [ 'hp-form__button', 'alt' ],
-						],
-					],
-					(array) static::$button
-				)
-			);
-		}
-
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
@@ -369,18 +375,22 @@ abstract class Form {
 		$output = '<form ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render header.
-		$output .= '<header class="hp-form__header">';
+		if ( isset( $this->header ) || isset( static::$description ) ) {
+			$output .= '<header class="hp-form__header">';
 
-		if ( isset( $this->header ) ) {
-			$output .= $this->header;
+			if ( isset( $this->header ) ) {
+				$output .= $this->header;
+			}
+
+			if ( isset( static::$description ) ) {
+				$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
+			}
+
+			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
+			$output .= '</header>';
+		} else {
+			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
 		}
-
-		if ( isset( static::$description ) ) {
-			$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
-		}
-
-		$output .= '<div class="hp-form__messages" data-element="messages"></div>';
-		$output .= '</header>';
 
 		// Render fields.
 		$output .= '<div class="hp-form__fields">';

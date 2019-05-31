@@ -41,6 +41,13 @@ class Select extends Field {
 	protected static $settings = [];
 
 	/**
+	 * Field placeholder.
+	 *
+	 * @var string
+	 */
+	protected $placeholder = '&mdash;';
+
+	/**
 	 * Select options.
 	 *
 	 * @var array
@@ -100,8 +107,8 @@ class Select extends Field {
 		}
 
 		// Add default option.
-		if ( ! $this->multiple ) {
-			$this->options = [ '' => '&mdash;' ] + $this->options;
+		if ( isset( $this->placeholder ) && ! $this->multiple ) {
+			$this->options = [ '' => $this->placeholder ] + $this->options;
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );

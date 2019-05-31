@@ -1,6 +1,7 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
+
 .image-wrapper {
 	img {
 		display: block;
@@ -46,13 +47,6 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
-	Modals
-	--------------------------------------------------------------*/
-	&-modal {
-		display: none;
-		width: 24.33rem;
-	}
-	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
@@ -70,10 +64,15 @@ Mixins
 
 		&__captcha,
 		&__fields,
-		&__footer,
-		&__header {
+		&__footer {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
+			}
+		}
+
+		&__header {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
 			}
 		}
 
@@ -129,6 +128,12 @@ Mixins
 		&__messages {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
+			}
+		}
+
+		> &__messages {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
 			}
 		}
 
@@ -327,6 +332,17 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
+	Modals
+	--------------------------------------------------------------*/
+	&-modal {
+		display: none;
+		width: 24.33rem;
+	}
+
+	&-modal &-form {
+		margin-bottom: 0;
+	}
+	/*--------------------------------------------------------------
 	Menus
 	--------------------------------------------------------------*/
 	&-menu {
@@ -375,6 +391,10 @@ Mixins
 	Pages
 	--------------------------------------------------------------*/
 	&-page {
+		&__title {
+			margin-bottom: 2rem;
+		}
+
 		&__header {
 			&:not(:last-child) {
 				margin-bottom: 4rem;
@@ -519,7 +539,7 @@ Mixins
 			}
 		}
 
-		&__date {
+		&--view-block &__date {
 			font-size: 80%;
 			display: block;
 		}
@@ -581,6 +601,8 @@ Mixins
 			}
 		}
 
+		&--submit-block &__content,
+		&--submit-block &__header,
 		&--view-block &__content,
 		&--view-block &__header {
 			&:not(:last-child) {
@@ -588,6 +610,7 @@ Mixins
 			}
 		}
 
+		&--submit-block &__name,
 		&--view-block &__description,
 		&--view-block &__details--primary,
 		&--view-block &__image,
@@ -614,6 +637,7 @@ Mixins
 			font-size: 80%;
 		}
 
+		&--submit-block &__name,
 		&--view-block &__count,
 		&--view-block &__description,
 		&--view-block &__name {
@@ -744,6 +768,11 @@ Mixins
 				margin-left: 0;
 			}
 		}
+	}
+
+	&-theme--twentynineteen .entry-content > &-page {
+		max-width: 100%;
+		margin: 0 0 3rem;
 	}
 
 	&-theme--storefront &-menu--main {

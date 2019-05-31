@@ -296,7 +296,7 @@ class Listing extends Controller {
 			$category_id = get_queried_object_id();
 		}
 
-		if ( ( is_page() && get_option( 'hp_page_listings_display_subcategories' ) ) || ( 0 !== $category_id && get_term_meta( $category_id, 'hp_display_subcategories', true ) ) ) {
+		if ( ( is_page() && get_option( 'hp_page_listings_display_categories' ) ) || ( 0 !== $category_id && get_term_meta( $category_id, 'hp_display_subcategories', true ) ) ) {
 
 			// Render categories.
 			return ( new Blocks\Template(

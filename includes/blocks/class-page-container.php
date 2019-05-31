@@ -30,17 +30,18 @@ class Page_Container extends Container {
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {
-		$attributes = [];
 
-		// Set attributes.
+		// Set class.
+		$class = [ 'hp-page' ];
+
 		switch ( get_template() ) {
 			case 'storefront':
-				$attributes['class'] = [ 'site-main' ];
+				$class[] = 'site-main';
 
 				break;
 		}
 
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+		$this->attributes = hp\merge_arrays( $this->attributes, [ 'class' => $class ] );
 
 		parent::bootstrap();
 	}
@@ -55,6 +56,11 @@ class Page_Container extends Container {
 
 		// Add container.
 		switch ( get_template() ) {
+			case 'twentynineteen':
+				$output = '<div class="entry"><div class="entry-content">' . $output . '</div></div>';
+
+				break;
+
 			case 'storefront':
 				$output = '<div class="content-area">' . $output . '</div>';
 

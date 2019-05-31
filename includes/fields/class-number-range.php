@@ -94,18 +94,20 @@ class Number_Range extends Number {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			if ( $this->decimals > 0 ) {
-				$decimals = $this->decimals;
+			$this->value = array_map(
+				function( $value ) use ( $decimals ) {
+					if ( ! is_null( $value ) ) {
+						if ( $decimals > 0 ) {
+							$value = round( floatval( $value ), $decimals );
+						} else {
+							$value = intval( $value );
+						}
+					}
 
-				$this->value = array_map(
-					function( $value ) use ( $decimals ) {
-						return round( floatval( $value ), $decimals );
-					},
-					$this->value
-				);
-			} else {
-				$this->value = array_map( 'intval', $this->value );
-			}
+					return $value;
+				},
+				$this->value
+			);
 		}
 	}
 
@@ -115,16 +117,15 @@ class Number_Range extends Number {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) ) {
-			if ( reset( $this->value ) > end( $this->value ) ) {
-				$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
-			}
+		if ( Field::validate() && ! is_null( $this->value ) ) {
+			$min_value = reset( $this->value );
+			$max_value = end( $this->value );
 
-			if ( ! is_null( $this->min_value ) && ( reset( $this->value ) < $this->min_value || end( $this->value ) < $this->min_value ) ) {
+			if ( ! is_null( $this->min_value ) && ( ( ! is_null( $min_value ) && $min_value < $this->min_value ) || ( ! is_null( $max_value ) && $max_value < $this->min_value ) ) ) {
 				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
 			}
 
-			if ( ! is_null( $this->max_value ) && ( reset( $this->value ) > $this->max_value || end( $this->value ) > $this->max_value ) ) {
+			if ( ! is_null( $this->max_value ) && ( ( ! is_null( $min_value ) && $min_value > $this->max_value ) || ( ! is_null( $max_value ) && $max_value > $this->max_value ) ) ) {
 				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
 			}
 		}
