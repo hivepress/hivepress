@@ -51,7 +51,7 @@ return [
 							'blocks'     => [
 								'user_delete_link' => [
 									'type'     => 'element',
-									'filepath' => 'user/edit/page/delete-link',
+									'filepath' => 'user/edit/delete-link',
 									'order'    => 10,
 								],
 							],
