@@ -59,7 +59,7 @@ return [
 									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-form--narrow', 'widget' ],
+										'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
 									],
 								],
 							],

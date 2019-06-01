@@ -42,7 +42,7 @@ return [
 									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'widget', 'widget_nav_menu' ],
+										'class' => [ 'hp-widget', 'widget', 'widget_nav_menu' ],
 									],
 								],
 							],

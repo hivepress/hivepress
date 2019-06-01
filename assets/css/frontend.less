@@ -60,6 +60,10 @@ Mixins
 			display: flex;
 			align-items: flex-end;
 			margin: 0 -.5rem;
+			@media only screen and (max-width:48em) {
+				flex-direction: column;
+				align-items: stretch;
+			}
 		}
 
 		&__captcha,
@@ -89,6 +93,11 @@ Mixins
 		&--wide &__fields,
 		&--wide &__footer {
 			margin: 0;
+			@media only screen and (max-width:48em) {
+				&:not(:last-child) {
+					margin-bottom: 2rem;
+				}
+			}
 		}
 
 		&--wide &__fields {
@@ -108,6 +117,21 @@ Mixins
 		&--wide &__field {
 			&:not(:last-child) {
 				margin-bottom: 0;
+			}
+			@media only screen and (max-width:48em) {
+				&:not(:last-child) {
+					margin-bottom: 1.5rem;
+				}
+			}
+		}
+
+		&--wide &__button {
+			@media only screen and (max-width:48em) {
+				width: 100%;
+
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
 			}
 		}
 
@@ -391,13 +415,21 @@ Mixins
 	Pages
 	--------------------------------------------------------------*/
 	&-page {
-		&__title {
-			margin-bottom: 2rem;
-		}
-
 		&__header {
 			&:not(:last-child) {
 				margin-bottom: 4rem;
+			}
+		}
+
+		&__sidebar {
+			@media only screen and (max-width:48em) {
+				&:first-child {
+					margin-bottom: 3rem;
+				}
+
+				&:last-child {
+					margin-top: 3rem;
+				}
 			}
 		}
 
@@ -409,6 +441,12 @@ Mixins
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
+		}
+	}
+
+	&-widget {
+		&:not(:last-child) {
+			margin-bottom: 2rem;
 		}
 	}
 	/*--------------------------------------------------------------

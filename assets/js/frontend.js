@@ -79,41 +79,35 @@ var hivepress = {
 							submitButton.prop('disabled', false);
 							submitButton.attr('data-state', '');
 
-							if (response !== null) {
-								if (response.hasOwnProperty('data')) {
-									if (typeof grecaptcha !== 'undefined' && captcha.length) {
-										grecaptcha.reset(captchaId);
-									}
-
-									if (!form.is('[data-redirect]')) {
-										if (form.data('message')) {
-											messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
-										}
-
-										if (!form.is('[data-id]')) {
-											form.trigger('reset');
-										}
-									}
-								} else if (response.hasOwnProperty('error')) {
-									if (response.error.hasOwnProperty('errors')) {
-										$.each(response.error.errors, function(index, error) {
-											messageContainer.append('<div>' + error.message + '</div>');
-										});
-									} else if (response.error.hasOwnProperty('message')) {
-										messageContainer.html('<div>' + response.error.message + '</div>');
-									}
-
-									if (!messageContainer.is(':empty')) {
-										messageContainer.addClass(messageClass + '--error').show();
-									}
-								}
+							if (typeof grecaptcha !== 'undefined' && captcha.length) {
+								grecaptcha.reset(captchaId);
 							}
 
-							if (form.data('redirect')) {
-								if (form.data('redirect') === true) {
-									window.location.reload(true);
-								} else {
-									window.location.replace(form.data('redirect'));
+							if (response === null || response.hasOwnProperty('data')) {
+								if (form.data('message')) {
+									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
+								}
+
+								if (form.data('redirect')) {
+									if (form.data('redirect') === true) {
+										window.location.reload(true);
+									} else {
+										window.location.replace(form.data('redirect'));
+									}
+								} else if (!form.is('[data-id]')) {
+									form.trigger('reset');
+								}
+							} else if (response.hasOwnProperty('error')) {
+								if (response.error.hasOwnProperty('errors')) {
+									$.each(response.error.errors, function(index, error) {
+										messageContainer.append('<div>' + error.message + '</div>');
+									});
+								} else if (response.error.hasOwnProperty('message')) {
+									messageContainer.html('<div>' + response.error.message + '</div>');
+								}
+
+								if (!messageContainer.is(':empty')) {
+									messageContainer.addClass(messageClass + '--error').show();
 								}
 							}
 

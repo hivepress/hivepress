@@ -31,17 +31,13 @@ class Page_Container extends Container {
 	 */
 	protected function bootstrap() {
 
-		// Set class.
-		$class = [ 'hp-page' ];
-
-		switch ( get_template() ) {
-			case 'storefront':
-				$class[] = 'site-main';
-
-				break;
-		}
-
-		$this->attributes = hp\merge_arrays( $this->attributes, [ 'class' => $class ] );
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-page', 'site-main' ],
+			]
+		);
 
 		parent::bootstrap();
 	}
@@ -56,13 +52,18 @@ class Page_Container extends Container {
 
 		// Add container.
 		switch ( get_template() ) {
+			case 'twentyseventeen':
+				$output = '<div class="wrap"><div class="content-area">' . $output . '</div></div>';
+
+				break;
+
 			case 'twentynineteen':
 				$output = '<div class="entry"><div class="entry-content">' . $output . '</div></div>';
 
 				break;
 
-			case 'storefront':
-				$output = '<div class="content-area">' . $output . '</div>';
+			default:
+				$output .= '<div class="content-area">' . $output . '</div>';
 
 				break;
 		}

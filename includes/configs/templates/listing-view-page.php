@@ -110,7 +110,7 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'widget' ],
+										'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'hp-widget', 'widget' ],
 									],
 
 									'blocks'     => [
@@ -145,7 +145,7 @@ return [
 									'order'      => 30,
 
 									'attributes' => [
-										'class' => [ 'widget' ],
+										'class' => [ 'hp-widget', 'widget' ],
 									],
 								],
 							],

@@ -45,7 +45,7 @@ return [
 									'order'      => 10,
 
 									'attributes' => [
-										'class' => [ 'hp-vendor__summary', 'widget' ],
+										'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
 									],
 
 									'blocks'     => [
@@ -91,7 +91,7 @@ return [
 									'order'      => 20,
 
 									'attributes' => [
-										'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'widget' ],
+										'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
 									],
 
 									'blocks'     => [],
