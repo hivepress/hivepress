@@ -1,20 +1,22 @@
 <?php
 /**
- * Contains helper functions.
+ * Helper functions.
  *
  * @package HivePress
  */
+
+namespace HivePress\Helpers;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Adds plugin prefix.
+ * Adds HivePress prefix.
  *
- * @param mixed $names
+ * @param mixed $names Names to prefix.
  * @return mixed
  */
-function hp_prefix( $names ) {
+function prefix( $names ) {
 	$prefixed = '';
 
 	if ( is_array( $names ) ) {
@@ -32,23 +34,23 @@ function hp_prefix( $names ) {
 }
 
 /**
- * Removes plugin prefix.
+ * Removes HivePress prefix.
  *
- * @param mixed $names
+ * @param mixed $names Names to unprefix.
  * @return mixed
  */
-function hp_unprefix( $names ) {
+function unprefix( $names ) {
 	$unprefixed = '';
 
 	if ( is_array( $names ) ) {
 		$unprefixed = array_map(
 			function( $name ) {
-				return str_replace( 'hp_', '', $name );
+				return preg_replace( '/^hp_/', '', $name );
 			},
 			$names
 		);
 	} else {
-		$unprefixed = str_replace( 'hp_', '', $names );
+		$unprefixed = preg_replace( '/^hp_/', '', $names );
 	}
 
 	return $unprefixed;
@@ -57,12 +59,12 @@ function hp_unprefix( $names ) {
 /**
  * Gets array item value by key.
  *
- * @param array  $array
- * @param string $key
- * @param mixed  $default
+ * @param array  $array Source array.
+ * @param string $key Key to search.
+ * @param mixed  $default Default value.
  * @return mixed
  */
-function hp_get_array_value( $array, $key, $default = null ) {
+function get_array_value( $array, $key, $default = null ) {
 	$value = $default;
 
 	if ( is_array( $array ) && isset( $array[ $key ] ) ) {
@@ -73,12 +75,47 @@ function hp_get_array_value( $array, $key, $default = null ) {
 }
 
 /**
+ * Searches array item value by keys.
+ *
+ * @param array $array Source array.
+ * @param array $keys Keys to search.
+ * @return mixed
+ */
+function search_array_value( $array, $keys ) {
+	$keys = (array) $keys;
+
+	foreach ( $keys as $key ) {
+		if ( isset( $array[ $key ] ) ) {
+			if ( end( $keys ) === $key ) {
+				return $array[ $key ];
+			} elseif ( is_array( $array[ $key ] ) ) {
+				$array = $array[ $key ];
+			}
+		} else {
+			foreach ( $array as $subarray ) {
+				if ( is_array( $subarray ) ) {
+					$value = search_array_value( $subarray, $keys );
+
+					if ( ! is_null( $value ) ) {
+						return $value;
+					}
+				}
+			}
+
+			break;
+		}
+	}
+
+	return null;
+}
+
+/**
  * Sorts array by custom order.
  *
- * @param array $array
+ * @param array $array Source array.
  * @return array
  */
-function hp_sort_array( $array ) {
+function sort_array( $array ) {
 	$sorted = [];
 
 	foreach ( $array as $key => $value ) {
@@ -97,16 +134,14 @@ function hp_sort_array( $array ) {
 }
 
 /**
- * Merges two arrays with mixed values.
+ * Merges arrays with mixed values.
  *
  * @return array
  */
-function hp_merge_arrays() {
+function merge_arrays() {
 	$merged = [];
 
-	$arrays = func_get_args();
-
-	foreach ( $arrays as $array ) {
+	foreach ( func_get_args() as $array ) {
 		foreach ( $array as $key => $value ) {
 			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
 				if ( is_numeric( $key ) ) {
@@ -115,7 +150,7 @@ function hp_merge_arrays() {
 					$merged[ $key ] = $value;
 				}
 			} else {
-				$merged[ $key ] = hp_merge_arrays( $merged[ $key ], $value );
+				$merged[ $key ] = merge_arrays( $merged[ $key ], $value );
 			}
 		}
 	}
@@ -126,15 +161,21 @@ function hp_merge_arrays() {
 /**
  * Renders HTML attributes.
  *
- * @param array $atts
+ * @param array $atts Array of attributes.
  * @return string
  */
-function hp_html_attributes( $atts ) {
+function html_attributes( $atts ) {
 	$output = '';
 
-	foreach ( $atts as $att_name => $att_value ) {
-		if ( ! is_null( $att_value ) ) {
-			$output .= esc_html( $att_name ) . '="' . esc_attr( trim( $att_value ) ) . '" ';
+	if ( is_array( $atts ) ) {
+		foreach ( $atts as $name => $value ) {
+			if ( true === $value ) {
+				$value = $name;
+			} elseif ( is_array( $value ) ) {
+				$value = implode( ' ', $value );
+			}
+
+			$output .= esc_attr( $name ) . '="' . esc_attr( trim( $value ) ) . '" ';
 		}
 	}
 
@@ -142,29 +183,12 @@ function hp_html_attributes( $atts ) {
 }
 
 /**
- * Replaces placeholders with values.
- *
- * @param array  $placeholders
- * @param string $text
- * @return string
- */
-function hp_replace_placeholders( $placeholders, $text ) {
-	foreach ( $placeholders as $placeholder_name => $placeholder_value ) {
-		if ( ! is_array( $placeholder_value ) ) {
-			$text = str_replace( '%' . $placeholder_name . '%', $placeholder_value, $text );
-		}
-	}
-
-	return $text;
-}
-
-/**
  * Sanitizes HTML.
  *
- * @param string $html
+ * @param string $html HTML to sanitize.
  * @return string
  */
-function hp_sanitize_html( $html ) {
+function sanitize_html( $html ) {
 	$tags = [
 		'strong' => [],
 		'a'      => [
@@ -180,113 +204,64 @@ function hp_sanitize_html( $html ) {
 }
 
 /**
- * Sanitizes ID.
+ * Sanitizes slug.
  *
- * @param string $text
+ * @param string $text Text to sanitize.
  * @return string
  */
-function hp_sanitize_id( $text ) {
-	$id = $text;
+function sanitize_slug( $text ) {
+	return str_replace( '_', '-', strtolower( $text ) );
+}
+
+/**
+ * Sanitizes key.
+ *
+ * @param string $text Text to sanitize.
+ * @return string
+ */
+function sanitize_key( $text ) {
+	$key = $text;
 
 	if ( function_exists( 'transliterator_transliterate' ) ) {
-		$id = transliterator_transliterate( 'Any-Latin; Latin-ASCII', $id );
+		$key = transliterator_transliterate( 'Any-Latin; Latin-ASCII; Lower()', $key );
+	} else {
+		$key = strtolower( $key );
 	}
 
-	$id = trim( preg_replace( '/[^a-z0-9\s\-]/', '', $id ) );
-	$id = str_replace( '-', '_', sanitize_title( $id ) );
-	$id = substr( $id, 0, 32 );
+	$key = preg_replace( '/[^a-z0-9]+/', '_', $key );
+	$key = ltrim( trim( $key, '_' ), '0..9' );
 
-	if ( '' === $id ) {
-		$id = md5( $text );
+	if ( '' === $key ) {
+		$key = 'a' . substr( md5( $text ), 0, 31 );
 	}
 
-	return $id;
+	return $key;
 }
 
 /**
- * Gets current page number.
+ * Replaces tokens with values.
  *
- * @return int
- */
-function hp_get_current_page() {
-	$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-	$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
-
-	return absint( $page );
-}
-
-/**
- * Gets the current URL.
- *
- * @param array $query
+ * @param array  $tokens Array of tokens.
+ * @param string $text Text to be processed.
  * @return string
  */
-function hp_get_current_url( $query = [] ) {
-	global $wp;
-
-	$query_string = '';
-
-	if ( ! empty( $_GET ) || ! empty( $query ) ) {
-		$query_string = '/?' . http_build_query( array_merge( $_GET, $query ) );
+function replace_tokens( $tokens, $text ) {
+	foreach ( $tokens as $name => $value ) {
+		if ( ! is_array( $value ) ) {
+			$text = str_replace( '%' . $name . '%', $value, $text );
+		}
 	}
 
-	return home_url( $wp->request . $query_string );
-}
-
-/**
- * Validates redirect URL.
- *
- * @param mixed $url
- * return bool
- */
-function hp_validate_redirect( $url ) {
-	return wp_validate_redirect( $url ) && ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 );
-}
-
-/**
- * Redirects HTTP request.
- *
- * @param mixed $url
- */
-function hp_redirect( $url = null ) {
-	if ( is_null( $url ) || true === $url ) {
-		$url = hp_get_current_url();
-	}
-
-	wp_safe_redirect( esc_url( $url ) );
-	exit;
-}
-
-/**
- * Gets remote JSON.
- *
- * @param string $url
- * @param array  $headers
- * @return mixed
- */
-function hp_get_remote_json( $url, $headers = [] ) {
-	$response = wp_remote_get(
-		$url,
-		[
-			'headers'   => $headers,
-			'sslverify' => false,
-		]
-	);
-
-	if ( ! is_wp_error( $response ) && 200 === $response['response']['code'] ) {
-		return json_decode( $response['body'], true );
-	}
-
-	return false;
+	return $text;
 }
 
 /**
  * Gets post ID.
  *
- * @param array $args
+ * @param array $args Post arguments.
  * @return int
  */
-function hp_get_post_id( $args ) {
+function get_post_id( $args ) {
 	$args = array_merge(
 		$args,
 		[
@@ -295,11 +270,87 @@ function hp_get_post_id( $args ) {
 		]
 	);
 
-	if ( hp_get_array_value( $args, 'post_status' ) === 'any' ) {
-		$args['post_status'] = [ 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ];
+	$post_ids = get_posts( $args );
+
+	return absint( reset( $post_ids ) );
+}
+
+/**
+ * Gets REST API URL.
+ *
+ * @param string $url Redirect URL.
+ * @return bool
+ */
+function validate_redirect( $url ) {
+	return wp_validate_redirect( $url ) && ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 );
+}
+
+/**
+ * Gets current URL.
+ *
+ * @return string
+ */
+function get_current_url() {
+	global $wp;
+
+	$query_string = '';
+
+	if ( ! empty( $_GET ) ) {
+		$query_string = '/?' . http_build_query( $_GET );
 	}
 
-	$posts = get_posts( $args );
+	return home_url( $wp->request . $query_string );
+}
 
-	return absint( reset( $posts ) );
+/**
+ * Gets REST API URL.
+ *
+ * @param string $path URL path.
+ * @return string
+ */
+function get_rest_url( $path = '' ) {
+	return \get_rest_url( null, 'hivepress/v1' . $path );
+}
+
+/**
+ * Gets REST API error.
+ *
+ * @param int   $code Error code.
+ * @param array $errors Additional errors.
+ * @return WP_Rest_Response
+ */
+function rest_error( $code, $errors = [] ) {
+	$error = [
+		'code' => $code,
+	];
+
+	if ( ! empty( $errors ) ) {
+		$error['errors'] = array_map(
+			function( $error ) {
+				return [
+					'message' => $error,
+				];
+			},
+			(array) $errors
+		);
+	}
+
+	return new \WP_Rest_Response(
+		[
+			'error' => $error,
+		],
+		$code
+	);
+}
+
+/**
+ * Gets current page number.
+ *
+ * @return int
+ */
+function get_current_page() {
+	$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
+
+	return absint( $page );
 }

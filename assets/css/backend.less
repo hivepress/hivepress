@@ -8,10 +8,6 @@
 			width: 25em;
 			line-height: 1.4em;
 			margin-top: 0.35em;
-
-			&:not(:last-child) {
-				margin-bottom: 1em;
-			}
 		}
 
 		input[type=email],
@@ -34,34 +30,55 @@
 			width: 500px;
 			min-height: 7em;
 		}
+	}
 
-		&__field {
-			&--file-select {
-				> div {
-					position: relative;
-					width: 150px;
-					overflow: hidden;
+	&-field {
+		&--checkboxes,
+		&--radio {
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
 
-					img {
-						display: block;
-						width: 100%;
-						height: auto;
-						margin-bottom: 10px;
+				ul {
+					margin: 1em 0 0 1.5em;
+				}
+
+				li {
+					margin: 0;
+
+					&:not(:last-child) {
+						margin-bottom: 1em;
 					}
+				}
+			}
+		}
 
-					a {
-						position: absolute;
-						top: 10px;
-						right: 10px;
-						width: 20px;
-						height: 20px;
-						line-height: 20px;
-						text-align: center;
-						text-decoration: none;
-						color: #fff;
-						background-color: rgba(0,0,0,0.5);
-						border-radius: 3px;
-					}
+		&--attachment-select {
+			> div {
+				position: relative;
+				width: 150px;
+				overflow: hidden;
+
+				img {
+					display: block;
+					width: 100%;
+					height: auto;
+					margin-bottom: 10px;
+				}
+
+				a {
+					position: absolute;
+					top: 10px;
+					right: 10px;
+					width: 20px;
+					height: 20px;
+					line-height: 20px;
+					text-align: center;
+					text-decoration: none;
+					color: #fff;
+					background-color: rgba(0,0,0,0.5);
+					border-radius: 3px;
 				}
 			}
 		}
@@ -130,7 +147,7 @@ Pages
 	}
 }
 
-.hivepress_page_hp_addons {
+.hivepress_page_hp_extensions {
 	.wp-list-table {
 		padding-top: 15px;
 	}

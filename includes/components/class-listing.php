@@ -1,175 +1,210 @@
 <?php
-namespace HivePress;
+/**
+ * Listing component.
+ *
+ * @package HivePress\Components
+ */
+
+namespace HivePress\Components;
+
+use HivePress\Helpers as hp;
+use HivePress\Models;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Manages listings.
+ * Listing component class.
  *
  * @class Listing
  */
-class Listing extends Entity {
+final class Listing {
 
 	/**
 	 * Class constructor.
-	 *
-	 * @param array $settings
 	 */
-	public function __construct( $settings ) {
-		parent::__construct( $settings );
+	public function __construct() {
 
-		// Render editor blocks.
-		add_filter( 'hivepress/editor/block_html/listing_search', [ $this, 'render_search_block' ], 10, 2 );
-		add_filter( 'hivepress/editor/block_html/listings', [ $this, 'render_listings_block' ], 10, 2 );
-		add_filter( 'hivepress/editor/block_html/listing_categories', [ $this, 'render_categories_block' ], 10, 2 );
+		// Add menu items.
+		add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+
+		// Set vendor.
+		add_action( 'save_post_hp_listing', [ $this, 'set_vendor' ], 10, 2 );
+
+		// Set image.
+		add_action( 'add_attachment', [ $this, 'set_image' ] );
+		add_action( 'edit_attachment', [ $this, 'set_image' ] );
+
+		// Update status.
+		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
 	}
 
 	/**
-	 * Renders search block.
+	 * Adds menu items.
 	 *
-	 * @param string $output
-	 * @param array  $atts
-	 * @return string
+	 * @param array $menu Menu arguments.
+	 * @return array
 	 */
-	public function render_search_block( $output, $atts ) {
-		return hivepress()->template->render_part( 'listing/parts/search-form' );
-	}
-
-	/**
-	 * Renders listings block.
-	 *
-	 * @param string $output
-	 * @param array  $atts
-	 * @return string
-	 */
-	public function render_listings_block( $output, $atts ) {
-		$atts = shortcode_atts(
+	public function add_menu_items( $menu ) {
+		if ( hp\get_post_id(
 			[
-				'category' => '',
-				'number'   => 3,
-				'columns'  => 3,
-				'order'    => '',
-				'status'   => '',
-			],
-			$atts
-		);
-
-		// Get column width.
-		$columns      = absint( $atts['columns'] );
-		$column_width = 12;
-
-		if ( $columns > 0 && $columns <= 12 ) {
-			$column_width = round( $column_width / $columns );
-		}
-
-		// Set query arguments.
-		$query_args = [
-			'post_type'      => hp_prefix( $this->name ),
-			'post_status'    => 'publish',
-			'posts_per_page' => absint( $atts['number'] ),
-		];
-
-		// Get category.
-		if ( '' !== $atts['category'] ) {
-			$query_args['tax_query'][] = [
-				'taxonomy' => hp_prefix( $this->name . '_category' ),
-				'terms'    => [ absint( $atts['category'] ) ],
+				'post_type'   => 'hp_listing',
+				'post_status' => [ 'draft', 'pending', 'publish' ],
+				'author'      => get_current_user_id(),
+			]
+		) !== 0 ) {
+			$menu['items']['edit_listings'] = [
+				'route' => 'listing/edit_listings',
+				'order' => 10,
 			];
 		}
 
-		// Get order.
-		if ( 'title' === $atts['order'] ) {
-			$query_args['orderby'] = 'title';
-			$query_args['order']   = 'ASC';
-		} elseif ( 'random' === $atts['order'] ) {
-			$query_args['orderby'] = 'rand';
-		}
-
-		// Get status.
-		if ( 'featured' === $atts['status'] ) {
-			$query_args['meta_key']   = hp_prefix( $atts['status'] );
-			$query_args['meta_value'] = '1';
-		}
-
-		// Query listings.
-		$query = new \WP_Query( $query_args );
-
-		$output = hivepress()->template->render_part(
-			'listing/parts/loop-archive',
-			[
-				'listing_query' => $query,
-				'column_width'  => $column_width,
-			]
-		);
-
-		wp_reset_postdata();
-
-		return $output;
+		return $menu;
 	}
 
 	/**
-	 * Renders categories block.
+	 * Sets vendor.
 	 *
-	 * @param string $output
-	 * @param array  $atts
-	 * @return string
+	 * @param int     $listing_id Listing ID.
+	 * @param WP_Post $listing Listing object.
 	 */
-	public function render_categories_block( $output, $atts ) {
-		$atts = shortcode_atts(
+	public function set_vendor( $listing_id, $listing ) {
+
+		// Get vendor ID.
+		$vendor_id = hp\get_post_id(
 			[
-				'parent'  => '',
-				'number'  => 3,
-				'columns' => 3,
-				'order'   => '',
-			],
-			$atts
-		);
-
-		// Get column width.
-		$columns      = absint( $atts['columns'] );
-		$column_width = 12;
-
-		if ( $columns > 0 && $columns <= 12 ) {
-			$column_width = round( $column_width / $columns );
-		}
-
-		// Set category arguments.
-		$category_args = [
-			'taxonomy'   => hp_prefix( $this->name . '_category' ),
-			'hide_empty' => false,
-			'number'     => absint( $atts['number'] ),
-			'parent'     => absint( $atts['parent'] ),
-		];
-
-		// Get order.
-		if ( 'title' === $atts['order'] ) {
-			$category_args['orderby'] = 'name';
-		} elseif ( 'count' === $atts['order'] ) {
-			$category_args['orderby'] = 'count';
-			$category_args['order']   = 'DESC';
-		} else {
-			$category_args['orderby']  = 'meta_value_num';
-			$category_args['order']    = 'ASC';
-			$category_args['meta_key'] = 'hp_order';
-		}
-
-		// Get categories.
-		$categories = get_terms( $category_args );
-
-		// Set category count.
-		foreach ( $categories as $category_index => $category ) {
-			$categories[ $category_index ]->count = $this->get_category_count( $category->term_id );
-		}
-
-		$output = hivepress()->template->render_part(
-			'category/parts/loop-archive',
-			[
-				'categories'   => $categories,
-				'column_width' => $column_width,
+				'post_type'   => 'hp_vendor',
+				'post_status' => 'any',
+				'post__in'    => [ absint( $listing->post_parent ) ],
 			]
 		);
 
-		return $output;
+		if ( 0 === $vendor_id ) {
+
+			// Get user ID.
+			$user_id = absint( $listing->post_author );
+
+			// Get vendor ID.
+			$vendor_id = hp\get_post_id(
+				[
+					'post_type'   => 'hp_vendor',
+					'post_status' => 'any',
+					'author'      => $user_id,
+				]
+			);
+
+			if ( 0 === $vendor_id ) {
+
+				// Add vendor.
+				$vendor_id = wp_insert_post(
+					[
+						'post_title'   => get_userdata( $user_id )->display_name,
+						'post_content' => get_user_meta( $user_id, 'description', true ),
+						'post_type'    => 'hp_vendor',
+						'post_status'  => 'publish',
+						'post_author'  => $user_id,
+					]
+				);
+
+				if ( 0 !== $vendor_id ) {
+
+					// Get image ID.
+					$image_id = hp\get_post_id(
+						[
+							'post_type'   => 'attachment',
+							'post_parent' => 0,
+							'author'      => $user_id,
+							'meta_key'    => 'hp_parent_field',
+							'meta_value'  => 'image_id',
+						]
+					);
+
+					if ( 0 !== $image_id ) {
+
+						// Update image.
+						set_post_thumbnail( $vendor_id, $image_id );
+					}
+				}
+			}
+
+			// Set vendor ID.
+			wp_update_post(
+				[
+					'ID'          => $listing_id,
+					'post_parent' => $vendor_id,
+				]
+			);
+		}
+	}
+
+	/**
+	 * Sets image.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 */
+	public function set_image( $attachment_id ) {
+
+		// Get listing ID.
+		$listing_id = wp_get_post_parent_id( $attachment_id );
+
+		if ( get_post_type( $listing_id ) === 'hp_listing' ) {
+
+			// Get mime type.
+			$mime_type = get_post_mime_type( $attachment_id );
+
+			if ( in_array( $mime_type, [ 'image/jpeg', 'image/png' ], true ) ) {
+
+				// Get image IDs.
+				$image_ids = wp_list_pluck( get_attached_media( 'image', $listing_id ), 'ID' );
+
+				// Set image.
+				if ( ! empty( $image_ids ) ) {
+					set_post_thumbnail( $listing_id, reset( $image_ids ) );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates status.
+	 *
+	 * @param string  $new_status New status.
+	 * @param string  $old_status Old status.
+	 * @param WP_Post $listing Listing object.
+	 */
+	public function update_status( $new_status, $old_status, $listing ) {
+		if ( 'hp_listing' === $listing->post_type && 'pending' === $old_status ) {
+
+			// Get user.
+			$user = get_userdata( $listing->post_author );
+
+			if ( 'publish' === $new_status ) {
+
+				// Send approval email.
+				( new Emails\Listing_Approve(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+							'listing_url'   => get_permalink( $listing->ID ),
+						],
+					]
+				) )->send();
+			} elseif ( 'trash' === $new_status ) {
+
+				// Send rejection email.
+				( new Emails\Listing_Reject(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+						],
+					]
+				) )->send();
+			}
+		}
 	}
 }

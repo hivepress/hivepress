@@ -2,9 +2,9 @@
 /**
  * Plugin Name: HivePress
  * Description: Multipurpose listing & directory plugin.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: HivePress
- * Author URI: https://hivepress.co/
+ * Author URI: https://hivepress.io/
  * Text Domain: hivepress
  * Domain Path: /languages/
  *
@@ -14,24 +14,22 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Define the plugin file.
+// Define the core HivePress file.
 if ( ! defined( 'HP_CORE_FILE' ) ) {
 	define( 'HP_CORE_FILE', __FILE__ );
 }
 
-// Include the main plugin class.
-if ( ! class_exists( 'HivePress' ) ) {
-	require_once dirname( __FILE__ ) . '/includes/class-hivepress.php';
-}
+// Include the core HivePress class.
+require_once __DIR__ . '/includes/class-core.php';
 
 /**
- * Returns the main plugin instance.
+ * Returns the core HivePress instance.
  *
- * @return HivePress
+ * @return HivePress\Core
  */
 function hivepress() {
-	return HivePress::instance();
+	return HivePress\Core::instance();
 }
 
-// Initialize plugin.
+// Initialize HivePress.
 hivepress();
