@@ -1,0 +1,932 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: HivePress\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-21 19:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: includes/settings.php:19
+msgid "Integrations"
+msgstr ""
+
+#: includes/settings.php:56
+msgid "Site Key"
+msgstr ""
+
+#: includes/settings.php:62
+msgid "Secret Key"
+msgstr ""
+
+#: includes/settings.php:68
+msgid "Protected Forms"
+msgstr ""
+
+#: includes/settings.php:256
+msgid "Users"
+msgstr ""
+
+#: includes/settings.php:261
+msgid "Registration"
+msgstr ""
+
+#: includes/settings.php:266
+msgid "Registration Terms Page"
+msgstr ""
+
+#: includes/settings.php:267
+msgid "Choose a page with terms that user has to accept before registering."
+msgstr ""
+
+#: includes/settings.php:277 includes/settings.php:711
+msgid "Emails"
+msgstr ""
+
+#: includes/settings.php:282
+msgid "User Registered"
+msgstr ""
+
+#: includes/settings.php:283
+msgid ""
+"This email is sent to users after registration, the following placeholders "
+"are available: %user_name%, %user_password%."
+msgstr ""
+
+#: includes/settings.php:285
+msgid ""
+"Hi, %user_name%! Thank you for registering, here's your password: "
+"%user_password%"
+msgstr ""
+
+#: includes/settings.php:291 includes/settings.php:311
+msgid "Password Reset"
+msgstr ""
+
+#: includes/settings.php:292
+msgid ""
+"This email is sent to users when new password is requested, the following "
+"placeholders are available: %user_name%, %password_reset_url%."
+msgstr ""
+
+#: includes/settings.php:294
+msgid ""
+"Hi, %user_name%! Please click on the following link to set a new password: "
+"%password_reset_url%"
+msgstr ""
+
+#: includes/settings.php:307
+msgid "Registration Complete"
+msgstr ""
+
+#: includes/settings.php:318
+msgid "Register User"
+msgstr ""
+
+#: includes/settings.php:325 includes/settings.php:464
+#: includes/settings.php:865
+msgid "Email"
+msgstr ""
+
+#: includes/settings.php:332 includes/settings.php:364
+#: includes/settings.php:494
+msgid "Password"
+msgstr ""
+
+#: includes/settings.php:344 templates/user/parts/login-form.php:8
+#: templates/user/parts/register-popup.php:8
+msgid "Register"
+msgstr ""
+
+#: includes/settings.php:349
+msgid "Login User"
+msgstr ""
+
+#: includes/settings.php:356 includes/settings.php:388
+msgid "Username or Email"
+msgstr ""
+
+#: includes/settings.php:376 includes/settings.php:510
+#: templates/user/parts/account-link.php:9
+#: templates/user/parts/login-popup.php:8
+#: templates/user/parts/register-form.php:8
+msgid "Sign In"
+msgstr ""
+
+#: includes/settings.php:381 includes/settings.php:425
+#: includes/settings.php:518 templates/user/parts/request-password-popup.php:8
+msgid "Reset Password"
+msgstr ""
+
+#: includes/settings.php:384
+msgid "Password reset email has been sent."
+msgstr ""
+
+#: includes/settings.php:397
+msgid "Send Email"
+msgstr ""
+
+#: includes/settings.php:407 includes/settings.php:471
+msgid "New Password"
+msgstr ""
+
+#: includes/settings.php:431
+msgid "Your settings have been updated."
+msgstr ""
+
+#: includes/settings.php:435
+msgid "Profile Image"
+msgstr ""
+
+#: includes/settings.php:436 includes/settings.php:969
+msgid "Select Image"
+msgstr ""
+
+#: includes/settings.php:443
+msgid "First Name"
+msgstr ""
+
+#: includes/settings.php:450
+msgid "Last Name"
+msgstr ""
+
+#: includes/settings.php:457
+msgid "Profile Info"
+msgstr ""
+
+#: includes/settings.php:477
+msgid "Current Password"
+msgstr ""
+
+#: includes/settings.php:484
+msgid "Update Settings"
+msgstr ""
+
+#: includes/settings.php:502 templates/user/parts/settings-form.php:8
+#: templates/user/parts/settings-form.php:23
+msgid "Delete Account"
+msgstr ""
+
+#: includes/settings.php:532
+msgid "My Settings"
+msgstr ""
+
+#: includes/settings.php:651 includes/settings.php:774
+#: includes/settings.php:1845
+msgid "Listings"
+msgstr ""
+
+#: includes/settings.php:656 includes/settings.php:981
+msgid "Display"
+msgstr ""
+
+#: includes/settings.php:661
+msgid "Listings Page"
+msgstr ""
+
+#: includes/settings.php:662
+msgid "Choose a page that displays all listings."
+msgstr ""
+
+#: includes/settings.php:670
+msgid "Listings Page Display"
+msgstr ""
+
+#: includes/settings.php:671 includes/settings.php:982
+msgid "Display subcategories"
+msgstr ""
+
+#: includes/settings.php:677
+msgid "Listings per Page"
+msgstr ""
+
+#: includes/settings.php:687
+msgid "Submission"
+msgstr ""
+
+#: includes/settings.php:692
+msgid "Submission Terms Page"
+msgstr ""
+
+#: includes/settings.php:693
+msgid ""
+"Choose a page with terms that user has to accept before submitting a new "
+"listing."
+msgstr ""
+
+#: includes/settings.php:701
+msgid "Moderation"
+msgstr ""
+
+#: includes/settings.php:702
+msgid "Manually approve new listings"
+msgstr ""
+
+#: includes/settings.php:716 includes/settings.php:756
+msgid "Listing Approved"
+msgstr ""
+
+#: includes/settings.php:717
+msgid ""
+"This email is sent to users when listing is approved, the following "
+"placeholders are available: %user_name%, %listing_title%, %listing_url%."
+msgstr ""
+
+#: includes/settings.php:719
+msgid ""
+"Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
+"on the following link to view it: %listing_url%"
+msgstr ""
+
+#: includes/settings.php:725 includes/settings.php:760
+msgid "Listing Rejected"
+msgstr ""
+
+#: includes/settings.php:726
+msgid ""
+"This email is sent to users when listing is rejected, the following "
+"placeholders are available: %user_name%, %listing_title%."
+msgstr ""
+
+#: includes/settings.php:728
+msgid ""
+"Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
+"rejected."
+msgstr ""
+
+#: includes/settings.php:741 includes/settings.php:1223
+msgid "Listing Submitted"
+msgstr ""
+
+#: includes/settings.php:742
+msgid ""
+"A new listing \"%listing_title%\" has been submitted, click on the following "
+"link to view it: %listing_url%"
+msgstr ""
+
+#: includes/settings.php:746
+msgid "Listing Updated"
+msgstr ""
+
+#: includes/settings.php:747
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been updated, the following "
+"changes were made: %listing_changes%"
+msgstr ""
+
+#: includes/settings.php:751
+msgid "Listing Reported"
+msgstr ""
+
+#: includes/settings.php:752
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been reported for the "
+"following reason: %report_reason%"
+msgstr ""
+
+#: includes/settings.php:775 templates/listing/parts/loop-edit.php:10
+msgid "Listing"
+msgstr ""
+
+#: includes/settings.php:776
+msgid "Add New Listing"
+msgstr ""
+
+#: includes/settings.php:777 includes/settings.php:1243
+msgid "Edit Listing"
+msgstr ""
+
+#: includes/settings.php:778
+msgid "New Listing"
+msgstr ""
+
+#: includes/settings.php:779
+msgid "View Listing"
+msgstr ""
+
+#: includes/settings.php:780
+msgid "All Listings"
+msgstr ""
+
+#: includes/settings.php:781
+msgid "Search Listings"
+msgstr ""
+
+#: includes/settings.php:782
+msgid "No Listings Found"
+msgstr ""
+
+#: includes/settings.php:783
+msgid "No Listings Found in Trash"
+msgstr ""
+
+#: includes/settings.php:794 includes/settings.php:800
+#: includes/settings.php:831
+msgid "Attributes"
+msgstr ""
+
+#: includes/settings.php:795
+msgid "Attribute"
+msgstr ""
+
+#: includes/settings.php:796
+msgid "Add New Attribute"
+msgstr ""
+
+#: includes/settings.php:797
+msgid "Edit Attribute"
+msgstr ""
+
+#: includes/settings.php:798
+msgid "New Attribute"
+msgstr ""
+
+#: includes/settings.php:799
+msgid "View Attribute"
+msgstr ""
+
+#: includes/settings.php:801
+msgid "Search Attributes"
+msgstr ""
+
+#: includes/settings.php:802
+msgid "No Attributes Found"
+msgstr ""
+
+#: includes/settings.php:803
+msgid "No Attributes Found in Trash"
+msgstr ""
+
+#: includes/settings.php:835 includes/settings.php:1882
+msgid "Featured"
+msgstr ""
+
+#: includes/settings.php:836
+msgid "Make this listing featured"
+msgstr ""
+
+#: includes/settings.php:844 includes/components/class-admin.php:109
+msgid "Settings"
+msgstr ""
+
+#: includes/settings.php:849 includes/settings.php:1868
+#: includes/components/abstracts/class-entity.php:1675
+msgid "Category"
+msgstr ""
+
+#: includes/settings.php:850
+msgid ""
+"Choose a category if you want to make this attribute category-specific "
+"instead of global."
+msgstr ""
+
+#: includes/settings.php:858
+msgid "Type"
+msgstr ""
+
+#: includes/settings.php:859
+msgid ""
+"Choose the attribute type, if there're two types the second will be used for "
+"search."
+msgstr ""
+
+#: includes/settings.php:864
+msgid "Text"
+msgstr ""
+
+#: includes/settings.php:866 includes/settings.php:1815
+#: includes/settings.php:1861
+msgid "Number"
+msgstr ""
+
+#: includes/settings.php:867
+msgid "Number / Number Range"
+msgstr ""
+
+#: includes/settings.php:868
+msgid "Checkbox"
+msgstr ""
+
+#: includes/settings.php:869
+msgid "Checkboxes"
+msgstr ""
+
+#: includes/settings.php:870
+msgid "Checkboxes / Select"
+msgstr ""
+
+#: includes/settings.php:871
+msgid "Checkboxes / Radio"
+msgstr ""
+
+#: includes/settings.php:872
+msgid "Select"
+msgstr ""
+
+#: includes/settings.php:873
+msgid "Select / Radio"
+msgstr ""
+
+#: includes/settings.php:874
+msgid "Select / Checkboxes"
+msgstr ""
+
+#: includes/settings.php:875
+msgid "Radio"
+msgstr ""
+
+#: includes/settings.php:876
+msgid "Radio / Select"
+msgstr ""
+
+#: includes/settings.php:877
+msgid "Radio / Checkboxes"
+msgstr ""
+
+#: includes/settings.php:882
+msgid "Decimals"
+msgstr ""
+
+#: includes/settings.php:883
+msgid "Set the number of decimal places allowed for numeric values."
+msgstr ""
+
+#: includes/settings.php:896
+msgid "Label"
+msgstr ""
+
+#: includes/settings.php:897
+msgid ""
+"Set the checkbox label that will also be used for displaying this attribute."
+msgstr ""
+
+#: includes/settings.php:904
+msgid "Format"
+msgstr ""
+
+#: includes/settings.php:905
+msgid ""
+"Set the attribute display format, the following placeholders are available: "
+"%value%."
+msgstr ""
+
+#: includes/settings.php:912
+msgid "Areas"
+msgstr ""
+
+#: includes/settings.php:913
+msgid "Choose the template areas where you want to display this attribute."
+msgstr ""
+
+#: includes/settings.php:918
+msgid "Archive page (primary)"
+msgstr ""
+
+#: includes/settings.php:919
+msgid "Archive page (secondary)"
+msgstr ""
+
+#: includes/settings.php:920
+msgid "Single page (primary)"
+msgstr ""
+
+#: includes/settings.php:921
+msgid "Single page (secondary)"
+msgstr ""
+
+#: includes/settings.php:926
+msgid "Editable"
+msgstr ""
+
+#: includes/settings.php:927
+msgid "Add to the front-end editor"
+msgstr ""
+
+#: includes/settings.php:933
+msgid "Required"
+msgstr ""
+
+#: includes/settings.php:934
+msgid "Make this attribute required"
+msgstr ""
+
+#: includes/settings.php:941
+msgid "Searchable"
+msgstr ""
+
+#: includes/settings.php:942
+msgid "Add to the search filter"
+msgstr ""
+
+#: includes/settings.php:948
+msgid "Sortable"
+msgstr ""
+
+#: includes/settings.php:949
+msgid "Add to the sorting options"
+msgstr ""
+
+#: includes/settings.php:968
+msgid "Image"
+msgstr ""
+
+#: includes/settings.php:975 includes/settings.php:1831
+#: includes/settings.php:1888
+msgid "Order"
+msgstr ""
+
+#: includes/settings.php:998
+msgid "Keywords"
+msgstr ""
+
+#: includes/settings.php:1012
+msgid "Search"
+msgstr ""
+
+#: includes/settings.php:1038
+msgid "Filter"
+msgstr ""
+
+#: includes/settings.php:1050
+msgid "Sort by"
+msgstr ""
+
+#: includes/settings.php:1069 includes/settings.php:1107
+#: templates/listing/parts/submission-link.php:5
+msgid "Submit Listing"
+msgstr ""
+
+#: includes/settings.php:1076 includes/settings.php:1117
+#: includes/settings.php:1836 includes/settings.php:1893
+msgid "Title"
+msgstr ""
+
+#: includes/settings.php:1084 includes/settings.php:1125
+msgid "Description"
+msgstr ""
+
+#: includes/settings.php:1092 includes/settings.php:1133
+msgid "Images"
+msgstr ""
+
+#: includes/settings.php:1093 includes/settings.php:1134
+msgid "Select Images"
+msgstr ""
+
+#: includes/settings.php:1113
+msgid "Listing has been updated."
+msgstr ""
+
+#: includes/settings.php:1148
+msgid "Update Listing"
+msgstr ""
+
+#: includes/settings.php:1164 templates/listing/parts/edit-form.php:8
+#: templates/listing/parts/edit-form.php:21
+msgid "Delete Listing"
+msgstr ""
+
+#: includes/settings.php:1169 includes/settings.php:1189
+#: templates/listing/parts/report-form.php:5
+#: templates/listing/parts/report-form.php:8
+msgid "Report Listing"
+msgstr ""
+
+#: includes/settings.php:1172
+msgid "Listing has been reported."
+msgstr ""
+
+#: includes/settings.php:1203
+msgid "Select Category"
+msgstr ""
+
+#: includes/settings.php:1213
+msgid "Add Details"
+msgstr ""
+
+#: includes/settings.php:1233
+msgid "My Listings"
+msgstr ""
+
+#: includes/settings.php:1794
+msgid "Listing Search"
+msgstr ""
+
+#: includes/settings.php:1799
+msgid "Listing Categories"
+msgstr ""
+
+#: includes/settings.php:1803 includes/settings.php:1849
+msgid "Columns"
+msgstr ""
+
+#: includes/settings.php:1822
+msgid "Parent"
+msgstr ""
+
+#: includes/settings.php:1837
+msgid "Count"
+msgstr ""
+
+#: includes/settings.php:1877
+msgid "Status"
+msgstr ""
+
+#: includes/settings.php:1892
+#: includes/components/abstracts/class-entity.php:537
+#: templates/listing/parts/loop-edit.php:12
+msgid "Date"
+msgstr ""
+
+#: includes/settings.php:1894
+msgid "Random"
+msgstr ""
+
+#: includes/components/class-admin.php:108
+#: includes/components/class-admin.php:109 templates/admin/settings.php:6
+#, php-format
+msgid "%s Settings"
+msgstr ""
+
+#: includes/components/class-admin.php:110 templates/admin/addons.php:6
+#, php-format
+msgid "%s Add-ons"
+msgstr ""
+
+#: includes/components/class-admin.php:110
+msgid "Add-ons"
+msgstr ""
+
+#: includes/components/class-admin.php:759
+msgid "All"
+msgstr ""
+
+#: includes/components/class-admin.php:763
+msgid "Installed"
+msgstr ""
+
+#: includes/components/class-form.php:370
+msgid "Captcha is invalid."
+msgstr ""
+
+#: includes/components/class-form.php:412
+msgid "Submit"
+msgstr ""
+
+#: includes/components/class-form.php:890
+#, php-format
+msgid "\"%s\" is required."
+msgstr ""
+
+#: includes/components/class-form.php:896
+#: includes/components/class-form.php:905
+#, php-format
+msgid "\"%s\" contains invalid value."
+msgstr ""
+
+#: includes/components/class-form.php:913
+#, php-format
+msgid "\"%s\" contains invalid number."
+msgstr ""
+
+#: includes/components/class-form.php:921
+#, php-format
+msgid "\"%s\" contains invalid email address."
+msgstr ""
+
+#: includes/components/class-form.php:1074
+msgid "Min"
+msgstr ""
+
+#: includes/components/class-form.php:1084
+msgid "Max"
+msgstr ""
+
+#: includes/components/class-form.php:1140
+#: includes/components/class-form.php:1191
+msgid "Select File"
+msgstr ""
+
+#: includes/components/class-form.php:1381
+msgid "Maximum number of files exceeded."
+msgstr ""
+
+#: includes/components/class-form.php:1389
+#, php-format
+msgid "Only %s files are allowed."
+msgstr ""
+
+#: includes/components/class-template.php:805
+#, php-format
+msgid "Showing %1$s-%2$s of %3$s results"
+msgstr ""
+
+#: includes/components/class-user.php:178
+#, php-format
+msgid "I agree to %s"
+msgstr ""
+
+#: includes/components/class-user.php:198
+msgid "Username contains invalid characters."
+msgstr ""
+
+#: includes/components/class-user.php:200
+msgid "This username is already in use."
+msgstr ""
+
+#: includes/components/class-user.php:206
+msgid "This email is already registered."
+msgstr ""
+
+#: includes/components/class-user.php:211
+msgid "Password is too short."
+msgstr ""
+
+#: includes/components/class-user.php:284
+msgid "Username or password is incorrect."
+msgstr ""
+
+#: includes/components/class-user.php:328
+msgid "User with this email doesn't exist."
+msgstr ""
+
+#: includes/components/class-user.php:330
+msgid "User with this username doesn't exist."
+msgstr ""
+
+#: includes/components/class-user.php:362
+#: includes/components/class-user.php:448
+msgid "New password is too short."
+msgstr ""
+
+#: includes/components/class-user.php:382
+#: templates/user/parts/reset-password-form.php:23
+msgid "Password reset link is expired or invalid."
+msgstr ""
+
+#: includes/components/class-user.php:430
+msgid "The current password is required."
+msgstr ""
+
+#: includes/components/class-user.php:432
+msgid "The current password is incorrect."
+msgstr ""
+
+#: includes/components/class-user.php:472
+msgid "Password is incorrect."
+msgstr ""
+
+#: templates/admin/addons.php:35
+msgid "Install Now"
+msgstr ""
+
+#: templates/admin/addons.php:37
+msgid "Update Now"
+msgstr ""
+
+#: templates/admin/addons.php:39
+msgid "Activate"
+msgstr ""
+
+#: templates/admin/addons.php:41
+msgid "Active"
+msgstr ""
+
+#: templates/admin/addons.php:48
+#, php-format
+msgid "By %s"
+msgstr ""
+
+#: templates/admin/addons.php:52
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: templates/admin/addons.php:55
+msgid "<strong>Compatible</strong> with your version of WordPress"
+msgstr ""
+
+#: templates/admin/addons.php:57
+msgid "<strong>Incompatible</strong> with your version of WordPress"
+msgstr ""
+
+#: includes/components/abstracts/class-entity.php:535
+msgid "Relevance"
+msgstr ""
+
+#: includes/components/abstracts/class-entity.php:1628
+msgid "All Categories"
+msgstr ""
+
+#: templates/category/parts/loop-archive.php:18
+msgid "No categories found."
+msgstr ""
+
+#: templates/listing/parts/date.php:5
+#, php-format
+msgid "Added on %s"
+msgstr ""
+
+#: templates/listing/parts/edit-form.php:26
+msgid "Are you sure you want to permanently delete this listing?"
+msgstr ""
+
+#: templates/listing/parts/loop-archive.php:21
+msgid "No listings found."
+msgstr ""
+
+#: templates/listing/parts/loop-edit.php:33
+msgid "Pending"
+msgstr ""
+
+#: templates/listing/parts/loop-edit.php:35
+msgid "Rejected"
+msgstr ""
+
+#: templates/listing/parts/loop-edit.php:43
+msgid "View"
+msgstr ""
+
+#: templates/listing/parts/loop-edit.php:52
+msgid "No listings yet."
+msgstr ""
+
+#: templates/listing/submission/review-message.php:7
+#, php-format
+msgid ""
+"Thank you! Your listing \"%s\" has been submitted and will be reviewed as "
+"soon as possible."
+msgstr ""
+
+#: templates/listing/submission/review-message.php:8
+msgid "Return to My Account"
+msgstr ""
+
+#: templates/listing/submission/submit-form.php:11
+msgid "Change Category"
+msgstr ""
+
+#: templates/user/account/menu.php:7
+msgid "Sign Out"
+msgstr ""
+
+#: templates/user/parts/account-link.php:7
+msgid "My Account"
+msgstr ""
+
+#: templates/user/parts/login-form.php:8
+msgid "Don't have an account?"
+msgstr ""
+
+#: templates/user/parts/login-form.php:9
+msgid "Forgot password?"
+msgstr ""
+
+#: templates/user/parts/register-form.php:8
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/user/parts/request-password-form.php:8
+msgid ""
+"Please enter your username or email address, you will receive a link to "
+"create a new password via email."
+msgstr ""
+
+#: templates/user/parts/reset-password-form.php:9
+msgid "Please enter new password below."
+msgstr ""
+
+#: templates/user/parts/settings-form.php:28
+msgid "Please enter your password below to permanently delete your account."
+msgstr ""
+
+#: templates/vendor/parts/date.php:5
+#, php-format
+msgid "Member since %s"
+msgstr ""
+
+#: templates/vendor/content-single/parts/title.php:5
+#, php-format
+msgid "Listings by %s"
+msgstr ""
+
+#. Name of the plugin
+#. Author of the plugin
+msgid "HivePress"
+msgstr ""
+
+#. Description of the plugin
+msgid "Multipurpose listing & directory plugin."
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://hivepress.co/"
+msgstr ""
