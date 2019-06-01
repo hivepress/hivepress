@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-18 21:57+0000\n"
+"POT-Creation-Date: 2019-06-01 17:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,50 +15,68 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.2.2; wp-5.2"
 
-#: includes/fields/class-number.php:180
-#, php-format
-msgid "%1$s can't be greater than %2$s"
+#: includes/blocks/class-listing-categories.php:87
+msgid "Listing Categories"
 msgstr ""
 
-#: includes/fields/class-text.php:164
-#, php-format
-msgid "%1$s can't be longer than %2$s characters"
+#: includes/blocks/class-listing-categories.php:91
+#: includes/blocks/class-listings.php:91
+msgid "Columns"
 msgstr ""
 
-#: includes/fields/class-number.php:176
-#, php-format
-msgid "%1$s can't be lower than %2$s"
+#: includes/blocks/class-listing-categories.php:103
+#: includes/blocks/class-listings.php:103 includes/fields/class-number.php:79
+msgid "Number"
 msgstr ""
 
-#: includes/fields/class-text.php:160
-msgid "%1\\$s should be at least %2\\$s characters long"
+#: includes/blocks/class-listing-categories.php:111
+msgid "Parent"
 msgstr ""
 
-#: templates/listing-category/view/count.php:5
-#, php-format
-msgid "%d Listing"
-msgid_plural "%d Listings"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/fields/class-select.php:122
-#, php-format
-msgid "%s are invalid"
+#: includes/blocks/class-listing-categories.php:120
+#: includes/blocks/class-listings.php:120 includes/configs/meta-boxes.php:108
+msgid "Order"
 msgstr ""
 
-#: includes/components/class-admin.php:105 templates/admin/extensions.php:6
-#, php-format
-msgid "%s Extensions"
+#: includes/blocks/class-listing-categories.php:126
+#: includes/models/class-listing-category.php:53
+#: includes/models/class-vendor.php:53
+msgid "Name"
 msgstr ""
 
-#: includes/fields/class-email.php:93 includes/fields/class-select.php:124
-#, php-format
-msgid "%s is invalid"
+#: includes/blocks/class-listing-categories.php:127
+msgid "Count"
 msgstr ""
 
-#: includes/fields/class-field.php:296
+#: includes/blocks/class-listing-search-form.php:44
+msgid "Listing Search Form"
+msgstr ""
+
+#: includes/blocks/class-listings.php:87 includes/configs/post-types.php:22
+#: includes/configs/settings.php:15
+msgid "Listings"
+msgstr ""
+
+#: includes/blocks/class-listings.php:111
+msgid "Category"
+msgstr ""
+
+#: includes/blocks/class-listings.php:125
+#: includes/components/class-attribute.php:482
+msgid "Date"
+msgstr ""
+
+#: includes/blocks/class-listings.php:126 includes/models/class-listing.php:61
+msgid "Title"
+msgstr ""
+
+#: includes/blocks/class-listings.php:127
+msgid "Random"
+msgstr ""
+
+#: includes/blocks/class-result-count.php:52
 #, php-format
-msgid "%s is required"
+msgid "Showing %1$s-%2$s of %3$s results"
 msgstr ""
 
 #: includes/components/class-admin.php:103
@@ -67,80 +85,38 @@ msgstr ""
 msgid "%s Settings"
 msgstr ""
 
-#: templates/admin/extensions.php:55 templates/admin/extensions.php:57
+#: includes/components/class-admin.php:104
+msgid "Settings"
+msgstr ""
+
+#: includes/components/class-admin.php:105 templates/admin/extensions.php:6
 #, php-format
-msgid "%s with your version of WordPress"
+msgid "%s Extensions"
 msgstr ""
 
-#: includes/emails/class-listing-submit.php:31
-msgid ""
-"A new listing \"%listing_title%\" has been submitted, click on the following "
-"link to view it: %listing_url%"
-msgstr ""
-
-#: templates/admin/extensions.php:39
-msgid "Activate"
-msgstr ""
-
-#: templates/admin/extensions.php:41
-msgid "Active"
-msgstr ""
-
-#: includes/controllers/class-listing.php:112
-msgid "Add Details"
-msgstr ""
-
-#: includes/configs/post-types.php:44
-msgid "Add New Attribute"
-msgstr ""
-
-#: includes/configs/post-types.php:24
-msgid "Add New Listing"
-msgstr ""
-
-#: includes/configs/post-types.php:64
-msgid "Add New Vendor"
-msgstr ""
-
-#: templates/listing/view/date.php:5
-#, php-format
-msgid "Added on %s"
+#: includes/components/class-admin.php:105
+msgid "Extensions"
 msgstr ""
 
 #: includes/components/class-admin.php:462
 msgid "All"
 msgstr ""
 
-#: includes/components/class-attribute.php:435
+#: includes/components/class-admin.php:466
+msgid "Installed"
+msgstr ""
+
+#: includes/components/class-attribute.php:452
 msgid "All Categories"
 msgstr ""
 
-#: includes/configs/post-types.php:28
-msgid "All Listings"
+#: includes/components/class-attribute.php:480
+msgid "Relevance"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:26
-msgid "Allow front-end editing"
-msgstr ""
-
-#: includes/fields/class-select.php:69
-msgid "Allow multiple selection"
-msgstr ""
-
-#: templates/user/login-link.php:5
-msgid "Already have an account?"
-msgstr ""
-
-#: includes/forms/class-listing-delete.php:58
-msgid "Are you sure you want to permanently delete this listing?"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:80
-msgid "Areas"
-msgstr ""
-
-#: includes/configs/post-types.php:43
-msgid "Attribute"
+#: includes/components/class-vendor.php:144
+#, php-format
+msgid "Listings by %s"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:15 includes/configs/post-types.php:42
@@ -148,451 +124,120 @@ msgstr ""
 msgid "Attributes"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:85
-msgid "Block (primary)"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:86
-msgid "Block (secondary)"
-msgstr ""
-
-#: templates/admin/extensions.php:48
-#, php-format
-msgid "By %s"
-msgstr ""
-
-#: includes/forms/class-form.php:338
-msgid "Captcha is invalid"
-msgstr ""
-
-#: includes/fields/class-checkbox.php:68
-msgid "Caption"
-msgstr ""
-
-#: includes/blocks/class-listings.php:102
-msgid "Category"
-msgstr ""
-
-#: templates/listing-category/submit/change-link.php:5
-msgid "Change Category"
-msgstr ""
-
-#: includes/fields/class-checkbox.php:65
-msgid "Checkbox"
-msgstr ""
-
-#: includes/fields/class-checkboxes.php:51
-msgid "Checkboxes"
-msgstr ""
-
-#: includes/configs/settings.php:26
-msgid "Choose a page that displays all listings."
-msgstr ""
-
-#: includes/configs/settings.php:114
-msgid "Choose a page with terms that user has to accept before registering."
-msgstr ""
-
-#: includes/configs/settings.php:58
-msgid ""
-"Choose a page with terms that user has to accept before submitting a new "
-"listing."
-msgstr ""
-
-#: includes/configs/meta-boxes.php:81
-msgid "Choose the template areas where you want to display this attribute."
-msgstr ""
-
-#: includes/blocks/class-listing-categories.php:82
-#: includes/blocks/class-listings.php:82
-msgid "Columns"
-msgstr ""
-
-#: templates/admin/extensions.php:55
-msgid "Compatible"
-msgstr ""
-
-#: includes/blocks/class-listing-categories.php:118
-msgid "Count"
-msgstr ""
-
-#: includes/forms/class-user-update.php:102
-msgid "Current Password"
-msgstr ""
-
-#: includes/controllers/class-user.php:458
-msgid "Current password is incorrect"
-msgstr ""
-
-#: includes/controllers/class-user.php:454
-msgid "Current password is required"
-msgstr ""
-
-#: includes/blocks/class-listings.php:116
-#: includes/components/class-attribute.php:465
-msgid "Date"
-msgstr ""
-
-#: includes/fields/class-number.php:88
-msgid "Decimals"
-msgstr ""
-
-#: includes/forms/class-user-delete.php:86
-#: includes/configs/templates/user-settings-page.php:21
-#: templates/user/edit/delete-link.php:5
-msgid "Delete Account"
-msgstr ""
-
-#: includes/forms/class-listing-delete.php:80
-#: includes/configs/templates/listing-edit-page.php:21
-#: templates/listing/edit/delete-link.php:5
-msgid "Delete Listing"
-msgstr ""
-
-#: includes/models/class-listing-category.php:60
-#: includes/models/class-listing.php:60 includes/models/class-vendor.php:60
-msgid "Description"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:76 includes/configs/meta-boxes.php:122
-#: includes/configs/settings.php:20
-msgid "Display"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:54
-msgid "Display in the filter form"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:47
-msgid "Display in the search form"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:61
-msgid "Display in the sort form"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:123 includes/configs/settings.php:35
-msgid "Display subcategories"
-msgstr ""
-
-#: templates/user/register-link.php:5
-msgid "Don't have an account?"
-msgstr ""
-
-#: includes/configs/post-types.php:45
-msgid "Edit Attribute"
-msgstr ""
-
-#: includes/configs/post-types.php:25 includes/controllers/class-listing.php:93
-msgid "Edit Listing"
-msgstr ""
-
-#: includes/configs/post-types.php:65
-msgid "Edit Vendor"
+#: includes/configs/meta-boxes.php:21
+msgid "Editing"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:25
 msgid "Editable"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:21
-msgid "Editing"
+#: includes/configs/meta-boxes.php:26
+msgid "Allow front-end editing"
 msgstr ""
 
-#: includes/fields/class-email.php:51 includes/models/class-user.php:60
-msgid "Email"
-msgstr ""
-
-#: includes/configs/settings.php:76 includes/configs/settings.php:124
-msgid "Emails"
-msgstr ""
-
-#: includes/controllers/class-listing.php:265
-msgid "Error deleting listing"
-msgstr ""
-
-#: includes/controllers/class-user.php:521
-msgid "Error deleting user"
-msgstr ""
-
-#: includes/controllers/class-user.php:191
-msgid "Error registering user"
-msgstr ""
-
-#: includes/controllers/class-block.php:100
-msgid "Error rendering block"
-msgstr ""
-
-#: includes/controllers/class-listing.php:174
-msgid "Error updating listing"
-msgstr ""
-
-#: includes/controllers/class-user.php:466
-msgid "Error updating user"
-msgstr ""
-
-#: includes/components/class-admin.php:105
-msgid "Extensions"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:32 includes/configs/meta-boxes.php:67
+#: includes/configs/meta-boxes.php:32 includes/configs/meta-boxes.php:60
 msgid "Field Type"
 msgstr ""
 
-#: includes/forms/class-listing-filter.php:69
-msgid "Filter"
+#: includes/configs/meta-boxes.php:42
+#: includes/forms/class-listing-search.php:83
+msgid "Search"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:46
+msgid "Searchable"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:47
+msgid "Display in the search form"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:53
-msgid "Filterable"
+msgid "Sortable"
 msgstr ""
 
-#: includes/models/class-user.php:73
-msgid "First Name"
+#: includes/configs/meta-boxes.php:54
+msgid "Display in the sort form"
 msgstr ""
 
-#: templates/user/password-request-link.php:5
-msgid "Forgot password?"
+#: includes/configs/meta-boxes.php:69 includes/configs/meta-boxes.php:115
+#: includes/configs/settings.php:20
+msgid "Display"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:93
+#: includes/configs/meta-boxes.php:73
+msgid "Areas"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:74
+msgid "Choose the template areas where you want to display this attribute."
+msgstr ""
+
+#: includes/configs/meta-boxes.php:78
+msgid "Block (primary)"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:79
+msgid "Block (secondary)"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:80
+msgid "Page (primary)"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:81
+msgid "Page (secondary)"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:86
 msgid "Format"
 msgstr ""
 
-#: includes/configs/settings.php:132
+#: includes/configs/meta-boxes.php:87
 msgid ""
-"Hi, %1$user_name%! Thank you for registering, here's your password: "
-"%2$user_password%"
+"Set the attribute display format, the following tokens are available: "
+"%value%."
 msgstr ""
 
-#: includes/configs/settings.php:141
-#: includes/emails/class-user-password-request.php:31
-msgid ""
-"Hi, %user_name%! Please click on the following link to set a new password: "
-"%password_reset_url%"
-msgstr ""
-
-#: includes/emails/class-user-register.php:31
-msgid ""
-"Hi, %user_name%! Thank you for registering, here's your password: "
-"%user_password%"
-msgstr ""
-
-#: includes/configs/settings.php:93 includes/emails/class-listing-reject.php:31
-msgid ""
-"Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
-"rejected."
-msgstr ""
-
-#: includes/configs/settings.php:84
-#: includes/emails/class-listing-approve.php:31
-msgid ""
-"Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
-"on the following link to view it: %listing_url%"
-msgstr ""
-
-#. Name of the plugin
-#. Author of the plugin
-msgid "HivePress"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://hivepress.io/"
-msgstr ""
-
-#: includes/forms/class-listing-submit.php:73
-#: includes/forms/class-user-register.php:89
-#, php-format
-msgid "I agree to %s"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:107
+#: includes/configs/meta-boxes.php:100
 msgid "Image"
 msgstr ""
 
-#: includes/models/class-listing.php:72
-msgid "Images"
+#: includes/configs/meta-boxes.php:101 includes/models/class-user.php:91
+msgid "Select Image"
 msgstr ""
 
-#: templates/admin/extensions.php:57
-msgid "Incompatible"
-msgstr ""
-
-#: templates/admin/extensions.php:35
-msgid "Install Now"
-msgstr ""
-
-#: includes/components/class-admin.php:466
-msgid "Installed"
-msgstr ""
-
-#: includes/configs/settings.php:151
-msgid "Integrations"
-msgstr ""
-
-#: includes/forms/class-listing-search.php:49
-msgid "Keywords"
-msgstr ""
-
-#: includes/models/class-user.php:79
-msgid "Last Name"
+#: includes/configs/meta-boxes.php:116
+msgid "Display subcategories"
 msgstr ""
 
 #: includes/configs/post-types.php:23
 msgid "Listing"
 msgstr ""
 
-#: includes/emails/class-listing-report.php:31
-msgid ""
-"Listing \"%listing_title%\" %listing_url% has been reported for the "
-"following reason: %report_reason%"
+#: includes/configs/post-types.php:24
+msgid "Add New Listing"
 msgstr ""
 
-#: includes/configs/settings.php:81
-#: includes/emails/class-listing-approve.php:30
-msgid "Listing Approved"
-msgstr ""
-
-#: includes/blocks/class-listing-categories.php:79
-msgid "Listing Categories"
-msgstr ""
-
-#: includes/forms/class-listing-report.php:60
-msgid "Listing has been reported"
-msgstr ""
-
-#: includes/forms/class-listing-update.php:67
-msgid "Listing has been updated"
-msgstr ""
-
-#: includes/configs/settings.php:90 includes/emails/class-listing-reject.php:30
-msgid "Listing Rejected"
-msgstr ""
-
-#: includes/emails/class-listing-report.php:30
-msgid "Listing Reported"
-msgstr ""
-
-#: includes/blocks/class-listing-search-form.php:37
-msgid "Listing Search Form"
-msgstr ""
-
-#: includes/controllers/class-listing.php:119
-#: includes/emails/class-listing-submit.php:30
-msgid "Listing Submitted"
-msgstr ""
-
-#: includes/blocks/class-listings.php:79 includes/configs/post-types.php:22
-#: includes/configs/settings.php:15
-msgid "Listings"
-msgstr ""
-
-#: includes/configs/settings.php:25
-msgid "Listings Page"
-msgstr ""
-
-#: includes/configs/settings.php:34
-msgid "Listings Page Display"
-msgstr ""
-
-#: includes/configs/settings.php:41
-msgid "Listings per Page"
-msgstr ""
-
-#: includes/forms/class-user-login.php:51
-msgid "Login User"
-msgstr ""
-
-#: includes/configs/settings.php:67
-msgid "Manually approve new listings"
-msgstr ""
-
-#: includes/fields/class-number-range.php:114
-msgid "Max"
-msgstr ""
-
-#: includes/fields/class-text.php:88
-msgid "Maximum Length"
-msgstr ""
-
-#: includes/fields/class-number.php:103
-msgid "Maximum Value"
-msgstr ""
-
-#: templates/vendor/view/date.php:5
-#, php-format
-msgid "Member since %s"
-msgstr ""
-
-#: includes/fields/class-number-range.php:103
-msgid "Min"
-msgstr ""
-
-#: includes/fields/class-text.php:81
-msgid "Minimum Length"
-msgstr ""
-
-#: includes/fields/class-number.php:97
-msgid "Minimum Value"
-msgstr ""
-
-#: includes/configs/settings.php:66
-msgid "Moderation"
-msgstr ""
-
-#: includes/fields/class-select.php:68
-msgid "Multiple"
-msgstr ""
-
-#. Description of the plugin
-msgid "Multipurpose listing & directory plugin."
-msgstr ""
-
-#: templates/user/account-link.php:7
-msgid "My Account"
-msgstr ""
-
-#: includes/controllers/class-listing.php:86
-msgid "My Listings"
-msgstr ""
-
-#: includes/controllers/class-user.php:112
-msgid "My Settings"
-msgstr ""
-
-#: includes/blocks/class-listing-categories.php:117
-#: includes/models/class-listing-category.php:53
-#: includes/models/class-vendor.php:53
-msgid "Name"
-msgstr ""
-
-#: includes/configs/post-types.php:46
-msgid "New Attribute"
+#: includes/configs/post-types.php:25 includes/controllers/class-listing.php:92
+msgid "Edit Listing"
 msgstr ""
 
 #: includes/configs/post-types.php:26
 msgid "New Listing"
 msgstr ""
 
-#: includes/forms/class-user-password-reset.php:80
-#: includes/forms/class-user-update.php:96
-msgid "New Password"
+#: includes/configs/post-types.php:27
+msgid "View Listing"
 msgstr ""
 
-#: includes/configs/post-types.php:66
-msgid "New Vendor"
+#: includes/configs/post-types.php:28
+msgid "All Listings"
 msgstr ""
 
-#: includes/models/class-listing.php:170
-msgid "No"
-msgstr ""
-
-#: includes/configs/post-types.php:50
-msgid "No Attributes Found"
-msgstr ""
-
-#: includes/configs/post-types.php:51
-msgid "No Attributes Found in Trash"
+#: includes/configs/post-types.php:29
+msgid "Search Listings"
 msgstr ""
 
 #: includes/configs/post-types.php:30
@@ -603,6 +248,66 @@ msgstr ""
 msgid "No Listings Found in Trash"
 msgstr ""
 
+#: includes/configs/post-types.php:43
+msgid "Attribute"
+msgstr ""
+
+#: includes/configs/post-types.php:44
+msgid "Add New Attribute"
+msgstr ""
+
+#: includes/configs/post-types.php:45
+msgid "Edit Attribute"
+msgstr ""
+
+#: includes/configs/post-types.php:46
+msgid "New Attribute"
+msgstr ""
+
+#: includes/configs/post-types.php:47
+msgid "View Attribute"
+msgstr ""
+
+#: includes/configs/post-types.php:49
+msgid "Search Attributes"
+msgstr ""
+
+#: includes/configs/post-types.php:50
+msgid "No Attributes Found"
+msgstr ""
+
+#: includes/configs/post-types.php:51
+msgid "No Attributes Found in Trash"
+msgstr ""
+
+#: includes/configs/post-types.php:62 includes/configs/post-types.php:68
+msgid "Vendors"
+msgstr ""
+
+#: includes/configs/post-types.php:63
+msgid "Vendor"
+msgstr ""
+
+#: includes/configs/post-types.php:64
+msgid "Add New Vendor"
+msgstr ""
+
+#: includes/configs/post-types.php:65
+msgid "Edit Vendor"
+msgstr ""
+
+#: includes/configs/post-types.php:66
+msgid "New Vendor"
+msgstr ""
+
+#: includes/configs/post-types.php:67
+msgid "View Vendor"
+msgstr ""
+
+#: includes/configs/post-types.php:69
+msgid "Search Vendors"
+msgstr ""
+
 #: includes/configs/post-types.php:70
 msgid "No Vendors Found"
 msgstr ""
@@ -611,189 +316,281 @@ msgstr ""
 msgid "No Vendors Found in Trash"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:94
-#: includes/blocks/class-listings.php:94 includes/fields/class-number.php:79
-msgid "Number"
+#: includes/configs/settings.php:25
+msgid "Listings Page"
 msgstr ""
 
-#: includes/fields/class-number-range.php:51
-msgid "Number Range"
+#: includes/configs/settings.php:26
+msgid "Choose a page that displays all listings."
 msgstr ""
 
-#: includes/controllers/class-attachment.php:143
-#, php-format
-msgid "Only %s files are allowed"
+#: includes/configs/settings.php:34
+msgid "Listings Page Display"
 msgstr ""
 
-#: includes/controllers/class-attachment.php:135
-#, php-format
-msgid "Only up to %s files can be uploaded"
+#: includes/configs/settings.php:35
+msgid "Display categories"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:111
-#: includes/blocks/class-listings.php:111 includes/configs/meta-boxes.php:115
-msgid "Order"
+#: includes/configs/settings.php:41
+msgid "Listings per Page"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:87
-msgid "Page (primary)"
+#: includes/configs/settings.php:52
+msgid "Submission"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:88
-msgid "Page (secondary)"
+#: includes/configs/settings.php:57
+msgid "Submission Terms Page"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:102
-msgid "Parent"
-msgstr ""
-
-#: includes/models/class-user.php:66
-msgid "Password"
-msgstr ""
-
-#: includes/controllers/class-user.php:515
-msgid "Password is incorrect"
-msgstr ""
-
-#: includes/configs/settings.php:138
-#: includes/emails/class-user-password-request.php:30
-msgid "Password Reset"
-msgstr ""
-
-#: includes/forms/class-user-password-request.php:68
-msgid "Password reset email has been sent"
-msgstr ""
-
-#: includes/controllers/class-user.php:393
-msgid "Password reset key is expired or invalid"
-msgstr ""
-
-#: templates/listing/edit/status.php:7
-msgid "Pending"
-msgstr ""
-
-#: includes/fields/class-number.php:82 includes/fields/class-text.php:75
-msgid "Placeholder"
-msgstr ""
-
-#: includes/forms/class-user-password-reset.php:58
-msgid "Please enter a new password below."
-msgstr ""
-
-#: includes/forms/class-user-delete.php:58
-msgid "Please enter your password below to permanently delete your account."
-msgstr ""
-
-#: includes/forms/class-user-password-request.php:52
-#: includes/configs/templates/modals-block.php:61
+#: includes/configs/settings.php:58
 msgid ""
-"Please enter your username or email address, you will receive a link to "
-"create a new password via email."
+"Choose a page with terms that user has to accept before submitting a new "
+"listing."
 msgstr ""
 
-#: includes/forms/class-user-update.php:72
-msgid "Profile Image"
+#: includes/configs/settings.php:66
+msgid "Moderation"
 msgstr ""
 
-#: includes/models/class-user.php:85
-msgid "Profile Info"
+#: includes/configs/settings.php:67
+msgid "Manually approve new listings"
 msgstr ""
 
-#: includes/configs/settings.php:175
-msgid "Protected Forms"
+#: includes/configs/settings.php:76 includes/configs/settings.php:124
+msgid "Emails"
 msgstr ""
 
-#: includes/fields/class-radio.php:51
-msgid "Radio"
+#: includes/configs/settings.php:81
+#: includes/emails/class-listing-approve.php:51
+msgid "Listing Approved"
 msgstr ""
 
-#: includes/blocks/class-listings.php:118
-msgid "Random"
+#: includes/configs/settings.php:82
+msgid ""
+"This email is sent to users when listing is approved, the following tokens "
+"are available: %user_name%, %listing_title%, %listing_url%."
 msgstr ""
 
-#: includes/forms/class-listing-report.php:65
-msgid "Reason"
+#: includes/configs/settings.php:84
+#: includes/emails/class-listing-approve.php:52
+msgid ""
+"Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
+"on the following link to view it: %listing_url%"
 msgstr ""
 
-#: includes/forms/class-user-register.php:104
-#: templates/user/register-link.php:5
-#: includes/configs/templates/modals-block.php:30
-msgid "Register"
+#: includes/configs/settings.php:90 includes/emails/class-listing-reject.php:51
+msgid "Listing Rejected"
 msgstr ""
 
-#: includes/forms/class-user-register.php:51
-msgid "Register User"
+#: includes/configs/settings.php:91
+msgid ""
+"This email is sent to users when listing is rejected, the following tokens "
+"are available: %user_name%, %listing_title%."
+msgstr ""
+
+#: includes/configs/settings.php:93 includes/emails/class-listing-reject.php:52
+msgid ""
+"Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
+"rejected."
+msgstr ""
+
+#: includes/configs/settings.php:103
+msgid "Users"
 msgstr ""
 
 #: includes/configs/settings.php:108
 msgid "Registration"
 msgstr ""
 
-#: includes/emails/class-user-register.php:30
-msgid "Registration Complete"
-msgstr ""
-
 #: includes/configs/settings.php:113
 msgid "Registration Terms Page"
 msgstr ""
 
-#: templates/listing/edit/status.php:9
-msgid "Rejected"
+#: includes/configs/settings.php:114
+msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 
-#: includes/components/class-attribute.php:463
-msgid "Relevance"
+#: includes/configs/settings.php:129
+msgid "User Registered"
 msgstr ""
 
-#: includes/forms/class-listing-report.php:44
-#: includes/forms/class-listing-report.php:74
-#: includes/configs/templates/listing-view-page.php:120
-#: templates/listing/view/page/report-link.php:5
-msgid "Report Listing"
+#: includes/configs/settings.php:130
+msgid ""
+"This email is sent to users after registration, the following tokens are "
+"available: %user_name%, %user_password%."
 msgstr ""
 
-#: includes/controllers/class-user.php:100
-#: includes/forms/class-user-password-request.php:51
-#: includes/forms/class-user-password-reset.php:95
-#: includes/configs/templates/modals-block.php:55
-msgid "Reset Password"
+#: includes/configs/settings.php:132 includes/emails/class-user-register.php:52
+msgid ""
+"Hi, %user_name%! Thank you for registering, here's your password: "
+"%user_password%"
 msgstr ""
 
-#: templates/listing/submit/complete-message.php:6
-msgid "Return to My Account"
+#: includes/configs/settings.php:138
+#: includes/emails/class-user-password-request.php:51
+msgid "Password Reset"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:42
-#: includes/forms/class-listing-search.php:62
-msgid "Search"
+#: includes/configs/settings.php:139
+msgid ""
+"This email is sent to users when new password is requested, the following "
+"tokens are available: %user_name%, %password_reset_url%."
 msgstr ""
 
-#: includes/configs/post-types.php:49
-msgid "Search Attributes"
+#: includes/configs/settings.php:141
+#: includes/emails/class-user-password-request.php:52
+msgid ""
+"Hi, %user_name%! Please click on the following link to set a new password: "
+"%password_reset_url%"
 msgstr ""
 
-#: includes/configs/post-types.php:29
-msgid "Search Listings"
+#: includes/configs/settings.php:151
+msgid "Integrations"
 msgstr ""
 
-#: includes/configs/post-types.php:69
-msgid "Search Vendors"
-msgstr ""
-
-#: includes/configs/meta-boxes.php:46
-msgid "Searchable"
+#: includes/configs/settings.php:161
+msgid "Site Key"
 msgstr ""
 
 #: includes/configs/settings.php:168
 msgid "Secret Key"
 msgstr ""
 
-#: includes/fields/class-select.php:65
-msgid "Select"
+#: includes/configs/settings.php:175
+msgid "Protected Forms"
 msgstr ""
 
-#: includes/controllers/class-listing.php:105
+#: includes/controllers/class-attachment.php:139
+#, php-format
+msgid "Only up to %s files can be uploaded"
+msgstr ""
+
+#: includes/controllers/class-attachment.php:147
+#, php-format
+msgid "Only %s files are allowed"
+msgstr ""
+
+#: includes/controllers/class-block.php:100
+msgid "Error rendering block"
+msgstr ""
+
+#: includes/controllers/class-listing.php:85
+msgid "My Listings"
+msgstr ""
+
+#: includes/controllers/class-listing.php:104
 msgid "Select Category"
+msgstr ""
+
+#: includes/controllers/class-listing.php:111
+msgid "Add Details"
+msgstr ""
+
+#: includes/controllers/class-listing.php:118
+#: includes/emails/class-listing-submit.php:51
+msgid "Listing Submitted"
+msgstr ""
+
+#: includes/controllers/class-listing.php:175
+msgid "Error updating listing"
+msgstr ""
+
+#: includes/controllers/class-listing.php:266
+msgid "Error deleting listing"
+msgstr ""
+
+#: includes/controllers/class-user.php:93
+#: includes/forms/class-user-login.php:115
+#: includes/configs/templates/footer-block.php:17
+#: templates/user/auth/account-link.php:9 templates/user/auth/login-link.php:5
+msgid "Sign In"
+msgstr ""
+
+#: includes/controllers/class-user.php:100
+#: includes/forms/class-user-password-request.php:93
+#: includes/forms/class-user-password-reset.php:109
+#: includes/configs/templates/footer-block.php:65
+#: templates/user/auth/password-reset-message.php:6
+msgid "Reset Password"
+msgstr ""
+
+#: includes/controllers/class-user.php:112
+msgid "My Settings"
+msgstr ""
+
+#: includes/controllers/class-user.php:157
+msgid "Username contains invalid characters"
+msgstr ""
+
+#: includes/controllers/class-user.php:159
+msgid "This username is already in use"
+msgstr ""
+
+#: includes/controllers/class-user.php:165
+msgid "This email is already registered"
+msgstr ""
+
+#: includes/controllers/class-user.php:191
+msgid "Error registering user"
+msgstr ""
+
+#: includes/controllers/class-user.php:264
+#: includes/controllers/class-user.php:269
+msgid "Username or password is incorrect"
+msgstr ""
+
+#: includes/controllers/class-user.php:327
+msgid "User with this email doesn't exist"
+msgstr ""
+
+#: includes/controllers/class-user.php:329
+msgid "User with this username doesn't exist"
+msgstr ""
+
+#: includes/controllers/class-user.php:393
+msgid "Password reset key is expired or invalid"
+msgstr ""
+
+#: includes/controllers/class-user.php:451
+msgid "Current password is required"
+msgstr ""
+
+#: includes/controllers/class-user.php:455
+msgid "Current password is incorrect"
+msgstr ""
+
+#: includes/controllers/class-user.php:463
+msgid "Error updating user"
+msgstr ""
+
+#: includes/controllers/class-user.php:512
+msgid "Password is incorrect"
+msgstr ""
+
+#: includes/controllers/class-user.php:518
+msgid "Error deleting user"
+msgstr ""
+
+#: includes/emails/class-listing-report.php:51
+msgid "Listing Reported"
+msgstr ""
+
+#: includes/emails/class-listing-report.php:52
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been reported for the "
+"following reason: %report_reason%"
+msgstr ""
+
+#: includes/emails/class-listing-submit.php:52
+msgid ""
+"A new listing \"%listing_title%\" has been submitted, click on the following "
+"link to view it: %listing_url%"
+msgstr ""
+
+#: includes/emails/class-user-register.php:51
+msgid "Registration Complete"
 msgstr ""
 
 #: includes/fields/class-attachment-select.php:43
@@ -805,80 +602,352 @@ msgstr ""
 msgid "Select Files"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:108 includes/forms/class-user-update.php:73
-msgid "Select Image"
+#: includes/fields/class-checkbox.php:65
+msgid "Checkbox"
 msgstr ""
 
-#: includes/models/class-listing.php:73
-msgid "Select Images"
+#: includes/fields/class-checkbox.php:69
+msgid "Caption"
 msgstr ""
 
-#: includes/forms/class-user-password-request.php:82
-msgid "Send Email"
+#: includes/fields/class-checkboxes.php:51
+msgid "Checkboxes"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:94
-msgid ""
-"Set the attribute display format, the following tokens are available: "
-"%value%."
+#: includes/fields/class-email.php:51 includes/models/class-user.php:60
+msgid "Email"
 msgstr ""
 
-#: includes/components/class-admin.php:104
-msgid "Settings"
-msgstr ""
-
-#: includes/blocks/class-result-count.php:45
+#: includes/fields/class-email.php:93 includes/fields/class-select.php:157
 #, php-format
-msgid "Showing %1$s-%2$s of %3$s results"
+msgid "%s is invalid"
 msgstr ""
 
-#: includes/controllers/class-user.php:93
-#: includes/forms/class-user-login.php:87 templates/user/account-link.php:9
-#: templates/user/login-link.php:5
-#: includes/configs/templates/modals-block.php:18
-msgid "Sign In"
+#: includes/fields/class-field.php:104
+msgid "Required"
 msgstr ""
 
-#: includes/menus/class-account.php:51
-msgid "Sign Out"
+#: includes/fields/class-field.php:105
+msgid "Make this field required"
 msgstr ""
 
-#: includes/configs/settings.php:161
-msgid "Site Key"
+#: includes/fields/class-field.php:303
+#, php-format
+msgid "%s is required"
 msgstr ""
 
-#: includes/forms/class-listing-sort.php:50
-msgid "Sort by"
+#: includes/fields/class-number-range.php:51
+msgid "Number Range"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:60
-msgid "Sortable"
+#: includes/fields/class-number-range.php:125
+#: includes/fields/class-number.php:182
+#, php-format
+msgid "%1$s can't be lower than %2$s"
 msgstr ""
 
-#: includes/configs/settings.php:52
-msgid "Submission"
+#: includes/fields/class-number-range.php:129
+#: includes/fields/class-number.php:186
+#, php-format
+msgid "%1$s can't be greater than %2$s"
 msgstr ""
 
-#: includes/configs/settings.php:57
-msgid "Submission Terms Page"
+#: includes/fields/class-number-range.php:153
+msgid "Min"
 msgstr ""
 
-#: includes/forms/class-form.php:305
-msgid "Submit"
+#: includes/fields/class-number-range.php:164
+msgid "Max"
 msgstr ""
 
-#: includes/forms/class-listing-submit.php:44
-#: includes/forms/class-listing-submit.php:88
-#: templates/listing/submit-button.php:5
-msgid "Submit Listing"
+#: includes/fields/class-number.php:83 includes/fields/class-text.php:76
+msgid "Placeholder"
+msgstr ""
+
+#: includes/fields/class-number.php:89
+msgid "Decimals"
+msgstr ""
+
+#: includes/fields/class-number.php:98
+msgid "Minimum Value"
+msgstr ""
+
+#: includes/fields/class-number.php:104
+msgid "Maximum Value"
+msgstr ""
+
+#: includes/fields/class-radio.php:51
+msgid "Radio"
+msgstr ""
+
+#: includes/fields/class-select.php:72
+msgid "Select"
+msgstr ""
+
+#: includes/fields/class-select.php:76
+msgid "Multiple"
+msgstr ""
+
+#: includes/fields/class-select.php:77
+msgid "Allow multiple selection"
+msgstr ""
+
+#: includes/fields/class-select.php:155
+#, php-format
+msgid "%s are invalid"
 msgstr ""
 
 #: includes/fields/class-text.php:72
 msgid "Text"
 msgstr ""
 
+#: includes/fields/class-text.php:82
+msgid "Minimum Length"
+msgstr ""
+
+#: includes/fields/class-text.php:89
+msgid "Maximum Length"
+msgstr ""
+
+#: includes/fields/class-text.php:161
+#, php-format
+msgid "%1$s should be at least %2$s characters long"
+msgstr ""
+
+#: includes/fields/class-text.php:165
+#, php-format
+msgid "%1$s can't be longer than %2$s characters"
+msgstr ""
+
 #: includes/fields/class-textarea.php:44
 msgid "Textarea"
+msgstr ""
+
+#: includes/forms/class-form.php:217
+msgid "Submit"
+msgstr ""
+
+#: includes/forms/class-form.php:353
+msgid "Captcha is invalid"
+msgstr ""
+
+#: includes/forms/class-listing-delete.php:86
+msgid "Are you sure you want to permanently delete this listing?"
+msgstr ""
+
+#: includes/forms/class-listing-delete.php:94
+#: includes/configs/templates/listing-edit-page.php:21
+#: templates/listing/edit/page/delete-link.php:5
+msgid "Delete Listing"
+msgstr ""
+
+#: includes/forms/class-listing-filter.php:90
+msgid "Filter"
+msgstr ""
+
+#: includes/forms/class-listing-report.php:86
+#: includes/forms/class-listing-report.php:101
+#: includes/configs/templates/listing-view-page.php:119
+#: templates/listing/view/page/report-link.php:5
+msgid "Report Listing"
+msgstr ""
+
+#: includes/forms/class-listing-report.php:87
+msgid "Listing has been reported"
+msgstr ""
+
+#: includes/forms/class-listing-report.php:92
+msgid "Reason"
+msgstr ""
+
+#: includes/forms/class-listing-search.php:70
+msgid "Keywords"
+msgstr ""
+
+#: includes/forms/class-listing-sort.php:71
+msgid "Sort by"
+msgstr ""
+
+#: includes/forms/class-listing-submit.php:99
+#: includes/forms/class-user-register.php:115
+#, php-format
+msgid "I agree to %s"
+msgstr ""
+
+#: includes/forms/class-listing-submit.php:109
+#: includes/forms/class-listing-submit.php:115
+#: templates/listing/submit/submit-button.php:5
+msgid "Submit Listing"
+msgstr ""
+
+#: includes/forms/class-listing-update.php:79
+msgid "Listing has been updated"
+msgstr ""
+
+#: includes/forms/class-listing-update.php:98
+msgid "Update Listing"
+msgstr ""
+
+#: includes/forms/class-user-delete.php:86
+msgid "Please enter your password below to permanently delete your account."
+msgstr ""
+
+#: includes/forms/class-user-delete.php:101
+#: includes/configs/templates/user-settings-page.php:21
+#: templates/user/edit/delete-link.php:5
+msgid "Delete Account"
+msgstr ""
+
+#: includes/forms/class-user-login.php:93
+msgid "Login User"
+msgstr ""
+
+#: includes/forms/class-user-login.php:100
+#: includes/forms/class-user-password-request.php:100
+msgid "Username or Email"
+msgstr ""
+
+#: includes/forms/class-user-password-request.php:94
+msgid ""
+"Please enter your username or email address, you will receive a link to "
+"create a new password via email."
+msgstr ""
+
+#: includes/forms/class-user-password-request.php:95
+msgid "Password reset email has been sent"
+msgstr ""
+
+#: includes/forms/class-user-password-request.php:109
+msgid "Send Email"
+msgstr ""
+
+#: includes/forms/class-user-password-reset.php:86
+msgid "Please enter a new password below."
+msgstr ""
+
+#: includes/forms/class-user-password-reset.php:93
+#: includes/forms/class-user-update.php:105
+msgid "New Password"
+msgstr ""
+
+#: includes/forms/class-user-register.php:125
+msgid "Register User"
+msgstr ""
+
+#: includes/forms/class-user-register.php:132
+#: includes/configs/templates/footer-block.php:29
+#: templates/user/auth/register-link.php:5
+msgid "Register"
+msgstr ""
+
+#: includes/forms/class-user-update.php:79
+msgid "Your settings have been updated"
+msgstr ""
+
+#: includes/forms/class-user-update.php:110
+msgid "Current Password"
+msgstr ""
+
+#: includes/forms/class-user-update.php:117
+msgid "Update Settings"
+msgstr ""
+
+#: includes/menus/class-account.php:51
+msgid "Sign Out"
+msgstr ""
+
+#: includes/models/class-listing-category.php:60
+#: includes/models/class-listing.php:68 includes/models/class-vendor.php:60
+msgid "Description"
+msgstr ""
+
+#: includes/models/class-listing.php:80
+msgid "Images"
+msgstr ""
+
+#: includes/models/class-listing.php:81
+msgid "Select Images"
+msgstr ""
+
+#: includes/models/class-listing.php:184
+msgid "Yes"
+msgstr ""
+
+#: includes/models/class-listing.php:186
+msgid "No"
+msgstr ""
+
+#: includes/models/class-user.php:53
+msgid "Username"
+msgstr ""
+
+#: includes/models/class-user.php:66
+msgid "Password"
+msgstr ""
+
+#: includes/models/class-user.php:72
+msgid "First Name"
+msgstr ""
+
+#: includes/models/class-user.php:78
+msgid "Last Name"
+msgstr ""
+
+#: includes/models/class-user.php:84
+msgid "Profile Info"
+msgstr ""
+
+#: includes/models/class-user.php:90
+msgid "Profile Image"
+msgstr ""
+
+#: templates/admin/extensions.php:35
+msgid "Install Now"
+msgstr ""
+
+#: templates/admin/extensions.php:37
+msgid "Update Now"
+msgstr ""
+
+#: templates/admin/extensions.php:39
+msgid "Activate"
+msgstr ""
+
+#: templates/admin/extensions.php:41
+msgid "Active"
+msgstr ""
+
+#: templates/admin/extensions.php:48
+#, php-format
+msgid "By %s"
+msgstr ""
+
+#: templates/admin/extensions.php:52
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: templates/admin/extensions.php:55 templates/admin/extensions.php:57
+#, php-format
+msgid "%s with your version of WordPress"
+msgstr ""
+
+#: templates/admin/extensions.php:55
+msgid "Compatible"
+msgstr ""
+
+#: templates/admin/extensions.php:57
+msgid "Incompatible"
+msgstr ""
+
+#: templates/page/no-results.php:6
+msgid "Nothing found"
+msgstr ""
+
+#: templates/page/no-results.php:7
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
 msgstr ""
 
 #: templates/listing/submit/complete-message.php:5
@@ -888,121 +957,72 @@ msgid ""
 "soon as possible."
 msgstr ""
 
-#: includes/controllers/class-user.php:165
-msgid "This email is already registered"
+#: templates/listing/submit/complete-message.php:6
+msgid "Return to My Account"
 msgstr ""
 
-#: includes/configs/settings.php:130
-msgid ""
-"This email is sent to users after registration, the following tokens are "
-"available: %1$user_name%, %2$user_password%."
-msgstr ""
-
-#: includes/configs/settings.php:82
-msgid ""
-"This email is sent to users when listing is approved, the following tokens "
-"are available: %user_name%, %listing_title%, %listing_url%."
-msgstr ""
-
-#: includes/configs/settings.php:91
-msgid ""
-"This email is sent to users when listing is rejected, the following tokens "
-"are available: %user_name%, %listing_title%."
-msgstr ""
-
-#: includes/configs/settings.php:139
-msgid ""
-"This email is sent to users when new password is requested, the following "
-"tokens are available: %user_name%, %password_reset_url%."
-msgstr ""
-
-#: includes/controllers/class-user.php:159
-msgid "This username is already in use"
-msgstr ""
-
-#: includes/blocks/class-listings.php:117 includes/models/class-listing.php:53
-msgid "Title"
-msgstr ""
-
-#: includes/forms/class-listing-update.php:85
-msgid "Update Listing"
-msgstr ""
-
-#: templates/admin/extensions.php:37
-msgid "Update Now"
-msgstr ""
-
-#: includes/forms/class-user-update.php:109
-msgid "Update Settings"
-msgstr ""
-
-#: includes/configs/settings.php:129
-msgid "User Registered"
-msgstr ""
-
-#: includes/controllers/class-user.php:327
-msgid "User with this email doesn't exist"
-msgstr ""
-
-#: includes/controllers/class-user.php:329
-msgid "User with this username doesn't exist"
-msgstr ""
-
-#: includes/models/class-user.php:53
-msgid "Username"
-msgstr ""
-
-#: includes/controllers/class-user.php:157
-msgid "Username contains invalid characters"
-msgstr ""
-
-#: includes/forms/class-user-login.php:73
-#: includes/forms/class-user-password-request.php:73
-msgid "Username or Email"
-msgstr ""
-
-#: includes/controllers/class-user.php:264
-#: includes/controllers/class-user.php:269
-msgid "Username or password is incorrect"
-msgstr ""
-
-#: includes/configs/settings.php:103
-msgid "Users"
-msgstr ""
-
-#: includes/configs/post-types.php:63
-msgid "Vendor"
-msgstr ""
-
-#: includes/configs/post-types.php:62 includes/configs/post-types.php:68
-msgid "Vendors"
-msgstr ""
-
-#: templates/admin/extensions.php:52
+#: templates/listing/view/date.php:5
 #, php-format
-msgid "Version %s"
+msgid "Added on %s"
 msgstr ""
 
-#: templates/listing/edit/view-link.php:7
+#: templates/listing-category/view/count.php:5
+#, php-format
+msgid "%d Listing"
+msgid_plural "%d Listings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/user/auth/account-link.php:7
+msgid "My Account"
+msgstr ""
+
+#: templates/user/auth/login-link.php:5
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/user/auth/password-request-link.php:5
+msgid "Forgot password?"
+msgstr ""
+
+#: templates/user/auth/password-reset-message.php:5
+msgid "Password reset link is expired or invalid."
+msgstr ""
+
+#: templates/user/auth/register-link.php:5
+msgid "Don't have an account?"
+msgstr ""
+
+#: templates/vendor/view/date.php:5
+#, php-format
+msgid "Member since %s"
+msgstr ""
+
+#: templates/listing/edit/block/status.php:7
+msgid "Pending"
+msgstr ""
+
+#: templates/listing/edit/block/status.php:9
+msgid "Rejected"
+msgstr ""
+
+#: templates/listing/edit/block/view-link.php:7
 msgid "View"
 msgstr ""
 
-#: includes/configs/post-types.php:47
-msgid "View Attribute"
+#: templates/listing-category/submit/page/change-link.php:5
+msgid "Change Category"
 msgstr ""
 
-#: includes/configs/post-types.php:27
-msgid "View Listing"
+#. Name of the plugin
+#. Author of the plugin
+msgid "HivePress"
 msgstr ""
 
-#: includes/configs/post-types.php:67
-msgid "View Vendor"
+#. Description of the plugin
+msgid "Multipurpose listing & directory plugin."
 msgstr ""
 
-#: includes/models/class-listing.php:168
-msgid "Yes"
-msgstr ""
-
-#: includes/forms/class-user-update.php:67
-msgid "Your settings have been updated"
+#. Author URI of the plugin
+msgid "https://hivepress.io/"
 msgstr ""

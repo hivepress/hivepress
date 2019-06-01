@@ -2,7 +2,7 @@
 Contributors: hivepress
 Tags: directory, business directory, classifieds, classified ads, listings
 Requires at least: 4.7
-Tested up to: 5.0
+Tested up to: 5.2.1
 Requires PHP: 5.6
 Stable tag: 1.1.0
 License: GPLv3
@@ -14,7 +14,7 @@ An extensible, highly customizable, easy-to-use plugin that lets you build any k
 
 HivePress is an extensible, highly customizable, easy-to-use plugin that lets you build any kind of directory or classifieds website.
 
-[Demo](https://demo.hivepress.io/) | [Documentation](https://hivepress.io/docs/) | [Support](https://hivepress.io/support/)
+[Demo](https://demo.hivepress.co/) | [Documentation](https://docs.hivepress.co/) | [Support](https://github.com/hivepress/hivepress/issues)
 
 == Installation ==
 

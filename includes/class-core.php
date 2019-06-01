@@ -89,7 +89,7 @@ final class Core {
 	 * @param string $class Class name.
 	 */
 	public function autoload( $class ) {
-		$parts = explode( '\\', hp\sanitize_slug( $class ) );
+		$parts = explode( '\\', str_replace( '_', '-', strtolower( $class ) ) );
 
 		if ( count( $parts ) > 1 && reset( $parts ) === 'hivepress' ) {
 			$filename = 'class-' . end( $parts ) . '.php';

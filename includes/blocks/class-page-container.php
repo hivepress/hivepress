@@ -63,7 +63,7 @@ class Page_Container extends Container {
 				break;
 
 			default:
-				$output .= '<div class="content-area">' . $output . '</div>';
+				$output = '<div class="content-area">' . $output . '</div>';
 
 				break;
 		}

@@ -36,11 +36,6 @@ return [
 		'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
 	],
 
-	'select2'           => [
-		'handle' => 'select2',
-		'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
-	],
-
 	'grid'              => [
 		'handle' => 'hp-grid',
 		'src'    => HP_CORE_URL . '/assets/css/grid.min.css',

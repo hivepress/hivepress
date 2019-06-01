@@ -49,7 +49,7 @@ class User_Register extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Registration Complete', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 			],
 			$args
 		);
