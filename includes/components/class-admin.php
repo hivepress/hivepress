@@ -62,7 +62,8 @@ final class Admin {
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
 			// Filter comments.
-			add_filter( 'comments_clauses', [ $this, 'filter_comments' ] );
+			//todo
+			//add_filter( 'comments_clauses', [ $this, 'filter_comments' ] );
 
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
