@@ -78,7 +78,7 @@ function get_array_value( $array, $key, $default = null ) {
  * Searches array item value by keys.
  *
  * @param array $array Source array.
- * @param array $keys Keys to search.
+ * @param mixed $keys Keys to search.
  * @return mixed
  */
 function search_array_value( $array, $keys ) {
@@ -156,6 +156,18 @@ function merge_arrays() {
 	}
 
 	return $merged;
+}
+
+/**
+ * Merges trees with mixed values.
+ *
+ * @param array  $parent_tree Parent tree.
+ * @param array  $child_tree Child tree.
+ * @param string $key Node key.
+ * @return array
+ */
+function merge_trees( $parent_tree, $child_tree, $key ) {
+	return $parent_tree;
 }
 
 /**
