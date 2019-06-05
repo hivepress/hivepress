@@ -601,7 +601,7 @@ final class Attribute {
 		$attributes = array_filter(
 			$this->attributes[ $model ],
 			function( $attribute ) {
-				return $attribute['searchable'] || $attribute['filterable'];
+				return $attribute['searchable'] || $attribute['filterable'] || $attribute['sortable'];
 			}
 		);
 
