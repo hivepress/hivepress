@@ -61,10 +61,6 @@ final class Admin {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
-			// Filter comments.
-			//todo
-			//add_filter( 'comments_clauses', [ $this, 'filter_comments' ] );
-
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -401,7 +397,7 @@ final class Admin {
 						$api->plugins
 					),
 					function( $extension ) {
-						return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-reviews', 'hivepress-marketplace' ], true );
+						return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-marketplace' ], true );
 					}
 				);
 
@@ -831,22 +827,6 @@ final class Admin {
 		}
 
 		echo $output;
-	}
-
-	/**
-	 * Filters comments.
-	 *
-	 * @param array $clauses Comment clauses.
-	 * @return array
-	 */
-	public function filter_comments( $clauses ) {
-		global $pagenow;
-
-		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
-			$clauses['where'] .= ' AND comment_type NOT LIKE "hp_%"';
-		}
-
-		return $clauses;
 	}
 
 	/**

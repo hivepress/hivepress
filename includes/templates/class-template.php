@@ -52,6 +52,9 @@ abstract class Template {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
+		// Filter arguments.
+		$args = apply_filters( 'hivepress/v1/templates/' . $args['name'], $args );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );

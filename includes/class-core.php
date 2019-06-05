@@ -268,30 +268,18 @@ final class Core {
 	/**
 	 * Gets configuration.
 	 *
-	 * @param string $path Configuration path.
+	 * @param string $name Configuration name.
 	 * @return array
 	 */
-	public function get_config( $path ) {
-
-		// Get type and name.
-		$type = $path;
-		$name = null;
-
-		if ( strpos( $path, '/' ) !== false ) {
-			list($type, $name) = explode( '/', $path );
-		}
+	public function get_config( $name ) {
 
 		// Get existing configuration.
-		$config = hp\get_array_value( $this->config, $type );
-
-		if ( ! is_null( $name ) ) {
-			$config = hp\get_array_value( $config, $name );
-		}
+		$config = hp\get_array_value( $this->config, $name );
 
 		// Get new configuration.
 		if ( is_null( $config ) ) {
 			foreach ( $this->dirs as $dir ) {
-				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $path ) . '.php';
+				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $name ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
 					$config = hp\merge_arrays( (array) $config, include $filepath );
@@ -299,14 +287,10 @@ final class Core {
 			}
 
 			// Filter configuration.
-			$config = apply_filters( 'hivepress/v1/' . $path, $config );
+			$config = apply_filters( 'hivepress/v1/' . $name, $config );
 
 			// Set configuration.
-			if ( ! is_null( $name ) ) {
-				$this->config[ $type ][ $name ] = $config;
-			} else {
-				$this->config[ $type ] = $config;
-			}
+			$this->config[ $name ] = $config;
 		}
 
 		return $config;
