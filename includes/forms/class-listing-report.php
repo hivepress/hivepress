@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Report
  */
-class Listing_Report extends Form {
+class Listing_Report extends Model_Form {
 
 	/**
 	 * Form name.
@@ -39,6 +39,13 @@ class Listing_Report extends Form {
 	 * @var string
 	 */
 	protected static $message;
+
+	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected static $model;
 
 	/**
 	 * Form action.
@@ -85,10 +92,11 @@ class Listing_Report extends Form {
 			[
 				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
 				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
+				'model'   => 'listing',
 				'action'  => hp\get_rest_url( '/listings/%id%/report' ),
 
 				'fields'  => [
-					'reason' => [
+					'report_reason' => [
 						'label'      => esc_html__( 'Reason', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,

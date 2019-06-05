@@ -457,7 +457,11 @@ class User extends Controller {
 		}
 
 		// Update user.
-		$user->fill( $form->get_values() );
+		$form_values = $form->get_values();
+
+		unset( $form_values['image_id'] );
+
+		$user->fill( $form_values );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400, esc_html__( 'Error updating user', 'hivepress' ) );

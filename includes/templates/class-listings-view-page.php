@@ -103,7 +103,7 @@ class Listings_View_Page extends Page {
 										],
 
 										'blocks'     => [
-											'listing_results' => [
+											'listings_container' => [
 												'type'   => 'results',
 												'order'  => 10,
 
@@ -117,7 +117,7 @@ class Listings_View_Page extends Page {
 														],
 
 														'blocks'     => [
-															'listing_result_count' => [
+															'listing_count' => [
 																'type' => 'result_count',
 																'order' => 10,
 															],

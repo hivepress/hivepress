@@ -68,7 +68,7 @@ class Modal extends Container {
 			new Element(
 				[
 					'type'     => 'element',
-					'filepath' => 'modal/title',
+					'filepath' => 'page/modal-title',
 					'context'  => array_merge( $this->context, [ 'title' => $this->caption ] ),
 				]
 			)
