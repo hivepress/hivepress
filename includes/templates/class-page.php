@@ -42,23 +42,11 @@ class Page extends Template {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'site_header'    => [
-						'type'     => 'element',
-						'filepath' => 'page/header',
-						'order'    => 10,
-					],
-
 					'page_container' => [
-						'type'   => 'page_container',
-						'order'  => 20,
+						'type'   => 'page',
+						'order'  => 10,
 
 						'blocks' => [],
-					],
-
-					'site_footer'    => [
-						'type'     => 'element',
-						'filepath' => 'page/footer',
-						'order'    => 30,
 					],
 				],
 			],

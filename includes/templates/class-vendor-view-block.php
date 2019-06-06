@@ -64,7 +64,7 @@ class Vendor_View_Block extends Template {
 								'blocks'     => [
 									'vendor_image' => [
 										'type'     => 'element',
-										'filepath' => 'vendor/view/block/image',
+										'filepath' => 'vendor/view/block/vendor-image',
 										'order'    => 10,
 									],
 								],
@@ -81,7 +81,7 @@ class Vendor_View_Block extends Template {
 								'blocks'     => [
 									'vendor_name' => [
 										'type'     => 'element',
-										'filepath' => 'vendor/view/block/name',
+										'filepath' => 'vendor/view/block/vendor-name',
 										'order'    => 10,
 									],
 
@@ -96,7 +96,7 @@ class Vendor_View_Block extends Template {
 										'blocks'     => [
 											'vendor_date' => [
 												'type'     => 'element',
-												'filepath' => 'vendor/view/date',
+												'filepath' => 'vendor/view/vendor-date',
 												'order'    => 10,
 											],
 										],

@@ -64,7 +64,7 @@ class Listing_View_Block extends Template {
 								'blocks'     => [
 									'listing_image' => [
 										'type'     => 'element',
-										'filepath' => 'listing/view/block/image',
+										'filepath' => 'listing/view/block/listing-image',
 										'order'    => 10,
 									],
 								],
@@ -81,7 +81,7 @@ class Listing_View_Block extends Template {
 								'blocks'     => [
 									'listing_title' => [
 										'type'     => 'element',
-										'filepath' => 'listing/view/block/title',
+										'filepath' => 'listing/view/block/listing-title',
 										'order'    => 10,
 									],
 
@@ -96,13 +96,13 @@ class Listing_View_Block extends Template {
 										'blocks'     => [
 											'listing_category' => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/category',
+												'filepath' => 'listing/view/listing-category',
 												'order'    => 10,
 											],
 
 											'listing_date' => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/date',
+												'filepath' => 'listing/view/listing-date',
 												'order'    => 20,
 											],
 										],
@@ -110,7 +110,7 @@ class Listing_View_Block extends Template {
 
 									'listing_attributes_secondary' => [
 										'type'     => 'element',
-										'filepath' => 'listing/view/block/attributes-secondary',
+										'filepath' => 'listing/view/block/listing-attributes-secondary',
 										'order'    => 30,
 									],
 								],
@@ -128,7 +128,7 @@ class Listing_View_Block extends Template {
 								'blocks'     => [
 									'listing_attributes_primary' => [
 										'type'     => 'element',
-										'filepath' => 'listing/view/block/attributes-primary',
+										'filepath' => 'listing/view/block/listing-attributes-primary',
 										'order'    => 10,
 									],
 

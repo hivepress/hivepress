@@ -79,7 +79,7 @@ class Listing_Edit_Page extends Account_Page {
 										'blocks'     => [
 											'listing_delete_link' => [
 												'type'     => 'element',
-												'filepath' => 'listing/edit/page/delete-link',
+												'filepath' => 'listing/edit/page/listing-delete-link',
 												'order'    => 10,
 											],
 										],

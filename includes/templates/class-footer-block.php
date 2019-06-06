@@ -80,7 +80,7 @@ class Footer_Block extends Template {
 										'blocks'     => [
 											'user_login_link' => [
 												'type'     => 'element',
-												'filepath' => 'user/auth/login-link',
+												'filepath' => 'user/register/user-login-link',
 												'order'    => 10,
 											],
 										],

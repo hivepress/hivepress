@@ -1,6 +1,6 @@
 <?php
 /**
- * User settings page template.
+ * User edit settings page template.
  *
  * @package HivePress\Templates
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User settings page template class.
+ * User edit settings page template class.
  *
- * @class User_Settings_Page
+ * @class User_Edit_Settings_Page
  */
-class User_Settings_Page extends Account_Page {
+class User_Edit_Settings_Page extends Account_Page {
 
 	/**
 	 * Template name.
@@ -79,7 +79,7 @@ class User_Settings_Page extends Account_Page {
 										'blocks'     => [
 											'user_delete_link' => [
 												'type'     => 'element',
-												'filepath' => 'user/edit/delete-link',
+												'filepath' => 'user/edit/user-delete-link',
 												'order'    => 10,
 											],
 										],

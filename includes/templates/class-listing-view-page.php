@@ -69,7 +69,7 @@ class Listing_View_Page extends Page {
 										'blocks'     => [
 											'listing_title'           => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/page/title',
+												'filepath' => 'listing/view/page/listing-title',
 												'order'    => 10,
 											],
 
@@ -84,13 +84,13 @@ class Listing_View_Page extends Page {
 												'blocks' => [
 													'listing_category' => [
 														'type'     => 'element',
-														'filepath' => 'listing/view/category',
+														'filepath' => 'listing/view/listing-category',
 														'order'    => 10,
 													],
 
 													'listing_date'     => [
 														'type'     => 'element',
-														'filepath' => 'listing/view/date',
+														'filepath' => 'listing/view/listing-date',
 														'order'    => 20,
 													],
 												],
@@ -98,19 +98,19 @@ class Listing_View_Page extends Page {
 
 											'listing_images'          => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/page/images',
+												'filepath' => 'listing/view/page/listing-images',
 												'order'    => 30,
 											],
 
 											'listing_attributes_secondary' => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/page/attributes-secondary',
+												'filepath' => 'listing/view/page/listing-attributes-secondary',
 												'order'    => 40,
 											],
 
 											'listing_description'     => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/page/description',
+												'filepath' => 'listing/view/page/listing-description',
 												'order'    => 50,
 											],
 										],
@@ -129,7 +129,7 @@ class Listing_View_Page extends Page {
 										'blocks'     => [
 											'listing_attributes_primary' => [
 												'type'     => 'element',
-												'filepath' => 'listing/view/page/attributes-primary',
+												'filepath' => 'listing/view/page/listing-attributes-primary',
 												'order'    => 10,
 											],
 
@@ -161,7 +161,7 @@ class Listing_View_Page extends Page {
 
 													'listing_report_link' => [
 														'type'     => 'element',
-														'filepath' => 'listing/view/page/report-link',
+														'filepath' => 'listing/view/page/listing-report-link',
 														'order'    => 20,
 													],
 												],

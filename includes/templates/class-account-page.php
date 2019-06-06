@@ -88,7 +88,7 @@ class Account_Page extends Page {
 										'blocks'     => [
 											'page_title' => [
 												'type'     => 'element',
-												'filepath' => 'page/title',
+												'filepath' => 'page/page-title',
 												'order'    => 5,
 											],
 										],

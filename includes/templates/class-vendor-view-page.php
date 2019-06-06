@@ -79,13 +79,13 @@ class Vendor_View_Page extends Page {
 												'blocks' => [
 													'vendor_image' => [
 														'type'     => 'element',
-														'filepath' => 'vendor/view/page/image',
+														'filepath' => 'vendor/view/page/vendor-image',
 														'order'    => 10,
 													],
 
 													'vendor_name'  => [
 														'type'     => 'element',
-														'filepath' => 'vendor/view/page/name',
+														'filepath' => 'vendor/view/page/vendor-name',
 														'order'    => 20,
 													],
 
@@ -100,7 +100,7 @@ class Vendor_View_Page extends Page {
 														'blocks'     => [
 															'vendor_date' => [
 																'type' => 'element',
-																'filepath' => 'vendor/view/date',
+																'filepath' => 'vendor/view/vendor-date',
 																'order' => 10,
 															],
 														],
@@ -108,7 +108,7 @@ class Vendor_View_Page extends Page {
 
 													'vendor_description' => [
 														'type'     => 'element',
-														'filepath' => 'vendor/view/page/description',
+														'filepath' => 'vendor/view/page/vendor-description',
 														'order'    => 40,
 													],
 												],
@@ -139,7 +139,7 @@ class Vendor_View_Page extends Page {
 										'blocks'     => [
 											'page_title' => [
 												'type'     => 'element',
-												'filepath' => 'page/title',
+												'filepath' => 'page/page-title',
 												'order'    => 5,
 											],
 
