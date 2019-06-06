@@ -76,15 +76,15 @@ class Block extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get template.
-		$template_args = hivepress()->get_config( 'templates/' . str_replace( '-', '_', $request->get_param( 'template' ) ) );
+		// Get template class.
+		$template_class = 'HivePress\Templates\\' . $request->get_param( 'template' );
 
-		if ( is_null( $template_args ) ) {
+		if ( ! class_exists( $template_class ) ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Get block.
-		$block_args = hp\search_array_value( $template_args, [ 'blocks', str_replace( '-', '_', $request->get_param( 'block_name' ) ) ] );
+		$block_args = hp\search_array_value( [ 'blocks' => $template_class::get_blocks() ], [ 'blocks', $request->get_param( 'block' ) ] );
 
 		if ( is_null( $block_args ) ) {
 			return hp\rest_error( 404 );

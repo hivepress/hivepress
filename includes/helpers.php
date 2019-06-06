@@ -78,7 +78,7 @@ function get_array_value( $array, $key, $default = null ) {
  * Searches array item value by keys.
  *
  * @param array $array Source array.
- * @param array $keys Keys to search.
+ * @param mixed $keys Keys to search.
  * @return mixed
  */
 function search_array_value( $array, $keys ) {
@@ -156,6 +156,37 @@ function merge_arrays() {
 	}
 
 	return $merged;
+}
+
+/**
+ * Merges trees with mixed values.
+ *
+ * @param array  $parent_tree Parent tree.
+ * @param array  $child_tree Child tree.
+ * @param string $tree_key Tree key.
+ * @param string $node_key Node key.
+ * @return array
+ */
+function merge_trees( $parent_tree, $child_tree, $tree_key, $node_key = null ) {
+	if ( isset( $parent_tree[ $tree_key ] ) ) {
+		foreach ( $parent_tree[ $tree_key ] as $parent_node_key => $parent_node ) {
+			$parent_tree[ $tree_key ][ $parent_node_key ] = merge_trees( $parent_node, $child_tree, $tree_key, $parent_node_key );
+		}
+	}
+
+	if ( is_null( $node_key ) ) {
+		unset( $child_tree[ $tree_key ] );
+
+		$parent_tree = merge_arrays( $parent_tree, $child_tree );
+	} else {
+		$child_node = search_array_value( $child_tree, [ $tree_key, $node_key ] );
+
+		if ( ! is_null( $child_node ) ) {
+			$parent_tree = merge_arrays( $parent_tree, $child_node );
+		}
+	}
+
+	return $parent_tree;
 }
 
 /**

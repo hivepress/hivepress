@@ -99,11 +99,11 @@ class User extends Controller {
 					'reset_password' => [
 						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
 						'path'     => '/account/reset-password',
-						'redirect' => 'redirect_password_page',
-						'action'   => 'render_password_page',
+						'redirect' => 'redirect_password_reset_page',
+						'action'   => 'render_password_reset_page',
 					],
 
-					'account'        => [
+					'view_account'   => [
 						'path'     => '/account',
 						'redirect' => 'redirect_account_page',
 					],
@@ -111,8 +111,8 @@ class User extends Controller {
 					'edit_settings'  => [
 						'title'    => esc_html__( 'My Settings', 'hivepress' ),
 						'path'     => '/account/settings',
-						'redirect' => 'redirect_settings_page',
-						'action'   => 'render_settings_page',
+						'redirect' => 'redirect_edit_settings_page',
+						'action'   => 'render_edit_settings_page',
 					],
 				],
 			],
@@ -457,7 +457,11 @@ class User extends Controller {
 		}
 
 		// Update user.
-		$user->fill( $form->get_values() );
+		$form_values = $form->get_values();
+
+		unset( $form_values['image_id'] );
+
+		$user->fill( $form_values );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400, esc_html__( 'Error updating user', 'hivepress' ) );
@@ -554,7 +558,7 @@ class User extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function redirect_password_page() {
+	public function redirect_password_reset_page() {
 		if ( is_user_logged_in() ) {
 			return self::get_url( 'account' );
 		}
@@ -567,7 +571,7 @@ class User extends Controller {
 	 *
 	 * @return string
 	 */
-	public function render_password_page() {
+	public function render_password_reset_page() {
 		return ( new Blocks\Template( [ 'template' => 'user_password_reset_page' ] ) )->render();
 	}
 
@@ -598,7 +602,7 @@ class User extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function redirect_settings_page() {
+	public function redirect_edit_settings_page() {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -613,10 +617,10 @@ class User extends Controller {
 	 *
 	 * @return string
 	 */
-	public function render_settings_page() {
+	public function render_edit_settings_page() {
 		return ( new Blocks\Template(
 			[
-				'template' => 'user_settings_page',
+				'template' => 'user_edit_settings_page',
 
 				'context'  => [
 					'user_id' => get_current_user_id(),

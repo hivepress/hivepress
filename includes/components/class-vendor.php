@@ -52,16 +52,6 @@ final class Vendor {
 	public function update_vendor( $meta_id, $user_id, $meta_key, $meta_value ) {
 		if ( in_array( $meta_key, [ 'first_name', 'description' ], true ) ) {
 
-			// Update user name.
-			if ( 'first_name' === $meta_key && '' !== $meta_value ) {
-				wp_update_user(
-					[
-						'ID'           => $user_id,
-						'display_name' => $meta_value,
-					]
-				);
-			}
-
 			// Get vendor ID.
 			$vendor_id = hp\get_post_id(
 				[

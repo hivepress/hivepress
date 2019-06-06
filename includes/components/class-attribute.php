@@ -86,6 +86,11 @@ final class Attribute {
 	 */
 	public function register_attributes() {
 
+		// Set defaults.
+		foreach ( $this->models as $model ) {
+			$this->attributes[ $model ] = [];
+		}
+
 		// Get attributes.
 		$attributes = get_posts(
 			[
@@ -111,7 +116,6 @@ final class Attribute {
 
 			// Set defaults.
 			$attribute_args = [
-				'model'          => $attribute_model,
 				'display_areas'  => (array) $attribute->hp_display_areas,
 				'display_format' => $attribute->hp_display_format,
 				'editable'       => (bool) $attribute->hp_editable,
@@ -192,25 +196,31 @@ final class Attribute {
 			}
 
 			// Add attribute.
-			$this->attributes[ $attribute_name ] = $attribute_args;
+			$this->attributes[ $attribute_model ][ $attribute_name ] = $attribute_args;
 		}
 
-		// Filter attributes.
-		$this->attributes = apply_filters( 'hivepress/v1/attributes', $this->attributes );
+		foreach ( $this->attributes as $model_name => $model_attributes ) {
 
-		// Set defaults.
-		foreach ( $this->attributes as $attribute_name => $attribute_args ) {
-			$this->attributes[ $attribute_name ] = array_merge(
-				[
-					'display_areas'  => [],
-					'display_format' => '',
-					'editable'       => false,
-					'searchable'     => false,
-					'filterable'     => false,
-					'sortable'       => false,
-					'categories'     => [],
-				],
-				$attribute_args
+			// Filter attributes.
+			$model_attributes = apply_filters( 'hivepress/v1/models/' . $model_name . '/attributes', $model_attributes );
+
+			// Set defaults.
+			$this->attributes[ $model_name ] = array_map(
+				function( $attribute_args ) {
+					return hp\merge_arrays(
+						[
+							'display_areas'  => [],
+							'display_format' => '',
+							'editable'       => false,
+							'searchable'     => false,
+							'filterable'     => false,
+							'sortable'       => false,
+							'categories'     => [],
+						],
+						$attribute_args
+					);
+				},
+				$model_attributes
 			);
 		}
 	}
@@ -263,16 +273,8 @@ final class Attribute {
 	 */
 	public function add_model_fields( $model ) {
 
-		// Filter attributes.
-		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $model ) {
-				return $attribute['model'] === $model['name'];
-			}
-		);
-
 		// Add fields.
-		foreach ( $attributes as $attribute_name => $attribute ) {
+		foreach ( $this->attributes[ $model['name'] ] as $attribute_name => $attribute ) {
 			if ( ! isset( $model['fields'][ $attribute_name ] ) ) {
 				$model['fields'][ $attribute_name ] = array_merge(
 					$attribute['edit_field'],
@@ -311,9 +313,9 @@ final class Attribute {
 		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $model, $category_ids ) {
-				return $attribute['model'] === $model && ( empty( $attribute['categories'] ) || count( array_intersect( $category_ids, $attribute['categories'] ) ) > 0 );
+			$this->attributes[ $model ],
+			function( $attribute ) use ( $category_ids ) {
+				return empty( $attribute['categories'] ) || count( array_intersect( $category_ids, $attribute['categories'] ) ) > 0;
 			}
 		);
 
@@ -343,9 +345,9 @@ final class Attribute {
 		$category_id = $this->get_category_id( $model );
 
 		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $model, $category_id ) {
-				return $attribute['model'] === $model && ( empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true ) );
+			$this->attributes[ $model ],
+			function( $attribute ) use ( $category_id ) {
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
 			}
 		);
 
@@ -490,9 +492,9 @@ final class Attribute {
 		$category_id = $this->get_category_id( $model );
 
 		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $model, $category_id ) {
-				return $attribute['model'] === $model && ( empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true ) );
+			$this->attributes[ $model ],
+			function( $attribute ) use ( $category_id ) {
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
 			}
 		);
 
@@ -553,9 +555,9 @@ final class Attribute {
 			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
 
 			$attributes = array_filter(
-				$this->attributes,
-				function( $attribute ) use ( $model, $category_ids ) {
-					return $attribute['model'] === $model && ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0;
+				$this->attributes[ $model ],
+				function( $attribute ) use ( $category_ids ) {
+					return ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0;
 				}
 			);
 
@@ -597,9 +599,9 @@ final class Attribute {
 
 		// Filter attributes.
 		$attributes = array_filter(
-			$this->attributes,
-			function( $attribute ) use ( $model ) {
-				return $attribute['model'] === $model && ( $attribute['searchable'] || $attribute['filterable'] );
+			$this->attributes[ $model ],
+			function( $attribute ) {
+				return $attribute['searchable'] || $attribute['filterable'] || $attribute['sortable'];
 			}
 		);
 

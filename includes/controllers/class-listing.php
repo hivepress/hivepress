@@ -221,7 +221,7 @@ class Listing extends Controller {
 				'tokens'    => [
 					'listing_title' => $listing->get_title(),
 					'listing_url'   => get_permalink( $listing->get_id() ),
-					'report_reason' => $form->get_value( 'reason' ),
+					'report_reason' => $form->get_value( 'report_reason' ),
 				],
 			]
 		) )->send();
@@ -303,7 +303,7 @@ class Listing extends Controller {
 				[
 					'template' => 'listing_categories_view_page',
 
-					'context'       => [
+					'context'  => [
 						'listing_category_id' => $category_id,
 					],
 				]
@@ -352,8 +352,9 @@ class Listing extends Controller {
 			[
 				'template' => 'listing_view_page',
 
-				'context'       => [
-					'listing' => Models\Listing::get( get_the_ID() ),
+				'context'  => [
+					'listing_id' => get_the_ID(),
+					'listing'    => Models\Listing::get( get_the_ID() ),
 				],
 			]
 		) )->render();
@@ -435,7 +436,7 @@ class Listing extends Controller {
 			[
 				'template' => 'listing_edit_page',
 
-				'context'       => [
+				'context'  => [
 					'listing_id' => absint( get_query_var( 'hp_listing_id' ) ),
 				],
 			]
@@ -546,7 +547,7 @@ class Listing extends Controller {
 			[
 				'template' => 'listing_submit_category_page',
 
-				'context'       => [
+				'context'  => [
 					'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
 				],
 			]
@@ -593,7 +594,7 @@ class Listing extends Controller {
 			[
 				'template' => 'listing_submit_details_page',
 
-				'context'       => [
+				'context'  => [
 					'listing_id' => hp\get_post_id(
 						[
 							'post_type'   => 'hp_listing',
@@ -669,7 +670,7 @@ class Listing extends Controller {
 			[
 				'template' => 'listing_submit_complete_page',
 
-				'context'       => [
+				'context'  => [
 					'listing' => Models\Listing::get(
 						hp\get_post_id(
 							[

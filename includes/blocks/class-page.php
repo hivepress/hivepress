@@ -1,6 +1,6 @@
 <?php
 /**
- * Page container block.
+ * Page block.
  *
  * @package HivePress\Blocks
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Page container block class.
+ * Page block class.
  *
- * @class Page_Container
+ * @class Page
  */
-class Page_Container extends Container {
+class Page extends Container {
 
 	/**
 	 * Block type.
@@ -67,6 +67,18 @@ class Page_Container extends Container {
 
 				break;
 		}
+
+		// Add header.
+		ob_start();
+		get_header();
+		$output = ob_get_contents() . $output;
+		ob_end_clean();
+
+		// Add footer.
+		ob_start();
+		get_footer();
+		$output .= ob_get_contents();
+		ob_end_clean();
 
 		return $output;
 	}

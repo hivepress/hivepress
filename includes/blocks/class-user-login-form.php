@@ -48,13 +48,13 @@ class User_Login_Form extends Form {
 						'blocks'     => [
 							'user_register_link'         => [
 								'type'     => 'element',
-								'filepath' => 'user/auth/register-link',
+								'filepath' => 'user/login/user-register-link',
 								'order'    => 10,
 							],
 
 							'user_password_request_link' => [
 								'type'     => 'element',
-								'filepath' => 'user/auth/password-request-link',
+								'filepath' => 'user/login/user-password-request-link',
 								'order'    => 20,
 							],
 						],
