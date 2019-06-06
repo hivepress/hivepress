@@ -162,7 +162,7 @@ class Listing_View_Page extends Page {
 													'listing_report_link' => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/page/listing-report-link',
-														'order'    => 20,
+														'order'    => 100,
 													],
 												],
 											],
