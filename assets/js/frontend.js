@@ -184,14 +184,14 @@ var hivepress = {
 
 					selectButton.prop('disabled', true);
 					selectButton.attr('data-state', 'loading');
-					submitButton.addClass('is-loading');
+					selectButton.addClass('is-loading');
 				},
 				stop: function() {
 					field.prop('disabled', false);
 
 					selectButton.prop('disabled', false);
 					selectButton.attr('data-state', '');
-					submitButton.removeClass('is-loading');
+					selectButton.removeClass('is-loading');
 				},
 				done: function(e, data) {
 					if (data.result.hasOwnProperty('data')) {
