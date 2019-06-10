@@ -217,7 +217,7 @@ abstract class Form {
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
 						'type'       => 'button',
 						'attributes' => [
-							'class' => [ 'hp-form__button', 'alt' ],
+							'class' => [ 'hp-form__button', 'button', 'is-primary', 'alt' ],
 						],
 					],
 					$button

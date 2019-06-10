@@ -64,6 +64,7 @@ var hivepress = {
 				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 				submitButton.prop('disabled', true);
 				submitButton.attr('data-state', 'loading');
+				submitButton.addClass('is-loading');
 
 				if (form.data('action')) {
 					$.ajax({
@@ -78,6 +79,7 @@ var hivepress = {
 
 							submitButton.prop('disabled', false);
 							submitButton.attr('data-state', '');
+							submitButton.removeClass('is-loading');
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								grecaptcha.reset(captchaId);
@@ -182,12 +184,14 @@ var hivepress = {
 
 					selectButton.prop('disabled', true);
 					selectButton.attr('data-state', 'loading');
+					submitButton.addClass('is-loading');
 				},
 				stop: function() {
 					field.prop('disabled', false);
 
 					selectButton.prop('disabled', false);
 					selectButton.attr('data-state', '');
+					submitButton.removeClass('is-loading');
 				},
 				done: function(e, data) {
 					if (data.result.hasOwnProperty('data')) {
@@ -247,7 +251,7 @@ var hivepress = {
 		$(window).on('load', function() {
 			hivepress.getComponent('sticky').each(function() {
 				var container = $(this),
-					spacing = 30 + $('#wpadminbar').height();
+					spacing = 32 + $('#wpadminbar').height();
 
 				container.wrapInner('<div />');
 

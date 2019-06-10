@@ -38,7 +38,7 @@ final class Core {
 	 *
 	 * @var array
 	 */
-	private $config = [];
+	private $configs = [];
 
 	/**
 	 * Array of HivePress objects.
@@ -274,7 +274,7 @@ final class Core {
 	public function get_config( $name ) {
 
 		// Get existing configuration.
-		$config = hp\get_array_value( $this->config, $name );
+		$config = hp\get_array_value( $this->configs, $name );
 
 		// Get new configuration.
 		if ( is_null( $config ) ) {
@@ -290,7 +290,7 @@ final class Core {
 			$config = apply_filters( 'hivepress/v1/' . $name, $config );
 
 			// Set configuration.
-			$this->config[ $name ] = $config;
+			$this->configs[ $name ] = $config;
 		}
 
 		return $config;

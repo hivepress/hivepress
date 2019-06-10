@@ -151,7 +151,7 @@ class Attachment_Upload extends Field {
 		$output .= '<label for="' . esc_attr( $this->name ) . '">';
 
 		// Render upload button.
-		$output .= '<button type="button">' . esc_html( $this->caption ) . '</button>';
+		$output .= '<button type="button" class="button">' . esc_html( $this->caption ) . '</button>';
 
 		// Render upload field.
 		$output .= ( new File(
