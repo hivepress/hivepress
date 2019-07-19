@@ -190,7 +190,7 @@ class Listings extends Block {
 		// Render listings.
 		if ( $query->have_posts() ) {
 			if ( 'edit' === $this->template ) {
-				$output .= '<table class="hp-table">';
+				$output .= '<table class="hp-table table is-fullwidth">';
 			} else {
 				$output .= '<div class="hp-grid">';
 				$output .= '<div class="hp-row">';

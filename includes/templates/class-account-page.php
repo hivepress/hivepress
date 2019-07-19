@@ -70,7 +70,7 @@ class Account_Page extends Page {
 												'order' => 10,
 
 												'attributes' => [
-													'class' => [ 'hp-widget', 'widget', 'widget_nav_menu' ],
+													'class' => [ 'hp-widget', 'widget', 'widget--sidebar', 'widget_nav_menu' ],
 												],
 											],
 										],

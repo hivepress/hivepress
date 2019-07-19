@@ -104,14 +104,14 @@ final class User {
 
 		if ( is_numeric( $id_or_email ) ) {
 			$user_id = absint( $id_or_email );
+		} elseif ( is_object( $id_or_email ) ) {
+			$user_id = absint( $id_or_email->user_id );
 		} elseif ( is_email( $id_or_email ) ) {
 			$user = get_user_by( 'email', $id_or_email );
 
 			if ( false !== $user ) {
 				$user_id = $user->ID;
 			}
-		} elseif ( is_object( $id_or_email ) ) {
-			$user_id = absint( $id_or_email->user_id );
 		}
 
 		if ( 0 !== $user_id ) {

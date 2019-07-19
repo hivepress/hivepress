@@ -122,7 +122,7 @@ class Select extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( is_array( $this->value ) ) {
+		if ( is_array( $this->value ) && ! $this->multiple ) {
 			if ( ! empty( $this->value ) ) {
 				$this->value = reset( $this->value );
 			} else {

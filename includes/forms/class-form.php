@@ -383,7 +383,7 @@ abstract class Form {
 			}
 
 			if ( isset( static::$description ) ) {
-				$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
+				$output .= '<p class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</p>';
 			}
 
 			$output .= '<div class="hp-form__messages" data-element="messages"></div>';

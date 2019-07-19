@@ -81,7 +81,9 @@ final class Debug {
 
 		// Enqueue LESS.
 		// todo uncomment.
-		//$output .= '<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>';
+		if ( is_admin() ) {
+			$output .= '<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>';
+		}
 
 		echo $output;
 	}
