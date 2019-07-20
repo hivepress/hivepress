@@ -68,7 +68,7 @@ class Vendor_View_Page extends Page {
 										],
 
 										'blocks'     => [
-											'vendor_summary'         => [
+											'vendor_summary' => [
 												'type'   => 'container',
 												'order'  => 10,
 
@@ -123,6 +123,12 @@ class Vendor_View_Page extends Page {
 												],
 
 												'blocks' => [],
+											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'vendor_sidebar',
+												'order' => 30,
 											],
 										],
 									],

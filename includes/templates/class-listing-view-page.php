@@ -176,6 +176,12 @@ class Listing_View_Page extends Page {
 													'class' => [ 'hp-widget', 'widget' ],
 												],
 											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'listing_sidebar',
+												'order' => 40,
+											],
 										],
 									],
 								],

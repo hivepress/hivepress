@@ -73,6 +73,12 @@ class Account_Page extends Page {
 													'class' => [ 'hp-widget', 'widget', 'widget--sidebar', 'widget_nav_menu' ],
 												],
 											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'account_sidebar',
+												'order' => 20,
+											],
 										],
 									],
 

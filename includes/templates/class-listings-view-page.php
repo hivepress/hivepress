@@ -90,6 +90,12 @@ class Listings_View_Page extends Page {
 													'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
 												],
 											],
+
+											'sidebar_widgets'         => [
+												'type'  => 'widgets',
+												'area'  => 'listings_sidebar',
+												'order' => 20,
+											],
 										],
 									],
 
