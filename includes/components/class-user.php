@@ -33,6 +33,9 @@ final class User {
 
 		// Set image.
 		add_filter( 'get_avatar', [ $this, 'set_image' ], 1, 5 );
+
+		// Import users.
+		add_action( 'import_start', [ $this, 'import_users' ] );
 	}
 
 	/**
@@ -125,5 +128,12 @@ final class User {
 		}
 
 		return $image;
+	}
+
+	/**
+	 * Imports users.
+	 */
+	public function import_users() {
+		remove_action( 'added_post_meta', [ $this, 'update_image' ] );
 	}
 }

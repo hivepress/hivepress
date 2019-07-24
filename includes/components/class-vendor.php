@@ -31,6 +31,9 @@ final class Vendor {
 		// Update image.
 		add_action( 'added_post_meta', [ $this, 'update_image' ], 10, 4 );
 
+		// Import vendors.
+		add_action( 'import_start', [ $this, 'import_vendors' ] );
+
 		if ( ! is_admin() ) {
 
 			// Disable redirect.
@@ -113,6 +116,13 @@ final class Vendor {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Imports vendors.
+	 */
+	public function import_vendors() {
+		remove_action( 'added_post_meta', [ $this, 'update_image' ] );
 	}
 
 	/**

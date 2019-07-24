@@ -38,6 +38,9 @@ final class Listing {
 
 		// Update status.
 		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
+
+		// Import listings.
+		add_action( 'import_start', [ $this, 'import_listings' ] );
 	}
 
 	/**
@@ -206,5 +209,14 @@ final class Listing {
 				) )->send();
 			}
 		}
+	}
+
+	/**
+	 * Imports listings.
+	 */
+	public function import_listings() {
+		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
+		remove_action( 'add_attachment', [ $this, 'set_image' ] );
+		remove_action( 'edit_attachment', [ $this, 'set_image' ] );
 	}
 }
