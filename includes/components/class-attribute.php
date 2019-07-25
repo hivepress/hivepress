@@ -496,9 +496,9 @@ final class Attribute {
 
 		// Add defaults.
 		if ( is_search() ) {
-			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
+			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
 		} else {
-			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
+			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
 		}
 
 		// Get model.

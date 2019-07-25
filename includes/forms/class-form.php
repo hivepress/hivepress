@@ -292,7 +292,7 @@ abstract class Form {
 
 		// Set action.
 		if ( strpos( static::$action, get_rest_url() ) === 0 ) {
-			$attributes['action']      = '';
+			$attributes['action']      = '#';
 			$attributes['data-action'] = static::$action;
 		} else {
 			$attributes['action'] = static::$action;
@@ -424,7 +424,7 @@ abstract class Form {
 
 		// Render footer.
 		if ( isset( static::$button ) || isset( $this->footer ) ) {
-			$output .= '<footer class="hp-form__footer">';
+			$output .= '<div class="hp-form__footer">';
 
 			if ( isset( static::$button ) ) {
 				$output .= static::$button->render();
@@ -434,7 +434,7 @@ abstract class Form {
 				$output .= $this->footer;
 			}
 
-			$output .= '</footer>';
+			$output .= '</div>';
 		}
 
 		$output .= '</form>';

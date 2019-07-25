@@ -105,13 +105,15 @@ final class Asset {
 	 * @return string
 	 */
 	public function filter_script( $tag, $handle ) {
+		if ( in_array( $handle, wp_list_pluck( hivepress()->get_config( 'scripts' ), 'handle' ), true ) ) {
 
-		// Set attributes.
-		$atts = [ 'async', 'defer' ];
+			// Set attributes.
+			$atts = [ 'async', 'defer' ];
 
-		foreach ( $atts as $att ) {
-			if ( wp_scripts()->get_data( $handle, $att ) ) {
-				$tag = str_replace( '></', ' ' . $att . '></', $tag );
+			foreach ( $atts as $att ) {
+				if ( wp_scripts()->get_data( $handle, $att ) ) {
+					$tag = str_replace( '></', ' ' . $att . '></', $tag );
+				}
 			}
 		}
 
