@@ -123,7 +123,9 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '">';
+		$output = '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '" class="' . esc_attr( implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) ) ) . '">';
+
+		unset( $this->attributes['class'] );
 
 		$output .= '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';

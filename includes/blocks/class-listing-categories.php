@@ -122,7 +122,7 @@ class Listing_Categories extends Block {
 						'default' => '',
 						'order'   => 40,
 						'options' => [
-							''      => '&mdash;',
+							''      => esc_html__( 'Default', 'hivepress' ),
 							'name'  => esc_html__( 'Name', 'hivepress' ),
 							'count' => esc_html__( 'Count', 'hivepress' ),
 						],
@@ -189,7 +189,7 @@ class Listing_Categories extends Block {
 
 		// Render categories.
 		if ( ! empty( $categories ) ) {
-			$output  = '<div class="hp-grid">';
+			$output  = '<div class="hp-grid hp-block">';
 			$output .= '<div class="hp-row">';
 
 			foreach ( $categories as $category_args ) {

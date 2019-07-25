@@ -661,24 +661,24 @@ final class Attribute {
 			}
 		}
 
+		// Get meta and taxonomy queries.
+		$meta_query = (array) $query->get( 'meta_query' );
+		$tax_query  = (array) $query->get( 'tax_query' );
+
+		// Set category.
+		$category_id = $this->get_category_id( $model );
+
+		if ( 0 !== $category_id ) {
+			$tax_query[] = [
+				[
+					'taxonomy' => hp\prefix( $model . '_category' ),
+					'terms'    => $category_id,
+				],
+			];
+		}
+
 		// Filter results.
 		if ( $query->is_search ) {
-
-			// Get meta and taxonomy queries.
-			$meta_query = (array) $query->get( 'meta_query' );
-			$tax_query  = (array) $query->get( 'tax_query' );
-
-			// Set category.
-			$category_id = $this->get_category_id( $model );
-
-			if ( 0 !== $category_id ) {
-				$tax_query[] = [
-					[
-						'taxonomy' => hp\prefix( $model . '_category' ),
-						'terms'    => $category_id,
-					],
-				];
-			}
 
 			// Set attributes.
 			foreach ( $attributes as $attribute_name => $attribute ) {
@@ -746,10 +746,10 @@ final class Attribute {
 					}
 				}
 			}
-
-			// Set meta and taxonomy queries.
-			$query->set( 'meta_query', $meta_query );
-			$query->set( 'tax_query', $tax_query );
 		}
+
+		// Set meta and taxonomy queries.
+		$query->set( 'meta_query', $meta_query );
+		$query->set( 'tax_query', $tax_query );
 	}
 }

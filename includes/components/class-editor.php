@@ -57,6 +57,10 @@ final class Editor {
 				foreach ( $block::get_settings() as $field_name => $field ) {
 					$field_args = $field->get_args();
 
+					if ( isset( $field_args['options'] ) && ! isset( $field_args['options'][''] ) ) {
+						$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
+					}
+
 					// Add attribute.
 					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
