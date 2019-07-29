@@ -2,6 +2,8 @@
 /**
  * Listing edit page template.
  *
+ * @template listing_edit_page
+ * @description Listing page in edit context.
  * @package HivePress\Templates
  */
 

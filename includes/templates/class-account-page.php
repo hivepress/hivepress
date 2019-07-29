@@ -2,6 +2,8 @@
 /**
  * Account page template.
  *
+ * @template account_page
+ * @description User account page.
  * @package HivePress\Templates
  */
 

@@ -76,8 +76,7 @@ abstract class Model {
 		/**
 		 * Filters model arguments.
 		 *
-		 * @filter
-		 * @route /models/{$name}
+		 * @filter /models/{$name}
 		 * @description Filters model arguments.
 		 * @param string $name Model name.
 		 * @param array $args Model arguments.

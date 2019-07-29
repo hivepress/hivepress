@@ -51,7 +51,6 @@ class User extends Controller {
 					/**
 					 * Users API route.
 					 *
-					 * @rest
 					 * @resource Users
 					 * @description The users API allows you to register, update and delete users.
 					 */
@@ -64,7 +63,6 @@ class User extends Controller {
 							/**
 							 * Registers user.
 							 *
-							 * @rest
 							 * @endpoint Register user
 							 * @route /users
 							 * @method POST
@@ -98,7 +96,6 @@ class User extends Controller {
 							/**
 							 * Updates user.
 							 *
-							 * @rest
 							 * @endpoint Update user
 							 * @route /users/<id>
 							 * @method POST
@@ -117,7 +114,6 @@ class User extends Controller {
 							/**
 							 * Deletes user.
 							 *
-							 * @rest
 							 * @endpoint Delete user
 							 * @route /users/<id>
 							 * @method DELETE

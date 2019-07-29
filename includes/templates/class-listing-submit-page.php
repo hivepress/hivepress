@@ -2,6 +2,8 @@
 /**
  * Listing submit page template.
  *
+ * @template listing_submit_page
+ * @description Listing submission page.
  * @package HivePress\Templates
  */
 

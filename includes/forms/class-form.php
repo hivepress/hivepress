@@ -133,8 +133,7 @@ abstract class Form {
 		/**
 		 * Filters form arguments.
 		 *
-		 * @filter
-		 * @route /forms/{$name}
+		 * @filter /forms/{$name}
 		 * @description Filters form arguments.
 		 * @param string $name Form name or "form" to filter all forms.
 		 * @param array $args Form arguments.

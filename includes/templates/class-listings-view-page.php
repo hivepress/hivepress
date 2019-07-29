@@ -2,6 +2,8 @@
 /**
  * Listings view page template.
  *
+ * @template listings_view_page
+ * @description Listings page in view context.
  * @package HivePress\Templates
  */
 

@@ -2,6 +2,8 @@
 /**
  * Listing category submit block template.
  *
+ * @template listing_category_submit_block
+ * @description Listing category block in submit context.
  * @package HivePress\Templates
  */
 

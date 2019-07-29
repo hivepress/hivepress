@@ -50,7 +50,6 @@ class Listing extends Controller {
 					/**
 					 * Listings API route.
 					 *
-					 * @rest
 					 * @resource Listings
 					 * @description The listings API allows you to update and delete listings.
 					 */
@@ -63,7 +62,6 @@ class Listing extends Controller {
 							/**
 							 * Updates listing.
 							 *
-							 * @rest
 							 * @endpoint Update listing
 							 * @route /listings/<id>
 							 * @method POST
@@ -85,7 +83,6 @@ class Listing extends Controller {
 							/**
 							 * Deletes listing.
 							 *
-							 * @rest
 							 * @endpoint Delete listing
 							 * @route /listings/<id>
 							 * @method DELETE

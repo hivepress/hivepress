@@ -131,8 +131,7 @@ final class Core {
 			/**
 			 * Fires on HivePress activation.
 			 *
-			 * @action
-			 * @route /activate
+			 * @action /activate
 			 * @description Fires on HivePress activation.
 			 */
 			do_action( 'hivepress/v1/activate' );
@@ -157,8 +156,7 @@ final class Core {
 		/**
 		 * Filters HivePress directories.
 		 *
-		 * @filter
-		 * @route /dirs
+		 * @filter /dirs
 		 * @description Filters HivePress directories.
 		 * @param array $dirs Directory paths. If you add a new path HivePress will treat it like an extension.
 		 */
@@ -302,8 +300,7 @@ final class Core {
 			/**
 			 * Filters HivePress configuration.
 			 *
-			 * @filter
-			 * @route /{$config}
+			 * @filter /{$config}
 			 * @description Filters HivePress configuration.
 			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies".
 			 * @param array $args Configuration arguments.

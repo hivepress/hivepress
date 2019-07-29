@@ -62,8 +62,7 @@ abstract class Menu {
 		/**
 		 * Filters menu arguments.
 		 *
-		 * @filter
-		 * @route /menus/{$name}
+		 * @filter /menus/{$name}
 		 * @description Filters menu arguments.
 		 * @param string $name Menu name.
 		 * @param array $args Menu arguments.

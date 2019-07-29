@@ -207,8 +207,7 @@ final class Attribute {
 			/**
 			 * Filters model attributes.
 			 *
-			 * @filter
-			 * @route /models/{$name}/attributes
+			 * @filter /models/{$name}/attributes
 			 * @description Filters model attributes.
 			 * @param string $name Model name.
 			 * @param array $atts Model attributes.

@@ -130,8 +130,7 @@ abstract class Field {
 		/**
 		 * Filters field arguments.
 		 *
-		 * @filter
-		 * @route /fields/field/args
+		 * @filter /fields/field/args
 		 * @description Filters field arguments.
 		 * @param array $args Field arguments.
 		 */

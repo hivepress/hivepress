@@ -157,8 +157,7 @@ final class Router {
 					/**
 					 * Filters controller route arguments.
 					 *
-					 * @filter
-					 * @route /controllers/{$controller_name}/routes/{$route_name}
+					 * @filter /controllers/{$controller_name}/routes/{$route_name}
 					 * @description Filters controller route arguments.
 					 * @param string $controller_name Controller name.
 					 * @param string $route_name Route name.

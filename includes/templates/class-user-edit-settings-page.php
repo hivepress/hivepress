@@ -2,6 +2,8 @@
 /**
  * User edit settings page template.
  *
+ * @template user_edit_settings_page
+ * @description User page in edit context (settings).
  * @package HivePress\Templates
  */
 

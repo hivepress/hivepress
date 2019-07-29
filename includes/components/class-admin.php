@@ -559,8 +559,7 @@ final class Admin {
 				/**
 				 * Filters meta box arguments.
 				 *
-				 * @filter
-				 * @route /meta_boxes/{$name}
+				 * @filter /meta_boxes/{$name}
 				 * @description Filters meta box arguments.
 				 * @param string $name Meta box name.
 				 * @param array $args Meta box arguments.

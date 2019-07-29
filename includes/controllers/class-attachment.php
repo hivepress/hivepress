@@ -46,7 +46,6 @@ class Attachment extends Controller {
 					/**
 					 * Attachments API route.
 					 *
-					 * @rest
 					 * @resource Attachments
 					 * @description The attachments API allows you to upload, update and delete attachments.
 					 */
@@ -59,7 +58,6 @@ class Attachment extends Controller {
 							/**
 							 * Uploads attachment.
 							 *
-							 * @rest
 							 * @endpoint Upload attachment
 							 * @route /attachments
 							 * @method POST
@@ -75,7 +73,6 @@ class Attachment extends Controller {
 							/**
 							 * Updates attachment.
 							 *
-							 * @rest
 							 * @endpoint Update attachment
 							 * @route /attachments/<id>
 							 * @method POST
@@ -90,7 +87,6 @@ class Attachment extends Controller {
 							/**
 							 * Deletes atachment.
 							 *
-							 * @rest
 							 * @endpoint Delete attachment
 							 * @route /attachments/<id>
 							 * @method DELETE

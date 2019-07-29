@@ -2,6 +2,8 @@
 /**
  * Vendor view block template.
  *
+ * @template vendor_view_block
+ * @description Vendor block in view context.
  * @package HivePress\Templates
  */
 

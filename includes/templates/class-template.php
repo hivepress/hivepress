@@ -55,8 +55,7 @@ abstract class Template {
 		/**
 		 * Filters template arguments.
 		 *
-		 * @filter
-		 * @route /templates/{$name}
+		 * @filter /templates/{$name}
 		 * @description Filters template arguments.
 		 * @param string $name Template name.
 		 * @param array $args Template arguments.
