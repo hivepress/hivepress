@@ -130,7 +130,15 @@ abstract class Form {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
-		// Filter arguments.
+		/**
+		 * Filters form arguments.
+		 *
+		 * @filter
+		 * @route /forms/{$name}
+		 * @description Filters form arguments.
+		 * @param string $name Form name or "form" to filter all forms.
+		 * @param array $args Form arguments.
+		 */
 		$args = apply_filters( 'hivepress/v1/forms/form', $args );
 		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
 

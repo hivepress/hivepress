@@ -42,22 +42,59 @@ class Attachment extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
+
+					/**
+					 * Attachments API route.
+					 *
+					 * @rest
+					 * @resource Attachments
+					 * @description The attachments API allows you to upload, update and delete attachments.
+					 */
 					[
 						'path'      => '/attachments',
 						'rest'      => true,
 
 						'endpoints' => [
+
+							/**
+							 * Uploads attachment.
+							 *
+							 * @rest
+							 * @endpoint Upload attachment
+							 * @route /attachments
+							 * @method POST
+							 * @param string $parent_model Parent model.
+							 * @param string $parent_field Parent field.
+							 * @param int $parent_id Parent ID.
+							 */
 							[
 								'methods' => 'POST',
 								'action'  => 'upload_attachment',
 							],
 
+							/**
+							 * Updates attachment.
+							 *
+							 * @rest
+							 * @endpoint Update attachment
+							 * @route /attachments/<id>
+							 * @method POST
+							 * @param int $order Order.
+							 */
 							[
 								'path'    => '/(?P<attachment_id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_attachment',
 							],
 
+							/**
+							 * Deletes atachment.
+							 *
+							 * @rest
+							 * @endpoint Delete attachment
+							 * @route /attachments/<id>
+							 * @method DELETE
+							 */
 							[
 								'path'    => '/(?P<attachment_id>\d+)',
 								'methods' => 'DELETE',

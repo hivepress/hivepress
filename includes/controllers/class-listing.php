@@ -46,11 +46,30 @@ class Listing extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
+
+					/**
+					 * Listings API route.
+					 *
+					 * @rest
+					 * @resource Listings
+					 * @description The listings API allows you to update and delete listings.
+					 */
 					[
 						'path'      => '/listings',
 						'rest'      => true,
 
 						'endpoints' => [
+
+							/**
+							 * Updates listing.
+							 *
+							 * @rest
+							 * @endpoint Update listing
+							 * @route /listings/<id>
+							 * @method POST
+							 * @param string $title Title.
+							 * @param string $description Description.
+							 */
 							[
 								'path'    => '/(?P<listing_id>\d+)',
 								'methods' => 'POST',
@@ -63,6 +82,14 @@ class Listing extends Controller {
 								'action'  => 'report_listing',
 							],
 
+							/**
+							 * Deletes listing.
+							 *
+							 * @rest
+							 * @endpoint Delete listing
+							 * @route /listings/<id>
+							 * @method DELETE
+							 */
 							[
 								'path'    => '/(?P<listing_id>\d+)',
 								'methods' => 'DELETE',

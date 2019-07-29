@@ -204,7 +204,15 @@ final class Attribute {
 
 		foreach ( $this->attributes as $model_name => $model_attributes ) {
 
-			// Filter attributes.
+			/**
+			 * Filters model attributes.
+			 *
+			 * @filter
+			 * @route /models/{$name}/attributes
+			 * @description Filters model attributes.
+			 * @param string $name Model name.
+			 * @param array $atts Model attributes.
+			 */
 			$model_attributes = apply_filters( 'hivepress/v1/models/' . $model_name . '/attributes', $model_attributes );
 
 			// Set defaults.

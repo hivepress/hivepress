@@ -59,7 +59,15 @@ abstract class Menu {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
-		// Filter arguments.
+		/**
+		 * Filters menu arguments.
+		 *
+		 * @filter
+		 * @route /menus/{$name}
+		 * @description Filters menu arguments.
+		 * @param string $name Menu name.
+		 * @param array $args Menu arguments.
+		 */
 		$args = apply_filters( 'hivepress/v1/menus/' . $args['name'], $args );
 
 		// Set properties.
