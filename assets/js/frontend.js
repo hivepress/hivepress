@@ -247,7 +247,7 @@ var hivepress = {
 		$(window).on('load', function() {
 			hivepress.getComponent('sticky').each(function() {
 				var container = $(this),
-					spacing = 30 + $('#wpadminbar').height();
+					spacing = 32 + $('#wpadminbar').height();
 
 				container.wrapInner('<div />');
 
@@ -260,13 +260,13 @@ var hivepress = {
 
 		// Slider
 		hivepress.getComponent('slider').each(function() {
-			var container = $(this),
-				containerClass = container.attr('class').split(' ')[0],
-				images = container.find('img'),
-				slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
-				carousel = slider.clone();
+			if ($(this).find('img').length > 1) {
+				var container = $(this),
+					containerClass = container.attr('class').split(' ')[0],
+					images = container.find('img'),
+					slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
+					carousel = slider.clone();
 
-			if (images.length > 1) {
 				container.html('');
 
 				slider.appendTo(container);

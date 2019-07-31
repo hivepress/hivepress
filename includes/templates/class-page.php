@@ -2,6 +2,8 @@
 /**
  * Page template.
  *
+ * @template page
+ * @description Basic page template.
  * @package HivePress\Templates
  */
 

@@ -119,10 +119,9 @@ class Listings extends Block {
 					'order'    => [
 						'label'   => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
-						'default' => 'date',
 						'order'   => 40,
 						'options' => [
-							'date'   => esc_html__( 'Date', 'hivepress' ),
+							''       => esc_html__( 'Date', 'hivepress' ),
 							'title'  => esc_html__( 'Title', 'hivepress' ),
 							'random' => esc_html__( 'Random', 'hivepress' ),
 						],
@@ -156,7 +155,7 @@ class Listings extends Block {
 		// Get listing query.
 		$query = $wp_query;
 
-		if ( is_single() || hp\get_array_value( $query->query, 'post_type' ) !== 'hp_listing' ) {
+		if ( is_single() || ( hp\get_array_value( $query->query, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
 
 			// Set query arguments.
 			$query_args = [
@@ -192,7 +191,7 @@ class Listings extends Block {
 			if ( 'edit' === $this->template ) {
 				$output .= '<table class="hp-table">';
 			} else {
-				$output .= '<div class="hp-grid">';
+				$output .= '<div class="hp-grid hp-block">';
 				$output .= '<div class="hp-row">';
 			}
 

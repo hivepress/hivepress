@@ -2,6 +2,8 @@
 /**
  * Header block template.
  *
+ * @template header_block
+ * @description Site header block.
  * @package HivePress\Templates
  */
 

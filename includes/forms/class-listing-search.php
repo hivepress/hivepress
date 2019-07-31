@@ -67,10 +67,10 @@ class Listing_Search extends Form {
 
 				'fields' => [
 					's'         => [
-						'label'      => esc_html__( 'Keywords', 'hivepress' ),
-						'type'       => 'search',
-						'max_length' => 256,
-						'order'      => 10,
+						'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
+						'type'        => 'search',
+						'max_length'  => 256,
+						'order'       => 10,
 					],
 
 					'post_type' => [

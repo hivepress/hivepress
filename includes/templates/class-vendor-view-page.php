@@ -2,6 +2,8 @@
 /**
  * Vendor view page template.
  *
+ * @template vendor_view_page
+ * @description Vendor page in view context.
  * @package HivePress\Templates
  */
 
@@ -68,7 +70,7 @@ class Vendor_View_Page extends Page {
 										],
 
 										'blocks'     => [
-											'vendor_summary'         => [
+											'vendor_summary' => [
 												'type'   => 'container',
 												'order'  => 10,
 
@@ -123,6 +125,12 @@ class Vendor_View_Page extends Page {
 												],
 
 												'blocks' => [],
+											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'vendor_sidebar',
+												'order' => 30,
 											],
 										],
 									],

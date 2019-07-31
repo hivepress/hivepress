@@ -47,11 +47,29 @@ class User extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
+
+					/**
+					 * Users API route.
+					 *
+					 * @resource Users
+					 * @description The users API allows you to register, update and delete users.
+					 */
 					[
 						'path'      => '/users',
 						'rest'      => true,
 
 						'endpoints' => [
+
+							/**
+							 * Registers user.
+							 *
+							 * @endpoint Register user
+							 * @route /users
+							 * @method POST
+							 * @param string $username Username.
+							 * @param string $email Email address.
+							 * @param string $password Password.
+							 */
 							[
 								'methods' => 'POST',
 								'action'  => 'register_user',
@@ -75,12 +93,31 @@ class User extends Controller {
 								'action'  => 'reset_password',
 							],
 
+							/**
+							 * Updates user.
+							 *
+							 * @endpoint Update user
+							 * @route /users/<id>
+							 * @method POST
+							 * @param string $first_name First name.
+							 * @param string $last_name Last name.
+							 * @param string $description Description.
+							 * @param string $email Email address.
+							 * @param string $password Password.
+							 */
 							[
 								'path'    => '/(?P<user_id>\d+)',
 								'methods' => 'POST',
 								'action'  => 'update_user',
 							],
 
+							/**
+							 * Deletes user.
+							 *
+							 * @endpoint Delete user
+							 * @route /users/<id>
+							 * @method DELETE
+							 */
 							[
 								'path'    => '/(?P<user_id>\d+)',
 								'methods' => 'DELETE',

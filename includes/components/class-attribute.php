@@ -41,6 +41,9 @@ final class Attribute {
 		// Register attributes.
 		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
 
+		// Import attribute.
+		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
+
 		foreach ( $this->models as $model ) {
 
 			// Add field settings.
@@ -201,7 +204,14 @@ final class Attribute {
 
 		foreach ( $this->attributes as $model_name => $model_attributes ) {
 
-			// Filter attributes.
+			/**
+			 * Filters model attributes.
+			 *
+			 * @filter /models/{$name}/attributes
+			 * @description Filters model attributes.
+			 * @param string $name Model name.
+			 * @param array $atts Model attributes.
+			 */
 			$model_attributes = apply_filters( 'hivepress/v1/models/' . $model_name . '/attributes', $model_attributes );
 
 			// Set defaults.
@@ -223,6 +233,20 @@ final class Attribute {
 				$model_attributes
 			);
 		}
+	}
+
+	/**
+	 * Imports attribute.
+	 *
+	 * @param array $term Term object.
+	 * @return array
+	 */
+	public function import_attribute( $term ) {
+		if ( strpos( $term['taxonomy'], 'hp_' ) === 0 && ! taxonomy_exists( $term['taxonomy'] ) ) {
+			register_taxonomy( $term['taxonomy'], hp\prefix( $this->models ) );
+		}
+
+		return $term;
 	}
 
 	/**
@@ -479,9 +503,9 @@ final class Attribute {
 
 		// Add defaults.
 		if ( is_search() ) {
-			$form['fields']['sort']['options']['relevance'] = esc_html__( 'Relevance', 'hivepress' );
+			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
 		} else {
-			$form['fields']['sort']['options']['date'] = esc_html__( 'Date', 'hivepress' );
+			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
 		}
 
 		// Get model.
@@ -586,7 +610,7 @@ final class Attribute {
 		foreach ( $this->models as $current_model ) {
 			$page_id = absint( get_option( 'hp_page_' . $current_model . 's' ) );
 
-			if ( ( 0 !== $page_id && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $current_model ) ) || is_tax( hp\prefix( $current_model . '_category' ) ) ) {
+			if ( ( 0 !== $page_id && get_queried_object_id() !== 0 && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $current_model ) ) || is_tax( hp\prefix( $current_model . '_category' ) ) ) {
 				$model = $current_model;
 
 				break;
@@ -644,93 +668,95 @@ final class Attribute {
 			}
 		}
 
+		// Get meta and taxonomy queries.
+		$meta_query = (array) $query->get( 'meta_query' );
+		$tax_query  = (array) $query->get( 'tax_query' );
+
+		// Set category.
+		$category_id = $this->get_category_id( $model );
+
+		if ( 0 !== $category_id ) {
+			$tax_query[] = [
+				[
+					'taxonomy' => hp\prefix( $model . '_category' ),
+					'terms'    => $category_id,
+				],
+			];
+		}
+
 		// Filter results.
 		if ( $query->is_search ) {
 
-			// Get meta and taxonomy queries.
-			$meta_query = (array) $query->get( 'meta_query' );
-			$tax_query  = (array) $query->get( 'tax_query' );
-
-			// Set category.
-			$category_id = $this->get_category_id( $model );
-
-			if ( 0 !== $category_id ) {
-				$tax_query[] = [
-					[
-						'taxonomy' => hp\prefix( $model . '_category' ),
-						'terms'    => $category_id,
-					],
-				];
-			}
-
 			// Set attributes.
 			foreach ( $attributes as $attribute_name => $attribute ) {
-				$field_args = $attribute['search_field'];
+				if ( $attribute['searchable'] || $attribute['filterable'] ) {
+					$field_args = $attribute['search_field'];
 
-				// Get field class.
-				$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Get field class.
+					$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-				if ( class_exists( $field_class ) ) {
+					if ( class_exists( $field_class ) ) {
 
-					// Create field.
-					$field = new $field_class( $field_args );
+						// Create field.
+						$field = new $field_class( $field_args );
 
-					$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
+						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-					// Get attribute value.
-					$attribute_value = $field->get_value();
+						// Get attribute value.
+						$attribute_value = $field->get_value();
 
-					if ( $field->validate() && ! is_null( $attribute_value ) ) {
-						if ( isset( $field_args['options'] ) ) {
+						if ( $field->validate() && ! is_null( $attribute_value ) ) {
+							if ( isset( $field_args['options'] ) ) {
 
-							// Set taxonomy filter.
-							$tax_filter = [
-								'taxonomy' => hp\prefix( $model . '_' . $attribute_name ),
-								'terms'    => $attribute_value,
-							];
+								// Set taxonomy filter.
+								$tax_filter = [
+									'taxonomy' => hp\prefix( $model . '_' . $attribute_name ),
+									'terms'    => $attribute_value,
+								];
 
-							if ( hp\get_array_value( $field_args, 'multiple' ) ) {
-								$tax_filter['operator'] = 'AND';
-							}
-
-							$tax_query[] = $tax_filter;
-						} else {
-
-							// Set meta filter.
-							$meta_filter = [
-								'key'   => hp\prefix( $attribute_name ),
-								'value' => $attribute_value,
-							];
-
-							if ( is_array( $attribute_value ) ) {
-								$meta_filter['type']    = 'NUMERIC';
-								$meta_filter['compare'] = 'BETWEEN';
-
-								$min_value = reset( $attribute_value );
-								$max_value = end( $attribute_value );
-
-								if ( is_null( $min_value ) ) {
-									$meta_filter['compare'] = '<=';
-									$meta_filter['value']   = $max_value;
-								} elseif ( is_null( $max_value ) ) {
-									$meta_filter['compare'] = '>=';
-									$meta_filter['value']   = $min_value;
+								if ( hp\get_array_value( $field_args, 'multiple' ) ) {
+									$tax_filter['operator'] = 'AND';
 								}
-							} elseif ( is_float( $attribute_value ) ) {
-								$meta_filter['type'] = 'NUMERIC';
-							} else {
-								$meta_filter['compare'] = 'LIKE';
-							}
 
-							$meta_query[] = $meta_filter;
+								$tax_query[] = $tax_filter;
+							} else {
+
+								// Set meta filter.
+								$meta_filter = [
+									'key'   => hp\prefix( $attribute_name ),
+									'value' => $attribute_value,
+								];
+
+								if ( is_array( $attribute_value ) ) {
+									$meta_filter['type']    = 'NUMERIC';
+									$meta_filter['compare'] = 'BETWEEN';
+
+									$min_value = reset( $attribute_value );
+									$max_value = end( $attribute_value );
+
+									if ( is_null( $min_value ) ) {
+										$meta_filter['compare'] = '<=';
+										$meta_filter['value']   = $max_value;
+									} elseif ( is_null( $max_value ) ) {
+										$meta_filter['compare'] = '>=';
+										$meta_filter['value']   = $min_value;
+									}
+								} elseif ( is_float( $attribute_value ) ) {
+									$meta_filter['type'] = 'NUMERIC';
+								} else {
+									$meta_filter['compare'] = 'LIKE';
+								}
+
+								$meta_query[] = $meta_filter;
+							}
 						}
 					}
 				}
 			}
-
-			// Set meta and taxonomy queries.
-			$query->set( 'meta_query', $meta_query );
-			$query->set( 'tax_query', $tax_query );
 		}
+
+		// Set meta and taxonomy queries.
+		$query->set( 'meta_query', $meta_query );
+		$query->set( 'tax_query', $tax_query );
 	}
 }

@@ -59,7 +59,14 @@ abstract class Menu {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
-		// Filter arguments.
+		/**
+		 * Filters menu arguments.
+		 *
+		 * @filter /menus/{$name}
+		 * @description Filters menu arguments.
+		 * @param string $name Menu name.
+		 * @param array $args Menu arguments.
+		 */
 		$args = apply_filters( 'hivepress/v1/menus/' . $args['name'], $args );
 
 		// Set properties.
@@ -170,7 +177,7 @@ abstract class Menu {
 			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
 
 			foreach ( static::$items as $item_name => $item ) {
-				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $item, 'current', false ) ? 'hp-menu__item--current' : '' ) . '">';
+				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $item, 'current', false ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
 				$output .= '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
 				$output .= '</li>';
 			}

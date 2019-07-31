@@ -2,6 +2,8 @@
 /**
  * Vendor view block template.
  *
+ * @template vendor_view_block
+ * @description Vendor block in view context.
  * @package HivePress\Templates
  */
 
@@ -100,6 +102,29 @@ class Vendor_View_Block extends Template {
 												'order'    => 10,
 											],
 										],
+									],
+								],
+							],
+
+							'vendor_footer'  => [
+								'type'       => 'container',
+								'tag'        => 'footer',
+								'order'      => 30,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__footer' ],
+								],
+
+								'blocks'     => [
+									'vendor_actions_primary'    => [
+										'type'       => 'container',
+										'order'      => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
+										],
+
+										'blocks'     => [],
 									],
 								],
 							],

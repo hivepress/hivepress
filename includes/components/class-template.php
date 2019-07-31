@@ -33,6 +33,7 @@ final class Template {
 			add_filter( 'twentynineteen_can_show_post_thumbnail', [ $this, 'remove_theme_header' ] );
 
 			// Render header.
+			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_header' ] );
 			add_action( 'storefront_header', [ $this, 'render_header' ], 31 );
 
 			// Render footer.

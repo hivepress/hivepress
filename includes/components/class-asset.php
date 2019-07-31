@@ -110,7 +110,7 @@ final class Asset {
 		$atts = [ 'async', 'defer' ];
 
 		foreach ( $atts as $att ) {
-			if ( wp_scripts()->get_data( $handle, $att ) ) {
+			if ( wp_scripts()->get_data( $handle, $att ) && strpos( $tag, ' ' . $att . '>' ) === false && strpos( $tag, ' ' . $att . ' ' ) === false ) {
 				$tag = str_replace( '></', ' ' . $att . '></', $tag );
 			}
 		}

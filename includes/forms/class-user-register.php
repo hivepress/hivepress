@@ -115,7 +115,7 @@ class User_Register extends Model_Form {
 				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
 				'type'     => 'checkbox',
 				'required' => true,
-				'order'    => 100,
+				'order'    => 1000,
 			];
 		}
 

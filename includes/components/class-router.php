@@ -154,7 +154,15 @@ final class Router {
 			foreach ( $controller::get_routes() as $route_name => $route ) {
 				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
 
-					// Set the current route.
+					/**
+					 * Filters controller route arguments.
+					 *
+					 * @filter /controllers/{$controller_name}/routes/{$route_name}
+					 * @description Filters controller route arguments.
+					 * @param string $controller_name Controller name.
+					 * @param string $route_name Route name.
+					 * @param array $args Controller route arguments.
+					 */
 					$this->route = apply_filters( 'hivepress/v1/controllers/' . $controller_name . '/routes/' . $route_name, $route );
 
 					// Set query variables.

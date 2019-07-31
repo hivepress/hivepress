@@ -127,7 +127,13 @@ abstract class Field {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Filter arguments.
+		/**
+		 * Filters field arguments.
+		 *
+		 * @filter /fields/field/args
+		 * @description Filters field arguments.
+		 * @param array $args Field arguments.
+		 */
 		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::$type ] ) );
 
 		// Set arguments.

@@ -38,7 +38,7 @@ final class Core {
 	 *
 	 * @var array
 	 */
-	private $config = [];
+	private $configs = [];
 
 	/**
 	 * Array of HivePress objects.
@@ -128,7 +128,12 @@ final class Core {
 	public function install() {
 		if ( get_option( 'hp_core_activated' ) || count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
 
-			// Fires on HivePress activation.
+			/**
+			 * Fires on HivePress activation.
+			 *
+			 * @action /activate
+			 * @description Fires on HivePress activation.
+			 */
 			do_action( 'hivepress/v1/activate' );
 
 			// Delete activation status.
@@ -148,7 +153,13 @@ final class Core {
 	 */
 	public function setup() {
 
-		// Set HivePress directories.
+		/**
+		 * Filters HivePress directories.
+		 *
+		 * @filter /dirs
+		 * @description Filters HivePress directories.
+		 * @param array $dirs Directory paths. If you add a new path HivePress will treat it like an extension.
+		 */
 		$this->dirs = apply_filters( 'hivepress/v1/dirs', [ dirname( HP_CORE_FILE ) ] );
 
 		// Define constants.
@@ -274,7 +285,7 @@ final class Core {
 	public function get_config( $name ) {
 
 		// Get existing configuration.
-		$config = hp\get_array_value( $this->config, $name );
+		$config = hp\get_array_value( $this->configs, $name );
 
 		// Get new configuration.
 		if ( is_null( $config ) ) {
@@ -286,11 +297,18 @@ final class Core {
 				}
 			}
 
-			// Filter configuration.
+			/**
+			 * Filters HivePress configuration.
+			 *
+			 * @filter /{$config}
+			 * @description Filters HivePress configuration.
+			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies".
+			 * @param array $args Configuration arguments.
+			 */
 			$config = apply_filters( 'hivepress/v1/' . $name, $config );
 
 			// Set configuration.
-			$this->config[ $name ] = $config;
+			$this->configs[ $name ] = $config;
 		}
 
 		return $config;

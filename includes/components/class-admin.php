@@ -556,7 +556,14 @@ final class Admin {
 		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 			if ( hp\prefix( $meta_box['screen'] ) === $post_type ) {
 
-				// Filter arguments.
+				/**
+				 * Filters meta box arguments.
+				 *
+				 * @filter /meta_boxes/{$name}
+				 * @description Filters meta box arguments.
+				 * @param string $name Meta box name.
+				 * @param array $args Meta box arguments.
+				 */
 				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 				// Add meta box.

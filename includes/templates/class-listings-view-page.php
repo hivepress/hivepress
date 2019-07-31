@@ -2,6 +2,8 @@
 /**
  * Listings view page template.
  *
+ * @template listings_view_page
+ * @description Listings page in view context.
  * @package HivePress\Templates
  */
 
@@ -89,6 +91,12 @@ class Listings_View_Page extends Page {
 												'attributes' => [
 													'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
 												],
+											],
+
+											'sidebar_widgets'         => [
+												'type'  => 'widgets',
+												'area'  => 'listings_sidebar',
+												'order' => 20,
 											],
 										],
 									],

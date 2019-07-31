@@ -130,7 +130,14 @@ abstract class Form {
 		// Set name.
 		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 
-		// Filter arguments.
+		/**
+		 * Filters form arguments.
+		 *
+		 * @filter /forms/{$name}
+		 * @description Filters form arguments.
+		 * @param string $name Form name or "form" to filter all forms.
+		 * @param array $args Form arguments.
+		 */
 		$args = apply_filters( 'hivepress/v1/forms/form', $args );
 		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
 
@@ -217,7 +224,7 @@ abstract class Form {
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
 						'type'       => 'button',
 						'attributes' => [
-							'class' => [ 'hp-form__button', 'alt' ],
+							'class' => [ 'hp-form__button', 'button', 'is-primary', 'alt' ],
 						],
 					],
 					$button
@@ -292,7 +299,7 @@ abstract class Form {
 
 		// Set action.
 		if ( strpos( static::$action, get_rest_url() ) === 0 ) {
-			$attributes['action']      = '';
+			$attributes['action']      = '#';
 			$attributes['data-action'] = static::$action;
 		} else {
 			$attributes['action'] = static::$action;
@@ -383,7 +390,7 @@ abstract class Form {
 			}
 
 			if ( isset( static::$description ) ) {
-				$output .= '<div class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</div>';
+				$output .= '<p class="hp-form__description">' . hp\sanitize_html( static::$description ) . '</p>';
 			}
 
 			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
@@ -424,7 +431,7 @@ abstract class Form {
 
 		// Render footer.
 		if ( isset( static::$button ) || isset( $this->footer ) ) {
-			$output .= '<footer class="hp-form__footer">';
+			$output .= '<div class="hp-form__footer">';
 
 			if ( isset( static::$button ) ) {
 				$output .= static::$button->render();
@@ -434,7 +441,7 @@ abstract class Form {
 				$output .= $this->footer;
 			}
 
-			$output .= '</footer>';
+			$output .= '</div>';
 		}
 
 		$output .= '</form>';

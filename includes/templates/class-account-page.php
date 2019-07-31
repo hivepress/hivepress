@@ -2,6 +2,8 @@
 /**
  * Account page template.
  *
+ * @template account_page
+ * @description User account page.
  * @package HivePress\Templates
  */
 
@@ -72,6 +74,12 @@ class Account_Page extends Page {
 												'attributes' => [
 													'class' => [ 'hp-widget', 'widget', 'widget_nav_menu' ],
 												],
+											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'account_sidebar',
+												'order' => 20,
 											],
 										],
 									],

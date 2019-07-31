@@ -74,7 +74,7 @@ class Listing_Search_Form extends Form {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-form--wide' ],
+				'class' => [ 'hp-form--wide', 'hp-block' ],
 			]
 		);
 

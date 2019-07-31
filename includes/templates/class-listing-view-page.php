@@ -2,6 +2,8 @@
 /**
  * Listing view page template.
  *
+ * @template listing_view_page
+ * @description Listing page in view context.
  * @package HivePress\Templates
  */
 
@@ -175,6 +177,12 @@ class Listing_View_Page extends Page {
 												'attributes' => [
 													'class' => [ 'hp-widget', 'widget' ],
 												],
+											],
+
+											'sidebar_widgets' => [
+												'type'  => 'widgets',
+												'area'  => 'listing_sidebar',
+												'order' => 40,
 											],
 										],
 									],

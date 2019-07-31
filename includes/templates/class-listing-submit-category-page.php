@@ -2,6 +2,8 @@
 /**
  * Listing submit category page template.
  *
+ * @template listing_submit_category_page
+ * @description Listing submission page (category).
  * @package HivePress\Templates
  */
 
