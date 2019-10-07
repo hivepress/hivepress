@@ -118,9 +118,10 @@ final class Editor {
 
 			$block_type  = substr( $name, strlen( 'render' ) + 1 );
 			$block_class = '\HivePress\Blocks\\' . $block_type;
+			$block_args  = reset( $args );
 
 			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( reset( $args ) ) )->render();
+				$output .= ( new $block_class( (array) $block_args ) )->render();
 			}
 
 			return $output;
