@@ -117,6 +117,17 @@ return [
 						'post_type'   => 'page',
 						'order'       => 10,
 					],
+
+					'registration_methods'         => [
+						'label'   => esc_html__( 'Registration Methods', 'hivepress' ),
+						'type'    => 'checkboxes',
+						'order'   => 20,
+
+						'options' => [
+							'facebook' => 'Facebook',
+							'google'   => 'Google',
+						],
+					],
 				],
 			],
 
@@ -127,9 +138,9 @@ return [
 				'fields' => [
 					'email_user_register'         => [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %user_name%, %user_password%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 						'required'    => true,
 						'order'       => 10,
 					],
@@ -176,6 +187,27 @@ return [
 						'type'    => 'checkboxes',
 						'options' => 'forms',
 						'order'   => 30,
+					],
+				],
+			],
+
+			'facebook'  => [
+				'title'  => 'Facebook',
+				'order'  => 20,
+
+				'fields' => [
+					'facebook_app_id'     => [
+						'label'      => esc_html__( 'App ID', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'order'      => 10,
+					],
+
+					'facebook_app_secret' => [
+						'label'      => esc_html__( 'App Secret', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'order'      => 20,
 					],
 				],
 			],

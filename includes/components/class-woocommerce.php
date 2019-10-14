@@ -24,7 +24,7 @@ final class WooCommerce {
 	 */
 	public function __construct() {
 
-		// Check WooCommerce.
+		// Check WooCommerce status.
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
