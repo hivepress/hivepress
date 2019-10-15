@@ -131,7 +131,7 @@ final class Router {
 	 */
 	public function set_page_title( $parts ) {
 		if ( isset( $this->route['title'] ) ) {
-			if ( count( $parts > 1 ) ) {
+			if ( count( $parts ) > 1 ) {
 				array_shift( $parts );
 			}
 
