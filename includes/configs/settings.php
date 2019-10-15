@@ -104,8 +104,8 @@ return [
 		'order'    => 20,
 
 		'sections' => [
-			'registration' => [
-				'title'  => esc_html__( 'Registration', 'hivepress' ),
+			'authentication' => [
+				'title'  => esc_html__( 'Authentication', 'hivepress' ),
 				'order'  => 10,
 
 				'fields' => [
@@ -117,21 +117,10 @@ return [
 						'post_type'   => 'page',
 						'order'       => 10,
 					],
-
-					'registration_methods'         => [
-						'label'   => esc_html__( 'Registration Methods', 'hivepress' ),
-						'type'    => 'checkboxes',
-						'order'   => 20,
-
-						'options' => [
-							'facebook' => 'Facebook',
-							'google'   => 'Google',
-						],
-					],
 				],
 			],
 
-			'emails'       => [
+			'emails'         => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
 				'order'  => 20,
 
@@ -187,27 +176,6 @@ return [
 						'type'    => 'checkboxes',
 						'options' => 'forms',
 						'order'   => 30,
-					],
-				],
-			],
-
-			'facebook'  => [
-				'title'  => 'Facebook',
-				'order'  => 20,
-
-				'fields' => [
-					'facebook_app_id'     => [
-						'label'      => esc_html__( 'App ID', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 256,
-						'order'      => 10,
-					],
-
-					'facebook_app_secret' => [
-						'label'      => esc_html__( 'App Secret', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 256,
-						'order'      => 20,
 					],
 				],
 			],
