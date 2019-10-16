@@ -104,8 +104,8 @@ return [
 		'order'    => 20,
 
 		'sections' => [
-			'authentication' => [
-				'title'  => esc_html__( 'Authentication', 'hivepress' ),
+			'registration' => [
+				'title'  => esc_html__( 'Registration', 'hivepress' ),
 				'order'  => 10,
 
 				'fields' => [
@@ -120,7 +120,7 @@ return [
 				],
 			],
 
-			'emails'         => [
+			'emails'       => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
 				'order'  => 20,
 
