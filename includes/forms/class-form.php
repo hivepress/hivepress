@@ -160,8 +160,9 @@ abstract class Form {
 		 * @filter /forms/form/args
 		 * @description Filters form arguments.
 		 * @param array $args Form arguments.
+		 * @param string $name Form name.
 		 */
-		$args = apply_filters( 'hivepress/v1/forms/form/args', array_merge( $args, [ 'name' => static::$name ] ) );
+		$args = apply_filters( 'hivepress/v1/forms/form/args', $args, static::$name );
 
 		unset( $args['name'] );
 
