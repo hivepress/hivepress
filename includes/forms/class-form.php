@@ -154,6 +154,17 @@ abstract class Form {
 	 */
 	public function __construct( $args = [] ) {
 
+		/**
+		 * Filters form arguments.
+		 *
+		 * @filter /forms/form/args
+		 * @description Filters form arguments.
+		 * @param array $args Form arguments.
+		 */
+		$args = apply_filters( 'hivepress/v1/forms/form/args', array_merge( $args, [ 'name' => static::$name ] ) );
+
+		unset( $args['name'] );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
