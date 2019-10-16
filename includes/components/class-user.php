@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -24,6 +25,9 @@ final class User {
 	 */
 	public function __construct() {
 
+		// Register user.
+		add_action( 'hivepress/v1/users/register', [ $this, 'register_user' ], 10, 2 );
+
 		// Update user.
 		add_action( 'added_user_meta', [ $this, 'update_user' ], 10, 4 );
 		add_action( 'updated_user_meta', [ $this, 'update_user' ], 10, 4 );
@@ -36,6 +40,31 @@ final class User {
 
 		// Import users.
 		add_action( 'import_start', [ $this, 'import_users' ] );
+	}
+
+	/**
+	 * Registers user.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param object $user User instance.
+	 */
+	public function register_user( $user_id, $user ) {
+
+		// Hide admin bar.
+		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
+
+		// Send emails.
+		wp_new_user_notification( $user_id );
+
+		( new Emails\User_Register(
+			[
+				'recipient' => $user->get_email(),
+				'tokens'    => [
+					'user_name'     => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
+					'user_password' => $user->get_password(),
+				],
+			]
+		) )->send();
 	}
 
 	/**
