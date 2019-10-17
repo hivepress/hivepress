@@ -78,7 +78,7 @@ final class Editor {
 			foreach ( $blocks as $block_type => $block ) {
 
 				// Register block script.
-				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
+				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
 				wp_localize_script( $block['script'], 'hpBlock', $block );
 
 				// Register block type.
