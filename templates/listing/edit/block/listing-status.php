@@ -6,6 +6,6 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( $listing->get_status() === 'pending' ) : ?>
 		<span><?php esc_html_e( 'Pending', 'hivepress' ); ?></span>
 	<?php elseif ( $listing->get_status() === 'draft' ) : ?>
-		<span><?php esc_html_e( 'Rejected', 'hivepress' ); ?></span>
+		<span><?php esc_html_e( 'Hidden', 'hivepress' ); ?></span>
 	<?php endif; ?>
 </td>
