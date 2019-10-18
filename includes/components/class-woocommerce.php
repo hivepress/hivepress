@@ -31,9 +31,30 @@ final class WooCommerce {
 
 		if ( ! is_admin() ) {
 
+			// Set page template.
+			add_filter( 'wc_get_template', [ $this, 'set_page_template' ], 10, 2 );
+
 			// Add menu items.
 			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+
+			// Alter templates.
+			add_filter( 'hivepress/v1/templates/account_page', [ $this, 'alter_account_page' ] );
 		}
+	}
+
+	/**
+	 * Sets page template.
+	 *
+	 * @param string $template_path Template path.
+	 * @param string $template Template name.
+	 * @return string
+	 */
+	public function set_page_template( $template_path, $template ) {
+		if ( 'myaccount/my-account.php' === $template && ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) ) {
+			$template_path = HP_CORE_DIR . '/templates/woocommerce/myaccount/my-account.php';
+		}
+
+		return $template_path;
 	}
 
 	/**
@@ -45,7 +66,7 @@ final class WooCommerce {
 	public function add_menu_items( $menu ) {
 
 		// Get page ID.
-		$page_id = wc_get_page_id( 'myaccount' );
+		$page_id = wc_get_page_id( 'myaccount/orders' );
 
 		// Add menu item.
 		if ( ! empty( $page_id ) ) {
@@ -57,5 +78,36 @@ final class WooCommerce {
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Alters account page.
+	 *
+	 * @param array $template Template arguments.
+	 * @return array
+	 */
+	public function alter_account_page( $template ) {
+		if ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) {
+			$template = hp\merge_trees(
+				$template,
+				[
+					'blocks' => [
+						'page_content' => [
+							'blocks' => [
+								'woocommerce_content' => [
+									'type'     => 'callback',
+									'callback' => 'do_action',
+									'params'   => [ 'woocommerce_account_content' ],
+									'order'    => 10,
+								],
+							],
+						],
+					],
+				],
+				'blocks'
+			);
+		}
+
+		return $template;
 	}
 }
