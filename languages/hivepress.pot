@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 19:10+0000\n"
+"POT-Creation-Date: 2019-10-18 19:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -435,13 +435,13 @@ msgstr ""
 #: includes/configs/settings.php:130
 msgid ""
 "This email is sent to users after registration, the following tokens are "
-"available: %1$user_name%, %2$user_password%."
+"available: %user_name%, %user_password%."
 msgstr ""
 
-#: includes/configs/settings.php:132
+#: includes/configs/settings.php:132 includes/emails/class-user-register.php:52
 msgid ""
-"Hi, %1$user_name%! Thank you for registering, here's your password: "
-"%2$user_password%"
+"Hi, %user_name%! Thank you for registering, here's your password: "
+"%user_password%"
 msgstr ""
 
 #: includes/configs/settings.php:138
@@ -608,12 +608,6 @@ msgstr ""
 
 #: includes/emails/class-user-register.php:51
 msgid "Registration Complete"
-msgstr ""
-
-#: includes/emails/class-user-register.php:52
-msgid ""
-"Hi, %user_name%! Thank you for registering, here's your password: "
-"%user_password%"
 msgstr ""
 
 #: includes/fields/class-attachment-select.php:43
