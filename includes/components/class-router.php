@@ -286,6 +286,6 @@ final class Router {
 	 * @return mixed
 	 */
 	public function get_title() {
-		return hp\get_array_value( $this->route, 'title' );
+		return hp\get_array_value( $this->route, 'title', get_the_title() );
 	}
 }
