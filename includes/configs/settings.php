@@ -74,7 +74,7 @@ return [
 
 			'emails'     => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'order'  => 30,
+				'order'  => 100,
 
 				'fields' => [
 					'email_listing_approve' => [
@@ -122,7 +122,7 @@ return [
 
 			'emails'       => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'order'  => 20,
+				'order'  => 100,
 
 				'fields' => [
 					'email_user_register'         => [

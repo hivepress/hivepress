@@ -228,21 +228,15 @@ class User extends Controller {
 			return hp\rest_error( 400, esc_html__( 'Error registering user', 'hivepress' ) );
 		}
 
-		// Hide admin bar.
-		update_user_meta( $user->get_id(), 'show_admin_bar_front', 'false' );
-
-		// Send emails.
-		wp_new_user_notification( $user->get_id() );
-
-		( new Emails\User_Register(
-			[
-				'recipient' => $user->get_email(),
-				'tokens'    => [
-					'user_name'     => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
-					'user_password' => $user->get_password(),
-				],
-			]
-		) )->send();
+		/**
+		 * Fires on user registration.
+		 *
+		 * @action /users/register
+		 * @description Fires on user registration.
+		 * @param int $user_id User ID.
+		 * @param object User instance.
+		 */
+		do_action( 'hivepress/v1/users/register', $user->get_id(), $user );
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {

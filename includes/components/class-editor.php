@@ -78,7 +78,7 @@ final class Editor {
 			foreach ( $blocks as $block_type => $block ) {
 
 				// Register block script.
-				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
+				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
 				wp_localize_script( $block['script'], 'hpBlock', $block );
 
 				// Register block type.
@@ -118,9 +118,10 @@ final class Editor {
 
 			$block_type  = substr( $name, strlen( 'render' ) + 1 );
 			$block_class = '\HivePress\Blocks\\' . $block_type;
+			$block_args  = reset( $args );
 
 			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( reset( $args ) ) )->render();
+				$output .= ( new $block_class( (array) $block_args ) )->render();
 			}
 
 			return $output;

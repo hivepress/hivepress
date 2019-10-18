@@ -131,7 +131,7 @@ final class Router {
 	 */
 	public function set_page_title( $parts ) {
 		if ( isset( $this->route['title'] ) ) {
-			if ( count( $parts > 1 ) ) {
+			if ( count( $parts ) > 1 ) {
 				array_shift( $parts );
 			}
 
@@ -286,6 +286,6 @@ final class Router {
 	 * @return mixed
 	 */
 	public function get_title() {
-		return hp\get_array_value( $this->route, 'title' );
+		return hp\get_array_value( $this->route, 'title', get_the_title() );
 	}
 }

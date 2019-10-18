@@ -45,6 +45,7 @@ class Block extends Controller {
 					[
 						'path'      => '/templates/(?P<template_name>[a-z\-]+)/blocks',
 						'rest'      => true,
+
 						'endpoints' => [
 							[
 								'path'    => '/(?P<block_name>[a-z\-]+)',

@@ -46,6 +46,7 @@ return [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
 		'deps'   => [ 'jquery', 'serializejson', 'fileupload', 'jquery-ui-sortable', 'fancybox', 'slick', 'sticky-sidebar' ],
+
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
 			'apiNonce' => wp_create_nonce( 'wp_rest' ),
@@ -57,5 +58,10 @@ return [
 		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
 		'deps'   => [ 'jquery' ],
 		'admin'  => true,
+
+		'data'   => [
+			'apiURL'   => hp\get_rest_url(),
+			'apiNonce' => wp_create_nonce( 'wp_rest' ),
+		],
 	],
 ];

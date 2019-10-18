@@ -154,6 +154,18 @@ abstract class Form {
 	 */
 	public function __construct( $args = [] ) {
 
+		/**
+		 * Filters form arguments.
+		 *
+		 * @filter /forms/form/args
+		 * @description Filters form arguments.
+		 * @param array $args Form arguments.
+		 * @param string $name Form name.
+		 */
+		$args = apply_filters( 'hivepress/v1/forms/form/args', $args, static::$name );
+
+		unset( $args['name'] );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
@@ -356,7 +368,7 @@ abstract class Form {
 				)
 			);
 
-			if ( is_wp_error( $response ) || ! hp\get_array_value( json_decode( $response['body'], true ), 'success', false ) ) {
+			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
 				$this->add_errors( [ esc_html__( 'Captcha is invalid', 'hivepress' ) ] );
 			}
 		}

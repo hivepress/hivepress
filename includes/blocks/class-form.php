@@ -48,6 +48,13 @@ class Form extends Block {
 	protected $attributes = [];
 
 	/**
+	 * Form header.
+	 *
+	 * @var array
+	 */
+	protected $header = [];
+
+	/**
 	 * Form footer.
 	 *
 	 * @var array
@@ -75,6 +82,17 @@ class Form extends Block {
 
 			// Set attributes.
 			$form_args['attributes'] = $this->attributes;
+
+			// Render header.
+			if ( ! empty( $this->header ) ) {
+				$form_args['header'] = ( new Container(
+					[
+						'context' => $this->context,
+						'tag'     => false,
+						'blocks'  => $this->header,
+					]
+				) )->render();
+			}
 
 			// Render footer.
 			if ( ! empty( $this->footer ) ) {

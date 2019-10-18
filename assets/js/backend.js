@@ -20,6 +20,24 @@ var hivepress = {
 
 	$(document).ready(function() {
 
+		// Notice
+		hivepress.getComponent('notice').each(function() {
+			var notice = $(this);
+
+			notice.find('button').on('click', function() {
+				$.ajax({
+					url: hpCoreBackendData.apiURL + '/admin/notices/' + notice.data('name'),
+					method: 'POST',
+					data: {
+						'dismissed': true,
+					},
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hpCoreBackendData.apiNonce);
+					},
+				});
+			});
+		});
+
 		// File select
 		hivepress.getComponent('file-select').on('click', function(e) {
 			var button = $(this),
