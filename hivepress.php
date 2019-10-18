@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: HivePress
- * Description: Multipurpose directory & listing plugin.
- * Version: 1.1.2
+ * Description: Multipurpose directory, listing & classifieds plugin.
+ * Version: 1.1.3
  * Author: HivePress
  * Author URI: https://hivepress.io/
  * Text Domain: hivepress
