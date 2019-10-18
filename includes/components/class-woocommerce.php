@@ -64,11 +64,18 @@ final class WooCommerce {
 	 * @return array
 	 */
 	public function add_menu_items( $menu ) {
-		$menu['items']['woocommerce_orders'] = [
-			'label' => esc_html__( 'My Orders', 'hivepress' ),
-			'url'   => wc_get_endpoint_url( 'orders' ),
-			'order' => 40,
-		];
+
+		// Get page ID.
+		$page_id = wc_get_page_id( 'myaccount/orders' );
+
+		// Add menu item.
+		if ( ! empty( $page_id ) ) {
+			$menu['items']['woocommerce_orders'] = [
+				'label' => esc_html__( 'My Orders', 'hivepress' ),
+				'url'   => get_permalink( $page_id ),
+				'order' => 40,
+			];
+		}
 
 		return $menu;
 	}
