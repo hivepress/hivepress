@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-31 12:05+0000\n"
+"POT-Creation-Date: 2019-10-18 19:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -110,6 +110,13 @@ msgstr ""
 msgid "Installed"
 msgstr ""
 
+#: includes/components/class-admin.php:863
+#, php-format
+msgid ""
+"The current theme doesn't declare HivePress support, if you encounter layout "
+"or styling issues please consider using the official %s theme."
+msgstr ""
+
 #: includes/components/class-attribute.php:478
 msgid "All Categories"
 msgstr ""
@@ -121,6 +128,10 @@ msgstr ""
 #: includes/components/class-vendor.php:144
 #, php-format
 msgid "Listings by %s"
+msgstr ""
+
+#: includes/components/class-woocommerce.php:69
+msgid "My Orders"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:15 includes/configs/post-types.php:42
@@ -424,13 +435,13 @@ msgstr ""
 #: includes/configs/settings.php:130
 msgid ""
 "This email is sent to users after registration, the following tokens are "
-"available: %user_name%, %user_password%."
+"available: %1$user_name%, %2$user_password%."
 msgstr ""
 
-#: includes/configs/settings.php:132 includes/emails/class-user-register.php:52
+#: includes/configs/settings.php:132
 msgid ""
-"Hi, %user_name%! Thank you for registering, here's your password: "
-"%user_password%"
+"Hi, %1$user_name%! Thank you for registering, here's your password: "
+"%2$user_password%"
 msgstr ""
 
 #: includes/configs/settings.php:138
@@ -477,7 +488,7 @@ msgstr ""
 msgid "Only %s files are allowed"
 msgstr ""
 
-#: includes/controllers/class-block.php:100
+#: includes/controllers/class-block.php:101
 msgid "Error rendering block"
 msgstr ""
 
@@ -542,40 +553,40 @@ msgstr ""
 msgid "Error registering user"
 msgstr ""
 
-#: includes/controllers/class-user.php:301
-#: includes/controllers/class-user.php:306
+#: includes/controllers/class-user.php:295
+#: includes/controllers/class-user.php:300
 msgid "Username or password is incorrect"
 msgstr ""
 
-#: includes/controllers/class-user.php:364
+#: includes/controllers/class-user.php:358
 msgid "User with this email doesn't exist"
 msgstr ""
 
-#: includes/controllers/class-user.php:366
+#: includes/controllers/class-user.php:360
 msgid "User with this username doesn't exist"
 msgstr ""
 
-#: includes/controllers/class-user.php:430
+#: includes/controllers/class-user.php:424
 msgid "Password reset key is expired or invalid"
 msgstr ""
 
-#: includes/controllers/class-user.php:488
+#: includes/controllers/class-user.php:482
 msgid "Current password is required"
 msgstr ""
 
-#: includes/controllers/class-user.php:492
+#: includes/controllers/class-user.php:486
 msgid "Current password is incorrect"
 msgstr ""
 
-#: includes/controllers/class-user.php:504
+#: includes/controllers/class-user.php:498
 msgid "Error updating user"
 msgstr ""
 
-#: includes/controllers/class-user.php:553
+#: includes/controllers/class-user.php:547
 msgid "Password is incorrect"
 msgstr ""
 
-#: includes/controllers/class-user.php:559
+#: includes/controllers/class-user.php:553
 msgid "Error deleting user"
 msgstr ""
 
@@ -597,6 +608,12 @@ msgstr ""
 
 #: includes/emails/class-user-register.php:51
 msgid "Registration Complete"
+msgstr ""
+
+#: includes/emails/class-user-register.php:52
+msgid ""
+"Hi, %user_name%! Thank you for registering, here's your password: "
+"%user_password%"
 msgstr ""
 
 #: includes/fields/class-attachment-select.php:43
@@ -729,11 +746,11 @@ msgstr ""
 msgid "Textarea"
 msgstr ""
 
-#: includes/forms/class-form.php:224
+#: includes/forms/class-form.php:236
 msgid "Submit"
 msgstr ""
 
-#: includes/forms/class-form.php:360
+#: includes/forms/class-form.php:372
 msgid "Captcha is invalid"
 msgstr ""
 
@@ -1013,7 +1030,7 @@ msgid "Pending"
 msgstr ""
 
 #: templates/listing/edit/block/listing-status.php:9
-msgid "Rejected"
+msgid "Hidden"
 msgstr ""
 
 #: templates/listing/edit/block/listing-view-link.php:7
@@ -1026,7 +1043,7 @@ msgid "HivePress"
 msgstr ""
 
 #. Description of the plugin
-msgid "Multipurpose directory & listing plugin."
+msgid "Multipurpose directory, listing & classifieds plugin."
 msgstr ""
 
 #. Author URI of the plugin
