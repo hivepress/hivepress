@@ -860,7 +860,7 @@ final class Admin {
 
 		// Render theme notice.
 		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
-			echo '<div class="notice notice-info is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
+			echo '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
 		}
 	}
 
