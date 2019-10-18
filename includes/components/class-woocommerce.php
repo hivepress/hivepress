@@ -64,15 +64,10 @@ final class WooCommerce {
 	 * @return array
 	 */
 	public function add_menu_items( $menu ) {
-
-		// Get page ID.
-		$page_id = wc_get_page_id( 'myaccount' );
-
-		// Add menu item.
-		if ( ! empty( $page_id ) ) {
+		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
 			$menu['items']['woocommerce_orders'] = [
 				'label' => esc_html__( 'My Orders', 'hivepress' ),
-				'url'   => wc_get_endpoint_url( 'orders', '', get_permalink( $page_id ) ),
+				'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 				'order' => 40,
 			];
 		}
@@ -88,11 +83,20 @@ final class WooCommerce {
 	 */
 	public function alter_account_page( $template ) {
 		if ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) {
+
+			// Set page title.
+			add_filter( 'the_title', 'wc_page_endpoint_title' );
+
+			// Alter page template.
 			$template = hp\merge_trees(
 				$template,
 				[
 					'blocks' => [
-						'page_content' => [
+						'page_container' => [
+							'type' => 'container',
+						],
+
+						'page_content'   => [
 							'blocks' => [
 								'woocommerce_content' => [
 									'type'     => 'callback',
