@@ -69,10 +69,22 @@ class Listing_View_Page extends Page {
 										],
 
 										'blocks'     => [
-											'listing_title'           => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/page/listing-title',
-												'order'    => 10,
+											'listing_title' => [
+												'type'   => 'container',
+												'tag'    => 'h1',
+												'order'  => 10,
+
+												'attributes' => [
+													'class' => [ 'hp-listing__title' ],
+												],
+
+												'blocks' => [
+													'listing_title_text'           => [
+														'type'     => 'element',
+														'filepath' => 'listing/view/page/listing-title',
+														'order'    => 10,
+													],
+												],
 											],
 
 											'listing_details_primary' => [

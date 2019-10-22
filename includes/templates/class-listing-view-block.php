@@ -82,9 +82,21 @@ class Listing_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_title' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/block/listing-title',
-										'order'    => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'order'      => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-listing__title' ],
+										],
+
+										'blocks'     => [
+											'listing_title_text'           => [
+												'type'     => 'element',
+												'filepath' => 'listing/view/block/listing-title',
+												'order'    => 10,
+											],
+										],
 									],
 
 									'listing_details_primary' => [
