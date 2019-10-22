@@ -177,7 +177,7 @@ final class Listing {
 	 * @param WP_Post $listing Listing object.
 	 */
 	public function update_status( $new_status, $old_status, $listing ) {
-		if ( 'hp_listing' === $listing->post_type && 'pending' === $old_status ) {
+		if ( 'hp_listing' === $listing->post_type && $new_status !== $old_status && 'pending' === $old_status ) {
 
 			// Get user.
 			$user = get_userdata( $listing->post_author );
