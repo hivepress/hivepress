@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Controllers;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -36,6 +37,9 @@ final class WooCommerce {
 
 			// Add menu items.
 			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+
+			// Redirect account page.
+			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/account_page', [ $this, 'alter_account_page' ] );
@@ -73,6 +77,17 @@ final class WooCommerce {
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Redirects account page.
+	 */
+	public function redirect_account_page() {
+		if ( ! is_user_logged_in() && is_account_page() ) {
+			wp_safe_redirect( add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), Controllers\User::get_url( 'login_user' ) ) );
+
+			exit();
+		}
 	}
 
 	/**
