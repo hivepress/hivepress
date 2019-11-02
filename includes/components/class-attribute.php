@@ -570,7 +570,7 @@ final class Attribute {
 	public function remove_term_boxes() {
 		global $pagenow, $post;
 
-		if ( 'post.php' === $pagenow && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
+		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
 
 			// Get model.
 			$model = hp\unprefix( $post->post_type );
