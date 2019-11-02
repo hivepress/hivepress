@@ -63,11 +63,15 @@ final class Attribute {
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ] );
 
+			// Add sort options.
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+
 			// Add category options.
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ] );
 
-			// Add sort options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+			// Set category value.
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ] );
 		}
 
 		if ( is_admin() ) {
@@ -416,6 +420,46 @@ final class Attribute {
 	}
 
 	/**
+	 * Adds sort options.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_sort_options( $form ) {
+
+		// Add defaults.
+		if ( is_search() ) {
+			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
+		} else {
+			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
+		}
+
+		// Get model.
+		$model = explode( '_', $form['name'] );
+		$model = reset( $model );
+
+		// Filter attributes.
+		$category_id = $this->get_category_id( $model );
+
+		$attributes = array_filter(
+			$this->attributes[ $model ],
+			function( $attribute ) use ( $category_id ) {
+				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
+			}
+		);
+
+		// Add options.
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
+				$form['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
+				$form['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
+			}
+		}
+
+		return $form;
+	}
+
+	/**
 	 * Adds category options.
 	 *
 	 * @param array $form Form arguments.
@@ -494,41 +538,19 @@ final class Attribute {
 	}
 
 	/**
-	 * Adds sort options.
+	 * Sets category value.
 	 *
 	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_sort_options( $form ) {
-
-		// Add defaults.
-		if ( is_search() ) {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
-		}
+	public function set_category_value( $form ) {
 
 		// Get model.
 		$model = explode( '_', $form['name'] );
 		$model = reset( $model );
 
-		// Filter attributes.
-		$category_id = $this->get_category_id( $model );
-
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
-
-		// Add options.
-		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
-				$form['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
-			}
-		}
+		// Set value.
+		$form['fields']['category']['value'] = $this->get_category_id( $model );
 
 		return $form;
 	}
