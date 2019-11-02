@@ -245,17 +245,19 @@ var hivepress = {
 
 		// Sticky
 		$(window).on('load', function() {
-			hivepress.getComponent('sticky').each(function() {
-				var container = $(this),
-					spacing = 32 + $('#wpadminbar').height();
+			if ($(window).width() >= 768) {
+				hivepress.getComponent('sticky').each(function() {
+					var container = $(this),
+						spacing = 32 + $('#wpadminbar').height();
 
-				container.wrapInner('<div />');
+					container.wrapInner('<div />');
 
-				container.children('div').stickySidebar({
-					topSpacing: spacing,
-					bottomSpacing: spacing,
+					container.children('div').stickySidebar({
+						topSpacing: spacing,
+						bottomSpacing: spacing,
+					});
 				});
-			});
+			}
 		});
 
 		// Slider
