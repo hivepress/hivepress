@@ -39,6 +39,9 @@ final class Listing {
 		// Update status.
 		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
 
+		// Expire listings.
+		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
+
 		// Import listings.
 		add_action( 'import_start', [ $this, 'import_listings' ] );
 	}
@@ -177,28 +180,94 @@ final class Listing {
 	 * @param WP_Post $listing Listing object.
 	 */
 	public function update_status( $new_status, $old_status, $listing ) {
-		if ( 'hp_listing' === $listing->post_type && $new_status !== $old_status && 'pending' === $old_status ) {
+		if ( 'hp_listing' === $listing->post_type && $new_status !== $old_status ) {
+			if ( 'pending' === $old_status ) {
 
-			// Get user.
-			$user = get_userdata( $listing->post_author );
+				// Get user.
+				$user = get_userdata( $listing->post_author );
+
+				if ( 'publish' === $new_status ) {
+
+					// Send approval email.
+					( new Emails\Listing_Approve(
+						[
+							'recipient' => $user->user_email,
+							'tokens'    => [
+								'user_name'     => $user->display_name,
+								'listing_title' => $listing->post_title,
+								'listing_url'   => get_permalink( $listing->ID ),
+							],
+						]
+					) )->send();
+				} elseif ( 'trash' === $new_status ) {
+
+					// Send rejection email.
+					( new Emails\Listing_Reject(
+						[
+							'recipient' => $user->user_email,
+							'tokens'    => [
+								'user_name'     => $user->display_name,
+								'listing_title' => $listing->post_title,
+							],
+						]
+					) )->send();
+				}
+			}
 
 			if ( 'publish' === $new_status ) {
 
-				// Send approval email.
-				( new Emails\Listing_Approve(
-					[
-						'recipient' => $user->user_email,
-						'tokens'    => [
-							'user_name'     => $user->display_name,
-							'listing_title' => $listing->post_title,
-							'listing_url'   => get_permalink( $listing->ID ),
-						],
-					]
-				) )->send();
-			} elseif ( 'trash' === $new_status ) {
+				// Get expiration period.
+				$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
 
-				// Send rejection email.
-				( new Emails\Listing_Reject(
+				if ( $expiration_period > 0 && ! metadata_exists( 'post', $listing->ID, 'hp_expiration_time' ) ) {
+
+					// Set expiration time.
+					update_post_meta( $listing->ID, 'hp_expiration_time', time() + $expiration_period * DAY_IN_SECONDS );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Expires listings.
+	 */
+	public function expire_listings() {
+
+		// Get listings.
+		$listings = get_posts(
+			[
+				'post_type'      => 'hp_listing',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'meta_query'     => [
+					[
+						'key'     => 'hp_expiration_time',
+						'value'   => time(),
+						'compare' => '<=',
+						'type'    => 'NUMERIC',
+					],
+				],
+			]
+		);
+
+		// Expire listings.
+		foreach ( $listings as $listing ) {
+
+			// Update listing.
+			wp_update_post(
+				[
+					'ID'          => $listing->ID,
+					'post_status' => 'draft',
+				]
+			);
+
+			delete_post_meta( $listing->ID, 'hp_expiration_time' );
+
+			// Send email.
+			$user = get_userdata( $listing->post_author );
+
+			if ( false !== $user ) {
+				( new Emails\Listing_Expire(
 					[
 						'recipient' => $user->user_email,
 						'tokens'    => [

@@ -72,6 +72,21 @@ return [
 				],
 			],
 
+			'expiration' => [
+				'title'  => esc_html__( 'Expiration', 'hivepress' ),
+				'order'  => 30,
+
+				'fields' => [
+					'listing_expiration_period' => [
+						'label'       => esc_html__( 'Expiration Period', 'hivepress' ),
+						'description' => esc_html__( 'Set the number of days after which a listing expires.', 'hivepress' ),
+						'type'        => 'number',
+						'min_value'   => 1,
+						'order'       => 10,
+					],
+				],
+			],
+
 			'emails'     => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
 				'order'  => 100,
@@ -93,6 +108,15 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 						'required'    => true,
 						'order'       => 20,
+					],
+
+					'email_listing_expire'  => [
+						'label'       => esc_html__( 'Listing Expired', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when listing is expired, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
+						'type'        => 'textarea',
+						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
+						'required'    => true,
+						'order'       => 30,
 					],
 				],
 			],
@@ -127,9 +151,9 @@ return [
 				'fields' => [
 					'email_user_register'         => [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %user_name%, %user_password%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %1$user_name%, %2$user_password%.', 'hivepress' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 						'required'    => true,
 						'order'       => 10,
 					],
