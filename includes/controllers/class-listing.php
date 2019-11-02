@@ -106,7 +106,7 @@ class Listing extends Controller {
 					],
 
 					'edit_listings'   => [
-						'title'    => esc_html__( 'My Listings', 'hivepress' ),
+						'title'    => esc_html__( 'Listings', 'hivepress' ),
 						'path'     => '/account/listings',
 						'redirect' => 'redirect_listings_edit_page',
 						'action'   => 'render_listings_edit_page',
@@ -196,7 +196,7 @@ class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error updating listing.', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response(
@@ -287,7 +287,7 @@ class Listing extends Controller {
 
 		// Delete listing.
 		if ( ! $listing->delete() ) {
-			return hp\rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error deleting listing.', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );

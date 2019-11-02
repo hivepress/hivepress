@@ -122,11 +122,11 @@ class Number_Range extends Number {
 			$max_value = end( $this->value );
 
 			if ( ! is_null( $this->min_value ) && ( ( ! is_null( $min_value ) && $min_value < $this->min_value ) || ( ! is_null( $max_value ) && $max_value < $this->min_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
 			}
 
 			if ( ! is_null( $this->max_value ) && ( ( ! is_null( $min_value ) && $min_value > $this->max_value ) || ( ! is_null( $max_value ) && $max_value > $this->max_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
 			}
 		}
 

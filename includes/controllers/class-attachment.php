@@ -169,7 +169,7 @@ class Attachment extends Controller {
 
 		// Check attachment quantity.
 		if ( $field->is_multiple() && count( $attachment_ids ) >= $field->get_max_files() ) {
-			return hp\rest_error( 403, sprintf( esc_html__( 'Only up to %s files can be uploaded', 'hivepress' ), number_format_i18n( $field->get_max_files() ) ) );
+			return hp\rest_error( 403, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $field->get_max_files() ) ) );
 		}
 
 		// Check file format.
@@ -177,7 +177,7 @@ class Attachment extends Controller {
 		$file_formats = array_map( 'strtoupper', $field->get_file_formats() );
 
 		if ( ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
-			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed', 'hivepress' ), implode( ', ', $file_extensions ) ) );
+			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_extensions ) ) );
 		}
 
 		// Delete attachments.

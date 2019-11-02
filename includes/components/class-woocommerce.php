@@ -70,7 +70,7 @@ final class WooCommerce {
 	public function add_menu_items( $menu ) {
 		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
 			$menu['items']['woocommerce_orders'] = [
-				'label' => esc_html__( 'My Orders', 'hivepress' ),
+				'label' => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 				'order' => 40,
 			];
