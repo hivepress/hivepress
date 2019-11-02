@@ -76,7 +76,7 @@ class Listing_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Listing has been updated', 'hivepress' ),
+				'message' => esc_html__( 'Listing has been updated.', 'hivepress' ),
 				'model'   => 'listing',
 				'action'  => hp\get_rest_url( '/listings/%id%' ),
 

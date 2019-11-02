@@ -243,9 +243,9 @@ class Listing extends Controller {
 			[
 				'recipient' => get_option( 'admin_email' ),
 				'tokens'    => [
-					'listing_title' => $listing->get_title(),
-					'listing_url'   => get_permalink( $listing->get_id() ),
-					'report_reason' => $form->get_value( 'report_reason' ),
+					'listing_title'  => $listing->get_title(),
+					'listing_url'    => get_permalink( $listing->get_id() ),
+					'report_details' => $form->get_value( 'report_details' ),
 				],
 			]
 		) )->send();

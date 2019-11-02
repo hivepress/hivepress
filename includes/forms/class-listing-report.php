@@ -27,6 +27,13 @@ class Listing_Report extends Model_Form {
 	protected static $name;
 
 	/**
+	 * Form description.
+	 *
+	 * @var string
+	 */
+	protected static $description;
+
+	/**
 	 * Form title.
 	 *
 	 * @var string
@@ -90,14 +97,15 @@ class Listing_Report extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'   => esc_html__( 'Report Listing', 'hivepress' ),
-				'message' => esc_html__( 'Listing has been reported', 'hivepress' ),
-				'model'   => 'listing',
-				'action'  => hp\get_rest_url( '/listings/%id%/report' ),
+				'title'       => esc_html__( 'Report Listing', 'hivepress' ),
+				'description' => esc_html__( 'Please provide details that will help us verify that this listing breaks the terms of service.', 'hivepress' ),
+				'message'     => esc_html__( 'Listing has been reported.', 'hivepress' ),
+				'model'       => 'listing',
+				'action'      => hp\get_rest_url( '/listings/%id%/report' ),
 
-				'fields'  => [
-					'report_reason' => [
-						'label'      => esc_html__( 'Reason', 'hivepress' ),
+				'fields'      => [
+					'report_details' => [
+						'label'      => esc_html__( 'Details', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,
@@ -105,7 +113,7 @@ class Listing_Report extends Model_Form {
 					],
 				],
 
-				'button'  => [
+				'button'      => [
 					'label' => esc_html__( 'Report Listing', 'hivepress' ),
 				],
 			],
