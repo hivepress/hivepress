@@ -41,8 +41,8 @@ final class Debug {
 		add_filter( 'hivetheme/v1/styles', [ $this, 'filter_styles' ] );
 
 		// Enqueue styles.
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ], 99 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ], 99 );
+		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 99 );
+		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 99 );
 
 		// Filter scripts.
 		add_filter( 'hivepress/v1/scripts', [ $this, 'filter_scripts' ] );
