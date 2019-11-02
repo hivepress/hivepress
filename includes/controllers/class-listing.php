@@ -522,7 +522,7 @@ class Listing extends Controller {
 		}
 
 		// Check categories.
-		if ( wp_count_terms( 'hp_listing_category', [ 'hide_empty' => false ] ) === 0 ) {
+		if ( absint( wp_count_terms( 'hp_listing_category' ) ) === 0 ) {
 			return true;
 		}
 
