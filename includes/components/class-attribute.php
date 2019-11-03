@@ -586,7 +586,7 @@ final class Attribute {
 				$max_value = get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'DESC' ] ) ), hp\prefix( $field_name ), true );
 
 				// Set range values.
-				if ( ! in_array( $min_value, [ false, '' ], true ) && ! in_array( $max_value, [ false, '' ], true ) ) {
+				if ( ! in_array( $min_value, [ false, '' ], true ) && ! in_array( $max_value, [ false, '' ], true ) && $min_value !== $max_value ) {
 					$form['fields'][ $field_name ]['min_value'] = floatval( $min_value );
 					$form['fields'][ $field_name ]['max_value'] = floatval( $max_value );
 				}
