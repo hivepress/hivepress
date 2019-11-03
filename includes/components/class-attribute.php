@@ -72,6 +72,9 @@ final class Attribute {
 			// Set category value.
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ] );
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ] );
+
+			// Set range values.
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ] );
 		}
 
 		if ( is_admin() ) {
@@ -335,7 +338,7 @@ final class Attribute {
 		$model = reset( $model );
 
 		// Get instance ID.
-		$instance_id = get_query_var( 'hp_listing_id' ) ? absint( get_query_var( 'hp_listing_id' ) ) : get_the_ID();
+		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
 
 		// Filter attributes.
 		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
@@ -551,6 +554,44 @@ final class Attribute {
 
 		// Set value.
 		$form['fields']['category']['value'] = $this->get_category_id( $model );
+
+		return $form;
+	}
+
+	/**
+	 * Sets range values.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function set_range_values( $form ) {
+
+		// Get model.
+		$model = explode( '_', $form['name'] );
+		$model = reset( $model );
+
+		// Filter fields.
+		foreach ( $form['fields'] as $field_name => $field_args ) {
+			if ( 'number_range' === $field_args['type'] ) {
+
+				// Get range values.
+				$query_args = [
+					'post_type'   => hp\prefix( $model ),
+					'post_status' => 'publish',
+					'meta_key'    => hp\prefix( $field_name ),
+					'orderby'     => 'meta_value_num',
+				];
+
+				$min_value = get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'ASC' ] ) ), hp\prefix( $field_name ), true );
+				$max_value = get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'DESC' ] ) ), hp\prefix( $field_name ), true );
+
+				// Set range values.
+				if ( '' !== $min_value && '' !== $max_value ) {
+					$form['fields'][ $field_name ]['min_value'] = floatval( $min_value );
+					$form['fields'][ $field_name ]['max_value'] = floatval( $max_value );
+				}
+			}
+		}
 
 		return $form;
 	}

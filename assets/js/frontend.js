@@ -243,6 +243,48 @@ var hivepress = {
 			});
 		});
 
+		// Range slider
+		hivepress.getComponent('range-slider').each(function() {
+			var container = $(this),
+				fields = $(this).find('input[type=number]'),
+				minField = fields.eq(0),
+				maxField = fields.eq(-1),
+				slider = null;
+
+			if (!minField.val()) {
+				minField.val(minField.attr('min'));
+			}
+
+			if (!maxField.val()) {
+				maxField.val(maxField.attr('max'));
+			}
+
+			slider = $('<div />').appendTo(container).slider({
+				range: true,
+				min: Number(minField.attr('min')),
+				max: Number(maxField.attr('max')),
+				values: [Number(minField.val()), Number(maxField.val())],
+				slide: function(e, ui) {
+					minField.val(ui.values[0]);
+					maxField.val(ui.values[1]);
+				},
+			});
+
+			slider.wrap('<div />');
+
+			fields.on('change', function() {
+				if (!minField.val()) {
+					minField.val(minField.attr('min'));
+				}
+
+				if (!maxField.val()) {
+					maxField.val(maxField.attr('max'));
+				}
+
+				slider.slider('values', [Number(minField.val()), Number(maxField.val())]);
+			});
+		});
+
 		// Sticky
 		$(window).on('load', function() {
 			if ($(window).width() >= 768) {

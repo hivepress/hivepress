@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -284,12 +283,18 @@ Mixins
 
 		&--number-range {
 			display: flex;
+			flex-wrap: wrap;
 			margin: 0 -.5rem;
 
 			input[type=number] {
 				width: 100%;
 				margin: 0 0.5rem;
 				flex: 1;
+			}
+
+			> div {
+				flex: 0 1 100%;
+				margin: 1rem 0.5rem 0;
 			}
 		}
 

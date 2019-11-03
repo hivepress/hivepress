@@ -64,6 +64,15 @@ class Number_Range extends Number {
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
+		$attributes = [];
+
+		// Set range slider.
+		if ( ! is_null( $this->min_value ) && ! is_null( $this->max_value ) ) {
+			$attributes['data-component'] = 'range-slider';
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
 		Field::bootstrap();
 	}
 
@@ -94,6 +103,8 @@ class Number_Range extends Number {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
+			$decimals = $this->decimals;
+
 			$this->value = array_map(
 				function( $value ) use ( $decimals ) {
 					if ( ! is_null( $value ) ) {
