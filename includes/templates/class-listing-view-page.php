@@ -84,6 +84,12 @@ class Listing_View_Page extends Page {
 														'filepath' => 'listing/view/page/listing-title',
 														'order'    => 10,
 													],
+
+													'listing_verified_badge' => [
+														'type'     => 'element',
+														'filepath' => 'listing/view/listing-verified-badge',
+														'order'    => 20,
+													],
 												],
 											],
 

@@ -11,12 +11,6 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'listing_attributes'        => [
-		'title'  => esc_html__( 'Attributes', 'hivepress' ),
-		'screen' => 'listing',
-		'fields' => [],
-	],
-
 	'listing_settings'          => [
 		'title'  => esc_html__( 'Settings', 'hivepress' ),
 		'screen' => 'listing',
@@ -28,7 +22,20 @@ return [
 				'type'    => 'checkbox',
 				'order'   => 10,
 			],
+
+			'verified' => [
+				'label'   => esc_html__( 'Verified', 'hivepress' ),
+				'caption' => esc_html__( 'Mark this listing as verified', 'hivepress' ),
+				'type'    => 'checkbox',
+				'order'   => 20,
+			],
 		],
+	],
+
+	'listing_attributes'        => [
+		'title'  => esc_html__( 'Attributes', 'hivepress' ),
+		'screen' => 'listing',
+		'fields' => [],
 	],
 
 	'listing_attribute_edit'    => [

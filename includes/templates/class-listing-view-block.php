@@ -64,10 +64,16 @@ class Listing_View_Block extends Template {
 								],
 
 								'blocks'     => [
+									'listing_featured_badge' => [
+										'type'     => 'element',
+										'filepath' => 'listing/view/listing-featured-badge',
+										'order'    => 10,
+									],
+
 									'listing_image' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/block/listing-image',
-										'order'    => 10,
+										'order'    => 20,
 									],
 								],
 							],
@@ -95,6 +101,12 @@ class Listing_View_Block extends Template {
 												'type'     => 'element',
 												'filepath' => 'listing/view/block/listing-title',
 												'order'    => 10,
+											],
+
+											'listing_verified_badge' => [
+												'type'     => 'element',
+												'filepath' => 'listing/view/listing-verified-badge',
+												'order'    => 20,
 											],
 										],
 									],
