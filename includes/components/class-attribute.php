@@ -827,6 +827,7 @@ final class Attribute {
 			'post_type'      => hp\prefix( $model ),
 			'post_status'    => 'publish',
 			'meta_key'       => 'hp_featured',
+			'meta_value'     => '1',
 			'posts_per_page' => absint( get_option( 'hp_' . $model . 's_featured_per_page' ) ),
 			'orderby'        => 'rand',
 			'fields'         => 'ids',

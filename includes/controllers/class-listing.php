@@ -333,17 +333,34 @@ class Listing extends Controller {
 				]
 			) )->render();
 		} else {
-
-			// Query listings.
 			if ( is_page() ) {
-				query_posts(
-					[
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-						'paged'          => hp\get_current_page(),
-					]
-				);
+
+				// Set query arguments.
+				$query_args = [
+					'post_type'      => 'hp_listing',
+					'post_status'    => 'publish',
+					'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+					'paged'          => hp\get_current_page(),
+				];
+
+				// Get featured IDs.
+				$featured_ids = [];
+
+				if ( get_query_var( 'hp_featured_ids' ) ) {
+					$featured_ids = array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) );
+				}
+
+				// Exclude listings.
+				if ( ! empty( $featured_ids ) ) {
+					$query_args['post__not_in'] = $featured_ids;
+				}
+
+				// Query listings.
+				query_posts( $query_args );
+
+				if ( ! empty( $featured_ids ) ) {
+					set_query_var( 'hp_featured_ids', $featured_ids );
+				}
 			}
 
 			// Render listings.
