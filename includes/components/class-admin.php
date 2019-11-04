@@ -584,6 +584,11 @@ final class Admin {
 		global $pagenow;
 
 		if ( 'post.php' === $pagenow ) {
+
+			// Remove action.
+			remove_action( 'save_post', [ $this, 'update_meta_box' ] );
+
+			// Update field values.
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 				$screen = hp\prefix( $meta_box['screen'] );
 
@@ -607,8 +612,17 @@ final class Admin {
 
 							if ( $field->validate() ) {
 
-								// Update meta value.
-								update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+								// Update field value.
+								if ( ! isset( $field_args['alias'] ) ) {
+									update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+								} else {
+									wp_update_post(
+										[
+											'ID' => $post_id,
+											$field_args['alias'] => $field->get_value(),
+										]
+									);
+								}
 							}
 						}
 					}
@@ -651,7 +665,11 @@ final class Admin {
 					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
 					// Get field value.
-					$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+					if ( ! isset( $field_args['alias'] ) ) {
+						$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+					} else {
+						$value = get_post_field( $field_args['alias'], $post );
+					}
 
 					if ( '' !== $value ) {
 						$field->set_value( $value );
@@ -717,6 +735,12 @@ final class Admin {
 		$term = get_term( $term_id );
 
 		if ( ! is_null( $term ) ) {
+
+			// Remove actions.
+			add_action( 'edit_' . $term->taxonomy, [ $this, 'update_term_box' ] );
+			add_action( 'create_' . $term->taxonomy, [ $this, 'update_term_box' ] );
+
+			// Update field values.
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 				$screen = hp\prefix( $meta_box['screen'] );
 
@@ -740,8 +764,18 @@ final class Admin {
 
 							if ( $field->validate() ) {
 
-								// Update meta value.
-								update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+								// Update field value.
+								if ( ! isset( $field_args['alias'] ) ) {
+									update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+								} else {
+									wp_update_term(
+										$term->term_id,
+										$term->taxonomy,
+										[
+											$field_args['alias'] => $field->get_value(),
+										]
+									);
+								}
 							}
 						}
 					}
@@ -809,7 +843,11 @@ final class Admin {
 							$output .= '<td>';
 
 							// Get field value.
-							$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+							if ( ! isset( $field_args['alias'] ) ) {
+								$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+							} else {
+								$value = get_term_field( $field_args['alias'], $term );
+							}
 
 							if ( '' === $value ) {
 								$value = null;
