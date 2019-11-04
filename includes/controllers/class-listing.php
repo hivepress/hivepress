@@ -479,6 +479,13 @@ class Listing extends Controller {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 
+		// Check permissions.
+		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
+			wp_safe_redirect( home_url( '/' ) );
+
+			exit();
+		}
+
 		// Get listing ID.
 		$listing_id = hp\get_post_id(
 			[

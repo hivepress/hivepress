@@ -71,12 +71,20 @@ return [
 						'order'       => 10,
 					],
 
+					'listing_enable_submission'     => [
+						'label'   => esc_html__( 'Submission', 'hivepress' ),
+						'caption' => esc_html__( 'Allow submitting new listings', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'order'   => 20,
+					],
+
 					'listing_enable_moderation'     => [
 						'label'   => esc_html__( 'Moderation', 'hivepress' ),
 						'caption' => esc_html__( 'Manually approve new listings', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
-						'order'   => 20,
+						'order'   => 30,
 					],
 				],
 			],
