@@ -4,7 +4,8 @@ var registerBlockType = wp.blocks.registerBlockType,
 	ServerSideRender = wp.components.ServerSideRender,
 	InspectorControls = wp.editor.InspectorControls,
 	TextControl = wp.components.TextControl,
-	SelectControl = wp.components.SelectControl;
+	SelectControl = wp.components.SelectControl,
+	CheckboxControl = wp.components.CheckboxControl;
 
 registerBlockType(hpBlock.type, {
 	title: hpBlock.title,
@@ -36,6 +37,12 @@ registerBlockType(hpBlock.type, {
 								var fieldName = event.target.id.split('-').pop(),
 									values = {};
 
+								if (value === true) {
+									value = '1';
+								} else if (value === false) {
+									value = '';
+								}
+
 								values[fieldName] = value;
 
 								props.setAttributes(values);
@@ -54,6 +61,9 @@ registerBlockType(hpBlock.type, {
 								value: optionName,
 							});
 						}
+					} else if (field.type === 'checkbox') {
+						controlType = CheckboxControl;
+						controlProps.checked = Boolean(props.attributes[fieldName]);
 					}
 
 					controls.push(createElement(controlType, controlProps));
