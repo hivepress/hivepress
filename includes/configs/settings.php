@@ -38,12 +38,21 @@ return [
 					],
 
 					'listings_per_page'                => [
-						'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
+						'label'     => esc_html__( 'Regular Listings per Page', 'hivepress' ),
 						'type'      => 'number',
-						'default'   => 10,
+						'default'   => 8,
 						'min_value' => 1,
 						'required'  => true,
 						'order'     => 30,
+					],
+
+					'listings_featured_per_page'       => [
+						'label'     => esc_html__( 'Featured Listings per Page', 'hivepress' ),
+						'type'      => 'number',
+						'default'   => 2,
+						'min_value' => 0,
+						'required'  => true,
+						'order'     => 40,
 					],
 				],
 			],

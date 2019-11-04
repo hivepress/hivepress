@@ -47,8 +47,8 @@ final class Listing {
 
 		if ( is_admin() ) {
 
-			// Add listing states.
-			add_filter( 'display_post_states', [ $this, 'add_listing_states' ], 10, 2 );
+			// Add states.
+			add_filter( 'display_post_states', [ $this, 'add_states' ], 10, 2 );
 		}
 	}
 
@@ -296,15 +296,21 @@ final class Listing {
 	}
 
 	/**
-	 * Adds listing states.
+	 * Adds states.
 	 *
 	 * @param array   $states Listing states.
 	 * @param WP_Post $listing Listing object.
 	 * @return array
 	 */
-	public function add_listing_states( $states, $listing ) {
-		if ( 'hp_listing' === $listing->post_type && get_post_meta( $listing->ID, 'hp_featured', true ) ) {
-			$states[] = esc_html__( 'Featured', 'hivepress' );
+	public function add_states( $states, $listing ) {
+		if ( 'hp_listing' === $listing->post_type ) {
+			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
+				$states[] = esc_html__( 'Verified', 'hivepress' );
+			}
+
+			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
+				$states[] = esc_html__( 'Featured', 'hivepress' );
+			}
 		}
 
 		return $states;

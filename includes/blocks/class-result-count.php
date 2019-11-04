@@ -49,7 +49,18 @@ class Result_Count extends Block {
 			// Get last result.
 			$last_result = $first_result + $wp_query->post_count - 1;
 
-			$output .= sprintf( esc_html__( 'Showing %1$s-%2$s of %3$s results', 'hivepress' ), number_format_i18n( $first_result ), number_format_i18n( $last_result ), number_format_i18n( $wp_query->found_posts ) );
+			// Get total results.
+			$total_results = $wp_query->found_posts;
+
+			// Add featured results.
+			if ( get_query_var( 'hp_featured_ids' ) ) {
+				$featured_results = count( (array) get_query_var( 'hp_featured_ids' ) );
+
+				$last_result   += $featured_results;
+				$total_results += $featured_results;
+			}
+
+			$output .= sprintf( esc_html__( 'Showing %1$s-%2$s of %3$s results', 'hivepress' ), number_format_i18n( $first_result ), number_format_i18n( $last_result ), number_format_i18n( $total_results ) );
 
 			$output .= '</div>';
 		}

@@ -77,6 +77,13 @@ class Listings extends Block {
 	protected $order;
 
 	/**
+	 * Featured status.
+	 *
+	 * @var bool
+	 */
+	protected $featured;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Block arguments.
@@ -126,6 +133,12 @@ class Listings extends Block {
 							'random' => esc_html__( 'Random', 'hivepress' ),
 						],
 					],
+
+					'featured' => [
+						'label' => esc_html__( 'Display only featured listings', 'hivepress' ),
+						'type'  => 'checkbox',
+						'order' => 50,
+					],
 				],
 			],
 			$args
@@ -153,7 +166,8 @@ class Listings extends Block {
 		}
 
 		// Get listing query.
-		$query = $wp_query;
+		$query          = $wp_query;
+		$featured_query = null;
 
 		if ( is_single() || ( hp\get_array_value( $query->query, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
 
@@ -182,11 +196,27 @@ class Listings extends Block {
 				$query_args['orderby'] = 'rand';
 			}
 
+			// Get featured.
+			if ( $this->featured ) {
+				$query_args['meta_key']   = 'hp_featured';
+				$query_args['meta_value'] = '1';
+			}
+
 			// Query listings.
 			$query = new \WP_Query( $query_args );
+		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
+
+			// Query featured listings.
+			$featured_query = new \WP_Query(
+				[
+					'post_type'   => 'hp_listing',
+					'post_status' => 'publish',
+					'post__in'    => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
+					'orderby'     => 'rand',
+				]
+			);
 		}
 
-		// Render listings.
 		if ( $query->have_posts() ) {
 			if ( 'edit' === $this->template ) {
 				$output .= '<table class="hp-table">';
@@ -195,6 +225,34 @@ class Listings extends Block {
 				$output .= '<div class="hp-row">';
 			}
 
+			// Render featured listings.
+			if ( ! is_null( $featured_query ) ) {
+				while ( $featured_query->have_posts() ) {
+					$featured_query->the_post();
+
+					// Get listing.
+					$listing = Models\Listing::get( get_the_ID() );
+
+					if ( ! is_null( $listing ) ) {
+						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+
+						// Render listing.
+						$output .= ( new Listing(
+							[
+								'template' => 'listing_' . $this->template . '_block',
+
+								'context'  => [
+									'listing' => $listing,
+								],
+							]
+						) )->render();
+
+						$output .= '</div>';
+					}
+				}
+			}
+
+			// Render listings.
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
@@ -207,7 +265,7 @@ class Listings extends Block {
 					}
 
 					// Render listing.
-					$output .= ( new Template(
+					$output .= ( new Listing(
 						[
 							'template' => 'listing_' . $this->template . '_block',
 

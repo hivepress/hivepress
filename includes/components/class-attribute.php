@@ -821,5 +821,30 @@ final class Attribute {
 		// Set meta and taxonomy queries.
 		$query->set( 'meta_query', $meta_query );
 		$query->set( 'tax_query', $tax_query );
+
+		// Get featured IDs.
+		$query_args = [
+			'post_type'      => hp\prefix( $model ),
+			'post_status'    => 'publish',
+			'meta_key'       => 'hp_featured',
+			'posts_per_page' => absint( get_option( 'hp_' . $model . 's_featured_per_page' ) ),
+			'orderby'        => 'rand',
+			'fields'         => 'ids',
+		];
+
+		if ( ! is_page() ) {
+			$query_args = array_merge( $query->query_vars, $query_args );
+		}
+
+		$featured_ids = get_posts( $query_args );
+
+		if ( ! empty( $featured_ids ) ) {
+
+			// Exclude featured IDs.
+			$query->set( 'post__not_in', $featured_ids );
+
+			// Set featured IDs.
+			$query->set( 'hp_featured_ids', $featured_ids );
+		}
 	}
 }
