@@ -392,17 +392,32 @@ final class Admin {
 				$extensions = array_filter(
 					array_map(
 						function( $extension ) {
-							return (array) $extension;
+							return array_intersect_key(
+								(array) $extension,
+								array_flip(
+									[
+										'slug',
+										'name',
+										'version',
+										'status',
+										'url',
+										'icons',
+										'requires',
+										'author',
+										'short_description',
+									]
+								)
+							);
 						},
 						$api->plugins
 					),
 					function( $extension ) {
-						return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-marketplace' ], true );
+						return 'hivepress' !== $extension['slug'];
 					}
 				);
 
 				// Cache extensions.
-				hivepress()->set_cache( 'extensions', $extensions, DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( 'extensions', $extensions, DAY_IN_SECONDS );
 			}
 		}
 
