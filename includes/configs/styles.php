@@ -14,11 +14,13 @@ return [
 	'fontawesome'       => [
 		'handle' => 'fontawesome',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome.min.css',
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'fontawesome_solid' => [
 		'handle' => 'fontawesome-solid',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome-solid.min.css',
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'fancybox'          => [
