@@ -26,9 +26,6 @@ final class Listing {
 	 */
 	public function __construct() {
 
-		// Add menu items.
-		add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
-
 		// Set vendor.
 		add_action( 'save_post_hp_listing', [ $this, 'set_vendor' ], 10, 2 );
 
@@ -49,30 +46,11 @@ final class Listing {
 
 			// Add states.
 			add_filter( 'display_post_states', [ $this, 'add_states' ], 10, 2 );
-		}
-	}
+		} else {
 
-	/**
-	 * Adds menu items.
-	 *
-	 * @param array $menu Menu arguments.
-	 * @return array
-	 */
-	public function add_menu_items( $menu ) {
-		if ( hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => [ 'draft', 'pending', 'publish' ],
-				'author'      => get_current_user_id(),
-			]
-		) !== 0 ) {
-			$menu['items']['edit_listings'] = [
-				'route' => 'listing/edit_listings',
-				'order' => 10,
-			];
+			// Add menu items.
+			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
 		}
-
-		return $menu;
 	}
 
 	/**
@@ -83,62 +61,56 @@ final class Listing {
 	 */
 	public function set_vendor( $listing_id, $listing ) {
 
+		// Remove action.
+		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
+
+		// Get user ID.
+		$user_id = absint( $listing->post_author );
+
 		// Get vendor ID.
 		$vendor_id = hp\get_post_id(
 			[
 				'post_type'   => 'hp_vendor',
 				'post_status' => 'any',
-				'post__in'    => [ absint( $listing->post_parent ) ],
+				'author'      => $user_id,
 			]
 		);
 
 		if ( 0 === $vendor_id ) {
 
-			// Get user ID.
-			$user_id = absint( $listing->post_author );
-
-			// Get vendor ID.
-			$vendor_id = hp\get_post_id(
+			// Add vendor.
+			$vendor_id = wp_insert_post(
 				[
-					'post_type'   => 'hp_vendor',
-					'post_status' => 'any',
-					'author'      => $user_id,
+					'post_title'   => get_userdata( $user_id )->display_name,
+					'post_content' => get_user_meta( $user_id, 'description', true ),
+					'post_type'    => 'hp_vendor',
+					'post_status'  => 'publish',
+					'post_author'  => $user_id,
 				]
 			);
 
-			if ( 0 === $vendor_id ) {
+			if ( 0 !== $vendor_id ) {
 
-				// Add vendor.
-				$vendor_id = wp_insert_post(
+				// Get image ID.
+				$image_id = hp\get_post_id(
 					[
-						'post_title'   => get_userdata( $user_id )->display_name,
-						'post_content' => get_user_meta( $user_id, 'description', true ),
-						'post_type'    => 'hp_vendor',
-						'post_status'  => 'publish',
-						'post_author'  => $user_id,
+						'post_type'   => 'attachment',
+						'post_parent' => 0,
+						'author'      => $user_id,
+						'meta_key'    => 'hp_parent_field',
+						'meta_value'  => 'image_id',
 					]
 				);
 
-				if ( 0 !== $vendor_id ) {
+				if ( 0 !== $image_id ) {
 
-					// Get image ID.
-					$image_id = hp\get_post_id(
-						[
-							'post_type'   => 'attachment',
-							'post_parent' => 0,
-							'author'      => $user_id,
-							'meta_key'    => 'hp_parent_field',
-							'meta_value'  => 'image_id',
-						]
-					);
-
-					if ( 0 !== $image_id ) {
-
-						// Update image.
-						set_post_thumbnail( $vendor_id, $image_id );
-					}
+					// Update image.
+					set_post_thumbnail( $vendor_id, $image_id );
 				}
 			}
+		}
+
+		if ( 0 !== $vendor_id && ( 0 === $listing->post_parent || $listing->post_parent !== $vendor_id ) ) {
 
 			// Set vendor ID.
 			wp_update_post(
@@ -147,6 +119,30 @@ final class Listing {
 					'post_parent' => $vendor_id,
 				]
 			);
+
+			if ( 0 !== $listing->post_parent ) {
+
+				// Get attachment IDs.
+				$attachment_ids = get_posts(
+					[
+						'post_type'      => 'attachment',
+						'post_status'    => 'any',
+						'post_parent'    => $listing_id,
+						'posts_per_page' => -1,
+						'fields'         => 'ids',
+					]
+				);
+
+				// Set vendor ID.
+				foreach ( $attachment_ids as $attachment_id ) {
+					wp_update_post(
+						[
+							'ID'          => $attachment_id,
+							'post_author' => $user_id,
+						]
+					);
+				}
+			}
 		}
 	}
 
@@ -304,15 +300,38 @@ final class Listing {
 	 */
 	public function add_states( $states, $listing ) {
 		if ( 'hp_listing' === $listing->post_type ) {
-			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
-				$states[] = esc_html__( 'Verified', 'hivepress' );
-			}
-
 			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
 				$states[] = esc_html__( 'Featured', 'hivepress' );
+			}
+
+			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
+				$states[] = esc_html__( 'Verified', 'hivepress' );
 			}
 		}
 
 		return $states;
+	}
+
+	/**
+	 * Adds menu items.
+	 *
+	 * @param array $menu Menu arguments.
+	 * @return array
+	 */
+	public function add_menu_items( $menu ) {
+		if ( hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => [ 'draft', 'pending', 'publish' ],
+				'author'      => get_current_user_id(),
+			]
+		) !== 0 ) {
+			$menu['items']['edit_listings'] = [
+				'route' => 'listing/edit_listings',
+				'order' => 10,
+			];
+		}
+
+		return $menu;
 	}
 }
