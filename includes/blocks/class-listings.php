@@ -231,8 +231,8 @@ class Listings extends Block {
 			// Query featured listings.
 			$featured_query = new \WP_Query(
 				[
-					'post_type'   => 'hp_listing',
-					'post_status' => 'publish',
+					'post_type'   => 'any',
+					'post_status' => 'any',
 					'post__in'    => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
 					'orderby'     => 'rand',
 				]

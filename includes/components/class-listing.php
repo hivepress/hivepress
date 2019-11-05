@@ -36,6 +36,14 @@ final class Listing {
 		// Update status.
 		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
 
+		// Clear cache.
+		add_action( 'save_post', [ $this, 'clear_listing_cache' ] );
+		add_action( 'delete_post', [ $this, 'clear_listing_cache' ] );
+
+		add_action( 'create_term', [ $this, 'clear_category_cache' ], 10, 3 );
+		add_action( 'edit_term', [ $this, 'clear_category_cache' ], 10, 3 );
+		add_action( 'delete_term', [ $this, 'clear_category_cache' ], 10, 3 );
+
 		// Expire listings.
 		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
 
@@ -227,6 +235,30 @@ final class Listing {
 					update_post_meta( $listing->ID, 'hp_expiration_time', time() + $expiration_period * DAY_IN_SECONDS );
 				}
 			}
+		}
+	}
+
+	/**
+	 * Clears listing cache.
+	 *
+	 * @param int $listing_id Listing ID.
+	 */
+	public function clear_listing_cache( $listing_id ) {
+		if ( 'hp_listing' === get_post_type( $listing_id ) ) {
+			hivepress()->cache->clear_cache( 'listings_*' );
+		}
+	}
+
+	/**
+	 * Clears category cache.
+	 *
+	 * @param int    $category_id Category ID.
+	 * @param int    $taxonomy_id Taxonomy ID.
+	 * @param string $taxonomy Taxonomy name.
+	 */
+	public function clear_category_cache( $category_id, $taxonomy_id, $taxonomy ) {
+		if ( 'hp_listing_category' === $taxonomy ) {
+			hivepress()->cache->clear_cache( 'listing_categories_*' );
 		}
 	}
 

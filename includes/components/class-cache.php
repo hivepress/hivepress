@@ -63,6 +63,33 @@ final class Cache {
 	}
 
 	/**
+	 * Clears cache.
+	 *
+	 * @param mixed $name Cache name.
+	 */
+	public function clear_cache( $name ) {
+		global $wpdb;
+
+		if ( strpos( $name, '*' ) !== false ) {
+
+			// Get transients.
+			$transients = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT option_name FROM $wpdb->options WHERE option_name LIKE %s",
+					'_transient_' . hp\prefix( str_replace( '*', '%', $name ) )
+				)
+			);
+
+			// Delete transients.
+			foreach ( $transients as $transient ) {
+				delete_transient( substr( $transient, strlen( '_transient_' ) ) );
+			}
+		} else {
+			delete_transient( hp\prefix( $name ) );
+		}
+	}
+
+	/**
 	 * Gets cache name.
 	 *
 	 * @param mixed $names Cache names.
