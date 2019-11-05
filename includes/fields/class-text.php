@@ -62,6 +62,13 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * HTML property.
+	 *
+	 * @var mixed
+	 */
+	protected $html = false;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
@@ -146,7 +153,13 @@ class Text extends Field {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
+			if ( empty( $this->html ) ) {
+				$this->value = sanitize_text_field( $this->value );
+			} elseif ( is_array( $this->html ) ) {
+				$this->value = wp_kses( $this->value, $this->html );
+			} else {
+				$this->value = wp_kses( $this->value, 'post' );
+			}
 		}
 	}
 

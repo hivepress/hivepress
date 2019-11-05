@@ -111,6 +111,7 @@ return [
 				'description' => esc_html__( 'Set the attribute display format, the following tokens are available: %value%.', 'hivepress' ),
 				'type'        => 'text',
 				'default'     => '%value%',
+				'html'        => 'post',
 				'order'       => 20,
 			],
 		],
