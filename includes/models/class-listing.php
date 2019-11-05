@@ -191,6 +191,7 @@ class Listing extends Post {
 				if ( ! is_null( $field_value ) ) {
 					$fields[ $field_name ] = new Fields\Text(
 						[
+							'html'    => 'post',
 							'label'   => $field->get_label(),
 							'default' => hp\replace_tokens(
 								[

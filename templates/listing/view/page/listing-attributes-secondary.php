@@ -10,7 +10,7 @@ if ( $listing->get_display_fields( 'view_page_secondary' ) ) :
 				<div class="hp-col-lg-6 hp-col-xs-12">
 					<div class="hp-listing__attribute">
 						<strong><?php echo esc_html( $field->get_label() ); ?>:</strong>
-						<span><?php echo esc_html( $field->get_value() ); ?></span>
+						<span><?php echo $field->get_value(); ?></span>
 					</div>
 				</div>
 			<?php endforeach; ?>
