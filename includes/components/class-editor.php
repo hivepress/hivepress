@@ -133,7 +133,7 @@ final class Editor {
 	 */
 	public function enqueue_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {
-			if ( hp\get_array_value( $style, 'editor', false ) ) {
+			if ( in_array( 'editor', (array) hp\get_array_value( $style, 'scope' ), true ) ) {
 				add_editor_style( $style['src'] );
 			}
 		}

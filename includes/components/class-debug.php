@@ -59,7 +59,9 @@ final class Debug {
 		foreach ( array_filter(
 			$styles,
 			function( $style ) {
-				return ! is_admin() xor hp\get_array_value( $style, 'admin', false );
+				$scope = (array) hp\get_array_value( $style, 'scope' );
+
+				return ! array_diff( [ 'frontend', 'backend' ], $scope ) || ( ! is_admin() xor in_array( 'backend', $scope, true ) );
 			}
 		) as $style_name => $style ) {
 			$style_url = explode( '/', hp\get_array_value( $style, 'src' ) );
@@ -103,7 +105,7 @@ final class Debug {
 		foreach ( $scripts as $script_name => $script ) {
 			$script_url = explode( '/', hp\get_array_value( $script, 'src' ) );
 
-			if ( in_array( end( $script_url ), [ 'frontend.min.js', 'backend.min.js' ], true ) ) {
+			if ( in_array( end( $script_url ), [ 'frontend.min.js', 'backend.min.js', 'common.min.js' ], true ) ) {
 				$scripts[ $script_name ]['src'] = preg_replace( '/\.min\.js$/', '.js', $scripts[ $script_name ]['src'] );
 			}
 		}

@@ -63,7 +63,7 @@ return [
 		'handle' => 'hp-core-backend',
 		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
 		'deps'   => [ 'jquery' ],
-		'admin'  => true,
+		'scope'  => 'backend',
 
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
