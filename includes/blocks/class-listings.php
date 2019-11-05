@@ -202,8 +202,30 @@ class Listings extends Block {
 				$query_args['meta_value'] = '1';
 			}
 
+			// Get cache.
+			$cache = null;
+
+			if ( 'random' !== $this->order ) {
+				$cache = hivepress()->cache->get_cache( [ 'listings', $query_args ] );
+
+				if ( ! empty( $cache ) ) {
+					$query_args = [
+						'post_type'      => 'any',
+						'post_status'    => 'any',
+						'post__in'       => $cache,
+						'posts_per_page' => count( $cache ),
+						'orderby'        => 'post__in',
+					];
+				}
+			}
+
 			// Query listings.
 			$query = new \WP_Query( $query_args );
+
+			// Set cache.
+			if ( 'random' !== $this->order && empty( $cache ) && $query->have_posts() ) {
+				hivepress()->cache->set_cache( [ 'listings', $query_args ], wp_list_pluck( $query->posts, 'ID' ), DAY_IN_SECONDS );
+			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 
 			// Query featured listings.

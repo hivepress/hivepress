@@ -40,4 +40,53 @@ final class Cache {
 			}
 		}
 	}
+
+	/**
+	 * Gets cache.
+	 *
+	 * @param mixed $name Cache name.
+	 * @return mixed
+	 */
+	public function get_cache( $name ) {
+		return get_transient( $this->get_cache_name( $name ) );
+	}
+
+	/**
+	 * Sets cache.
+	 *
+	 * @param mixed $name Cache name.
+	 * @param mixed $value Cache value.
+	 * @param int   $expiration Expiration period.
+	 */
+	public function set_cache( $name, $value, $expiration = 0 ) {
+		set_transient( $this->get_cache_name( $name ), $value, $expiration );
+	}
+
+	/**
+	 * Gets cache name.
+	 *
+	 * @param mixed $names Cache names.
+	 * @return string
+	 */
+	protected function get_cache_name( $names ) {
+		$name = $names;
+
+		if ( is_array( $names ) ) {
+			$name = '';
+
+			ksort( $names );
+
+			foreach ( $names as $part ) {
+				if ( is_array( $part ) ) {
+					$part = md5( wp_json_encode( $part ) );
+				}
+
+				$name .= '_' . strval( $part );
+			}
+
+			$name = ltrim( $name, '_' );
+		}
+
+		return hp\prefix( $name );
+	}
 }

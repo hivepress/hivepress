@@ -370,9 +370,9 @@ final class Admin {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 		// Get cached extensions.
-		$extensions = get_transient( 'hp_extensions' );
+		$extensions = hivepress()->cache->get_cache( 'extensions' );
 
-		if ( false === $extensions ) {
+		if ( empty( $extensions ) ) {
 			$extensions = [];
 
 			// Query plugins.
@@ -402,7 +402,7 @@ final class Admin {
 				);
 
 				// Cache extensions.
-				set_transient( 'hp_extensions', $extensions, DAY_IN_SECONDS );
+				hivepress()->set_cache( 'extensions', $extensions, DAY_IN_SECONDS );
 			}
 		}
 
