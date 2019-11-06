@@ -26,6 +26,14 @@ final class Cache {
 
 		// Schedule events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
+
+		// Clear cache.
+		add_action( 'save_post', [ $this, 'clear_post_cache' ] );
+		add_action( 'delete_post', [ $this, 'clear_post_cache' ] );
+
+		add_action( 'create_term', [ $this, 'clear_term_cache' ], 10, 3 );
+		add_action( 'edit_term', [ $this, 'clear_term_cache' ], 10, 3 );
+		add_action( 'delete_term', [ $this, 'clear_term_cache' ], 10, 3 );
 	}
 
 	/**
@@ -38,6 +46,32 @@ final class Cache {
 			if ( ! wp_next_scheduled( 'hivepress/v1/cron/' . $recurrence ) ) {
 				wp_schedule_event( time(), $recurrence, 'hivepress/v1/cron/' . $recurrence );
 			}
+		}
+	}
+
+	/**
+	 * Clears post cache.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public function clear_post_cache( $post_id ) {
+		$post_type = get_post_type( $post_id );
+
+		if ( in_array( $post_type, hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ), true ) ) {
+			$this->clear_cache( hp\unprefix( $post_type ) . '_*' );
+		}
+	}
+
+	/**
+	 * Clears term cache.
+	 *
+	 * @param int    $term_id Term ID.
+	 * @param int    $term_taxonomy_id Term taxonomy ID.
+	 * @param string $taxonomy Taxonomy name.
+	 */
+	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
+		if ( in_array( $taxonomy, hp\prefix( array_keys( hivepress()->get_config( 'taxonomies' ) ) ), true ) ) {
+			$this->clear_cache( hp\unprefix( $taxonomy ) . '_*' );
 		}
 	}
 
