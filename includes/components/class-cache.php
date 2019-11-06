@@ -200,11 +200,12 @@ final class Cache {
 			if ( function_exists( $callback ) ) {
 
 				// Get meta values.
+				$table  = $wpdb->prefix . $type . 'meta';
+				$column = $type . '_id';
+
 				$meta_values = $wpdb->get_results(
 					$wpdb->prepare(
-						'SELECT %s, meta_key FROM %s WHERE meta_key LIKE %s AND CAST(meta_value AS SIGNED) <= %s',
-						$type . '_id',
-						$wpdb->prefix . $type . 'meta',
+						"SELECT {$column}, meta_key FROM {$table} WHERE meta_key LIKE %s AND CAST(meta_value AS SIGNED) <= %d;",
 						'\_transient\_timeout\_%',
 						time()
 					),
@@ -330,7 +331,7 @@ final class Cache {
 	 * @return string
 	 */
 	protected function get_cache_version( $names ) {
-		$version = $this->get_cache( array_merge( (array) $names, 'version' ), false );
+		$version = $this->get_cache( array_merge( (array) $names, [ 'version' ] ), false );
 
 		if ( empty( $version ) ) {
 			$version = $this->update_cache_version( $names );
@@ -348,7 +349,7 @@ final class Cache {
 	protected function update_cache_version( $names ) {
 
 		// Get cache names.
-		$name = array_merge( (array) $names, 'version' );
+		$name = array_merge( (array) $names, [ 'version' ] );
 
 		// Delete old versions.
 		$this->delete_cache( $name, false );
