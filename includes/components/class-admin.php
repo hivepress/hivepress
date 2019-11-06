@@ -61,6 +61,9 @@ final class Admin {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Hide comments.
+			add_filter( 'comments_clauses', [ $this, 'hide_comments' ] );
+
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -737,6 +740,40 @@ final class Admin {
 				add_action( $taxonomy . '_add_form_fields', [ $this, 'render_term_box' ], 10, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Hides comments.
+	 *
+	 * @param array $query Query arguments.
+	 * @return array
+	 */
+	public function hide_comments( $query ) {
+		global $pagenow;
+
+		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
+			$config = hivepress()->get_config( 'comment_types' );
+
+			if ( ! empty( $config ) ) {
+				$types = array_filter(
+					array_map(
+						function( $type, $args ) {
+							if ( ! isset( $args['show_ui'] ) || ! $args['show_ui'] ) {
+								return '"' . hp\prefix( $type ) . '"';
+							}
+						},
+						array_keys( $config ),
+						$config
+					)
+				);
+
+				if ( ! empty( $types ) ) {
+					$query['where'] .= ' AND comment_type NOT IN (' . implode( ',', $types ) . ')';
+				}
+			}
+		}
+
+		return $query;
 	}
 
 	/**
