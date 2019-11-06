@@ -78,22 +78,72 @@ final class Cache {
 	/**
 	 * Gets cache.
 	 *
-	 * @param mixed $name Cache name.
+	 * @param mixed $names Cache names.
 	 * @return mixed
 	 */
-	public function get_cache( $name ) {
-		return get_transient( $this->get_cache_name( $name ) );
+	public function get_cache( $names ) {
+		$cache = null;
+
+		// Get meta value.
+		$id = null;
+
+		if ( is_array( $names ) && count( $names ) > 2 ) {
+			$id = reset( $names );
+
+			if ( is_numeric( $id ) ) {
+				array_shift( $names );
+
+				$callback = 'get_' . array_shift( $names ) . '_meta';
+
+				if ( function_exists( $callback ) ) {
+					$cache = call_user_func_array( $callback, [ $id, $this->get_cache_name( $names ), true ] );
+				}
+			}
+		}
+
+		// Get transient value.
+		if ( ! is_numeric( $id ) ) {
+			$cache = get_transient( $this->get_cache_name( $names ) );
+		}
+
+		// Normalize value.
+		if ( in_array( $cache, [ false, '' ], true ) ) {
+			$cache = null;
+		}
+
+		return $cache;
 	}
 
 	/**
 	 * Sets cache.
 	 *
-	 * @param mixed $name Cache name.
+	 * @param mixed $names Cache names.
 	 * @param mixed $value Cache value.
 	 * @param int   $expiration Expiration period.
 	 */
-	public function set_cache( $name, $value, $expiration = 0 ) {
-		set_transient( $this->get_cache_name( $name ), $value, $expiration );
+	public function set_cache( $names, $value, $expiration = 0 ) {
+
+		// Set meta value.
+		$id = null;
+
+		if ( is_array( $names ) && count( $names ) > 2 ) {
+			$id = reset( $names );
+
+			if ( is_numeric( $id ) ) {
+				array_shift( $names );
+
+				$callback = 'update_' . array_shift( $names ) . '_meta';
+
+				if ( function_exists( $callback ) ) {
+					$cache = call_user_func_array( $callback, [ $id, $this->get_cache_name( $names ), $value ] );
+				}
+			}
+		}
+
+		// Set transient value.
+		if ( ! is_numeric( $id ) ) {
+			set_transient( $this->get_cache_name( $names ), $value, $expiration );
+		}
 	}
 
 	/**

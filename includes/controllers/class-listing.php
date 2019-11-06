@@ -356,6 +356,7 @@ class Listing extends Controller {
 				}
 
 				// Query listings.
+				// todo.
 				query_posts( $query_args );
 
 				if ( ! empty( $featured_ids ) ) {
@@ -431,16 +432,36 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
+		global $wp_query;
+
+		// Set query arguments.
+		$query_args = [
+			'post_type'      => 'hp_listing',
+			'post_status'    => [ 'draft', 'pending', 'publish' ],
+			'author'         => get_current_user_id(),
+			'posts_per_page' => -1,
+		];
+
+		// Get cached IDs.
+		$listing_ids = hivepress()->cache->get_cache( [ get_current_user_id(), 'user', 'listing', 'ids', $query_args ] );
+
+		if ( ! empty( $listing_ids ) ) {
+			$query_args = [
+				'post_type'      => 'any',
+				'post_status'    => 'any',
+				'post__in'       => $listing_ids,
+				'posts_per_page' => count( $listing_ids ),
+				'orderby'        => 'post__in',
+			];
+		}
 
 		// Query listings.
-		query_posts(
-			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => [ 'draft', 'pending', 'publish' ],
-				'author'         => get_current_user_id(),
-				'posts_per_page' => -1,
-			]
-		);
+		query_posts( $query_args );
+
+		// Cache IDs.
+		if ( empty( $listing_ids ) && have_posts() && $wp_query->found_posts <= 100 ) {
+			hivepress()->cache->set_cache( [ get_current_user_id(), 'user', 'listing', 'ids', $query_args ], wp_list_pluck( $wp_query->posts, 'ID' ), WEEK_IN_SECONDS );
+		}
 
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
 	}
