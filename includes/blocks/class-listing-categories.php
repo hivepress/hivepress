@@ -185,7 +185,7 @@ class Listing_Categories extends Block {
 		}
 
 		// Get cache.
-		$cache = hivepress()->cache->get_cache( [ 'listing_categories', $query_args ] );
+		$cache = hivepress()->cache->get_cache( [ 'listing_category_ids', $query_args ] );
 
 		if ( ! empty( $cache ) ) {
 			$query_args = [
@@ -199,8 +199,8 @@ class Listing_Categories extends Block {
 		$categories = get_terms( $query_args );
 
 		// Set cache.
-		if ( empty( $cache ) && ! empty( $categories ) ) {
-			hivepress()->cache->set_cache( [ 'listing_categories', $query_args ], wp_list_pluck( $categories, 'term_id' ), DAY_IN_SECONDS );
+		if ( empty( $cache ) && ! empty( $categories ) && count( $categories ) <= 100 ) {
+			hivepress()->cache->set_cache( [ 'listing_category_ids', $query_args ], wp_list_pluck( $categories, 'term_id' ), WEEK_IN_SECONDS );
 		}
 
 		// Render categories.

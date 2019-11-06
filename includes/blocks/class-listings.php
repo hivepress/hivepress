@@ -206,7 +206,7 @@ class Listings extends Block {
 			$cache = null;
 
 			if ( 'random' !== $this->order ) {
-				$cache = hivepress()->cache->get_cache( [ 'listings', $query_args ] );
+				$cache = hivepress()->cache->get_cache( [ 'listing_ids', $query_args ] );
 
 				if ( ! empty( $cache ) ) {
 					$query_args = [
@@ -223,18 +223,19 @@ class Listings extends Block {
 			$query = new \WP_Query( $query_args );
 
 			// Set cache.
-			if ( 'random' !== $this->order && empty( $cache ) && $query->have_posts() ) {
-				hivepress()->cache->set_cache( [ 'listings', $query_args ], wp_list_pluck( $query->posts, 'ID' ), DAY_IN_SECONDS );
+			if ( 'random' !== $this->order && empty( $cache ) && $query->have_posts() && $query->found_posts <= 100 ) {
+				hivepress()->cache->set_cache( [ 'listing_ids', $query_args ], wp_list_pluck( $query->posts, 'ID' ), WEEK_IN_SECONDS );
 			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 
 			// Query featured listings.
 			$featured_query = new \WP_Query(
 				[
-					'post_type'   => 'any',
-					'post_status' => 'any',
-					'post__in'    => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
-					'orderby'     => 'rand',
+					'post_type'      => 'any',
+					'post_status'    => 'any',
+					'post__in'       => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
+					'posts_per_page' => absint( get_option( 'hp_listings_featured_per_page' ) ),
+					'orderby'        => 'rand',
 				]
 			);
 		}
