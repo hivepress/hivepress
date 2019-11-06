@@ -58,7 +58,7 @@ final class Cache {
 		$post_type = get_post_type( $post_id );
 
 		if ( in_array( $post_type, hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ), true ) ) {
-			$this->clear_cache( hp\unprefix( $post_type ) . '_*' );
+			$this->clear_cache( hp\unprefix( $post_type ) . '/*' );
 		}
 	}
 
@@ -71,7 +71,7 @@ final class Cache {
 	 */
 	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( in_array( $taxonomy, hp\prefix( array_keys( hivepress()->get_config( 'taxonomies' ) ) ), true ) ) {
-			$this->clear_cache( hp\unprefix( $taxonomy ) . '_*' );
+			$this->clear_cache( hp\unprefix( $taxonomy ) . '/*' );
 		}
 	}
 
@@ -110,7 +110,7 @@ final class Cache {
 			$transients = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT option_name FROM $wpdb->options WHERE option_name LIKE %s",
-					'_transient_' . hp\prefix( str_replace( '*', '%', $name ) )
+					'_transient_' . hp\prefix( str_replace( '*', '%', str_replace( '_', '\_', $name ) ) )
 				)
 			);
 
@@ -142,10 +142,10 @@ final class Cache {
 					$part = md5( wp_json_encode( $part ) );
 				}
 
-				$name .= '_' . strval( $part );
+				$name .= '/' . strval( $part );
 			}
 
-			$name = ltrim( $name, '_' );
+			$name = ltrim( $name, '/' );
 		}
 
 		return hp\prefix( $name );

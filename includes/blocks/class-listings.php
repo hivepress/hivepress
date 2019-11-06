@@ -206,7 +206,7 @@ class Listings extends Block {
 			$listing_ids = [];
 
 			if ( 'random' !== $this->order ) {
-				$listing_ids = hivepress()->cache->get_cache( [ 'listing_ids', $query_args ] );
+				$listing_ids = hivepress()->cache->get_cache( [ 'listing', 'ids', $query_args ] );
 
 				if ( ! empty( $listing_ids ) ) {
 					$query_args = [
@@ -224,7 +224,7 @@ class Listings extends Block {
 
 			// Cache IDs.
 			if ( 'random' !== $this->order && empty( $listing_ids ) && $query->have_posts() && $query->found_posts <= 100 ) {
-				hivepress()->cache->set_cache( [ 'listing_ids', $query_args ], wp_list_pluck( $query->posts, 'ID' ), WEEK_IN_SECONDS );
+				hivepress()->cache->set_cache( [ 'listing', 'ids', $query_args ], wp_list_pluck( $query->posts, 'ID' ), WEEK_IN_SECONDS );
 			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 
