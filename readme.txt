@@ -1,4 +1,4 @@
-=== HivePress - Multipurpose Directory, Listing & Classifieds Plugin ===
+=== HivePress - Multipurpose Directory, Listing & Classifieds WordPress Plugin ===
 Contributors: hivepress
 Tags: directory, business directory, classifieds, classified ads, listing, listings
 Requires at least: 4.9
