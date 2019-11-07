@@ -113,25 +113,41 @@ class Listing_Category extends Term {
 	 */
 	final public function get_count() {
 
-		// Get category IDs.
-		$category_ids = array_merge( [ absint( $this->id ) ], get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
+		// Set query arguments.
+		$query_args = [
+			'post_type'   => 'hp_listing',
+			'post_status' => 'publish',
+		];
 
-		// Get listing IDs.
-		$listing_ids = get_posts(
-			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'fields'         => 'ids',
-				'posts_per_page' => -1,
-				'tax_query'      => [
+		// Get cached count.
+		$count = hivepress()->cache->get_cache( [ absint( $this->id ), 'term', 'listing', 'count', $query_args ] );
+
+		if ( is_null( $count ) ) {
+
+			// Get category IDs.
+			$category_ids = array_merge( [ absint( $this->id ) ], get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
+
+			// Get listing IDs.
+			$listing_ids = get_posts(
+				array_merge(
+					$query_args,
 					[
-						'taxonomy' => hp\prefix( static::$name ),
-						'terms'    => $category_ids,
-					],
-				],
-			]
-		);
+						'fields'         => 'ids',
+						'posts_per_page' => -1,
+						'tax_query'      => [
+							[
+								'taxonomy' => hp\prefix( static::$name ),
+								'terms'    => $category_ids,
+							],
+						],
+					]
+				)
+			);
 
-		return count( $listing_ids );
+			// Cache count.
+			hivepress()->cache->set_cache( [ absint( $this->id ), 'term', 'listing', 'count', $query_args ], count( $listing_ids ), DAY_IN_SECONDS );
+		}
+
+		return absint( $count );
 	}
 }

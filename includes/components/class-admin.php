@@ -375,7 +375,7 @@ final class Admin {
 		// Get cached extensions.
 		$extensions = hivepress()->cache->get_cache( 'extensions' );
 
-		if ( empty( $extensions ) ) {
+		if ( is_null( $extensions ) ) {
 			$extensions = [];
 
 			// Query plugins.
@@ -420,7 +420,9 @@ final class Admin {
 				);
 
 				// Cache extensions.
-				hivepress()->cache->set_cache( 'extensions', $extensions, DAY_IN_SECONDS );
+				if ( count( $extensions ) <= 100 ) {
+					hivepress()->cache->set_cache( 'extensions', $extensions, DAY_IN_SECONDS );
+				}
 			}
 		}
 

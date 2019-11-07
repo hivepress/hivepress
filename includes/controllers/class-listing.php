@@ -445,7 +445,7 @@ class Listing extends Controller {
 		// Get cached IDs.
 		$listing_ids = hivepress()->cache->get_cache( [ get_current_user_id(), 'user', 'listing', 'ids', $query_args ] );
 
-		if ( ! empty( $listing_ids ) ) {
+		if ( ! is_null( $listing_ids ) ) {
 			$query_args = [
 				'post_type'      => 'any',
 				'post_status'    => 'any',
@@ -458,9 +458,11 @@ class Listing extends Controller {
 		// Query listings.
 		query_posts( $query_args );
 
+		set_query_var( 'post_type', 'hp_listing' );
+
 		// Cache IDs.
-		if ( empty( $listing_ids ) && have_posts() && $wp_query->found_posts <= 100 ) {
-			hivepress()->cache->set_cache( [ get_current_user_id(), 'user', 'listing', 'ids', $query_args ], wp_list_pluck( $wp_query->posts, 'ID' ), WEEK_IN_SECONDS );
+		if ( is_null( $listing_ids ) && $wp_query->found_posts <= 1000 ) {
+			hivepress()->cache->set_cache( [ get_current_user_id(), 'user', 'listing', 'ids', $query_args ], wp_list_pluck( $wp_query->posts, 'ID' ), DAY_IN_SECONDS );
 		}
 
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
@@ -587,6 +589,7 @@ class Listing extends Controller {
 		if ( ! is_null( $category ) && ! is_wp_error( $category ) ) {
 
 			// Get category IDs.
+			// todo.
 			$category_ids = get_term_children( $category->term_id, 'hp_listing_category' );
 
 			if ( empty( $category_ids ) ) {

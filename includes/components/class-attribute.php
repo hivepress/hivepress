@@ -109,7 +109,7 @@ final class Attribute {
 			// Get cached attributes.
 			$attributes = hivepress()->cache->get_cache( [ $model . '_attribute', 'args', $query_args ] );
 
-			if ( empty( $attributes ) ) {
+			if ( is_null( $attributes ) ) {
 				$attributes = [];
 
 				// Get attribute posts.
@@ -119,15 +119,18 @@ final class Attribute {
 
 					// Set defaults.
 					$attribute_args = [
+						'label'          => $attribute_post->post_title,
 						'display_areas'  => (array) $attribute_post->hp_display_areas,
 						'display_format' => $attribute_post->hp_display_format,
 						'editable'       => (bool) $attribute_post->hp_editable,
 						'searchable'     => (bool) $attribute_post->hp_searchable,
 						'filterable'     => (bool) $attribute_post->hp_filterable,
 						'sortable'       => (bool) $attribute_post->hp_sortable,
+						'categories'     => [],
 					];
 
 					// Get categories.
+					// todo.
 					$category_ids = wp_get_post_terms( $attribute_post->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 					foreach ( $category_ids as $category_id ) {
@@ -143,7 +146,7 @@ final class Attribute {
 
 						// Set defaults.
 						$field_args = [
-							'label' => $attribute_post->post_title,
+							'label' => $attribute_args['label'],
 							'type'  => 'text',
 							'order' => 100 + absint( $attribute_post->menu_order ),
 						];
@@ -177,20 +180,6 @@ final class Attribute {
 					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
 						$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $model ) . '_' ) );
 
-						// Register taxonomy.
-						register_taxonomy(
-							hp\prefix( $model . '_' . $attribute_name ),
-							hp\prefix( $model ),
-							[
-								'label'        => $attribute_post->post_title,
-								'hierarchical' => true,
-								'public'       => false,
-								'show_ui'      => true,
-								'show_in_menu' => false,
-								'rewrite'      => false,
-							]
-						);
-
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
 							$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
@@ -203,16 +192,28 @@ final class Attribute {
 				}
 
 				// Cache attributes.
-				if ( ! empty( $attributes ) && count( $attributes ) <= 100 ) {
+				if ( count( $attributes ) <= 100 ) {
 					hivepress()->cache->set_cache( [ $model . '_attribute', 'args', $query_args ], $attributes, DAY_IN_SECONDS );
 				}
 			}
 
-			// Set attributes.
-			$this->attributes[ $model ] = $attributes;
-		}
-
-		foreach ( $this->attributes as $model => $attributes ) {
+			// Register taxonomies.
+			foreach ( $attributes as $attribute_name => $attribute_args ) {
+				if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+					register_taxonomy(
+						hp\prefix( $model . '_' . $attribute_name ),
+						hp\prefix( $model ),
+						[
+							'label'        => $attribute_args['label'],
+							'hierarchical' => true,
+							'public'       => false,
+							'show_ui'      => true,
+							'show_in_menu' => false,
+							'rewrite'      => false,
+						]
+					);
+				}
+			}
 
 			/**
 			 * Filters model attributes.
@@ -224,11 +225,12 @@ final class Attribute {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
-			// Set defaults.
+			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $attribute_args ) {
 					return hp\merge_arrays(
 						[
+							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '',
 							'editable'       => false,
@@ -344,6 +346,7 @@ final class Attribute {
 		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
 
 		// Filter attributes.
+		// todo.
 		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		$attributes = array_filter(
@@ -477,43 +480,43 @@ final class Attribute {
 		$model = explode( '_', $form['name'] );
 		$model = reset( $model );
 
-		// Get category IDs.
-		$category_ids = [];
-
+		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		if ( 0 !== $category_id ) {
+		// Set query arguments.
+		$query_args = [
+			'parent'         => $category_id,
+			'include_parent' => true,
+			'fields'         => 'ids',
+		];
 
-			// Get parent categories.
-			$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
+		// Get cached IDs.
+		$category_ids = hivepress()->cache->get_cache( [ $model . '_category', 'ids', $query_args ] );
 
-			// Get child categories.
-			$category_ids = array_merge(
-				$category_ids,
-				// todo.
-				get_terms(
-					hp\prefix( $model . '_category' ),
-					[
-						'parent' => $category_id,
-						'fields' => 'ids',
-					]
-				)
-			);
-		} else {
+		if ( is_null( $category_ids ) ) {
+			$category_ids = [];
 
-			// Get top-level categories.
-			// todo.
-			$category_ids = get_terms(
-				hp\prefix( $model . '_category' ),
-				[
-					'parent' => 0,
-					'fields' => 'ids',
-				]
-			);
+			// Get category IDs.
+			if ( 0 === $category_id ) {
+
+				// Get top-level categories.
+				$category_ids = get_terms( hp\prefix( $model . '_category' ), $query_args );
+			} else {
+
+				// Get parent categories.
+				$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
+
+				// Get child categories.
+				$category_ids = array_merge( $category_ids, get_terms( hp\prefix( $model . '_category' ), $query_args ) );
+			}
+
+			// Cache IDs.
+			if ( count( $category_ids ) <= 1000 ) {
+				hivepress()->cache->set_cache( [ $model . '_category', 'ids', $query_args ], $category_ids, DAY_IN_SECONDS );
+			}
 		}
 
 		// Get categories.
-		// todo.
 		$categories = get_terms(
 			[
 				'taxonomy'   => hp\prefix( $model . '_category' ),
@@ -645,6 +648,7 @@ final class Attribute {
 			$model = hp\unprefix( $post->post_type );
 
 			// Filter attributes.
+			// todo.
 			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
 
 			$attributes = array_filter(
