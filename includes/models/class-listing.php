@@ -76,6 +76,14 @@ class Listing extends Post {
 						'max_length' => 128,
 					],
 
+					'featured'    => [
+						'type' => 'checkbox',
+					],
+
+					'verified'    => [
+						'type' => 'checkbox',
+					],
+
 					'image_ids'   => [
 						'label'        => esc_html__( 'Images', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
