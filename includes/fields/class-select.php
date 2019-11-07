@@ -80,7 +80,10 @@ class Select extends Field {
 					],
 
 					'options'  => [
-						'type' => 'hidden',
+						'label'    => esc_html__( 'Options', 'hivepress' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'order'    => 20,
 					],
 				],
 			],

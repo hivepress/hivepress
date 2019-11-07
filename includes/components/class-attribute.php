@@ -283,7 +283,7 @@ final class Attribute {
 			// Add field settings.
 			if ( class_exists( $field_class ) ) {
 				foreach ( $field_class::get_settings() as $field_name => $field ) {
-					if ( 'search' !== $field_context || 'required' !== $field_name ) {
+					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
 						$field_args = $field->get_args();
 
 						if ( 'required' !== $field_name ) {
