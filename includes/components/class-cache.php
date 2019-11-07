@@ -79,6 +79,7 @@ final class Cache {
 				$timeout = 0;
 
 				if ( $expire ) {
+					error_log( $callback . ' _transient_timeout_' . $name );
 					$timeout = absint( call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, true ] ) );
 				}
 
@@ -89,12 +90,14 @@ final class Cache {
 				} else {
 
 					// Get value.
+					error_log( $callback . ' _transient_' . $name );
 					$cache = call_user_func_array( $callback, [ $id, '_transient_' . $name, true ] );
 				}
 			}
 		} else {
 
 			// Get transient value.
+			error_log( 'get_transient ' . $name );
 			$cache = get_transient( $name );
 		}
 
@@ -130,16 +133,19 @@ final class Cache {
 			if ( function_exists( $callback ) ) {
 
 				// Set value.
+				error_log( $callback . ' _transient_' . $name );
 				call_user_func_array( $callback, [ $id, '_transient_' . $name, $value ] );
 
 				// Set timeout.
 				if ( $timeout > 0 ) {
+					error_log( $callback . ' _transient_timeout_' . $name );
 					call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, time() + $timeout ] );
 				}
 			}
 		} else {
 
 			// Set transient value.
+			error_log( 'set_transient ' . $name );
 			set_transient( $name, $value, $timeout );
 		}
 	}
@@ -171,15 +177,21 @@ final class Cache {
 				$callback = 'delete_' . $type . '_meta';
 
 				if ( function_exists( $callback ) ) {
+
+					// Delete value.
+					error_log( $callback . ' _transient_' . $name );
 					call_user_func_array( $callback, [ $id, '_transient_' . $name ] );
 
+					// Delete timeout.
 					if ( $expire ) {
+						error_log( $callback . ' _transient_timeout_' . $name );
 						call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
 					}
 				}
 			} else {
 
 				// Delete transient.
+				error_log( 'delete_transient ' . $name );
 				delete_transient( $name );
 			}
 		}
@@ -193,7 +205,7 @@ final class Cache {
 
 		// Set meta types.
 		$types = [ 'user', 'post', 'term', 'comment' ];
-
+		error_log( 'Begin clearing cache.' );
 		foreach ( $types as $type ) {
 			$callback = 'delete_' . $type . '_meta';
 
@@ -215,12 +227,15 @@ final class Cache {
 				// Delete meta values.
 				if ( ! empty( $meta_values ) ) {
 					foreach ( $meta_values as $meta_value ) {
-						call_user_func_array( $callback, [ $meta_value[ $type . '_id' ], $meta_value[ $meta_key ] ] );
-						call_user_func_array( $callback, [ $meta_value[ $type . '_id' ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value[ $meta_key ] ) ] );
+						error_log( $callback . ' ' . $meta_value['meta_key'] );
+						error_log( $callback . ' ' . preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) );
+						call_user_func_array( $callback, [ $meta_value[ $column ], $meta_value['meta_key'] ] );
+						call_user_func_array( $callback, [ $meta_value[ $column ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) ] );
 					}
 				}
 			}
 		}
+		error_log( 'End clearing cache.' );
 	}
 
 	/**
@@ -238,7 +253,7 @@ final class Cache {
 			$this->delete_cache( [ hp\unprefix( $post->post_type ), '*' ] );
 
 			// Delete meta.
-			$this->delete_cache( [ absint( $post->post_author ), 'user', hp\unprefix( $post->post_type ), '*' ] );
+			$this->delete_cache( [ $post->post_author, 'user', hp\unprefix( $post->post_type ), '*' ] );
 		}
 	}
 
@@ -351,7 +366,7 @@ final class Cache {
 		// Get cache names.
 		$name = array_merge( (array) $names, [ 'version' ] );
 
-		// Delete old versions.
+		// Delete old version.
 		$this->delete_cache( $name, false );
 
 		// Set new version.
