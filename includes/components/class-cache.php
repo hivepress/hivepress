@@ -267,7 +267,7 @@ final class Cache {
 	 * @param int $post_id Post ID.
 	 */
 	public function delete_post_cache( $post_id ) {
-		if ( in_array( get_post_type( $post_id ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ), true ) ) {
+		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
 
 			// Get post.
 			$post = get_post( $post_id );
@@ -291,7 +291,7 @@ final class Cache {
 	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
 	 */
 	public function delete_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
-		if ( in_array( $taxonomy, hp\prefix( array_keys( hivepress()->get_config( 'taxonomies' ) ) ), true ) ) {
+		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
@@ -312,7 +312,7 @@ final class Cache {
 	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
-		if ( in_array( $taxonomy, hp\prefix( array_keys( hivepress()->get_config( 'taxonomies' ) ) ), true ) ) {
+		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			$this->delete_cache( [ hp\unprefix( $taxonomy ), '*' ] );
 		}
 	}

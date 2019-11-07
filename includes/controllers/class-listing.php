@@ -356,7 +356,6 @@ class Listing extends Controller {
 				}
 
 				// Query listings.
-				// todo.
 				query_posts( $query_args );
 
 				if ( ! empty( $featured_ids ) ) {
@@ -589,7 +588,6 @@ class Listing extends Controller {
 		if ( ! is_null( $category ) && ! is_wp_error( $category ) ) {
 
 			// Get category IDs.
-			// todo.
 			$category_ids = get_term_children( $category->term_id, 'hp_listing_category' );
 
 			if ( empty( $category_ids ) ) {

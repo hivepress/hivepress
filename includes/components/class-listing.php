@@ -123,7 +123,6 @@ final class Listing {
 			if ( 0 !== $listing->post_parent ) {
 
 				// Get attachment IDs.
-				// todo.
 				$attachment_ids = get_posts(
 					[
 						'post_type'      => 'attachment',
@@ -237,7 +236,6 @@ final class Listing {
 	public function expire_listings() {
 
 		// Get listings.
-		// todo.
 		$listings = get_posts(
 			[
 				'post_type'      => 'hp_listing',

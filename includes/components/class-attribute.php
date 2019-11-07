@@ -130,7 +130,6 @@ final class Attribute {
 					];
 
 					// Get categories.
-					// todo.
 					$category_ids = wp_get_post_terms( $attribute_post->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 					foreach ( $category_ids as $category_id ) {
@@ -346,7 +345,6 @@ final class Attribute {
 		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
 
 		// Filter attributes.
-		// todo.
 		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		$attributes = array_filter(
@@ -583,7 +581,7 @@ final class Attribute {
 		foreach ( $form['fields'] as $field_name => $field_args ) {
 			if ( 'number_range' === $field_args['type'] ) {
 
-				// Get range values.
+				// Set query arguments.
 				$query_args = [
 					'post_type'   => hp\prefix( $model ),
 					'post_status' => 'publish',
@@ -591,13 +589,25 @@ final class Attribute {
 					'orderby'     => 'meta_value_num',
 				];
 
-				$min_value = get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'ASC' ] ) ), hp\prefix( $field_name ), true );
-				$max_value = get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'DESC' ] ) ), hp\prefix( $field_name ), true );
+				// Get cached range.
+				$range = hivepress()->cache->get_cache( [ $model, $field_name . '_range', $query_args ] );
+
+				if ( is_null( $range ) ) {
+
+					// Get range.
+					$range = [
+						floatval( get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'ASC' ] ) ), hp\prefix( $field_name ), true ) ),
+						floatval( get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'DESC' ] ) ), hp\prefix( $field_name ), true ) ),
+					];
+
+					// Cache range.
+					hivepress()->cache->set_cache( [ $model, $field_name . '_range', $query_args ], $range, DAY_IN_SECONDS );
+				}
 
 				// Set range values.
-				if ( ! in_array( $min_value, [ false, '' ], true ) && ! in_array( $max_value, [ false, '' ], true ) && $min_value !== $max_value ) {
-					$form['fields'][ $field_name ]['min_value'] = floatval( $min_value );
-					$form['fields'][ $field_name ]['max_value'] = floatval( $max_value );
+				if ( count( array_filter( $range ) ) > 0 && reset( $range ) !== end( $range ) ) {
+					$form['fields'][ $field_name ]['min_value'] = reset( $range );
+					$form['fields'][ $field_name ]['max_value'] = end( $range );
 				}
 			}
 		}
@@ -648,7 +658,6 @@ final class Attribute {
 			$model = hp\unprefix( $post->post_type );
 
 			// Filter attributes.
-			// todo.
 			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
 
 			$attributes = array_filter(
@@ -847,7 +856,6 @@ final class Attribute {
 			$query_args = array_merge( $query->query_vars, $query_args );
 		}
 
-		// todo.
 		$featured_ids = get_posts( $query_args );
 
 		if ( ! empty( $featured_ids ) ) {
