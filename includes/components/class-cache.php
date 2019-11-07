@@ -362,17 +362,9 @@ final class Cache {
 	 * @return string
 	 */
 	protected function update_cache_version( $names ) {
-
-		// Get cache names.
-		$name = array_merge( (array) $names, [ 'version' ] );
-
-		// Delete old version.
-		$this->delete_cache( $name, false );
-
-		// Set new version.
 		$version = (string) time();
 
-		$this->set_cache( $name, $version );
+		$this->set_cache( array_merge( (array) $names, [ 'version' ] ), $version );
 
 		return $version;
 	}
