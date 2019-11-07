@@ -95,130 +95,124 @@ final class Attribute {
 	 * Registers attributes.
 	 */
 	public function register_attributes() {
+		foreach ( $this->models as $model ) {
 
-		// Get cached attributes.
-		$this->attributes = hivepress()->cache->get_cache( 'attributes' );
+			// Set query arguments.
+			$query_args = [
+				'post_type'      => hp\prefix( $model . '_attribute' ),
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+			];
 
-		if ( empty( $this->attributes ) ) {
+			// Get cached attributes.
+			$attributes = hivepress()->cache->get_cache( [ $model . '_attribute', 'args', $query_args ] );
 
-			// Set defaults.
-			foreach ( $this->models as $model ) {
-				$this->attributes[ $model ] = [];
-			}
+			if ( empty( $attributes ) ) {
+				$attributes = [];
 
-			// Get attributes.
-			$attributes = get_posts(
-				[
-					'post_type'      => hp\prefix(
-						array_map(
-							function( $model ) {
-								return $model . '_attribute';
-							},
-							$this->models
-						)
-					),
-					'post_status'    => 'publish',
-					'posts_per_page' => -1,
-					'orderby'        => 'menu_order',
-					'order'          => 'ASC',
-				]
-			);
+				// Get attribute posts.
+				$attribute_posts = get_posts( $query_args );
 
-			foreach ( $attributes as $attribute ) {
-
-				// Get model.
-				$attribute_model = hp\unprefix( preg_replace( '/_attribute$/', '', $attribute->post_type ) );
-
-				// Set defaults.
-				$attribute_args = [
-					'display_areas'  => (array) $attribute->hp_display_areas,
-					'display_format' => $attribute->hp_display_format,
-					'editable'       => (bool) $attribute->hp_editable,
-					'searchable'     => (bool) $attribute->hp_searchable,
-					'filterable'     => (bool) $attribute->hp_filterable,
-					'sortable'       => (bool) $attribute->hp_sortable,
-				];
-
-				// Get categories.
-				$category_ids = wp_get_post_terms( $attribute->ID, hp\prefix( $attribute_model . '_category' ), [ 'fields' => 'ids' ] );
-
-				foreach ( $category_ids as $category_id ) {
-					$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $attribute_model . '_category' ) ) );
-				}
-
-				$attribute_args['categories'] = array_unique( $category_ids );
-
-				// Get fields.
-				$field_contexts = [ 'edit', 'search' ];
-
-				foreach ( $field_contexts as $field_context ) {
+				foreach ( $attribute_posts as $attribute_post ) {
 
 					// Set defaults.
-					$field_args = [
-						'label' => $attribute->post_title,
-						'type'  => 'text',
-						'order' => 100 + absint( $attribute->menu_order ),
+					$attribute_args = [
+						'display_areas'  => (array) $attribute_post->hp_display_areas,
+						'display_format' => $attribute_post->hp_display_format,
+						'editable'       => (bool) $attribute_post->hp_editable,
+						'searchable'     => (bool) $attribute_post->hp_searchable,
+						'filterable'     => (bool) $attribute_post->hp_filterable,
+						'sortable'       => (bool) $attribute_post->hp_sortable,
 					];
 
-					// Get field type.
-					$field_type = sanitize_key( get_post_meta( $attribute->ID, hp\prefix( $field_context . '_field_type' ), true ) );
+					// Get categories.
+					$category_ids = wp_get_post_terms( $attribute_post->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
-					if ( '' !== $field_type ) {
+					foreach ( $category_ids as $category_id ) {
+						$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $model . '_category' ) ) );
+					}
 
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_type;
+					$attribute_args['categories'] = array_unique( $category_ids );
 
-						// Get field settings.
-						if ( class_exists( $field_class ) ) {
-							$field_args['type'] = $field_type;
+					// Get fields.
+					$field_contexts = [ 'edit', 'search' ];
 
-							foreach ( $field_class::get_settings() as $field_name => $field ) {
-								$field->set_value( get_post_meta( $attribute->ID, hp\prefix( $field_context . '_field_' . $field_name ), true ) );
-								$field_args[ $field_name ] = $field->get_value();
+					foreach ( $field_contexts as $field_context ) {
+
+						// Set defaults.
+						$field_args = [
+							'label' => $attribute_post->post_title,
+							'type'  => 'text',
+							'order' => 100 + absint( $attribute_post->menu_order ),
+						];
+
+						// Get field type.
+						$field_type = sanitize_key( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_type' ), true ) );
+
+						if ( ! empty( $field_type ) ) {
+
+							// Get field class.
+							$field_class = '\HivePress\Fields\\' . $field_type;
+
+							// Get field settings.
+							if ( class_exists( $field_class ) ) {
+								$field_args['type'] = $field_type;
+
+								foreach ( $field_class::get_settings() as $field_name => $field ) {
+									$field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $field_name ), true ) );
+									$field_args[ $field_name ] = $field->get_value();
+								}
 							}
+						}
+
+						// Add field.
+						$attribute_args[ $field_context . '_field' ] = $field_args;
+					}
+
+					// Get attribute name.
+					$attribute_name = substr( hp\sanitize_key( urldecode( $attribute_post->post_name ) ), 0, 32 - strlen( hp\prefix( '' ) ) );
+
+					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+						$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $model ) . '_' ) );
+
+						// Register taxonomy.
+						register_taxonomy(
+							hp\prefix( $model . '_' . $attribute_name ),
+							hp\prefix( $model ),
+							[
+								'label'        => $attribute_post->post_title,
+								'hierarchical' => true,
+								'public'       => false,
+								'show_ui'      => true,
+								'show_in_menu' => false,
+								'rewrite'      => false,
+							]
+						);
+
+						// Set field options.
+						foreach ( $field_contexts as $field_context ) {
+							$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
+							$attribute_args[ $field_context . '_field' ]['taxonomy'] = hp\prefix( $model . '_' . $attribute_name );
 						}
 					}
 
-					// Add field.
-					$attribute_args[ $field_context . '_field' ] = $field_args;
+					// Add attribute.
+					$attributes[ $attribute_name ] = $attribute_args;
 				}
 
-				// Get attribute name.
-				$attribute_name = substr( hp\sanitize_key( urldecode( $attribute->post_name ) ), 0, 32 - strlen( hp\prefix( '' ) ) );
-
-				if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
-					$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $attribute_model ) . '_' ) );
-
-					// Register taxonomy.
-					register_taxonomy(
-						hp\prefix( $attribute_model . '_' . $attribute_name ),
-						hp\prefix( $attribute_model ),
-						[
-							'label'        => $attribute->post_title,
-							'hierarchical' => true,
-							'public'       => false,
-							'show_ui'      => true,
-							'show_in_menu' => false,
-							'rewrite'      => false,
-						]
-					);
-
-					// Set field options.
-					foreach ( $field_contexts as $field_context ) {
-						$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
-						$attribute_args[ $field_context . '_field' ]['taxonomy'] = hp\prefix( $attribute_model . '_' . $attribute_name );
-					}
+				// Cache attributes.
+				if ( ! empty( $attributes ) && count( $attributes ) <= 100 ) {
+					hivepress()->cache->set_cache( [ $model . '_attribute', 'args', $query_args ], $attributes, DAY_IN_SECONDS );
 				}
-
-				// Add attribute.
-				$this->attributes[ $attribute_model ][ $attribute_name ] = $attribute_args;
 			}
 
-			// Cache attributes.
-			hivepress()->cache->set_cache( 'attributes', $this->attributes, WEEK_IN_SECONDS );
+			// Set attributes.
+			$this->attributes[ $model ] = $attributes;
 		}
 
-		foreach ( $this->attributes as $model_name => $model_attributes ) {
+		foreach ( $this->attributes as $model => $attributes ) {
 
 			/**
 			 * Filters model attributes.
@@ -228,10 +222,10 @@ final class Attribute {
 			 * @param string $name Model name.
 			 * @param array $atts Model attributes.
 			 */
-			$model_attributes = apply_filters( 'hivepress/v1/models/' . $model_name . '/attributes', $model_attributes );
+			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
 			// Set defaults.
-			$this->attributes[ $model_name ] = array_map(
+			$this->attributes[ $model ] = array_map(
 				function( $attribute_args ) {
 					return hp\merge_arrays(
 						[
@@ -246,7 +240,7 @@ final class Attribute {
 						$attribute_args
 					);
 				},
-				$model_attributes
+				$attributes
 			);
 		}
 	}

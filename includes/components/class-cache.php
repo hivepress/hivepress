@@ -27,6 +27,11 @@ final class Cache {
 		// Schedule events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
 
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		// Delete cache.
 		add_action( 'hivepress/v1/cron/daily', [ $this, 'delete_expired_cache' ] );
 
@@ -60,6 +65,11 @@ final class Cache {
 	 */
 	public function get_cache( $names, $expire = true ) {
 		$cache = null;
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
 
 		// Get cache name.
 		$name = $this->get_cache_name( $names );
@@ -118,6 +128,11 @@ final class Cache {
 	 */
 	public function set_cache( $names, $value, $timeout = 0 ) {
 
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		// Get cache name.
 		$name = $this->get_cache_name( $names );
 
@@ -157,6 +172,12 @@ final class Cache {
 	 * @param bool  $expire Expiration check.
 	 */
 	public function delete_cache( $names, $expire = true ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		if ( is_array( $names ) && end( $names ) === '*' ) {
 			array_pop( $names );
 
