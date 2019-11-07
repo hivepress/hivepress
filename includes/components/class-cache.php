@@ -43,6 +43,10 @@ final class Cache {
 		add_action( 'create_term', [ $this, 'delete_term_cache' ], 10, 3 );
 		add_action( 'edit_term', [ $this, 'delete_term_cache' ], 10, 3 );
 		add_action( 'delete_term', [ $this, 'delete_term_cache' ], 10, 3 );
+
+		add_action( 'wp_insert_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
+		add_action( 'edit_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
+		add_action( 'delete_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
 	}
 
 	/**
@@ -295,8 +299,11 @@ final class Cache {
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
+
+				// Get term.
 				$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
 
+				// Delete cache.
 				if ( false !== $term ) {
 					$this->delete_cache( [ $term->term_id, 'term', hp\unprefix( get_post_type( $post_id ) ), '*' ] );
 				}
@@ -314,6 +321,33 @@ final class Cache {
 	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			$this->delete_cache( [ hp\unprefix( $taxonomy ), '*' ] );
+		}
+	}
+
+	/**
+	 * Deletes comment cache.
+	 *
+	 * @param int        $comment_id Comment ID.
+	 * @param WP_Comment $comment Comment object.
+	 */
+	public function delete_comment_cache( $comment_id, $comment ) {
+
+		// Get comment.
+		if ( is_array( $comment ) ) {
+			$comment = get_comment( $commend_id );
+		}
+
+		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
+
+			// Delete user meta.
+			if ( ! empty( $comment->user_id ) ) {
+				$this->delete_cache( [ $comment->user_id, 'user', hp\unprefix( $comment->comment_type ), '*' ] );
+			}
+
+			// Delete post meta.
+			if ( ! empty( $comment->comment_post_ID ) ) {
+				$this->delete_cache( [ $comment->comment_post_ID, 'post', hp\unprefix( $comment->comment_type ), '*' ] );
+			}
 		}
 	}
 

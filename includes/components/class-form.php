@@ -65,38 +65,58 @@ final class Form {
 
 				// Posts.
 				case 'posts':
-					$post_type = get_post_type_object( $args['post_type'] );
+					if ( post_type_exists( $args['post_type'] ) ) {
+						$titles = null;
 
-					if ( ! is_null( $post_type ) ) {
-						$options += wp_list_pluck(
-							get_posts(
-								[
-									'post_type'      => $args['post_type'],
-									'post_status'    => 'publish',
-									'posts_per_page' => -1,
-									'orderby'        => 'title',
-									'order'          => 'ASC',
-								]
-							),
-							'post_title',
-							'ID'
-						);
+						$query_args = [
+							'post_type'      => $args['post_type'],
+							'post_status'    => 'publish',
+							'posts_per_page' => -1,
+							'orderby'        => 'title',
+							'order'          => 'ASC',
+						];
+
+						if ( substr( $args['post_type'], 0, 3 ) === 'hp_' ) {
+							$titles = hivepress()->cache->get_cache( [ hp\unprefix( $args['post_type'] ), 'titles', $query_args ] );
+						}
+
+						if ( is_null( $titles ) ) {
+							$titles = wp_list_pluck( get_posts( $query_args ), 'post_title', 'ID' );
+
+							if ( substr( $args['post_type'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
+								hivepress()->cache->set_cache( [ hp\unprefix( $args['post_type'] ), 'titles', $query_args ], $titles, DAY_IN_SECONDS );
+							}
+						}
+
+						$options += $titles;
 					}
 
 					break;
 
 				// Terms.
 				case 'terms':
-					$taxonomy = get_taxonomy( $args['taxonomy'] );
+					if ( taxonomy_exists( $args['taxonomy'] ) ) {
+						$titles = null;
 
-					if ( false !== $taxonomy ) {
-						$options += get_terms(
-							[
-								'taxonomy'   => $args['taxonomy'],
-								'fields'     => 'id=>name',
-								'hide_empty' => false,
-							]
-						);
+						$query_args = [
+							'taxonomy'   => $args['taxonomy'],
+							'fields'     => 'id=>name',
+							'hide_empty' => false,
+						];
+
+						if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' ) {
+							$titles = hivepress()->cache->get_cache( [ hp\unprefix( $args['taxonomy'] ), 'titles', $query_args ] );
+						}
+
+						if ( is_null( $titles ) ) {
+							$titles = get_terms( $query_args );
+
+							if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
+								hivepress()->cache->set_cache( [ hp\unprefix( $args['taxonomy'] ), 'titles', $query_args ], $titles, DAY_IN_SECONDS );
+							}
+						}
+
+						$options += $titles;
 					}
 
 					break;
