@@ -520,7 +520,7 @@ final class Attribute {
 		$categories = get_terms(
 			[
 				'taxonomy'   => hp\prefix( $model . '_category' ),
-				'include'    => $category_ids,
+				'include'    => array_merge( [ 0 ], $category_ids ),
 				'hide_empty' => false,
 				'meta_key'   => 'hp_order',
 				'orderby'    => 'meta_value_num',

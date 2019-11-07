@@ -155,7 +155,7 @@ class Listings extends Block {
 	public function render() {
 		global $wp_query;
 
-		$output = '';
+		$output = ' ';
 
 		// Get column width.
 		$columns      = absint( $this->columns );
@@ -212,7 +212,7 @@ class Listings extends Block {
 					$query_args = [
 						'post_type'      => 'any',
 						'post_status'    => 'any',
-						'post__in'       => $listing_ids,
+						'post__in'       => array_merge( [ 0 ], $listing_ids ),
 						'posts_per_page' => count( $listing_ids ),
 						'orderby'        => 'post__in',
 					];

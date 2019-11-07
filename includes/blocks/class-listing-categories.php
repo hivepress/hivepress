@@ -154,7 +154,7 @@ class Listing_Categories extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '';
+		$output = ' ';
 
 		// Get column width.
 		$columns      = absint( $this->columns );
@@ -189,7 +189,7 @@ class Listing_Categories extends Block {
 
 		if ( ! is_null( $listing_category_ids ) ) {
 			$query_args = [
-				'include'    => $listing_category_ids,
+				'include'    => array_merge( [ 0 ], $listing_category_ids ),
 				'hide_empty' => false,
 				'orderby'    => 'include',
 			];
