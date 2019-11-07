@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 
 global $wpdb;
 
-if ( defined( 'HP_DELETE_DATA' ) && HP_DELETE_DATA ) {
+if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 
 	// Trash pages.
 	$page_ids = $wpdb->get_results( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE 'hp\_page\_%';", ARRAY_A );

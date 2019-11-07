@@ -38,6 +38,8 @@ final class Cache {
 		add_action( 'save_post', [ $this, 'delete_post_cache' ] );
 		add_action( 'delete_post', [ $this, 'delete_post_cache' ] );
 
+		add_action( 'set_object_terms', [ $this, 'delete_post_term_cache' ], 10, 6 );
+
 		add_action( 'create_term', [ $this, 'delete_term_cache' ], 10, 3 );
 		add_action( 'edit_term', [ $this, 'delete_term_cache' ], 10, 3 );
 		add_action( 'delete_term', [ $this, 'delete_term_cache' ], 10, 3 );
@@ -273,8 +275,32 @@ final class Cache {
 			// Delete transients.
 			$this->delete_cache( [ hp\unprefix( $post->post_type ), '*' ] );
 
-			// Delete meta.
+			// Delete user meta.
 			$this->delete_cache( [ $post->post_author, 'user', hp\unprefix( $post->post_type ), '*' ] );
+		}
+	}
+
+	/**
+	 * Deletes post term cache.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param array  $terms Terms.
+	 * @param array  $term_taxonomy_ids Term taxonomy IDs.
+	 * @param string $taxonomy Taxonomy name.
+	 * @param bool   $append Append property.
+	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
+	 */
+	public function delete_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
+		if ( in_array( $taxonomy, hp\prefix( array_keys( hivepress()->get_config( 'taxonomies' ) ) ), true ) ) {
+			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
+
+			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
+				$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
+
+				if ( false !== $term ) {
+					$this->delete_cache( [ $term->term_id, 'term', hp\unprefix( get_post_type( $post_id ) ), '*' ] );
+				}
+			}
 		}
 	}
 
