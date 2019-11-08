@@ -476,7 +476,7 @@ final class Cache {
 	 */
 	public function delete_post_cache( $post_id ) {
 		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
-
+			error_log( 'begin deleting post cache' );
 			// Get post.
 			$post = get_post( $post_id );
 
@@ -487,6 +487,7 @@ final class Cache {
 			if ( ! empty( $post->post_author ) ) {
 				$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
 			}
+			error_log( 'end deleting post cache' );
 		}
 	}
 
@@ -502,6 +503,7 @@ final class Cache {
 	 */
 	public function delete_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
+			error_log( 'begin deleting post term cache' );
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
@@ -514,6 +516,7 @@ final class Cache {
 					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
+			error_log( 'end deleting post term cache' );
 		}
 	}
 
@@ -526,7 +529,9 @@ final class Cache {
 	 */
 	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
+			error_log( 'begin deleting term cache' );
 			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
+			error_log( 'end deleting term cache' );
 		}
 	}
 
@@ -544,7 +549,7 @@ final class Cache {
 		}
 
 		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
-
+			error_log( 'begin deleting comment cache' );
 			// Delete transient cache.
 			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 
@@ -556,6 +561,7 @@ final class Cache {
 			if ( ! empty( $comment->comment_post_ID ) ) {
 				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
+			error_log( 'end deleting comment cache' );
 		}
 	}
 }
