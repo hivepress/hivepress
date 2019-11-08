@@ -101,6 +101,7 @@ final class Cache {
 
 		// Get value.
 		$cache = get_transient( $this->get_cache_name( $key, $group ) );
+		error_log( 'get_transient ' . $this->get_cache_name( $key, $group ) );
 
 		// Normalize value.
 		if ( false === $cache ) {
@@ -137,6 +138,7 @@ final class Cache {
 
 			// Get timeout.
 			$timeout = absint( call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, true ] ) );
+			error_log( $callback . ' _transient_timeout_' . $name );
 
 			if ( 0 !== $timeout && $timeout <= time() ) {
 
@@ -146,6 +148,7 @@ final class Cache {
 
 				// Get value.
 				$cache = call_user_func_array( $callback, [ $id, '_transient_' . $name, true ] );
+				error_log( $callback . ' _transient_' . $name );
 
 				// Normalize value.
 				if ( '' === $cache ) {
@@ -174,6 +177,7 @@ final class Cache {
 
 		// Set value.
 		set_transient( $this->get_cache_name( $key, $group ), $value, $expiration );
+		error_log( 'set_transient ' . $this->get_cache_name( $key, $group ) );
 	}
 
 	/**
@@ -203,10 +207,12 @@ final class Cache {
 
 			// Set value.
 			call_user_func_array( $callback, [ $id, '_transient_' . $name, $value ] );
+			error_log( $callback . ' _transient_' . $name );
 
 			// Set timeout.
 			if ( $expiration > 0 ) {
 				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, time() + $expiration ] );
+				error_log( $callback . ' _transient_timeout_' . $name );
 			}
 		}
 	}
@@ -232,6 +238,7 @@ final class Cache {
 
 			// Delete value.
 			delete_transient( $this->get_cache_name( $key, $group ) );
+			error_log( 'delete_transient ' . $this->get_cache_name( $key, $group ) );
 		}
 	}
 
@@ -265,9 +272,11 @@ final class Cache {
 
 				// Delete value.
 				call_user_func_array( $callback, [ $id, '_transient_' . $name ] );
+				error_log( $callback . ' _transient_' . $name );
 
 				// Delete timeout.
 				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
+				error_log( $callback . ' _transient_timeout_' . $name );
 			}
 		}
 	}
@@ -422,7 +431,7 @@ final class Cache {
 	 */
 	public function clear_meta_cache() {
 		global $wpdb;
-
+		error_log( 'begin clearing cache' );
 		// Set types.
 		$types = [ 'user', 'post', 'term', 'comment' ];
 
@@ -449,12 +458,15 @@ final class Cache {
 				// Delete values.
 				if ( ! empty( $meta_values ) ) {
 					foreach ( $meta_values as $meta_value ) {
+						error_log( $callback . ' ' . $meta_value['meta_key'] );
+						error_log( $callback . ' ' . preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) );
 						call_user_func_array( $callback, [ $meta_value[ $column ], $meta_value['meta_key'] ] );
 						call_user_func_array( $callback, [ $meta_value[ $column ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) ] );
 					}
 				}
 			}
 		}
+		error_log( 'end clearing cache' );
 	}
 
 	/**
