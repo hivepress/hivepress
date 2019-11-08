@@ -206,9 +206,9 @@ class Listings extends Block {
 			$listing_ids = null;
 
 			if ( 'random' !== $this->order ) {
-				$listing_ids = hivepress()->cache->get_cache( [ 'listing', 'ids', $query_args ] );
+				$listing_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
 
-				if ( ! is_null( $listing_ids ) ) {
+				if ( is_array( $listing_ids ) ) {
 					$query_args = [
 						'post_type'      => 'any',
 						'post_status'    => 'any',
@@ -224,7 +224,7 @@ class Listings extends Block {
 
 			// Cache IDs.
 			if ( 'random' !== $this->order && is_null( $listing_ids ) && $query->found_posts <= 1000 ) {
-				hivepress()->cache->set_cache( [ 'listing', 'ids', $query_args ], wp_list_pluck( $query->posts, 'ID' ), DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), wp_list_pluck( $query->posts, 'ID' ), 'post/listing', DAY_IN_SECONDS );
 			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 

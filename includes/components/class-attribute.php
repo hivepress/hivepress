@@ -107,7 +107,7 @@ final class Attribute {
 			];
 
 			// Get cached attributes.
-			$attributes = hivepress()->cache->get_cache( [ $model . '_attribute', 'args', $query_args ] );
+			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'args' ] ), 'post/' . $model . '_attribute' );
 
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
@@ -192,7 +192,7 @@ final class Attribute {
 
 				// Cache attributes.
 				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->set_cache( [ $model . '_attribute', 'args', $query_args ], $attributes, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'args' ] ), $attributes, 'post/' . $model . '_attribute', DAY_IN_SECONDS );
 				}
 			}
 
@@ -489,7 +489,7 @@ final class Attribute {
 		];
 
 		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( [ $model . '_category', 'ids', $query_args ] );
+		$category_ids = hivepress()->cache->get_cache( $query_args, 'term/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
 			$category_ids = [];
@@ -510,7 +510,7 @@ final class Attribute {
 
 			// Cache IDs.
 			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( [ $model . '_category', 'ids', $query_args ], $category_ids, DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( $query_args, $category_ids, 'term/' . $model . '_category', DAY_IN_SECONDS );
 			}
 		}
 
@@ -590,7 +590,7 @@ final class Attribute {
 				];
 
 				// Get cached range.
-				$range = hivepress()->cache->get_cache( [ $model, $field_name . '_range', $query_args ] );
+				$range = hivepress()->cache->get_cache( array_merge( $query_args, [ 'cache_type' => 'number_range' ] ), 'post/' . $model );
 
 				if ( is_null( $range ) ) {
 
@@ -601,7 +601,7 @@ final class Attribute {
 					];
 
 					// Cache range.
-					hivepress()->cache->set_cache( [ $model, $field_name . '_range', $query_args ], $range, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'cache_type' => 'number_range' ] ), $range, 'post/' . $model, DAY_IN_SECONDS );
 				}
 
 				// Set range values.

@@ -185,9 +185,9 @@ class Listing_Categories extends Block {
 		}
 
 		// Get cached IDs.
-		$listing_category_ids = hivepress()->cache->get_cache( [ 'listing_category', 'ids', $query_args ] );
+		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category' );
 
-		if ( ! is_null( $listing_category_ids ) ) {
+		if ( is_array( $listing_category_ids ) ) {
 			$query_args = [
 				'include'    => array_merge( [ 0 ], $listing_category_ids ),
 				'hide_empty' => false,
@@ -200,7 +200,7 @@ class Listing_Categories extends Block {
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && count( $categories ) <= 1000 ) {
-			hivepress()->cache->set_cache( [ 'listing_category', 'ids', $query_args ], wp_list_pluck( $categories, 'term_id' ), DAY_IN_SECONDS );
+			hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), wp_list_pluck( $categories, 'term_id' ), 'term/listing_category', DAY_IN_SECONDS );
 		}
 
 		// Render categories.

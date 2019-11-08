@@ -77,14 +77,14 @@ final class Form {
 						];
 
 						if ( substr( $args['post_type'], 0, 3 ) === 'hp_' ) {
-							$titles = hivepress()->cache->get_cache( [ hp\unprefix( $args['post_type'] ), 'titles', $query_args ] );
+							$titles = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), 'post/' . hp\unprefix( $args['post_type'] ) );
 						}
 
 						if ( is_null( $titles ) ) {
 							$titles = wp_list_pluck( get_posts( $query_args ), 'post_title', 'ID' );
 
 							if ( substr( $args['post_type'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
-								hivepress()->cache->set_cache( [ hp\unprefix( $args['post_type'] ), 'titles', $query_args ], $titles, DAY_IN_SECONDS );
+								hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), $titles, 'post/' . hp\unprefix( $args['post_type'] ), DAY_IN_SECONDS );
 							}
 						}
 
@@ -96,7 +96,7 @@ final class Form {
 				// Terms.
 				case 'terms':
 					if ( taxonomy_exists( $args['taxonomy'] ) ) {
-						$titles = null;
+						$names = null;
 
 						$query_args = [
 							'taxonomy'   => $args['taxonomy'],
@@ -105,18 +105,18 @@ final class Form {
 						];
 
 						if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' ) {
-							$titles = hivepress()->cache->get_cache( [ hp\unprefix( $args['taxonomy'] ), 'titles', $query_args ] );
+							$names = hivepress()->cache->get_cache( $query_args, 'term/' . hp\unprefix( $args['taxonomy'] ) );
 						}
 
-						if ( is_null( $titles ) ) {
-							$titles = get_terms( $query_args );
+						if ( is_null( $names ) ) {
+							$names = get_terms( $query_args );
 
-							if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
-								hivepress()->cache->set_cache( [ hp\unprefix( $args['taxonomy'] ), 'titles', $query_args ], $titles, DAY_IN_SECONDS );
+							if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' && count( $names ) <= 1000 ) {
+								hivepress()->cache->set_cache( $query_args, $names, 'term/' . hp\unprefix( $args['taxonomy'] ), DAY_IN_SECONDS );
 							}
 						}
 
-						$options += $titles;
+						$options += $names;
 					}
 
 					break;
