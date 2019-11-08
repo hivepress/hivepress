@@ -32,9 +32,10 @@ final class Cache {
 			return;
 		}
 
-		// Delete cache.
-		add_action( 'hivepress/v1/cron/daily', [ $this, 'delete_expired_cache' ] );
+		// Clear cache.
+		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
 
+		// Delete cache.
 		add_action( 'save_post', [ $this, 'delete_post_cache' ] );
 		add_action( 'delete_post', [ $this, 'delete_post_cache' ] );
 
@@ -63,62 +64,46 @@ final class Cache {
 	}
 
 	/**
-	 * Gets cache.
+	 * Routes methods.
 	 *
-	 * @param mixed $names Cache names.
-	 * @param bool  $expire Expiration check.
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
 	 * @return mixed
 	 */
-	public function get_cache( $names, $expire = true ) {
-		$cache = null;
+	public function __call( $name, $args ) {
+		preg_match( '/^(get|set|delete)_([a-z_]+)_cache$/', $name, $matches );
+
+		if ( is_array( $matches ) && count( $matches ) === 3 ) {
+			array_shift( $matches );
+
+			$method = reset( $matches ) . '_meta_cache';
+			$type   = end( $matches );
+
+			if ( method_exists( $this, $method ) ) {
+				return call_user_func_array( [ $this, $method ], array_merge( [ $type ], $args ) );
+			}
+		}
+	}
+
+	/**
+	 * Gets transient cache.
+	 *
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
+	 * @return mixed
+	 */
+	public function get_cache( $key, $group = null ) {
 
 		// Check status.
 		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
 			return;
 		}
 
-		// Get cache name.
-		$name = $this->get_cache_name( $names );
-
-		// Get cache ID.
-		$id = $this->get_cache_id( $names );
-
-		if ( ! empty( $id ) ) {
-
-			// Get meta value.
-			$type     = $names[1];
-			$callback = 'get_' . $type . '_meta';
-
-			if ( function_exists( $callback ) ) {
-
-				// Get timeout.
-				$timeout = 0;
-
-				if ( $expire ) {
-					error_log( $callback . ' _transient_timeout_' . $name );
-					$timeout = absint( call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, true ] ) );
-				}
-
-				if ( 0 !== $timeout && $timeout <= time() ) {
-
-					// Delete value.
-					$this->delete_cache( [ $id, $type, hp\unprefix( $name ) ] );
-				} else {
-
-					// Get value.
-					error_log( $callback . ' _transient_' . $name );
-					$cache = call_user_func_array( $callback, [ $id, '_transient_' . $name, true ] );
-				}
-			}
-		} else {
-
-			// Get transient value.
-			error_log( 'get_transient ' . $name );
-			$cache = get_transient( $name );
-		}
+		// Get value.
+		$cache = get_transient( $this->get_cache_name( $key, $group ) );
 
 		// Normalize value.
-		if ( in_array( $cache, [ false, '' ], true ) ) {
+		if ( false === $cache ) {
 			$cache = null;
 		}
 
@@ -126,119 +111,329 @@ final class Cache {
 	}
 
 	/**
-	 * Sets cache.
+	 * Gets meta cache.
 	 *
-	 * @param mixed $names Cache names.
-	 * @param mixed $value Cache value.
-	 * @param int   $timeout Expiration timeout.
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
+	 * @return mixed
 	 */
-	public function set_cache( $names, $value, $timeout = 0 ) {
+	private function get_meta_cache( $type, $id, $key, $group = null ) {
+		$cache = null;
 
 		// Check status.
 		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
 			return;
 		}
 
-		// Get cache name.
-		$name = $this->get_cache_name( $names );
+		// Set callback.
+		$callback = 'get_' . $type . '_meta';
 
-		// Get cache ID.
-		$id = $this->get_cache_id( $names );
+		if ( function_exists( $callback ) ) {
 
-		if ( ! empty( $id ) ) {
+			// Get name.
+			$name = $this->get_meta_cache_name( $type, $id, $key, $group );
 
-			// Set meta value.
-			$type     = $names[1];
-			$callback = 'update_' . $type . '_meta';
+			// Get timeout.
+			$timeout = absint( call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, true ] ) );
 
-			if ( function_exists( $callback ) ) {
+			if ( 0 !== $timeout && $timeout <= time() ) {
 
-				// Set value.
-				error_log( $callback . ' _transient_' . $name );
-				call_user_func_array( $callback, [ $id, '_transient_' . $name, $value ] );
-
-				// Set timeout.
-				if ( $timeout > 0 ) {
-					error_log( $callback . ' _transient_timeout_' . $name );
-					call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, time() + $timeout ] );
-				}
-			}
-		} else {
-
-			// Set transient value.
-			error_log( 'set_transient ' . $name );
-			set_transient( $name, $value, $timeout );
-		}
-	}
-
-	/**
-	 * Deletes cache.
-	 *
-	 * @param mixed $names Cache names.
-	 * @param bool  $expire Expiration check.
-	 */
-	public function delete_cache( $names, $expire = true ) {
-
-		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
-			return;
-		}
-
-		if ( is_array( $names ) && end( $names ) === '*' ) {
-			array_pop( $names );
-
-			// Update cache version.
-			$this->update_cache_version( $names );
-		} else {
-
-			// Get cache name.
-			$name = $this->get_cache_name( $names );
-
-			// Get cache ID.
-			$id = $this->get_cache_id( $names );
-
-			if ( ! empty( $id ) ) {
-
-				// Delete meta value.
-				$type     = $names[1];
-				$callback = 'delete_' . $type . '_meta';
-
-				if ( function_exists( $callback ) ) {
-
-					// Delete value.
-					error_log( $callback . ' _transient_' . $name );
-					call_user_func_array( $callback, [ $id, '_transient_' . $name ] );
-
-					// Delete timeout.
-					if ( $expire ) {
-						error_log( $callback . ' _transient_timeout_' . $name );
-						call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
-					}
-				}
+				// Delete value.
+				$this->delete_meta_cache( $type, $id, $key, $group );
 			} else {
 
-				// Delete transient.
-				error_log( 'delete_transient ' . $name );
-				delete_transient( $name );
+				// Get value.
+				$cache = call_user_func_array( $callback, [ $id, '_transient_' . $name, true ] );
+
+				// Normalize value.
+				if ( '' === $cache ) {
+					$cache = null;
+				}
+			}
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Sets transient cache.
+	 *
+	 * @param mixed  $key Cache key.
+	 * @param mixed  $value Cache value.
+	 * @param string $group Cache group.
+	 * @param int    $expiration Expiration period.
+	 */
+	public function set_cache( $key, $value, $group = null, $expiration = 0 ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
+		// Set value.
+		set_transient( $this->get_cache_name( $key, $group ), $value, $expiration );
+	}
+
+	/**
+	 * Sets meta cache.
+	 *
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param mixed  $key Cache key.
+	 * @param mixed  $value Cache value.
+	 * @param string $group Cache group.
+	 * @param int    $expiration Expiration period.
+	 */
+	private function set_meta_cache( $type, $id, $key, $value, $group = null, $expiration = 0 ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
+		// Set callback.
+		$callback = 'update_' . $type . '_meta';
+
+		if ( function_exists( $callback ) ) {
+
+			// Get name.
+			$name = $this->get_meta_cache_name( $type, $id, $key, $group );
+
+			// Set value.
+			call_user_func_array( $callback, [ $id, '_transient_' . $name, $value ] );
+
+			// Set timeout.
+			if ( $expiration > 0 ) {
+				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, time() + $expiration ] );
 			}
 		}
 	}
 
 	/**
-	 * Deletes expired cache.
+	 * Deletes transient cache.
+	 *
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
 	 */
-	public function delete_expired_cache() {
+	public function delete_cache( $key, $group = null ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
+		if ( is_null( $key ) && ! is_null( $group ) ) {
+
+			// Update version.
+			$this->update_cache_version( $group );
+		} else {
+
+			// Delete value.
+			delete_transient( $this->get_cache_name( $key, $group ) );
+		}
+	}
+
+	/**
+	 * Deletes meta cache.
+	 *
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
+	 */
+	private function delete_meta_cache( $type, $id, $key, $group = null ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
+		// Set callback.
+		$callback = 'delete_' . $type . '_meta';
+
+		if ( function_exists( $callback ) ) {
+			if ( is_null( $key ) && ! is_null( $group ) ) {
+
+				// Update version.
+				$this->update_meta_cache_version( $type, $id, $group );
+			} else {
+
+				// Get name.
+				$name = $this->get_meta_cache_name( $type, $id, $key, $group );
+
+				// Delete value.
+				call_user_func_array( $callback, [ $id, '_transient_' . $name ] );
+
+				// Delete timeout.
+				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
+			}
+		}
+	}
+
+	/**
+	 * Gets transient cache name.
+	 *
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	private function get_cache_name( $key, $group = null ) {
+		$name = $this->serialize_cache_key( $key );
+
+		if ( ! is_null( $group ) ) {
+			$name .= $this->get_cache_version( $group );
+
+			$name = $group . '/' . md5( $name );
+		}
+
+		return hp\prefix( $name );
+	}
+
+	/**
+	 * Gets meta cache name.
+	 *
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param mixed  $key Cache key.
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	private function get_meta_cache_name( $type, $id, $key, $group = null ) {
+		$name = $this->serialize_cache_key( $key );
+
+		if ( ! is_null( $group ) ) {
+			$name .= $this->get_meta_cache_version( $type, $id, $group );
+
+			$name = $group . '/' . md5( $name );
+		}
+
+		return hp\prefix( $name );
+	}
+
+	/**
+	 * Gets transient cache version.
+	 *
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	public function get_cache_version( $group ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
+		// Get version.
+		$version = $this->get_cache( $group . '/version' );
+
+		if ( is_null( $version ) ) {
+
+			// Set version.
+			$version = $this->update_cache_version( $group );
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Gets meta cache version.
+	 *
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	private function get_meta_cache_version( $type, $id, $group ) {
+		$version = $this->get_meta_cache( $type, $id, $group . '/version' );
+
+		if ( is_null( $version ) ) {
+			$version = $this->update_meta_cache_version( $type, $id, $group );
+		}
+
+		return $version;
+	}
+
+	/**
+	 * Updates transient cache version.
+	 *
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	private function update_cache_version( $group ) {
+		$version = (string) time();
+
+		$this->set_cache( $group . '/version', $version );
+
+		return $version;
+	}
+
+	/**
+	 * Updates meta cache version.
+	 *
+	 * @param string $type Meta type.
+	 * @param int    $id Object ID.
+	 * @param string $group Cache group.
+	 * @return string
+	 */
+	private function update_meta_cache_version( $type, $id, $group ) {
+		$version = (string) time();
+
+		$this->set_meta_cache( $type, $id, $group . '/version', $version );
+
+		return $version;
+	}
+
+	/**
+	 * Serializes cache key.
+	 *
+	 * @param mixed $key Cache key.
+	 * @return string
+	 */
+	private function serialize_cache_key( $key ) {
+		if ( is_array( $key ) ) {
+			$key = wp_json_encode( $this->sort_cache_key( $key ) );
+		}
+
+		return $key;
+	}
+
+	/**
+	 * Sorts cache key.
+	 *
+	 * @param mixed $key Cache key.
+	 * @return mixed
+	 */
+	private function sort_cache_key( $key ) {
+		if ( is_array( $key ) ) {
+			ksort( $key );
+
+			foreach ( $key as $name => $value ) {
+				$key[ $name ] = $this->sort_cache_key( $value );
+			}
+		}
+
+		return $key;
+	}
+
+	/**
+	 * Clears meta cache.
+	 */
+	public function clear_meta_cache() {
 		global $wpdb;
 
-		// Set meta types.
+		// Set types.
 		$types = [ 'user', 'post', 'term', 'comment' ];
-		error_log( 'Begin clearing cache.' );
+
 		foreach ( $types as $type ) {
+
+			// Set callback.
 			$callback = 'delete_' . $type . '_meta';
 
 			if ( function_exists( $callback ) ) {
 
-				// Get meta values.
+				// Get values.
 				$table  = $wpdb->prefix . $type . 'meta';
 				$column = $type . '_id';
 
@@ -251,18 +446,15 @@ final class Cache {
 					ARRAY_A
 				);
 
-				// Delete meta values.
+				// Delete values.
 				if ( ! empty( $meta_values ) ) {
 					foreach ( $meta_values as $meta_value ) {
-						error_log( $callback . ' ' . $meta_value['meta_key'] );
-						error_log( $callback . ' ' . preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) );
 						call_user_func_array( $callback, [ $meta_value[ $column ], $meta_value['meta_key'] ] );
 						call_user_func_array( $callback, [ $meta_value[ $column ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) ] );
 					}
 				}
 			}
 		}
-		error_log( 'End clearing cache.' );
 	}
 
 	/**
@@ -276,11 +468,13 @@ final class Cache {
 			// Get post.
 			$post = get_post( $post_id );
 
-			// Delete transients.
-			$this->delete_cache( [ hp\unprefix( $post->post_type ), '*' ] );
+			// Delete transient cache.
+			$this->delete_cache( null, 'post/' . hp\unprefix( $post->post_type ) );
 
-			// Delete user meta.
-			$this->delete_cache( [ $post->post_author, 'user', hp\unprefix( $post->post_type ), '*' ] );
+			// Delete meta cache.
+			if ( ! empty( $post->post_author ) ) {
+				$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
+			}
 		}
 	}
 
@@ -303,9 +497,9 @@ final class Cache {
 				// Get term.
 				$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
 
-				// Delete cache.
+				// Delete meta cache.
 				if ( false !== $term ) {
-					$this->delete_cache( [ $term->term_id, 'term', hp\unprefix( get_post_type( $post_id ) ), '*' ] );
+					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
 		}
@@ -320,7 +514,7 @@ final class Cache {
 	 */
 	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			$this->delete_cache( [ hp\unprefix( $taxonomy ), '*' ] );
+			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
 		}
 	}
 
@@ -339,114 +533,17 @@ final class Cache {
 
 		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
 
-			// Delete user meta.
+			// Delete transient cache.
+			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
+
+			// Delete meta cache.
 			if ( ! empty( $comment->user_id ) ) {
-				$this->delete_cache( [ $comment->user_id, 'user', hp\unprefix( $comment->comment_type ), '*' ] );
+				$this->delete_user_cache( $comment->user_id, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
 
-			// Delete post meta.
 			if ( ! empty( $comment->comment_post_ID ) ) {
-				$this->delete_cache( [ $comment->comment_post_ID, 'post', hp\unprefix( $comment->comment_type ), '*' ] );
+				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
 		}
-	}
-
-	/**
-	 * Gets cache ID.
-	 *
-	 * @param mixed $names Cache names.
-	 * @return int
-	 */
-	protected function get_cache_id( $names ) {
-		$id = null;
-
-		if ( is_array( $names ) && count( $names ) >= 3 ) {
-			$id = absint( reset( $names ) );
-		}
-
-		return $id;
-	}
-
-	/**
-	 * Gets cache name.
-	 *
-	 * @param mixed $names Cache names.
-	 * @return string
-	 */
-	protected function get_cache_name( $names ) {
-		$name = $names;
-
-		if ( is_array( $names ) ) {
-
-			// Get cache ID.
-			$id   = $this->get_cache_id( $names );
-			$type = null;
-
-			if ( ! empty( $id ) ) {
-				array_shift( $names );
-
-				$type = array_shift( $names );
-			}
-
-			// Get cache version.
-			$version = '';
-
-			foreach ( $names as $part ) {
-				if ( is_array( $part ) ) {
-					if ( ! empty( $id ) ) {
-						$version = $this->get_cache_version( [ $id, $type, reset( $names ) ] );
-					} else {
-						$version = $this->get_cache_version( reset( $names ) );
-					}
-
-					break;
-				}
-			}
-
-			// Get cache name.
-			$name = array_shift( $names );
-
-			foreach ( $names as $part ) {
-				if ( is_array( $part ) ) {
-					ksort( $part );
-
-					$part = md5( wp_json_encode( $part ) . $version );
-				}
-
-				$name .= '/' . strval( $part );
-			}
-		}
-
-		return hp\prefix( $name );
-	}
-
-	/**
-	 * Gets cache version.
-	 *
-	 * @param mixed $names Cache names.
-	 * @return string
-	 */
-	protected function get_cache_version( $names ) {
-		$version = $this->get_cache( array_merge( (array) $names, [ 'version' ] ), false );
-
-		if ( empty( $version ) ) {
-			$version = $this->update_cache_version( $names );
-		}
-
-		return $version;
-	}
-
-	/**
-	 * Updates cache version.
-	 *
-	 * @param mixed $names Cache names.
-	 * @return string
-	 */
-	protected function update_cache_version( $names ) {
-		$version = (string) time();
-
-		$this->set_cache( array_merge( (array) $names, [ 'version' ] ), $version );
-
-		return $version;
 	}
 }
