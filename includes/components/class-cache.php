@@ -389,7 +389,7 @@ final class Cache {
 	private function update_cache_version( $group ) {
 		$version = (string) time();
 
-		$this->set_cache( $group . '/version', null, $version );
+		$this->set_cache( $group . '/version', null, $version, WEEK_IN_SECONDS );
 
 		return $version;
 	}
@@ -405,7 +405,7 @@ final class Cache {
 	private function update_meta_cache_version( $type, $id, $group ) {
 		$version = (string) time();
 
-		$this->set_meta_cache( $type, $id, $group . '/version', null, $version );
+		$this->set_meta_cache( $type, $id, $group . '/version', null, $version, WEEK_IN_SECONDS );
 
 		return $version;
 	}

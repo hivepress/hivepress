@@ -211,8 +211,8 @@ class Listings extends Block {
 
 				if ( is_array( $listing_ids ) ) {
 					$query_args = [
-						'post_type'      => 'any',
-						'post_status'    => 'any',
+						'post_type'      => 'hp_listing',
+						'post_status'    => 'publish',
 						'post__in'       => array_merge( [ 0 ], $listing_ids ),
 						'posts_per_page' => count( $listing_ids ),
 						'orderby'        => 'post__in',

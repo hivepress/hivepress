@@ -107,7 +107,7 @@ final class Attribute {
 			];
 
 			// Get cached attributes.
-			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'args' ] ), 'post/' . $model . '_attribute' );
+			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'attributes' ] ), 'post/' . $model . '_attribute' );
 
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
@@ -192,7 +192,7 @@ final class Attribute {
 
 				// Cache attributes.
 				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'args' ] ), 'post/' . $model . '_attribute', $attributes, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'attributes' ] ), 'post/' . $model . '_attribute', $attributes, DAY_IN_SECONDS );
 				}
 			}
 
