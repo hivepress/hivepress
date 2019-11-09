@@ -116,6 +116,7 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
 						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 10,
 					],
 
@@ -126,6 +127,7 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 20,
 					],
 
@@ -136,6 +138,7 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
 						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 30,
 					],
 				],
@@ -176,6 +179,7 @@ return [
 						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 10,
 					],
 
@@ -186,6 +190,7 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
 						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 20,
 					],
 				],

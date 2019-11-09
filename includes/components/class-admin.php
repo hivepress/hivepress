@@ -184,7 +184,9 @@ final class Admin {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
 					if ( isset( $field['default'] ) ) {
-						add_option( hp\prefix( $field_name ), $field['default'] );
+						$autoload = hp\get_array_value( $field, 'autoload', true ) ? 'yes' : 'no';
+
+						add_option( hp\prefix( $field_name ), $field['default'], '', $autoload );
 					}
 				}
 			}
