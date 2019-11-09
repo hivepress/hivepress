@@ -24,8 +24,9 @@ final class Cache {
 	 */
 	public function __construct() {
 
-		// Schedule events.
+		// Manage events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
+		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
 		// Check status.
 		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
@@ -54,11 +55,26 @@ final class Cache {
 	 * Schedules events.
 	 */
 	public function schedule_events() {
-		$recurrences = [ 'hourly', 'daily' ];
+		$periods = [ 'hourly', 'twicedaily', 'daily' ];
 
-		foreach ( $recurrences as $recurrence ) {
-			if ( ! wp_next_scheduled( 'hivepress/v1/cron/' . $recurrence ) ) {
-				wp_schedule_event( time(), $recurrence, 'hivepress/v1/cron/' . $recurrence );
+		foreach ( $periods as $period ) {
+			if ( ! wp_next_scheduled( 'hivepress/v1/cron/' . $period ) ) {
+				wp_schedule_event( time(), $period, 'hivepress/v1/cron/' . $period );
+			}
+		}
+	}
+
+	/**
+	 * Unschedules events.
+	 */
+	public function unschedule_events() {
+		$periods = [ 'hourly', 'twicedaily', 'daily' ];
+
+		foreach ( $periods as $period ) {
+			$timestamp = wp_next_scheduled( 'hivepress/v1/cron/' . $period );
+
+			if ( ! empty( $timestamp ) ) {
+				wp_unschedule_event( $timestamp, 'hivepress/v1/cron/' . $period );
 			}
 		}
 	}
