@@ -174,13 +174,21 @@ class Listing extends Post {
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
 				if ( array_key_exists( 'options', $field_args ) && ! is_null( $field_value ) ) {
-					$field_terms = get_terms(
-						[
-							'taxonomy' => $field_taxonomy,
-							'include'  => (array) $field_value,
-							'fields'   => 'names',
-						]
-					);
+					$field_terms = hivepress()->cache->get_post_cache( $this->id, 'names', 'term/' . hp\unprefix( $field_taxonomy ) );
+
+					if ( is_null( $field_terms ) ) {
+						$field_terms = get_terms(
+							[
+								'taxonomy' => $field_taxonomy,
+								'include'  => (array) $field_value,
+								'fields'   => 'names',
+							]
+						);
+
+						if ( is_array( $field_terms ) && count( $field_terms ) <= 100 ) {
+							hivepress()->cache->set_post_cache( $this->id, 'names', 'term/' . hp\unprefix( $field_taxonomy ), $field_terms, DAY_IN_SECONDS );
+						}
+					}
 
 					if ( ! empty( $field_terms ) ) {
 						$field_value = implode( ', ', $field_terms );
