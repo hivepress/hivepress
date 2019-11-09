@@ -189,7 +189,9 @@ class Listing_Categories extends Block {
 
 		if ( is_array( $listing_category_ids ) ) {
 			$query_args = [
+				'taxonomy'   => 'hp_listing_category',
 				'include'    => array_merge( [ 0 ], $listing_category_ids ),
+				'number'     => count( $listing_category_ids ),
 				'hide_empty' => false,
 				'orderby'    => 'include',
 			];
