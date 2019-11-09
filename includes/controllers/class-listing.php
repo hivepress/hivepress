@@ -439,6 +439,7 @@ class Listing extends Controller {
 			'post_status'    => [ 'draft', 'pending', 'publish' ],
 			'author'         => get_current_user_id(),
 			'posts_per_page' => -1,
+			'no_found_rows'  => true,
 		];
 
 		// Get cached IDs.
@@ -451,6 +452,7 @@ class Listing extends Controller {
 				'post__in'       => array_merge( [ 0 ], $listing_ids ),
 				'posts_per_page' => count( $listing_ids ),
 				'orderby'        => 'post__in',
+				'no_found_rows'  => true,
 			];
 		}
 

@@ -176,6 +176,7 @@ class Listings extends Block {
 				'post_type'      => 'hp_listing',
 				'post_status'    => 'publish',
 				'posts_per_page' => absint( $this->number ),
+				'no_found_rows'  => true,
 			];
 
 			// Get category.
@@ -215,6 +216,7 @@ class Listings extends Block {
 						'post__in'       => array_merge( [ 0 ], $listing_ids ),
 						'posts_per_page' => count( $listing_ids ),
 						'orderby'        => 'post__in',
+						'no_found_rows'  => true,
 					];
 				}
 			}
@@ -236,6 +238,7 @@ class Listings extends Block {
 					'post__in'       => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
 					'posts_per_page' => absint( get_option( 'hp_listings_featured_per_page' ) ),
 					'orderby'        => 'rand',
+					'no_found_rows'  => true,
 				]
 			);
 		}
