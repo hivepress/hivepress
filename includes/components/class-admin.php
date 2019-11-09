@@ -421,7 +421,7 @@ final class Admin {
 
 				// Cache extensions.
 				if ( count( $extensions ) <= 100 ) {
-					hivepress()->cache->set_cache( 'extensions', $extensions, null, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( 'extensions', null, $extensions, DAY_IN_SECONDS );
 				}
 			}
 		}

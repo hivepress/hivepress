@@ -164,11 +164,11 @@ final class Cache {
 	 * Sets transient cache.
 	 *
 	 * @param mixed  $key Cache key.
-	 * @param mixed  $value Cache value.
 	 * @param string $group Cache group.
+	 * @param mixed  $value Cache value.
 	 * @param int    $expiration Expiration period.
 	 */
-	public function set_cache( $key, $value, $group = null, $expiration = 0 ) {
+	public function set_cache( $key, $group, $value, $expiration = 0 ) {
 
 		// Check status.
 		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
@@ -186,11 +186,11 @@ final class Cache {
 	 * @param string $type Meta type.
 	 * @param int    $id Object ID.
 	 * @param mixed  $key Cache key.
-	 * @param mixed  $value Cache value.
 	 * @param string $group Cache group.
+	 * @param mixed  $value Cache value.
 	 * @param int    $expiration Expiration period.
 	 */
-	private function set_meta_cache( $type, $id, $key, $value, $group = null, $expiration = 0 ) {
+	private function set_meta_cache( $type, $id, $key, $group, $value, $expiration = 0 ) {
 
 		// Check status.
 		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
@@ -373,7 +373,7 @@ final class Cache {
 	private function update_cache_version( $group ) {
 		$version = (string) time();
 
-		$this->set_cache( $group . '/version', $version );
+		$this->set_cache( $group . '/version', null, $version );
 
 		return $version;
 	}
@@ -389,7 +389,7 @@ final class Cache {
 	private function update_meta_cache_version( $type, $id, $group ) {
 		$version = (string) time();
 
-		$this->set_meta_cache( $type, $id, $group . '/version', $version );
+		$this->set_meta_cache( $type, $id, $group . '/version', null, $version );
 
 		return $version;
 	}
@@ -431,7 +431,7 @@ final class Cache {
 	 */
 	public function clear_meta_cache() {
 		global $wpdb;
-		error_log( 'begin clearing cache' );
+		error_log( '---------------------------------------begin clearing cache' );
 		// Set types.
 		$types = [ 'user', 'post', 'term', 'comment' ];
 
@@ -466,7 +466,7 @@ final class Cache {
 				}
 			}
 		}
-		error_log( 'end clearing cache' );
+		error_log( '---------------------------------------end clearing cache' );
 	}
 
 	/**
@@ -476,7 +476,7 @@ final class Cache {
 	 */
 	public function delete_post_cache( $post_id ) {
 		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
-			error_log( 'begin deleting post cache' );
+			error_log( '---------------------------------------begin deleting post cache' );
 			// Get post.
 			$post = get_post( $post_id );
 
@@ -487,7 +487,7 @@ final class Cache {
 			if ( ! empty( $post->post_author ) ) {
 				$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
 			}
-			error_log( 'end deleting post cache' );
+			error_log( '---------------------------------------end deleting post cache' );
 		}
 	}
 
@@ -503,7 +503,7 @@ final class Cache {
 	 */
 	public function delete_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			error_log( 'begin deleting post term cache' );
+			error_log( '---------------------------------------begin deleting post term cache' );
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
@@ -516,7 +516,7 @@ final class Cache {
 					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
-			error_log( 'end deleting post term cache' );
+			error_log( '---------------------------------------end deleting post term cache' );
 		}
 	}
 
@@ -529,9 +529,9 @@ final class Cache {
 	 */
 	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			error_log( 'begin deleting term cache' );
+			error_log( '---------------------------------------begin deleting term cache' );
 			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
-			error_log( 'end deleting term cache' );
+			error_log( '---------------------------------------end deleting term cache' );
 		}
 	}
 
@@ -549,7 +549,7 @@ final class Cache {
 		}
 
 		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
-			error_log( 'begin deleting comment cache' );
+			error_log( '---------------------------------------begin deleting comment cache' );
 			// Delete transient cache.
 			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 
@@ -561,7 +561,7 @@ final class Cache {
 			if ( ! empty( $comment->comment_post_ID ) ) {
 				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
-			error_log( 'end deleting comment cache' );
+			error_log( '---------------------------------------end deleting comment cache' );
 		}
 	}
 }

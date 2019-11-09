@@ -200,7 +200,7 @@ class Listing_Categories extends Block {
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && count( $categories ) <= 1000 ) {
-			hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), wp_list_pluck( $categories, 'term_id' ), 'term/listing_category', DAY_IN_SECONDS );
+			hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category', wp_list_pluck( $categories, 'term_id' ), DAY_IN_SECONDS );
 		}
 
 		// Render categories.
