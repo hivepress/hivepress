@@ -483,13 +483,12 @@ final class Attribute {
 
 		// Set query arguments.
 		$query_args = [
-			'parent'         => $category_id,
-			'include_parent' => true,
-			'fields'         => 'ids',
+			'parent' => $category_id,
+			'fields' => 'ids',
 		];
 
 		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( $query_args, 'term/' . $model . '_category' );
+		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'tree_ids' ] ), 'term/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
 			$category_ids = [];
@@ -510,7 +509,7 @@ final class Attribute {
 
 			// Cache IDs.
 			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( $query_args, 'term/' . $model . '_category', $category_ids, DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'tree_ids' ] ), 'term/' . $model . '_category', $category_ids, DAY_IN_SECONDS );
 			}
 		}
 
@@ -590,7 +589,7 @@ final class Attribute {
 				];
 
 				// Get cached range.
-				$range = hivepress()->cache->get_cache( array_merge( $query_args, [ 'cache_type' => 'number_range' ] ), 'post/' . $model );
+				$range = hivepress()->cache->get_cache( array_merge( $query_args, [ 'number_range' ] ), 'post/' . $model );
 
 				if ( is_null( $range ) ) {
 
@@ -601,7 +600,7 @@ final class Attribute {
 					];
 
 					// Cache range.
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'cache_type' => 'number_range' ] ), 'post/' . $model, $range, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'number_range' ] ), 'post/' . $model, $range, DAY_IN_SECONDS );
 				}
 
 				// Set range values.

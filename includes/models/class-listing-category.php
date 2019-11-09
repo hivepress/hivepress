@@ -120,7 +120,7 @@ class Listing_Category extends Term {
 		];
 
 		// Get cached count.
-		$count = hivepress()->cache->get_term_cache( $this->id, array_merge( $query_args, [ 'cache_type' => 'count' ] ), 'post/listing' );
+		$count = hivepress()->cache->get_term_cache( $this->id, array_merge( $query_args, [ 'count' ] ), 'post/listing' );
 
 		if ( is_null( $count ) ) {
 
@@ -145,7 +145,7 @@ class Listing_Category extends Term {
 			);
 
 			// Cache count.
-			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'cache_type' => 'count' ] ), 'post/listing', count( $listing_ids ), DAY_IN_SECONDS );
+			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'count' ] ), 'post/listing', count( $listing_ids ), DAY_IN_SECONDS );
 		}
 
 		return absint( $count );

@@ -447,8 +447,8 @@ class Listing extends Controller {
 
 		if ( is_array( $listing_ids ) ) {
 			$query_args = [
-				'post_type'      => 'any',
-				'post_status'    => 'any',
+				'post_type'      => 'hp_listing',
+				'post_status'    => [ 'draft', 'pending', 'publish' ],
 				'post__in'       => array_merge( [ 0 ], $listing_ids ),
 				'posts_per_page' => count( $listing_ids ),
 				'orderby'        => 'post__in',
@@ -462,7 +462,7 @@ class Listing extends Controller {
 		set_query_var( 'post_type', 'hp_listing' );
 
 		// Cache IDs.
-		if ( is_null( $listing_ids ) && $wp_query->found_posts <= 1000 ) {
+		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
 			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ), DAY_IN_SECONDS );
 		}
 
