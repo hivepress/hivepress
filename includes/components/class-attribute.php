@@ -841,29 +841,35 @@ final class Attribute {
 		$query->set( 'tax_query', $tax_query );
 
 		// Get featured IDs.
-		$query_args = [
-			'post_type'      => hp\prefix( $model ),
-			'post_status'    => 'publish',
-			'meta_key'       => 'hp_featured',
-			'meta_value'     => '1',
-			'posts_per_page' => absint( get_option( 'hp_' . $model . 's_featured_per_page' ) ),
-			'orderby'        => 'rand',
-			'fields'         => 'ids',
-		];
+		$featured_count = absint( get_option( 'hp_' . $model . 's_featured_per_page' ) );
 
-		if ( ! is_page() ) {
-			$query_args = array_merge( $query->query_vars, $query_args );
-		}
+		if ( $featured_count > 0 ) {
 
-		$featured_ids = get_posts( $query_args );
+			// Set query arguments.
+			$query_args = [
+				'post_type'      => hp\prefix( $model ),
+				'post_status'    => 'publish',
+				'meta_key'       => 'hp_featured',
+				'meta_value'     => '1',
+				'posts_per_page' => $featured_count,
+				'orderby'        => 'rand',
+				'fields'         => 'ids',
+			];
 
-		if ( ! empty( $featured_ids ) ) {
+			if ( ! is_page() ) {
+				$query_args = array_merge( $query->query_vars, $query_args );
+			}
 
-			// Exclude featured IDs.
-			$query->set( 'post__not_in', $featured_ids );
+			$featured_ids = get_posts( $query_args );
 
-			// Set featured IDs.
-			$query->set( 'hp_featured_ids', $featured_ids );
+			if ( ! empty( $featured_ids ) ) {
+
+				// Exclude featured IDs.
+				$query->set( 'post__not_in', $featured_ids );
+
+				// Set featured IDs.
+				$query->set( 'hp_featured_ids', $featured_ids );
+			}
 		}
 	}
 }
