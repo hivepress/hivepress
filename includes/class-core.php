@@ -122,7 +122,7 @@ final class Core {
 	public static function activate() {
 
 		// Set activation status.
-		add_option( 'hp_core_activated', '1' );
+		update_option( 'hp_core_activated', '1' );
 	}
 
 	/**
@@ -155,7 +155,7 @@ final class Core {
 
 			// Delete activation status.
 			if ( get_option( 'hp_core_activated' ) ) {
-				delete_option( 'hp_core_activated' );
+				update_option( 'hp_core_activated', '0' );
 			}
 
 			// Update HivePress directories number.

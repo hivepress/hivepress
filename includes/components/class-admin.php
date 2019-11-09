@@ -180,6 +180,8 @@ final class Admin {
 	 * Initializes settings.
 	 */
 	public function init_settings() {
+		add_option( 'hp_admin_dismissed_notices' );
+
 		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
