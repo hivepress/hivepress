@@ -155,7 +155,7 @@ class Listings extends Block {
 	public function render() {
 		global $wp_query;
 
-		$output = ' ';
+		$output = '';
 
 		// Get column width.
 		$columns      = absint( $this->columns );

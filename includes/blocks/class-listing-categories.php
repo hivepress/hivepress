@@ -154,7 +154,7 @@ class Listing_Categories extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = ' ';
+		$output = '';
 
 		// Get column width.
 		$columns      = absint( $this->columns );

@@ -114,7 +114,7 @@ final class Editor {
 		if ( strpos( $name, 'render_' ) === 0 ) {
 
 			// Render block HTML.
-			$output = '';
+			$output = ' ';
 
 			$block_type  = substr( $name, strlen( 'render' ) + 1 );
 			$block_class = '\HivePress\Blocks\\' . $block_type;
