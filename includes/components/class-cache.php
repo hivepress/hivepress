@@ -36,19 +36,18 @@ final class Cache {
 		// Clear cache.
 		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
 
-		// Delete cache.
-		add_action( 'save_post', [ $this, 'delete_post_cache' ] );
-		add_action( 'delete_post', [ $this, 'delete_post_cache' ] );
+		add_action( 'save_post', [ $this, 'clear_post_cache' ] );
+		add_action( 'delete_post', [ $this, 'clear_post_cache' ] );
 
-		add_action( 'set_object_terms', [ $this, 'delete_post_term_cache' ], 10, 6 );
+		add_action( 'set_object_terms', [ $this, 'clear_post_term_cache' ], 10, 6 );
 
-		add_action( 'create_term', [ $this, 'delete_term_cache' ], 10, 3 );
-		add_action( 'edit_term', [ $this, 'delete_term_cache' ], 10, 3 );
-		add_action( 'delete_term', [ $this, 'delete_term_cache' ], 10, 3 );
+		add_action( 'create_term', [ $this, 'clear_term_cache' ], 10, 3 );
+		add_action( 'edit_term', [ $this, 'clear_term_cache' ], 10, 3 );
+		add_action( 'delete_term', [ $this, 'clear_term_cache' ], 10, 3 );
 
-		add_action( 'wp_insert_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
-		add_action( 'edit_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
-		add_action( 'delete_comment', [ $this, 'delete_comment_cache' ], 10, 2 );
+		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 	}
 
 	/**
@@ -486,11 +485,11 @@ final class Cache {
 	}
 
 	/**
-	 * Deletes post cache.
+	 * Clears post cache.
 	 *
 	 * @param int $post_id Post ID.
 	 */
-	public function delete_post_cache( $post_id ) {
+	public function clear_post_cache( $post_id ) {
 		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting post cache' );
 			// Get post.
@@ -508,7 +507,7 @@ final class Cache {
 	}
 
 	/**
-	 * Deletes post term cache.
+	 * Clears post term cache.
 	 *
 	 * @param int    $post_id Post ID.
 	 * @param array  $terms Terms.
@@ -517,7 +516,7 @@ final class Cache {
 	 * @param bool   $append Append property.
 	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
 	 */
-	public function delete_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
+	public function clear_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting post term cache' );
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
@@ -537,13 +536,13 @@ final class Cache {
 	}
 
 	/**
-	 * Deletes term cache.
+	 * Clears term cache.
 	 *
 	 * @param int    $term_id Term ID.
 	 * @param int    $term_taxonomy_id Term taxonomy ID.
 	 * @param string $taxonomy Taxonomy name.
 	 */
-	public function delete_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
+	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting term cache' );
 			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
@@ -552,12 +551,12 @@ final class Cache {
 	}
 
 	/**
-	 * Deletes comment cache.
+	 * Clears comment cache.
 	 *
 	 * @param int        $comment_id Comment ID.
 	 * @param WP_Comment $comment Comment object.
 	 */
-	public function delete_comment_cache( $comment_id, $comment ) {
+	public function clear_comment_cache( $comment_id, $comment ) {
 
 		// Get comment.
 		if ( is_array( $comment ) ) {
