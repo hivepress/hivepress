@@ -28,11 +28,6 @@ final class Cache {
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
-		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
-			return;
-		}
-
 		// Clear cache.
 		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
 
@@ -48,6 +43,9 @@ final class Cache {
 		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
+
+		// Disable cache.
+		add_action( 'import_start', [ $this, 'disable_import_cache' ] );
 	}
 
 	/**
@@ -447,6 +445,12 @@ final class Cache {
 	public function clear_meta_cache() {
 		global $wpdb;
 		error_log( '---------------------------------------begin clearing cache' );
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		// Set types.
 		$types = [ 'user', 'post', 'term', 'comment' ];
 
@@ -490,6 +494,12 @@ final class Cache {
 	 * @param int $post_id Post ID.
 	 */
 	public function clear_post_cache( $post_id ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting post cache' );
 			// Get post.
@@ -517,6 +527,12 @@ final class Cache {
 	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
 	 */
 	public function clear_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting post term cache' );
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
@@ -543,6 +559,12 @@ final class Cache {
 	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
+
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
 			error_log( '---------------------------------------begin deleting term cache' );
 			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
@@ -557,6 +579,11 @@ final class Cache {
 	 * @param WP_Comment $comment Comment object.
 	 */
 	public function clear_comment_cache( $comment_id, $comment ) {
+
+		// Check status.
+		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+			return;
+		}
 
 		// Get comment.
 		if ( is_array( $comment ) ) {
@@ -577,6 +604,15 @@ final class Cache {
 				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
 			error_log( '---------------------------------------end deleting comment cache' );
+		}
+	}
+
+	/**
+	 * Disables import cache.
+	 */
+	public function disable_import_cache() {
+		if ( ! defined( 'HP_CACHE' ) ) {
+			define( 'HP_CACHE', false );
 		}
 	}
 }
