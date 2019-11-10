@@ -558,6 +558,9 @@ final class Cache {
 					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
+
+			// Delete meta cache.
+			$this->delete_post_cache( $post_id, null, 'term/' . hp\unprefix( $taxonomy ) );
 		}
 	}
 
