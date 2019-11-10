@@ -43,9 +43,6 @@ final class Cache {
 		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
-
-		// Disable cache.
-		add_action( 'import_start', [ $this, 'disable_import_cache' ] );
 	}
 
 	/**
@@ -613,15 +610,6 @@ final class Cache {
 				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
 			error_log( '---------------------------------------end deleting comment cache' );
-		}
-	}
-
-	/**
-	 * Disables import cache.
-	 */
-	public function disable_import_cache() {
-		if ( ! defined( 'HP_CACHE' ) ) {
-			define( 'HP_CACHE', false );
 		}
 	}
 }
