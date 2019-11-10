@@ -41,7 +41,6 @@ final class Cache {
 		add_action( 'delete_term', [ $this, 'clear_term_cache' ], 10, 3 );
 
 		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
-		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 	}
 
@@ -111,7 +110,6 @@ final class Cache {
 
 		// Get value.
 		$cache = get_transient( $this->get_cache_name( $key, $group ) );
-		error_log( 'get_transient ' . $this->get_cache_name( $key, $group ) );
 
 		// Normalize value.
 		if ( false === $cache ) {
@@ -148,7 +146,6 @@ final class Cache {
 
 			// Get timeout.
 			$timeout = absint( call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, true ] ) );
-			error_log( $callback . ' _transient_timeout_' . $name );
 
 			if ( 0 !== $timeout && $timeout <= time() ) {
 
@@ -158,7 +155,6 @@ final class Cache {
 
 				// Get value.
 				$cache = call_user_func_array( $callback, [ $id, '_transient_' . $name, true ] );
-				error_log( $callback . ' _transient_' . $name );
 
 				// Normalize value.
 				if ( '' === $cache ) {
@@ -198,7 +194,6 @@ final class Cache {
 
 		// Set value.
 		set_transient( $this->get_cache_name( $key, $group ), $value, $expiration );
-		error_log( 'set_transient ' . $this->get_cache_name( $key, $group ) );
 	}
 
 	/**
@@ -228,12 +223,10 @@ final class Cache {
 
 			// Set value.
 			call_user_func_array( $callback, [ $id, '_transient_' . $name, $value ] );
-			error_log( $callback . ' _transient_' . $name );
 
 			// Set timeout.
 			if ( $expiration > 0 ) {
 				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name, time() + $expiration ] );
-				error_log( $callback . ' _transient_timeout_' . $name );
 			}
 		}
 	}
@@ -259,7 +252,6 @@ final class Cache {
 
 			// Delete value.
 			delete_transient( $this->get_cache_name( $key, $group ) );
-			error_log( 'delete_transient ' . $this->get_cache_name( $key, $group ) );
 		}
 	}
 
@@ -293,11 +285,9 @@ final class Cache {
 
 				// Delete value.
 				call_user_func_array( $callback, [ $id, '_transient_' . $name ] );
-				error_log( $callback . ' _transient_' . $name );
 
 				// Delete timeout.
 				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
-				error_log( $callback . ' _transient_timeout_' . $name );
 			}
 		}
 	}
@@ -471,7 +461,6 @@ final class Cache {
 	 */
 	public function clear_meta_cache() {
 		global $wpdb;
-		error_log( '---------------------------------------begin clearing cache' );
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -504,15 +493,12 @@ final class Cache {
 				// Delete values.
 				if ( ! empty( $meta_values ) ) {
 					foreach ( $meta_values as $meta_value ) {
-						error_log( $callback . ' ' . $meta_value['meta_key'] );
-						error_log( $callback . ' ' . preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) );
 						call_user_func_array( $callback, [ $meta_value[ $column ], $meta_value['meta_key'] ] );
 						call_user_func_array( $callback, [ $meta_value[ $column ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) ] );
 					}
 				}
 			}
 		}
-		error_log( '---------------------------------------end clearing cache' );
 	}
 
 	/**
@@ -528,7 +514,7 @@ final class Cache {
 		}
 
 		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
-			error_log( '---------------------------------------begin deleting post cache' );
+
 			// Get post.
 			$post = get_post( $post_id );
 
@@ -539,7 +525,6 @@ final class Cache {
 			if ( ! empty( $post->post_author ) ) {
 				$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
 			}
-			error_log( '---------------------------------------end deleting post cache' );
 		}
 	}
 
@@ -561,7 +546,6 @@ final class Cache {
 		}
 
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			error_log( '---------------------------------------begin deleting post term cache' );
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
@@ -574,7 +558,6 @@ final class Cache {
 					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
-			error_log( '---------------------------------------end deleting post term cache' );
 		}
 	}
 
@@ -593,9 +576,7 @@ final class Cache {
 		}
 
 		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			error_log( '---------------------------------------begin deleting term cache' );
 			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
-			error_log( '---------------------------------------end deleting term cache' );
 		}
 	}
 
@@ -612,13 +593,8 @@ final class Cache {
 			return;
 		}
 
-		// Get comment.
-		if ( is_array( $comment ) ) {
-			$comment = get_comment( $commend_id );
-		}
-
 		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
-			error_log( '---------------------------------------begin deleting comment cache' );
+
 			// Delete transient cache.
 			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 
@@ -630,7 +606,6 @@ final class Cache {
 			if ( ! empty( $comment->comment_post_ID ) ) {
 				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 			}
-			error_log( '---------------------------------------end deleting comment cache' );
 		}
 	}
 }
