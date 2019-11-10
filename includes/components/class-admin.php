@@ -678,46 +678,85 @@ final class Admin {
 
 			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
-				// Get field class.
-				$field_class = '\HivePress\Fields\\' . $field_args['type'];
+				// Get field output.
+				$field_output = '';
 
-				if ( class_exists( $field_class ) ) {
+				if ( 'block' === $field_args['type'] ) {
 
-					// Create field.
-					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+					// Get block class.
+					$block_class = '\HivePress\Blocks\\' . $field_args['block_type'];
 
-					// Get field value.
-					if ( ! isset( $field_args['alias'] ) ) {
-						$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
-					} else {
-						$value = get_post_field( $field_args['alias'], $post );
+					if ( class_exists( $block_class ) ) {
+
+						// Get block arguments.
+						$block_args = array_filter(
+							$field_args,
+							function( $key ) {
+								return strpos( $key, 'block_' ) === 0;
+							},
+							ARRAY_FILTER_USE_KEY
+						);
+
+						$block_args = array_combine(
+							array_map(
+								function( $key ) {
+									return preg_replace( '/^block_/', '', $key );
+								},
+								array_keys( $block_args )
+							),
+							$block_args
+						);
+
+						// Set field output.
+						$field_output = ( new $block_class( $block_args ) )->render();
 					}
+				} else {
 
-					if ( '' !== $value ) {
-						$field->set_value( $value );
-					}
+					// Get field class.
+					$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-					if ( 'hidden' === $field_args['type'] ) {
+					if ( class_exists( $field_class ) ) {
 
-						// Render field.
-						$output .= $field->render();
-					} else {
-						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
+						// Create field.
+						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
-						// Render field label.
-						$output .= '<th scope="row">';
-
-						if ( isset( $field_args['label'] ) ) {
-							$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+						// Get field value.
+						if ( ! isset( $field_args['alias'] ) ) {
+							$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+						} else {
+							$value = get_post_field( $field_args['alias'], $post );
 						}
 
-						$output .= '</th>';
+						// Set field value.
+						if ( '' !== $value ) {
+							$field->set_value( $value );
+						}
 
-						// Render field.
-						$output .= '<td>' . $field->render() . '</td>';
-
-						$output .= '</tr>';
+						// Set field output.
+						$field_output = $field->render();
 					}
+				}
+
+				if ( 'hidden' === $field_args['type'] ) {
+
+					// Render field.
+					$output .= $field_output;
+				} else {
+					$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
+
+					// Render field label.
+					$output .= '<th scope="row">';
+
+					if ( isset( $field_args['label'] ) ) {
+						$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+					}
+
+					$output .= '</th>';
+
+					// Render field.
+					$output .= '<td>' . $field_output . '</td>';
+
+					$output .= '</tr>';
 				}
 			}
 
