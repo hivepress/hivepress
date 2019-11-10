@@ -108,7 +108,7 @@ final class Cache {
 	public function get_cache( $key, $group = null ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -137,7 +137,7 @@ final class Cache {
 		$cache = null;
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -184,7 +184,7 @@ final class Cache {
 	public function set_cache( $key, $group, $value, $expiration = 0 ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -206,7 +206,7 @@ final class Cache {
 	private function set_meta_cache( $type, $id, $key, $group, $value, $expiration = 0 ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -239,7 +239,7 @@ final class Cache {
 	public function delete_cache( $key, $group = null ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -266,7 +266,7 @@ final class Cache {
 	private function delete_meta_cache( $type, $id, $key, $group = null ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -343,7 +343,7 @@ final class Cache {
 	public function get_cache_version( $group ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -440,6 +440,15 @@ final class Cache {
 	}
 
 	/**
+	 * Checks cache status.
+	 *
+	 * @return bool
+	 */
+	private function is_cache_enabled() {
+		return ! defined( 'HP_CACHE' ) || HP_CACHE;
+	}
+
+	/**
 	 * Clears meta cache.
 	 */
 	public function clear_meta_cache() {
@@ -447,7 +456,7 @@ final class Cache {
 		error_log( '---------------------------------------begin clearing cache' );
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -496,7 +505,7 @@ final class Cache {
 	public function clear_post_cache( $post_id ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -529,7 +538,7 @@ final class Cache {
 	public function clear_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -561,7 +570,7 @@ final class Cache {
 	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
@@ -581,7 +590,7 @@ final class Cache {
 	public function clear_comment_cache( $comment_id, $comment ) {
 
 		// Check status.
-		if ( defined( 'HP_CACHE' ) && ! HP_CACHE ) {
+		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
