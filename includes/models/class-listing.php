@@ -204,6 +204,8 @@ class Listing extends Post {
 					} else {
 						$field_value = esc_html__( 'No', 'hivepress' );
 					}
+				} elseif ( is_numeric( $field_value ) ) {
+					$field_value = number_format_i18n( $field_value, strlen( substr( strrchr( (string) $field_value, '.' ), 1 ) ) );
 				}
 
 				// Create field.
