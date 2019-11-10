@@ -174,10 +174,10 @@ final class Attribute {
 					}
 
 					// Get attribute name.
-					$attribute_name = substr( hp\sanitize_key( urldecode( $attribute_post->post_name ) ), 0, 32 - strlen( hp\prefix( '' ) ) );
+					$attribute_name = $this->get_attribute_name( $attribute_post->post_name );
 
 					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
-						$attribute_name = substr( $attribute_name, 0, 32 - strlen( hp\prefix( $model ) . '_' ) );
+						$attribute_name = $this->get_attribute_name( $attribute_post->post_name, $model );
 
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
@@ -268,6 +268,9 @@ final class Attribute {
 	 */
 	public function add_field_settings( $meta_box ) {
 
+		// Get model.
+		$model = hp\unprefix( preg_replace( '/_attribute$/', '', get_post_type() ) );
+
 		// Get field context.
 		$field_context = explode( '_', $meta_box['name'] );
 		$field_context = end( $field_context );
@@ -284,7 +287,29 @@ final class Attribute {
 			if ( class_exists( $field_class ) ) {
 				foreach ( $field_class::get_settings() as $field_name => $field ) {
 					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
+
+						// Get field arguments.
 						$field_args = $field->get_args();
+
+						if ( 'options' === $field_name ) {
+							$field_args = array_merge(
+								$field_args,
+								[
+									'type'          => 'block',
+									'block_type'    => 'content',
+									'block_content' => '<a href="' . esc_url(
+										admin_url(
+											'edit-tags.php?' . http_build_query(
+												[
+													'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name', get_the_ID() ), $model ) ),
+													'post_type' => hp\prefix( $model ),
+												]
+											)
+										)
+									) . '" class="button">' . esc_html__( 'Edit Options', 'hivepress' ) . '</a>',
+								]
+							);
+						}
 
 						if ( 'required' !== $field_name ) {
 							$field_args['order'] = hp\get_array_value( $field_args, 'order', 10 ) + 100;
@@ -631,6 +656,21 @@ final class Attribute {
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Gets attribute name.
+	 *
+	 * @param string $slug Attribute slug.
+	 * @param string $prefix Attribute prefix.
+	 * @return string
+	 */
+	private function get_attribute_name( $slug, $prefix = '' ) {
+		if ( '' !== $prefix ) {
+			$prefix .= '_';
+		}
+
+		return substr( hp\sanitize_key( urldecode( $slug ) ), 0, 32 - strlen( hp\prefix( $prefix ) ) );
 	}
 
 	/**
