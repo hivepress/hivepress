@@ -463,7 +463,7 @@ class Listing extends Controller {
 
 		// Cache IDs.
 		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
-			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ), DAY_IN_SECONDS );
+			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
 		}
 
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();

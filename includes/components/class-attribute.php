@@ -107,7 +107,7 @@ final class Attribute {
 			];
 
 			// Get cached attributes.
-			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'attributes' ] ), 'post/' . $model . '_attribute' );
+			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), 'post/' . $model . '_attribute' );
 
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
@@ -192,7 +192,7 @@ final class Attribute {
 
 				// Cache attributes.
 				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'attributes' ] ), 'post/' . $model . '_attribute', $attributes, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), 'post/' . $model . '_attribute', $attributes );
 				}
 			}
 
@@ -488,7 +488,7 @@ final class Attribute {
 		];
 
 		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'tree_ids' ] ), 'term/' . $model . '_category' );
+		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'term/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
 			$category_ids = [];
@@ -509,7 +509,7 @@ final class Attribute {
 
 			// Cache IDs.
 			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'tree_ids' ] ), 'term/' . $model . '_category', $category_ids, DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'term/' . $model . '_category', $category_ids );
 			}
 		}
 
@@ -589,7 +589,16 @@ final class Attribute {
 				];
 
 				// Get cached range.
-				$range = hivepress()->cache->get_cache( array_merge( $query_args, [ 'number_range' ] ), 'post/' . $model );
+				$range = hivepress()->cache->get_cache(
+					array_merge(
+						$query_args,
+						[
+							'fields'   => 'meta_values',
+							'function' => 'minmax',
+						]
+					),
+					'post/' . $model
+				);
 
 				if ( is_null( $range ) ) {
 
@@ -600,7 +609,17 @@ final class Attribute {
 					];
 
 					// Cache range.
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'number_range' ] ), 'post/' . $model, $range, DAY_IN_SECONDS );
+					hivepress()->cache->set_cache(
+						array_merge(
+							$query_args,
+							[
+								'fields'   => 'meta_values',
+								'function' => 'minmax',
+							]
+						),
+						'post/' . $model,
+						$range
+					);
 				}
 
 				// Set range values.

@@ -185,6 +185,17 @@ final class Cache {
 			return;
 		}
 
+		// Get expiration period.
+		if ( 0 === $expiration ) {
+			if ( ! wp_using_ext_object_cache() ) {
+				$expiration = DAY_IN_SECONDS;
+			} else {
+				$expiration = WEEK_IN_SECONDS;
+			}
+		}
+
+		$expiration = absint( $expiration );
+
 		// Set value.
 		set_transient( $this->get_cache_name( $key, $group ), $value, $expiration );
 		error_log( 'set_transient ' . $this->get_cache_name( $key, $group ) );
@@ -200,7 +211,7 @@ final class Cache {
 	 * @param mixed  $value Cache value.
 	 * @param int    $expiration Expiration period.
 	 */
-	private function set_meta_cache( $type, $id, $key, $group, $value, $expiration = 0 ) {
+	private function set_meta_cache( $type, $id, $key, $group, $value, $expiration = DAY_IN_SECONDS ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -381,9 +392,19 @@ final class Cache {
 	 * @return string
 	 */
 	private function update_cache_version( $group ) {
+
+		// Get version.
 		$version = (string) time();
 
-		$this->set_cache( $group . '/version', null, $version, WEEK_IN_SECONDS );
+		// Get expiration period.
+		$expiration = false;
+
+		if ( ! wp_using_ext_object_cache() ) {
+			$expiration = WEEK_IN_SECONDS;
+		}
+
+		// Set version.
+		$this->set_cache( $group . '/version', null, $version, $expiration );
 
 		return $version;
 	}

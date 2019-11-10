@@ -226,7 +226,7 @@ class Listings extends Block {
 
 			// Cache IDs.
 			if ( 'random' !== $this->order && is_null( $listing_ids ) && $query->post_count <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $query->posts, 'ID' ), DAY_IN_SECONDS );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $query->posts, 'ID' ) );
 			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 
