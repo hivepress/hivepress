@@ -48,21 +48,25 @@ abstract class Post extends Model {
 				get_post_meta( $data['ID'] )
 			);
 
-			// Get instance terms.
-			$terms = [];
-
-			if ( ! empty( static::$relations ) ) {
-				$terms = wp_list_pluck( wp_get_post_terms( $data['ID'], hp\prefix( array_keys( static::$relations ) ) ), 'taxonomy', 'term_id' );
-			}
-
 			// Get instance attributes.
 			foreach ( array_keys( static::$fields ) as $field_name ) {
 				if ( in_array( $field_name, static::$aliases, true ) ) {
 					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} elseif ( in_array( $field_name, static::$relations, true ) ) {
-					$attributes[ $field_name ] = array_keys( $terms, hp\prefix( array_search( $field_name, static::$relations, true ) ), true );
-				} else {
+				} elseif ( ! in_array( $field_name, static::$relations, true ) ) {
 					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+				} else {
+					$taxonomy = hp\prefix( array_search( $field_name, static::$relations, true ) );
+					$term_ids = hivepress()->cache->get_post_cache( $data['ID'], [ 'fields' => 'ids' ], 'term/' . hp\unprefix( $taxonomy ) );
+
+					if ( is_null( $term_ids ) ) {
+						$term_ids = wp_get_post_terms( $data['ID'], $taxonomy, [ 'fields' => 'ids' ] );
+
+						if ( is_array( $term_ids ) && count( $term_ids ) <= 100 ) {
+							hivepress()->cache->set_post_cache( $data['ID'], [ 'fields' => 'ids' ], 'term/' . hp\unprefix( $taxonomy ), $term_ids );
+						}
+					}
+
+					$attributes[ $field_name ] = $term_ids;
 				}
 			}
 

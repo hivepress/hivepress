@@ -131,6 +131,7 @@ abstract class Model {
 			[
 				'set',
 				'get',
+				'is',
 			],
 			function( $prefix ) use ( $name ) {
 				return strpos( $name, $prefix . '_' ) === 0;
@@ -140,6 +141,10 @@ abstract class Model {
 		if ( ! empty( $prefixes ) ) {
 			$method = reset( $prefixes );
 			$arg    = substr( $name, strlen( $method ) + 1 );
+
+			if ( 'is' === $method ) {
+				$method = 'get';
+			}
 
 			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}

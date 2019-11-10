@@ -76,6 +76,14 @@ class Listing extends Post {
 						'max_length' => 128,
 					],
 
+					'featured'    => [
+						'type' => 'checkbox',
+					],
+
+					'verified'    => [
+						'type' => 'checkbox',
+					],
+
 					'image_ids'   => [
 						'label'        => esc_html__( 'Images', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
@@ -166,13 +174,39 @@ class Listing extends Post {
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
 				if ( array_key_exists( 'options', $field_args ) && ! is_null( $field_value ) ) {
-					$field_terms = get_terms(
+					$cache_group   = 'term/' . hp\unprefix( $field_taxonomy );
+					$cache_version = hivepress()->cache->get_cache_version( $cache_group );
+
+					$field_terms = hivepress()->cache->get_post_cache(
+						$this->id,
 						[
-							'taxonomy' => $field_taxonomy,
-							'include'  => (array) $field_value,
-							'fields'   => 'names',
-						]
+							'fields'        => 'names',
+							'cache_version' => $cache_version,
+						],
+						$cache_group
 					);
+
+					if ( is_null( $field_terms ) ) {
+						$field_terms = get_terms(
+							[
+								'taxonomy' => $field_taxonomy,
+								'include'  => (array) $field_value,
+								'fields'   => 'names',
+							]
+						);
+
+						if ( is_array( $field_terms ) && count( $field_terms ) <= 100 ) {
+							hivepress()->cache->set_post_cache(
+								$this->id,
+								[
+									'fields'        => 'names',
+									'cache_version' => $cache_version,
+								],
+								$cache_group,
+								$field_terms
+							);
+						}
+					}
 
 					if ( ! empty( $field_terms ) ) {
 						$field_value = implode( ', ', $field_terms );
@@ -185,12 +219,15 @@ class Listing extends Post {
 					} else {
 						$field_value = esc_html__( 'No', 'hivepress' );
 					}
+				} elseif ( is_numeric( $field_value ) ) {
+					$field_value = number_format_i18n( $field_value, strlen( substr( strrchr( (string) $field_value, '.' ), 1 ) ) );
 				}
 
 				// Create field.
 				if ( ! is_null( $field_value ) ) {
 					$fields[ $field_name ] = new Fields\Text(
 						[
+							'html'    => 'post',
 							'label'   => $field->get_label(),
 							'default' => hp\replace_tokens(
 								[

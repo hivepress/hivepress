@@ -38,12 +38,21 @@ return [
 					],
 
 					'listings_per_page'                => [
-						'label'     => esc_html__( 'Listings per Page', 'hivepress' ),
+						'label'     => esc_html__( 'Regular Listings per Page', 'hivepress' ),
 						'type'      => 'number',
-						'default'   => 10,
+						'default'   => 8,
 						'min_value' => 1,
 						'required'  => true,
 						'order'     => 30,
+					],
+
+					'listings_featured_per_page'       => [
+						'label'     => esc_html__( 'Featured Listings per Page', 'hivepress' ),
+						'type'      => 'number',
+						'default'   => 2,
+						'min_value' => 0,
+						'required'  => true,
+						'order'     => 40,
 					],
 				],
 			],
@@ -62,12 +71,35 @@ return [
 						'order'       => 10,
 					],
 
+					'listing_enable_submission'     => [
+						'label'   => esc_html__( 'Submission', 'hivepress' ),
+						'caption' => esc_html__( 'Allow submitting new listings', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'order'   => 20,
+					],
+
 					'listing_enable_moderation'     => [
 						'label'   => esc_html__( 'Moderation', 'hivepress' ),
 						'caption' => esc_html__( 'Manually approve new listings', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
-						'order'   => 20,
+						'order'   => 30,
+					],
+				],
+			],
+
+			'expiration' => [
+				'title'  => esc_html__( 'Expiration', 'hivepress' ),
+				'order'  => 30,
+
+				'fields' => [
+					'listing_expiration_period' => [
+						'label'       => esc_html__( 'Expiration Period', 'hivepress' ),
+						'description' => esc_html__( 'Set the number of days after which a listing expires.', 'hivepress' ),
+						'type'        => 'number',
+						'min_value'   => 1,
+						'order'       => 10,
 					],
 				],
 			],
@@ -82,7 +114,9 @@ return [
 						'description' => esc_html__( 'This email is sent to users when listing is approved, the following tokens are available: %user_name%, %listing_title%, %listing_url%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
+						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 10,
 					],
 
@@ -91,8 +125,21 @@ return [
 						'description' => esc_html__( 'This email is sent to users when listing is rejected, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
+						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 20,
+					],
+
+					'email_listing_expire'  => [
+						'label'       => esc_html__( 'Listing Expired', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when listing is expired, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
+						'type'        => 'textarea',
+						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
+						'html'        => 'post',
+						'required'    => true,
+						'autoload'    => false,
+						'order'       => 30,
 					],
 				],
 			],
@@ -130,7 +177,9 @@ return [
 						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %user_name%, %user_password%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 10,
 					],
 
@@ -139,7 +188,9 @@ return [
 						'description' => esc_html__( 'This email is sent to users when new password is requested, the following tokens are available: %user_name%, %password_reset_url%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
+						'html'        => 'post',
 						'required'    => true,
+						'autoload'    => false,
 						'order'       => 20,
 					],
 				],

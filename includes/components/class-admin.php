@@ -61,6 +61,9 @@ final class Admin {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Hide comments.
+			add_filter( 'comments_clauses', [ $this, 'hide_comments' ] );
+
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -177,12 +180,14 @@ final class Admin {
 	 * Initializes settings.
 	 */
 	public function init_settings() {
+		add_option( 'hp_admin_dismissed_notices' );
+
 		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
-					if ( isset( $field['default'] ) ) {
-						add_option( hp\prefix( $field_name ), $field['default'] );
-					}
+					$autoload = hp\get_array_value( $field, 'autoload', true ) ? 'yes' : 'no';
+
+					add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
 				}
 			}
 		}
@@ -370,9 +375,9 @@ final class Admin {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 		// Get cached extensions.
-		$extensions = get_transient( 'hp_extensions' );
+		$extensions = hivepress()->cache->get_cache( 'extensions' );
 
-		if ( false === $extensions ) {
+		if ( is_null( $extensions ) ) {
 			$extensions = [];
 
 			// Query plugins.
@@ -392,17 +397,34 @@ final class Admin {
 				$extensions = array_filter(
 					array_map(
 						function( $extension ) {
-							return (array) $extension;
+							return array_intersect_key(
+								(array) $extension,
+								array_flip(
+									[
+										'slug',
+										'name',
+										'version',
+										'status',
+										'url',
+										'icons',
+										'requires',
+										'author',
+										'short_description',
+									]
+								)
+							);
 						},
 						$api->plugins
 					),
 					function( $extension ) {
-						return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-marketplace' ], true );
+						return 'hivepress' !== $extension['slug'];
 					}
 				);
 
 				// Cache extensions.
-				set_transient( 'hp_extensions', $extensions, DAY_IN_SECONDS );
+				if ( count( $extensions ) <= 100 ) {
+					hivepress()->cache->set_cache( 'extensions', null, $extensions, DAY_IN_SECONDS );
+				}
 			}
 		}
 
@@ -584,6 +606,11 @@ final class Admin {
 		global $pagenow;
 
 		if ( 'post.php' === $pagenow ) {
+
+			// Remove action.
+			remove_action( 'save_post', [ $this, 'update_meta_box' ] );
+
+			// Update field values.
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 				$screen = hp\prefix( $meta_box['screen'] );
 
@@ -607,8 +634,17 @@ final class Admin {
 
 							if ( $field->validate() ) {
 
-								// Update meta value.
-								update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+								// Update field value.
+								if ( ! isset( $field_args['alias'] ) ) {
+									update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+								} else {
+									wp_update_post(
+										[
+											'ID' => $post_id,
+											$field_args['alias'] => $field->get_value(),
+										]
+									);
+								}
 							}
 						}
 					}
@@ -642,42 +678,85 @@ final class Admin {
 
 			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
-				// Get field class.
-				$field_class = '\HivePress\Fields\\' . $field_args['type'];
+				// Get field output.
+				$field_output = '';
 
-				if ( class_exists( $field_class ) ) {
+				if ( 'block' === $field_args['type'] ) {
 
-					// Create field.
-					$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+					// Get block class.
+					$block_class = '\HivePress\Blocks\\' . $field_args['block_type'];
 
-					// Get field value.
-					$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+					if ( class_exists( $block_class ) ) {
 
-					if ( '' !== $value ) {
-						$field->set_value( $value );
+						// Get block arguments.
+						$block_args = array_filter(
+							$field_args,
+							function( $key ) {
+								return strpos( $key, 'block_' ) === 0;
+							},
+							ARRAY_FILTER_USE_KEY
+						);
+
+						$block_args = array_combine(
+							array_map(
+								function( $key ) {
+									return preg_replace( '/^block_/', '', $key );
+								},
+								array_keys( $block_args )
+							),
+							$block_args
+						);
+
+						// Set field output.
+						$field_output = ( new $block_class( $block_args ) )->render();
 					}
+				} else {
 
-					if ( 'hidden' === $field_args['type'] ) {
+					// Get field class.
+					$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
-						// Render field.
-						$output .= $field->render();
-					} else {
-						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
+					if ( class_exists( $field_class ) ) {
 
-						// Render field label.
-						$output .= '<th scope="row">';
+						// Create field.
+						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
 
-						if ( isset( $field_args['label'] ) ) {
-							$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+						// Get field value.
+						if ( ! isset( $field_args['alias'] ) ) {
+							$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+						} else {
+							$value = get_post_field( $field_args['alias'], $post );
 						}
 
-						$output .= '</th>';
+						// Set field value.
+						if ( '' !== $value ) {
+							$field->set_value( $value );
+						}
 
-						// Render field.
-						$output .= '<td>' . $field->render() . '</td>';
-
-						$output .= '</tr>';
+						// Set field output.
+						$field_output = $field->render();
 					}
+				}
+
+				if ( 'hidden' === $field_args['type'] ) {
+
+					// Render field.
+					$output .= $field_output;
+				} else {
+					$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
+
+					// Render field label.
+					$output .= '<th scope="row">';
+
+					if ( isset( $field_args['label'] ) ) {
+						$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+					}
+
+					$output .= '</th>';
+
+					// Render field.
+					$output .= '<td>' . $field_output . '</td>';
+
+					$output .= '</tr>';
 				}
 			}
 
@@ -707,6 +786,40 @@ final class Admin {
 	}
 
 	/**
+	 * Hides comments.
+	 *
+	 * @param array $query Query arguments.
+	 * @return array
+	 */
+	public function hide_comments( $query ) {
+		global $pagenow;
+
+		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php' ], true ) ) {
+			$config = hivepress()->get_config( 'comment_types' );
+
+			if ( ! empty( $config ) ) {
+				$types = array_filter(
+					array_map(
+						function( $type, $args ) {
+							if ( ! isset( $args['show_ui'] ) || ! $args['show_ui'] ) {
+								return '"' . hp\prefix( $type ) . '"';
+							}
+						},
+						array_keys( $config ),
+						$config
+					)
+				);
+
+				if ( ! empty( $types ) ) {
+					$query['where'] .= ' AND comment_type NOT IN (' . implode( ',', $types ) . ')';
+				}
+			}
+		}
+
+		return $query;
+	}
+
+	/**
 	 * Updates term box values.
 	 *
 	 * @param int $term_id Term ID.
@@ -717,6 +830,12 @@ final class Admin {
 		$term = get_term( $term_id );
 
 		if ( ! is_null( $term ) ) {
+
+			// Remove actions.
+			add_action( 'edit_' . $term->taxonomy, [ $this, 'update_term_box' ] );
+			add_action( 'create_' . $term->taxonomy, [ $this, 'update_term_box' ] );
+
+			// Update field values.
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 				$screen = hp\prefix( $meta_box['screen'] );
 
@@ -740,8 +859,18 @@ final class Admin {
 
 							if ( $field->validate() ) {
 
-								// Update meta value.
-								update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+								// Update field value.
+								if ( ! isset( $field_args['alias'] ) ) {
+									update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+								} else {
+									wp_update_term(
+										$term->term_id,
+										$term->taxonomy,
+										[
+											$field_args['alias'] => $field->get_value(),
+										]
+									);
+								}
 							}
 						}
 					}
@@ -809,7 +938,11 @@ final class Admin {
 							$output .= '<td>';
 
 							// Get field value.
-							$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+							if ( ! isset( $field_args['alias'] ) ) {
+								$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+							} else {
+								$value = get_term_field( $field_args['alias'], $term );
+							}
 
 							if ( '' === $value ) {
 								$value = null;

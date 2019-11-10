@@ -62,6 +62,9 @@ final class Core {
 		// Activate HivePress.
 		register_activation_hook( HP_CORE_FILE, [ __CLASS__, 'activate' ] );
 
+		// Deactivate HivePress.
+		register_deactivation_hook( HP_CORE_FILE, [ __CLASS__, 'deactivate' ] );
+
 		// Install HivePress.
 		add_action( 'init', [ $this, 'install' ] );
 
@@ -119,7 +122,21 @@ final class Core {
 	public static function activate() {
 
 		// Set activation status.
-		add_option( 'hp_core_activated', '1' );
+		update_option( 'hp_core_activated', '1' );
+	}
+
+	/**
+	 * Deactivates HivePress.
+	 */
+	public static function deactivate() {
+
+		/**
+		 * Fires on HivePress deactivation.
+		 *
+		 * @action /deactivate
+		 * @description Fires on HivePress deactivation.
+		 */
+		do_action( 'hivepress/v1/deactivate' );
 	}
 
 	/**
@@ -138,7 +155,7 @@ final class Core {
 
 			// Delete activation status.
 			if ( get_option( 'hp_core_activated' ) ) {
-				delete_option( 'hp_core_activated' );
+				update_option( 'hp_core_activated', '0' );
 			}
 
 			// Update HivePress directories number.

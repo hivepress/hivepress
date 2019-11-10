@@ -236,7 +236,7 @@ abstract class Form {
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
 						'type'       => 'button',
 						'attributes' => [
-							'class' => [ 'hp-form__button', 'button', 'is-primary', 'alt' ],
+							'class' => [ 'hp-form__button', 'button', 'alt' ],
 						],
 					],
 					$button
@@ -369,7 +369,7 @@ abstract class Form {
 			);
 
 			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
-				$this->add_errors( [ esc_html__( 'Captcha is invalid', 'hivepress' ) ] );
+				$this->add_errors( [ esc_html__( 'Captcha is invalid.', 'hivepress' ) ] );
 			}
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Listing report email.
+ * Listing expire email.
  *
  * @package HivePress\Emails
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing report email class.
+ * Listing expire email class.
  *
- * @class Listing_Report
+ * @class Listing_Expire
  */
-class Listing_Report extends Email {
+class Listing_Expire extends Email {
 
 	/**
 	 * Email name.
@@ -48,8 +48,8 @@ class Listing_Report extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Reported', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been reported with the following details: %report_details%', 'hivepress' ) ),
+				'subject' => esc_html__( 'Listing Expired', 'hivepress' ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
 			],
 			$args
 		);

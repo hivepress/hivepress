@@ -34,6 +34,13 @@ class Template extends Block {
 	protected $template;
 
 	/**
+	 * Template blocks.
+	 *
+	 * @var array
+	 */
+	protected $blocks = [];
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -46,12 +53,20 @@ class Template extends Block {
 
 		if ( class_exists( $template_class ) ) {
 
+			// Get blocks.
+			$blocks = $template_class::get_blocks();
+
+			if ( ! empty( $this->blocks ) ) {
+				$blocks = hp\merge_trees( [ 'blocks' => $blocks ], [ 'blocks' => $this->blocks ], 'blocks' );
+				$blocks = reset( $blocks );
+			}
+
 			// Render blocks.
 			$output .= ( new Container(
 				[
 					'context' => $this->context,
 					'tag'     => false,
-					'blocks'  => $template_class::get_blocks(),
+					'blocks'  => $blocks,
 				]
 			) )->render();
 		}

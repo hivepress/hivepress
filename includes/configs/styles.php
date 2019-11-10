@@ -14,11 +14,13 @@ return [
 	'fontawesome'       => [
 		'handle' => 'fontawesome',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome.min.css',
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'fontawesome_solid' => [
 		'handle' => 'fontawesome-solid',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome-solid.min.css',
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'fancybox'          => [
@@ -39,18 +41,18 @@ return [
 	'grid'              => [
 		'handle' => 'hp-grid',
 		'src'    => HP_CORE_URL . '/assets/css/grid.min.css',
-		'editor' => true,
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'core_frontend'     => [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/css/frontend.min.css',
-		'editor' => true,
+		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'core_backend'      => [
 		'handle' => 'hp-core-backend',
 		'src'    => HP_CORE_URL . '/assets/css/backend.min.css',
-		'admin'  => true,
+		'scope'  => 'backend',
 	],
 ];

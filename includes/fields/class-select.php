@@ -80,7 +80,10 @@ class Select extends Field {
 					],
 
 					'options'  => [
-						'type' => 'hidden',
+						'label'    => esc_html__( 'Options', 'hivepress' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'order'    => 20,
 					],
 				],
 			],
@@ -152,9 +155,9 @@ class Select extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( array_map( 'strval', (array) $this->value ), array_map( 'strval', array_keys( $this->options ) ) ) ) === 0 ) {
 			if ( $this->multiple ) {
-				$this->add_errors( [ sprintf( esc_html__( '%s are invalid', 'hivepress' ), $this->label ) ] );
+				$this->add_errors( [ sprintf( esc_html__( '%s are invalid.', 'hivepress' ), $this->label ) ] );
 			} else {
-				$this->add_errors( [ sprintf( esc_html__( '%s is invalid', 'hivepress' ), $this->label ) ] );
+				$this->add_errors( [ sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->label ) ] );
 			}
 		}
 

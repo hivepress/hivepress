@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 
 global $wpdb;
 
-if ( defined( 'HP_DELETE_DATA' ) && HP_DELETE_DATA ) {
+if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 
 	// Trash pages.
 	$page_ids = $wpdb->get_results( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE 'hp\_page\_%';", ARRAY_A );
@@ -40,6 +40,22 @@ if ( defined( 'HP_DELETE_DATA' ) && HP_DELETE_DATA ) {
 
 	// Delete options.
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'hp\_%';" );
+
+	// Delete transients.
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+
+	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+
+	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+
+	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+
+	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
 
 	// Flush cache.
 	wp_cache_flush();

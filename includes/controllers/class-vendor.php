@@ -90,7 +90,7 @@ class Vendor extends Controller {
 			[
 				'template' => 'vendor_view_page',
 
-				'context'       => [
+				'context'  => [
 					'vendor' => Models\Vendor::get( get_the_ID() ),
 				],
 			]

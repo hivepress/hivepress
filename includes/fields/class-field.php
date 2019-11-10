@@ -306,7 +306,7 @@ abstract class Field {
 	 */
 	public function validate() {
 		if ( $this->required && is_null( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is required', 'hivepress' ), $this->label ) ] );
+			$this->add_errors( [ sprintf( esc_html__( '%s is required.', 'hivepress' ), $this->label ) ] );
 		}
 
 		return empty( $this->errors );

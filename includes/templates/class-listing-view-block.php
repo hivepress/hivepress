@@ -64,10 +64,16 @@ class Listing_View_Block extends Template {
 								],
 
 								'blocks'     => [
+									'listing_featured_badge' => [
+										'type'     => 'element',
+										'filepath' => 'listing/view/listing-featured-badge',
+										'order'    => 10,
+									],
+
 									'listing_image' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/block/listing-image',
-										'order'    => 10,
+										'order'    => 20,
 									],
 								],
 							],
@@ -82,9 +88,27 @@ class Listing_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_title' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/block/listing-title',
-										'order'    => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'order'      => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-listing__title' ],
+										],
+
+										'blocks'     => [
+											'listing_title_text'           => [
+												'type'     => 'element',
+												'filepath' => 'listing/view/block/listing-title',
+												'order'    => 10,
+											],
+
+											'listing_verified_badge' => [
+												'type'     => 'element',
+												'filepath' => 'listing/view/listing-verified-badge',
+												'order'    => 20,
+											],
+										],
 									],
 
 									'listing_details_primary' => [

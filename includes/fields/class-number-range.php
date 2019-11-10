@@ -64,6 +64,15 @@ class Number_Range extends Number {
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
+		$attributes = [];
+
+		// Set range slider.
+		if ( ! is_null( $this->min_value ) && ! is_null( $this->max_value ) ) {
+			$attributes['data-component'] = 'range-slider';
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
 		Field::bootstrap();
 	}
 
@@ -94,6 +103,8 @@ class Number_Range extends Number {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
+			$decimals = $this->decimals;
+
 			$this->value = array_map(
 				function( $value ) use ( $decimals ) {
 					if ( ! is_null( $value ) ) {
@@ -122,11 +133,11 @@ class Number_Range extends Number {
 			$max_value = end( $this->value );
 
 			if ( ! is_null( $this->min_value ) && ( ( ! is_null( $min_value ) && $min_value < $this->min_value ) || ( ! is_null( $max_value ) && $max_value < $this->min_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
 			}
 
 			if ( ! is_null( $this->max_value ) && ( ( ! is_null( $min_value ) && $min_value > $this->max_value ) || ( ! is_null( $max_value ) && $max_value > $this->max_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
+				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
 			}
 		}
 

@@ -106,7 +106,7 @@ class Listing extends Controller {
 					],
 
 					'edit_listings'   => [
-						'title'    => esc_html__( 'My Listings', 'hivepress' ),
+						'title'    => esc_html__( 'Listings', 'hivepress' ),
 						'path'     => '/account/listings',
 						'redirect' => 'redirect_listings_edit_page',
 						'action'   => 'render_listings_edit_page',
@@ -196,7 +196,7 @@ class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error updating listing', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error updating listing.', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response(
@@ -243,9 +243,9 @@ class Listing extends Controller {
 			[
 				'recipient' => get_option( 'admin_email' ),
 				'tokens'    => [
-					'listing_title' => $listing->get_title(),
-					'listing_url'   => get_permalink( $listing->get_id() ),
-					'report_reason' => $form->get_value( 'report_reason' ),
+					'listing_title'  => $listing->get_title(),
+					'listing_url'    => get_permalink( $listing->get_id() ),
+					'report_details' => $form->get_value( 'report_details' ),
 				],
 			]
 		) )->send();
@@ -287,7 +287,7 @@ class Listing extends Controller {
 
 		// Delete listing.
 		if ( ! $listing->delete() ) {
-			return hp\rest_error( 400, esc_html__( 'Error deleting listing', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Error deleting listing.', 'hivepress' ) );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );
@@ -333,17 +333,34 @@ class Listing extends Controller {
 				]
 			) )->render();
 		} else {
-
-			// Query listings.
 			if ( is_page() ) {
-				query_posts(
-					[
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-						'paged'          => hp\get_current_page(),
-					]
-				);
+
+				// Set query arguments.
+				$query_args = [
+					'post_type'      => 'hp_listing',
+					'post_status'    => 'publish',
+					'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
+					'paged'          => hp\get_current_page(),
+				];
+
+				// Get featured IDs.
+				$featured_ids = [];
+
+				if ( get_query_var( 'hp_featured_ids' ) ) {
+					$featured_ids = array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) );
+				}
+
+				// Exclude listings.
+				if ( ! empty( $featured_ids ) ) {
+					$query_args['post__not_in'] = $featured_ids;
+				}
+
+				// Query listings.
+				query_posts( $query_args );
+
+				if ( ! empty( $featured_ids ) ) {
+					set_query_var( 'hp_featured_ids', $featured_ids );
+				}
 			}
 
 			// Render listings.
@@ -414,16 +431,40 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
+		global $wp_query;
 
-		// Query listings.
-		query_posts(
-			[
+		// Set query arguments.
+		$query_args = [
+			'post_type'      => 'hp_listing',
+			'post_status'    => [ 'draft', 'pending', 'publish' ],
+			'author'         => get_current_user_id(),
+			'posts_per_page' => -1,
+			'no_found_rows'  => true,
+		];
+
+		// Get cached IDs.
+		$listing_ids = hivepress()->cache->get_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
+
+		if ( is_array( $listing_ids ) ) {
+			$query_args = [
 				'post_type'      => 'hp_listing',
 				'post_status'    => [ 'draft', 'pending', 'publish' ],
-				'author'         => get_current_user_id(),
-				'posts_per_page' => -1,
-			]
-		);
+				'post__in'       => array_merge( [ 0 ], $listing_ids ),
+				'posts_per_page' => count( $listing_ids ),
+				'orderby'        => 'post__in',
+				'no_found_rows'  => true,
+			];
+		}
+
+		// Query listings.
+		query_posts( $query_args );
+
+		set_query_var( 'post_type', 'hp_listing' );
+
+		// Cache IDs.
+		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
+			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
+		}
 
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
 	}
@@ -479,6 +520,13 @@ class Listing extends Controller {
 			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
 		}
 
+		// Check permissions.
+		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
+			wp_safe_redirect( home_url( '/' ) );
+
+			exit();
+		}
+
 		// Get listing ID.
 		$listing_id = hp\get_post_id(
 			[
@@ -522,7 +570,7 @@ class Listing extends Controller {
 		}
 
 		// Check categories.
-		if ( wp_count_terms( 'hp_listing_category', [ 'hide_empty' => false ] ) === 0 ) {
+		if ( absint( wp_count_terms( 'hp_listing_category' ) ) === 0 ) {
 			return true;
 		}
 

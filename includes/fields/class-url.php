@@ -1,6 +1,6 @@
 <?php
 /**
- * Email field.
+ * URL field.
  *
  * @package HivePress\Fields
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Email field class.
+ * URL field class.
  *
- * @class Email
+ * @class URL
  */
-class Email extends Text {
+class URL extends Text {
 
 	/**
 	 * Field type.
@@ -48,7 +48,7 @@ class Email extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Email', 'hivepress' ),
+				'title'    => esc_html__( 'URL', 'hivepress' ),
 
 				'settings' => [
 					'min_length' => null,
@@ -69,7 +69,7 @@ class Email extends Text {
 	public function __construct( $args = [] ) {
 
 		// Set maximum length.
-		$args['max_length'] = 254;
+		$args['max_length'] = 2048;
 
 		parent::__construct( $args );
 	}
@@ -79,20 +79,16 @@ class Email extends Text {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_email( $this->value );
+			$this->value = esc_url_raw( $this->value );
 		}
 	}
 
 	/**
-	 * Validates field value.
+	 * Renders field HTML.
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->label ) ] );
-		}
-
-		return empty( $this->errors );
+	public function render() {
+		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_url( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

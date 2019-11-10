@@ -49,7 +49,7 @@ class Account extends Menu {
 
 					'logout_user'   => [
 						'label' => esc_html__( 'Sign Out', 'hivepress' ),
-						'url'   => wp_logout_url( home_url() ),
+						'url'   => wp_logout_url( home_url( '/' ) ),
 						'order' => 100,
 					],
 				],

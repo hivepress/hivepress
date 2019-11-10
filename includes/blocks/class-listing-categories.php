@@ -184,8 +184,26 @@ class Listing_Categories extends Block {
 			$query_args['meta_key'] = 'hp_order';
 		}
 
+		// Get cached IDs.
+		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category' );
+
+		if ( is_array( $listing_category_ids ) ) {
+			$query_args = [
+				'taxonomy'   => 'hp_listing_category',
+				'include'    => array_merge( [ 0 ], $listing_category_ids ),
+				'number'     => count( $listing_category_ids ),
+				'hide_empty' => false,
+				'orderby'    => 'include',
+			];
+		}
+
 		// Query categories.
 		$categories = get_terms( $query_args );
+
+		// Cache IDs.
+		if ( is_null( $listing_category_ids ) && count( $categories ) <= 1000 ) {
+			hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category', wp_list_pluck( $categories, 'term_id' ) );
+		}
 
 		// Render categories.
 		if ( ! empty( $categories ) ) {

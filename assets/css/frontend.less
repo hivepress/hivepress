@@ -244,6 +244,7 @@ Mixins
 
 	&-field {
 		&--email,
+		&--url,
 		&--number,
 		&--password,
 		&--search,
@@ -284,12 +285,18 @@ Mixins
 
 		&--number-range {
 			display: flex;
+			flex-wrap: wrap;
 			margin: 0 -.5rem;
 
 			input[type=number] {
 				width: 100%;
 				margin: 0 0.5rem;
 				flex: 1;
+			}
+
+			> div {
+				flex: 0 1 100%;
+				margin: 1rem 0.5rem 0;
 			}
 		}
 
@@ -481,6 +488,10 @@ Mixins
 			}
 		}
 
+		&--view-block &__header {
+			position: relative;
+		}
+
 		&--view-block &__footer {
 			display: flex;
 			justify-content: space-between;
@@ -580,6 +591,25 @@ Mixins
 				text-decoration: none;
 				color: inherit;
 			}
+		}
+
+		&__verified {
+			color: #15cd72;
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		&--view-block &__featured {
+			.center-container;
+			position: absolute;
+			z-index: 1;
+			left: 1rem;
+			top: 1rem;
+			background-color: rgba(0,0,0,.5);
+			border-radius: 50%;
+			width: 2rem;
+			height: 2rem;
+			color: #fff;
 		}
 
 		&--view-block &__date,

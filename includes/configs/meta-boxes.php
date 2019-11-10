@@ -11,6 +11,27 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'listing_settings'          => [
+		'title'  => esc_html__( 'Settings', 'hivepress' ),
+		'screen' => 'listing',
+
+		'fields' => [
+			'featured' => [
+				'label'   => esc_html__( 'Featured', 'hivepress' ),
+				'caption' => esc_html__( 'Make this listing featured', 'hivepress' ),
+				'type'    => 'checkbox',
+				'order'   => 10,
+			],
+
+			'verified' => [
+				'label'   => esc_html__( 'Verified', 'hivepress' ),
+				'caption' => esc_html__( 'Mark this listing as verified', 'hivepress' ),
+				'type'    => 'checkbox',
+				'order'   => 20,
+			],
+		],
+	],
+
 	'listing_attributes'        => [
 		'title'  => esc_html__( 'Attributes', 'hivepress' ),
 		'screen' => 'listing',
@@ -20,6 +41,7 @@ return [
 	'listing_attribute_edit'    => [
 		'title'  => esc_html__( 'Editing', 'hivepress' ),
 		'screen' => 'listing_attribute',
+
 		'fields' => [
 			'editable'        => [
 				'label'   => esc_html__( 'Editable', 'hivepress' ),
@@ -41,6 +63,7 @@ return [
 	'listing_attribute_search'  => [
 		'title'  => esc_html__( 'Search', 'hivepress' ),
 		'screen' => 'listing_attribute',
+
 		'fields' => [
 			'filterable'        => [
 				'label'   => esc_html__( 'Searchable', 'hivepress' ),
@@ -68,6 +91,7 @@ return [
 	'listing_attribute_display' => [
 		'title'  => esc_html__( 'Display', 'hivepress' ),
 		'screen' => 'listing_attribute',
+
 		'fields' => [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
@@ -87,6 +111,7 @@ return [
 				'description' => esc_html__( 'Set the attribute display format, the following tokens are available: %value%.', 'hivepress' ),
 				'type'        => 'text',
 				'default'     => '%value%',
+				'html'        => 'post',
 				'order'       => 20,
 			],
 		],
