@@ -174,7 +174,10 @@ class Listing extends Post {
 				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
 
 				if ( array_key_exists( 'options', $field_args ) && ! is_null( $field_value ) ) {
-					$field_terms = hivepress()->cache->get_post_cache( $this->id, 'names', 'term/' . hp\unprefix( $field_taxonomy ) );
+					$cache_group   = 'term/' . hp\unprefix( $field_taxonomy );
+					$cache_version = hivepress()->cache->get_cache_version( $cache_group );
+
+					$field_terms = hivepress()->cache->get_post_cache( $this->id, 'names/' . $cache_version, $cache_group );
 
 					if ( is_null( $field_terms ) ) {
 						$field_terms = get_terms(
@@ -186,7 +189,7 @@ class Listing extends Post {
 						);
 
 						if ( is_array( $field_terms ) && count( $field_terms ) <= 100 ) {
-							hivepress()->cache->set_post_cache( $this->id, 'names', 'term/' . hp\unprefix( $field_taxonomy ), $field_terms, DAY_IN_SECONDS );
+							hivepress()->cache->set_post_cache( $this->id, 'names/' . $cache_version, $cache_group, $field_terms, DAY_IN_SECONDS );
 						}
 					}
 
