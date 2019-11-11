@@ -37,6 +37,7 @@ final class Router {
 		// Manage rewrite rules.
 		add_action( 'init', [ $this, 'add_rewrite_rules' ] );
 		add_action( 'hivepress/v1/activate', [ $this, 'flush_rewrite_rules' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'flush_rewrite_rules' ] );
 
 		if ( ! is_admin() ) {
 
