@@ -46,6 +46,7 @@ final class Admin {
 
 			// Initialize settings.
 			add_action( 'hivepress/v1/activate', [ $this, 'init_settings' ] );
+			add_action( 'hivepress/v1/update', [ $this, 'init_settings' ] );
 
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );

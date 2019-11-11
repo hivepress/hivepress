@@ -26,6 +26,8 @@ final class Cache {
 
 		// Manage events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'schedule_events' ] );
+
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
 		// Clear cache.

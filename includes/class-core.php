@@ -163,6 +163,20 @@ final class Core {
 				update_option( 'hp_dirs_number', count( $this->dirs ) );
 			}
 		}
+
+		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), HP_CORE_VERSION, '<' ) ) {
+
+			/**
+			 * Fires on HivePress update.
+			 *
+			 * @action /update
+			 * @description Fires on HivePress update.
+			 */
+			do_action( 'hivepress/v1/update' );
+
+			// Update HivePress version.
+			update_option( 'hp_core_version', HP_CORE_VERSION );
+		}
 	}
 
 	/**
