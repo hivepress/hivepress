@@ -584,9 +584,9 @@ class Cache extends \PHPUnit\Framework\TestCase {
 
 		wp_update_comment(
 			[
-				'comment_type'    => 'hp_comment',
-				'user_id'         => $this->object_ids['user'],
+				'comment_ID'      => $this->object_ids['comment'],
 				'comment_post_ID' => $this->object_ids['post'],
+				'user_id'         => $this->object_ids['user'],
 			]
 		);
 
