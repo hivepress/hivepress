@@ -453,8 +453,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		foreach ( $this->cache_types as $type ) {
 			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7', null, 'value', -1000 ] );
 
-			hivepress()->cache->clear_meta_cache();
-			wp_cache_flush();
+			do_action( 'hivepress/v1/cron/daily' );
 
 			$this->assertNull( call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7' ] ) );
 		}
@@ -479,8 +478,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key8', 'post/post_type' ) );
 		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key8', 'post/post_type' ) );
 
@@ -495,8 +492,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key9', 'post/post_type' ) );
 		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key9', 'post/post_type' ) );
 
@@ -505,8 +500,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key9', 'post/post_type', 'value' );
 
 		wp_delete_post( $this->object_ids['post'], true );
-
-		wp_cache_flush();
 
 		$this->assertNull( hivepress()->cache->get_cache( 'key9', 'post/post_type' ) );
 		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key9', 'post/post_type' ) );
@@ -522,8 +515,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key11', 'term/taxonomy', 'value' );
 
 		wp_set_post_terms( $this->object_ids['post'], [ $this->object_ids['term'] ], 'hp_taxonomy' );
-
-		wp_cache_flush();
 
 		$this->assertNull( hivepress()->cache->get_term_cache( $this->object_ids['term'], 'key11', 'post/post_type' ) );
 		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key11', 'term/taxonomy' ) );
@@ -541,8 +532,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 
 		wp_insert_term( 'term' . uniqid(), 'hp_taxonomy' );
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key12', 'term/taxonomy' ) );
 
 		// Update term.
@@ -550,16 +539,12 @@ class Cache extends \PHPUnit\Framework\TestCase {
 
 		wp_update_term( $this->object_ids['term'], 'hp_taxonomy' );
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key12', 'term/taxonomy' ) );
 
 		// Delete term.
 		hivepress()->cache->set_cache( 'key12', 'term/taxonomy', 'value' );
 
 		wp_delete_term( $this->object_ids['term'], 'hp_taxonomy' );
-
-		wp_cache_flush();
 
 		$this->assertNull( hivepress()->cache->get_cache( 'key12', 'term/taxonomy' ) );
 	}
@@ -584,8 +569,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/hp_comment' ) );
 		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/hp_comment' ) );
 		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/hp_comment' ) );
@@ -603,8 +586,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		wp_cache_flush();
-
 		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/hp_comment' ) );
 		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/hp_comment' ) );
 		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/hp_comment' ) );
@@ -615,8 +596,6 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/hp_comment', 'value' );
 
 		wp_delete_comment( $this->object_ids['comment'], true );
-
-		wp_cache_flush();
 
 		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/hp_comment' ) );
 		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/hp_comment' ) );
