@@ -662,19 +662,26 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_details_page() {
+
+		// Get listing ID.
+		$listing_id = hp\get_post_id(
+			[
+				'post_type'   => 'hp_listing',
+				'post_status' => 'auto-draft',
+				'post_parent' => null,
+				'author'      => get_current_user_id(),
+			]
+		);
+
+		// Set listing ID.
+		set_query_var( 'hp_listing_id', $listing_id );
+
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing_id' => hp\get_post_id(
-						[
-							'post_type'   => 'hp_listing',
-							'post_status' => 'auto-draft',
-							'post_parent' => null,
-							'author'      => get_current_user_id(),
-						]
-					),
+					'listing_id' => $listing_id,
 				],
 			]
 		) )->render();
