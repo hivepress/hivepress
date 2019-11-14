@@ -63,7 +63,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// Comment.
 		$this->object_ids['comment'] = wp_insert_comment(
 			[
-				'comment_type' => 'hp_type',
+				'comment_type' => 'hp_comment_type',
 			]
 		);
 
@@ -561,26 +561,26 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	public function clear_comment_cache() {
 
 		// Create comment.
-		hivepress()->cache->set_cache( 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment', 'value' );
+		hivepress()->cache->set_cache( 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type', 'value' );
 
 		wp_insert_comment(
 			[
-				'comment_type'    => 'hp_comment',
+				'comment_type'    => 'hp_comment_type',
 				'comment_post_ID' => $this->object_ids['post'],
 				'user_id'         => $this->object_ids['user'],
 			]
 		);
 
-		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type' ) );
 
 		// Update comment.
-		hivepress()->cache->set_cache( 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment', 'value' );
+		hivepress()->cache->set_cache( 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type', 'value' );
 
 		wp_update_comment(
 			[
@@ -590,19 +590,19 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type' ) );
 
 		// Delete comment.
-		hivepress()->cache->set_cache( 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment', 'value' );
-		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment', 'value' );
+		hivepress()->cache->set_cache( 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type', 'value' );
+		hivepress()->cache->set_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type', 'value' );
 
 		wp_delete_comment( $this->object_ids['comment'], true );
 
-		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment' ) );
-		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_post_cache( $this->object_ids['post'], 'key13', 'comment/comment_type' ) );
+		$this->assertNull( hivepress()->cache->get_user_cache( $this->object_ids['user'], 'key13', 'comment/comment_type' ) );
 	}
 }
