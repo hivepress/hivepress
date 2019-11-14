@@ -41,13 +41,13 @@ class Email extends \PHPUnit\Framework\TestCase {
 		$field->set_value( null );
 		$this->assertTrue( $field->validate() );
 
+		$field->set_value( 'example@example.com' );
+		$this->assertTrue( $field->validate() );
+
 		$field->set_value( 'example@example' );
 		$this->assertFalse( $field->validate() );
 
 		$field->set_value( 'eqbujptxfckdjykzckylzqfgmaalxsnknoukcoajrmwjnbptsuuvumyfvgilpivpoevotkzohqvjgkhdaxqibzxmtapxdnairomksiyqxsnuhlognrcoabkgfncorlgrvufcthrciuvkgpvuztfvjxfpvwxhrozcswnrcotcbnumkvfwqnieefwepsibmvqzvwjbcamrxwfwtfydokcxtcisllaezgvjaaupftsfyvhipocaumf@example.com' );
 		$this->assertFalse( $field->validate() );
-
-		$field->set_value( 'example@example.com' );
-		$this->assertTrue( $field->validate() );
 	}
 }
