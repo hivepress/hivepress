@@ -1,6 +1,6 @@
 <?php
 /**
- * Cache test component.
+ * Cache component test.
  *
  * @package HivePress\Tests\Components
  */
@@ -12,7 +12,7 @@ namespace HivePress\Tests\Components;
  *
  * @class Cache
  */
-class Cache extends PHPUnit\Framework\TestCase {
+class Cache extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * Gets transient cache.
@@ -20,6 +20,6 @@ class Cache extends PHPUnit\Framework\TestCase {
 	 * @test
 	 */
 	public function get_cache() {
-		$this->assertTrue(false);
+		$this->assertTrue( false );
 	}
 }
