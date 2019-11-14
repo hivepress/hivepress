@@ -440,7 +440,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// Get by group.
 		$version = uniqid();
 
-		set_transient( 'hp_group9', $version );
+		set_transient( 'hp_group9/version', $version );
 		$this->assertSame( $version, hivepress()->cache->get_cache_version( 'group9' ) );
 	}
 
@@ -451,10 +451,14 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	 */
 	public function clear_meta_cache() {
 		foreach ( $this->cache_types as $type ) {
-			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7', null, 'value', -1000 ] );
+			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7', null, 'value', 1 ] );
+		}
 
-			do_action( 'hivepress/v1/cron/daily' );
+		sleep( 1 );
 
+		do_action( 'hivepress/v1/cron/daily' );
+
+		foreach ( $this->cache_types as $type ) {
 			$this->assertNull( call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7' ] ) );
 		}
 	}
