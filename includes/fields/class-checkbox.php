@@ -92,7 +92,7 @@ class Checkbox extends Field {
 		// Set ID.
 		$id = explode( '[', $this->name );
 
-		$attributes['id'] = reset( $id ) . '_' . uniqid();
+		$attributes['id'] = reset( $id ) . '_' . uniqid( '', true );
 
 		// Set required property.
 		if ( $this->required ) {

@@ -130,7 +130,7 @@ class Radio extends Select {
 				}
 
 				// Get ID.
-				$id = $this->name . '_' . uniqid();
+				$id = $this->name . '_' . uniqid( '', true );
 
 				// Render option.
 				$output .= '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
