@@ -22,19 +22,19 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	public function get_cache() {
 
 		// Get non-existent.
-		$this->assertSame( null, hivepress()->cache->get_cache( 'key' ) );
+		$this->assertSame( null, hivepress()->cache->get_cache( 'key1' ) );
 
 		// Get by key.
-		set_transient( 'hp_key', 'value' );
-		$this->assertSame( 'value', hivepress()->cache->get_cache( 'key' ) );
+		set_transient( 'hp_key1', 'value' );
+		$this->assertSame( 'value', hivepress()->cache->get_cache( 'key1' ) );
 
 		// Get by key and group.
 		$version = (string) time();
 
 		set_transient( 'hp_group/version', $version );
 
-		set_transient( 'hp_group/' . md5( 'key' . $version ), 'value' );
-		$this->assertSame( 'value', hivepress()->cache->get_cache( 'key', 'group' ) );
+		set_transient( 'hp_group/' . md5( 'key1' . $version ), 'value' );
+		$this->assertSame( 'value', hivepress()->cache->get_cache( 'key1', 'group' ) );
 
 		set_transient(
 			'hp_group/' . md5(
@@ -72,20 +72,20 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		foreach ( $types as $type ) {
 
 			// Get non-existent.
-			$this->assertSame( null, call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key' ] ) );
+			$this->assertSame( null, call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key2' ] ) );
 
 			// Get by key.
-			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_key', 'value' ] );
+			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_key2', 'value' ] );
 
-			$this->assertSame( 'value', call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key' ] ) );
+			$this->assertSame( 'value', call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key2' ] ) );
 
 			// Get by key and group.
 			$version = (string) time();
 
 			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_group/version', $version ] );
 
-			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_group/' . md5( 'key' . $version ), 'value' ] );
-			$this->assertSame( 'value', call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key', 'group' ] ) );
+			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_group/' . md5( 'key2' . $version ), 'value' ] );
+			$this->assertSame( 'value', call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key2', 'group' ] ) );
 
 			call_user_func_array(
 				'update_' . $type . '_meta',
@@ -94,8 +94,8 @@ class Cache extends \PHPUnit\Framework\TestCase {
 					'_transient_hp_group/' . md5(
 						wp_json_encode(
 							[
-								'a' => 1,
-								'b' => 2,
+								'a' => 3,
+								'b' => 4,
 							]
 						) . $version
 					),
@@ -110,8 +110,8 @@ class Cache extends \PHPUnit\Framework\TestCase {
 					[
 						$object_ids[ $type ],
 						[
-							'b' => 2,
-							'a' => 1,
+							'b' => 4,
+							'a' => 3,
 						],
 						'group',
 					]
@@ -128,22 +128,22 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	public function set_cache() {
 
 		// Set by key.
-		hivepress()->cache->set_cache( 'key', null, 'value' );
+		hivepress()->cache->set_cache( 'key3', null, 'value' );
 
-		$this->assetSame( 'value', get_transient( 'hp_key' ) );
+		$this->assertSame( 'value', get_transient( 'hp_key3' ) );
 
 		// Set by key and group.
 		$version = (string) time();
 
 		set_transient( 'hp_group/version', $version );
 
-		hivepress()->cache->set_cache( 'key', 'group', 'value' );
-		$this->assertSame( 'value', get_transient( 'hp_group/' . md5( 'key' . $version ) ) );
+		hivepress()->cache->set_cache( 'key3', 'group', 'value' );
+		$this->assertSame( 'value', get_transient( 'hp_group/' . md5( 'key3' . $version ) ) );
 
 		hivepress()->cache->set_cache(
 			[
-				'b' => 2,
-				'a' => 1,
+				'b' => 5,
+				'a' => 6,
 			],
 			'group',
 			'value'
@@ -155,13 +155,70 @@ class Cache extends \PHPUnit\Framework\TestCase {
 				'hp_group/' . md5(
 					wp_json_encode(
 						[
-							'a' => 1,
-							'b' => 2,
+							'a' => 6,
+							'b' => 5,
 						]
 					) . $version
 				)
 			)
 		);
+	}
+
+	/**
+	 * Sets meta cache.
+	 *
+	 * @test
+	 */
+	public function set_meta_cache() {
+		$types      = [ 'user', 'post', 'comment', 'term' ];
+		$object_ids = $this->get_object_ids();
+
+		foreach ( $types as $type ) {
+
+			// Set by key.
+			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key4', null, 'value' ] );
+			$this->assertSame( 'value', call_user_func_array( 'get_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_key4', true ] ) );
+
+			// Set by key and group.
+			$version = (string) time();
+
+			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_group/version', $version ] );
+
+			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key4', 'group', 'value' ] );
+			$this->assertSame( 'value', call_user_func_array( 'get_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_group/' . md5( 'key4' . $version ), true ] ) );
+
+			call_user_func_array(
+				[ hivepress()->cache, 'set_' . $type . '_cache' ],
+				[
+					$object_ids[ $type ],
+					[
+						'b' => 7,
+						'a' => 8,
+					],
+					'group',
+					'value',
+				]
+			);
+
+			$this->assertSame(
+				'value',
+				call_user_func_array(
+					'get_' . $type . '_meta',
+					[
+						$object_ids[ $type ],
+						'_transient_hp_group/' . md5(
+							wp_json_encode(
+								[
+									'a' => 8,
+									'b' => 7,
+								]
+							) . $version
+						),
+						true,
+					]
+				)
+			);
+		}
 	}
 
 	/**
