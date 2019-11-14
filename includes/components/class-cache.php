@@ -386,7 +386,7 @@ final class Cache {
 	private function update_cache_version( $group ) {
 
 		// Get version.
-		$version = (string) time();
+		$version = uniqid();
 
 		// Get expiration period.
 		$expiration = false;
@@ -410,7 +410,7 @@ final class Cache {
 	 * @return string
 	 */
 	private function update_meta_cache_version( $type, $id, $group ) {
-		$version = (string) time();
+		$version = uniqid();
 
 		$this->set_meta_cache( $type, $id, $group . '/version', null, $version, WEEK_IN_SECONDS );
 
