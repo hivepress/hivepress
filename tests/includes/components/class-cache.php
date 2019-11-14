@@ -406,7 +406,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$object_ids = $this->get_object_ids();
 
 		foreach ( $types as $type ) {
-			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7', null, 'value', time() - 1 ] );
+			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7', null, 'value', time() - 10 ] );
 
 			hivepress()->cache->clear_meta_cache();
 
@@ -429,13 +429,33 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
+		// Create post.
 		hivepress()->cache->set_cache( 'key8', 'post/post_type', 'value' );
 		hivepress()->cache->set_user_cache( $object_ids['user'], 'key8', 'post/post_type', 'value' );
 
-		hivepress()->cache->clear_post_cache( $object_ids['post'] );
+		wp_insert_post(
+			[
+				'post_title'  => 'title',
+				'post_type'   => 'hp_post_type',
+				'post_author' => $object_ids['user'],
+			]
+		);
 
 		$this->assertSame( null, hivepress()->cache->get_cache( 'key8', 'post/post_type' ) );
 		$this->assertSame( null, hivepress()->cache->get_user_cache( $object_ids['user'], 'key8', 'post/post_type' ) );
+
+		// Update post.
+		hivepress()->cache->set_cache( 'key9', 'post/post_type', 'value' );
+		hivepress()->cache->set_user_cache( $object_ids['user'], 'key9', 'post/post_type', 'value' );
+
+		wp_update_post(
+			[
+				'ID' => $object_ids['post'],
+			]
+		);
+
+		$this->assertSame( null, hivepress()->cache->get_cache( 'key9', 'post/post_type' ) );
+		$this->assertSame( null, hivepress()->cache->get_user_cache( $object_ids['user'], 'key9', 'post/post_type' ) );
 	}
 
 	/**
