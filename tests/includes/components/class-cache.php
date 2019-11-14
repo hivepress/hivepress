@@ -121,6 +121,50 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Sets transient cache.
+	 *
+	 * @test
+	 */
+	public function set_cache() {
+
+		// Set by key.
+		hivepress()->cache->set_cache( 'key', null, 'value' );
+
+		$this->assetSame( 'value', get_transient( 'hp_key' ) );
+
+		// Set by key and group.
+		$version = (string) time();
+
+		set_transient( 'hp_group/version', $version );
+
+		hivepress()->cache->set_cache( 'key', 'group', 'value' );
+		$this->assertSame( 'value', get_transient( 'hp_group/' . md5( 'key' . $version ) ) );
+
+		hivepress()->cache->set_cache(
+			[
+				'b' => 2,
+				'a' => 1,
+			],
+			'group',
+			'value'
+		);
+
+		$this->assertSame(
+			'value',
+			get_transient(
+				'hp_group/' . md5(
+					wp_json_encode(
+						[
+							'a' => 1,
+							'b' => 2,
+						]
+					) . $version
+				)
+			)
+		);
+	}
+
+	/**
 	 * Gets object IDs.
 	 *
 	 * @return array
@@ -131,8 +175,9 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// User.
 		$object_ids['user'] = wp_insert_user(
 			[
-				'user_login' => 'username',
+				'user_login' => 'user' . uniqid(),
 				'user_email' => uniqid() . '@example.com',
+				'user_pass'  => wp_generate_password(),
 			]
 		);
 
@@ -156,9 +201,10 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// Term.
 		register_taxonomy( 'hp_taxonomy', 'hp_post_type' );
 
-		$object_ids['term'] = wp_insert_term( 'term', 'hp_taxonomy' );
+		$term = wp_insert_term( 'term' . uniqid(), 'hp_taxonomy' );
 
-		var_dump( $object_ids );
+		$object_ids['term'] = $term['term_id'];
+
 		return $object_ids;
 	}
 }
