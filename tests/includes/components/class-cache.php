@@ -50,7 +50,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	public function get_cache() {
 
 		// Get non-existent.
-		$this->assertSame( null, hivepress()->cache->get_cache( 'key1' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key1' ) );
 
 		// Get by key.
 		set_transient( 'hp_key1', 'value' );
@@ -100,7 +100,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		foreach ( $types as $type ) {
 
 			// Get non-existent.
-			$this->assertSame( null, call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key2' ] ) );
+			$this->assertNull( call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key2' ] ) );
 
 			// Get by key.
 			call_user_func_array( 'update_' . $type . '_meta', [ $object_ids[ $type ], '_transient_hp_key2', 'value' ] );
@@ -406,11 +406,11 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$object_ids = $this->get_object_ids();
 
 		foreach ( $types as $type ) {
-			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7', null, 'value', time() - 10 ] );
+			call_user_func_array( [ hivepress()->cache, 'set_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7', null, 'value', -1000 ] );
 
 			hivepress()->cache->clear_meta_cache();
 
-			$this->assertSame( null, call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7' ] ) );
+			$this->assertNull( call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $object_ids[ $type ], 'key7' ] ) );
 		}
 	}
 
@@ -441,8 +441,8 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		$this->assertSame( null, hivepress()->cache->get_cache( 'key8', 'post/post_type' ) );
-		$this->assertSame( null, hivepress()->cache->get_user_cache( $object_ids['user'], 'key8', 'post/post_type' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key8', 'post/post_type' ) );
+		$this->assertNull( hivepress()->cache->get_user_cache( $object_ids['user'], 'key8', 'post/post_type' ) );
 
 		// Update post.
 		hivepress()->cache->set_cache( 'key9', 'post/post_type', 'value' );
@@ -454,8 +454,25 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			]
 		);
 
-		$this->assertSame( null, hivepress()->cache->get_cache( 'key9', 'post/post_type' ) );
-		$this->assertSame( null, hivepress()->cache->get_user_cache( $object_ids['user'], 'key9', 'post/post_type' ) );
+		$this->assertNull( hivepress()->cache->get_cache( 'key9', 'post/post_type' ) );
+		$this->assertNull( hivepress()->cache->get_user_cache( $object_ids['user'], 'key9', 'post/post_type' ) );
+	}
+
+	/**
+	 * Clears post term cache.
+	 *
+	 * @test
+	 */
+	public function clear_post_term_cache() {
+		$object_ids = $this->get_object_ids();
+
+		hivepress()->cache->set_term_cache( $object_ids['term'], 'key11', 'post/post_type', 'value' );
+		hivepress()->cache->set_post_cache( $object_ids['post'], 'key11', 'term/taxonomy', 'value' );
+
+		wp_set_post_terms( $object_ids['post'], [ $object_ids['term'] ], 'hp_taxonomy' );
+
+		$this->assertNull( hivepress()->cache->get_term_cache( $object_ids['term'], 'key11', 'post/post_type' ) );
+		$this->assertNull( hivepress()->cache->get_post_cache( $object_ids['post'], 'key11', 'term/taxonomy' ) );
 	}
 
 	/**
