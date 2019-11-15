@@ -1033,13 +1033,16 @@ final class Admin {
 
 		$output = '';
 
+		// Get dismissed notices.
+		$dismissed_notices = (array) get_option( 'hp_admin_dismissed_notices' );
+
 		// Render setting errors.
 		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
 			settings_errors();
 		}
 
 		// Render theme notice.
-		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
+		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', $dismissed_notices, true ) ) {
 			$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
 		}
 
@@ -1049,7 +1052,7 @@ final class Admin {
 				if ( get_template() === $theme['slug'] ) {
 					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
 
-					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) && ! in_array( $notice_name, (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
+					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) && ! in_array( $notice_name, $dismissed_notices, true ) ) {
 						$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '"><p>' . sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ) . '</p></div>';
 					}
 
