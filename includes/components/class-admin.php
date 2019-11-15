@@ -536,6 +536,50 @@ final class Admin {
 	}
 
 	/**
+	 * Gets themes.
+	 *
+	 * @return array
+	 */
+	private function get_themes() {
+
+		// Get cached themes.
+		$themes = hivepress()->cache->get_cache( 'themes' );
+
+		if ( is_null( $themes ) ) {
+			$themes = [];
+
+			// Query themes.
+			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( 'https://hivepress.io/wp-json/hivepress/v1/themes' ) ), true );
+
+			if ( ! is_null( $response ) && isset( $response['data'] ) ) {
+				$themes = (array) $response['data'];
+
+				// Cache themes.
+				if ( count( $themes ) <= 100 ) {
+					hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
+				}
+			}
+		}
+
+		// Set defaults.
+		$themes = array_map(
+			function( $theme ) {
+				return array_merge(
+					[
+						'name'    => '',
+						'slug'    => '',
+						'version' => '',
+					],
+					(array) $theme
+				);
+			},
+			$themes
+		);
+
+		return $themes;
+	}
+
+	/**
 	 * Registers post states.
 	 */
 	public function register_post_states() {
@@ -987,6 +1031,8 @@ final class Admin {
 	public function render_notices() {
 		global $pagenow;
 
+		$output = '';
+
 		// Render setting errors.
 		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
 			settings_errors();
@@ -994,8 +1040,25 @@ final class Admin {
 
 		// Render theme notice.
 		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
-			echo '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
+			$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
 		}
+
+		// Render update notice.
+		if ( current_theme_supports( 'hivepress' ) ) {
+			foreach ( $this->get_themes() as $theme ) {
+				if ( get_template() === $theme['slug'] ) {
+					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
+
+					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) && ! in_array( $notice_name, (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
+						$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '"><p>' . sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ) . '</p></div>';
+					}
+
+					break;
+				}
+			}
+		}
+
+		echo $output;
 	}
 
 	/**
