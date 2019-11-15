@@ -33,6 +33,18 @@ return [
 		'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
 	],
 
+	'select2'           => [
+		'handle' => 'select2',
+		'src'    => HP_CORE_URL . '/assets/css/select2.min.css',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
+	'flatpickr'         => [
+		'handle' => 'flatpickr',
+		'src'    => HP_CORE_URL . '/assets/css/flatpickr.min.css',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
 	'jquery_ui'         => [
 		'handle' => 'jquery-ui',
 		'src'    => HP_CORE_URL . '/assets/css/jquery-ui.min.css',
