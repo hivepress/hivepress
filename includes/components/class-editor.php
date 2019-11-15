@@ -57,7 +57,7 @@ final class Editor {
 				foreach ( $block::get_settings() as $field_name => $field ) {
 					$field_args = $field->get_args();
 
-					if ( isset( $field_args['options'] ) && ! isset( $field_args['options'][''] ) ) {
+					if ( isset( $field_args['options'] ) && ! isset( $field_args['options'][''] ) && ! hp\get_array_value( $field_args, 'required', false ) ) {
 						$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
 					}
 
