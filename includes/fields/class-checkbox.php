@@ -105,6 +105,15 @@ class Checkbox extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		return $this->value ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' );
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

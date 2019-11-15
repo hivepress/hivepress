@@ -151,6 +151,27 @@ abstract class Field {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+
+		// Set class.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
+			]
+		);
+
+		// Set default value.
+		$default = hp\get_array_value( $this->args, 'default' );
+
+		if ( ! is_null( $default ) ) {
+			$this->set_value( $default );
+		}
+	}
+
+	/**
 	 * Gets field type.
 	 *
 	 * @return string
@@ -247,6 +268,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		return $this->value;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param array $errors Field errors.
@@ -262,27 +292,6 @@ abstract class Field {
 	 */
 	final public function get_errors() {
 		return $this->errors;
-	}
-
-	/**
-	 * Bootstraps field properties.
-	 */
-	protected function bootstrap() {
-
-		// Set class.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
-			]
-		);
-
-		// Set default value.
-		$default = hp\get_array_value( $this->args, 'default' );
-
-		if ( ! is_null( $default ) ) {
-			$this->set_value( $default );
-		}
 	}
 
 	/**

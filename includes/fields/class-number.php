@@ -148,6 +148,15 @@ class Number extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {

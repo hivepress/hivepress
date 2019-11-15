@@ -165,15 +165,25 @@ class Listing extends Post {
 		$fields = [];
 
 		foreach ( static::$fields as $field_name => $field ) {
+
+			// Get field arguments.
 			$field_args = $field->get_args();
 
 			if ( in_array( $area, hp\get_array_value( $field_args, 'display_areas', [] ), true ) ) {
 
-				// Get value.
-				$field_value    = hp\get_array_value( $this->attributes, $field_name );
-				$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
+				// Get field value.
+				$field_value = hp\get_array_value( $this->attributes, $field_name );
 
-				if ( array_key_exists( 'options', $field_args ) && ! is_null( $field_value ) ) {
+				if ( ! array_key_exists( 'options', $field_args ) ) {
+
+					// Format field value.
+					$field->set_value( $field_value );
+					$field_value = $field->get_display_value();
+				} elseif ( ! is_null( $field_value ) ) {
+
+					// Format field terms.
+					$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
+
 					$cache_group   = 'term/' . hp\unprefix( $field_taxonomy );
 					$cache_version = hivepress()->cache->get_cache_version( $cache_group );
 
@@ -213,18 +223,9 @@ class Listing extends Post {
 					}
 				}
 
-				if ( is_bool( $field_value ) ) {
-					if ( $field_value ) {
-						$field_value = esc_html__( 'Yes', 'hivepress' );
-					} else {
-						$field_value = esc_html__( 'No', 'hivepress' );
-					}
-				} elseif ( is_numeric( $field_value ) ) {
-					$field_value = number_format_i18n( $field_value, strlen( substr( strrchr( (string) $field_value, '.' ), 1 ) ) );
-				}
-
-				// Create field.
 				if ( ! is_null( $field_value ) ) {
+
+					// Create field.
 					$fields[ $field_name ] = new Fields\Text(
 						[
 							'html'    => 'post',
