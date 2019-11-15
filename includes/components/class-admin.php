@@ -790,16 +790,18 @@ final class Admin {
 					$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
 
 					// Render field label.
-					$output .= '<th scope="row">';
-
 					if ( isset( $field_args['label'] ) ) {
-						$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+						$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
 					}
 
-					$output .= '</th>';
-
 					// Render field.
-					$output .= '<td>' . $field_output . '</td>';
+					if ( isset( $field_args['label'] ) ) {
+						$output .= '<td>';
+					} else {
+						$output .= '<td colspan="2">';
+					}
+
+					$output .= $field_output . '</td>';
 
 					$output .= '</tr>';
 				}
