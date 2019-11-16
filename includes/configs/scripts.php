@@ -48,12 +48,6 @@ return [
 		'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
 	],
 
-	'select2'               => [
-		'handle' => 'select2',
-		'src'    => HP_CORE_URL . '/assets/js/select2.min.js',
-		'scope'  => [ 'frontend', 'backend' ],
-	],
-
 	'flatpickr'             => [
 		'handle' => 'flatpickr',
 		'src'    => HP_CORE_URL . '/assets/js/flatpickr.min.js',
@@ -63,7 +57,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'jquery', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar', 'select2', 'flatpickr' ],
+		'deps'   => [ 'jquery', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar', 'flatpickr' ],
 
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
@@ -74,7 +68,7 @@ return [
 	'core_backend'          => [
 		'handle' => 'hp-core-backend',
 		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
-		'deps'   => [ 'jquery', 'select2', 'flatpickr' ],
+		'deps'   => [ 'jquery', 'flatpickr' ],
 		'scope'  => 'backend',
 
 		'data'   => [
