@@ -171,57 +171,9 @@ class Listing extends Post {
 
 			if ( in_array( $area, hp\get_array_value( $field_args, 'display_areas', [] ), true ) ) {
 
-				// Get field value.
-				$field_value = hp\get_array_value( $this->attributes, $field_name );
-
-				if ( ! array_key_exists( 'options', $field_args ) ) {
-
-					// Format field value.
-					$field->set_value( $field_value );
-					$field_value = $field->get_display_value();
-				} elseif ( ! is_null( $field_value ) ) {
-
-					// Format field terms.
-					$field_taxonomy = hp\prefix( static::$name . '_' . $field_name );
-
-					$cache_group   = 'term/' . hp\unprefix( $field_taxonomy );
-					$cache_version = hivepress()->cache->get_cache_version( $cache_group );
-
-					$field_terms = hivepress()->cache->get_post_cache(
-						$this->id,
-						[
-							'fields'        => 'names',
-							'cache_version' => $cache_version,
-						],
-						$cache_group
-					);
-
-					if ( is_null( $field_terms ) ) {
-						$field_terms = get_terms(
-							[
-								'taxonomy' => $field_taxonomy,
-								'include'  => (array) $field_value,
-								'fields'   => 'names',
-							]
-						);
-
-						if ( is_array( $field_terms ) && count( $field_terms ) <= 100 ) {
-							hivepress()->cache->set_post_cache(
-								$this->id,
-								[
-									'fields'        => 'names',
-									'cache_version' => $cache_version,
-								],
-								$cache_group,
-								$field_terms
-							);
-						}
-					}
-
-					if ( ! empty( $field_terms ) ) {
-						$field_value = implode( ', ', $field_terms );
-					}
-				}
+				// Format field value.
+				$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
+				$field_value = $field->get_display_value();
 
 				if ( ! is_null( $field_value ) ) {
 

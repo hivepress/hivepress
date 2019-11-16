@@ -153,7 +153,11 @@ class Number extends Field {
 	 * @return mixed
 	 */
 	public function get_display_value() {
-		return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
+		if ( ! is_null( $this->value ) ) {
+			return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
+		}
+
+		return $this->value;
 	}
 
 	/**

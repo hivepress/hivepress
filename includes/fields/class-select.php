@@ -120,6 +120,31 @@ class Select extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			$options = $this->options;
+
+			return implode(
+				', ',
+				array_filter(
+					array_map(
+						function( $value ) use ( $options ) {
+							return hp\get_array_value( $options, $value );
+						},
+						(array) $this->value
+					)
+				)
+			);
+		}
+
+		return $this->value;
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
