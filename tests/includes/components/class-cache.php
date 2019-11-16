@@ -44,8 +44,8 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// User.
 		$this->object_ids['user'] = wp_insert_user(
 			[
-				'user_login' => 'user' . uniqid( '', true ),
-				'user_email' => uniqid( '', true ) . '@example.com',
+				'user_login' => 'user' . uniqid(),
+				'user_email' => uniqid() . '@example.com',
 				'user_pass'  => wp_generate_password(),
 			]
 		);
@@ -70,7 +70,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// Term.
 		register_taxonomy( 'hp_taxonomy', 'hp_post_type' );
 
-		$term = wp_insert_term( 'term' . uniqid( '', true ), 'hp_taxonomy' );
+		$term = wp_insert_term( 'term' . uniqid(), 'hp_taxonomy' );
 
 		$this->object_ids['term'] = $term['term_id'];
 	}
@@ -114,7 +114,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$this->assertSame( 'value', hivepress()->cache->get_cache( 'key1' ) );
 
 		// Get by key and group.
-		$version = uniqid( '', true );
+		$version = uniqid();
 
 		set_transient( 'hp_group1/version', $version );
 
@@ -162,7 +162,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			$this->assertSame( 'value', call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key2' ] ) );
 
 			// Get by key and group.
-			$version = uniqid( '', true );
+			$version = uniqid();
 
 			call_user_func_array( 'update_' . $type . '_meta', [ $this->object_ids[ $type ], '_transient_hp_group2/version', $version ] );
 
@@ -215,7 +215,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$this->assertSame( 'value', get_transient( 'hp_key3' ) );
 
 		// Set by key and group.
-		$version = uniqid( '', true );
+		$version = uniqid();
 
 		set_transient( 'hp_group3/version', $version );
 
@@ -259,7 +259,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			$this->assertSame( 'value', call_user_func_array( 'get_' . $type . '_meta', [ $this->object_ids[ $type ], '_transient_hp_key4', true ] ) );
 
 			// Set by key and group.
-			$version = uniqid( '', true );
+			$version = uniqid();
 
 			call_user_func_array( 'update_' . $type . '_meta', [ $this->object_ids[ $type ], '_transient_hp_group4/version', $version ] );
 
@@ -313,7 +313,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$this->assertNotSame( 'value', get_transient( 'hp_key' ) );
 
 		// Delete by key and group.
-		$version = uniqid( '', true );
+		$version = uniqid();
 
 		set_transient( 'hp_group5/version', $version );
 
@@ -370,7 +370,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 			$this->assertNotSame( 'value', call_user_func_array( 'get_' . $type . '_meta', [ $this->object_ids[ $type ], '_transient_hp_key6', true ] ) );
 
 			// Delete by key and group.
-			$version = uniqid( '', true );
+			$version = uniqid();
 
 			call_user_func_array( 'update_' . $type . '_meta', [ $this->object_ids[ $type ], '_transient_hp_group6/version', $version ] );
 
@@ -438,7 +438,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		$this->assertNotEquals( null, hivepress()->cache->get_cache_version( 'group8' ) );
 
 		// Get by group.
-		$version = uniqid( '', true );
+		$version = uniqid();
 
 		set_transient( 'hp_group9/version', $version );
 		$this->assertSame( $version, hivepress()->cache->get_cache_version( 'group9' ) );
@@ -534,7 +534,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		// Create term.
 		hivepress()->cache->set_cache( 'key12', 'term/taxonomy', 'value' );
 
-		wp_insert_term( 'term' . uniqid( '', true ), 'hp_taxonomy' );
+		wp_insert_term( 'term' . uniqid(), 'hp_taxonomy' );
 
 		$this->assertNull( hivepress()->cache->get_cache( 'key12', 'term/taxonomy' ) );
 

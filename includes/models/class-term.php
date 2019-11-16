@@ -90,7 +90,7 @@ abstract class Term extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$ids = wp_insert_term( uniqid( '', true ), hp\prefix( static::$name ), $data );
+				$ids = wp_insert_term( uniqid(), hp\prefix( static::$name ), $data );
 
 				if ( ! is_wp_error( $ids ) ) {
 					$this->set_id( reset( $ids ) );
