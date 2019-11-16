@@ -387,7 +387,7 @@ final class Attribute {
 			// Get field arguments.
 			$field_args = $attribute['edit_field'];
 
-			if ( $attribute['moderated'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) {
+			if ( $attribute['moderated'] && $model . '_update' === $form['name'] ) {
 				$field_args = hp\merge_arrays(
 					$field_args,
 					[
