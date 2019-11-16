@@ -243,6 +243,51 @@ var hivepress = {
 			});
 		});
 
+		// Date
+		hivepress.getComponent('date').each(function() {
+			var field = $(this),
+				settings = {
+					altInput: true,
+					dateFormat: 'Y-m-d',
+				};
+
+			if (field.data('format')) {
+				settings['dateFormat'] = field.data('format');
+			}
+
+			if (field.data('display-format')) {
+				settings['altFormat'] = field.data('display-format');
+			}
+
+			if (field.data('min-date')) {
+				settings['minDate'] = field.data('min-date');
+			}
+
+			if (field.data('max-date')) {
+				settings['maxDate'] = field.data('max-date');
+			}
+
+			if (field.data('mode')) {
+				settings['mode'] = field.data('mode');
+
+				if (field.data('mode') === 'range') {
+					settings['onChange'] = function(selectedDates) {
+						var fields = field.parent().find('input[type=hidden]').not(field),
+							formattedDates = selectedDates.map(function(date) {
+								return flatpickr.formatDate(date, settings['dateFormat']);
+							});
+
+						if (formattedDates.length === 2) {
+							fields.eq(0).val(formattedDates[0]);
+							fields.eq(1).val(formattedDates[1]);
+						}
+					};
+				}
+			}
+
+			field.flatpickr(settings);
+		});
+
 		// Range slider
 		hivepress.getComponent('range-slider').each(function() {
 			var container = $(this),

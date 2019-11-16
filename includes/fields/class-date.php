@@ -171,7 +171,7 @@ class Date extends Field {
 			$attributes['data-max-date'] = $this->max_date;
 		}
 
-		// Set component name.
+		// Set datepicker.
 		$attributes['data-component'] = 'date';
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
