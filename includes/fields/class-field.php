@@ -171,8 +171,8 @@ abstract class Field {
 		);
 
 		// Set optional status.
-		if ( ! $this->required ) {
-			$this->statuses[] = esc_html__( 'optional', 'hivepress' );
+		if ( ! $this->required && ! isset( $this->statuses['optional'] ) ) {
+			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html__( 'optional', 'hivepress' ) ], $this->statuses );
 		}
 
 		// Set default value.
@@ -312,7 +312,7 @@ abstract class Field {
 	 * @return array
 	 */
 	final public function get_statuses() {
-		return $this->statuses;
+		return array_filter( $this->statuses );
 	}
 
 	/**
