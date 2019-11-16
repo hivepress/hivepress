@@ -3,13 +3,7 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
-		label {
-			display: block;
-			width: 25em;
-			line-height: 1.4em;
-			margin-top: 0.35em;
-		}
-
+		.select2,
 		input[type=email],
 		input[type=text],
 		select {
@@ -25,14 +19,14 @@
 		input[type=radio] {
 			margin-right: 8px;
 		}
-
-		textarea {
-			width: 500px;
-			min-height: 7em;
-		}
 	}
 
 	&-field {
+		&--textarea {
+			width: 500px;
+			min-height: 7em;
+		}
+
 		&--checkboxes,
 		&--radio {
 			ul {
@@ -82,6 +76,29 @@
 				}
 			}
 		}
+
+		&--date[readonly] {
+			background-color: #fff;
+		}
+
+		&--wide {
+			width: 100%;
+		}
+
+		&__label {
+			small {
+				font-size: 1em;
+				color: #666;
+				font-weight: normal;
+			}
+		}
+
+		label {
+			display: block;
+			width: 25em;
+			line-height: 1.4em;
+			margin-top: 0.35em;
+		}
 	}
 	/*--------------------------------------------------------------
 	Tooltip
@@ -91,6 +108,9 @@
 		position: relative;
 		margin: -1px -10px -2px 0;
 		cursor: help;
+		@media screen and (max-width: 782px) {
+			display: none;
+		}
 
 		&__icon {
 			color: #82878c;

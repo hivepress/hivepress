@@ -218,13 +218,13 @@ final class Admin {
 						$field_name = hp\prefix( $field_name );
 
 						// Get field label.
-						$field_label = '<span>' . esc_html( $field['label'] ) . '</span>';
+						$field_label = '<label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
 
-						if ( ! hp\get_array_value( $field, 'required', false ) ) {
+						if ( ! hp\get_array_value( $field, 'required', false ) && 'checkbox' !== $field['type'] ) {
 							$field_label .= ' <small>(' . esc_html__( 'optional', 'hivepress' ) . ')</small>';
 						}
 
-						$field_label .= $this->render_tooltip( hp\get_array_value( $field, 'description' ) );
+						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) );
 
 						// Get field value.
 						$field['default'] = get_option( $field_name );
@@ -819,13 +819,13 @@ final class Admin {
 
 					// Render field label.
 					if ( isset( $field_args['label'] ) ) {
-						$output .= '<th scope="row"><span>' . esc_html( $field_args['label'] ) . '</span>';
+						$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
 
 						if ( count( $field->get_statuses() ) > 0 ) {
 							$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
 						}
 
-						$output .= $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
+						$output .= '</label>' . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
 					}
 
 					// Render field.
@@ -1000,7 +1000,13 @@ final class Admin {
 							$output .= '<div class="form-field">';
 
 							// Render label.
-							$output .= '<label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+							$output .= '<label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+							if ( count( $field->get_statuses() ) > 0 ) {
+								$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+							}
+
+							$output .= '</label>';
 
 							// Render field.
 							$output .= $field->render();
@@ -1015,8 +1021,13 @@ final class Admin {
 							$output .= '<tr class="form-field">';
 
 							// Render label.
-							$output .= '<th scope="row"><label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
-							$output .= '<td>';
+							$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+							if ( count( $field->get_statuses() ) > 0 ) {
+								$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+							}
+
+							$output .= '</label></th>';
 
 							// Get field value.
 							if ( ! isset( $field_args['alias'] ) ) {
@@ -1032,6 +1043,8 @@ final class Admin {
 							$field->set_value( $value );
 
 							// Render field.
+							$output .= '<td>';
+
 							$output .= $field->render();
 
 							// Render description.
