@@ -294,7 +294,7 @@ abstract class Field {
 	 * @param array $errors Field errors.
 	 */
 	final protected function add_errors( $errors ) {
-		$this->errors = array_merge( $this->errors, $errors );
+		$this->errors = array_unique( array_merge( $this->errors, $errors ) );
 	}
 
 	/**
