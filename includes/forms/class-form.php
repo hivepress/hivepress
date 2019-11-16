@@ -420,7 +420,13 @@ abstract class Form {
 
 				// Render label.
 				if ( $field->get_label() ) {
-					$output .= '<label class="hp-form__label">' . esc_html( $field->get_label() ) . '</label>';
+					$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+					if ( count( $field->get_statuses() ) > 0 ) {
+						$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+					}
+
+					$output .= '</label>';
 				}
 			}
 

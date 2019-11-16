@@ -213,10 +213,24 @@ final class Admin {
 
 					// Register settings.
 					foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field ) {
-						$field_name       = hp\prefix( $field_name );
+
+						// Get field name.
+						$field_name = hp\prefix( $field_name );
+
+						// Get field label.
+						$field_label = '<span>' . esc_html( $field['label'] ) . '</span>';
+
+						if ( ! hp\get_array_value( $field, 'required', false ) ) {
+							$field_label .= ' <small>(' . esc_html__( 'optional', 'hivepress' ) . ')</small>';
+						}
+
+						$field_label .= $this->render_tooltip( hp\get_array_value( $field, 'description' ) );
+
+						// Get field value.
 						$field['default'] = get_option( $field_name );
 
-						add_settings_field( $field_name, esc_html( $field['label'] ) . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ), [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $field, [ 'name' => $field_name ] ) );
+						// Add field.
+						add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $field, [ 'name' => $field_name ] ) );
 						register_setting( 'hp_settings', $field_name, [ $this, 'validate_' . hp\unprefix( $field_name ) ] );
 					}
 				}
@@ -762,8 +776,22 @@ final class Admin {
 
 					if ( class_exists( $field_class ) ) {
 
+						// Get field arguments.
+						$field_args = array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] );
+
+						if ( ! isset( $field_args['label'] ) ) {
+							$field_args = hp\merge_arrays(
+								$field_args,
+								[
+									'attributes' => [
+										'class' => [ 'hp-field--wide' ],
+									],
+								]
+							);
+						}
+
 						// Create field.
-						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+						$field = new $field_class( $field_args );
 
 						// Get field value.
 						if ( ! isset( $field_args['alias'] ) ) {
@@ -791,7 +819,13 @@ final class Admin {
 
 					// Render field label.
 					if ( isset( $field_args['label'] ) ) {
-						$output .= '<th scope="row">' . esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
+						$output .= '<th scope="row"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+						if ( count( $field->get_statuses() ) > 0 ) {
+							$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+						}
+
+						$output .= $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
 					}
 
 					// Render field.

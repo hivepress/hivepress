@@ -85,6 +85,13 @@ abstract class Field {
 	protected $errors = [];
 
 	/**
+	 * Field statuses.
+	 *
+	 * @var array
+	 */
+	protected $statuses = [];
+
+	/**
 	 * Required property.
 	 *
 	 * @var bool
@@ -162,6 +169,11 @@ abstract class Field {
 				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
 			]
 		);
+
+		// Set optional status.
+		if ( ! $this->required ) {
+			$this->statuses[] = esc_html__( 'optional', 'hivepress' );
+		}
 
 		// Set default value.
 		$default = hp\get_array_value( $this->args, 'default' );
@@ -292,6 +304,15 @@ abstract class Field {
 	 */
 	final public function get_errors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Gets field statuses.
+	 *
+	 * @return array
+	 */
+	final public function get_statuses() {
+		return $this->statuses;
 	}
 
 	/**
