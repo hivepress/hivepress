@@ -50,6 +50,13 @@ return [
 				'order'   => 1,
 			],
 
+			'moderated'       => [
+				'label'   => esc_html__( 'Moderated', 'hivepress' ),
+				'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+				'type'    => 'checkbox',
+				'order'   => 5,
+			],
+
 			'edit_field_type' => [
 				'label'    => esc_html__( 'Field Type', 'hivepress' ),
 				'type'     => 'select',

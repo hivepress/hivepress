@@ -123,6 +123,7 @@ final class Attribute {
 						'display_areas'  => (array) $attribute_post->hp_display_areas,
 						'display_format' => $attribute_post->hp_display_format,
 						'editable'       => (bool) $attribute_post->hp_editable,
+						'moderated'      => (bool) $attribute_post->hp_moderated,
 						'searchable'     => (bool) $attribute_post->hp_searchable,
 						'filterable'     => (bool) $attribute_post->hp_filterable,
 						'sortable'       => (bool) $attribute_post->hp_sortable,
@@ -233,6 +234,7 @@ final class Attribute {
 							'display_areas'  => [],
 							'display_format' => '',
 							'editable'       => false,
+							'moderated'      => false,
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
@@ -381,8 +383,22 @@ final class Attribute {
 
 		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $attribute['edit_field'] ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
-				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
+
+			// Get field arguments.
+			$field_args = $attribute['edit_field'];
+
+			if ( $attribute['moderated'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) {
+				$field_args = hp\merge_arrays(
+					$field_args,
+					[
+						'statuses' => [ 'moderated' => esc_html__( 'moderated', 'hivepress' ) ],
+					]
+				);
+			}
+
+			// Add field.
+			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $field_args ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
+				$form['fields'][ $attribute_name ] = $field_args;
 			}
 		}
 
