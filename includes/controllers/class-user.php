@@ -236,7 +236,7 @@ class User extends Controller {
 		 * @param int $user_id User ID.
 		 * @param object User instance.
 		 */
-		do_action( 'hivepress/v1/users/register', $user->get_id(), $user );
+		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $user );
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
