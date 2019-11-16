@@ -271,17 +271,22 @@ var hivepress = {
 				settings['mode'] = field.data('mode');
 
 				if (field.data('mode') === 'range') {
-					settings['onChange'] = function(selectedDates) {
-						var fields = field.parent().find('input[type=hidden]').not(field),
-							formattedDates = selectedDates.map(function(date) {
+					var fields = field.parent().find('input[type=hidden]').not(field);
+
+					$.extend(settings, {
+						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
+						errorHandler: function(error) {},
+						onChange: function(selectedDates) {
+							var formattedDates = selectedDates.map(function(date) {
 								return flatpickr.formatDate(date, settings['dateFormat']);
 							});
 
-						if (formattedDates.length === 2) {
-							fields.eq(0).val(formattedDates[0]);
-							fields.eq(1).val(formattedDates[1]);
-						}
-					};
+							if (formattedDates.length === 2) {
+								fields.eq(0).val(formattedDates[0]);
+								fields.eq(1).val(formattedDates[1]);
+							}
+						},
+					});
 				}
 			}
 

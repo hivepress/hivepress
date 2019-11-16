@@ -91,9 +91,12 @@ class Date_Range extends Date {
 	 */
 	protected function sanitize() {
 		if ( ! is_null( $this->value ) ) {
+
+			// Set field values.
 			$this->min_field->set_value( reset( $this->value ) );
 			$this->max_field->set_value( end( $this->value ) );
 
+			// Set range value.
 			$this->value = [ $this->min_field->get_value(), $this->max_field->get_value() ];
 		}
 	}
@@ -105,9 +108,12 @@ class Date_Range extends Date {
 	 */
 	public function validate() {
 		if ( Field::validate() && ! is_null( $this->value ) ) {
+
+			// Validate fields.
 			$this->min_field->validate();
 			$this->max_field->validate();
 
+			// Add errors.
 			$this->add_errors( $this->min_field->get_errors() );
 			$this->add_errors( $this->max_field->get_errors() );
 		}
@@ -128,11 +134,14 @@ class Date_Range extends Date {
 			hp\merge_arrays(
 				$this->args,
 				[
-					'name'       => $this->name . '_' . uniqid(),
+					'name'       => null,
 					'attributes' => [ 'data-mode' => 'range' ],
 				]
 			)
 		) )->render();
+
+		// Get values.
+		$values = (array) $this->value;
 
 		// Render hidden fields.
 		$output .= ( new Hidden(
@@ -141,6 +150,7 @@ class Date_Range extends Date {
 				[
 					'name'     => $this->name . '[]',
 					'required' => false,
+					'default'  => reset( $values ),
 				]
 			)
 		) )->render();
@@ -151,6 +161,7 @@ class Date_Range extends Date {
 				[
 					'name'     => $this->name . '[]',
 					'required' => false,
+					'default'  => end( $values ),
 				]
 			)
 		) )->render();
