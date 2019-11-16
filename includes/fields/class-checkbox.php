@@ -89,6 +89,9 @@ class Checkbox extends Field {
 			$this->caption = $this->label;
 		}
 
+		// Set status.
+		$this->statuses['optional'] = null;
+
 		// Set ID.
 		$id = explode( '[', $this->name );
 
