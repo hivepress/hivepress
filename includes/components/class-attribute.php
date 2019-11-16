@@ -429,25 +429,34 @@ final class Attribute {
 
 		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
+
+			// Get field arguments.
+			$field_args = hp\merge_arrays(
+				$attribute['search_field'],
+				[
+					'statuses' => [ 'optional' => null ],
+				]
+			);
+
 			if ( ! isset( $form['fields'][ $attribute_name ] ) ) {
 				if ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) {
 
 					// Add field.
-					$form['fields'][ $attribute_name ] = $attribute['search_field'];
+					$form['fields'][ $attribute_name ] = $field_args;
 				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
 
 					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $attribute['search_field']['type'];
+					$field_class = '\HivePress\Fields\\' . $field_args['type'];
 
 					if ( class_exists( $field_class ) ) {
 
 						// Create field.
-						$field = new $field_class( $attribute['search_field'] );
+						$field = new $field_class( $field_args );
 
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
 						if ( $field->validate() ) {
-							$field_args  = array_merge( $attribute['search_field'], [ 'type' => 'hidden' ] );
+							$field_args  = array_merge( $field_args, [ 'type' => 'hidden' ] );
 							$field_value = $field->get_value();
 
 							// Add field.
