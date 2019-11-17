@@ -81,7 +81,9 @@ class Date_Range extends Date {
 	protected function normalize() {
 		Field::normalize();
 
-		if ( ! is_array( $this->value ) || count( $this->value ) !== 2 ) {
+		if ( is_array( $this->value ) && count( $this->value ) === 2 ) {
+			sort( $this->value );
+		} else {
 			$this->value = null;
 		}
 	}
@@ -97,7 +99,11 @@ class Date_Range extends Date {
 			$this->max_field->set_value( end( $this->value ) );
 
 			// Set range value.
-			$this->value = [ $this->min_field->get_value(), $this->max_field->get_value() ];
+			$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );
+
+			if ( count( $this->value ) !== 2 ) {
+				$this->value = null;
+			}
 		}
 	}
 
@@ -135,22 +141,20 @@ class Date_Range extends Date {
 				$this->args,
 				[
 					'name'       => null,
+					'default'    => null,
 					'attributes' => [ 'data-mode' => 'range' ],
 				]
 			)
 		) )->render();
 
-		// Get values.
-		$values = (array) $this->value;
-
-		// Render hidden fields.
+		// Render range fields.
 		$output .= ( new Hidden(
 			array_merge(
 				$this->args,
 				[
 					'name'     => $this->name . '[]',
 					'required' => false,
-					'default'  => reset( $values ),
+					'default'  => $this->min_field->get_value(),
 				]
 			)
 		) )->render();
@@ -161,7 +165,7 @@ class Date_Range extends Date {
 				[
 					'name'     => $this->name . '[]',
 					'required' => false,
-					'default'  => end( $values ),
+					'default'  => $this->max_field->get_value(),
 				]
 			)
 		) )->render();
