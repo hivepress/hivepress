@@ -194,10 +194,10 @@ class Date extends Field {
 	}
 
 	/**
-	 * Sets field filters.
+	 * Adds field filters.
 	 */
-	protected function set_filters() {
-		parent::set_filters();
+	protected function add_filters() {
+		parent::add_filters();
 
 		$this->filters['type'] = 'DATE';
 	}

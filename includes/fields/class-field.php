@@ -285,7 +285,7 @@ abstract class Field {
 				$this->sanitize();
 
 				if ( ! is_null( $this->value ) && false !== $this->filters ) {
-					$this->set_filters();
+					$this->add_filters();
 				}
 			}
 		}
@@ -310,9 +310,9 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets field filters.
+	 * Adds field filters.
 	 */
-	protected function set_filters() {
+	protected function add_filters() {
 		$this->filters = [
 			'name'     => $this->name,
 			'value'    => $this->value,

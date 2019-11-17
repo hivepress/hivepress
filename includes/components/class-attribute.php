@@ -851,11 +851,17 @@ final class Attribute {
 
 		// Filter results.
 		if ( $query->is_search ) {
-
-			// Set attributes.
 			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['searchable'] || $attribute['filterable'] ) {
+
+					// Get field arguments.
 					$field_args = $attribute['search_field'];
+
+					if ( isset( $field_args['options'] ) ) {
+						$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
+					} else {
+						$field_args['name'] = hp\prefix( $attribute_name );
+					}
 
 					// Get field class.
 					$field_class = '\HivePress\Fields\\' . $field_args['type'];
@@ -867,52 +873,56 @@ final class Attribute {
 
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-						// Get attribute value.
-						$attribute_value = $field->get_value();
+						// Get filters.
+						$field_filters = $field->get_filters();
 
-						if ( $field->validate() && ! is_null( $attribute_value ) ) {
+						if ( ! empty( $field_filters ) ) {
 							if ( isset( $field_args['options'] ) ) {
 
-								// Set taxonomy filter.
-								$tax_filter = [
-									'taxonomy' => hp\prefix( $model . '_' . $attribute_name ),
-									'terms'    => $attribute_value,
-								];
+								// Replace filter keys.
+								$field_filters = array_combine(
+									array_map(
+										function( $key ) {
+											if ( 'name' === $key ) {
+												$key = 'taxonomy';
+											} elseif ( 'value' === $key ) {
+												$key = 'terms';
+											}
 
-								if ( hp\get_array_value( $field_args, 'multiple' ) ) {
-									$tax_filter['operator'] = 'AND';
-								}
+											return $key;
+										},
+										array_keys( $field_filters )
+									),
+									$field_filters
+								);
 
-								$tax_query[] = $tax_filter;
+								unset( $field_filters['type'] );
+
+								$field_filters['include_children'] = false;
+
+								// Add taxonomy filters.
+								$tax_query[] = $field_filters;
 							} else {
 
-								// Set meta filter.
-								$meta_filter = [
-									'key'   => hp\prefix( $attribute_name ),
-									'value' => $attribute_value,
-								];
+								// Replace filter keys.
+								$field_filters = array_combine(
+									array_map(
+										function( $key ) {
+											if ( 'name' === $key ) {
+												$key = 'key';
+											} elseif ( 'operator' === $key ) {
+												$key = 'compare';
+											}
 
-								if ( is_array( $attribute_value ) ) {
-									$meta_filter['type']    = 'NUMERIC';
-									$meta_filter['compare'] = 'BETWEEN';
+											return $key;
+										},
+										array_keys( $field_filters )
+									),
+									$field_filters
+								);
 
-									$min_value = reset( $attribute_value );
-									$max_value = end( $attribute_value );
-
-									if ( is_null( $min_value ) ) {
-										$meta_filter['compare'] = '<=';
-										$meta_filter['value']   = $max_value;
-									} elseif ( is_null( $max_value ) ) {
-										$meta_filter['compare'] = '>=';
-										$meta_filter['value']   = $min_value;
-									}
-								} elseif ( is_float( $attribute_value ) ) {
-									$meta_filter['type'] = 'NUMERIC';
-								} else {
-									$meta_filter['compare'] = 'LIKE';
-								}
-
-								$meta_query[] = $meta_filter;
+								// Add meta filters.
+								$meta_query[] = $field_filters;
 							}
 						}
 					}

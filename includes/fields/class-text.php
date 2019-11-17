@@ -154,18 +154,13 @@ class Text extends Field {
 	}
 
 	/**
-	 * Sets field filters.
+	 * Adds field filters.
 	 */
-	protected function set_filters() {
-		parent::set_filters();
+	protected function add_filters() {
+		parent::add_filters();
 
-		$this->filters = array_merge(
-			$this->filters,
-			[
-				'type'     => 'CHAR',
-				'operator' => 'LIKE',
-			]
-		);
+		$this->filters['type']     = 'CHAR';
+		$this->filters['operator'] = 'LIKE';
 	}
 
 	/**
