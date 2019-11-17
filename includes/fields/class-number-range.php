@@ -114,6 +114,19 @@ class Number_Range extends Number {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
+		}
+
+		return $this->value;
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
