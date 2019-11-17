@@ -80,9 +80,9 @@ abstract class Field {
 	/**
 	 * Field filters.
 	 *
-	 * @var array
+	 * @var mixed
 	 */
-	protected $filters = [];
+	protected $filters = false;
 
 	/**
 	 * Field statuses.
@@ -182,6 +182,11 @@ abstract class Field {
 			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html__( 'optional', 'hivepress' ) ], $this->statuses );
 		}
 
+		// Set filters.
+		if ( false !== $this->filters ) {
+			$this->filters = [];
+		}
+
 		// Set default value.
 		$default = hp\get_array_value( $this->args, 'default' );
 
@@ -273,10 +278,17 @@ abstract class Field {
 	final public function set_value( $value ) {
 		$this->value = $value;
 
-		$this->normalize();
-		$this->sanitize();
+		if ( ! is_null( $this->value ) ) {
+			$this->normalize();
 
-		$this->set_filters();
+			if ( ! is_null( $this->value ) ) {
+				$this->sanitize();
+
+				if ( ! is_null( $this->value ) && false !== $this->filters ) {
+					$this->set_filters();
+				}
+			}
+		}
 	}
 
 	/**
@@ -301,21 +313,17 @@ abstract class Field {
 	 * Sets field filters.
 	 */
 	protected function set_filters() {
-		$this->filters = [];
-
-		if ( ! is_null( $this->value ) ) {
-			$this->filters[] = [
-				'name'     => $this->name,
-				'value'    => $this->value,
-				'operator' => '=',
-			];
-		}
+		$this->filters = [
+			'name'     => $this->name,
+			'value'    => $this->value,
+			'operator' => '=',
+		];
 	}
 
 	/**
 	 * Gets field filters.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
 	final public function get_filters() {
 		return $this->filters;

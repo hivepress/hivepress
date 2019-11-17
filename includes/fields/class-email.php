@@ -67,9 +67,15 @@ class Email extends Text {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set maximum length.
-		$args['max_length'] = 254;
+		$args = hp\merge_arrays(
+			[
+				'filters' => false,
+			],
+			$args,
+			[
+				'max_length' => 254,
+			]
+		);
 
 		parent::__construct( $args );
 	}
@@ -78,9 +84,7 @@ class Email extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_email( $this->value );
-		}
+		$this->value = sanitize_email( $this->value );
 	}
 
 	/**

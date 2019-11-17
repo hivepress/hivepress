@@ -107,6 +107,22 @@ class Text extends Field {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
@@ -138,6 +154,21 @@ class Text extends Field {
 	}
 
 	/**
+	 * Sets field filters.
+	 */
+	protected function set_filters() {
+		parent::set_filters();
+
+		$this->filters = array_merge(
+			$this->filters,
+			[
+				'type'     => 'CHAR',
+				'operator' => 'LIKE',
+			]
+		);
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -152,14 +183,12 @@ class Text extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			if ( empty( $this->html ) ) {
-				$this->value = sanitize_text_field( $this->value );
-			} elseif ( is_array( $this->html ) ) {
-				$this->value = wp_kses( $this->value, $this->html );
-			} else {
-				$this->value = wp_kses( $this->value, 'post' );
-			}
+		if ( empty( $this->html ) ) {
+			$this->value = sanitize_text_field( $this->value );
+		} elseif ( is_array( $this->html ) ) {
+			$this->value = wp_kses( $this->value, $this->html );
+		} else {
+			$this->value = wp_kses( $this->value, 'post' );
 		}
 	}
 

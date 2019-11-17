@@ -102,27 +102,25 @@ class Attachment_Upload extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$attachment_ids = get_posts(
-				[
-					'post_type'      => 'attachment',
-					'post__in'       => array_merge( [ 0 ], array_map( 'absint', (array) $this->value ) ),
-					'orderby'        => 'menu_order',
-					'order'          => 'ASC',
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				]
-			);
+		$attachment_ids = get_posts(
+			[
+				'post_type'      => 'attachment',
+				'post__in'       => array_merge( [ 0 ], array_map( 'absint', (array) $this->value ) ),
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			]
+		);
 
-			if ( ! empty( $attachment_ids ) ) {
-				if ( $this->multiple ) {
-					$this->value = $attachment_ids;
-				} else {
-					$this->value = reset( $attachment_ids );
-				}
+		if ( ! empty( $attachment_ids ) ) {
+			if ( $this->multiple ) {
+				$this->value = $attachment_ids;
 			} else {
-				$this->value = null;
+				$this->value = reset( $attachment_ids );
 			}
+		} else {
+			$this->value = null;
 		}
 	}
 

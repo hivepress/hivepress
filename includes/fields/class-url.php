@@ -67,9 +67,15 @@ class URL extends Text {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set maximum length.
-		$args['max_length'] = 2048;
+		$args = hp\merge_arrays(
+			[
+				'filters' => false,
+			],
+			$args,
+			[
+				'max_length' => 2048,
+			]
+		);
 
 		parent::__construct( $args );
 	}
@@ -78,9 +84,7 @@ class URL extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = esc_url_raw( $this->value );
-		}
+		$this->value = esc_url_raw( $this->value );
 	}
 
 	/**

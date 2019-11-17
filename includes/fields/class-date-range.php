@@ -89,6 +89,15 @@ class Date_Range extends Date {
 	}
 
 	/**
+	 * Sets field filters.
+	 */
+	protected function set_filters() {
+		parent::set_filters();
+
+		$this->filters['operator'] = 'BETWEEN';
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -105,18 +114,16 @@ class Date_Range extends Date {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
 
-			// Set field values.
-			$this->min_field->set_value( reset( $this->value ) );
-			$this->max_field->set_value( end( $this->value ) );
+		// Set field values.
+		$this->min_field->set_value( reset( $this->value ) );
+		$this->max_field->set_value( end( $this->value ) );
 
-			// Set range value.
-			$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );
+		// Set range value.
+		$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );
 
-			if ( count( $this->value ) !== 2 ) {
-				$this->value = null;
-			}
+		if ( count( $this->value ) !== 2 ) {
+			$this->value = null;
 		}
 	}
 

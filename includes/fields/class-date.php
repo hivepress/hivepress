@@ -127,6 +127,7 @@ class Date extends Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'filters'        => true,
 				'display_format' => get_option( 'date_format' ),
 			],
 			$args
@@ -193,6 +194,15 @@ class Date extends Field {
 	}
 
 	/**
+	 * Sets field filters.
+	 */
+	protected function set_filters() {
+		parent::set_filters();
+
+		$this->filters['type'] = 'DATE';
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -207,9 +217,7 @@ class Date extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
-		}
+		$this->value = sanitize_text_field( $this->value );
 	}
 
 	/**

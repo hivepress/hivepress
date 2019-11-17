@@ -94,6 +94,22 @@ class Select extends Field {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
@@ -145,6 +161,19 @@ class Select extends Field {
 	}
 
 	/**
+	 * Sets field filters.
+	 */
+	protected function set_filters() {
+		parent::set_filters();
+
+		if ( $this->multiple ) {
+			$this->filters['operator'] = 'AND';
+		} else {
+			$this->filters['operator'] = 'IN';
+		}
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -163,12 +192,10 @@ class Select extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			if ( $this->multiple ) {
-				$this->value = array_map( 'sanitize_text_field', (array) $this->value );
-			} else {
-				$this->value = sanitize_text_field( $this->value );
-			}
+		if ( $this->multiple ) {
+			$this->value = array_map( 'sanitize_text_field', (array) $this->value );
+		} else {
+			$this->value = sanitize_text_field( $this->value );
 		}
 	}
 

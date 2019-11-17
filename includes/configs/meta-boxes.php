@@ -87,10 +87,11 @@ return [
 			],
 
 			'search_field_type' => [
-				'label'   => esc_html__( 'Field Type', 'hivepress' ),
-				'type'    => 'select',
-				'options' => 'fields',
-				'order'   => 100,
+				'label'         => esc_html__( 'Field Type', 'hivepress' ),
+				'type'          => 'select',
+				'options'       => 'fields',
+				'field_filters' => true,
+				'order'         => 100,
 			],
 		],
 	],

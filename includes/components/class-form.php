@@ -136,7 +136,7 @@ final class Form {
 				// Fields.
 				case 'fields':
 					foreach ( hivepress()->get_fields() as $field_name => $field ) {
-						if ( $field::get_title() ) {
+						if ( $field::get_title() && ( ! hp\get_array_value( $args, 'field_filters', false ) || false !== $field->get_filters() ) ) {
 							$options[ $field_name ] = $field::get_title();
 						}
 					}
