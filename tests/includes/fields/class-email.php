@@ -59,5 +59,8 @@ class Email extends \PHPUnit\Framework\TestCase {
 
 		$this->field->set_value( 'eqbujptxfckdjykzckylzqfgmaalxsnknoukcoajrmwjnbptsuuvumyfvgilpivpoevotkzohqvjgkhdaxqibzxmtapxdnairomksiyqxsnuhlognrcoabkgfncorlgrvufcthrciuvkgpvuztfvjxfpvwxhrozcswnrcotcbnumkvfwqnieefwepsibmvqzvwjbcamrxwfwtfydokcxtcisllaezgvjaaupftsfyvhipocaumf@example.com' );
 		$this->assertFalse( $this->field->validate() );
+
+		$this->field->set_value( 'yzvomzzgpbohaeyklkwruvqjplxzpdfnvingrrkstwhtgcnlvauiorzbzfjbksoawxfelexzccofzyyyrcylgzoyupoucfkqwdpgwivaxucumnjhjktnymsmyqsypizskneqdbhifeykmpvnymqicuwpkncyzfzcqdpgsxobgaxwxkuhrypabunexxlkwlnnuyfnutxkgducgxpglodbhdkkabzzunxuzrudublxkpfcmxgtxg@example.com' );
+		$this->assertTrue( $this->field->validate() );
 	}
 }
