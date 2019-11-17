@@ -364,9 +364,8 @@ final class Attribute {
 	 */
 	public function add_edit_fields( $form ) {
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Get instance ID.
 		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
@@ -413,9 +412,8 @@ final class Attribute {
 	 */
 	public function add_search_fields( $form ) {
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Filter attributes.
 		$category_id = $this->get_category_id( $model );
@@ -491,9 +489,8 @@ final class Attribute {
 			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
 		}
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Filter attributes.
 		$category_id = $this->get_category_id( $model );
@@ -524,9 +521,8 @@ final class Attribute {
 	 */
 	public function add_category_options( $form ) {
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
@@ -604,9 +600,8 @@ final class Attribute {
 	 */
 	public function set_category_value( $form ) {
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Set value.
 		$form['fields']['category']['value'] = $this->get_category_id( $model );
@@ -622,9 +617,8 @@ final class Attribute {
 	 */
 	public function set_range_values( $form ) {
 
-		// Get model.
-		$model = explode( '_', $form['name'] );
-		$model = reset( $model );
+		// Get model name.
+		$model = $this->get_model_name( $form['name'] );
 
 		// Filter fields.
 		foreach ( $form['fields'] as $field_name => $field_args ) {
@@ -681,6 +675,18 @@ final class Attribute {
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Gets model name.
+	 *
+	 * @param string $name Name.
+	 * @return string
+	 */
+	private function get_model_name( $name ) {
+		$parts = explode( '_', $name );
+
+		return reset( $parts );
 	}
 
 	/**
