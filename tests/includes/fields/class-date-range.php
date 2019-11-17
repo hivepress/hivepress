@@ -1,6 +1,6 @@
 <?php
 /**
- * Number range field test.
+ * Date range field test.
  *
  * @package HivePress\Tests\Fields
  */
@@ -10,11 +10,11 @@ namespace HivePress\Tests\Fields;
 use HivePress\Fields;
 
 /**
- * Number range field test class.
+ * Date range field test class.
  *
- * @class Number_Range
+ * @class Date_Range
  */
-class Number_Range extends \PHPUnit\Framework\TestCase {
+class Date_Range extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * Field object.
@@ -27,7 +27,7 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 	 * Setups test.
 	 */
 	protected function setUp() {
-		$this->field = new Fields\Number_Range();
+		$this->field = new Fields\Date_Range();
 	}
 
 	/**
@@ -36,15 +36,15 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 	 * @test
 	 */
 	public function normalize() {
-		$values = [ true, 1, 'value', [], [ 1 ], [ 1, 2, 3 ], new \stdClass() ];
+		$values = [ true, 1, 'value', [], [ '1000-01-01' ], [ '1000-01-01', '1000-01-01', '1000-01-01' ], new \stdClass() ];
 
 		foreach ( $values as $value ) {
 			$this->field->set_value( $value );
 			$this->assertSame( null, $this->field->get_value() );
 		}
 
-		$this->field->set_value( [ 2, 1 ] );
-		$this->assertSame( [ 1, 2 ], $this->field->get_value() );
+		$this->field->set_value( [ '1000-01-02', '1000-01-01' ] );
+		$this->assertSame( [ '1000-01-01', '1000-01-02' ], $this->field->get_value() );
 	}
 
 	/**
@@ -53,15 +53,15 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 	 * @test
 	 */
 	public function sanitize() {
-		$values = [ [ null, null ], [ 'a', 'b' ], [ 1, 'b' ], [ 'a', 2 ] ];
+		$values = [ [ null, null ], [ 1, 2 ], [ '1000-01-01', 2 ], [ 1, '1000-01-01' ] ];
 
 		foreach ( $values as $value ) {
 			$this->field->set_value( $value );
 			$this->assertSame( null, $this->field->get_value() );
 		}
 
-		$this->field->set_value( [ 0, 0 ] );
-		$this->assertSame( [ 0, 0 ], $this->field->get_value() );
+		$this->field->set_value( [ '0', '0' ] );
+		$this->assertSame( [ '0', '0' ], $this->field->get_value() );
 	}
 
 	/**
@@ -73,8 +73,8 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 		$this->field->set_value( null );
 		$this->assertTrue( $this->field->validate() );
 
-		$this->field->set_value( [ 2, 1 ] );
+		$this->field->set_value( [ '1000-01-02', '1000-01-01' ] );
 		$this->assertTrue( $this->field->validate() );
-		$this->assertSame( [ 1, 2 ], $this->field->get_value() );
+		$this->assertSame( [ '1000-01-01', '1000-01-02' ], $this->field->get_value() );
 	}
 }
