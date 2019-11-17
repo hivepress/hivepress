@@ -71,13 +71,6 @@ abstract class Field {
 	protected $value;
 
 	/**
-	 * Field attributes.
-	 *
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
 	 * Field errors.
 	 *
 	 * @var array
@@ -85,11 +78,25 @@ abstract class Field {
 	protected $errors = [];
 
 	/**
+	 * Field filters.
+	 *
+	 * @var array
+	 */
+	protected $filters = [];
+
+	/**
 	 * Field statuses.
 	 *
 	 * @var array
 	 */
 	protected $statuses = [];
+
+	/**
+	 * Field attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
 
 	/**
 	 * Required property.
@@ -268,6 +275,8 @@ abstract class Field {
 
 		$this->normalize();
 		$this->sanitize();
+
+		$this->set_filters();
 	}
 
 	/**
@@ -286,6 +295,30 @@ abstract class Field {
 	 */
 	public function get_display_value() {
 		return $this->value;
+	}
+
+	/**
+	 * Sets field filters.
+	 */
+	protected function set_filters() {
+		$this->filters = [];
+
+		if ( ! is_null( $this->value ) ) {
+			$this->filters[] = [
+				'name'     => $this->name,
+				'value'    => $this->value,
+				'operator' => '=',
+			];
+		}
+	}
+
+	/**
+	 * Gets field filters.
+	 *
+	 * @return array
+	 */
+	final public function get_filters() {
+		return $this->filters;
 	}
 
 	/**
