@@ -15,7 +15,25 @@ namespace HivePress\Tests\Components;
 class Translator extends \PHPUnit\Framework\TestCase {
 
 	/**
-	 * Gets string.
+	 * Gets language code.
+	 *
+	 * @test
+	 */
+	public function get_language() {
+		$this->assertSame( 'en', hivepress()->translator->get_language() );
+	}
+
+	/**
+	 * Gets region code.
+	 *
+	 * @test
+	 */
+	public function get_region() {
+		$this->assertSame( 'US', hivepress()->translator->get_region() );
+	}
+
+	/**
+	 * Gets translation string.
 	 *
 	 * @test
 	 */
