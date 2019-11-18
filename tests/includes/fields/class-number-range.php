@@ -36,7 +36,7 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 	 * @test
 	 */
 	public function add_filters() {
-		$this->set_value( [ 1, 2 ] );
+		$this->field->set_value( [ 1, 2 ] );
 		$this->assertSame( 'BETWEEN', $this->field->get_filters()['operator'] );
 	}
 
