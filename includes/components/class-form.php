@@ -156,10 +156,15 @@ final class Form {
 	 * Enqueues scripts.
 	 */
 	public function enqueue_scripts() {
+
+		// Get language.
+		$language = hivepress()->translator->get_language();
+
+		// ReCAPTCHA.
 		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) ) {
 			wp_enqueue_script(
 				'recaptcha',
-				'https://www.google.com/recaptcha/api.js',
+				'https://www.google.com/recaptcha/api.js?hl=' . $language,
 				[],
 				null,
 				false
