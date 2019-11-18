@@ -3,6 +3,18 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		th {
+			@media screen and (max-width: 782px) {
+				padding-bottom: 10px;
+			}
+
+			> div {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+		}
+
 		input[type=email],
 		input[type=text],
 		select {
@@ -103,9 +115,8 @@
 	Tooltip
 	--------------------------------------------------------------*/
 	&-tooltip {
-		float: right;
 		position: relative;
-		margin: -1px -10px -2px 0;
+		margin-right: -10px;
 		cursor: help;
 		@media screen and (max-width: 782px) {
 			display: none;
@@ -154,12 +165,14 @@
 /*--------------------------------------------------------------
 Menu
 --------------------------------------------------------------*/
+
 #adminmenu .toplevel_page_hp_settings .wp-menu-image img {
 	padding-top: 7px;
 }
 /*--------------------------------------------------------------
 Pages
 --------------------------------------------------------------*/
+
 .toplevel_page_hp_settings {
 	.nav-tab-wrapper {
 		padding-top: 15px;

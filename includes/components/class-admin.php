@@ -218,13 +218,13 @@ final class Admin {
 						$field_name = hp\prefix( $field_name );
 
 						// Get field label.
-						$field_label = '<label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
+						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
 
 						if ( ! hp\get_array_value( $field, 'required', false ) && 'checkbox' !== $field['type'] ) {
 							$field_label .= ' <small>(' . esc_html__( 'optional', 'hivepress' ) . ')</small>';
 						}
 
-						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) );
+						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ) . '</div>';
 
 						// Get field value.
 						$field['default'] = get_option( $field_name );
@@ -819,13 +819,13 @@ final class Admin {
 
 					// Render field label.
 					if ( isset( $field_args['label'] ) ) {
-						$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+						$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
 
 						if ( count( $field->get_statuses() ) > 0 ) {
 							$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
 						}
 
-						$output .= '</label>' . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</th>';
+						$output .= '</label>' . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</div></th>';
 					}
 
 					// Render field.
