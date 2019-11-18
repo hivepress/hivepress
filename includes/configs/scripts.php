@@ -54,10 +54,21 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
+	'core_common'           => [
+		'handle' => 'hp-core-common',
+		'src'    => HP_CORE_URL . '/assets/js/common.min.js',
+		'deps'   => [ 'jquery', 'flatpickr' ],
+		'scope'  => [ 'frontend', 'backend' ],
+
+		'data'   => [
+			'language' => hivepress()->translator->get_language(),
+		],
+	],
+
 	'core_frontend'         => [
 		'handle' => 'hp-core-frontend',
 		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'jquery', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar', 'flatpickr' ],
+		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 
 		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
@@ -68,7 +79,7 @@ return [
 	'core_backend'          => [
 		'handle' => 'hp-core-backend',
 		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
-		'deps'   => [ 'jquery', 'flatpickr' ],
+		'deps'   => [ 'hp-core-common' ],
 		'scope'  => 'backend',
 
 		'data'   => [
