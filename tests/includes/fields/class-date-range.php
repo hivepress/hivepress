@@ -36,7 +36,7 @@ class Date_Range extends \PHPUnit\Framework\TestCase {
 	 * @test
 	 */
 	public function add_filters() {
-		$this->field->set_value( [ '1000-01-01', '1000-01-02' ] );
+		$this->set_value( [ '1000-01-01', '1000-01-02' ] );
 		$this->assertSame( 'BETWEEN', $this->field->get_filters()['operator'] );
 	}
 
