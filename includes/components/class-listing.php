@@ -271,7 +271,7 @@ final class Listing {
 			wp_update_post(
 				[
 					'ID'          => $listing->ID,
-					'post_status' => 'draft',
+					'post_status' => 'trash',
 				]
 			);
 
