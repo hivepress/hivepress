@@ -31,6 +31,16 @@ class Number_Range extends \PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Adds field filters.
+	 *
+	 * @test
+	 */
+	public function add_filters() {
+		$this->set_value( [ 1, 2 ] );
+		$this->assertSame( 'BETWEEN', $this->field->get_filters()['operator'] );
+	}
+
+	/**
 	 * Normalizes field value.
 	 *
 	 * @test
