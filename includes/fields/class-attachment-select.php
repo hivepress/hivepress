@@ -50,19 +50,17 @@ class Attachment_Select extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$attachment_id = hp\get_post_id(
-				[
-					'post_type' => 'attachment',
-					'post__in'  => [ absint( $this->value ) ],
-				]
-			);
+		$attachment_id = hp\get_post_id(
+			[
+				'post_type' => 'attachment',
+				'post__in'  => [ absint( $this->value ) ],
+			]
+		);
 
-			if ( 0 !== $attachment_id ) {
-				$this->value = $attachment_id;
-			} else {
-				$this->value = null;
-			}
+		if ( 0 !== $attachment_id ) {
+			$this->value = $attachment_id;
+		} else {
+			$this->value = null;
 		}
 	}
 

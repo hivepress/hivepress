@@ -235,34 +235,47 @@ final class Listing {
 	 */
 	public function expire_listings() {
 
-		// Get listings.
-		$listings = get_posts(
-			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'meta_query'     => [
-					[
-						'key'     => 'hp_expiration_time',
-						'value'   => time(),
-						'compare' => '<=',
-						'type'    => 'NUMERIC',
-					],
+		// Set query arguments.
+		$query_args = [
+			'post_type'      => 'hp_listing',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+
+			'meta_query'     => [
+				'time_clause' => [
+					'value'   => time(),
+					'compare' => '<=',
+					'type'    => 'NUMERIC',
 				],
-			]
+			],
+		];
+
+		// Get expirable listings.
+		$expirable_listings = get_posts(
+			hp\merge_arrays(
+				$query_args,
+				[
+					'meta_query' => [
+						'time_clause' => [
+							'key' => 'hp_expiration_time',
+						],
+					],
+				]
+			)
 		);
 
-		// Expire listings.
-		foreach ( $listings as $listing ) {
+		// Update expirable listings.
+		foreach ( $expirable_listings as $listing ) {
 
-			// Update listing.
+			// Update status.
 			wp_update_post(
 				[
 					'ID'          => $listing->ID,
-					'post_status' => 'draft',
+					'post_status' => 'trash',
 				]
 			);
 
+			// Delete timestamp.
 			delete_post_meta( $listing->ID, 'hp_expiration_time' );
 
 			// Send email.
@@ -279,6 +292,32 @@ final class Listing {
 					]
 				) )->send();
 			}
+		}
+
+		// Get featured listing IDs.
+		$featured_listing_ids = get_posts(
+			hp\merge_arrays(
+				$query_args,
+				[
+					'fields'     => 'ids',
+
+					'meta_query' => [
+						'time_clause' => [
+							'key' => 'hp_featuring_time',
+						],
+					],
+				]
+			)
+		);
+
+		// Update featured listings.
+		foreach ( $featured_listing_ids as $listing_id ) {
+
+			// Delete status.
+			delete_post_meta( $listing_id, 'hp_featured' );
+
+			// Delete timestamp.
+			delete_post_meta( $listing_id, 'hp_featuring_time' );
 		}
 	}
 

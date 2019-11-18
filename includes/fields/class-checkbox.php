@@ -79,6 +79,22 @@ class Checkbox extends Field {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
@@ -88,6 +104,9 @@ class Checkbox extends Field {
 		if ( is_null( $this->caption ) ) {
 			$this->caption = $this->label;
 		}
+
+		// Set status.
+		$this->statuses['optional'] = null;
 
 		// Set ID.
 		$id = explode( '[', $this->name );
@@ -105,15 +124,31 @@ class Checkbox extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		return $this->value ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' );
+	}
+
+	/**
+	 * Adds field filters.
+	 */
+	protected function add_filters() {
+		parent::add_filters();
+
+		$this->filters['type'] = 'CHAR';
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			if ( is_bool( $this->sample ) ) {
-				$this->value = boolval( $this->value );
-			} else {
-				$this->value = sanitize_text_field( $this->value );
-			}
+		if ( is_bool( $this->sample ) ) {
+			$this->value = boolval( $this->value );
+		} else {
+			$this->value = sanitize_text_field( $this->value );
 		}
 	}
 

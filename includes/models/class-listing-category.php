@@ -123,29 +123,28 @@ class Listing_Category extends Term {
 
 		if ( is_null( $count ) ) {
 
-			// Get category IDs.
-			$category_ids = array_merge( [ absint( $this->id ) ], get_term_children( absint( $this->id ), hp\prefix( static::$name ) ) );
-
-			// Get listing IDs.
-			$listing_ids = get_posts(
-				array_merge(
-					$query_args,
-					[
-						'post_type'      => 'hp_listing',
-						'posts_per_page' => -1,
-						'fields'         => 'ids',
-						'tax_query'      => [
-							[
-								'taxonomy' => hp\prefix( static::$name ),
-								'terms'    => $category_ids,
+			// Get count.
+			$count = count(
+				get_posts(
+					array_merge(
+						$query_args,
+						[
+							'post_type'      => 'hp_listing',
+							'posts_per_page' => -1,
+							'fields'         => 'ids',
+							'tax_query'      => [
+								[
+									'taxonomy' => hp\prefix( static::$name ),
+									'terms'    => [ absint( $this->id ) ],
+								],
 							],
-						],
-					]
+						]
+					)
 				)
 			);
 
 			// Cache count.
-			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing', count( $listing_ids ) );
+			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing', $count );
 		}
 
 		return absint( $count );

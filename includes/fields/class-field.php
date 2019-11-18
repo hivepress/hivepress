@@ -71,18 +71,32 @@ abstract class Field {
 	protected $value;
 
 	/**
-	 * Field attributes.
-	 *
-	 * @var array
-	 */
-	protected $attributes = [];
-
-	/**
 	 * Field errors.
 	 *
 	 * @var array
 	 */
 	protected $errors = [];
+
+	/**
+	 * Field filters.
+	 *
+	 * @var mixed
+	 */
+	protected $filters = false;
+
+	/**
+	 * Field statuses.
+	 *
+	 * @var array
+	 */
+	protected $statuses = [];
+
+	/**
+	 * Field attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
 
 	/**
 	 * Required property.
@@ -148,6 +162,37 @@ abstract class Field {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+
+		// Set class.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
+			]
+		);
+
+		// Set optional status.
+		if ( ! $this->required && ! isset( $this->statuses['optional'] ) ) {
+			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html__( 'optional', 'hivepress' ) ], $this->statuses );
+		}
+
+		// Set filters.
+		if ( false !== $this->filters ) {
+			$this->filters = [];
+		}
+
+		// Set default value.
+		$default = hp\get_array_value( $this->args, 'default' );
+
+		if ( ! is_null( $default ) ) {
+			$this->set_value( $default );
+		}
 	}
 
 	/**
@@ -233,8 +278,17 @@ abstract class Field {
 	final public function set_value( $value ) {
 		$this->value = $value;
 
-		$this->normalize();
-		$this->sanitize();
+		if ( ! is_null( $this->value ) ) {
+			$this->normalize();
+
+			if ( ! is_null( $this->value ) ) {
+				$this->sanitize();
+
+				if ( ! is_null( $this->value ) && false !== $this->filters ) {
+					$this->add_filters();
+				}
+			}
+		}
 	}
 
 	/**
@@ -247,12 +301,41 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		return $this->value;
+	}
+
+	/**
+	 * Adds field filters.
+	 */
+	protected function add_filters() {
+		$this->filters = [
+			'name'     => $this->name,
+			'value'    => $this->value,
+			'operator' => '=',
+		];
+	}
+
+	/**
+	 * Gets field filters.
+	 *
+	 * @return mixed
+	 */
+	final public function get_filters() {
+		return $this->filters;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param array $errors Field errors.
 	 */
 	final protected function add_errors( $errors ) {
-		$this->errors = array_merge( $this->errors, $errors );
+		$this->errors = array_unique( array_merge( $this->errors, $errors ) );
 	}
 
 	/**
@@ -265,24 +348,12 @@ abstract class Field {
 	}
 
 	/**
-	 * Bootstraps field properties.
+	 * Gets field statuses.
+	 *
+	 * @return array
 	 */
-	protected function bootstrap() {
-
-		// Set class.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
-			]
-		);
-
-		// Set default value.
-		$default = hp\get_array_value( $this->args, 'default' );
-
-		if ( ! is_null( $default ) ) {
-			$this->set_value( $default );
-		}
+	final public function get_statuses() {
+		return array_filter( $this->statuses );
 	}
 
 	/**
@@ -305,6 +376,8 @@ abstract class Field {
 	 * @return bool
 	 */
 	public function validate() {
+		$this->errors = [];
+
 		if ( $this->required && is_null( $this->value ) ) {
 			$this->add_errors( [ sprintf( esc_html__( '%s is required.', 'hivepress' ), $this->label ) ] );
 		}

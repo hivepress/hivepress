@@ -48,4 +48,20 @@ class Search extends Text {
 
 		parent::init( $args );
 	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => false,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
 }

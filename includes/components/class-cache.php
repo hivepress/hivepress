@@ -43,6 +43,7 @@ final class Cache {
 		add_action( 'delete_term', [ $this, 'clear_term_cache' ], 10, 3 );
 
 		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
 	}
 
@@ -386,7 +387,7 @@ final class Cache {
 	private function update_cache_version( $group ) {
 
 		// Get version.
-		$version = (string) time();
+		$version = uniqid( '', true );
 
 		// Get expiration period.
 		$expiration = false;
@@ -410,7 +411,7 @@ final class Cache {
 	 * @return string
 	 */
 	private function update_meta_cache_version( $type, $id, $group ) {
-		$version = (string) time();
+		$version = uniqid( '', true );
 
 		$this->set_meta_cache( $type, $id, $group . '/version', null, $version, WEEK_IN_SECONDS );
 
@@ -598,7 +599,11 @@ final class Cache {
 			return;
 		}
 
-		if ( substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
+		if ( current_action() === 'edit_comment' ) {
+			$comment = get_comment( $comment_id );
+		}
+
+		if ( is_object( $comment ) && substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
 
 			// Delete transient cache.
 			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );

@@ -20,7 +20,33 @@ defined( 'ABSPATH' ) || exit;
 final class Translator {
 
 	/**
-	 * Gets string.
+	 * Gets language code.
+	 *
+	 * @return string
+	 */
+	public function get_language() {
+		$parts = explode( '_', get_locale() );
+
+		return reset( $parts );
+	}
+
+	/**
+	 * Gets region code.
+	 *
+	 * @return string
+	 */
+	public function get_region() {
+		$parts = explode( '_', get_locale() );
+
+		if ( count( $parts ) === 2 ) {
+			return end( $parts );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Gets translation string.
 	 *
 	 * @param string $key String key.
 	 * @return string

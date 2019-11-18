@@ -95,11 +95,12 @@ class Listings extends Block {
 
 				'settings' => [
 					'columns'  => [
-						'label'   => esc_html__( 'Columns', 'hivepress' ),
-						'type'    => 'select',
-						'default' => 3,
-						'order'   => 10,
-						'options' => [
+						'label'    => esc_html__( 'Columns', 'hivepress' ),
+						'type'     => 'select',
+						'default'  => 3,
+						'required' => true,
+						'order'    => 10,
+						'options'  => [
 							2 => '2',
 							3 => '3',
 							4 => '4',

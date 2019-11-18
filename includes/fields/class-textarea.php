@@ -50,12 +50,26 @@ class Textarea extends Text {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => false,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_textarea_field( $this->value );
-		}
+		$this->value = sanitize_textarea_field( $this->value );
 	}
 
 	/**

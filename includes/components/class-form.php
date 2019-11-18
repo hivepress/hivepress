@@ -30,11 +30,9 @@ final class Form {
 		// Set field options.
 		add_filter( 'hivepress/v1/fields/field/args', [ $this, 'set_field_options' ] );
 
-		if ( ! is_admin() ) {
-
-			// Enqueue scripts.
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		}
+		// Enqueue scripts.
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
 	/**
@@ -135,8 +133,10 @@ final class Form {
 
 				// Fields.
 				case 'fields':
+					$filters = hp\get_array_value( $args, 'field_filters', false );
+
 					foreach ( hivepress()->get_fields() as $field_name => $field ) {
-						if ( $field::get_title() ) {
+						if ( $field::get_title() && ( ( ! $filters && ! in_array( $field_name, [ 'number_range', 'date_range' ], true ) ) || ( $filters && false !== $field->get_filters() ) ) ) {
 							$options[ $field_name ] = $field::get_title();
 						}
 					}
@@ -156,10 +156,28 @@ final class Form {
 	 * Enqueues scripts.
 	 */
 	public function enqueue_scripts() {
-		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) ) {
+
+		// Get language.
+		$language = hivepress()->translator->get_language();
+
+		// Enqueue Flatpickr.
+		$filepath = '/assets/js/flatpickr/l10n/' . $language . '.js';
+
+		if ( file_exists( HP_CORE_DIR . $filepath ) ) {
+			wp_enqueue_script(
+				'flatpickr-' . $language,
+				HP_CORE_URL . $filepath,
+				[ 'flatpickr' ],
+				HP_CORE_VERSION,
+				true
+			);
+		}
+
+		// Enqueue ReCAPTCHA.
+		if ( ! is_admin() && get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) ) {
 			wp_enqueue_script(
 				'recaptcha',
-				'https://www.google.com/recaptcha/api.js',
+				'https://www.google.com/recaptcha/api.js?hl=' . $language,
 				[],
 				null,
 				false

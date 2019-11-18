@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -216,6 +215,11 @@ Mixins
 		&__label {
 			display: block;
 			margin-bottom: 0.5rem;
+
+			small {
+				font-size: 1em;
+				font-weight: normal;
+			}
 		}
 
 		&--pivot &__label {
@@ -244,13 +248,14 @@ Mixins
 
 	&-field {
 		&--email,
-		&--url,
 		&--number,
 		&--password,
 		&--search,
 		&--select,
 		&--text,
-		&--textarea {
+		&--date,
+		&--textarea,
+		&--url {
 			width: 100%;
 			min-width: 1px;
 		}

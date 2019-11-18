@@ -114,6 +114,22 @@ class Number extends Field {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'filters' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function bootstrap() {
@@ -148,6 +164,28 @@ class Number extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
+		}
+
+		return $this->value;
+	}
+
+	/**
+	 * Adds field filters.
+	 */
+	protected function add_filters() {
+		parent::add_filters();
+
+		$this->filters['type'] = 'NUMERIC';
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -162,12 +200,10 @@ class Number extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			if ( $this->decimals > 0 ) {
-				$this->value = round( floatval( $this->value ), $this->decimals );
-			} else {
-				$this->value = intval( $this->value );
-			}
+		if ( $this->decimals > 0 ) {
+			$this->value = round( floatval( $this->value ), $this->decimals );
+		} else {
+			$this->value = intval( $this->value );
 		}
 	}
 

@@ -213,10 +213,24 @@ final class Admin {
 
 					// Register settings.
 					foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field ) {
-						$field_name       = hp\prefix( $field_name );
+
+						// Get field name.
+						$field_name = hp\prefix( $field_name );
+
+						// Get field label.
+						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
+
+						if ( ! hp\get_array_value( $field, 'required', false ) && 'checkbox' !== $field['type'] ) {
+							$field_label .= ' <small>(' . esc_html__( 'optional', 'hivepress' ) . ')</small>';
+						}
+
+						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ) . '</div>';
+
+						// Get field value.
 						$field['default'] = get_option( $field_name );
 
-						add_settings_field( $field_name, esc_html( $field['label'] ) . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ), [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $field, [ 'name' => $field_name ] ) );
+						// Add field.
+						add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, array_merge( $field, [ 'name' => $field_name ] ) );
 						register_setting( 'hp_settings', $field_name, [ $this, 'validate_' . hp\unprefix( $field_name ) ] );
 					}
 				}
@@ -536,6 +550,50 @@ final class Admin {
 	}
 
 	/**
+	 * Gets themes.
+	 *
+	 * @return array
+	 */
+	private function get_themes() {
+
+		// Get cached themes.
+		$themes = hivepress()->cache->get_cache( 'themes' );
+
+		if ( is_null( $themes ) ) {
+			$themes = [];
+
+			// Query themes.
+			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( 'https://hivepress.io/wp-json/hivepress/v1/themes' ) ), true );
+
+			if ( ! is_null( $response ) && isset( $response['data'] ) ) {
+				$themes = (array) $response['data'];
+
+				// Cache themes.
+				if ( count( $themes ) <= 100 ) {
+					hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
+				}
+			}
+		}
+
+		// Set defaults.
+		$themes = array_map(
+			function( $theme ) {
+				return array_merge(
+					[
+						'name'    => '',
+						'slug'    => '',
+						'version' => '',
+					],
+					(array) $theme
+				);
+			},
+			$themes
+		);
+
+		return $themes;
+	}
+
+	/**
 	 * Registers post states.
 	 */
 	public function register_post_states() {
@@ -718,8 +776,22 @@ final class Admin {
 
 					if ( class_exists( $field_class ) ) {
 
+						// Get field arguments.
+						$field_args = array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] );
+
+						if ( ! isset( $field_args['label'] ) ) {
+							$field_args = hp\merge_arrays(
+								$field_args,
+								[
+									'attributes' => [
+										'class' => [ 'hp-field--wide' ],
+									],
+								]
+							);
+						}
+
 						// Create field.
-						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
+						$field = new $field_class( $field_args );
 
 						// Get field value.
 						if ( ! isset( $field_args['alias'] ) ) {
@@ -746,16 +818,24 @@ final class Admin {
 					$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( $field_args['type'] ) . '">';
 
 					// Render field label.
-					$output .= '<th scope="row">';
-
 					if ( isset( $field_args['label'] ) ) {
-						$output .= esc_html( $field_args['label'] ) . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) );
+						$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+						if ( count( $field->get_statuses() ) > 0 ) {
+							$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+						}
+
+						$output .= '</label>' . $this->render_tooltip( hp\get_array_value( $field_args, 'description' ) ) . '</div></th>';
 					}
 
-					$output .= '</th>';
-
 					// Render field.
-					$output .= '<td>' . $field_output . '</td>';
+					if ( isset( $field_args['label'] ) ) {
+						$output .= '<td>';
+					} else {
+						$output .= '<td colspan="2">';
+					}
+
+					$output .= $field_output . '</td>';
 
 					$output .= '</tr>';
 				}
@@ -920,7 +1000,13 @@ final class Admin {
 							$output .= '<div class="form-field">';
 
 							// Render label.
-							$output .= '<label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+							$output .= '<label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+							if ( count( $field->get_statuses() ) > 0 ) {
+								$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+							}
+
+							$output .= '</label>';
 
 							// Render field.
 							$output .= $field->render();
@@ -935,8 +1021,13 @@ final class Admin {
 							$output .= '<tr class="form-field">';
 
 							// Render label.
-							$output .= '<th scope="row"><label for="' . esc_attr( hp\prefix( $field_name ) ) . '">' . esc_html( $field_args['label'] ) . '</label></th>';
-							$output .= '<td>';
+							$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field_args['label'] ) . '</span>';
+
+							if ( count( $field->get_statuses() ) > 0 ) {
+								$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+							}
+
+							$output .= '</label></th>';
 
 							// Get field value.
 							if ( ! isset( $field_args['alias'] ) ) {
@@ -952,6 +1043,8 @@ final class Admin {
 							$field->set_value( $value );
 
 							// Render field.
+							$output .= '<td>';
+
 							$output .= $field->render();
 
 							// Render description.
@@ -987,15 +1080,37 @@ final class Admin {
 	public function render_notices() {
 		global $pagenow;
 
+		$output = '';
+
+		// Get dismissed notices.
+		$dismissed_notices = (array) get_option( 'hp_admin_dismissed_notices' );
+
 		// Render setting errors.
 		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
 			settings_errors();
 		}
 
 		// Render theme notice.
-		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', (array) get_option( 'hp_admin_dismissed_notices' ), true ) ) {
-			echo '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
+		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', $dismissed_notices, true ) ) {
+			$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' . sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ) . '</p></div>';
 		}
+
+		// Render update notice.
+		if ( current_theme_supports( 'hivepress' ) ) {
+			foreach ( $this->get_themes() as $theme ) {
+				if ( get_template() === $theme['slug'] ) {
+					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
+
+					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) && ! in_array( $notice_name, $dismissed_notices, true ) ) {
+						$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '"><p>' . sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ) . '</p></div>';
+					}
+
+					break;
+				}
+			}
+		}
+
+		echo $output;
 	}
 
 	/**

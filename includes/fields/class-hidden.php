@@ -41,9 +41,7 @@ class Hidden extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$this->value = sanitize_text_field( $this->value );
-		}
+		$this->value = sanitize_text_field( $this->value );
 	}
 
 	/**

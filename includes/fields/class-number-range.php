@@ -41,6 +41,20 @@ class Number_Range extends Number {
 	protected static $settings = [];
 
 	/**
+	 * Minimum field.
+	 *
+	 * @var object
+	 */
+	protected $min_field;
+
+	/**
+	 * Maximum field.
+	 *
+	 * @var object
+	 */
+	protected $max_field;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
@@ -66,6 +80,29 @@ class Number_Range extends Number {
 	protected function bootstrap() {
 		$attributes = [];
 
+		// Create fields.
+		$this->min_field = new Number(
+			array_merge(
+				$this->args,
+				[
+					'name'        => $this->name . '[]',
+					'placeholder' => esc_html__( 'Min', 'hivepress' ),
+					'required'    => false,
+				]
+			)
+		);
+
+		$this->max_field = new Number(
+			array_merge(
+				$this->args,
+				[
+					'name'        => $this->name . '[]',
+					'placeholder' => esc_html__( 'Max', 'hivepress' ),
+					'required'    => false,
+				]
+			)
+		);
+
 		// Set range slider.
 		if ( ! is_null( $this->min_value ) && ! is_null( $this->max_value ) ) {
 			$attributes['data-component'] = 'range-slider';
@@ -77,22 +114,35 @@ class Number_Range extends Number {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
+		}
+
+		return $this->value;
+	}
+
+	/**
+	 * Adds field filters.
+	 */
+	protected function add_filters() {
+		parent::add_filters();
+
+		$this->filters['operator'] = 'BETWEEN';
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
 		Field::normalize();
 
 		if ( is_array( $this->value ) && count( $this->value ) === 2 ) {
-			$this->value = array_map(
-				function( $value ) {
-					return is_numeric( $value ) ? $value : null;
-				},
-				$this->value
-			);
-
-			if ( [ null, null ] === $this->value ) {
-				$this->value = reset( $this->value );
-			}
+			sort( $this->value );
 		} else {
 			$this->value = null;
 		}
@@ -102,23 +152,16 @@ class Number_Range extends Number {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_null( $this->value ) ) {
-			$decimals = $this->decimals;
 
-			$this->value = array_map(
-				function( $value ) use ( $decimals ) {
-					if ( ! is_null( $value ) ) {
-						if ( $decimals > 0 ) {
-							$value = round( floatval( $value ), $decimals );
-						} else {
-							$value = intval( $value );
-						}
-					}
+		// Set field values.
+		$this->min_field->set_value( reset( $this->value ) );
+		$this->max_field->set_value( end( $this->value ) );
 
-					return $value;
-				},
-				$this->value
-			);
+		// Set range value.
+		$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );
+
+		if ( count( $this->value ) !== 2 ) {
+			$this->value = null;
 		}
 	}
 
@@ -129,16 +172,14 @@ class Number_Range extends Number {
 	 */
 	public function validate() {
 		if ( Field::validate() && ! is_null( $this->value ) ) {
-			$min_value = reset( $this->value );
-			$max_value = end( $this->value );
 
-			if ( ! is_null( $this->min_value ) && ( ( ! is_null( $min_value ) && $min_value < $this->min_value ) || ( ! is_null( $max_value ) && $max_value < $this->min_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be lower than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
-			}
+			// Validate fields.
+			$this->min_field->validate();
+			$this->max_field->validate();
 
-			if ( ! is_null( $this->max_value ) && ( ( ! is_null( $min_value ) && $min_value > $this->max_value ) || ( ! is_null( $max_value ) && $max_value > $this->max_value ) ) ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be greater than %2\$s.", 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
-			}
+			// Add errors.
+			$this->add_errors( $this->min_field->get_errors() );
+			$this->add_errors( $this->max_field->get_errors() );
 		}
 
 		return empty( $this->errors );
@@ -152,31 +193,9 @@ class Number_Range extends Number {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
-		// Get values.
-		$values = (array) $this->value;
-
 		// Render fields.
-		$output .= ( new Number(
-			array_merge(
-				$this->args,
-				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Min', 'hivepress' ),
-					'default'     => reset( $values ),
-				]
-			)
-		) )->render();
-
-		$output .= ( new Number(
-			array_merge(
-				$this->args,
-				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Max', 'hivepress' ),
-					'default'     => end( $values ),
-				]
-			)
-		) )->render();
+		$output .= $this->min_field->render();
+		$output .= $this->max_field->render();
 
 		$output .= '</div>';
 

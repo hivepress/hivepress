@@ -26,7 +26,7 @@ final class User {
 	public function __construct() {
 
 		// Register user.
-		add_action( 'hivepress/v1/users/register', [ $this, 'register_user' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ], 10, 2 );
 
 		// Update user.
 		add_action( 'added_user_meta', [ $this, 'update_user' ], 10, 4 );

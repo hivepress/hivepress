@@ -14,13 +14,13 @@ return [
 	'fontawesome'       => [
 		'handle' => 'fontawesome',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome.min.css',
-		'scope'  => [ 'frontend', 'editor' ],
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fontawesome_solid' => [
 		'handle' => 'fontawesome-solid',
 		'src'    => HP_CORE_URL . '/assets/css/fontawesome-solid.min.css',
-		'scope'  => [ 'frontend', 'editor' ],
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fancybox'          => [
@@ -31,6 +31,12 @@ return [
 	'slick'             => [
 		'handle' => 'slick',
 		'src'    => HP_CORE_URL . '/assets/css/slick.min.css',
+	],
+
+	'flatpickr'         => [
+		'handle' => 'flatpickr',
+		'src'    => HP_CORE_URL . '/assets/css/flatpickr.min.css',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'jquery_ui'         => [

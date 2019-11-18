@@ -55,9 +55,15 @@ class Password extends Text {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set maximum length.
-		$args['max_length'] = 64;
+		$args = hp\merge_arrays(
+			[
+				'filters' => false,
+			],
+			$args,
+			[
+				'max_length' => 64,
+			]
+		);
 
 		parent::__construct( $args );
 	}

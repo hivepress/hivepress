@@ -48,7 +48,7 @@ class Admin extends Controller {
 
 						'endpoints' => [
 							[
-								'path'    => '/(?P<notice_name>[a-z_]+)',
+								'path'    => '/(?P<notice_name>[a-z0-9_]+)',
 								'methods' => 'POST',
 								'action'  => 'update_notice',
 							],
