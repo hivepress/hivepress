@@ -86,30 +86,22 @@ class Date extends Field {
 				'title'    => esc_html__( 'Date', 'hivepress' ),
 
 				'settings' => [
-					'placeholder'    => [
+					'placeholder' => [
 						'label' => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'  => 'text',
 						'order' => 10,
 					],
 
-					'display_format' => [
-						'label'    => esc_html__( 'Date Format', 'hivepress' ),
-						'type'     => 'text',
-						'default'  => get_option( 'date_format' ),
-						'required' => true,
-						'order'    => 20,
-					],
-
-					'min_date'       => [
+					'min_date'    => [
 						'label' => esc_html__( 'Minimum Date', 'hivepress' ),
 						'type'  => 'date',
-						'order' => 30,
+						'order' => 20,
 					],
 
-					'max_date'       => [
+					'max_date'    => [
 						'label' => esc_html__( 'Maximum Date', 'hivepress' ),
 						'type'  => 'date',
-						'order' => 40,
+						'order' => 30,
 					],
 				],
 			],
