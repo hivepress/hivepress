@@ -341,9 +341,9 @@ final class Attribute {
 				$model['fields'][ $attribute_name ] = array_merge(
 					$attribute['edit_field'],
 					[
-						'required'       => false,
-						'display_areas'  => $attribute['display_areas'],
-						'display_format' => $attribute['display_format'],
+						'required'                 => false,
+						'attribute_display_areas'  => $attribute['display_areas'],
+						'attribute_display_format' => $attribute['display_format'],
 					]
 				);
 

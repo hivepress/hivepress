@@ -169,7 +169,7 @@ class Listing extends Post {
 			// Get field arguments.
 			$field_args = $field->get_args();
 
-			if ( in_array( $area, hp\get_array_value( $field_args, 'display_areas', [] ), true ) ) {
+			if ( in_array( $area, hp\get_array_value( $field_args, 'attribute_display_areas', [] ), true ) ) {
 
 				// Format field value.
 				$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
@@ -186,7 +186,7 @@ class Listing extends Post {
 								[
 									'value' => $field_value,
 								],
-								hp\get_array_value( $field_args, 'display_format', '%value%' )
+								hp\get_array_value( $field_args, 'attribute_display_format', '%value%' )
 							),
 						]
 					);
