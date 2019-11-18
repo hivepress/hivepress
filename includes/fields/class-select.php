@@ -224,10 +224,25 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Get field name.
+		$name = $this->name;
+
+		if ( $this->multiple ) {
+			$name .= '[]';
+		}
+
+		// Render field.
+		$output = '<select name="' . esc_attr( $name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
-			$output .= '<option value="' . esc_attr( $value ) . '" ' . selected( $this->value, $value, false ) . '>' . esc_html( $label ) . '</option>';
+			$selected = '';
+
+			if ( ( ! $this->multiple && $this->value === (string) $value ) || ( $this->multiple && in_array( (string) $value, $this->value, true ) ) ) {
+				$selected = 'selected';
+			}
+
+			$output .= '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
 		}
 
 		$output .= '</select>';
