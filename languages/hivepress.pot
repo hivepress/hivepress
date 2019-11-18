@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-10 18:43+0000\n"
+"POT-Creation-Date: 2019-11-18 20:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -24,31 +24,31 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:103
-#: includes/blocks/class-listings.php:110 includes/fields/class-number.php:79
+#: includes/blocks/class-listing-categories.php:104
+#: includes/blocks/class-listings.php:111 includes/fields/class-number.php:79
 msgid "Number"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:111
+#: includes/blocks/class-listing-categories.php:112
 msgid "Parent"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:120
-#: includes/blocks/class-listings.php:127 includes/configs/meta-boxes.php:133
+#: includes/blocks/class-listing-categories.php:121
+#: includes/blocks/class-listings.php:128 includes/configs/meta-boxes.php:134
 msgid "Order"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:125
+#: includes/blocks/class-listing-categories.php:126
 msgid "Default"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:126
+#: includes/blocks/class-listing-categories.php:127
 #: includes/models/class-listing-category.php:53
 #: includes/models/class-vendor.php:53
 msgid "Name"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:127
+#: includes/blocks/class-listing-categories.php:128
 msgid "Count"
 msgstr ""
 
@@ -61,24 +61,25 @@ msgstr ""
 msgid "Listings"
 msgstr ""
 
-#: includes/blocks/class-listings.php:118
+#: includes/blocks/class-listings.php:119
 msgid "Category"
 msgstr ""
 
-#: includes/blocks/class-listings.php:131
-#: includes/components/class-attribute.php:466
+#: includes/blocks/class-listings.php:132
+#: includes/components/class-attribute.php:489
+#: includes/fields/class-date.php:86
 msgid "Date"
 msgstr ""
 
-#: includes/blocks/class-listings.php:132 includes/models/class-listing.php:61
+#: includes/blocks/class-listings.php:133 includes/models/class-listing.php:61
 msgid "Title"
 msgstr ""
 
-#: includes/blocks/class-listings.php:133
+#: includes/blocks/class-listings.php:134
 msgid "Random"
 msgstr ""
 
-#: includes/blocks/class-listings.php:138
+#: includes/blocks/class-listings.php:139
 msgid "Display only featured listings"
 msgstr ""
 
@@ -87,59 +88,74 @@ msgstr ""
 msgid "Showing %1$s-%2$s of %3$s results"
 msgstr ""
 
-#: includes/components/class-admin.php:103
-#: includes/components/class-admin.php:104 templates/admin/settings.php:6
+#: includes/components/class-admin.php:104
+#: includes/components/class-admin.php:105 templates/admin/settings.php:6
 #, php-format
 msgid "%s Settings"
 msgstr ""
 
-#: includes/components/class-admin.php:104 includes/configs/meta-boxes.php:15
+#: includes/components/class-admin.php:105 includes/configs/meta-boxes.php:15
 #: includes/controllers/class-user.php:149
 msgid "Settings"
 msgstr ""
 
-#: includes/components/class-admin.php:105 templates/admin/extensions.php:6
+#: includes/components/class-admin.php:106 templates/admin/extensions.php:6
 #, php-format
 msgid "%s Extensions"
 msgstr ""
 
-#: includes/components/class-admin.php:105
+#: includes/components/class-admin.php:106
 msgid "Extensions"
 msgstr ""
 
-#: includes/components/class-admin.php:481
+#: includes/components/class-admin.php:224 includes/fields/class-field.php:182
+msgid "optional"
+msgstr ""
+
+#: includes/components/class-admin.php:496
 msgid "All"
 msgstr ""
 
-#: includes/components/class-admin.php:485
+#: includes/components/class-admin.php:500
 msgid "Installed"
 msgstr ""
 
-#: includes/components/class-admin.php:996
+#: includes/components/class-admin.php:1095
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
 "or styling issues please consider using the official %s theme."
 msgstr ""
 
-#: includes/components/class-attribute.php:309
+#: includes/components/class-admin.php:1105
+#, php-format
+msgid ""
+"A new version of %s theme is available, please update for new features and "
+"improvements."
+msgstr ""
+
+#: includes/components/class-attribute.php:311
 msgid "Edit Options"
 msgstr ""
 
-#: includes/components/class-attribute.php:464
+#: includes/components/class-attribute.php:393
+msgid "moderated"
+msgstr ""
+
+#: includes/components/class-attribute.php:487
 msgid "Relevance"
 msgstr ""
 
-#: includes/components/class-attribute.php:556
+#: includes/components/class-attribute.php:577
 msgid "All Categories"
 msgstr ""
 
-#: includes/components/class-listing.php:304 includes/configs/meta-boxes.php:20
+#: includes/components/class-listing.php:343 includes/configs/meta-boxes.php:20
 #: templates/listing/view/listing-featured-badge.php:7
 msgid "Featured"
 msgstr ""
 
-#: includes/components/class-listing.php:308 includes/configs/meta-boxes.php:27
+#: includes/components/class-listing.php:347 includes/configs/meta-boxes.php:27
 #: templates/listing/view/listing-verified-badge.php:7
 msgid "Verified"
 msgstr ""
@@ -199,54 +215,54 @@ msgstr ""
 msgid "Display in the sort form"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:92 includes/configs/meta-boxes.php:140
+#: includes/configs/meta-boxes.php:93 includes/configs/meta-boxes.php:141
 #: includes/configs/settings.php:20
 msgid "Display"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:97
+#: includes/configs/meta-boxes.php:98
 msgid "Areas"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:98
+#: includes/configs/meta-boxes.php:99
 msgid "Choose the template areas where you want to display this attribute."
 msgstr ""
 
-#: includes/configs/meta-boxes.php:102
+#: includes/configs/meta-boxes.php:103
 msgid "Block (primary)"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:103
+#: includes/configs/meta-boxes.php:104
 msgid "Block (secondary)"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:104
+#: includes/configs/meta-boxes.php:105
 msgid "Page (primary)"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:105
+#: includes/configs/meta-boxes.php:106
 msgid "Page (secondary)"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:110
+#: includes/configs/meta-boxes.php:111
 msgid "Format"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:111
+#: includes/configs/meta-boxes.php:112
 msgid ""
 "Set the attribute display format, the following tokens are available: "
 "%value%."
 msgstr ""
 
-#: includes/configs/meta-boxes.php:125
+#: includes/configs/meta-boxes.php:126
 msgid "Image"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:126 includes/models/class-user.php:91
+#: includes/configs/meta-boxes.php:127 includes/models/class-user.php:91
 msgid "Select Image"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:141
+#: includes/configs/meta-boxes.php:142
 msgid "Display subcategories"
 msgstr ""
 
@@ -674,6 +690,16 @@ msgid ""
 "link to view it: %listing_url%"
 msgstr ""
 
+#: includes/emails/class-listing-update.php:51
+msgid "Listing Updated"
+msgstr ""
+
+#: includes/emails/class-listing-update.php:52
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been updated with the "
+"following details: %listing_attributes%."
+msgstr ""
+
 #: includes/emails/class-user-register.php:51
 msgid "Registration Complete"
 msgstr ""
@@ -695,58 +721,78 @@ msgstr ""
 msgid "Caption"
 msgstr ""
 
+#: includes/fields/class-checkbox.php:132
+msgid "Yes"
+msgstr ""
+
+#: includes/fields/class-checkbox.php:132
+msgid "No"
+msgstr ""
+
 #: includes/fields/class-checkboxes.php:51
 msgid "Checkboxes"
+msgstr ""
+
+#: includes/fields/class-date-range.php:58
+msgid "Date Range"
+msgstr ""
+
+#: includes/fields/class-date.php:90 includes/fields/class-number.php:83
+#: includes/fields/class-text.php:83
+msgid "Placeholder"
+msgstr ""
+
+#: includes/fields/class-date.php:96
+msgid "Minimum Date"
+msgstr ""
+
+#: includes/fields/class-date.php:102
+msgid "Maximum Date"
+msgstr ""
+
+#: includes/fields/class-date.php:225 includes/fields/class-email.php:97
+#: includes/fields/class-select.php:214
+#, php-format
+msgid "%s is invalid."
+msgstr ""
+
+#: includes/fields/class-date.php:231
+#, php-format
+msgid "%1$s can't be earlier than %2$s."
+msgstr ""
+
+#: includes/fields/class-date.php:239
+#, php-format
+msgid "%1$s can't be later than %2$s."
 msgstr ""
 
 #: includes/fields/class-email.php:51 includes/models/class-user.php:60
 msgid "Email"
 msgstr ""
 
-#: includes/fields/class-email.php:93 includes/fields/class-select.php:160
-#, php-format
-msgid "%s is invalid."
-msgstr ""
-
-#: includes/fields/class-field.php:104
+#: includes/fields/class-field.php:118
 msgid "Required"
 msgstr ""
 
-#: includes/fields/class-field.php:105
+#: includes/fields/class-field.php:119
 msgid "Make this field required"
 msgstr ""
 
-#: includes/fields/class-field.php:309
+#: includes/fields/class-field.php:382
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: includes/fields/class-number-range.php:51
+#: includes/fields/class-number-range.php:65
 msgid "Number Range"
 msgstr ""
 
-#: includes/fields/class-number-range.php:136
-#: includes/fields/class-number.php:182
-#, php-format
-msgid "%1$s can't be lower than %2$s."
-msgstr ""
-
-#: includes/fields/class-number-range.php:140
-#: includes/fields/class-number.php:186
-#, php-format
-msgid "%1$s can't be greater than %2$s."
-msgstr ""
-
-#: includes/fields/class-number-range.php:164
+#: includes/fields/class-number-range.php:89
 msgid "Min"
 msgstr ""
 
-#: includes/fields/class-number-range.php:175
+#: includes/fields/class-number-range.php:100
 msgid "Max"
-msgstr ""
-
-#: includes/fields/class-number.php:83 includes/fields/class-text.php:83
-msgid "Placeholder"
 msgstr ""
 
 #: includes/fields/class-number.php:89
@@ -759,6 +805,16 @@ msgstr ""
 
 #: includes/fields/class-number.php:104
 msgid "Maximum Value"
+msgstr ""
+
+#: includes/fields/class-number.php:218
+#, php-format
+msgid "%1$s can't be lower than %2$s."
+msgstr ""
+
+#: includes/fields/class-number.php:222
+#, php-format
+msgid "%1$s can't be greater than %2$s."
 msgstr ""
 
 #: includes/fields/class-radio.php:51
@@ -781,7 +837,7 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-#: includes/fields/class-select.php:158
+#: includes/fields/class-select.php:212
 #, php-format
 msgid "%s are invalid."
 msgstr ""
@@ -798,12 +854,12 @@ msgstr ""
 msgid "Maximum Length"
 msgstr ""
 
-#: includes/fields/class-text.php:174
+#: includes/fields/class-text.php:198
 #, php-format
 msgid "%1$s should be at least %2$s characters long."
 msgstr ""
 
-#: includes/fields/class-text.php:178
+#: includes/fields/class-text.php:202
 #, php-format
 msgid "%1$s can't be longer than %2$s characters."
 msgstr ""
@@ -952,14 +1008,6 @@ msgstr ""
 
 #: includes/models/class-listing.php:89
 msgid "Select Images"
-msgstr ""
-
-#: includes/models/class-listing.php:218
-msgid "Yes"
-msgstr ""
-
-#: includes/models/class-listing.php:220
-msgid "No"
 msgstr ""
 
 #: includes/models/class-user.php:53
