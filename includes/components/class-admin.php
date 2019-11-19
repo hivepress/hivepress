@@ -466,8 +466,13 @@ final class Admin {
 
 			unset( $extension_status['version'] );
 
-			$extensions[ $index ]['name'] = str_replace( HP_CORE_NAME . ' ', '', $extension['name'] );
-			$extensions[ $index ]         = array_merge( $extension, $extension_status );
+			$extensions[ $index ] = array_merge(
+				$extension,
+				$extension_status,
+				[
+					'name' => substr( $extension['name'], strlen( HP_CORE_NAME ) + 1 ),
+				]
+			);
 		}
 
 		// Filter extensions.
