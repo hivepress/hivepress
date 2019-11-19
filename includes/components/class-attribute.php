@@ -128,6 +128,8 @@ final class Attribute {
 						'filterable'     => (bool) $attribute_post->hp_filterable,
 						'sortable'       => (bool) $attribute_post->hp_sortable,
 						'categories'     => [],
+						'edit_field'     => [],
+						'search_field'   => [],
 					];
 
 					// Get categories.
@@ -239,6 +241,8 @@ final class Attribute {
 							'filterable'     => false,
 							'sortable'       => false,
 							'categories'     => [],
+							'edit_field'     => [],
+							'search_field'   => [],
 						],
 						$attribute_args
 					);
