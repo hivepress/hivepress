@@ -18,14 +18,14 @@ return [
 		'fields' => [
 			'featured' => [
 				'label'   => esc_html__( 'Featured', 'hivepress' ),
-				'caption' => esc_html__( 'Make this listing featured', 'hivepress' ),
+				'caption' => hivepress()->translator->get_string( 'make_this_listing_featured' ),
 				'type'    => 'checkbox',
 				'order'   => 10,
 			],
 
 			'verified' => [
 				'label'   => esc_html__( 'Verified', 'hivepress' ),
-				'caption' => esc_html__( 'Mark this listing as verified', 'hivepress' ),
+				'caption' => hivepress()->translator->get_string( 'mark_this_listing_as_verified' ),
 				'type'    => 'checkbox',
 				'order'   => 20,
 			],

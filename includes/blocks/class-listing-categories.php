@@ -84,7 +84,7 @@ class Listing_Categories extends Block {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Listing Categories', 'hivepress' ),
+				'title'    => hivepress()->translator->get_string( 'listing_categories' ),
 
 				'settings' => [
 					'columns' => [

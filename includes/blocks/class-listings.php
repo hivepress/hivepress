@@ -91,7 +91,7 @@ class Listings extends Block {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'title'    => hivepress()->translator->get_string( 'listings' ),
 
 				'settings' => [
 					'columns'  => [
@@ -136,7 +136,7 @@ class Listings extends Block {
 					],
 
 					'featured' => [
-						'label' => esc_html__( 'Display only featured listings', 'hivepress' ),
+						'label' => hivepress()->translator->get_string( 'display_only_featured_listings' ),
 						'type'  => 'checkbox',
 						'order' => 50,
 					],

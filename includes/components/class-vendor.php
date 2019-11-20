@@ -141,6 +141,6 @@ final class Vendor {
 	 * @return array
 	 */
 	public function set_page_title( $route ) {
-		return array_merge( $route, [ 'title' => sprintf( esc_html__( 'Listings by %s', 'hivepress' ), get_the_title() ) ] );
+		return array_merge( $route, [ 'title' => sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), get_the_title() ) ] );
 	}
 }

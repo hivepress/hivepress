@@ -41,7 +41,7 @@ class Listing_Search_Form extends Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
+				'title' => hivepress()->translator->get_string( 'listing_search_form' ),
 			],
 			$args
 		);

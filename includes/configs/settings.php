@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'listings'     => [
-		'title'    => esc_html__( 'Listings', 'hivepress' ),
+		'title'    => hivepress()->translator->get_string( 'listings' ),
 		'order'    => 10,
 
 		'sections' => [
@@ -22,8 +22,8 @@ return [
 
 				'fields' => [
 					'page_listings'                    => [
-						'label'       => esc_html__( 'Listings Page', 'hivepress' ),
-						'description' => esc_html__( 'Choose a page that displays all listings.', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'listings_page' ),
+						'description' => hivepress()->translator->get_string( 'choose_page_that_displays_all_listings' ),
 						'type'        => 'select',
 						'options'     => 'posts',
 						'post_type'   => 'page',
@@ -31,7 +31,7 @@ return [
 					],
 
 					'page_listings_display_categories' => [
-						'label'   => esc_html__( 'Listings Page Display', 'hivepress' ),
+						'label'   => hivepress()->translator->get_string( 'listings_page_display' ),
 						'caption' => esc_html__( 'Display categories', 'hivepress' ),
 						'type'    => 'checkbox',
 						'order'   => 20,
@@ -96,7 +96,7 @@ return [
 				'fields' => [
 					'listing_expiration_period' => [
 						'label'       => esc_html__( 'Expiration Period', 'hivepress' ),
-						'description' => esc_html__( 'Set the number of days after which a listing expires.', 'hivepress' ),
+						'description' => hivepress()->translator->get_string( 'set_number_of_days_after_which_listing_expires' ),
 						'type'        => 'number',
 						'min_value'   => 1,
 						'order'       => 10,
@@ -110,7 +110,7 @@ return [
 
 				'fields' => [
 					'email_listing_approve' => [
-						'label'       => esc_html__( 'Listing Approved', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'listing_approved' ),
 						'description' => esc_html__( 'This email is sent to users when listing is approved, the following tokens are available: %user_name%, %listing_title%, %listing_url%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
@@ -121,7 +121,7 @@ return [
 					],
 
 					'email_listing_reject'  => [
-						'label'       => esc_html__( 'Listing Rejected', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'listing_rejected' ),
 						'description' => esc_html__( 'This email is sent to users when listing is rejected, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
@@ -132,7 +132,7 @@ return [
 					],
 
 					'email_listing_expire'  => [
-						'label'       => esc_html__( 'Listing Expired', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'listing_expired' ),
 						'description' => esc_html__( 'This email is sent to users when listing is expired, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
