@@ -27,7 +27,7 @@ final class Listing {
 	public function __construct() {
 
 		// Set vendor.
-		add_action( 'save_post_hp_listing', [ $this, 'set_vendor' ], 10, 2 );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
 
 		// Set image.
 		add_action( 'add_attachment', [ $this, 'set_image' ] );
@@ -56,13 +56,15 @@ final class Listing {
 	/**
 	 * Sets vendor.
 	 *
-	 * @param int     $listing_id Listing ID.
-	 * @param WP_Post $listing Listing object.
+	 * @param int $listing_id Listing ID.
 	 */
-	public function set_vendor( $listing_id, $listing ) {
+	public function set_vendor( $listing_id ) {
 
 		// Remove action.
-		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
+		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
+
+		// Get listing.
+		$listing = get_post( $listing_id );
 
 		// Get user ID.
 		$user_id = absint( $listing->post_author );
@@ -325,7 +327,7 @@ final class Listing {
 	 * Imports listings.
 	 */
 	public function import_listings() {
-		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
+		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
 		remove_action( 'add_attachment', [ $this, 'set_image' ] );
 		remove_action( 'edit_attachment', [ $this, 'set_image' ] );
 	}
