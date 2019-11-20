@@ -48,7 +48,7 @@ class Listing_Edit_Page extends Account_Page {
 						'blocks' => [
 							'listing_delete_modal' => [
 								'type'    => 'modal',
-								'caption' => esc_html__( 'Delete Listing', 'hivepress' ),
+								'caption' => hivepress()->translator->get_string( 'delete_listing' ),
 								'order'   => 5,
 
 								'blocks'  => [

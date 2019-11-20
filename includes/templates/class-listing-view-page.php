@@ -164,7 +164,7 @@ class Listing_View_Page extends Page {
 												'blocks' => [
 													'listing_report_modal' => [
 														'type'    => 'modal',
-														'caption' => esc_html__( 'Report Listing', 'hivepress' ),
+														'caption' => hivepress()->translator->get_string( 'report_listing' ),
 
 														'blocks'  => [
 															'listing_report_form' => [

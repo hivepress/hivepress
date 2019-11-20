@@ -48,7 +48,7 @@ class Listing_Approve extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Approved', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_approved' ),
 				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
 			],
 			$args

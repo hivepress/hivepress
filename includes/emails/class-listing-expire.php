@@ -48,7 +48,7 @@ class Listing_Expire extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Expired', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_expired' ),
 				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
 			],
 			$args

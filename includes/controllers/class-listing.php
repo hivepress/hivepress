@@ -106,14 +106,14 @@ class Listing extends Controller {
 					],
 
 					'edit_listings'   => [
-						'title'    => esc_html__( 'Listings', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'listings' ),
 						'path'     => '/account/listings',
 						'redirect' => 'redirect_listings_edit_page',
 						'action'   => 'render_listings_edit_page',
 					],
 
 					'edit_listing'    => [
-						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
 						'path'     => '/account/listings/(?P<listing_id>\d+)',
 						'redirect' => 'redirect_listing_edit_page',
 						'action'   => 'render_listing_edit_page',
@@ -139,7 +139,7 @@ class Listing extends Controller {
 					],
 
 					'submit_complete' => [
-						'title'    => esc_html__( 'Listing Submitted', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'listing_submitted' ),
 						'path'     => '/submit-listing/complete',
 						'redirect' => 'redirect_listing_submit_complete_page',
 						'action'   => 'render_listing_submit_complete_page',
@@ -196,7 +196,7 @@ class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error updating listing.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
 		return new \WP_Rest_Response(
@@ -287,7 +287,7 @@ class Listing extends Controller {
 
 		// Delete listing.
 		if ( ! $listing->delete() ) {
-			return hp\rest_error( 400, esc_html__( 'Error deleting listing.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );

@@ -48,7 +48,7 @@ class Listing_Submit extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Submitted', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_submitted' ),
 				'body'    => hp\sanitize_html( __( 'A new listing "%listing_title%" has been submitted, click on the following link to view it: %listing_url%', 'hivepress' ) ),
 			],
 			$args

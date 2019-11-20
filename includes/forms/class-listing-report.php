@@ -97,9 +97,9 @@ class Listing_Report extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'       => esc_html__( 'Report Listing', 'hivepress' ),
+				'title'       => hivepress()->translator->get_string( 'report_listing' ),
 				'description' => esc_html__( 'Please provide details that will help us verify that this listing breaks the terms of service.', 'hivepress' ),
-				'message'     => esc_html__( 'Listing has been reported.', 'hivepress' ),
+				'message'     => hivepress()->translator->get_string( 'listing_has_been_reported' ),
 				'model'       => 'listing',
 				'action'      => hp\get_rest_url( '/listings/%id%/report' ),
 
@@ -114,7 +114,7 @@ class Listing_Report extends Model_Form {
 				],
 
 				'button'      => [
-					'label' => esc_html__( 'Report Listing', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'report_listing' ),
 				],
 			],
 			$args

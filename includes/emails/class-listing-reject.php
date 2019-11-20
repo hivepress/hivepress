@@ -48,7 +48,7 @@ class Listing_Reject extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Rejected', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_rejected' ),
 				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 			],
 			$args

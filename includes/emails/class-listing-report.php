@@ -48,7 +48,7 @@ class Listing_Report extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Reported', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_reported' ),
 				'body'    => hp\sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been reported with the following details: %report_details%', 'hivepress' ) ),
 			],
 			$args

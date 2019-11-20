@@ -91,7 +91,7 @@ class Listing_Delete extends Model_Form {
 				'fields'      => [],
 
 				'button'      => [
-					'label' => esc_html__( 'Delete Listing', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'delete_listing' ),
 				],
 			],
 			$args
