@@ -33,8 +33,8 @@ final class Cache {
 		// Clear cache.
 		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
 
-		add_action( 'save_post', [ $this, 'clear_post_cache' ] );
-		add_action( 'delete_post', [ $this, 'clear_post_cache' ] );
+		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ] );
+		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ] );
 
 		add_action( 'set_object_terms', [ $this, 'clear_post_term_cache' ], 10, 6 );
 
@@ -516,18 +516,15 @@ final class Cache {
 			return;
 		}
 
-		if ( substr( get_post_type( $post_id ), 0, 3 ) === 'hp_' ) {
+		// Get post.
+		$post = get_post( $post_id );
 
-			// Get post.
-			$post = get_post( $post_id );
+		// Delete transient cache.
+		$this->delete_cache( null, 'post/' . hp\unprefix( $post->post_type ) );
 
-			// Delete transient cache.
-			$this->delete_cache( null, 'post/' . hp\unprefix( $post->post_type ) );
-
-			// Delete meta cache.
-			if ( ! empty( $post->post_author ) ) {
-				$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
-			}
+		// Delete meta cache.
+		if ( ! empty( $post->post_author ) ) {
+			$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
 		}
 	}
 
