@@ -64,7 +64,7 @@ class Listing_Category extends Term {
 
 					'image_id'    => [
 						'type'      => 'number',
-						'min_value' => 0,
+						'min_value' => 1,
 					],
 				],
 

@@ -64,7 +64,7 @@ class Vendor extends Post {
 
 					'user_id'     => [
 						'type'      => 'number',
-						'min_value' => 0,
+						'min_value' => 1,
 						'required'  => true,
 					],
 				],
