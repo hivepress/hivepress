@@ -48,7 +48,7 @@ class Listing_Update extends Email {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Updated', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_updated' ),
 				'body'    => hp\sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been updated with the following details: %listing_attributes%.', 'hivepress' ) ),
 			],
 			$args

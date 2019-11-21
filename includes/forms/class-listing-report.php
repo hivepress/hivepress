@@ -98,7 +98,7 @@ class Listing_Report extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'title'       => hivepress()->translator->get_string( 'report_listing' ),
-				'description' => esc_html__( 'Please provide details that will help us verify that this listing breaks the terms of service.', 'hivepress' ),
+				'description' => hivepress()->translator->get_string( 'provide_details_to_verify_listing_report' ),
 				'message'     => hivepress()->translator->get_string( 'listing_has_been_reported' ),
 				'model'       => 'listing',
 				'action'      => hp\get_rest_url( '/listings/%id%/report' ),

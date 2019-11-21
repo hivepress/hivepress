@@ -38,7 +38,7 @@ return [
 					],
 
 					'listings_per_page'                => [
-						'label'     => esc_html__( 'Regular Listings per Page', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'regular_listings_per_page' ),
 						'type'      => 'number',
 						'default'   => 8,
 						'min_value' => 1,
@@ -47,7 +47,7 @@ return [
 					],
 
 					'listings_featured_per_page'       => [
-						'label'     => esc_html__( 'Featured Listings per Page', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'featured_listings_per_page' ),
 						'type'      => 'number',
 						'default'   => 2,
 						'min_value' => 0,
@@ -64,7 +64,7 @@ return [
 				'fields' => [
 					'page_listing_submission_terms' => [
 						'label'       => esc_html__( 'Submission Terms Page', 'hivepress' ),
-						'description' => esc_html__( 'Choose a page with terms that user has to accept before submitting a new listing.', 'hivepress' ),
+						'description' => hivepress()->translator->get_string( 'choose_page_with_listing_submission_terms' ),
 						'type'        => 'select',
 						'options'     => 'posts',
 						'post_type'   => 'page',
@@ -73,15 +73,15 @@ return [
 
 					'listing_enable_submission'     => [
 						'label'   => esc_html__( 'Submission', 'hivepress' ),
-						'caption' => esc_html__( 'Allow submitting new listings', 'hivepress' ),
+						'caption' => hivepress()->translator->get_string( 'allow_submitting_listings' ),
 						'type'    => 'checkbox',
 						'default' => true,
 						'order'   => 20,
 					],
 
 					'listing_enable_moderation'     => [
-						'label'   => esc_html__( 'Moderation', 'hivepress' ),
-						'caption' => esc_html__( 'Manually approve new listings', 'hivepress' ),
+						'label'   => hivepress()->translator->get_string( 'moderation' ),
+						'caption' => hivepress()->translator->get_string( 'manually_approve_listings' ),
 						'type'    => 'checkbox',
 						'default' => true,
 						'order'   => 30,
@@ -96,7 +96,7 @@ return [
 				'fields' => [
 					'listing_expiration_period' => [
 						'label'       => esc_html__( 'Expiration Period', 'hivepress' ),
-						'description' => hivepress()->translator->get_string( 'set_number_of_days_after_which_listing_expires' ),
+						'description' => hivepress()->translator->get_string( 'set_number_of_days_until_listing_expires' ),
 						'type'        => 'number',
 						'min_value'   => 1,
 						'order'       => 10,

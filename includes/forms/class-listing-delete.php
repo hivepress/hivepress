@@ -83,7 +83,7 @@ class Listing_Delete extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
+				'description' => hivepress()->translator->get_string( 'confirm_listing_deletion' ),
 				'model'       => 'listing',
 				'action'      => hp\get_rest_url( '/listings/%id%' ),
 				'method'      => 'DELETE',
