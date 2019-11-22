@@ -76,7 +76,7 @@ class User_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Your settings have been updated.', 'hivepress' ),
+				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
 				'model'   => 'user',
 				'action'  => hp\get_rest_url( '/users/%id%' ),
 
@@ -114,7 +114,7 @@ class User_Update extends Model_Form {
 				],
 
 				'button'  => [
-					'label' => esc_html__( 'Update Settings', 'hivepress' ),
+					'label' => esc_html__( 'Save Changes', 'hivepress' ),
 				],
 			],
 			$args

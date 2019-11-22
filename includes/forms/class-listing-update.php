@@ -76,7 +76,7 @@ class Listing_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => hivepress()->translator->get_string( 'listing_has_been_updated' ),
+				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
 				'model'   => 'listing',
 				'action'  => hp\get_rest_url( '/listings/%id%' ),
 
@@ -95,7 +95,7 @@ class Listing_Update extends Model_Form {
 				],
 
 				'button'  => [
-					'label' => hivepress()->translator->get_string( 'update_listing' ),
+					'label' => esc_html__( 'Save Changes', 'hivepress' ),
 				],
 			],
 			$args
