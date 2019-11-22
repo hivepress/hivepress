@@ -34,7 +34,7 @@ final class Listing {
 		add_action( 'edit_attachment', [ $this, 'set_image' ] );
 
 		// Update status.
-		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
+		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
 
 		// Expire listings.
 		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
@@ -179,55 +179,56 @@ final class Listing {
 	/**
 	 * Updates status.
 	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $listing Listing object.
+	 * @param int    $listing_id Listing ID.
+	 * @param string $new_status New status.
+	 * @param string $old_status Old status.
 	 */
-	public function update_status( $new_status, $old_status, $listing ) {
-		if ( 'hp_listing' === $listing->post_type && $new_status !== $old_status ) {
-			if ( 'pending' === $old_status ) {
+	public function update_status( $listing_id, $new_status, $old_status ) {
+		if ( 'pending' === $old_status ) {
 
-				// Get user.
-				$user = get_userdata( $listing->post_author );
+			// Get listing.
+			$listing = get_post( $listing_id );
 
-				if ( 'publish' === $new_status ) {
-
-					// Send approval email.
-					( new Emails\Listing_Approve(
-						[
-							'recipient' => $user->user_email,
-							'tokens'    => [
-								'user_name'     => $user->display_name,
-								'listing_title' => $listing->post_title,
-								'listing_url'   => get_permalink( $listing->ID ),
-							],
-						]
-					) )->send();
-				} elseif ( 'trash' === $new_status ) {
-
-					// Send rejection email.
-					( new Emails\Listing_Reject(
-						[
-							'recipient' => $user->user_email,
-							'tokens'    => [
-								'user_name'     => $user->display_name,
-								'listing_title' => $listing->post_title,
-							],
-						]
-					) )->send();
-				}
-			}
+			// Get user.
+			$user = get_userdata( $listing->post_author );
 
 			if ( 'publish' === $new_status ) {
 
-				// Get expiration period.
-				$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
+				// Send approval email.
+				( new Emails\Listing_Approve(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+							'listing_url'   => get_permalink( $listing_id ),
+						],
+					]
+				) )->send();
+			} elseif ( 'trash' === $new_status ) {
 
-				if ( $expiration_period > 0 && ! metadata_exists( 'post', $listing->ID, 'hp_expiration_time' ) ) {
+				// Send rejection email.
+				( new Emails\Listing_Reject(
+					[
+						'recipient' => $user->user_email,
+						'tokens'    => [
+							'user_name'     => $user->display_name,
+							'listing_title' => $listing->post_title,
+						],
+					]
+				) )->send();
+			}
+		}
 
-					// Set expiration time.
-					update_post_meta( $listing->ID, 'hp_expiration_time', time() + $expiration_period * DAY_IN_SECONDS );
-				}
+		if ( 'publish' === $new_status ) {
+
+			// Get expiration period.
+			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
+
+			if ( $expiration_period > 0 && ! metadata_exists( 'post', $listing_id, 'hp_expiration_time' ) ) {
+
+				// Set expiration time.
+				update_post_meta( $listing_id, 'hp_expiration_time', time() + $expiration_period * DAY_IN_SECONDS );
 			}
 		}
 	}
@@ -327,7 +328,6 @@ final class Listing {
 	 * Imports listings.
 	 */
 	public function import_listings() {
-		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
 		remove_action( 'add_attachment', [ $this, 'set_image' ] );
 		remove_action( 'edit_attachment', [ $this, 'set_image' ] );
 	}
@@ -342,11 +342,11 @@ final class Listing {
 	public function add_states( $states, $listing ) {
 		if ( 'hp_listing' === $listing->post_type ) {
 			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
-				$states[] = esc_html__( 'Featured', 'hivepress' );
+				$states[] = esc_html_x( 'Featured', 'listing status', 'hivepress' );
 			}
 
 			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
-				$states[] = esc_html__( 'Verified', 'hivepress' );
+				$states[] = esc_html_x( 'Verified', 'listing status', 'hivepress' );
 			}
 		}
 
