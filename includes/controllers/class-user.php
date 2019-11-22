@@ -225,7 +225,7 @@ class User extends Controller {
 		$user->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
 
 		if ( ! $user->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error registering user.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
 		/**
@@ -240,7 +240,13 @@ class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
-			wp_set_auth_cookie( $user->get_id(), true );
+			wp_signon(
+				[
+					'user_login'    => $username,
+					'user_password' => $form->get_value( 'password' ),
+					'remember'      => true,
+				]
+			);
 		}
 
 		return new \WP_Rest_Response(
@@ -302,7 +308,13 @@ class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
-			wp_set_auth_cookie( $user->ID, true );
+			wp_signon(
+				[
+					'user_login'    => $user->user_login,
+					'user_password' => $form->get_value( 'password' ),
+					'remember'      => true,
+				]
+			);
 		}
 
 		return new \WP_Rest_Response(
@@ -429,7 +441,13 @@ class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
-			wp_set_auth_cookie( $user->ID, true );
+			wp_signon(
+				[
+					'user_login'    => $user->user_login,
+					'user_password' => $form->get_value( 'password' ),
+					'remember'      => true,
+				]
+			);
 		}
 
 		return new \WP_Rest_Response(
@@ -495,7 +513,7 @@ class User extends Controller {
 		$user->fill( $form_values );
 
 		if ( ! $user->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error updating user.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
 		return new \WP_Rest_Response(
@@ -550,7 +568,7 @@ class User extends Controller {
 
 		// Delete user.
 		if ( ! $user->delete() ) {
-			return hp\rest_error( 400, esc_html__( 'Error deleting user.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
 		return new \WP_Rest_Response( (object) [], 204 );
