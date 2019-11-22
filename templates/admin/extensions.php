@@ -1,9 +1,11 @@
 <?php
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+use HivePress\Helpers as hp;
 ?>
-<div class="wrap">
-	<h1><?php printf( esc_html__( '%s Extensions', 'hivepress' ), HP_CORE_NAME ); ?></h1>
+<div class="wrap hp-page">
+	<h1 class="hp-page__title"><?php echo esc_html( HP_CORE_NAME ); ?> <span>/</span> <?php esc_html_e( 'Extensions', 'hivepress' ); ?></h1>
 	<hr class="wp-header-end">
 	<?php if ( count( $tabs ) > 1 ) : ?>
 		<ul class="subsubsub">
@@ -32,29 +34,29 @@ defined( 'ABSPATH' ) || exit;
 					<ul class="plugin-action-buttons">
 						<li>
 							<?php if ( 'install' === $extension['status'] ) : ?>
-								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install Now', 'hivepress' ); ?></a>
+								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install Now' ); ?></a>
 							<?php elseif ( 'update_available' === $extension['status'] ) : ?>
-								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="update-now button"><?php esc_html_e( 'Update Now', 'hivepress' ); ?></a>
+								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="update-now button"><?php esc_html_e( 'Update Now' ); ?></a>
 							<?php elseif ( 'activate' === $extension['status'] ) : ?>
-								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="button activate-now"><?php esc_html_e( 'Activate', 'hivepress' ); ?></a>
+								<a href="<?php echo esc_url( $extension['url'] ); ?>" class="button activate-now"><?php esc_html_e( 'Activate' ); ?></a>
 							<?php else : ?>
-								<button type="button" class="button button-disabled" disabled="disabled"><?php esc_html_e( 'Active', 'hivepress' ); ?></button>
+								<button type="button" class="button button-disabled" disabled="disabled"><?php echo esc_html_x( 'Active', 'plugin' ); ?></button>
 							<?php endif; ?>
 						</li>
 					</ul>
 				</div>
 				<div class="desc column-description">
 					<p><?php echo esc_html( $extension['short_description'] ); ?></p>
-					<p class="authors"><cite><?php printf( esc_html__( 'By %s', 'hivepress' ), $extension['author'] ); ?></cite></p>
+					<p class="authors"><cite><?php printf( esc_html__( 'By %s' ), $extension['author'] ); ?></cite></p>
 				</div>
 			</div>
 			<div class="plugin-card-bottom">
-				<div class="column-downloaded"><?php printf( esc_html__( 'Version %s', 'hivepress' ), $extension['version'] ); ?></div>
+				<div class="column-downloaded"><?php printf( esc_html__( 'Version %s' ), $extension['version'] ); ?></div>
 				<div class="column-compatibility">
 					<?php if ( version_compare( substr( get_bloginfo( 'version' ), 0, strlen( $extension['requires'] ) ), $extension['requires'] ) >= 0 ) : ?>
-						<span class="compatibility-compatible"><?php printf( esc_html__( '%s with your version of WordPress', 'hivepress' ), '<strong>' . esc_html__( 'Compatible', 'hivepress' ) . '</strong>' ); ?></span>
+						<span class="compatibility-compatible"><?php echo hp\sanitize_html( __( '<strong>Compatible</strong> with your version of WordPress' ) ); ?></span>
 					<?php else : ?>
-						<span class="compatibility-incompatible"><?php printf( esc_html__( '%s with your version of WordPress', 'hivepress' ), '<strong>' . esc_html__( 'Incompatible', 'hivepress' ) . '</strong>' ); ?></span>
+						<span class="compatibility-incompatible"><?php echo hp\sanitize_html( __( '<strong>Incompatible</strong> with your version of WordPress' ) ); ?></span>
 					<?php endif; ?>
 				</div>
 			</div>

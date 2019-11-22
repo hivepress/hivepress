@@ -2,8 +2,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-<div class="wrap">
-	<h1><?php printf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ); ?></h1>
+<div class="wrap hp-page">
+	<h1 class="hp-page__title"><?php echo esc_html( HP_CORE_NAME ); ?> <span>/</span> <?php esc_html_e( 'Settings', 'hivepress' ); ?></h1>
 	<?php if ( ! empty( $tabs ) ) : ?>
 	<nav class="nav-tab-wrapper">
 		<?php foreach ( $tabs as $active_tab => $tab_name ) : ?>
