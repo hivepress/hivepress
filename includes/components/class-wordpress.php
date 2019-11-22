@@ -78,11 +78,11 @@ final class WordPress {
 	/**
 	 * Updates post.
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post Post object.
-	 * @param bool    $update Update flag.
+	 * @param int   $post_id Post ID.
+	 * @param mixed $post Post object.
+	 * @param bool  $update Update flag.
 	 */
-	public function update_post( $post_id, $post, $update ) {
+	public function update_post( $post_id, $post = null, $update = false ) {
 
 		// Check import status.
 		if ( $this->is_import_started() ) {
@@ -124,8 +124,8 @@ final class WordPress {
 
 		// Update post status.
 		if ( strpos( $post->post_type, 'hp_' ) === 0 && $new_status !== $old_status ) {
-			do_action( 'hivepress/v1/models/post/update_status', $post_id, $new_status, $old_status );
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $post->post_type ) . '/update_status', $post_id, $new_status, $old_status );
+			do_action( 'hivepress/v1/models/post/update_status', $post->ID, $new_status, $old_status );
+			do_action( 'hivepress/v1/models/' . hp\unprefix( $post->post_type ) . '/update_status', $post->ID, $new_status, $old_status );
 		}
 	}
 
