@@ -199,11 +199,13 @@ final class WordPress {
 		}
 
 		// Update comment status.
-		$comment_type = get_comment_type( $comment_id );
+		if ( 'delete' !== $new_status ) {
+			$comment_type = get_comment_type( $comment_id );
 
-		if ( strpos( $comment_type, 'hp_' ) === 0 ) {
-			do_action( 'hivepress/v1/models/comment/update_status', $comment_id, $new_status );
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $comment_type ) . '/update_status', $comment_id, $new_status );
+			if ( strpos( $comment_type, 'hp_' ) === 0 ) {
+				do_action( 'hivepress/v1/models/comment/update_status', $comment_id, $new_status );
+				do_action( 'hivepress/v1/models/' . hp\unprefix( $comment_type ) . '/update_status', $comment_id, $new_status );
+			}
 		}
 	}
 
