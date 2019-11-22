@@ -956,7 +956,7 @@ final class Attribute {
 		$query->set( 'tax_query', $tax_query );
 
 		// Get featured IDs.
-		$featured_count = absint( get_option( 'hp_' . $model . 's_featured_per_page' ) );
+		$featured_count = absint( get_option( hp\prefix( $model ) . 's_featured_per_page' ) );
 
 		if ( $featured_count > 0 ) {
 
