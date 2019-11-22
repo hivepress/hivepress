@@ -26,7 +26,7 @@ final class WordPress {
 
 		// Update posts.
 		add_action( 'save_post', [ $this, 'update_post' ], 10, 3 );
-		add_action( 'delete_post', [ $this, 'update_post' ], 10, 3 );
+		add_action( 'delete_post', [ $this, 'update_post' ] );
 
 		// Update terms.
 		add_action( 'create_term', [ $this, 'update_term' ], 10, 3 );

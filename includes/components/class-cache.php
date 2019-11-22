@@ -33,18 +33,19 @@ final class Cache {
 		// Clear cache.
 		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
 
+		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ] );
 		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ] );
 		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ] );
 
 		add_action( 'set_object_terms', [ $this, 'clear_post_term_cache' ], 10, 6 );
 
-		add_action( 'create_term', [ $this, 'clear_term_cache' ], 10, 3 );
-		add_action( 'edit_term', [ $this, 'clear_term_cache' ], 10, 3 );
-		add_action( 'delete_term', [ $this, 'clear_term_cache' ], 10, 3 );
+		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ] );
+		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ] );
+		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ] );
 
-		add_action( 'wp_insert_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
-		add_action( 'edit_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
-		add_action( 'delete_comment', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ] );
+		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ] );
+		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ] );
 	}
 
 	/**
@@ -545,7 +546,7 @@ final class Cache {
 			return;
 		}
 
-		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
+		if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
@@ -567,52 +568,47 @@ final class Cache {
 	/**
 	 * Clears term cache.
 	 *
-	 * @param int    $term_id Term ID.
-	 * @param int    $term_taxonomy_id Term taxonomy ID.
-	 * @param string $taxonomy Taxonomy name.
+	 * @param int $term_id Term ID.
 	 */
-	public function clear_term_cache( $term_id, $term_taxonomy_id, $taxonomy ) {
+	public function clear_term_cache( $term_id ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
-		if ( substr( $taxonomy, 0, 3 ) === 'hp_' ) {
-			$this->delete_cache( null, 'term/' . hp\unprefix( $taxonomy ) );
-		}
+		// Get term.
+		$term = get_term( $term_id );
+
+		// Delete transient cache.
+		$this->delete_cache( null, 'term/' . hp\unprefix( $term->taxonomy ) );
 	}
 
 	/**
 	 * Clears comment cache.
 	 *
-	 * @param int        $comment_id Comment ID.
-	 * @param WP_Comment $comment Comment object.
+	 * @param int $comment_id Comment ID.
 	 */
-	public function clear_comment_cache( $comment_id, $comment ) {
+	public function clear_comment_cache( $comment_id ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
-		if ( current_action() === 'edit_comment' ) {
-			$comment = get_comment( $comment_id );
+		// Get comment.
+		$comment = get_comment( $comment_id );
+
+		// Delete transient cache.
+		$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
+
+		// Delete meta cache.
+		if ( ! empty( $comment->user_id ) ) {
+			$this->delete_user_cache( $comment->user_id, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 		}
 
-		if ( is_object( $comment ) && substr( $comment->comment_type, 0, 3 ) === 'hp_' ) {
-
-			// Delete transient cache.
-			$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
-
-			// Delete meta cache.
-			if ( ! empty( $comment->user_id ) ) {
-				$this->delete_user_cache( $comment->user_id, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
-			}
-
-			if ( ! empty( $comment->comment_post_ID ) ) {
-				$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
-			}
+		if ( ! empty( $comment->comment_post_ID ) ) {
+			$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
 		}
 	}
 }
