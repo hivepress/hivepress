@@ -21,6 +21,7 @@ return [
 		'labels'      => [
 			'name'               => hivepress()->translator->get_string( 'listings' ),
 			'singular_name'      => hivepress()->translator->get_string( 'listing' ),
+			'add_new'            => esc_html_x( 'Add New', 'listing', 'hivepress' ),
 			'add_new_item'       => hivepress()->translator->get_string( 'add_listing' ),
 			'edit_item'          => hivepress()->translator->get_string( 'edit_listing' ),
 			'new_item'           => hivepress()->translator->get_string( 'add_listing' ),
@@ -42,14 +43,14 @@ return [
 		'labels'       => [
 			'name'               => esc_html__( 'Attributes', 'hivepress' ),
 			'singular_name'      => esc_html__( 'Attribute', 'hivepress' ),
+			'add_new'            => esc_html_x( 'Add New', 'attribute', 'hivepress' ),
 			'add_new_item'       => esc_html__( 'Add Attribute', 'hivepress' ),
 			'edit_item'          => esc_html__( 'Edit Attribute', 'hivepress' ),
 			'new_item'           => esc_html__( 'Add Attribute', 'hivepress' ),
-			'view_item'          => esc_html__( 'View Attribute', 'hivepress' ),
 			'all_items'          => esc_html__( 'Attributes', 'hivepress' ),
 			'search_items'       => esc_html__( 'Search Attributes', 'hivepress' ),
-			'not_found'          => esc_html__( 'No Attributes Found', 'hivepress' ),
-			'not_found_in_trash' => esc_html__( 'No Attributes Found', 'hivepress' ),
+			'not_found'          => esc_html__( 'No attributes found.', 'hivepress' ),
+			'not_found_in_trash' => esc_html__( 'No attributes found.', 'hivepress' ),
 		],
 	],
 
@@ -62,6 +63,7 @@ return [
 		'labels'       => [
 			'name'               => hivepress()->translator->get_string( 'vendors' ),
 			'singular_name'      => hivepress()->translator->get_string( 'vendor' ),
+			'add_new'            => esc_html_x( 'Add New', 'vendor', 'hivepress' ),
 			'add_new_item'       => hivepress()->translator->get_string( 'add_vendor' ),
 			'edit_item'          => hivepress()->translator->get_string( 'edit_vendor' ),
 			'new_item'           => hivepress()->translator->get_string( 'add_vendor' ),

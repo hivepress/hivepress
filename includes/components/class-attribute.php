@@ -212,6 +212,17 @@ final class Attribute {
 							'show_ui'      => true,
 							'show_in_menu' => false,
 							'rewrite'      => false,
+
+							'labels'       => [
+								'name'          => esc_html__( 'Options', 'hivepress' ),
+								'singular_name' => esc_html__( 'Option', 'hivepress' ),
+								'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
+								'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
+								'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
+								'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
+								'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
+								'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
+							],
 						]
 					);
 				}

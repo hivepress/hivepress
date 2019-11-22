@@ -109,7 +109,7 @@ class Listing_Categories extends Block {
 					],
 
 					'parent'  => [
-						'label'    => esc_html__( 'Parent', 'hivepress' ),
+						'label'    => esc_html__( 'Parent Category', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => 'terms',
 						'taxonomy' => 'hp_listing_category',
@@ -124,8 +124,8 @@ class Listing_Categories extends Block {
 						'order'   => 40,
 						'options' => [
 							''      => esc_html__( 'Default', 'hivepress' ),
-							'name'  => esc_html__( 'Name', 'hivepress' ),
-							'count' => esc_html__( 'Count', 'hivepress' ),
+							'name'  => esc_html__( 'Category Name', 'hivepress' ),
+							'count' => esc_html__( 'Listing Count', 'hivepress' ),
 						],
 					],
 				],

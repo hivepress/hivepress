@@ -57,7 +57,7 @@ final class Admin {
 
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
-			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+			add_action( 'hivepress/v1/models/post/update', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -101,9 +101,9 @@ final class Admin {
 		$menu[] = [ '', 'manage_options', 'hp_separator', '', 'wp-menu-separator' ];
 
 		// Add pages.
-		add_menu_page( sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
-		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Settings', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
-		add_submenu_page( 'hp_settings', sprintf( esc_html__( '%s Extensions', 'hivepress' ), HP_CORE_NAME ), esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_menu_page( esc_html__( 'Settings', 'hivepress' ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
+		add_submenu_page( 'hp_settings', esc_html__( 'Settings', 'hivepress' ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
+		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ), esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
 
 	/**
@@ -221,7 +221,7 @@ final class Admin {
 						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
 
 						if ( ! hp\get_array_value( $field, 'required', false ) && 'checkbox' !== $field['type'] ) {
-							$field_label .= ' <small>(' . esc_html__( 'optional', 'hivepress' ) . ')</small>';
+							$field_label .= ' <small>(' . esc_html_x( 'optional', 'field status', 'hivepress' ) . ')</small>';
 						}
 
 						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ) . '</div>';
@@ -498,11 +498,11 @@ final class Admin {
 		// Set tabs.
 		$tabs = [
 			'all'       => [
-				'name'  => esc_html__( 'All', 'hivepress' ),
+				'name'  => esc_html_x( 'All', 'plural', 'hivepress' ),
 				'count' => 0,
 			],
 			'installed' => [
-				'name'  => esc_html__( 'Installed', 'hivepress' ),
+				'name'  => esc_html_x( 'Installed', 'plural', 'hivepress' ),
 				'count' => 0,
 			],
 		];
@@ -663,22 +663,24 @@ final class Admin {
 	/**
 	 * Updates meta box values.
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post Post object.
+	 * @param int $post_id Post ID.
 	 */
-	public function update_meta_box( $post_id, $post ) {
+	public function update_meta_box( $post_id ) {
 		global $pagenow;
 
 		if ( 'post.php' === $pagenow ) {
 
 			// Remove action.
-			remove_action( 'save_post', [ $this, 'update_meta_box' ] );
+			remove_action( 'hivepress/v1/models/post/update', [ $this, 'update_meta_box' ] );
+
+			// Get post type.
+			$post_type = get_post_type( $post_id );
 
 			// Update field values.
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
 				$screen = hp\prefix( $meta_box['screen'] );
 
-				if ( $screen === $post->post_type || ( is_array( $screen ) && in_array( $post->post_type, $screen, true ) ) ) {
+				if ( $screen === $post_type || ( is_array( $screen ) && in_array( $post_type, $screen, true ) ) ) {
 
 					// Filter arguments.
 					$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );

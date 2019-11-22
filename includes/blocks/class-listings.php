@@ -131,7 +131,7 @@ class Listings extends Block {
 						'options' => [
 							''       => esc_html__( 'Date', 'hivepress' ),
 							'title'  => esc_html__( 'Title', 'hivepress' ),
-							'random' => esc_html__( 'Random', 'hivepress' ),
+							'random' => esc_html_x( 'Random', 'sorting order', 'hivepress' ),
 						],
 					],
 
