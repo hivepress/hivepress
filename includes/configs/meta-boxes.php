@@ -61,7 +61,7 @@ return [
 	],
 
 	'listing_attribute_search'  => [
-		'title'  => esc_html__( 'Search', 'hivepress' ),
+		'title'  => esc_html_x( 'Search', 'noun', 'hivepress' ),
 		'screen' => 'listing_attribute',
 
 		'fields' => [
@@ -74,7 +74,7 @@ return [
 
 			'sortable'          => [
 				'label'   => esc_html__( 'Sortable', 'hivepress' ),
-				'caption' => esc_html__( 'Display in the sort form', 'hivepress' ),
+				'caption' => esc_html__( 'Display as a sorting option', 'hivepress' ),
 				'type'    => 'checkbox',
 				'order'   => 20,
 			],
@@ -100,10 +100,10 @@ return [
 				'type'        => 'checkboxes',
 				'order'       => 10,
 				'options'     => [
-					'view_block_primary'   => esc_html__( 'Block (primary)', 'hivepress' ),
-					'view_block_secondary' => esc_html__( 'Block (secondary)', 'hivepress' ),
-					'view_page_primary'    => esc_html__( 'Page (primary)', 'hivepress' ),
-					'view_page_secondary'  => esc_html__( 'Page (secondary)', 'hivepress' ),
+					'view_block_primary'   => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_block_secondary' => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+					'view_page_primary'    => sprintf( esc_html__( 'Page (%s)', 'hivepress' ), esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_page_secondary'  => sprintf( esc_html__( 'Page (%s)', 'hivepress' ), esc_html_x( 'secondary', 'area', 'hivepress' ) ),
 				],
 			],
 

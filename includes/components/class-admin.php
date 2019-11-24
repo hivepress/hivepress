@@ -221,7 +221,7 @@ final class Admin {
 						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field['label'] ) . '</span>';
 
 						if ( ! hp\get_array_value( $field, 'required', false ) && 'checkbox' !== $field['type'] ) {
-							$field_label .= ' <small>(' . esc_html_x( 'optional', 'field status', 'hivepress' ) . ')</small>';
+							$field_label .= ' <small>(' . esc_html_x( 'optional', 'field', 'hivepress' ) . ')</small>';
 						}
 
 						$field_label .= '</label>' . $this->render_tooltip( hp\get_array_value( $field, 'description' ) ) . '</div>';

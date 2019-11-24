@@ -405,7 +405,7 @@ final class Attribute {
 				$field_args = hp\merge_arrays(
 					$field_args,
 					[
-						'statuses' => [ 'moderated' => esc_html__( 'moderated', 'hivepress' ) ],
+						'statuses' => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
 					]
 				);
 			}

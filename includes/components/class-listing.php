@@ -342,11 +342,11 @@ final class Listing {
 	public function add_states( $states, $listing ) {
 		if ( 'hp_listing' === $listing->post_type ) {
 			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
-				$states[] = esc_html_x( 'Featured', 'listing status', 'hivepress' );
+				$states[] = esc_html_x( 'Featured', 'listing', 'hivepress' );
 			}
 
 			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
-				$states[] = esc_html_x( 'Verified', 'listing status', 'hivepress' );
+				$states[] = esc_html_x( 'Verified', 'listing', 'hivepress' );
 			}
 		}
 

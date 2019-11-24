@@ -179,7 +179,7 @@ abstract class Field {
 
 		// Set optional status.
 		if ( ! $this->required && ! isset( $this->statuses['optional'] ) ) {
-			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html__( 'optional', 'hivepress' ) ], $this->statuses );
+			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
 		}
 
 		// Set filters.
