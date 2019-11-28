@@ -62,6 +62,11 @@ class Vendor extends Post {
 						'max_length' => 10240,
 					],
 
+					'status'      => [
+						'type'       => 'text',
+						'max_length' => 128,
+					],
+
 					'user_id'     => [
 						'type'      => 'number',
 						'min_value' => 1,
@@ -72,6 +77,7 @@ class Vendor extends Post {
 				'aliases' => [
 					'post_title'   => 'name',
 					'post_content' => 'description',
+					'post_status'  => 'status',
 					'post_author'  => 'user_id',
 				],
 			],

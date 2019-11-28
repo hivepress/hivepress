@@ -125,14 +125,14 @@ class Listing extends Controller {
 					],
 
 					'submit_category' => [
-						'title'    => esc_html__( 'Select Category', 'hivepress' ),
+						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
 						'path'     => '/submit-listing/category/?(?P<listing_category_id>\d+)?',
 						'redirect' => 'redirect_listing_submit_category_page',
 						'action'   => 'render_listing_submit_category_page',
 					],
 
 					'submit_details'  => [
-						'title'    => esc_html__( 'Add Details', 'hivepress' ),
+						'title'    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
 						'path'     => '/submit-listing/details',
 						'redirect' => 'redirect_listing_submit_details_page',
 						'action'   => 'render_listing_submit_details_page',
@@ -166,7 +166,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp\rest_error( 404 );
@@ -223,7 +223,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) || $listing->get_status() !== 'publish' ) {
 			return hp\rest_error( 404 );
@@ -274,7 +274,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( is_null( $listing ) ) {
 			return hp\rest_error( 404 );
@@ -395,7 +395,7 @@ class Listing extends Controller {
 
 				'context'  => [
 					'listing_id' => get_the_ID(),
-					'listing'    => Models\Listing::get( get_the_ID() ),
+					'listing'    => Models\Listing::get_by_id( get_the_ID() ),
 				],
 			]
 		) )->render();
@@ -482,7 +482,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
 
 		if ( is_null( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
 			return self::get_url( 'edit_listings' );
@@ -528,16 +528,15 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		$listing_id = Models\Listing::filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'    => 'auto-draft',
+				'vendor_id' => null,
+				'user_id'   => get_current_user_id(),
 			]
-		);
+		)->get_first_id();
 
-		if ( 0 === $listing_id ) {
+		if ( empty( $listing_id ) ) {
 
 			// Add listing.
 			$listing_id = wp_insert_post(
@@ -575,14 +574,13 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		$listing_id = Models\Listing::filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'    => 'auto-draft',
+				'vendor_id' => null,
+				'user_id'   => get_current_user_id(),
 			]
-		);
+		)->get_first_id();
 
 		// Get category.
 		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), 'hp_listing_category' );
@@ -639,14 +637,13 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		$listing_id = Models\Listing::filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'    => 'auto-draft',
+				'vendor_id' => null,
+				'user_id'   => get_current_user_id(),
 			]
-		);
+		)->get_first_id();
 
 		// Check listing.
 		if ( '' !== get_the_title( $listing_id ) ) {
@@ -664,14 +661,13 @@ class Listing extends Controller {
 	public function render_listing_submit_details_page() {
 
 		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		$listing_id = Models\Listing::filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'    => 'auto-draft',
+				'vendor_id' => null,
+				'user_id'   => get_current_user_id(),
 			]
-		);
+		)->get_first_id();
 
 		// Set listing ID.
 		set_query_var( 'hp_listing_id', $listing_id );
@@ -700,14 +696,13 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		$listing_id = Models\Listing::filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'    => 'auto-draft',
+				'vendor_id' => null,
+				'user_id'   => get_current_user_id(),
 			]
-		);
+		)->get_first_id();
 
 		// Update listing.
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
@@ -750,7 +745,7 @@ class Listing extends Controller {
 				'template' => 'listing_submit_complete_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get(
+					'listing' => Models\Listing::get_by_id(
 						hp\get_post_id(
 							[
 								'post_type'   => 'hp_listing',

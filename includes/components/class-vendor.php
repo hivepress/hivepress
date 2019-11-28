@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -56,15 +57,14 @@ final class Vendor {
 		if ( in_array( $meta_key, [ 'first_name', 'description' ], true ) ) {
 
 			// Get vendor ID.
-			$vendor_id = hp\get_post_id(
+			$vendor_id = Models\Vendor::filter(
 				[
-					'post_type'   => 'hp_vendor',
-					'post_status' => 'publish',
-					'author'      => $user_id,
+					'status'  => 'publish',
+					'user_id' => $user_id,
 				]
-			);
+			)->get_first_id();
 
-			if ( 0 !== $vendor_id ) {
+			if ( ! empty( $vendor_id ) ) {
 
 				// Get user.
 				$user = get_userdata( $user_id );
@@ -101,15 +101,14 @@ final class Vendor {
 			if ( 'attachment' === $attachment->post_type && 0 === $attachment->post_parent ) {
 
 				// Get vendor ID.
-				$vendor_id = hp\get_post_id(
+				$vendor_id = Models\Vendor::filter(
 					[
-						'post_type'   => 'hp_vendor',
-						'post_status' => 'publish',
-						'author'      => $attachment->post_author,
+						'status'  => 'publish',
+						'user_id' => $attachment->post_author,
 					]
-				);
+				)->get_first_id();
 
-				if ( 0 !== $vendor_id ) {
+				if ( ! empty( $vendor_id ) ) {
 
 					// Update image.
 					set_post_thumbnail( $vendor_id, $attachment_id );
