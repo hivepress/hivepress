@@ -206,7 +206,6 @@ final class Attribute {
 						hp\prefix( $model . '_' . $attribute_name ),
 						hp\prefix( $model ),
 						[
-							'label'        => $attribute_args['label'],
 							'hierarchical' => true,
 							'public'       => false,
 							'show_ui'      => true,
@@ -214,8 +213,8 @@ final class Attribute {
 							'rewrite'      => false,
 
 							'labels'       => [
-								'name'          => esc_html__( 'Options', 'hivepress' ),
-								'singular_name' => esc_html__( 'Option', 'hivepress' ),
+								'name'          => $attribute_args['label'],
+								'singular_name' => $attribute_args['label'],
 								'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
 								'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
 								'update_item'   => esc_html__( 'Update Option', 'hivepress' ),

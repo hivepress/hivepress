@@ -96,7 +96,7 @@ class Listing_Submit extends Listing_Update {
 
 		if ( 0 !== $page_id ) {
 			$fields['terms'] = [
-				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
+				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
 				'type'     => 'checkbox',
 				'required' => true,
 				'order'    => 1000,

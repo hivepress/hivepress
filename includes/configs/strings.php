@@ -20,6 +20,7 @@ return [
 	'app_id'                                    => esc_html__( 'App ID', 'hivepress' ),
 	'return_to_my_account'                      => esc_html__( 'Return to My Account', 'hivepress' ),
 	'ecommerce_product'                         => sprintf( esc_html__( '%s Product', 'hivepress' ), 'WooCommerce' ),
+	'these_tokens_are_available'                => esc_html__( 'The following tokens are available: %s.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),

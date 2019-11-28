@@ -111,7 +111,7 @@ return [
 				'fields' => [
 					'email_listing_approve' => [
 						'label'       => hivepress()->translator->get_string( 'listing_approved' ),
-						'description' => esc_html__( 'This email is sent to users when listing is approved, the following tokens are available: %user_name%, %listing_title%, %listing_url%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when listing is approved.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%, %listing_url%' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
 						'html'        => 'post',
@@ -122,7 +122,7 @@ return [
 
 					'email_listing_reject'  => [
 						'label'       => hivepress()->translator->get_string( 'listing_rejected' ),
-						'description' => esc_html__( 'This email is sent to users when listing is rejected, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when listing is rejected.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 						'html'        => 'post',
@@ -133,7 +133,7 @@ return [
 
 					'email_listing_expire'  => [
 						'label'       => hivepress()->translator->get_string( 'listing_expired' ),
-						'description' => esc_html__( 'This email is sent to users when listing is expired, the following tokens are available: %user_name%, %listing_title%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when listing is expired.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
 						'html'        => 'post',
@@ -174,7 +174,7 @@ return [
 				'fields' => [
 					'email_user_register'         => [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users after registration, the following tokens are available: %user_name%, %user_password%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 						'html'        => 'post',
@@ -185,7 +185,7 @@ return [
 
 					'email_user_request_password' => [
 						'label'       => esc_html__( 'Password Reset', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users when new password is requested, the following tokens are available: %user_name%, %password_reset_url%.', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when a password reset is requested.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %password_reset_url%' ),
 						'type'        => 'textarea',
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
 						'html'        => 'post',

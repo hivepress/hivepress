@@ -379,7 +379,7 @@ abstract class Field {
 		$this->errors = [];
 
 		if ( $this->required && is_null( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is required.', 'hivepress' ), $this->label ) ] );
+			$this->add_errors( [ sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->label ) ] );
 		}
 
 		return empty( $this->errors );

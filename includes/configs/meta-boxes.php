@@ -109,7 +109,7 @@ return [
 
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format, the following tokens are available: %value%.', 'hivepress' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%value%' ),
 				'type'        => 'text',
 				'default'     => '%value%',
 				'html'        => 'post',
