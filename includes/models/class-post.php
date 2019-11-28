@@ -32,7 +32,7 @@ abstract class Post extends Model {
 	 * @param int $id Instance ID.
 	 * @return mixed
 	 */
-	final public static function get( $id ) {
+	final public static function get_by_id( $id ) {
 
 		// Get instance data.
 		$data = get_post( absint( $id ), ARRAY_A );

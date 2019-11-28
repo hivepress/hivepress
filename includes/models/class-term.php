@@ -25,7 +25,7 @@ abstract class Term extends Model {
 	 * @param int $id Instance ID.
 	 * @return mixed
 	 */
-	final public static function get( $id ) {
+	final public static function get_by_id( $id ) {
 
 		// Get instance data.
 		$data = get_term( absint( $id ), hp\prefix( static::$name ), ARRAY_A );

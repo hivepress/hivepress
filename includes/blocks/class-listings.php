@@ -258,7 +258,7 @@ class Listings extends Block {
 					$featured_query->the_post();
 
 					// Get listing.
-					$listing = Models\Listing::get( get_the_ID() );
+					$listing = Models\Listing::get_by_id( get_the_ID() );
 
 					if ( ! is_null( $listing ) ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
@@ -284,7 +284,7 @@ class Listings extends Block {
 				$query->the_post();
 
 				// Get listing.
-				$listing = Models\Listing::get( get_the_ID() );
+				$listing = Models\Listing::get_by_id( get_the_ID() );
 
 				if ( ! is_null( $listing ) ) {
 					if ( 'edit' !== $this->template ) {

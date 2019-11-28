@@ -91,7 +91,7 @@ class Vendor extends Controller {
 				'template' => 'vendor_view_page',
 
 				'context'  => [
-					'vendor' => Models\Vendor::get( get_the_ID() ),
+					'vendor' => Models\Vendor::get_by_id( get_the_ID() ),
 				],
 			]
 		) )->render();

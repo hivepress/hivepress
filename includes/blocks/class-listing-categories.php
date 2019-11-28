@@ -214,7 +214,7 @@ class Listing_Categories extends Block {
 			foreach ( $categories as $category_args ) {
 
 				// Get category.
-				$category = Models\Listing_Category::get( $category_args->term_id );
+				$category = Models\Listing_Category::get_by_id( $category_args->term_id );
 
 				if ( ! is_null( $category ) ) {
 					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';

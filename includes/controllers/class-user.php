@@ -474,7 +474,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get( $request->get_param( 'user_id' ) );
+		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
 
 		if ( is_null( $user ) ) {
 			return hp\rest_error( 404 );
@@ -540,7 +540,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get( $request->get_param( 'user_id' ) );
+		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
 
 		if ( is_null( $user ) ) {
 			return hp\rest_error( 404 );

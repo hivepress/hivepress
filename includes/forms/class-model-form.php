@@ -110,7 +110,7 @@ abstract class Model_Form extends Form {
 			$model_class = '\HivePress\Models\\' . static::$model;
 
 			if ( class_exists( $model_class ) ) {
-				$instance = $model_class::get( $this->id );
+				$instance = $model_class::get_by_id( $this->id );
 
 				if ( ! is_null( $instance ) ) {
 					$this->set_values( $instance->serialize() );
