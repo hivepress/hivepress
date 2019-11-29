@@ -8,6 +8,7 @@
 namespace HivePress\Queries;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,14 @@ defined( 'ABSPATH' ) || exit;
  * @class Query
  */
 abstract class Query {
+	use Traits\Mutator;
+
+	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected $model;
 
 	/**
 	 * Query arguments.
@@ -32,8 +41,20 @@ abstract class Query {
 	 * @param array $args Query arguments.
 	 */
 	public function __construct( $args = [] ) {
-		$this->args = $args;
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			$this->set_property( $name, $value );
+		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
 	}
+
+	/**
+	 * Bootstraps query properties.
+	 */
+	protected function bootstrap() {}
 
 	/**
 	 * Gets query arguments.
@@ -54,5 +75,32 @@ abstract class Query {
 		$this->args = hp\merge_arrays( $this->args, $args );
 
 		return $this;
+	}
+
+	/**
+	 * Gets comparison operator.
+	 *
+	 * @param string $alias Operator alias.
+	 * @return string
+	 */
+	final protected function get_operator( $alias ) {
+
+		// Get operator.
+		$operator = hp\get_array_value(
+			[
+				'not' => '!=',
+				'gt'  => '>',
+				'gte' => '>=',
+				'lt'  => '<',
+				'lte' => '<=',
+			],
+			$alias,
+			$alias
+		);
+
+		// Normalize operator.
+		$operator = strtoupper( str_replace( '_', ' ', $operator ) );
+
+		return $operator;
 	}
 }
