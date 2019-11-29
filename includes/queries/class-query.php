@@ -57,12 +57,21 @@ abstract class Query {
 	protected function bootstrap() {}
 
 	/**
-	 * Gets model class.
+	 * Routes methods.
 	 *
-	 * @return string
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
+	 * @return mixed
 	 */
-	final protected function get_model() {
-		return '\HivePress\Models\\' . $this->model;
+	final public function __call( $name, $args ) {
+		if ( strpos( $name, 'get_model_' ) === 0 ) {
+			$class  = '\HivePress\Models\\' . $this->model;
+			$method = str_replace( '_model_', '_', $name );
+
+			if ( class_exists( $class ) && method_exists( $class, $method ) ) {
+				return call_user_func_array( [ $class, $method ], $args );
+			}
+		}
 	}
 
 	/**
@@ -93,24 +102,24 @@ abstract class Query {
 	 * @return string
 	 */
 	final protected function get_operator( $alias ) {
-
-		// Get operator.
-		$operator = hp\get_array_value(
+		return hp\get_array_value(
 			[
-				'not' => '!=',
-				'gt'  => '>',
-				'gte' => '>=',
-				'lt'  => '<',
-				'lte' => '<=',
+				'not'         => '!=',
+				'gt'          => '>',
+				'gte'         => '>=',
+				'lt'          => '<',
+				'lte'         => '<=',
+				'like'        => 'LIKE',
+				'not_like'    => 'NOT LIKE',
+				'in'          => 'IN',
+				'not_in'      => 'NOT IN',
+				'between'     => 'BETWEEN',
+				'not_between' => 'NOT BETWEEN',
+				'exists'      => 'EXISTS',
+				'not_exists'  => 'NOT EXISTS',
 			],
-			$alias,
-			$alias
+			strtolower( $alias )
 		);
-
-		// Normalize operator.
-		$operator = strtoupper( str_replace( '_', ' ', $operator ) );
-
-		return $operator;
 	}
 
 	/**
@@ -158,7 +167,7 @@ abstract class Query {
 	 *
 	 * @return array
 	 */
-	abstract public function get();
+	abstract public function get_all();
 
 	/**
 	 * Gets object IDs.
@@ -173,7 +182,7 @@ abstract class Query {
 	 * @return mixed
 	 */
 	final public function get_first() {
-		return hp\get_array_value( $this->limit( 1 )->get(), 0 );
+		return hp\get_array_value( $this->limit( 1 )->get_all(), 0 );
 	}
 
 	/**
@@ -184,6 +193,13 @@ abstract class Query {
 	final public function get_first_id() {
 		return hp\get_array_value( $this->limit( 1 )->get_ids(), 0 );
 	}
+
+	/**
+	 * Gets object count.
+	 *
+	 * @return int
+	 */
+	abstract public function get_count();
 
 	/**
 	 * Deletes objects.

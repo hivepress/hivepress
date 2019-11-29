@@ -100,7 +100,7 @@ abstract class Model {
 		$model_class = static::class;
 
 		while ( false !== $model_class ) {
-			$query_class = str_ireplace( '/models/', '/queries/', $model_class );
+			$query_class = str_ireplace( '\models\\', '\queries\\', $model_class );
 
 			if ( class_exists( $query_class ) && ! ( new \ReflectionClass( $query_class ) )->isAbstract() ) {
 				return call_user_func_array( [ new $query_class( [ 'model' => static::$name ] ), $name ], $args );
