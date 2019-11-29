@@ -27,6 +27,15 @@ abstract class Post extends Model {
 	protected static $relations = [];
 
 	/**
+	 * Gets model relations.
+	 *
+	 * @return array
+	 */
+	final public static function get_relations() {
+		return static::$relations;
+	}
+
+	/**
 	 * Gets instance by ID.
 	 *
 	 * @param int $id Instance ID.

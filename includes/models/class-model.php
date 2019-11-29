@@ -90,6 +90,27 @@ abstract class Model {
 	}
 
 	/**
+	 * Routes static methods.
+	 *
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
+	 * @return mixed
+	 */
+	final public static function __callStatic( $name, $args ) {
+		$model_class = static::class;
+
+		while ( false !== $model_class ) {
+			$query_class = str_ireplace( '/models/', '/queries/', $model_class );
+
+			if ( class_exists( $query_class ) && ! ( new \ReflectionClass( $query_class ) )->isAbstract() ) {
+				return call_user_func_array( [ new $query_class( [ 'model' => static::$name ] ), $name ], $args );
+			}
+
+			$model_class = get_parent_class( $model_class );
+		}
+	}
+
+	/**
 	 * Sets model fields.
 	 *
 	 * @param array $fields Model fields.
@@ -117,6 +138,15 @@ abstract class Model {
 	 */
 	final public static function get_fields() {
 		return static::$fields;
+	}
+
+	/**
+	 * Gets model aliases.
+	 *
+	 * @return array
+	 */
+	final public static function get_aliases() {
+		return static::$aliases;
 	}
 
 	/**
