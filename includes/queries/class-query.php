@@ -57,6 +57,15 @@ abstract class Query {
 	protected function bootstrap() {}
 
 	/**
+	 * Gets model class.
+	 *
+	 * @return string
+	 */
+	final protected function get_model() {
+		return '\HivePress\Models\\' . $this->model;
+	}
+
+	/**
 	 * Gets query arguments.
 	 *
 	 * @return array
