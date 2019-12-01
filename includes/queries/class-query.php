@@ -22,11 +22,18 @@ abstract class Query {
 	use Traits\Mutator;
 
 	/**
-	 * Model name.
+	 * Query model.
 	 *
 	 * @var string
 	 */
 	protected $model;
+
+	/**
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected $aliases = [];
 
 	/**
 	 * Query arguments.
@@ -64,35 +71,30 @@ abstract class Query {
 	 * @return mixed
 	 */
 	final public function __call( $name, $args ) {
-		if ( strpos( $name, 'get_model_' ) === 0 ) {
-			$class  = '\HivePress\Models\\' . $this->model;
-			$method = str_replace( '_model_', '_', $name );
+		$prefixes = [ 'get', 'delete' ];
 
-			if ( class_exists( $class ) && method_exists( $class, $method ) ) {
-				return call_user_func_array( [ $class, $method ], $args );
+		foreach ( $prefixes as $prefix ) {
+			if ( strpos( $name, $prefix . '_model_' ) === 0 ) {
+				$class  = '\HivePress\Models\\' . $this->model;
+				$method = $prefix . '_' . substr( $name, strlen( $prefix . '_model_' ) );
+
+				if ( class_exists( $class ) && method_exists( $class, $method ) ) {
+					return call_user_func_array( [ $class, $method ], $args );
+				}
+
+				break;
 			}
 		}
 	}
 
 	/**
-	 * Gets query arguments.
+	 * Gets query argument alias.
 	 *
-	 * @return array
+	 * @param string $name Argument name.
+	 * @return string
 	 */
-	final public function get_args() {
-		return $this->args;
-	}
-
-	/**
-	 * Sets query arguments.
-	 *
-	 * @param array $args Query arguments.
-	 * @return object
-	 */
-	final public function set_args( $args ) {
-		$this->args = hp\merge_arrays( $this->args, $args );
-
-		return $this;
+	final protected function get_alias( $name ) {
+		return hp\get_array_value( $this->aliases, $name, $name );
 	}
 
 	/**
@@ -118,25 +120,39 @@ abstract class Query {
 				'exists'      => 'EXISTS',
 				'not_exists'  => 'NOT EXISTS',
 			],
-			strtolower( $alias )
+			strtolower( $alias ),
+			'='
 		);
 	}
 
 	/**
-	 * Sets object filters.
+	 * Gets query arguments.
 	 *
-	 * @param array $args Filter arguments.
-	 * @return object
+	 * @return array
 	 */
-	abstract public function filter( $args );
+	final public function get_args() {
+		return $this->args;
+	}
 
 	/**
-	 * Sets object order.
+	 * Sets query arguments.
 	 *
-	 * @param array $args Order arguments.
+	 * @param array $args Query arguments.
 	 * @return object
 	 */
-	abstract public function order( $args );
+	final public function set_args( $args ) {
+		$this->args = hp\merge_arrays( $this->args, $args );
+
+		return $this;
+	}
+
+	/**
+	 * Gets todo objects.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	abstract protected function get_objects( $args );
 
 	/**
 	 * Limits the number of objects.
@@ -144,15 +160,11 @@ abstract class Query {
 	 * @param int $number Objects number.
 	 * @return object
 	 */
-	abstract public function limit( $number );
+	public function limit( $number ) {
+		$this->args[ $this->get_alias( 'limit' ) ] = absint( $number );
 
-	/**
-	 * Sets the current page number.
-	 *
-	 * @param int $number Page number.
-	 * @return object
-	 */
-	abstract public function paginate( $number );
+		return $this;
+	}
 
 	/**
 	 * Offsets the number of objects.
@@ -160,21 +172,37 @@ abstract class Query {
 	 * @param int $number Objects number.
 	 * @return object
 	 */
-	abstract public function offset( $number );
+	public function offset( $number ) {
+		$this->args[ $this->get_alias( 'offset' ) ] = absint( $number );
+
+		return $this;
+	}
 
 	/**
-	 * Gets objects.
+	 * Offsets the number of pages.
+	 *
+	 * @param int $number Page number.
+	 * @return object
+	 */
+	public function paginate( $number ) {
+		$this->args[ $this->get_alias( 'todo' ) ] = absint( $number );
+
+		return $this;
+	}
+
+	/**
+	 * Gets all objects.
 	 *
 	 * @return array
 	 */
-	abstract public function get_all();
-
-	/**
-	 * Gets object IDs.
-	 *
-	 * @return array
-	 */
-	abstract public function get_ids();
+	final public function get_all() {
+		return array_map(
+			function( $object ) {
+				return $this->get_model_from_todo( $object );
+			},
+			$this->get_objects( $this->args )
+		);
+	}
 
 	/**
 	 * Gets the first object.
@@ -199,10 +227,70 @@ abstract class Query {
 	 *
 	 * @return int
 	 */
-	abstract public function get_count();
+	public function get_count() {
+		return $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'count' ) => true ] ) );
+	}
 
 	/**
 	 * Deletes objects.
 	 */
-	abstract public function delete();
+	final public function delete() {
+		foreach ( $this->get_ids() as $id ) {
+			$this->delete_model_by_id( $id );
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Sets object filters.
+	 *
+	 * @param array $args Filter arguments.
+	 * @return object
+	 */
+	final public function filter( $args ) {
+
+	}
+
+	/**
+	 * Sets object order.
+	 *
+	 * @param array $args Order arguments.
+	 * @return object
+	 */
+	final public function order( $args ) {
+
+	}
+
+	/**
+	 * Gets object IDs.
+	 *
+	 * @return array
+	 */
+	public function get_ids() {
+		return $this->get_objects( array_merge( $this->args, [ 'fields' => 'ids' ] ) );
+	}
+
+
 }

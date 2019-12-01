@@ -32,6 +32,10 @@ class Term extends Query {
 		parent::bootstrap();
 	}
 
+	final protected function get_objects( $this->args ) {
+		return get_terms( $this->args );
+	}
+
 	/**
 	 * Sets object filters.
 	 *
@@ -78,18 +82,6 @@ class Term extends Query {
 	}
 
 	/**
-	 * Limits the number of objects.
-	 *
-	 * @param int $number Objects number.
-	 * @return object
-	 */
-	final public function limit( $number ) {
-		$this->args['number'] = absint( $number );
-
-		return $this;
-	}
-
-	/**
 	 * Sets the current page number.
 	 *
 	 * @param int $number Page number.
@@ -102,19 +94,7 @@ class Term extends Query {
 	}
 
 	/**
-	 * Offsets the number of objects.
-	 *
-	 * @param int $number Objects number.
-	 * @return object
-	 */
-	final public function offset( $number ) {
-		$this->args['offset'] = absint( $number );
-
-		return $this;
-	}
-
-	/**
-	 * Gets objects.
+	 * Gets all objects.
 	 *
 	 * @return array
 	 */
@@ -123,26 +103,8 @@ class Term extends Query {
 			function( $term ) {
 				return $this->get_model_by_id( $term->term_id );
 			},
-			get_terms( $this->args )
+			$this->get_objects( $this->args )
 		);
-	}
-
-	/**
-	 * Gets object IDs.
-	 *
-	 * @return array
-	 */
-	final public function get_ids() {
-		return get_terms( array_merge( $this->args, [ 'fields' => 'ids' ] ) );
-	}
-
-	/**
-	 * Gets object count.
-	 *
-	 * @return int
-	 */
-	final public function get_count() {
-		return get_terms( array_merge( $this->args, [ 'count' => true ] ) );
 	}
 
 	/**

@@ -32,6 +32,10 @@ class Comment extends Query {
 		parent::bootstrap();
 	}
 
+	final protected function get_objects( $this->args ) {
+		return get_comments( $this->args );
+	}
+
 	/**
 	 * Sets object filters.
 	 *
@@ -78,43 +82,7 @@ class Comment extends Query {
 	}
 
 	/**
-	 * Limits the number of objects.
-	 *
-	 * @param int $number Objects number.
-	 * @return object
-	 */
-	final public function limit( $number ) {
-		$this->args['number'] = absint( $number );
-
-		return $this;
-	}
-
-	/**
-	 * Sets the current page number.
-	 *
-	 * @param int $number Page number.
-	 * @return object
-	 */
-	final public function paginate( $number ) {
-		$this->args['paged'] = absint( $number );
-
-		return $this;
-	}
-
-	/**
-	 * Offsets the number of objects.
-	 *
-	 * @param int $number Objects number.
-	 * @return object
-	 */
-	final public function offset( $number ) {
-		$this->args['offset'] = absint( $number );
-
-		return $this;
-	}
-
-	/**
-	 * Gets objects.
+	 * Gets all objects.
 	 *
 	 * @return array
 	 */
@@ -123,26 +91,8 @@ class Comment extends Query {
 			function( $user ) {
 				return $this->get_model_by_id( $comment->comment_ID );
 			},
-			get_comments( $this->args )
+			$this->get_objects( $this->args )
 		);
-	}
-
-	/**
-	 * Gets object IDs.
-	 *
-	 * @return array
-	 */
-	final public function get_ids() {
-		return get_comments( array_merge( $this->args, [ 'fields' => 'ids' ] ) );
-	}
-
-	/**
-	 * Gets object count.
-	 *
-	 * @return int
-	 */
-	final public function get_count() {
-		return get_comments( array_merge( $this->args, [ 'count' => true ] ) );
 	}
 
 	/**
