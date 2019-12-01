@@ -92,6 +92,16 @@ abstract class Post extends Model {
 	}
 
 	/**
+	 * Deletes instance by ID.
+	 *
+	 * @param int $id Instance ID.
+	 * @return bool
+	 */
+	final public static function delete_by_id( $id ) {
+		return boolval( wp_delete_post( $id, true ) );
+	}
+
+	/**
 	 * Saves instance to the database.
 	 *
 	 * @return bool
@@ -147,14 +157,5 @@ abstract class Post extends Model {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Deletes instance from the database.
-	 *
-	 * @return bool
-	 */
-	final public function delete() {
-		return $this->id && wp_delete_post( $this->id, true ) !== false;
 	}
 }

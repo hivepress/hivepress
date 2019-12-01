@@ -155,6 +155,18 @@ class User extends Model {
 	}
 
 	/**
+	 * Deletes instance by ID.
+	 *
+	 * @param int $id Instance ID.
+	 * @return bool
+	 */
+	final public static function delete_by_id( $id ) {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+
+		return boolval( wp_delete_user( $id ) );
+	}
+
+	/**
 	 * Saves instance to the database.
 	 *
 	 * @return bool
@@ -205,17 +217,6 @@ class User extends Model {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Deletes instance from the database.
-	 *
-	 * @return bool
-	 */
-	final public function delete() {
-		require_once ABSPATH . 'wp-admin/includes/user.php';
-
-		return $this->id && wp_delete_user( $this->id );
 	}
 
 	/**
