@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Attachment_Select extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Button caption.
 	 *
 	 * @var string

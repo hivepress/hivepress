@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Number_Range extends Number {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string

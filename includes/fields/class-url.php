@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class URL extends Text {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -93,6 +86,6 @@ class URL extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_url( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_url( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

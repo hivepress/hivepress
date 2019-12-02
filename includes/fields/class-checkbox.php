@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Checkbox extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -162,7 +155,7 @@ class Checkbox extends Field {
 
 		unset( $this->attributes['class'] );
 
-		$output .= '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		$output .= '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

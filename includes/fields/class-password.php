@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Password extends Text {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -79,6 +72,6 @@ class Password extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

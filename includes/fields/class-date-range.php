@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Date_Range extends Date {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string

@@ -22,13 +22,6 @@ abstract class Field {
 	use Traits\Mutator;
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -125,9 +118,6 @@ abstract class Field {
 			$args
 		);
 
-		// Set type.
-		$args = array_merge( [ 'type' => strtolower( ( new \ReflectionClass( static::class ) )->getShortName() ) ], $args );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -148,7 +138,7 @@ abstract class Field {
 		 * @description Filters field arguments.
 		 * @param array $args Field arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::$type ] ) );
+		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::get_type() ] ) );
 
 		// Set arguments.
 		$this->args = $args;
@@ -173,7 +163,7 @@ abstract class Field {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::get_type() ) ],
 			]
 		);
 
@@ -201,7 +191,7 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_type() {
-		return static::$type;
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**

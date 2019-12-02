@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * File formats.
 	 *
 	 * @var array
@@ -77,6 +70,6 @@ class File extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }
