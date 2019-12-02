@@ -270,22 +270,6 @@ abstract class Model {
 	}
 
 	/**
-	 * Gets instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return mixed
-	 */
-	abstract public static function get_by_id( $id );
-
-	/**
-	 * Deletes instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return bool
-	 */
-	abstract public static function delete_by_id( $id );
-
-	/**
 	 * Saves instance to the database.
 	 *
 	 * @return bool

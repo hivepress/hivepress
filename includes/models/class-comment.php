@@ -26,10 +26,19 @@ abstract class Comment extends Model {
 	 * @return mixed
 	 */
 	final public static function get_by_id( $id ) {
+		return static::get_by_object( get_comment( absint( $id ) ) );
+	}
+
+	/**
+	 * Gets instance by object.
+	 *
+	 * @param object $object Object.
+	 * @return mixed
+	 */
+	final public static function get_by_object( $object ) {
 
 		// Get instance data.
-		$id   = absint( $id );
-		$data = get_comment( $id, ARRAY_A );
+		$data = get_object_vars( $object );
 
 		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['comment_type'] ) {
 			$attributes = [];

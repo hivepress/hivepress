@@ -106,11 +106,21 @@ class User extends Model {
 	 * @return mixed
 	 */
 	final public static function get_by_id( $id ) {
+		return static::get_by_object( get_userdata( absint( $id ) ) );
+	}
+
+	/**
+	 * Gets instance by object.
+	 *
+	 * @param object $object Object.
+	 * @return mixed
+	 */
+	final public static function get_by_object( $object ) {
 
 		// Get instance data.
-		$data = get_userdata( absint( $id ) );
+		$data = get_object_vars( $object );
 
-		if ( false !== $data ) {
+		if ( ! is_null( $data ) ) {
 			$attributes = [];
 
 			// Convert instance data.
