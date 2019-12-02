@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Listing_Update {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form title.
 	 *
 	 * @var string

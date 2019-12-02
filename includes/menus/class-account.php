@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Account extends Menu {
 
 	/**
-	 * Menu name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Menu items.
 	 *
 	 * @var array

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Model fields.
 	 *
 	 * @var array

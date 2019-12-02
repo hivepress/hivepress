@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listings_Edit_Page extends Account_Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array

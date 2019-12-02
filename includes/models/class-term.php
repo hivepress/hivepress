@@ -28,7 +28,7 @@ abstract class Term extends Model {
 	final public static function get_by_id( $id ) {
 
 		// Get instance data.
-		$data = get_term( absint( $id ), hp\prefix( static::$name ), ARRAY_A );
+		$data = get_term( absint( $id ), hp\prefix( static::get_name() ), ARRAY_A );
 
 		if ( ! is_null( $data ) ) {
 			$attributes = [];
@@ -69,7 +69,7 @@ abstract class Term extends Model {
 	 * @return bool
 	 */
 	final public static function delete_by_id( $id ) {
-		return boolval( wp_delete_term( $id, hp\prefix( static::$name ) ) );
+		return boolval( wp_delete_term( $id, hp\prefix( static::get_name() ) ) );
 	}
 
 	/**
@@ -100,14 +100,14 @@ abstract class Term extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$ids = wp_insert_term( uniqid(), hp\prefix( static::$name ), $data );
+				$ids = wp_insert_term( uniqid(), hp\prefix( static::get_name() ), $data );
 
 				if ( ! is_wp_error( $ids ) ) {
 					$this->set_id( reset( $ids ) );
 				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::$name ), $data ) ) ) {
+			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::get_name() ), $data ) ) ) {
 				return false;
 			}
 

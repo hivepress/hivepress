@@ -23,13 +23,6 @@ abstract class Form {
 	use Traits\Mutator;
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form title.
 	 *
 	 * @var string
@@ -127,9 +120,6 @@ abstract class Form {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		/**
 		 * Filters form arguments.
 		 *
@@ -138,8 +128,8 @@ abstract class Form {
 		 * @param string $name Form name or "form" to filter all forms.
 		 * @param array $args Form arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/forms/form', $args );
-		$args = apply_filters( 'hivepress/v1/forms/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/forms/form', array_merge( $args, [ 'name' => static::get_name() ] ) );
+		$args = apply_filters( 'hivepress/v1/forms/' . static::get_name(), $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -162,9 +152,7 @@ abstract class Form {
 		 * @param array $args Form arguments.
 		 * @param string $name Form name.
 		 */
-		$args = apply_filters( 'hivepress/v1/forms/form/args', $args, static::$name );
-
-		unset( $args['name'] );
+		$args = apply_filters( 'hivepress/v1/forms/form/args', $args, static::get_name() );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -173,6 +161,15 @@ abstract class Form {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Gets form name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**
@@ -345,7 +342,7 @@ abstract class Form {
 		$attributes['data-component'] = 'form';
 
 		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::$name ) ];
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_name() ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}

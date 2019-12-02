@@ -22,13 +22,6 @@ abstract class Email {
 	use Traits\Mutator;
 
 	/**
-	 * Email name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Email subject.
 	 *
 	 * @var string
@@ -70,9 +63,6 @@ abstract class Email {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -96,6 +86,15 @@ abstract class Email {
 	}
 
 	/**
+	 * Gets email name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+	}
+
+	/**
 	 * Bootstraps email properties.
 	 */
 	protected function bootstrap() {
@@ -109,7 +108,7 @@ abstract class Email {
 		);
 
 		// Set body.
-		$body = get_option( 'hp_email_' . static::$name );
+		$body = get_option( 'hp_email_' . static::get_name() );
 
 		if ( ! empty( $body ) ) {
 			static::$body = $body;

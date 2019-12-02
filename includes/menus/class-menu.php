@@ -22,13 +22,6 @@ abstract class Menu {
 	use Traits\Mutator;
 
 	/**
-	 * Menu name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Chained property.
 	 *
 	 * @var bool
@@ -56,9 +49,6 @@ abstract class Menu {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		/**
 		 * Filters menu arguments.
 		 *
@@ -67,7 +57,7 @@ abstract class Menu {
 		 * @param string $name Menu name.
 		 * @param array $args Menu arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/menus/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/menus/' . static::get_name(), $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -89,6 +79,15 @@ abstract class Menu {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Gets menu name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**
@@ -160,7 +159,7 @@ abstract class Menu {
 		$attributes = [];
 
 		// Set class.
-		$attributes['class'] = [ 'hp-menu', 'hp-menu--' . hp\sanitize_slug( static::$name ) ];
+		$attributes['class'] = [ 'hp-menu', 'hp-menu--' . hp\sanitize_slug( static::get_name() ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}

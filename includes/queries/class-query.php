@@ -291,6 +291,4 @@ abstract class Query {
 	public function get_ids() {
 		return $this->get_objects( array_merge( $this->args, [ 'fields' => 'ids' ] ) );
 	}
-
-
 }

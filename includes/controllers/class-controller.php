@@ -22,13 +22,6 @@ abstract class Controller {
 	use Traits\Mutator;
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Controller routes.
 	 *
 	 * @var array
@@ -42,9 +35,6 @@ abstract class Controller {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -57,7 +47,7 @@ abstract class Controller {
 	 * @return string
 	 */
 	final public static function get_name() {
-		return static::$name;
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**
@@ -108,7 +98,7 @@ abstract class Controller {
 		if ( ! is_null( $route ) && isset( $route['path'] ) ) {
 
 			// Set route.
-			$query['route'] = static::$name . '/' . $route_name;
+			$query['route'] = static::get_name() . '/' . $route_name;
 
 			// Set parameters.
 			foreach ( static::get_url_params( $route_name ) as $param ) {

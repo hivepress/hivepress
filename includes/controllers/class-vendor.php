@@ -24,13 +24,6 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Controller routes.
 	 *
 	 * @var array

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string

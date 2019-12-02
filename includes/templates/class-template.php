@@ -22,13 +22,6 @@ abstract class Template {
 	use Traits\Mutator;
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Template title.
 	 *
 	 * @var string
@@ -49,9 +42,6 @@ abstract class Template {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		/**
 		 * Filters template arguments.
 		 *
@@ -60,12 +50,21 @@ abstract class Template {
 		 * @param string $name Template name.
 		 * @param array $args Template arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/templates/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/templates/' . static::get_name(), $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
 		}
+	}
+
+	/**
+	 * Gets template name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**

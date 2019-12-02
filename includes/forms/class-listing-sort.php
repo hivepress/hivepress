@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Sort extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form action.
 	 *
 	 * @var string

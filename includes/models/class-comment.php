@@ -31,7 +31,7 @@ abstract class Comment extends Model {
 		$id   = absint( $id );
 		$data = get_comment( $id, ARRAY_A );
 
-		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['comment_type'] ) {
+		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['comment_type'] ) {
 			$attributes = [];
 
 			// Get instance meta.
@@ -101,7 +101,7 @@ abstract class Comment extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_comment( array_merge( $data, [ 'comment_type' => hp\prefix( static::$name ) ] ) );
+				$id = wp_insert_comment( array_merge( $data, [ 'comment_type' => hp\prefix( static::get_name() ) ] ) );
 
 				if ( false !== $id ) {
 					$this->set_id( $id );

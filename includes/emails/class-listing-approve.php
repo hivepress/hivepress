@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Approve extends Email {
 
 	/**
-	 * Email name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Email subject.
 	 *
 	 * @var string

@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Category_Submit_Block extends Template {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array

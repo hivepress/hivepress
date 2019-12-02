@@ -22,13 +22,6 @@ abstract class Model {
 	use Traits\Mutator;
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Model fields.
 	 *
 	 * @var array
@@ -70,9 +63,6 @@ abstract class Model {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set name.
-		$args['name'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		/**
 		 * Filters model arguments.
 		 *
@@ -81,7 +71,7 @@ abstract class Model {
 		 * @param string $name Model name.
 		 * @param array $args Model arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/models/' . $args['name'], $args );
+		$args = apply_filters( 'hivepress/v1/models/' . static::get_name(), $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -103,11 +93,20 @@ abstract class Model {
 			$query_class = str_ireplace( '\models\\', '\queries\\', $model_class );
 
 			if ( class_exists( $query_class ) && ! ( new \ReflectionClass( $query_class ) )->isAbstract() ) {
-				return call_user_func_array( [ new $query_class( [ 'model' => static::$name ] ), $name ], $args );
+				return call_user_func_array( [ new $query_class( [ 'model' => static::get_name() ] ), $name ], $args );
 			}
 
 			$model_class = get_parent_class( $model_class );
 		}
+	}
+
+	/**
+	 * Gets model name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**
@@ -251,6 +250,8 @@ abstract class Model {
 
 	/**
 	 * Gets instance attributes.
+	 *
+	 * @return array
 	 */
 	final public function serialize() {
 		$attributes = [];

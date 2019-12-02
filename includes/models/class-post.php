@@ -46,7 +46,7 @@ abstract class Post extends Model {
 		// Get instance data.
 		$data = get_post( absint( $id ), ARRAY_A );
 
-		if ( ! is_null( $data ) && hp\prefix( static::$name ) === $data['post_type'] ) {
+		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['post_type'] ) {
 			$attributes = [];
 
 			// Get instance meta.
@@ -132,7 +132,7 @@ abstract class Post extends Model {
 		// Create or update instance.
 		if ( empty( $this->errors ) ) {
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp\prefix( static::$name ) ] ) );
+				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp\prefix( static::get_name() ) ] ) );
 
 				if ( 0 !== $id ) {
 					$this->set_id( $id );

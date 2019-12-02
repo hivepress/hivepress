@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Category extends Term {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Model fields.
 	 *
 	 * @var array
@@ -134,7 +127,7 @@ class Listing_Category extends Term {
 							'fields'         => 'ids',
 							'tax_query'      => [
 								[
-									'taxonomy' => hp\prefix( static::$name ),
+									'taxonomy' => hp\prefix( static::get_name() ),
 									'terms'    => [ absint( $this->id ) ],
 								],
 							],

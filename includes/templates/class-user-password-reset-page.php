@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset_Page extends Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array

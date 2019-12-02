@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Delete extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Form title.
 	 *
 	 * @var string

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Menu {
 
 	/**
-	 * Menu name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Chained property.
 	 *
 	 * @var bool

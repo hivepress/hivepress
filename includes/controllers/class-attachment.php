@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Attachment extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Controller routes.
 	 *
 	 * @var array

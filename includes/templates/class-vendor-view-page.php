@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_View_Page extends Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array

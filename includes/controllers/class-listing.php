@@ -24,13 +24,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
 	 * Controller routes.
 	 *
 	 * @var array
