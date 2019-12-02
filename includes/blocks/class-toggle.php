@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Toggle extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Toggle view.
 	 *
 	 * @var string

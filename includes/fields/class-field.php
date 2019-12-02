@@ -143,8 +143,6 @@ abstract class Field {
 		// Set arguments.
 		$this->args = $args;
 
-		unset( $args['type'] );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );

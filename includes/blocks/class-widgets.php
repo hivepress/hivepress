@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Widgets extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Widget area.
 	 *
 	 * @var string

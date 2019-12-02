@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Menu extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Menu name.
 	 *
 	 * @var string

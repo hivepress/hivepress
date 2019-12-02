@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Modal extends Container {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Modal caption.
 	 *
 	 * @var string

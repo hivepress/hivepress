@@ -22,13 +22,6 @@ abstract class Block {
 	use Traits\Mutator;
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Block title.
 	 *
 	 * @var string
@@ -63,9 +56,6 @@ abstract class Block {
 	 */
 	public static function init( $args = [] ) {
 
-		// Set type.
-		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
-
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -78,7 +68,6 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		unset( $args['type'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -87,6 +76,15 @@ abstract class Block {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Gets block type.
+	 *
+	 * @return string
+	 */
+	final public static function get_type() {
+		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
 	/**

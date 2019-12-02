@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search_Form extends Form {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Block title.
 	 *
 	 * @var string

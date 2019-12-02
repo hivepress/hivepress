@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Callback extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Callback name.
 	 *
 	 * @var string

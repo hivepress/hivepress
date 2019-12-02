@@ -21,13 +21,6 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Block title.
 	 *
 	 * @var string

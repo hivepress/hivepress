@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Template {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {

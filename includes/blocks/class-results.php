@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Results extends Container {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

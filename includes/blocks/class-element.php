@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Element extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * File path.
 	 *
 	 * @var string

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Template extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Template name.
 	 *
 	 * @var string

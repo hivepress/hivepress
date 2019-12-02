@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Result_Count extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

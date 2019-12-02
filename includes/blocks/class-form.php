@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Form extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Form name.
 	 *
 	 * @var string

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Content extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Block content.
 	 *
 	 * @var string

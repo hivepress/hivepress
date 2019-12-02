@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Page extends Container {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Bootstraps block properties.
 	 */
 	protected function bootstrap() {
