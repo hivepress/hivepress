@@ -541,6 +541,8 @@ class Listing extends Controller {
 			);
 		}
 
+		set_query_var( 'hp_listing_id', $listing_id );
+
 		// Check listing.
 		if ( 0 !== $listing_id ) {
 			return true;
@@ -567,13 +569,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = Models\Listing::filter(
-			[
-				'status'    => 'auto-draft',
-				'vendor_id' => null,
-				'user_id'   => get_current_user_id(),
-			]
-		)->get_first_id();
+		$listing_id = absint( get_query_var( 'hp_listing_id' ) );
 
 		// Get category.
 		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), 'hp_listing_category' );
@@ -630,13 +626,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = Models\Listing::filter(
-			[
-				'status'    => 'auto-draft',
-				'vendor_id' => null,
-				'user_id'   => get_current_user_id(),
-			]
-		)->get_first_id();
+		$listing_id = absint( get_query_var( 'hp_listing_id' ) );
 
 		// Check listing.
 		if ( '' !== get_the_title( $listing_id ) ) {
@@ -652,25 +642,12 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_details_page() {
-
-		// Get listing ID.
-		$listing_id = Models\Listing::filter(
-			[
-				'status'    => 'auto-draft',
-				'vendor_id' => null,
-				'user_id'   => get_current_user_id(),
-			]
-		)->get_first_id();
-
-		// Set listing ID.
-		set_query_var( 'hp_listing_id', $listing_id );
-
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing_id' => $listing_id,
+					'listing_id' => absint( get_query_var( 'hp_listing_id' ) ),
 				],
 			]
 		) )->render();
@@ -689,13 +666,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = Models\Listing::filter(
-			[
-				'status'    => 'auto-draft',
-				'vendor_id' => null,
-				'user_id'   => get_current_user_id(),
-			]
-		)->get_first_id();
+		$listing_id = absint( get_query_var( 'hp_listing_id' ) );
 
 		// Update listing.
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
