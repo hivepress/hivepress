@@ -21,7 +21,7 @@
 		hivepress.getComponent('link').on('click', function(e) {
 			var url = $(this).data('url');
 
-			if (!url.startsWith('#')) {
+			if (url.indexOf('#') !== 0) {
 				window.location.href = url;
 			}
 
