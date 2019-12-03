@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Query
  */
-abstract class Query {
+abstract class Query extends \ArrayObject {
 	use Traits\Mutator;
 
 	/**
@@ -49,6 +49,30 @@ abstract class Query {
 	 */
 	public function __construct( $args = [] ) {
 
+		$args = hp\merge_arrays(
+			[
+				'aliases' => [
+					'limit'    => 'number',
+					'offset'   => 'offset',
+					'paginate' => 'paged',
+					'count'    => 'count',
+
+					'select'   => [
+						'name'    => 'fields',
+
+						'aliases' => [
+							'id' => 'ids',
+						],
+					],
+
+					'order'    => [
+						'name' => 'order',
+					],
+				],
+			],
+			$args
+		);
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
@@ -68,6 +92,7 @@ abstract class Query {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
 	 * @return mixed
 	 */
 	final public function __call( $name, $args ) {
@@ -85,16 +110,33 @@ abstract class Query {
 				break;
 			}
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**
 	 * Gets query argument alias.
 	 *
-	 * @param string $name Argument name.
+	 * @param string $path Alias path.
 	 * @return string
 	 */
-	final protected function get_alias( $name ) {
-		return hp\get_array_value( $this->aliases, $name, $name );
+	final protected function get_alias( $path ) {
+		$alias = [ 'aliases' => $this->aliases ];
+		$parts = explode( '/', $path );
+
+		foreach ( $parts as $part ) {
+			if ( isset( $alias['aliases'][ $part ] ) ) {
+				$alias = $alias['aliases'][ $part ];
+			} else {
+				return null;
+			}
+		}
+
+		if ( is_array( $alias ) ) {
+			$alias = hp\get_array_value( $alias, 'name' );
+		}
+
+		return $alias;
 	}
 
 	/**
@@ -185,7 +227,7 @@ abstract class Query {
 	 * @return object
 	 */
 	public function paginate( $number ) {
-		$this->args[ $this->get_alias( 'todo' ) ] = absint( $number );
+		$this->args[ $this->get_alias( 'paginate' ) ] = absint( $number );
 
 		return $this;
 	}
@@ -193,15 +235,32 @@ abstract class Query {
 	/**
 	 * Gets all objects.
 	 *
-	 * @return array
+	 * @return object
 	 */
 	final public function get_all() {
-		return array_map(
-			function( $object ) {
-				return $this->get_model_from_todo( $object );
-			},
-			$this->get_objects( $this->args )
+		$this->exchangeArray(
+			array_map(
+				function( $object ) {
+					return $this->get_model_by_object( $object );
+				},
+				$this->get_objects( $this->args )
+			)
 		);
+
+		return $this;
+	}
+
+	/**
+	 * Gets object IDs.
+	 *
+	 * @return object
+	 */
+	final public function get_ids() {
+		$this->args[ $this->get_alias( 'select' ) ] = $this->get_alias( 'select/id' );
+
+		$this->exchangeArray( $this->get_objects( $this->args ) );
+
+		return $this;
 	}
 
 	/**
@@ -266,29 +325,81 @@ abstract class Query {
 	/**
 	 * Sets object filters.
 	 *
-	 * @param array $args Filter arguments.
+	 * @param array $criteria Filtering criteria.
 	 * @return object
 	 */
-	final public function filter( $args ) {
+	public function filter( $criteria ) {
+		foreach ( $criteria as $name => $value ) {
+			if ( $this->get_alias( 'filter/' . $name ) ) {
+				$this->args[ $this->get_alias( 'filter/' . $name ) ] = $value;
+			} else {
+				$operator = '';
 
+				if ( strpos( $name, '__' ) !== false ) {
+					list($name, $operator) = explode( '__', $name );
+				}
+
+				if ( in_array( $name, static::get_model_aliases(), true ) ) {
+					$this->args[ rtrim( array_search( $name, static::get_model_aliases(), true ) . '__' . $operator, '_' ) ] = $value;
+				} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+					$operator = $this->get_operator( $operator );
+
+					$filter = [
+						'key'     => hp\prefix( $name ),
+						'compare' => $operator,
+					];
+					if ( is_bool( $value ) ) {
+						$value = $value ? '1' : '0';
+					}
+					if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ] ) ) {
+						$filter = array_merge(
+							$filter,
+							[
+								'type'  => 'todo',
+								'value' => $value,
+							]
+						);
+					}
+
+					$this->args['meta_query'][ $name . '_clause' ] = $filter;
+				}
+			}
+		}
+
+		return $this;
 	}
 
 	/**
 	 * Sets object order.
 	 *
-	 * @param array $args Order arguments.
+	 * @param array $criteria Ordering criteria.
 	 * @return object
 	 */
-	final public function order( $args ) {
+	public function order( $criteria ) {
+		$args = [];
 
-	}
+		if ( is_array( $criteria ) ) {
+			$args[ $this->get_alias( 'order' ) ] = [];
 
-	/**
-	 * Gets object IDs.
-	 *
-	 * @return array
-	 */
-	public function get_ids() {
-		return $this->get_objects( array_merge( $this->args, [ 'fields' => 'ids' ] ) );
+			foreach ( $criteria as $name => $order ) {
+				$order = strtoupper( $order );
+
+				if ( in_array( $order, [ 'ASC', 'DESC' ] ) ) {
+					if ( $this->get_alias( 'order/' . $name ) ) {
+						$args[ $this->get_alias( 'order/' . $name ) ] = $order;
+					} elseif ( in_array( $name, static::get_model_aliases(), true ) ) {
+						$args[ array_search( $name, static::get_model_aliases(), true ) ] = $order;
+					} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+						$args[ $name . '_clause' ] = $order;
+					}
+				}
+			}
+		} elseif ( $this->get_alias( 'order/' . $criteria ) ) {
+			$args = $this->get_alias( 'order/' . $criteria );
+		}
+
+		$this->args[$this->get_alias('order')]=$args;
+
+		return $this;
 	}
 }

@@ -71,7 +71,7 @@ abstract class Model {
 		 * @param string $name Model name.
 		 * @param array $args Model arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/models/' . static::get_name(), $args );
+		$args = apply_filters( 'hivepress/v1/models/' . static::get_name(), array_merge( $args, [ 'name' => static::get_name() ] ) );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {

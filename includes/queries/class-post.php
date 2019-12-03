@@ -20,17 +20,49 @@ defined( 'ABSPATH' ) || exit;
 class Post extends Query {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'aliases' => [
+					'filter' => [
+						'aliases' => [
+							'id__in'     => 'post__in',
+							'id__not_in' => 'post__not_in',
+						],
+					],
+
+					'order'  => [
+						'aliases' => [
+							'random' => 'rand',
+							'id'     => 'ID',
+							'id__in' => 'post__in',
+						],
+					],
+				],
+
+				'args'    => [
+					'post_status'         => 'any',
+					'posts_per_page'      => -1,
+					'ignore_sticky_posts' => true,
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps query properties.
 	 */
 	protected function bootstrap() {
-		$this->args = [
-			'post_type'           => hp\prefix( $this->model ),
-			'post_status'         => 'any',
-			'posts_per_page'      => -1,
-			'ignore_sticky_posts' => true,
-			'tax_query'           => [],
-			'meta_query'          => [],
-		];
+
+		// Set post type.
+		$this->args['post_type'] = hp\prefix( $this->model );
 
 		parent::bootstrap();
 	}
@@ -38,31 +70,6 @@ class Post extends Query {
 	final protected function get_objects( $args ) {
 		return get_posts( $this->args );
 	}
-
-	/**
-	 * Sets object order.
-	 *
-	 * @param array $args Order arguments.
-	 * @return object
-	 */
-	final public function order( $args ) {
-		// todo.
-		return $this;
-	}
-
-	/**
-	 * Limits the number of objects.
-	 *
-	 * @param int $number Objects number.
-	 * @return object
-	 */
-	final public function limit( $number ) {
-		$this->args['posts_per_page'] = $number;
-
-		return $this;
-	}
-
-	
 
 	/**
 	 * Gets object count.
@@ -73,23 +80,44 @@ class Post extends Query {
 		return count( $this->get_ids() );
 	}
 
-	/**
-	 * Deletes objects.
-	 */
-	final public function delete() {
-		foreach ( $this->get_ids() as $id ) {
-			wp_delete_post( $id, true );
+	public function order( $criteria ) {
+		parent::order($criteria);
+
+		$aliases = [
+			'post_date'   => 'date',
+			'post_author' => 'author',
+		];
+
+		if ( is_array( $args ) ) {
+			$args = array_combine(
+				array_map(
+					function( $name ) use ( $aliases ) {
+						return hp\get_array_value( $aliases, $name, $name );
+					},
+					array_keys( $args )
+				),
+				$args
+			);
+		} else {
+			$args = hp\get_array_value( $aliases, $args, $args );
 		}
+
+		return $args;
 	}
 
-	final public function todo( $alias ) {
+	public function filter( $criteria ) {
+		parent::filter($criteria);
 
-		// Get name.
-		$name = hp\get_array_value( array_merge( $this->get_model_relations(), $this->get_model_aliases() ), $alias, $alias );
+		if ( isset( $this->args['post_author'] ) ) {
+			$this->args['author'] = $this->args['post_author'];
 
-		// Normalize name.
-		$name = hp\get_array_value( [ 'post_author' => 'author' ], $name, $name );
+			unset( $this->args['post_author'] );
+		}
 
-		return $name;
+		if ( isset( $this->args['post__in'] ) && empty( $this->args['post__in'] ) ) {
+			$this->args['post__in'] = [ 0 ];
+		}
+
+		return $this;
 	}
 }
