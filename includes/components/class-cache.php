@@ -81,6 +81,7 @@ final class Cache {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
 	 * @return mixed
 	 */
 	public function __call( $name, $args ) {
@@ -96,6 +97,8 @@ final class Cache {
 				return call_user_func_array( [ $this, $method ], array_merge( [ $type ], $args ) );
 			}
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**

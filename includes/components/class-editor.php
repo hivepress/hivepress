@@ -108,7 +108,8 @@ final class Editor {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
-	 * @return mixed
+	 * @throws \BadMethodCallException Invalid method.
+	 * @return string
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'render_' ) === 0 ) {
@@ -126,6 +127,8 @@ final class Editor {
 
 			return $output;
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**

@@ -264,6 +264,8 @@ final class Core {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
+	 * @return array
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
@@ -286,16 +288,23 @@ final class Core {
 
 			return $this->objects[ $object_type ];
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**
 	 * Routes properties.
 	 *
 	 * @param string $name Property name.
-	 * @return mixed
+	 * @throws \UnexpectedValueException Invalid property.
+	 * @return object
 	 */
 	public function __get( $name ) {
-		return hp\get_array_value( $this->get_components(), $name );
+		if ( isset( $this->get_components()[ $name ] ) ) {
+			return $this->get_components()[ $name ];
+		}
+
+		throw new \UnexpectedValueException();
 	}
 
 	/**

@@ -149,6 +149,7 @@ final class Admin {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
 	 * @return mixed
 	 */
 	public function __call( $name, $args ) {
@@ -169,12 +170,16 @@ final class Admin {
 				}
 
 				include $template_path;
+
+				return;
 			}
 		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
 
 			// Validate setting.
 			return $this->validate_setting( substr( $name, strlen( 'validate' ) + 1 ), $args[0] );
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**

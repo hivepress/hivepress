@@ -84,6 +84,7 @@ abstract class Model {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
 	 * @return mixed
 	 */
 	final public static function __callStatic( $name, $args ) {
@@ -98,6 +99,8 @@ abstract class Model {
 
 			$model_class = get_parent_class( $model_class );
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**
@@ -153,6 +156,7 @@ abstract class Model {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
 	 * @return mixed
 	 */
 	final public function __call( $name, $args ) {
@@ -177,6 +181,8 @@ abstract class Model {
 
 			return call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**
