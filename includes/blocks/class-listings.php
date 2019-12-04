@@ -159,85 +159,71 @@ class Listings extends Block {
 			$column_width = round( $column_width / $columns );
 		}
 
-		// Get listing query.
-		$query          = $wp_query;
+		// Get listing queries.
+		$regular_query  = $wp_query;
 		$featured_query = null;
 
-		if ( is_single() || ( hp\get_array_value( $query->query_vars, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
+		if ( is_single() || ( hp\get_array_value( $regular_query->query_vars, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
 
-			// Set query arguments.
-			$query_args = [
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'posts_per_page' => absint( $this->number ),
-				'no_found_rows'  => true,
-			];
+			// Set query.
+			$query = Models\Listing::filter( [ 'status' => 'publish' ] )->limit( $this->number );
 
-			// Get category.
+			// Set category.
 			if ( $this->category ) {
-				$query_args['tax_query'] = [
-					[
-						'taxonomy' => 'hp_listing_category',
-						'terms'    => [ absint( $this->category ) ],
-					],
-				];
+				$query->filter( [ 'category' => $this->category ] );
 			}
 
-			// Get order.
+			// Set order.
+			$query->order( [ 'date' => 'desc' ] );
+
 			if ( 'title' === $this->order ) {
-				$query_args['orderby'] = 'title';
-				$query_args['order']   = 'ASC';
+				$query->order( [ 'title' => 'asc' ] );
 			} elseif ( 'random' === $this->order ) {
-				$query_args['orderby'] = 'rand';
+				$query->order( 'random' );
 			}
 
 			// Get featured.
 			if ( $this->featured ) {
-				$query_args['meta_key']   = 'hp_featured';
-				$query_args['meta_value'] = '1';
+				$query->filter( [ 'featured' => true ] );
 			}
 
 			// Get cached IDs.
 			$listing_ids = null;
 
 			if ( 'random' !== $this->order ) {
-				$listing_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
+				$listing_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing' );
 
 				if ( is_array( $listing_ids ) ) {
-					$query_args = [
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'post__in'       => array_merge( [ 0 ], $listing_ids ),
-						'posts_per_page' => count( $listing_ids ),
-						'orderby'        => 'post__in',
-						'no_found_rows'  => true,
-					];
+					$query = Models\Listing::filter(
+						[
+							'status' => 'publish',
+							'id__in' => $listing_ids,
+						]
+					)->order( 'id__in' )->limit( count( $listing_ids ) );
 				}
 			}
-
+			// todo remove.
+error_log(print_r($query->get_args(), true));
 			// Query listings.
-			$query = new \WP_Query( $query_args );
+			$regular_query = new \WP_Query( $query->get_args() );
 
 			// Cache IDs.
-			if ( 'random' !== $this->order && is_null( $listing_ids ) && $query->post_count <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $query->posts, 'ID' ) );
+			if ( 'random' !== $this->order && is_null( $listing_ids ) && $regular_query->post_count <= 1000 ) {
+				hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing', wp_list_pluck( $regular_query->posts, 'ID' ) );
 			}
 		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
 
 			// Query featured listings.
 			$featured_query = new \WP_Query(
-				[
-					'post_type'      => 'any',
-					'post_status'    => 'any',
-					'post__in'       => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
-					'posts_per_page' => absint( get_option( 'hp_listings_featured_per_page' ) ),
-					'orderby'        => 'rand',
-					'no_found_rows'  => true,
-				]
+				Models\Listing::filter(
+					[
+						'id__in' => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
+					]
+				)->order( 'random' )->limit( get_option( 'hp_listings_featured_per_page' ) )->get_args()
 			);
 		}
 
-		if ( $query->have_posts() ) {
+		if ( $regular_query->have_posts() ) {
 			if ( 'edit' === $this->template ) {
 				$output .= '<table class="hp-table">';
 			} else {
@@ -272,9 +258,9 @@ class Listings extends Block {
 				}
 			}
 
-			// Render listings.
-			while ( $query->have_posts() ) {
-				$query->the_post();
+			// Render regular listings.
+			while ( $regular_query->have_posts() ) {
+				$regular_query->the_post();
 
 				// Get listing.
 				$listing = Models\Listing::get_by_id( get_the_ID() );
