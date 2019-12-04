@@ -66,6 +66,25 @@ class Term extends Query {
 	}
 
 	/**
+	 * Sets object order.
+	 *
+	 * @param array $criteria Order criteria.
+	 * @return object
+	 */
+	public function order( $criteria ) {
+		parent::order( $criteria );
+
+		$args = hp\get_array_value( $this->args, $this->get_alias( 'order' ) );
+
+		if ( is_array( $args ) && ! empty( $args ) ) {
+			$this->args[ $this->get_alias( 'order' ) ] = array_keys( $args )[0];
+			$this->args['order']                       = reset( $args );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Offsets the number of pages.
 	 *
 	 * @param int $number Page number.

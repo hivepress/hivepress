@@ -49,35 +49,50 @@ class Listing extends Post {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
-					'title'       => [
+				'fields'    => [
+					'title'         => [
 						'label'      => esc_html__( 'Title', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 128,
 						'required'   => true,
 					],
 
-					'description' => [
+					'description'   => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'required'   => true,
 					],
 
-					'status'      => [
+					'status'        => [
 						'type'       => 'text',
 						'max_length' => 128,
 					],
 
-					'featured'    => [
+					'date_created'  => [
+						'type' => 'date',
+					],
+
+					'date_modified' => [
+						'type' => 'date',
+					],
+
+					'category'      => [
+						'type'     => 'select',
+						'options'  => 'terms',
+						'taxonomy' => 'hp_listing_category',
+						'multiple' => true,
+					],
+
+					'featured'      => [
 						'type' => 'checkbox',
 					],
 
-					'verified'    => [
+					'verified'      => [
 						'type' => 'checkbox',
 					],
 
-					'image_ids'   => [
+					'image_ids'     => [
 						'label'        => esc_html__( 'Images', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Images', 'hivepress' ),
 						'type'         => 'attachment_upload',
@@ -86,25 +101,31 @@ class Listing extends Post {
 						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
 					],
 
-					'user_id'     => [
+					'user_id'       => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
 					],
 
-					'vendor_id'   => [
+					'vendor_id'     => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
 					],
 				],
 
-				'aliases' => [
-					'post_title'   => 'title',
-					'post_content' => 'description',
-					'post_status'  => 'status',
-					'post_author'  => 'user_id',
-					'post_parent'  => 'vendor_id',
+				'aliases'   => [
+					'post_title'    => 'title',
+					'post_content'  => 'description',
+					'post_status'   => 'status',
+					'post_date'     => 'date_created',
+					'post_modified' => 'date_modified',
+					'post_author'   => 'user_id',
+					'post_parent'   => 'vendor_id',
+				],
+
+				'relations' => [
+					'listing_category' => 'category',
 				],
 			],
 			$args

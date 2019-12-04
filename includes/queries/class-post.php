@@ -115,7 +115,7 @@ class Post extends Query {
 
 				// Set term clause.
 				$clause = [
-					'taxonomy' => hp\prefix( array_search( $name, $this->get_model_aliases(), true ) ),
+					'taxonomy' => hp\prefix( array_search( $name, $this->get_model_relations(), true ) ),
 					'operator' => $operator,
 				];
 
