@@ -158,45 +158,55 @@ class Listing_Categories extends Block {
 			$column_width = round( $column_width / $columns );
 		}
 
-		// Set query arguments.
-		$query_args = [
-			'taxonomy'   => 'hp_listing_category',
-			'hide_empty' => false,
-			'number'     => absint( $this->number ),
-			'parent'     => absint( $this->parent ),
-		];
+		// Set query.
+		$query = Models\Listing_Category::limit( $this->number );
 
-		// Get order.
+		// Set parent.
+		if ( $this->parent ) {
+			$query->filter( [ 'parent_id' => $this->parent ] );
+		}
+
+		// Set order.
 		if ( 'name' === $this->order ) {
-			$query_args['orderby'] = 'name';
+			$query->order( [ 'name' => 'asc' ] );
 		} elseif ( 'count' === $this->order ) {
-			$query_args['orderby'] = 'count';
-			$query_args['order']   = 'DESC';
+			$query->order( [ 'listing_count' => 'desc' ] );
 		} else {
-			$query_args['orderby']  = 'meta_value_num';
-			$query_args['order']    = 'ASC';
-			$query_args['meta_key'] = 'hp_order';
+			$query->set_args(
+				[
+					'meta_key' => 'hp_order',
+					'orderby'  => 'meta_value_num',
+					'order'    => 'ASC',
+				]
+			);
 		}
 
 		// Get cached IDs.
-		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category' );
+		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing_category' );
 
 		if ( is_array( $listing_category_ids ) ) {
-			$query_args = [
-				'taxonomy'   => 'hp_listing_category',
-				'include'    => array_merge( [ 0 ], $listing_category_ids ),
-				'number'     => count( $listing_category_ids ),
-				'hide_empty' => false,
-				'orderby'    => 'include',
-			];
+			$query = Models\Listing_Category::filter(
+				[
+					'id__in' => $listing_category_ids,
+				]
+			)->order( 'id__in' )->limit( count( $listing_category_ids ) );
 		}
 
 		// Query categories.
-		$categories = get_terms( $query_args );
+		$categories = $query->get_all();
 
 		// Cache IDs.
-		if ( is_null( $listing_category_ids ) && count( $categories ) <= 1000 ) {
-			hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'term/listing_category', wp_list_pluck( $categories, 'term_id' ) );
+		if ( is_null( $listing_category_ids ) && $categories->count() <= 1000 ) {
+			hivepress()->cache->set_cache(
+				array_merge( $query->get_args(), [ 'fields' => 'ids' ] ),
+				'listing_category',
+				array_map(
+					function( $category ) {
+						return $category->get_id();
+					},
+					$categories->getArrayCopy()
+				)
+			);
 		}
 
 		// Render categories.
@@ -204,26 +214,20 @@ class Listing_Categories extends Block {
 			$output  = '<div class="hp-grid hp-block">';
 			$output .= '<div class="hp-row">';
 
-			foreach ( $categories as $category_args ) {
+			foreach ( $categories as $category ) {
+				$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 
-				// Get category.
-				$category = Models\Listing_Category::get_by_id( $category_args->term_id );
+				$output .= ( new Template(
+					[
+						'template' => 'listing_category_' . $this->template . '_block',
 
-				if ( ! is_null( $category ) ) {
-					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+						'context'  => [
+							'listing_category' => $category,
+						],
+					]
+				) )->render();
 
-					$output .= ( new Template(
-						[
-							'template' => 'listing_category_' . $this->template . '_block',
-
-							'context'  => [
-								'listing_category' => $category,
-							],
-						]
-					) )->render();
-
-					$output .= '</div>';
-				}
+				$output .= '</div>';
 			}
 
 			$output .= '</div>';

@@ -174,7 +174,7 @@ class Listings extends Block {
 			}
 
 			// Set order.
-			$query->order( [ 'date' => 'desc' ] );
+			$query->order( [ 'date_created' => 'desc' ] );
 
 			if ( 'title' === $this->order ) {
 				$query->order( [ 'title' => 'asc' ] );
@@ -202,8 +202,7 @@ class Listings extends Block {
 					)->order( 'id__in' )->limit( count( $listing_ids ) );
 				}
 			}
-			// todo remove.
-error_log(print_r($query->get_args(), true));
+
 			// Query listings.
 			$regular_query = new \WP_Query( $query->get_args() );
 
