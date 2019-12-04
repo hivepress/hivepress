@@ -105,8 +105,6 @@ function search_array_value( $array, $keys ) {
 			break;
 		}
 	}
-
-	return;
 }
 
 /**

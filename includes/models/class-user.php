@@ -150,8 +150,6 @@ class User extends Model {
 
 			return $instance;
 		}
-
-		return;
 	}
 
 	/**
