@@ -27,6 +27,20 @@ class Textarea extends Text {
 	protected static $title;
 
 	/**
+	 * Field settings.
+	 *
+	 * @var array
+	 */
+	protected static $settings = [];
+
+	/**
+	 * Editor property.
+	 *
+	 * @var mixed
+	 */
+	protected $editor = false;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $args Field arguments.
@@ -34,7 +48,16 @@ class Textarea extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Textarea', 'hivepress' ),
+				'title'    => esc_html__( 'Textarea', 'hivepress' ),
+
+				'settings' => [
+					'editor' => [
+						'label'   => 'todo',
+						'caption' => 'todo',
+						'type'    => 'checkbox',
+						'order'   => 40,
+					],
+				],
 			],
 			$args
 		);
@@ -71,6 +94,31 @@ class Textarea extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( $this->value ) . '</textarea>';
+		$output = '';
+
+		if ( $this->editor ) {
+			ob_start();
+
+			// Render editor.
+			wp_editor(
+				$this->value,
+				$this->name,
+				[
+					'textarea_rows' => 5,
+					'media_buttons' => false,
+					'quicktags'     => false,
+					'tinymce'       => $this->editor,
+				]
+			);
+
+			$output .= ob_get_contents();
+			ob_end_clean();
+		} else {
+
+			// Render textarea.
+			$output .= '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( $this->value ) . '</textarea>';
+		}
+
+		return $output;
 	}
 }

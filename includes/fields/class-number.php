@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Number extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -69,6 +76,7 @@ class Number extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'type'     => 'NUMERIC',
 				'title'    => esc_html__( 'Number', 'hivepress' ),
 
 				'settings' => [
@@ -170,15 +178,6 @@ class Number extends Field {
 	}
 
 	/**
-	 * Adds field filters.
-	 */
-	protected function add_filters() {
-		parent::add_filters();
-
-		$this->filters['type'] = 'NUMERIC';
-	}
-
-	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
@@ -225,6 +224,6 @@ class Number extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

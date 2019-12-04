@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Checkbox extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -55,6 +62,7 @@ class Checkbox extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'type'     => 'CHAR',
 				'title'    => esc_html__( 'Checkbox', 'hivepress' ),
 
 				'settings' => [
@@ -126,15 +134,6 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Adds field filters.
-	 */
-	protected function add_filters() {
-		parent::add_filters();
-
-		$this->filters['type'] = 'CHAR';
-	}
-
-	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
@@ -155,7 +154,7 @@ class Checkbox extends Field {
 
 		unset( $this->attributes['class'] );
 
-		$output .= '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		$output .= '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

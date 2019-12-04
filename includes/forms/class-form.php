@@ -412,8 +412,8 @@ abstract class Form {
 		$output .= '<div class="hp-form__fields">';
 
 		foreach ( static::$fields as $field ) {
-			if ( $field::get_type() !== 'hidden' ) {
-				$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_type() ) ) . '">';
+			if ( $field::get_display_type() !== 'hidden' ) {
+				$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_display_type() ) ) . '">';
 
 				// Render label.
 				if ( $field->get_label() ) {
@@ -430,7 +430,7 @@ abstract class Form {
 			// Render field.
 			$output .= $field->render();
 
-			if ( $field::get_type() !== 'hidden' ) {
+			if ( $field::get_display_type() !== 'hidden' ) {
 				$output .= '</div>';
 			}
 		}

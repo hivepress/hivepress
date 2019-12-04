@@ -22,6 +22,13 @@ abstract class Field {
 	use Traits\Mutator;
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -138,12 +145,14 @@ abstract class Field {
 		 * @description Filters field arguments.
 		 * @param array $args Field arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::get_type() ] ) );
+		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::get_display_type() ] ) );
 
 		// Set arguments.
 		$this->args = $args;
 
 		// Set properties.
+		unset( $args['type'] );
+
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
@@ -161,7 +170,7 @@ abstract class Field {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::get_type() ) ],
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::get_display_type() ) ],
 			]
 		);
 
@@ -189,6 +198,15 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_type() {
+		return static::$type;
+	}
+
+	/**
+	 * Gets field display type.
+	 *
+	 * @return string
+	 */
+	final public static function get_display_type() {
 		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
 	}
 
@@ -306,6 +324,10 @@ abstract class Field {
 			'value'    => $this->value,
 			'operator' => '=',
 		];
+
+		if ( static::get_type() ) {
+			$this->filters['type'] = static::get_type();
+		}
 	}
 
 	/**

@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Date extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -76,6 +83,7 @@ class Date extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'type'     => 'DATE',
 				'title'    => esc_html__( 'Date', 'hivepress' ),
 
 				'settings' => [
@@ -176,15 +184,6 @@ class Date extends Field {
 		}
 
 		return $this->value;
-	}
-
-	/**
-	 * Adds field filters.
-	 */
-	protected function add_filters() {
-		parent::add_filters();
-
-		$this->filters['type'] = 'DATE';
 	}
 
 	/**

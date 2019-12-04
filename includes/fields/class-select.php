@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -62,6 +69,7 @@ class Select extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'type'     => 'CHAR',
 				'title'    => esc_html__( 'Select', 'hivepress' ),
 
 				'settings' => [
@@ -159,8 +167,7 @@ class Select extends Field {
 	protected function add_filters() {
 		parent::add_filters();
 
-		$this->filters['type'] = 'CHAR';
-
+		// todo enforces taxonomy.
 		if ( $this->multiple ) {
 			$this->filters['operator'] = 'AND';
 		} else {
