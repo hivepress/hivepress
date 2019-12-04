@@ -436,7 +436,7 @@ class Listing extends Controller {
 		];
 
 		// Get cached IDs.
-		$listing_ids = hivepress()->cache->get_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
+		$listing_ids = hivepress()->cache->get_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'listing' );
 
 		if ( is_array( $listing_ids ) ) {
 			$query_args = [
@@ -456,7 +456,7 @@ class Listing extends Controller {
 
 		// Cache IDs.
 		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
-			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
+			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
 		}
 
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();

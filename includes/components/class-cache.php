@@ -524,11 +524,11 @@ final class Cache {
 		$post = get_post( $post_id );
 
 		// Delete transient cache.
-		$this->delete_cache( null, 'post/' . hp\unprefix( $post->post_type ) );
+		$this->delete_cache( null, hp\unprefix( $post->post_type ) );
 
 		// Delete meta cache.
 		if ( ! empty( $post->post_author ) ) {
-			$this->delete_user_cache( $post->post_author, null, 'post/' . hp\unprefix( $post->post_type ) );
+			$this->delete_user_cache( $post->post_author, null, hp\unprefix( $post->post_type ) );
 		}
 	}
 
@@ -559,12 +559,12 @@ final class Cache {
 
 				// Delete meta cache.
 				if ( false !== $term ) {
-					$this->delete_term_cache( $term->term_id, null, 'post/' . hp\unprefix( get_post_type( $post_id ) ) );
+					$this->delete_term_cache( $term->term_id, null, hp\unprefix( get_post_type( $post_id ) ) );
 				}
 			}
 
 			// Delete meta cache.
-			$this->delete_post_cache( $post_id, null, 'term/' . hp\unprefix( $taxonomy ) );
+			$this->delete_post_cache( $post_id, null, hp\unprefix( $taxonomy ) );
 		}
 	}
 
@@ -584,7 +584,7 @@ final class Cache {
 		$term = get_term( $term_id );
 
 		// Delete transient cache.
-		$this->delete_cache( null, 'term/' . hp\unprefix( $term->taxonomy ) );
+		$this->delete_cache( null, hp\unprefix( $term->taxonomy ) );
 	}
 
 	/**
@@ -603,15 +603,15 @@ final class Cache {
 		$comment = get_comment( $comment_id );
 
 		// Delete transient cache.
-		$this->delete_cache( null, 'comment/' . hp\unprefix( $comment->comment_type ) );
+		$this->delete_cache( null, hp\unprefix( $comment->comment_type ) );
 
 		// Delete meta cache.
 		if ( ! empty( $comment->user_id ) ) {
-			$this->delete_user_cache( $comment->user_id, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
+			$this->delete_user_cache( $comment->user_id, null, hp\unprefix( $comment->comment_type ) );
 		}
 
 		if ( ! empty( $comment->comment_post_ID ) ) {
-			$this->delete_post_cache( $comment->comment_post_ID, null, 'comment/' . hp\unprefix( $comment->comment_type ) );
+			$this->delete_post_cache( $comment->comment_post_ID, null, hp\unprefix( $comment->comment_type ) );
 		}
 	}
 }

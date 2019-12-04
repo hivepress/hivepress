@@ -75,13 +75,13 @@ abstract class Post extends Model {
 					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
 				} else {
 					$taxonomy = hp\prefix( array_search( $field_name, static::$relations, true ) );
-					$term_ids = hivepress()->cache->get_post_cache( $data['ID'], [ 'fields' => 'ids' ], 'term/' . hp\unprefix( $taxonomy ) );
+					$term_ids = hivepress()->cache->get_post_cache( $data['ID'], [ 'fields' => 'ids' ], hp\unprefix( $taxonomy ) );
 
 					if ( is_null( $term_ids ) ) {
 						$term_ids = wp_get_post_terms( $data['ID'], $taxonomy, [ 'fields' => 'ids' ] );
 
 						if ( is_array( $term_ids ) && count( $term_ids ) <= 100 ) {
-							hivepress()->cache->set_post_cache( $data['ID'], [ 'fields' => 'ids' ], 'term/' . hp\unprefix( $taxonomy ), $term_ids );
+							hivepress()->cache->set_post_cache( $data['ID'], [ 'fields' => 'ids' ], hp\unprefix( $taxonomy ), $term_ids );
 						}
 					}
 
@@ -97,8 +97,6 @@ abstract class Post extends Model {
 
 			return $instance;
 		}
-
-		return;
 	}
 
 	/**

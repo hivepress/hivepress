@@ -75,14 +75,14 @@ final class Form {
 						];
 
 						if ( substr( $args['post_type'], 0, 3 ) === 'hp_' ) {
-							$titles = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), 'post/' . hp\unprefix( $args['post_type'] ) );
+							$titles = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ) );
 						}
 
 						if ( is_null( $titles ) ) {
 							$titles = wp_list_pluck( get_posts( $query_args ), 'post_title', 'ID' );
 
 							if ( substr( $args['post_type'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
-								hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), 'post/' . hp\unprefix( $args['post_type'] ), $titles );
+								hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ), $titles );
 							}
 						}
 
@@ -103,14 +103,14 @@ final class Form {
 						];
 
 						if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' ) {
-							$names = hivepress()->cache->get_cache( $query_args, 'term/' . hp\unprefix( $args['taxonomy'] ) );
+							$names = hivepress()->cache->get_cache( $query_args, hp\unprefix( $args['taxonomy'] ) );
 						}
 
 						if ( is_null( $names ) ) {
 							$names = get_terms( $query_args );
 
 							if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' && count( $names ) <= 1000 ) {
-								hivepress()->cache->set_cache( $query_args, 'term/' . hp\unprefix( $args['taxonomy'] ), $names );
+								hivepress()->cache->set_cache( $query_args, hp\unprefix( $args['taxonomy'] ), $names );
 							}
 						}
 
