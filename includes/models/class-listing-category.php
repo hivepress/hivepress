@@ -42,20 +42,30 @@ class Listing_Category extends Term {
 		$args = hp\merge_arrays(
 			[
 				'fields'  => [
-					'name'        => [
+					'name'          => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 128,
 						'required'   => true,
 					],
 
-					'description' => [
+					'description'   => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 					],
 
-					'image_id'    => [
+					'listing_count' => [
+						'type'      => 'number',
+						'min_value' => 0,
+					],
+
+					'image_id'      => [
+						'type'      => 'number',
+						'min_value' => 1,
+					],
+
+					'parent_id'     => [
 						'type'      => 'number',
 						'min_value' => 1,
 					],
@@ -64,6 +74,8 @@ class Listing_Category extends Term {
 				'aliases' => [
 					'name'        => 'name',
 					'description' => 'description',
+					'count'       => 'listing_count',
+					'parent'      => 'parent_id',
 				],
 			],
 			$args
@@ -95,16 +107,14 @@ class Listing_Category extends Term {
 				return reset( $urls );
 			}
 		}
-
-		return;
 	}
 
 	/**
-	 * Gets count.
+	 * Gets listing count.
 	 *
 	 * @return int
 	 */
-	final public function get_count() {
+	final public function get_listing_count() {
 
 		// Set query arguments.
 		$query_args = [
@@ -112,7 +122,7 @@ class Listing_Category extends Term {
 		];
 
 		// Get cached count.
-		$count = hivepress()->cache->get_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing' );
+		$count = hivepress()->cache->get_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'listing' );
 
 		if ( is_null( $count ) ) {
 
@@ -137,7 +147,7 @@ class Listing_Category extends Term {
 			);
 
 			// Cache count.
-			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing', $count );
+			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'listing', $count );
 		}
 
 		return absint( $count );
