@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Text extends Field {
 
 	/**
+	 * Field type.
+	 *
+	 * @var string
+	 */
+	protected static $type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -69,6 +76,7 @@ class Text extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'type'     => 'CHAR',
 				'title'    => esc_html__( 'Text', 'hivepress' ),
 
 				'settings' => [
@@ -152,7 +160,6 @@ class Text extends Field {
 	protected function add_filters() {
 		parent::add_filters();
 
-		$this->filters['type']     = 'CHAR';
 		$this->filters['operator'] = 'LIKE';
 	}
 
@@ -205,6 +212,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }
