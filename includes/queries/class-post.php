@@ -28,6 +28,8 @@ class Post extends Query {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
+					'limit'  => 'posts_per_page',
+
 					'filter' => [
 						'aliases' => [
 							'id__in'     => 'post__in',
@@ -47,7 +49,9 @@ class Post extends Query {
 				'args'    => [
 					'post_status'         => 'any',
 					'posts_per_page'      => -1,
+					'orderby'             => [ 'ID' => 'ASC' ],
 					'ignore_sticky_posts' => true,
+					'no_found_rows'       => true,
 				],
 			],
 			$args
@@ -67,8 +71,69 @@ class Post extends Query {
 		parent::bootstrap();
 	}
 
-	final protected function get_objects( $args ) {
-		return get_posts( $this->args );
+	/**
+	 * Sets object filters.
+	 *
+	 * @param array $criteria Filter criteria.
+	 * @return object
+	 */
+	public function filter( $criteria ) {
+		parent::filter( $criteria );
+
+		// Set IDs.
+		if ( isset( $this->args['post__in'] ) && empty( $this->args['post__in'] ) ) {
+			$this->args['post__in'] = [ 0 ];
+		}
+
+		// Set author.
+		if ( isset( $this->args['post_author'] ) ) {
+			$this->args['author'] = $this->args['post_author'];
+
+			unset( $this->args['post_author'] );
+		}
+
+		// Set term filters.
+		foreach ( $criteria as $name => $value ) {
+
+			// Normalize name.
+			$name = strtolower( $name );
+
+			// Get operator.
+			$operator = '=';
+
+			if ( strpos( $name, '__' ) !== false ) {
+				list($name, $operator) = explode( '__', $name );
+
+				$operator = $this->get_operator( $operator );
+			}
+
+			if ( '=' === $operator ) {
+				$operator = 'AND';
+			}
+
+			if ( in_array( $name, $this->get_model_relations(), true ) && in_array( $operator, [ 'AND', 'IN', 'NOT IN', 'EXISTS', 'NOT EXISTS' ], true ) ) {
+
+				// Set term clause.
+				$clause = [
+					'taxonomy' => hp\prefix( array_search( $name, $this->get_model_aliases(), true ) ),
+					'operator' => $operator,
+				];
+
+				if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ], true ) ) {
+
+					// Set term IDs.
+					$clause['terms'] = array_map( 'absint', (array) $value );
+				}
+
+				// Set term filter.
+				$this->args['tax_query'][] = $clause;
+
+				// Remove meta clause.
+				unset( $this->args['meta_query'][ $name . '_clause' ] );
+			}
+		}
+
+		return $this;
 	}
 
 	/**
@@ -80,44 +145,13 @@ class Post extends Query {
 		return count( $this->get_ids() );
 	}
 
-	public function order( $criteria ) {
-		parent::order($criteria);
-
-		$aliases = [
-			'post_date'   => 'date',
-			'post_author' => 'author',
-		];
-
-		if ( is_array( $args ) ) {
-			$args = array_combine(
-				array_map(
-					function( $name ) use ( $aliases ) {
-						return hp\get_array_value( $aliases, $name, $name );
-					},
-					array_keys( $args )
-				),
-				$args
-			);
-		} else {
-			$args = hp\get_array_value( $aliases, $args, $args );
-		}
-
-		return $args;
-	}
-
-	public function filter( $criteria ) {
-		parent::filter($criteria);
-
-		if ( isset( $this->args['post_author'] ) ) {
-			$this->args['author'] = $this->args['post_author'];
-
-			unset( $this->args['post_author'] );
-		}
-
-		if ( isset( $this->args['post__in'] ) && empty( $this->args['post__in'] ) ) {
-			$this->args['post__in'] = [ 0 ];
-		}
-
-		return $this;
+	/**
+	 * Gets WordPress objects.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	final protected function get_objects( $args ) {
+		return get_posts( $args );
 	}
 }

@@ -20,87 +20,90 @@ defined( 'ABSPATH' ) || exit;
 class Comment extends Query {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'aliases' => [
+					'filter' => [
+						'aliases' => [
+							'id__in'     => 'comment__in',
+							'id__not_in' => 'comment__not_in',
+						],
+					],
+
+					'order'  => [
+						'aliases' => [
+							'id'     => 'comment_ID',
+							'id__in' => 'comment__in',
+						],
+					],
+				],
+
+				'args'    => [
+					'orderby' => [ 'comment_ID' => 'ASC' ],
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps query properties.
 	 */
 	protected function bootstrap() {
-		$this->args = [
-			'type'    => hp\prefix( $this->model ),
-			'orderby' => 'comment_ID',
-			'order'   => 'ASC',
-		];
+
+		// Set comment type.
+		$this->args['type'] = hp\prefix( $this->model );
 
 		parent::bootstrap();
-	}
-
-	final protected function get_objects( $this->args ) {
-		return get_comments( $this->args );
 	}
 
 	/**
 	 * Sets object filters.
 	 *
-	 * @param array $args Filter arguments.
+	 * @param array $criteria Filter criteria.
 	 * @return object
 	 */
-	final public function filter( $args ) {
-		foreach ( $args as $name => $value ) {
+	final public function filter( $criteria ) {
+		parent::filter( $criteria );
 
-			// Get operator.
-			$operator = '=';
+		// Remove prefixes.
+		$this->args = array_combine(
+			array_map(
+				function( $name ) {
+					$operator = '';
 
-			$name = strtolower( $name );
+					if ( strpos( $name, '__' ) !== false ) {
+						list($name, $operator) = explode( '__', $name );
+					}
 
-			if ( strpos( $name, '__' ) !== false ) {
-				list($name, $operator) = explode( '__', $name );
+					if ( in_array( $name, $this->get_model_aliases(), true ) ) {
+						$name = preg_replace( '/^comment_/', '', $name );
+					}
 
-				$operator = $this->get_operator( $operator );
-			}
-
-			if ( 'id' === $name ) {
-				if ( 'IN' === $operator ) {
-					$this->args['comment__in'] = $value;
-				} elseif ( 'NOT IN' === $operator ) {
-					$this->args['comment__not_in'] = $value;
-				}
-			} else {
-				// todo.
-			}
-		}
+					return rtrim( $name . '__' . $operator, '_' );
+				},
+				array_keys( $this->args )
+			),
+			$this->args
+		);
 
 		return $this;
 	}
 
 	/**
-	 * Sets object order.
+	 * Gets WordPress objects.
 	 *
-	 * @param array $args Order arguments.
-	 * @return object
-	 */
-	final public function order( $args ) {
-		// todo.
-		return $this;
-	}
-
-	/**
-	 * Gets all objects.
-	 *
+	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	final public function get_all() {
-		return array_map(
-			function( $user ) {
-				return $this->get_model_by_id( $comment->comment_ID );
-			},
-			$this->get_objects( $this->args )
-		);
-	}
-
-	/**
-	 * Deletes objects.
-	 */
-	final public function delete() {
-		foreach ( $this->get_ids() as $id ) {
-			wp_delete_comment( $id, true );
-		}
+	final protected function get_objects( $args ) {
+		return get_comments( $args );
 	}
 }

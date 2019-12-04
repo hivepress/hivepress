@@ -49,15 +49,15 @@ abstract class Query extends \ArrayObject {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Set defaults.
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
-					'limit'    => 'number',
-					'offset'   => 'offset',
-					'paginate' => 'paged',
-					'count'    => 'count',
+					'limit'     => 'number',
+					'offset'    => 'offset',
+					'paginate'  => 'paged',
 
-					'select'   => [
+					'select'    => [
 						'name'    => 'fields',
 
 						'aliases' => [
@@ -65,8 +65,20 @@ abstract class Query extends \ArrayObject {
 						],
 					],
 
-					'order'    => [
-						'name' => 'order',
+					'aggregate' => [
+						'name'    => 'aggregate',
+
+						'aliases' => [
+							'count' => 'count',
+						],
+					],
+
+					'filter'    => [
+						'name' => 'filter',
+					],
+
+					'order'     => [
+						'name' => 'orderby',
 					],
 				],
 			],
@@ -115,10 +127,10 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Gets query argument alias.
+	 * Gets query alias.
 	 *
 	 * @param string $path Alias path.
-	 * @return string
+	 * @return mixed
 	 */
 	final protected function get_alias( $path ) {
 		$alias = [ 'aliases' => $this->aliases ];
@@ -128,7 +140,7 @@ abstract class Query extends \ArrayObject {
 			if ( isset( $alias['aliases'][ $part ] ) ) {
 				$alias = $alias['aliases'][ $part ];
 			} else {
-				return null;
+				return;
 			}
 		}
 
@@ -189,12 +201,123 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Gets todo objects.
+	 * Sets object filters.
 	 *
-	 * @param array $args Query arguments.
-	 * @return array
+	 * @param array $criteria Filter criteria.
+	 * @return object
 	 */
-	abstract protected function get_objects( $args );
+	public function filter( $criteria ) {
+		foreach ( $criteria as $name => $value ) {
+
+			// Normalize name.
+			$name = strtolower( $name );
+
+			if ( $this->get_alias( 'filter/' . $name ) ) {
+
+				// Set query filter.
+				$this->args[ $this->get_alias( 'filter/' . $name ) ] = $value;
+			} else {
+
+				// Get operator alias.
+				$operator_alias = '';
+
+				if ( strpos( $name, '__' ) !== false ) {
+					list($name, $operator_alias) = explode( '__', $name );
+				}
+
+				if ( in_array( $name, $this->get_model_aliases(), true ) ) {
+
+					// Normalize operator alias.
+					if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
+						$operator_alias = '';
+					}
+
+					// Set alias filter.
+					$this->args[ rtrim( array_search( $name, $this->get_model_aliases(), true ) . '__' . $operator_alias, '_' ) ] = $value;
+				} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+
+					// Get field.
+					$field = $this->get_model_fields()[ $name ];
+
+					// Get operator.
+					$operator = $this->get_operator( $operator_alias );
+
+					// Set meta clause.
+					$clause = [
+						'key'     => hp\prefix( $name ),
+						'compare' => $operator,
+					];
+
+					if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ], true ) ) {
+
+						// Normalize meta value.
+						if ( is_bool( $value ) ) {
+							$value = $value ? '1' : '0';
+						}
+
+						// Set meta type and value.
+						$clause = array_merge(
+							$clause,
+							[
+								'type'  => $field::get_type(),
+								'value' => $value,
+							]
+						);
+					}
+
+					// Set meta filter.
+					$this->args['meta_query'][ $name . '_clause' ] = $clause;
+				}
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets object order.
+	 *
+	 * @param array $criteria Order criteria.
+	 * @return object
+	 */
+	public function order( $criteria ) {
+		$args = [];
+
+		if ( is_array( $criteria ) ) {
+			foreach ( $criteria as $name => $order ) {
+
+				// Normalize order.
+				$order = strtoupper( $order );
+
+				if ( in_array( $order, [ 'ASC', 'DESC' ], true ) ) {
+					if ( $this->get_alias( 'order/' . $name ) ) {
+
+						// Set query order.
+						$args[ $this->get_alias( 'order/' . $name ) ] = $order;
+					} elseif ( in_array( $name, $this->get_model_aliases(), true ) ) {
+
+						// Set alias order.
+						$args[ array_search( $name, $this->get_model_aliases(), true ) ] = $order;
+					} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+
+						// Set meta order.
+						$args[ $name . '_clause' ] = $order;
+					}
+				}
+			}
+		} elseif ( $this->get_alias( 'order/' . $criteria ) ) {
+
+			// Set query order.
+			$args = $this->get_alias( 'order/' . $criteria );
+		}
+
+		// Set order arguments.
+		if ( ! empty( $args ) ) {
+			$this->args[ $this->get_alias( 'order' ) ] = $args;
+		}
+
+		return $this;
+	}
 
 	/**
 	 * Limits the number of objects.
@@ -233,6 +356,14 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
+	 * Gets WordPress objects.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	abstract protected function get_objects( $args );
+
+	/**
 	 * Gets all objects.
 	 *
 	 * @return object
@@ -253,14 +384,10 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets object IDs.
 	 *
-	 * @return object
+	 * @return array
 	 */
-	final public function get_ids() {
-		$this->args[ $this->get_alias( 'select' ) ] = $this->get_alias( 'select/id' );
-
-		$this->exchangeArray( $this->get_objects( $this->args ) );
-
-		return $this;
+	public function get_ids() {
+		return array_map( 'absint', $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'select' ) => $this->get_alias( 'select/id' ) ] ) ) );
 	}
 
 	/**
@@ -269,7 +396,9 @@ abstract class Query extends \ArrayObject {
 	 * @return mixed
 	 */
 	final public function get_first() {
-		return hp\get_array_value( $this->limit( 1 )->get_all(), 0 );
+		$query = clone $this;
+
+		return hp\get_array_value( $query->limit( 1 )->get_all()->getArrayCopy(), 0 );
 	}
 
 	/**
@@ -278,7 +407,9 @@ abstract class Query extends \ArrayObject {
 	 * @return mixed
 	 */
 	final public function get_first_id() {
-		return hp\get_array_value( $this->limit( 1 )->get_ids(), 0 );
+		$query = clone $this;
+
+		return hp\get_array_value( $query->limit( 1 )->get_ids(), 0 );
 	}
 
 	/**
@@ -287,7 +418,7 @@ abstract class Query extends \ArrayObject {
 	 * @return int
 	 */
 	public function get_count() {
-		return $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'count' ) => true ] ) );
+		return $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'aggregate/count' ) => true ] ) );
 	}
 
 	/**
@@ -297,109 +428,5 @@ abstract class Query extends \ArrayObject {
 		foreach ( $this->get_ids() as $id ) {
 			$this->delete_model_by_id( $id );
 		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**
-	 * Sets object filters.
-	 *
-	 * @param array $criteria Filtering criteria.
-	 * @return object
-	 */
-	public function filter( $criteria ) {
-		foreach ( $criteria as $name => $value ) {
-			if ( $this->get_alias( 'filter/' . $name ) ) {
-				$this->args[ $this->get_alias( 'filter/' . $name ) ] = $value;
-			} else {
-				$operator = '';
-
-				if ( strpos( $name, '__' ) !== false ) {
-					list($name, $operator) = explode( '__', $name );
-				}
-
-				if ( in_array( $name, static::get_model_aliases(), true ) ) {
-					$this->args[ rtrim( array_search( $name, static::get_model_aliases(), true ) . '__' . $operator, '_' ) ] = $value;
-				} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
-					$operator = $this->get_operator( $operator );
-
-					$filter = [
-						'key'     => hp\prefix( $name ),
-						'compare' => $operator,
-					];
-					if ( is_bool( $value ) ) {
-						$value = $value ? '1' : '0';
-					}
-					if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ] ) ) {
-						$filter = array_merge(
-							$filter,
-							[
-								'type'  => 'todo',
-								'value' => $value,
-							]
-						);
-					}
-
-					$this->args['meta_query'][ $name . '_clause' ] = $filter;
-				}
-			}
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Sets object order.
-	 *
-	 * @param array $criteria Ordering criteria.
-	 * @return object
-	 */
-	public function order( $criteria ) {
-		$args = [];
-
-		if ( is_array( $criteria ) ) {
-			$args[ $this->get_alias( 'order' ) ] = [];
-
-			foreach ( $criteria as $name => $order ) {
-				$order = strtoupper( $order );
-
-				if ( in_array( $order, [ 'ASC', 'DESC' ] ) ) {
-					if ( $this->get_alias( 'order/' . $name ) ) {
-						$args[ $this->get_alias( 'order/' . $name ) ] = $order;
-					} elseif ( in_array( $name, static::get_model_aliases(), true ) ) {
-						$args[ array_search( $name, static::get_model_aliases(), true ) ] = $order;
-					} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
-						$args[ $name . '_clause' ] = $order;
-					}
-				}
-			}
-		} elseif ( $this->get_alias( 'order/' . $criteria ) ) {
-			$args = $this->get_alias( 'order/' . $criteria );
-		}
-
-		$this->args[$this->get_alias('order')]=$args;
-
-		return $this;
 	}
 }
