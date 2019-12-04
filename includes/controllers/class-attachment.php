@@ -125,7 +125,7 @@ class Attachment extends Controller {
 		// Get field.
 		$field = hp\get_array_value( $model_class::get_fields(), $request->get_param( 'parent_field' ) );
 
-		if ( is_null( $field ) || $field::get_type() !== 'attachment_upload' ) {
+		if ( is_null( $field ) || $field::get_display_type() !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );
 		}
 
