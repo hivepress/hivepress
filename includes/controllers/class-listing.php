@@ -590,7 +590,7 @@ class Listing extends Controller {
 
 		// Check category.
 		if ( has_term( '', 'hp_listing_category', $listing_id ) ) {
-			return null;
+			return;
 		}
 
 		return false;
@@ -692,7 +692,7 @@ class Listing extends Controller {
 		if ( 'publish' === $status ) {
 			return get_permalink( $listing_id );
 		} else {
-			return null;
+			return;
 		}
 
 		return false;

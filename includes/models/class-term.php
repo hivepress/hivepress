@@ -69,7 +69,7 @@ abstract class Term extends Model {
 			return $instance;
 		}
 
-		return null;
+		return;
 	}
 
 	/**

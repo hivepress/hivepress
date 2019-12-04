@@ -118,13 +118,10 @@ class User extends Model {
 	final public static function get_by_object( $object ) {
 
 		// Get instance data.
-		$data = get_object_vars( $object );
+		$data = get_object_vars( $object->data );
 
 		if ( ! is_null( $data ) ) {
 			$attributes = [];
-
-			// Convert instance data.
-			$data = (array) $data->data;
 
 			// Get instance meta.
 			$meta = array_map(
@@ -154,7 +151,7 @@ class User extends Model {
 			return $instance;
 		}
 
-		return null;
+		return;
 	}
 
 	/**

@@ -152,6 +152,6 @@ abstract class Controller {
 			return home_url( $url );
 		}
 
-		return null;
+		return;
 	}
 }

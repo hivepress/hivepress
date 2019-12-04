@@ -96,7 +96,7 @@ class Listing_Category extends Term {
 			}
 		}
 
-		return null;
+		return;
 	}
 
 	/**

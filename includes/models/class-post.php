@@ -98,7 +98,7 @@ abstract class Post extends Model {
 			return $instance;
 		}
 
-		return null;
+		return;
 	}
 
 	/**

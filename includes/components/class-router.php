@@ -278,7 +278,7 @@ final class Router {
 			return $controller::get_url( $route_name, $query );
 		}
 
-		return null;
+		return;
 	}
 
 	/**

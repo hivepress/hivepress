@@ -69,7 +69,7 @@ abstract class Comment extends Model {
 			return $instance;
 		}
 
-		return null;
+		return;
 	}
 
 	/**
