@@ -70,15 +70,13 @@ final class Listing {
 		$user_id = absint( $listing->post_author );
 
 		// Get vendor ID.
-		$vendor_id = hp\get_post_id(
+		$vendor_id = Models\Vendor::filter(
 			[
-				'post_type'   => 'hp_vendor',
-				'post_status' => 'any',
-				'author'      => $user_id,
+				'user_id' => $user_id,
 			]
-		);
+		)->get_first_id();
 
-		if ( 0 === $vendor_id ) {
+		if ( empty( $vendor_id ) ) {
 
 			// Add vendor.
 			$vendor_id = wp_insert_post(
@@ -112,7 +110,7 @@ final class Listing {
 			}
 		}
 
-		if ( 0 !== $vendor_id && ( 0 === $listing->post_parent || $listing->post_parent !== $vendor_id ) ) {
+		if ( ! empty( $vendor_id ) && ( 0 === $listing->post_parent || $listing->post_parent !== $vendor_id ) ) {
 
 			// Set vendor ID.
 			wp_update_post(
