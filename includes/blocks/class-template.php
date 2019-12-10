@@ -41,14 +41,12 @@ class Template extends Block {
 	public function render() {
 		$output = '';
 
-		// Get template class.
-		$template_class = 'HivePress\Templates\\' . $this->template;
+		// Get blocks.
+		$blocks = hp\call_class_method( '\HivePress\Templates\\' . $this->template, 'get_blocks' );
 
-		if ( class_exists( $template_class ) ) {
+		if ( ! is_null( $blocks ) ) {
 
-			// Get blocks.
-			$blocks = $template_class::get_blocks();
-
+			// Merge blocks.
 			if ( ! empty( $this->blocks ) ) {
 				$blocks = hp\merge_trees( [ 'blocks' => $blocks ], [ 'blocks' => $this->blocks ], 'blocks' );
 				$blocks = reset( $blocks );

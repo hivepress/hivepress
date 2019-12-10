@@ -64,7 +64,7 @@ abstract class Template {
 	 * @return string
 	 */
 	final public static function get_name() {
-		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		return hp\get_class_name( static::class );
 	}
 
 	/**

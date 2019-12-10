@@ -113,16 +113,15 @@ final class Editor {
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'render_' ) === 0 ) {
-
-			// Render block HTML.
 			$output = ' ';
 
-			$block_type  = substr( $name, strlen( 'render' ) + 1 );
-			$block_class = '\HivePress\Blocks\\' . $block_type;
-			$block_args  = reset( $args );
+			// Create block.
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . substr( $name, strlen( 'render_' ) ), [ (array) reset( $args ) ] );
 
-			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( (array) $block_args ) )->render();
+			if ( ! is_null( $block ) ) {
+
+				// Render block.
+				$output .= $block->render();
 			}
 
 			return $output;

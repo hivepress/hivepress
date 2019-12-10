@@ -39,32 +39,20 @@ abstract class Model_Form extends Form {
 	 * @param array $fields Form fields.
 	 */
 	final protected static function set_fields( $fields ) {
-		static::$fields = [];
-
-		// Get model class.
-		$model_class = '\HivePress\Models\\' . static::$model;
 
 		// Get model fields.
-		$model_fields = [];
+		$model_fields = hp\call_class_method( '\HivePress\Models\\' . static::$model, 'get_fields' );
 
-		if ( class_exists( $model_class ) ) {
-			$model_fields = $model_class::get_fields();
-		}
-
-		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
-			if ( isset( $model_fields[ $field_name ] ) ) {
-				$field_args = hp\merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
-			}
-
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-			if ( class_exists( $field_class ) ) {
-
-				// Create field.
-				static::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+		// Merge fields.
+		if ( ! is_null( $model_fields ) ) {
+			foreach ( $fields as $field_name => $field_args ) {
+				if ( isset( $model_fields[ $field_name ] ) ) {
+					$fields[ $field_name ] = hp\merge_arrays( $model_fields[ $field_name ]->get_args(), $field_args );
+				}
 			}
 		}
+
+		parent::set_fields( $fields );
 	}
 
 	/**
@@ -107,14 +95,10 @@ abstract class Model_Form extends Form {
 
 		// Set values.
 		if ( isset( static::$model ) && isset( $this->id ) ) {
-			$model_class = '\HivePress\Models\\' . static::$model;
+			$instance = hp\call_class_method( '\HivePress\Models\\' . static::$model, 'get_by_id', [ $this->id ] );
 
-			if ( class_exists( $model_class ) ) {
-				$instance = $model_class::get_by_id( $this->id );
-
-				if ( ! is_null( $instance ) ) {
-					$this->set_values( $instance->serialize() );
-				}
+			if ( ! is_null( $instance ) ) {
+				$this->set_values( $instance->serialize() );
 			}
 		}
 

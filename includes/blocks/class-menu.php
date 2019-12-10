@@ -41,13 +41,10 @@ class Menu extends Block {
 	public function render() {
 		$output = '';
 
-		// Get menu class.
-		$menu_class = '\HivePress\Menus\\' . $this->menu;
+		// Create menu.
+		$menu = hp\create_class_instance( '\HivePress\Menus\\' . $this->menu, [ [ 'attributes' => $this->attributes ] ] );
 
-		if ( class_exists( $menu_class ) ) {
-
-			// Create menu.
-			$menu = new $menu_class( [ 'attributes' => $this->attributes ] );
+		if ( ! is_null( $menu ) ) {
 
 			// Render menu.
 			$output .= $menu->render();

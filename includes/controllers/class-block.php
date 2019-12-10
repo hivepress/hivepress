@@ -70,15 +70,15 @@ class Block extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get template class.
-		$template_class = 'HivePress\Templates\\' . $request->get_param( 'template' );
+		// Get blocks.
+		$blocks = hp\call_class_method( '\HivePress\Templates\\' . $request->get_param( 'template' ), 'get_blocks' );
 
-		if ( ! class_exists( $template_class ) ) {
+		if ( is_null( $blocks ) ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Get block.
-		$block_args = hp\search_array_value( [ 'blocks' => $template_class::get_blocks() ], [ 'blocks', $request->get_param( 'block' ) ] );
+		$block_args = hp\search_array_value( [ 'blocks' => $blocks ], [ 'blocks', $request->get_param( 'block' ) ] );
 
 		if ( is_null( $block_args ) ) {
 			return hp\rest_error( 404 );
@@ -88,13 +88,13 @@ class Block extends Controller {
 		$data = $block_args;
 
 		if ( $request->get_param( 'render' ) ) {
-			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_args['type'], [ hp\merge_arrays( [ 'context' => $request->get_params() ], $block_args ) ] );
 
-			if ( ! class_exists( $block_class ) ) {
+			if ( is_null( $block ) ) {
 				return hp\rest_error( 400 );
 			}
 
-			$data['html'] = ( new $block_class( hp\merge_arrays( [ 'context' => $request->get_params() ], $block_args ) ) )->render();
+			$data['html'] = $block->render();
 		}
 
 		return new \WP_Rest_Response(

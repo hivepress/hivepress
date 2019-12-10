@@ -62,45 +62,41 @@ class Form extends Block {
 	public function render() {
 		$output = '';
 
-		// Get form class.
-		$form_class = '\HivePress\Forms\\' . $this->form;
+		// Get arguments.
+		$form_args = [];
 
-		if ( class_exists( $form_class ) ) {
-			$form_args = [];
+		// Set instance ID.
+		$form_args['id'] = hp\get_array_value( $this->context, hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_model' ) . '_id' );
 
-			// Set instance ID.
-			if ( method_exists( $form_class, 'get_model' ) ) {
-				$form_args['id'] = hp\get_array_value( $this->context, $form_class::get_model() . '_id' );
-			}
+		// Set attributes.
+		$form_args['attributes'] = $this->attributes;
 
-			// Set attributes.
-			$form_args['attributes'] = $this->attributes;
+		// Render header.
+		if ( ! empty( $this->header ) ) {
+			$form_args['header'] = ( new Container(
+				[
+					'context' => $this->context,
+					'tag'     => false,
+					'blocks'  => $this->header,
+				]
+			) )->render();
+		}
 
-			// Render header.
-			if ( ! empty( $this->header ) ) {
-				$form_args['header'] = ( new Container(
-					[
-						'context' => $this->context,
-						'tag'     => false,
-						'blocks'  => $this->header,
-					]
-				) )->render();
-			}
+		// Render footer.
+		if ( ! empty( $this->footer ) ) {
+			$form_args['footer'] = ( new Container(
+				[
+					'context' => $this->context,
+					'tag'     => false,
+					'blocks'  => $this->footer,
+				]
+			) )->render();
+		}
 
-			// Render footer.
-			if ( ! empty( $this->footer ) ) {
-				$form_args['footer'] = ( new Container(
-					[
-						'context' => $this->context,
-						'tag'     => false,
-						'blocks'  => $this->footer,
-					]
-				) )->render();
-			}
+		// Create form.
+		$form = hp\create_class_instance( '\HivePress\Forms\\' . $this->form, [ $form_args ] );
 
-			// Create form.
-			$form = new $form_class( $form_args );
-
+		if ( ! is_null( $form ) ) {
 			if ( $form::get_method() === 'POST' ) {
 				$form->set_values( array_merge( $this->values, $_POST ) );
 			} elseif ( $form::get_method() === 'GET' ) {

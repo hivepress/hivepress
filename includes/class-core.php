@@ -269,6 +269,8 @@ final class Core {
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
+
+			// Get type.
 			$object_type = substr( $name, strlen( 'get' ) + 1 );
 
 			if ( ! isset( $this->objects[ $object_type ] ) ) {
@@ -276,11 +278,15 @@ final class Core {
 
 				foreach ( $this->dirs as $dir ) {
 					foreach ( glob( $dir . '/includes/' . $object_type . '/*.php' ) as $filepath ) {
-						$object_name  = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
-						$object_class = '\HivePress\\' . $object_type . '\\' . $object_name;
 
-						if ( ! ( new \ReflectionClass( $object_class ) )->isAbstract() ) {
-							$this->objects[ $object_type ][ $object_name ] = new $object_class();
+						// Get name.
+						$object_name = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
+
+						// Create object.
+						$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
+
+						if ( ! is_null( $object ) ) {
+							$this->objects[ $object_type ][ $object_name ] = $object;
 						}
 					}
 				}

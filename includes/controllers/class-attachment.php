@@ -115,15 +115,15 @@ class Attachment extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get model class.
-		$model_class = '\HivePress\Models\\' . $request->get_param( 'parent_model' );
+		// Get fields.
+		$fields = hp\call_class_method( '\HivePress\Models\\' . $request->get_param( 'parent_model' ), 'get_fields' );
 
-		if ( ! class_exists( $model_class ) ) {
+		if ( is_null( $fields ) ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get field.
-		$field = hp\get_array_value( $model_class::get_fields(), $request->get_param( 'parent_field' ) );
+		$field = hp\get_array_value( $fields, $request->get_param( 'parent_field' ) );
 
 		if ( is_null( $field ) || $field::get_display_type() !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );

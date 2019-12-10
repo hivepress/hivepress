@@ -278,13 +278,10 @@ final class Admin {
 			// Get setting name.
 			$setting_name = hp\prefix( $name );
 
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $setting['type'];
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $setting['type'], [ $setting ] );
 
-			if ( class_exists( $field_class ) ) {
-
-				// Create field.
-				$field = new $field_class( $setting );
+			if ( ! is_null( $field ) ) {
 
 				// Validate field.
 				$field->set_value( hp\get_array_value( $_POST, $setting_name ) );
@@ -337,13 +334,10 @@ final class Admin {
 	public function render_settings_field( $args ) {
 		$output = '';
 
-		// Get field class.
-		$field_class = '\HivePress\Fields\\' . $args['type'];
+		// Create field.
+		$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ $args ] );
 
-		if ( class_exists( $field_class ) ) {
-
-			// Create field.
-			$field = new $field_class( $args );
+		if ( ! is_null( $field ) ) {
 
 			// Render field.
 			$output .= $field->render();
@@ -695,13 +689,10 @@ final class Admin {
 
 					foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+						// Create field.
+						$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-						if ( class_exists( $field_class ) ) {
-
-							// Create field.
-							$field = new $field_class( $field_args );
+						if ( ! is_null( $field ) ) {
 
 							// Validate field.
 							$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
@@ -757,56 +748,53 @@ final class Admin {
 
 				if ( 'block' === $field_args['type'] ) {
 
-					// Get block class.
-					$block_class = '\HivePress\Blocks\\' . $field_args['block_type'];
+					// Get block arguments.
+					$block_args = array_filter(
+						$field_args,
+						function( $key ) {
+							return strpos( $key, 'block_' ) === 0;
+						},
+						ARRAY_FILTER_USE_KEY
+					);
 
-					if ( class_exists( $block_class ) ) {
-
-						// Get block arguments.
-						$block_args = array_filter(
-							$field_args,
+					$block_args = array_combine(
+						array_map(
 							function( $key ) {
-								return strpos( $key, 'block_' ) === 0;
+								return preg_replace( '/^block_/', '', $key );
 							},
-							ARRAY_FILTER_USE_KEY
-						);
+							array_keys( $block_args )
+						),
+						$block_args
+					);
 
-						$block_args = array_combine(
-							array_map(
-								function( $key ) {
-									return preg_replace( '/^block_/', '', $key );
-								},
-								array_keys( $block_args )
-							),
-							$block_args
-						);
+					// Create block.
+					$block = hp\create_class_instance( '\HivePress\Blocks\\' . $field_args['block_type'], [ $block_args ] );
+
+					if ( ! is_null( $block ) ) {
 
 						// Set field output.
-						$field_output = ( new $block_class( $block_args ) )->render();
+						$field_output = $block->render();
 					}
 				} else {
 
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Get field arguments.
+					$field_args = array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] );
 
-					if ( class_exists( $field_class ) ) {
+					if ( ! isset( $field_args['label'] ) ) {
+						$field_args = hp\merge_arrays(
+							$field_args,
+							[
+								'attributes' => [
+									'class' => [ 'hp-field--wide' ],
+								],
+							]
+						);
+					}
 
-						// Get field arguments.
-						$field_args = array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] );
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-						if ( ! isset( $field_args['label'] ) ) {
-							$field_args = hp\merge_arrays(
-								$field_args,
-								[
-									'attributes' => [
-										'class' => [ 'hp-field--wide' ],
-									],
-								]
-							);
-						}
-
-						// Create field.
-						$field = new $field_class( $field_args );
+					if ( ! is_null( $field ) ) {
 
 						// Get field value.
 						if ( ! isset( $field_args['alias'] ) ) {
@@ -942,13 +930,10 @@ final class Admin {
 
 					foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
-						// Get field class.
-						$field_class = '\HivePress\Fields\\' . $field_args['type'];
+						// Create field.
+						$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-						if ( class_exists( $field_class ) ) {
-
-							// Create field.
-							$field = new $field_class( $field_args );
+						if ( ! is_null( $field ) ) {
 
 							// Validate field.
 							$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
@@ -1003,14 +988,10 @@ final class Admin {
 
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
 
-					if ( class_exists( $field_class ) ) {
-
-						// Create field.
-						$field = new $field_class( array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) );
-
+					if ( ! is_null( $field ) ) {
 						if ( ! is_object( $term ) ) {
 							$output .= '<div class="form-field">';
 

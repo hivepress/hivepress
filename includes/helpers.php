@@ -383,3 +383,44 @@ function get_current_page() {
 
 	return absint( $page );
 }
+
+/**
+ * Creates class instance.
+ *
+ * @param string $class Class name.
+ * @param array  $args Instance arguments.
+ * @return mixed
+ */
+function create_class_instance( $class, $args = [] ) {
+	if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
+		if ( empty( $args ) ) {
+			return new $class();
+		} else {
+			return new $class( ...$args );
+		}
+	}
+}
+
+/**
+ * Calls class method.
+ *
+ * @param string $class Class name.
+ * @param string $method Method name.
+ * @param array  $args Method arguments.
+ * @return mixed
+ */
+function call_class_method( $class, $method, $args = [] ) {
+	if ( class_exists( $class ) && method_exists( $class, $method ) ) {
+		return call_user_func_array( [ $class, $method ], $args );
+	}
+}
+
+/**
+ * Gets class name.
+ *
+ * @param string $class Class name.
+ * @return string
+ */
+function get_class_name( $class ) {
+	return strtolower( ( new \ReflectionClass( $class ) )->getShortName() );
+}

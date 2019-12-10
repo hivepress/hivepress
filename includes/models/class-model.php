@@ -88,16 +88,16 @@ abstract class Model {
 	 * @return mixed
 	 */
 	final public static function __callStatic( $name, $args ) {
-		$model_class = static::class;
+		$model = static::class;
 
-		while ( false !== $model_class ) {
-			$query_class = str_ireplace( '\models\\', '\queries\\', $model_class );
+		while ( false !== $model ) {
+			$query = hp\create_class_instance( str_ireplace( '\models\\', '\queries\\', $model ), [ [ 'model' => static::get_name() ] ] );
 
-			if ( class_exists( $query_class ) && ! ( new \ReflectionClass( $query_class ) )->isAbstract() ) {
-				return call_user_func_array( [ new $query_class( [ 'model' => static::get_name() ] ), $name ], $args );
+			if ( ! is_null( $query ) ) {
+				return hp\call_class_method( $query, $name, $args );
 			}
 
-			$model_class = get_parent_class( $model_class );
+			$model = get_parent_class( $model );
 		}
 
 		throw new \BadMethodCallException();
@@ -109,7 +109,7 @@ abstract class Model {
 	 * @return string
 	 */
 	final public static function get_name() {
-		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		return hp\get_class_name( static::class );
 	}
 
 	/**
@@ -122,13 +122,11 @@ abstract class Model {
 
 		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => $field_name ] ) ] );
 
-			if ( class_exists( $field_class ) ) {
-
-				// Create field.
-				static::$fields[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			if ( ! is_null( $field ) ) {
+				static::$fields[ $field_name ] = $field;
 			}
 		}
 	}

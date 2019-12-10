@@ -207,7 +207,7 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_display_type() {
-		return strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		return hp\get_class_name( static::class );
 	}
 
 	/**
@@ -229,13 +229,11 @@ abstract class Field {
 
 		foreach ( $settings as $field_name => $field_args ) {
 
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => $field_name ] ) ] );
 
-			if ( class_exists( $field_class ) ) {
-
-				// Create field.
-				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+			if ( ! is_null( $field ) ) {
+				static::$settings[ $field_name ] = $field;
 			}
 		}
 	}

@@ -158,14 +158,14 @@ final class Attribute {
 
 						if ( ! empty( $field_type ) ) {
 
-							// Get field class.
-							$field_class = '\HivePress\Fields\\' . $field_type;
-
 							// Get field settings.
-							if ( class_exists( $field_class ) ) {
+							$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_settings' );
+
+							// Add field settings.
+							if ( ! is_null( $field_settings ) ) {
 								$field_args['type'] = $field_type;
 
-								foreach ( $field_class::get_settings() as $field_name => $field ) {
+								foreach ( $field_settings as $field_name => $field ) {
 									$field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $field_name ), true ) );
 									$field_args[ $field_name ] = $field->get_value();
 								}
@@ -296,12 +296,12 @@ final class Attribute {
 
 		if ( '' !== $field_type ) {
 
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_type;
+			// Get field settings.
+			$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_settings' );
 
 			// Add field settings.
-			if ( class_exists( $field_class ) ) {
-				foreach ( $field_class::get_settings() as $field_name => $field ) {
+			if ( ! is_null( $field_settings ) ) {
+				foreach ( $field_settings as $field_name => $field ) {
 					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
 
 						// Get field arguments.
@@ -457,14 +457,12 @@ final class Attribute {
 					$form['fields'][ $attribute_name ] = $field_args;
 				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
 
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-					if ( class_exists( $field_class ) ) {
+					if ( ! is_null( $field ) ) {
 
-						// Create field.
-						$field = new $field_class( $field_args );
-
+						// Set value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
 						if ( $field->validate() ) {
@@ -817,14 +815,12 @@ final class Attribute {
 		// Paginate results.
 		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
 
-		// Sort results.
-		$form_class = '\HivePress\Forms\\' . $model . '_sort';
+		// Create form.
+		$form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
 
-		if ( class_exists( $form_class ) ) {
+		if ( ! is_null( $form ) ) {
 
-			// Create form.
-			$form = new $form_class();
-
+			// Set values.
 			$form->set_values( $_GET );
 
 			if ( $form->validate() ) {
@@ -883,14 +879,12 @@ final class Attribute {
 						$field_args['name'] = hp\prefix( $attribute_name );
 					}
 
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-					if ( class_exists( $field_class ) ) {
+					if ( ! is_null( $field ) ) {
 
-						// Create field.
-						$field = new $field_class( $field_args );
-
+						// Set value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
 						// Get filters.

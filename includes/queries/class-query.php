@@ -112,14 +112,7 @@ abstract class Query extends \ArrayObject {
 
 		foreach ( $prefixes as $prefix ) {
 			if ( strpos( $name, $prefix . '_model_' ) === 0 ) {
-				$class  = '\HivePress\Models\\' . $this->model;
-				$method = $prefix . '_' . substr( $name, strlen( $prefix . '_model_' ) );
-
-				if ( class_exists( $class ) && method_exists( $class, $method ) ) {
-					return call_user_func_array( [ $class, $method ], $args );
-				}
-
-				break;
+				return hp\call_class_method( '\HivePress\Models\\' . $this->model, $prefix . '_' . substr( $name, strlen( $prefix . '_model_' ) ), $args );
 			}
 		}
 
