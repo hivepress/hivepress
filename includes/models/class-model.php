@@ -93,8 +93,8 @@ abstract class Model {
 		while ( false !== $model ) {
 			$query = hp\create_class_instance( str_ireplace( '\models\\', '\queries\\', $model ), [ [ 'model' => static::get_name() ] ] );
 
-			if ( ! is_null( $query ) ) {
-				return hp\call_class_method( $query, $name, $args );
+			if ( ! is_null( $query ) && method_exists( $query, $name ) ) {
+				return call_user_func_array( [ $query, $name ], $args );
 			}
 
 			$model = get_parent_class( $model );

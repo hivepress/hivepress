@@ -26,7 +26,7 @@ abstract class Term extends Model {
 	 * @return mixed
 	 */
 	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_term( absint( $id ), hp\prefix( static::get_name() ) ) );
+		return static::get_by_object( get_term( $id, hp\prefix( static::get_name() ) ) );
 	}
 
 	/**

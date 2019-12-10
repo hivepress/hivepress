@@ -42,7 +42,7 @@ abstract class Post extends Model {
 	 * @return mixed
 	 */
 	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_post( absint( $id ) ) );
+		return static::get_by_object( get_post( $id ) );
 	}
 
 	/**

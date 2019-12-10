@@ -26,7 +26,7 @@ abstract class Comment extends Model {
 	 * @return mixed
 	 */
 	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_comment( absint( $id ) ) );
+		return static::get_by_object( get_comment( $id ) );
 	}
 
 	/**
