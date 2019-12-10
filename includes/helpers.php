@@ -144,8 +144,10 @@ function merge_arrays() {
 			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
 				if ( is_numeric( $key ) ) {
 					$merged[] = $value;
-				} else {
+				} elseif ( ! is_null( $value ) ) {
 					$merged[ $key ] = $value;
+				} else {
+					unset( $merged[ $key ] );
 				}
 			} else {
 				$merged[ $key ] = merge_arrays( $merged[ $key ], $value );

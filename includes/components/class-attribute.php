@@ -121,7 +121,7 @@ final class Attribute {
 					$attribute_args = [
 						'label'          => $attribute_post->post_title,
 						'display_areas'  => (array) $attribute_post->hp_display_areas,
-						'display_format' => $attribute_post->hp_display_format,
+						'display_format' => (string) $attribute_post->hp_display_format,
 						'editable'       => (bool) $attribute_post->hp_editable,
 						'moderated'      => (bool) $attribute_post->hp_moderated,
 						'searchable'     => (bool) $attribute_post->hp_searchable,
