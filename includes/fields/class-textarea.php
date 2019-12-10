@@ -52,8 +52,8 @@ class Textarea extends Text {
 
 				'settings' => [
 					'editor' => [
-						'label'   => 'todo',
-						'caption' => 'todo',
+						'label'   => esc_html__( 'Formatting', 'hivepress' ),
+						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
 						'type'    => 'checkbox',
 						'order'   => 40,
 					],
@@ -82,10 +82,50 @@ class Textarea extends Text {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function bootstrap() {
+		if ( $this->editor ) {
+
+			// Set HTML property.
+			if ( empty( $this->html ) ) {
+				$this->html = true;
+			}
+
+			// Set editor settings.
+			if ( ! is_array( $this->editor ) ) {
+				$this->editor = [
+					'toolbar1'    => implode(
+						',',
+						[
+							'bold',
+							'italic',
+							'underline',
+							'strikethrough',
+							'bullist',
+							'numlist',
+						]
+					),
+					'toolbar2'    => '',
+					'toolbar3'    => '',
+					'toolbar4'    => '',
+					'elementpath' => false,
+				];
+			}
+		}
+
+		parent::bootstrap();
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$this->value = sanitize_textarea_field( $this->value );
+		if ( empty( $this->html ) ) {
+			$this->value = sanitize_textarea_field( $this->value );
+		} else {
+			parent::sanitize();
+		}
 	}
 
 	/**
