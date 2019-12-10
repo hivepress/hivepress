@@ -100,10 +100,13 @@ final class Admin {
 		// Add separator.
 		$menu[] = [ '', 'manage_options', 'hp_separator', '', 'wp-menu-separator' ];
 
+		// Set title.
+		$title = ' &lsaquo; ' . HP_CORE_NAME;
+
 		// Add pages.
-		add_menu_page( esc_html__( 'Settings', 'hivepress' ), HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
-		add_submenu_page( 'hp_settings', esc_html__( 'Settings', 'hivepress' ), esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
-		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ), esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_menu_page( esc_html__( 'Settings', 'hivepress' ) . $title, HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
+		add_submenu_page( 'hp_settings', esc_html__( 'Settings', 'hivepress' ) . $title, esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
+		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
 
 	/**
