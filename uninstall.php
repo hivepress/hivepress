@@ -13,10 +13,10 @@ global $wpdb;
 if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 
 	// Trash pages.
-	$page_ids = $wpdb->get_results( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE 'hp\_page\_%';", ARRAY_A );
+	$page_ids = wp_list_pluck( $wpdb->get_results( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE 'hp\_page\_%';" ), 'option_value' );
 
-	foreach ( wp_list_pluck( $page_ids, 'option_value' ) as $page_id ) {
-		wp_trash_post( absint( $page_id ) );
+	foreach ( $page_ids as $page_id ) {
+		wp_trash_post( $page_id );
 	}
 
 	// Delete posts.
