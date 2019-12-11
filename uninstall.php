@@ -16,7 +16,7 @@ if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 	$page_ids = wp_list_pluck( $wpdb->get_results( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE 'hp\_page\_%';" ), 'option_value' );
 
 	foreach ( $page_ids as $page_id ) {
-		wp_trash_post( $page_id );
+		wp_trash_post( absint( $page_id ) );
 	}
 
 	// Delete posts.
