@@ -21,6 +21,21 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Template {
 
 	/**
+	 * Bootstraps block properties.
+	 */
+	protected function bootstrap() {
+
+		// Set template.
+		if ( ! isset( $this->template ) ) {
+			$this->template = 'view';
+		}
+
+		$this->template = 'vendor_' . $this->template . '_block';
+
+		parent::bootstrap();
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

@@ -181,16 +181,15 @@ class Listing_View_Page extends Page {
 											],
 
 											'vendor' => [
-												'type'     => 'vendor',
-												'template' => 'vendor_view_block',
-												'order'    => 30,
+												'type'  => 'vendor',
+												'order' => 30,
 
 												'attributes' => [
 													'class' => [ 'hp-widget', 'widget' ],
 												],
 											],
 
-											'sidebar_widgets' => [
+											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'listing_sidebar',
 												'order' => 40,

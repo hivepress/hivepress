@@ -22,13 +22,6 @@ abstract class Template {
 	use Traits\Mutator;
 
 	/**
-	 * Template title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array

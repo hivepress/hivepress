@@ -120,7 +120,7 @@ class Vendor_View_Page extends Page {
 												'blocks' => [],
 											],
 
-											'sidebar_widgets' => [
+											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'vendor_sidebar',
 												'order' => 30,

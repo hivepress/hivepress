@@ -24,6 +24,13 @@ class Listing extends Template {
 	 */
 	protected function bootstrap() {
 
+		// Set template.
+		if ( ! isset( $this->template ) ) {
+			$this->template = 'view';
+		}
+
+		$this->template = 'listing_' . $this->template . '_block';
+
 		// Get classes.
 		$classes = [];
 

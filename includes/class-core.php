@@ -34,7 +34,7 @@ final class Core {
 	private $dirs = [];
 
 	/**
-	 * Array of HivePress configuration.
+	 * Array of HivePress configurations.
 	 *
 	 * @var array
 	 */
@@ -121,7 +121,7 @@ final class Core {
 	 */
 	public static function activate() {
 
-		// Set activation status.
+		// Set activation flag.
 		update_option( 'hp_core_activated', '1' );
 	}
 
@@ -153,12 +153,12 @@ final class Core {
 			 */
 			do_action( 'hivepress/v1/activate' );
 
-			// Delete activation status.
+			// Unset activation flag.
 			if ( get_option( 'hp_core_activated' ) ) {
 				update_option( 'hp_core_activated', '0' );
 			}
 
-			// Update HivePress directories number.
+			// Update directories number.
 			if ( count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
 				update_option( 'hp_dirs_number', count( $this->dirs ) );
 			}
@@ -196,14 +196,14 @@ final class Core {
 		// Define constants.
 		$this->define_constants();
 
-		// Include helper functions.
+		// Load helper functions.
 		require_once HP_CORE_DIR . '/includes/helpers.php';
 
 		// Load textdomains.
 		$this->load_textdomains();
 
-		// Set components.
-		$this->objects['components'] = $this->get_components();
+		// Initialize components.
+		$this->get_components();
 	}
 
 	/**
@@ -211,16 +211,16 @@ final class Core {
 	 */
 	private function define_constants() {
 		foreach ( $this->dirs as $dir ) {
-			$basename = basename( $dir );
-			$filepath = $dir . '/' . $basename . '.php';
-			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', str_replace( 'hivepress-', '', $basename ) ) ) . '_';
+			$dirname  = basename( $dir );
+			$filepath = $dir . '/' . $dirname . '.php';
+			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', preg_replace( '/^hivepress-/', '', $dirname ) ) ) . '_';
 
-			if ( 'hivepress' === $basename ) {
+			if ( 'hivepress' === $dirname ) {
 				$prefix = 'HP_CORE_';
 			}
 
 			if ( file_exists( $filepath ) ) {
-				$data = get_file_data(
+				$filedata = get_file_data(
 					$filepath,
 					[
 						'name'    => 'Plugin Name',
@@ -229,11 +229,11 @@ final class Core {
 				);
 
 				if ( ! defined( $prefix . 'NAME' ) ) {
-					define( $prefix . 'NAME', $data['name'] );
+					define( $prefix . 'NAME', $filedata['name'] );
 				}
 
 				if ( ! defined( $prefix . 'VERSION' ) ) {
-					define( $prefix . 'VERSION', $data['version'] );
+					define( $prefix . 'VERSION', $filedata['version'] );
 				}
 
 				if ( ! defined( $prefix . 'DIR' ) ) {
@@ -252,10 +252,10 @@ final class Core {
 	 */
 	private function load_textdomains() {
 		foreach ( $this->dirs as $dir ) {
-			$basename   = basename( $dir );
-			$textdomain = hp\sanitize_slug( $basename );
+			$dirname    = basename( $dir );
+			$textdomain = hp\sanitize_slug( $dirname );
 
-			load_plugin_textdomain( $textdomain, false, $basename . '/languages' );
+			load_plugin_textdomain( $textdomain, false, $dirname . '/languages' );
 		}
 	}
 
@@ -270,8 +270,8 @@ final class Core {
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
 
-			// Get type.
-			$object_type = substr( $name, strlen( 'get' ) + 1 );
+			// Get object type.
+			$object_type = substr( $name, strlen( 'get_' ) );
 
 			if ( ! isset( $this->objects[ $object_type ] ) ) {
 				$this->objects[ $object_type ] = [];
@@ -279,8 +279,8 @@ final class Core {
 				foreach ( $this->dirs as $dir ) {
 					foreach ( glob( $dir . '/includes/' . $object_type . '/*.php' ) as $filepath ) {
 
-						// Get name.
-						$object_name = str_replace( '-', '_', str_replace( 'class-', '', str_replace( '.php', '', basename( $filepath ) ) ) );
+						// Get object name.
+						$object_name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
 
 						// Create object.
 						$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
@@ -323,23 +323,20 @@ final class Core {
 	}
 
 	/**
-	 * Gets configuration.
+	 * Gets HivePress configuration.
 	 *
 	 * @param string $name Configuration name.
 	 * @return array
 	 */
 	public function get_config( $name ) {
+		if ( ! isset( $this->configs[ $name ] ) ) {
+			$this->configs[ $name ] = [];
 
-		// Get existing configuration.
-		$config = hp\get_array_value( $this->configs, $name );
-
-		// Get new configuration.
-		if ( is_null( $config ) ) {
 			foreach ( $this->dirs as $dir ) {
 				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $name ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
-					$config = hp\merge_arrays( (array) $config, include $filepath );
+					$this->configs[ $name ] = hp\merge_arrays( $this->configs[ $name ], include $filepath );
 				}
 			}
 
@@ -351,12 +348,9 @@ final class Core {
 			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies".
 			 * @param array $args Configuration arguments.
 			 */
-			$config = apply_filters( 'hivepress/v1/' . $name, $config );
-
-			// Set configuration.
-			$this->configs[ $name ] = $config;
+			$this->configs[ $name ] = apply_filters( 'hivepress/v1/' . $name, $this->configs[ $name ] );
 		}
 
-		return $config;
+		return $this->configs[ $name ];
 	}
 }

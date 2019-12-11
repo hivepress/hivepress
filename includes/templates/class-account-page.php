@@ -69,7 +69,7 @@ class Account_Page extends Page {
 												],
 											],
 
-											'sidebar_widgets' => [
+											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'account_sidebar',
 												'order' => 20,

@@ -46,13 +46,13 @@ class Header_Block extends Template {
 						],
 
 						'blocks'     => [
-							'user_account_link'     => [
+							'user_account_link'   => [
 								'type'     => 'element',
 								'filepath' => 'user/login/user-login-link',
 								'order'    => 10,
 							],
 
-							'listing_submit_button' => [
+							'listing_submit_link' => [
 								'type'     => 'element',
 								'filepath' => 'listing/submit/listing-submit-link',
 								'order'    => 20,

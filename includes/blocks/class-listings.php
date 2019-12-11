@@ -244,7 +244,7 @@ class Listings extends Block {
 						// Render listing.
 						$output .= ( new Listing(
 							[
-								'template' => 'listing_' . $this->template . '_block',
+								'template' => $this->template,
 
 								'context'  => [
 									'listing' => $listing,
@@ -272,7 +272,7 @@ class Listings extends Block {
 					// Render listing.
 					$output .= ( new Listing(
 						[
-							'template' => 'listing_' . $this->template . '_block',
+							'template' => $this->template,
 
 							'context'  => [
 								'listing' => $listing,

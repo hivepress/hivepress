@@ -14,16 +14,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Define the core HivePress file.
+// Define the core file.
 if ( ! defined( 'HP_CORE_FILE' ) ) {
 	define( 'HP_CORE_FILE', __FILE__ );
 }
 
-// Include the core HivePress class.
+// Include the core class.
 require_once __DIR__ . '/includes/class-core.php';
 
 /**
- * Returns the core HivePress instance.
+ * Returns the core instance.
  *
  * @return HivePress\Core
  */
