@@ -22,18 +22,18 @@ abstract class Query extends \ArrayObject {
 	use Traits\Mutator;
 
 	/**
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
 	 * Query model.
 	 *
 	 * @var string
 	 */
 	protected $model;
-
-	/**
-	 * Query aliases.
-	 *
-	 * @var array
-	 */
-	protected $aliases = [];
 
 	/**
 	 * Query arguments.
@@ -43,13 +43,11 @@ abstract class Query extends \ArrayObject {
 	protected $args = [];
 
 	/**
-	 * Class constructor.
+	 * Class initializer.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public function __construct( $args = [] ) {
-
-		// Set defaults.
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -84,6 +82,19 @@ abstract class Query extends \ArrayObject {
 			],
 			$args
 		);
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			static::set_static_property( $name, $value );
+		}
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -125,8 +136,8 @@ abstract class Query extends \ArrayObject {
 	 * @param string $path Alias path.
 	 * @return mixed
 	 */
-	final protected function get_alias( $path ) {
-		$alias = [ 'aliases' => $this->aliases ];
+	final protected static function get_alias( $path ) {
+		$alias = [ 'aliases' => static::$aliases ];
 		$parts = explode( '/', $path );
 
 		foreach ( $parts as $part ) {
@@ -150,7 +161,7 @@ abstract class Query extends \ArrayObject {
 	 * @param string $alias Operator alias.
 	 * @return string
 	 */
-	final protected function get_operator( $alias ) {
+	final protected static function get_operator( $alias ) {
 		return hp\get_array_value(
 			[
 				'not'         => '!=',

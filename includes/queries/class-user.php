@@ -20,18 +20,34 @@ defined( 'ABSPATH' ) || exit;
 class User extends Query {
 
 	/**
-	 * Class constructor.
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
+					'select' => [
+						'aliases' => [
+							'id' => 'ID',
+						],
+					],
+
 					'filter' => [
 						'aliases' => [
-							'id__in'     => 'include',
-							'id__not_in' => 'exclude',
+							'id__in'       => 'include',
+							'id__not_in'   => 'exclude',
+							'role'         => 'role',
+							'role__in'     => 'role__in',
+							'role__not_in' => 'role__not_in',
 						],
 					],
 
@@ -42,8 +58,22 @@ class User extends Query {
 						],
 					],
 				],
+			],
+			$args
+		);
 
-				'args'    => [
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'args' => [
 					'orderby'     => 'ID',
 					'count_total' => false,
 				],

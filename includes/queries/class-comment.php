@@ -20,11 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Comment extends Query {
 
 	/**
-	 * Class constructor.
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -42,8 +49,22 @@ class Comment extends Query {
 						],
 					],
 				],
+			],
+			$args
+		);
 
-				'args'    => [
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'args' => [
 					'orderby' => [ 'comment_ID' => 'ASC' ],
 				],
 			],
@@ -73,7 +94,7 @@ class Comment extends Query {
 	final public function filter( $criteria ) {
 		parent::filter( $criteria );
 
-		// Remove prefixes.
+		// Replace aliases.
 		$this->args = array_combine(
 			array_map(
 				function( $name ) {
@@ -87,12 +108,30 @@ class Comment extends Query {
 						$name = preg_replace( '/^comment_/', '', $name );
 					}
 
-					return rtrim( $name . '__' . $operator, '_' );
+					$name = rtrim( $name . '__' . $operator, '_' );
+
+					return hp\get_array_value(
+						[
+							'user_id__in'     => 'author__in',
+							'user_id__not_in' => 'author__not_in',
+							'post_id__in'     => 'post__in',
+							'post_id__not_in' => 'post__not_in',
+						],
+						$name,
+						$name
+					);
 				},
 				array_keys( $this->args )
 			),
 			$this->args
 		);
+
+		// Set status.
+		if ( isset( $this->args['approved'] ) ) {
+			$this->args['status'] = $this->args['approved'] ? 'approve' : 'hold';
+
+			unset( $this->args['approved'] );
+		}
 
 		return $this;
 	}

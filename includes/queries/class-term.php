@@ -20,11 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Term extends Query {
 
 	/**
-	 * Class constructor.
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -42,8 +49,22 @@ class Term extends Query {
 						],
 					],
 				],
+			],
+			$args
+		);
 
-				'args'    => [
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'args' => [
 					'orderby'    => 'term_id',
 					'hide_empty' => false,
 				],
@@ -63,6 +84,36 @@ class Term extends Query {
 		$this->args['taxonomy'] = hp\prefix( $this->model );
 
 		parent::bootstrap();
+	}
+
+	/**
+	 * Sets object filters.
+	 *
+	 * @param array $criteria Filter criteria.
+	 * @return object
+	 */
+	final public function filter( $criteria ) {
+		parent::filter( $criteria );
+
+		// Replace aliases.
+		$this->args = array_combine(
+			array_map(
+				function( $name ) {
+					return hp\get_array_value(
+						[
+							'name__in' => 'name',
+							'slug__in' => 'slug',
+						],
+						$name,
+						$name
+					);
+				},
+				array_keys( $this->args )
+			),
+			$this->args
+		);
+
+		return $this;
 	}
 
 	/**
