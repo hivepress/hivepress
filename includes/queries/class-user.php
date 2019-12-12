@@ -93,7 +93,7 @@ class User extends Query {
 	final public function filter( $criteria ) {
 		parent::filter( $criteria );
 
-		// Remove prefixes.
+		// Replace aliases.
 		$this->args = array_combine(
 			array_map(
 				function( $name ) {

@@ -20,11 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Post extends Query {
 
 	/**
-	 * Class constructor.
+	 * Query aliases.
+	 *
+	 * @var array
+	 */
+	protected static $aliases = [];
+
+	/**
+	 * Class initializer.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public function __construct( $args = [] ) {
+	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -45,8 +52,22 @@ class Post extends Query {
 						],
 					],
 				],
+			],
+			$args
+		);
 
-				'args'    => [
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Query arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'args' => [
 					'post_status'         => 'any',
 					'posts_per_page'      => -1,
 					'orderby'             => [ 'ID' => 'ASC' ],
@@ -80,16 +101,30 @@ class Post extends Query {
 	public function filter( $criteria ) {
 		parent::filter( $criteria );
 
+		// Replace aliases.
+		$this->args = array_combine(
+			array_map(
+				function( $name ) {
+					return hp\get_array_value(
+						[
+							'post_author'         => 'author',
+							'post_author__in'     => 'author__in',
+							'post_author__not_in' => 'author__not_in',
+							'post_status__in'     => 'post_status',
+							'post_title'          => 'title',
+						],
+						$name,
+						$name
+					);
+				},
+				array_keys( $this->args )
+			),
+			$this->args
+		);
+
 		// Set IDs.
 		if ( isset( $this->args['post__in'] ) && empty( $this->args['post__in'] ) ) {
 			$this->args['post__in'] = [ 0 ];
-		}
-
-		// Set author.
-		if ( isset( $this->args['post_author'] ) ) {
-			$this->args['author'] = $this->args['post_author'];
-
-			unset( $this->args['post_author'] );
 		}
 
 		// Set term filters.
