@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Edit_Page
  */
-class Listing_Edit_Page extends Account_Page {
+class Listing_Edit_Page extends User_Account_Page {
 
 	/**
 	 * Template blocks.

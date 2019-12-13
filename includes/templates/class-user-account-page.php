@@ -1,8 +1,8 @@
 <?php
 /**
- * Account page template.
+ * User account page template.
  *
- * @template account_page
+ * @template user_account_page
  * @description User account page.
  * @package HivePress\Templates
  */
@@ -15,11 +15,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Account page template class.
+ * User account page template class.
  *
- * @class Account_Page
+ * @class User_Account_Page
  */
-class Account_Page extends Page {
+class User_Account_Page extends Page {
 
 	/**
 	 * Template blocks.
@@ -59,9 +59,9 @@ class Account_Page extends Page {
 										],
 
 										'blocks'     => [
-											'account_menu' => [
+											'user_account_menu' => [
 												'type'  => 'menu',
-												'menu'  => 'account',
+												'menu'  => 'user_account',
 												'order' => 10,
 
 												'attributes' => [
