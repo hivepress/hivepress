@@ -94,7 +94,7 @@ class Listing_Sort extends Form {
 	 */
 	protected function bootstrap() {
 
-		// Set attributes.
+		// Set submission flag.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

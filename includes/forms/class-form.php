@@ -128,7 +128,7 @@ abstract class Form {
 		 * @param string $name Form name or "form" to filter all forms.
 		 * @param array $args Form arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/forms/form', array_merge( $args, [ 'name' => static::get_name() ] ) );
+		$args = apply_filters( 'hivepress/v1/forms/form', $args, static::get_name() );
 		$args = apply_filters( 'hivepress/v1/forms/' . static::get_name(), $args );
 
 		// Set properties.
@@ -145,14 +145,15 @@ abstract class Form {
 	public function __construct( $args = [] ) {
 
 		/**
-		 * Filters form arguments.
+		 * Filters form instance arguments.
 		 *
-		 * @filter /forms/form/args
-		 * @description Filters form arguments.
-		 * @param array $args Form arguments.
-		 * @param string $name Form name.
+		 * @filter /forms/{$name}/args
+		 * @description Filters form instance arguments.
+		 * @param string $name Form name or "form" to filter all forms.
+		 * @param array $args Form instance arguments.
 		 */
 		$args = apply_filters( 'hivepress/v1/forms/form/args', $args, static::get_name() );
+		$args = apply_filters( 'hivepress/v1/forms/' . static::get_name() . '/args', $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -161,6 +162,53 @@ abstract class Form {
 
 		// Bootstrap properties.
 		$this->bootstrap();
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+		$attributes = [];
+
+		// Set action.
+		if ( strpos( static::$action, get_rest_url() ) === 0 ) {
+			$attributes['action']      = '#';
+			$attributes['data-action'] = static::$action;
+		} else {
+			$attributes['action'] = static::$action;
+		}
+
+		// Set method.
+		if ( ! in_array( static::$method, [ 'GET', 'POST' ], true ) ) {
+			$attributes['method']      = 'POST';
+			$attributes['data-method'] = static::$method;
+		} else {
+			$attributes['method'] = static::$method;
+		}
+
+		// Set message.
+		if ( static::$message ) {
+			$attributes['data-message'] = static::$message;
+		}
+
+		// Set redirect.
+		if ( static::$redirect ) {
+			$redirect = hp\get_array_value( $_GET, 'redirect', '' );
+
+			if ( hp\validate_redirect( $redirect ) ) {
+				$attributes['data-redirect'] = esc_url( $redirect );
+			} else {
+				$attributes['data-redirect'] = 'true';
+			}
+		}
+
+		// Set component.
+		$attributes['data-component'] = 'form';
+
+		// Set class.
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_name() ) ];
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
@@ -230,6 +278,7 @@ abstract class Form {
 					[
 						'label'      => esc_html__( 'Submit', 'hivepress' ),
 						'type'       => 'button',
+
 						'attributes' => [
 							'class' => [ 'hp-form__button', 'button', 'alt' ],
 						],
@@ -299,81 +348,27 @@ abstract class Form {
 	}
 
 	/**
-	 * Bootstraps form properties.
-	 */
-	protected function bootstrap() {
-		$attributes = [];
-
-		// Set action.
-		if ( strpos( static::$action, get_rest_url() ) === 0 ) {
-			$attributes['action']      = '#';
-			$attributes['data-action'] = static::$action;
-		} else {
-			$attributes['action'] = static::$action;
-		}
-
-		// Set method.
-		if ( ! in_array( static::$method, [ 'GET', 'POST' ], true ) ) {
-			$attributes['method']      = 'POST';
-			$attributes['data-method'] = static::$method;
-		} else {
-			$attributes['method'] = static::$method;
-		}
-
-		// Set message.
-		if ( static::$message ) {
-			$attributes['data-message'] = static::$message;
-		}
-
-		// Set redirect.
-		if ( static::$redirect ) {
-			$redirect = hp\get_array_value( $_GET, 'redirect', 'true' );
-
-			if ( hp\validate_redirect( $redirect ) ) {
-				$attributes['data-redirect'] = esc_url( $redirect );
-			} else {
-				$attributes['data-redirect'] = 'true';
-			}
-		}
-
-		// Set component.
-		$attributes['data-component'] = 'form';
-
-		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_name() ) ];
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
-	}
-
-	/**
 	 * Validates field values.
 	 *
 	 * @return bool
 	 */
 	final public function validate() {
 
-		// Verify captcha.
-		if ( static::$captcha ) {
-			$response = wp_remote_get(
-				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
-					[
-						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
-					]
-				)
-			);
-
-			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
-				$this->add_errors( [ esc_html__( 'Captcha is invalid.', 'hivepress' ) ] );
-			}
-		}
+		/**
+		 * Filters form validation errors.
+		 *
+		 * @filter /forms/{$name}/errors
+		 * @description Filters form validation errors.
+		 * @param string $name Form name or "form" to filter all forms.
+		 * @param array $errors Form validation errors.
+		 */
+		$this->errors = apply_filters( 'hivepress/v1/forms/form/errors', [], static::get_name() );
+		$this->errors = apply_filters( 'hivepress/v1/forms/' . static::get_name() . '/errors', $this->errors );
 
 		// Validate fields.
-		if ( empty( $this->errors ) ) {
-			foreach ( static::$fields as $field ) {
-				if ( ! $field->validate() ) {
-					$this->add_errors( $field->get_errors() );
-				}
+		foreach ( static::$fields as $field ) {
+			if ( ! $field->validate() ) {
+				$this->add_errors( $field->get_errors() );
 			}
 		}
 
@@ -390,7 +385,7 @@ abstract class Form {
 
 		// Render header.
 		if ( isset( $this->header ) || isset( static::$description ) ) {
-			$output .= '<header class="hp-form__header">';
+			$output .= '<div class="hp-form__header">';
 
 			if ( isset( $this->header ) ) {
 				$output .= $this->header;
@@ -401,7 +396,7 @@ abstract class Form {
 			}
 
 			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
-			$output .= '</header>';
+			$output .= '</div>';
 		} else {
 			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
 		}
@@ -417,8 +412,8 @@ abstract class Form {
 				if ( $field->get_label() ) {
 					$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
-					if ( count( $field->get_statuses() ) > 0 ) {
-						$output .= ' <small>(' . implode( ', ', $field->get_statuses() ) . ')</small>';
+					if ( $field->get_statuses() ) {
+						$output .= ' <small>(' . implode( ', ', array_map( 'esc_html', $field->get_statuses() ) ) . ')</small>';
 					}
 
 					$output .= '</label>';
@@ -434,13 +429,6 @@ abstract class Form {
 		}
 
 		$output .= '</div>';
-
-		// Render captcha.
-		if ( static::$captcha ) {
-			$output .= '<div class="hp-form__captcha">';
-			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
-			$output .= '</div>';
-		}
 
 		// Render footer.
 		if ( isset( static::$button ) || isset( $this->footer ) ) {

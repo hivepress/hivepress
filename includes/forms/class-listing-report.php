@@ -20,18 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Report extends Model_Form {
 
 	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
 	 * Form title.
 	 *
 	 * @var string
 	 */
 	protected static $title;
+
+	/**
+	 * Form description.
+	 *
+	 * @var string
+	 */
+	protected static $description;
 
 	/**
 	 * Form message.
@@ -53,13 +53,6 @@ class Listing_Report extends Model_Form {
 	 * @var string
 	 */
 	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
 
 	/**
 	 * Form captcha.
@@ -97,11 +90,12 @@ class Listing_Report extends Model_Form {
 				'action'      => hp\get_rest_url( '/listings/%id%/report' ),
 
 				'fields'      => [
-					'report_details' => [
+					'details' => [
 						'label'      => esc_html__( 'Details', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,
+						'excluded'   => true,
 						'order'      => 10,
 					],
 				],

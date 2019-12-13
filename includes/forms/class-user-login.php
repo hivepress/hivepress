@@ -41,13 +41,6 @@ class User_Login extends Model_Form {
 	protected static $action;
 
 	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
 	 * Form captcha.
 	 *
 	 * @var bool
@@ -94,6 +87,7 @@ class User_Login extends Model_Form {
 						'type'       => 'text',
 						'max_length' => 254,
 						'required'   => true,
+						'excluded'   => true,
 						'order'      => 10,
 					],
 

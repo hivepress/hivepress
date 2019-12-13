@@ -238,7 +238,7 @@ class Listing extends Controller {
 				'tokens'    => [
 					'listing_title'  => $listing->get_title(),
 					'listing_url'    => get_permalink( $listing->get_id() ),
-					'report_details' => $form->get_value( 'report_details' ),
+					'report_details' => $form->get_value( 'details' ),
 				],
 			]
 		) )->send();

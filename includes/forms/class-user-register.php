@@ -41,13 +41,6 @@ class User_Register extends Model_Form {
 	protected static $action;
 
 	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
 	 * Form captcha.
 	 *
 	 * @var bool
@@ -81,45 +74,23 @@ class User_Register extends Model_Form {
 	 * @param array $args Form arguments.
 	 */
 	public static function init( $args = [] ) {
-
-		// Set fields.
-		$fields = [
-			'email'    => [
-				'order' => 10,
-			],
-
-			'password' => [
-				'required' => true,
-				'order'    => 20,
-			],
-		];
-
-		// Add terms checkbox.
-		$page_id = hp\get_post_id(
-			[
-				'post_type'   => 'page',
-				'post_status' => 'publish',
-				'post__in'    => [ absint( get_option( 'hp_page_user_registration_terms' ) ) ],
-			]
-		);
-
-		if ( 0 !== $page_id ) {
-			$fields['terms'] = [
-				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'     => 'checkbox',
-				'required' => true,
-				'order'    => 1000,
-			];
-		}
-
-		// Set arguments.
 		$args = hp\merge_arrays(
 			[
 				'title'    => esc_html__( 'Register User', 'hivepress' ),
 				'model'    => 'user',
 				'action'   => hp\get_rest_url( '/users' ),
 				'redirect' => true,
-				'fields'   => $fields,
+
+				'fields'   => [
+					'email'    => [
+						'order' => 10,
+					],
+
+					'password' => [
+						'required' => true,
+						'order'    => 20,
+					],
+				],
 
 				'button'   => [
 					'label' => esc_html__( 'Register', 'hivepress' ),

@@ -25,7 +25,7 @@ final class Form {
 	public function __construct() {
 
 		// Set form captcha.
-		add_filter( 'hivepress/v1/forms/form', [ $this, 'set_form_captcha' ] );
+		add_filter( 'hivepress/v1/forms/form', [ $this, 'set_form_captcha' ], 10, 2 );
 
 		// Set field options.
 		add_filter( 'hivepress/v1/fields/field/args', [ $this, 'set_field_options' ] );
@@ -35,14 +35,44 @@ final class Form {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 	}
 
+	// todo.
+	validate_form_captcha($errors) {
+		// Verify captcha.
+		if ( static::$captcha ) {
+			$response = wp_remote_get(
+				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
+					[
+						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
+						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
+					]
+				)
+			);
+
+			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
+				$this->add_errors( [ esc_html__( 'Captcha is invalid.', 'hivepress' ) ] );
+			}
+		}
+
+		// todo.
+		// Render captcha.
+		if ( static::$captcha ) {
+			$output .= '<div class="hp-form__captcha">';
+			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
+			$output .= '</div>';
+		}
+
+		return $errors;
+	}
+
 	/**
 	 * Sets form captcha.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array  $args Form arguments.
+	 * @param string $form Form name.
 	 * @return array
 	 */
-	public function set_form_captcha( $args ) {
-		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $args['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
+	public function set_form_captcha( $args, $form ) {
+		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $form, (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
 			$args['captcha'] = true;
 		}
 

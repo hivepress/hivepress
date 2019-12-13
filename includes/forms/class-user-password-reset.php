@@ -41,13 +41,6 @@ class User_Password_Reset extends Model_Form {
 	protected static $action;
 
 	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
 	 * Form redirect.
 	 *
 	 * @var mixed
@@ -95,6 +88,7 @@ class User_Password_Reset extends Model_Form {
 					'password_reset_key' => [
 						'type'     => 'hidden',
 						'required' => true,
+						'excluded' => true,
 					],
 				],
 

@@ -41,13 +41,6 @@ class User_Update extends Model_Form {
 	protected static $action;
 
 	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -100,9 +93,10 @@ class User_Update extends Model_Form {
 					],
 
 					'current_password' => [
-						'label' => esc_html__( 'Current Password', 'hivepress' ),
-						'type'  => 'password',
-						'order' => 70,
+						'label'    => esc_html__( 'Current Password', 'hivepress' ),
+						'type'     => 'password',
+						'excluded' => true,
+						'order'    => 70,
 					],
 				],
 
