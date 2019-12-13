@@ -1,6 +1,6 @@
 <?php
 /**
- * Account menu.
+ * User account menu.
  *
  * @package HivePress\Menus
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Account menu class.
+ * User account menu class.
  *
- * @class Account
+ * @class User_Account
  */
-class Account extends Menu {
+class User_Account extends Menu {
 
 	/**
 	 * Menu items.

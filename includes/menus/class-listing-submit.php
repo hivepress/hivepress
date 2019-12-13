@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Menu {
 
 	/**
-	 * Chained property.
+	 * Chained flag.
 	 *
 	 * @var bool
 	 */
@@ -42,6 +42,7 @@ class Listing_Submit extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'chained' => true,
+
 				'items'   => [
 					'submit_listing'  => [
 						'route' => 'listing/submit_listing',

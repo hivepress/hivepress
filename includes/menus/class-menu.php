@@ -22,7 +22,7 @@ abstract class Menu {
 	use Traits\Mutator;
 
 	/**
-	 * Chained property.
+	 * Chained flag.
 	 *
 	 * @var bool
 	 */
@@ -82,6 +82,23 @@ abstract class Menu {
 	}
 
 	/**
+	 * Bootstraps menu properties.
+	 */
+	protected function bootstrap() {
+
+		// Set class.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [
+					'hp-menu',
+					'hp-menu--' . hp\sanitize_slug( static::get_name() ),
+				],
+			]
+		);
+	}
+
+	/**
 	 * Gets menu name.
 	 *
 	 * @return string
@@ -91,7 +108,7 @@ abstract class Menu {
 	}
 
 	/**
-	 * Checks chained property.
+	 * Checks chained flag.
 	 *
 	 * @return bool
 	 */
@@ -131,8 +148,8 @@ abstract class Menu {
 							$item['url'] = $controller::get_url( $route_name );
 						}
 
-						// Set current.
-						if ( get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) {
+						// Set current flag.
+						if ( get_query_var( 'hp_route' ) === $item['route'] ) {
 							$item['current'] = true;
 						}
 					}
@@ -150,18 +167,6 @@ abstract class Menu {
 	 */
 	final public static function get_items() {
 		return static::$items;
-	}
-
-	/**
-	 * Bootstraps menu properties.
-	 */
-	protected function bootstrap() {
-		$attributes = [];
-
-		// Set class.
-		$attributes['class'] = [ 'hp-menu', 'hp-menu--' . hp\sanitize_slug( static::get_name() ) ];
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 	}
 
 	/**
