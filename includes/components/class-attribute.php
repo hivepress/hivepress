@@ -54,27 +54,27 @@ final class Attribute {
 			add_filter( 'hivepress/v1/models/' . $model, [ $this, 'add_model_fields' ] );
 
 			// Add edit fields.
-			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ] );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 10, 2 );
 
 			// Add search fields.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 10, 2 );
 
 			// Add sort options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 10, 2 );
 
 			// Add category options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 10, 2 );
 
 			// Set category value.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ], 10, 2 );
 
 			// Set range values.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 10, 2 );
 		}
 
 		if ( is_admin() ) {
@@ -373,13 +373,14 @@ final class Attribute {
 	/**
 	 * Adds edit fields.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function add_edit_fields( $form ) {
+	public function add_edit_fields( $form_args, $form_name ) {
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Get instance ID.
 		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
@@ -400,7 +401,7 @@ final class Attribute {
 			// Get field arguments.
 			$field_args = $attribute['edit_field'];
 
-			if ( $attribute['moderated'] && $model . '_update' === $form['name'] ) {
+			if ( $attribute['moderated'] && $model . '_update' === $form_name ) {
 				$field_args = hp\merge_arrays(
 					$field_args,
 					[
@@ -410,24 +411,25 @@ final class Attribute {
 			}
 
 			// Add field.
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $field_args ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
-				$form['fields'][ $attribute_name ] = $field_args;
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $field_args ) && $model . '_attributes' === $form_name ) || ( $attribute['editable'] && in_array( $form_name, [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
+				$form_args['fields'][ $attribute_name ] = $field_args;
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Adds search fields.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function add_search_fields( $form ) {
+	public function add_search_fields( $form_args, $form_name ) {
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Filter attributes.
 		$category_id = $this->get_category_id( $model );
@@ -450,12 +452,12 @@ final class Attribute {
 				]
 			);
 
-			if ( ! isset( $form['fields'][ $attribute_name ] ) ) {
-				if ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) {
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) ) {
+				if ( ( $attribute['searchable'] && $model . '_search' === $form_name ) || ( $attribute['filterable'] && $model . '_filter' === $form_name ) ) {
 
 					// Add field.
-					$form['fields'][ $attribute_name ] = $field_args;
-				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
+					$form_args['fields'][ $attribute_name ] = $field_args;
+				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_name, [ $model . '_filter', $model . '_sort' ], true ) ) {
 
 					// Create field.
 					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
@@ -472,10 +474,10 @@ final class Attribute {
 							// Add field.
 							if ( is_array( $field_value ) ) {
 								foreach ( $field_value as $option_name => $option_value ) {
-									$form['fields'][ $attribute_name . '[' . $option_name . ']' ] = array_merge( $field_args, [ 'default' => $option_value ] );
+									$form_args['fields'][ $attribute_name . '[' . $option_name . ']' ] = array_merge( $field_args, [ 'default' => $option_value ] );
 								}
 							} else {
-								$form['fields'][ $attribute_name ] = $field_args;
+								$form_args['fields'][ $attribute_name ] = $field_args;
 							}
 						}
 					}
@@ -483,26 +485,27 @@ final class Attribute {
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Adds sort options.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function add_sort_options( $form ) {
+	public function add_sort_options( $form_args, $form_name ) {
 
 		// Add defaults.
 		if ( is_search() ) {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
+			$form_args['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
 		} else {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
+			$form_args['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
 		}
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Filter attributes.
 		$category_id = $this->get_category_id( $model );
@@ -516,25 +519,26 @@ final class Attribute {
 
 		// Add options.
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
-				$form['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
+			if ( ! isset( $form_args['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
+				$form_args['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
+				$form_args['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Adds category options.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function add_category_options( $form ) {
+	public function add_category_options( $form_args, $form_name ) {
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
@@ -599,41 +603,43 @@ final class Attribute {
 		}
 
 		// Set options.
-		$form['fields']['category']['options'] = $options;
+		$form_args['fields']['category']['options'] = $options;
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Sets category value.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function set_category_value( $form ) {
+	public function set_category_value( $form_args, $form_name ) {
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Set value.
-		$form['fields']['category']['value'] = $this->get_category_id( $model );
+		$form_args['fields']['category']['value'] = $this->get_category_id( $model );
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Sets range values.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param string $form_name Form name.
 	 * @return array
 	 */
-	public function set_range_values( $form ) {
+	public function set_range_values( $form_args, $form_name ) {
 
 		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		$model = $this->get_model_name( $form_name );
 
 		// Filter fields.
-		foreach ( $form['fields'] as $field_name => $field_args ) {
+		foreach ( $form_args['fields'] as $field_name => $field_args ) {
 			if ( 'number_range' === $field_args['type'] ) {
 
 				// Set query arguments.
@@ -680,13 +686,13 @@ final class Attribute {
 
 				// Set range values.
 				if ( count( array_filter( $range ) ) > 0 && reset( $range ) !== end( $range ) ) {
-					$form['fields'][ $field_name ]['min_value'] = reset( $range );
-					$form['fields'][ $field_name ]['max_value'] = end( $range );
+					$form_args['fields'][ $field_name ]['min_value'] = reset( $range );
+					$form_args['fields'][ $field_name ]['max_value'] = end( $range );
 				}
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**

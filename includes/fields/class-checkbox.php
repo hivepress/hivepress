@@ -161,7 +161,7 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '" class="' . esc_attr( implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) ) ) . '">';
+		$output = '<label for="' . esc_attr( $this->attributes['id'] ) . '" class="' . esc_attr( implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) ) ) . '">';
 
 		unset( $this->attributes['class'] );
 

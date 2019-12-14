@@ -36,7 +36,7 @@ final class Form {
 	}
 
 	// todo.
-	validate_form_captcha($errors) {
+	function validate_form_captcha($errors) {
 		// Verify captcha.
 		if ( static::$captcha ) {
 			$response = wp_remote_get(
