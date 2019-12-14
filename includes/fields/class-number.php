@@ -81,9 +81,10 @@ class Number extends Field {
 
 				'settings' => [
 					'placeholder' => [
-						'label' => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'order'      => 10,
 					],
 
 					'decimals'    => [
@@ -154,7 +155,7 @@ class Number extends Field {
 			$attributes['max'] = $this->max_value;
 		}
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
@@ -173,8 +174,6 @@ class Number extends Field {
 		if ( ! is_null( $this->value ) ) {
 			return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
 		}
-
-		return $this->value;
 	}
 
 	/**

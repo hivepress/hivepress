@@ -98,7 +98,7 @@ class Listing extends Post {
 						'type'         => 'attachment_upload',
 						'multiple'     => true,
 						'max_files'    => 10,
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+						'formats' => [ 'jpg', 'jpeg', 'png' ],
 					],
 
 					'user_id'       => [

@@ -24,10 +24,10 @@ class File extends Field {
 	 *
 	 * @var array
 	 */
-	protected $file_formats = [];
+	protected $formats = [];
 
 	/**
-	 * Multiple property.
+	 * Multiple flag.
 	 *
 	 * @var bool
 	 */
@@ -39,19 +39,19 @@ class File extends Field {
 	protected function bootstrap() {
 		$attributes = [];
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
 
-		// Set multiple property.
+		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
 		}
 
 		// Set file formats.
-		if ( ! empty( $this->file_formats ) ) {
-			$attributes['accept'] = '.' . implode( ',.', $this->file_formats );
+		if ( ! empty( $this->formats ) ) {
+			$attributes['accept'] = '.' . implode( ',.', $this->formats );
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -70,6 +70,6 @@ class File extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

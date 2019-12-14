@@ -88,9 +88,10 @@ class Date extends Field {
 
 				'settings' => [
 					'placeholder' => [
-						'label' => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'order'      => 10,
 					],
 
 					'min_date'    => [
@@ -140,7 +141,7 @@ class Date extends Field {
 			$attributes['placeholder'] = $this->placeholder;
 		}
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
@@ -182,8 +183,6 @@ class Date extends Field {
 		if ( ! is_null( $this->value ) ) {
 			return date_create_from_format( $this->format, $this->value )->format( $this->display_format );
 		}
-
-		return $this->value;
 	}
 
 	/**
@@ -192,9 +191,7 @@ class Date extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( ! is_string( $this->value ) ) {
-			$this->value = null;
-		}
+		$this->value = wp_unslash( $this->value );
 	}
 
 	/**

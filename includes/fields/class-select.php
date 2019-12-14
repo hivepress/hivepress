@@ -48,14 +48,14 @@ class Select extends Field {
 	protected $placeholder = '&mdash;';
 
 	/**
-	 * Select options.
+	 * Field options.
 	 *
 	 * @var array
 	 */
 	protected $options = [];
 
 	/**
-	 * Multiple property.
+	 * Multiple flag.
 	 *
 	 * @var bool
 	 */
@@ -116,17 +116,17 @@ class Select extends Field {
 	protected function bootstrap() {
 		$attributes = [];
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
 
-		// Set multiple property.
+		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
 		}
 
-		// Add default option.
+		// Set placeholder.
 		if ( isset( $this->placeholder ) && ! $this->multiple ) {
 			$this->options = [ '' => $this->placeholder ] + $this->options;
 		}
@@ -145,20 +145,20 @@ class Select extends Field {
 		if ( ! is_null( $this->value ) ) {
 			$options = $this->options;
 
-			return implode(
-				', ',
-				array_filter(
-					array_map(
-						function( $value ) use ( $options ) {
-							return hp\get_array_value( $options, $value );
-						},
-						(array) $this->value
-					)
-				)
+			$labels = array_filter(
+				array_map(
+					function( $value ) use ( $options ) {
+						return hp\get_array_value( $options, $value );
+					},
+					(array) $this->value
+				),
+				'strlen'
 			);
-		}
 
-		return $this->value;
+			if ( ! empty( $labels ) ) {
+				return implode( ', ', $labels );
+			}
+		}
 	}
 
 	/**
@@ -167,7 +167,6 @@ class Select extends Field {
 	protected function add_filters() {
 		parent::add_filters();
 
-		// todo enforces taxonomy.
 		if ( $this->multiple ) {
 			$this->filters['operator'] = 'AND';
 		} else {
@@ -187,6 +186,8 @@ class Select extends Field {
 			} else {
 				$this->value = null;
 			}
+		} elseif ( ! is_array( $this->value ) && $this->multiple ) {
+			$this->value = (array) $this->value;
 		}
 	}
 
@@ -207,7 +208,7 @@ class Select extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( array_map( 'strval', (array) $this->value ), array_map( 'strval', array_keys( $this->options ) ) ) ) === 0 ) {
+		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_map( 'strval', array_keys( $this->options ) ) ) ) !== count( (array) $this->value ) ) {
 			$this->add_errors( [ sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) ] );
 		}
 
@@ -220,25 +221,10 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-
-		// Get field name.
-		$name = $this->name;
-
-		if ( $this->multiple ) {
-			$name .= '[]';
-		}
-
-		// Render field.
-		$output = '<select name="' . esc_attr( $name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]' : '' ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
-			$selected = '';
-
-			if ( ( ! $this->multiple && $this->value === (string) $value ) || ( $this->multiple && in_array( (string) $value, $this->value, true ) ) ) {
-				$selected = 'selected';
-			}
-
-			$output .= '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
+			$output .= '<option value="' . esc_attr( $value ) . '" ' . ( in_array( (string) $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
 		}
 
 		$output .= '</select>';

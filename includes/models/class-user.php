@@ -83,7 +83,7 @@ class User extends Model {
 						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
 						'type'         => 'attachment_upload',
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+						'formats' => [ 'jpg', 'jpeg', 'png' ],
 					],
 				],
 

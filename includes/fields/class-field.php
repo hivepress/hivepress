@@ -29,6 +29,13 @@ abstract class Field {
 	protected static $type;
 
 	/**
+	 * Field display type.
+	 *
+	 * @var string
+	 */
+	protected static $display_type;
+
+	/**
 	 * Field title.
 	 *
 	 * @var string
@@ -99,7 +106,7 @@ abstract class Field {
 	protected $attributes = [];
 
 	/**
-	 * Required property.
+	 * Required flag.
 	 *
 	 * @var bool
 	 */
@@ -125,6 +132,17 @@ abstract class Field {
 			$args
 		);
 
+		/**
+		 * Filters field arguments.
+		 *
+		 * @filter /fields/{$type}
+		 * @description Filters field arguments.
+		 * @param string $type Field type or "field" to filter all fields.
+		 * @param array $args Field arguments.
+		 */
+		$args = apply_filters( 'hivepress/v1/fields/field', $args, hp\get_class_name( static::class ) );
+		$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( static::class ), $args );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			static::set_static_property( $name, $value );
@@ -139,20 +157,20 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 
 		/**
-		 * Filters field arguments.
+		 * Filters field instance arguments.
 		 *
-		 * @filter /fields/field/args
-		 * @description Filters field arguments.
-		 * @param array $args Field arguments.
+		 * @filter /fields/{$type}/args
+		 * @description Filters field instance arguments.
+		 * @param string $type Field type or "field" to filter all fields.
+		 * @param array $args Field instance arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::get_display_type() ] ) );
+		$args = apply_filters( 'hivepress/v1/fields/field/args', $args, hp\get_class_name( static::class ) );
+		$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( static::class ) . '/args', $args );
 
 		// Set arguments.
 		$this->args = $args;
 
 		// Set properties.
-		unset( $args['type'] );
-
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
@@ -166,6 +184,19 @@ abstract class Field {
 	 */
 	protected function bootstrap() {
 
+		// Set default value.
+		$this->set_value( hp\get_array_value( $this->args, 'default' ) );
+
+		// Set filters.
+		if ( false !== $this->filters ) {
+			$this->filters = [];
+		}
+
+		// Set optional status.
+		if ( ! $this->required ) {
+			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
+		}
+
 		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
@@ -173,23 +204,6 @@ abstract class Field {
 				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::get_display_type() ) ],
 			]
 		);
-
-		// Set optional status.
-		if ( ! $this->required && ! isset( $this->statuses['optional'] ) ) {
-			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
-		}
-
-		// Set filters.
-		if ( false !== $this->filters ) {
-			$this->filters = [];
-		}
-
-		// Set default value.
-		$default = hp\get_array_value( $this->args, 'default' );
-
-		if ( ! is_null( $default ) ) {
-			$this->set_value( $default );
-		}
 	}
 
 	/**
@@ -207,7 +221,7 @@ abstract class Field {
 	 * @return string
 	 */
 	final public static function get_display_type() {
-		return hp\get_class_name( static::class );
+		return static::$display_type ? static::$display_type : hp\get_class_name( static::class );
 	}
 
 	/**
@@ -287,10 +301,14 @@ abstract class Field {
 
 			if ( ! is_null( $this->value ) ) {
 				$this->sanitize();
+			}
+		}
 
-				if ( ! is_null( $this->value ) && false !== $this->filters ) {
-					$this->add_filters();
-				}
+		if ( false !== $this->filters ) {
+			if ( ! is_null( $this->value ) ) {
+				$this->add_filters();
+			} else {
+				$this->filters = [];
 			}
 		}
 	}
@@ -361,7 +379,7 @@ abstract class Field {
 	 * @return array
 	 */
 	final public function get_statuses() {
-		return array_filter( $this->statuses );
+		return $this->statuses;
 	}
 
 	/**

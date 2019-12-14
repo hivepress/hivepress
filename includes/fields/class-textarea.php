@@ -34,7 +34,7 @@ class Textarea extends Text {
 	protected static $settings = [];
 
 	/**
-	 * Editor property.
+	 * Editor flag.
 	 *
 	 * @var mixed
 	 */
@@ -87,7 +87,7 @@ class Textarea extends Text {
 	protected function bootstrap() {
 		if ( $this->editor ) {
 
-			// Set HTML property.
+			// Set HTML flag.
 			if ( empty( $this->html ) ) {
 				$this->html = true;
 			}

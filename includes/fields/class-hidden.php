@@ -25,9 +25,7 @@ class Hidden extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
-		}
+		$this->value = wp_unslash( $this->value );
 	}
 
 	/**

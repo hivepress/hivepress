@@ -62,7 +62,7 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
-	 * HTML property.
+	 * HTML flag.
 	 *
 	 * @var mixed
 	 */
@@ -81,9 +81,10 @@ class Text extends Field {
 
 				'settings' => [
 					'placeholder' => [
-						'label' => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'order'      => 10,
 					],
 
 					'min_length'  => [
@@ -144,7 +145,7 @@ class Text extends Field {
 			$attributes['maxlength'] = $this->max_length;
 		}
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
@@ -169,9 +170,7 @@ class Text extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
-		}
+		$this->value = wp_unslash( $this->value );
 	}
 
 	/**

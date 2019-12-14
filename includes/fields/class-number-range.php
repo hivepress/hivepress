@@ -115,8 +115,6 @@ class Number_Range extends Number {
 		if ( ! is_null( $this->value ) ) {
 			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
 		}
-
-		return $this->value;
 	}
 
 	/**

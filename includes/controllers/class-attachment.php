@@ -167,7 +167,7 @@ class Attachment extends Controller {
 
 		// Check file format.
 		$file_type    = wp_check_filetype( wp_unslash( $_FILES['file']['name'] ) );
-		$file_formats = array_map( 'strtoupper', $field->get_file_formats() );
+		$file_formats = array_map( 'strtoupper', $field->get_formats() );
 
 		if ( ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
 			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_extensions ) ) );

@@ -59,9 +59,12 @@ class Checkboxes extends Select {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set multiple property.
-		$args['multiple'] = true;
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'multiple' => true,
+			]
+		);
 
 		parent::__construct( $args );
 	}
@@ -100,7 +103,7 @@ class Checkboxes extends Select {
 
 		// Filter options.
 		$options = array_filter(
-			(array) $this->options,
+			$this->options,
 			function( $option ) use ( $current ) {
 				$parent = hp\get_array_value( $option, 'parent' );
 
@@ -125,7 +128,7 @@ class Checkboxes extends Select {
 				// Get default value.
 				$default = null;
 
-				if ( in_array( (string) $value, array_map( 'strval', (array) $this->value ), true ) ) {
+				if ( in_array( (string) $value, (array) $this->value, true ) ) {
 					$default = $value;
 				}
 

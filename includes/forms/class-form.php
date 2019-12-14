@@ -295,7 +295,7 @@ abstract class Form {
 	 * @param array $errors Form errors.
 	 */
 	final protected function add_errors( $errors ) {
-		$this->errors = array_merge( $this->errors, $errors );
+		$this->errors = array_unique( array_merge( $this->errors, $errors ) );
 	}
 
 	/**
@@ -366,9 +366,11 @@ abstract class Form {
 		$this->errors = apply_filters( 'hivepress/v1/forms/' . static::get_name() . '/errors', $this->errors );
 
 		// Validate fields.
-		foreach ( static::$fields as $field ) {
-			if ( ! $field->validate() ) {
-				$this->add_errors( $field->get_errors() );
+		if ( empty( $this->errors ) ) {
+			foreach ( static::$fields as $field ) {
+				if ( ! $field->validate() ) {
+					$this->add_errors( $field->get_errors() );
+				}
 			}
 		}
 

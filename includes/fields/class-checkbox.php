@@ -67,9 +67,10 @@ class Checkbox extends Field {
 
 				'settings' => [
 					'caption' => [
-						'label' => esc_html__( 'Caption', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Caption', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'order'      => 10,
 					],
 				],
 			],
@@ -87,7 +88,11 @@ class Checkbox extends Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'filters' => true,
+				'filters'  => true,
+
+				'statuses' => [
+					'optional' => null,
+				],
 			],
 			$args
 		);
@@ -106,15 +111,10 @@ class Checkbox extends Field {
 			$this->caption = $this->label;
 		}
 
-		// Set status.
-		$this->statuses['optional'] = null;
-
 		// Set ID.
-		$id = explode( '[', $this->name );
+		$attributes['id'] = explode( '[', $this->name )[0] . '_' . uniqid();
 
-		$attributes['id'] = reset( $id ) . '_' . uniqid();
-
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
@@ -134,12 +134,23 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Sanitizes field value.
+	 * Normalizes field value.
 	 */
-	protected function sanitize() {
+	protected function normalize() {
+		parent::normalize();
+
 		if ( is_bool( $this->sample ) ) {
 			$this->value = boolval( $this->value );
 		} else {
+			$this->value = wp_unslash( $this->value );
+		}
+	}
+
+	/**
+	 * Sanitizes field value.
+	 */
+	protected function sanitize() {
+		if ( ! is_bool( $this->sample ) ) {
 			$this->value = sanitize_text_field( $this->value );
 		}
 	}

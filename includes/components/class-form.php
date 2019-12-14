@@ -53,14 +53,6 @@ final class Form {
 			}
 		}
 
-		// todo.
-		// Render captcha.
-		if ( static::$captcha ) {
-			$output .= '<div class="hp-form__captcha">';
-			$output .= '<div class="g-recaptcha" data-sitekey="' . esc_attr( get_option( 'hp_recaptcha_site_key' ) ) . '"></div>';
-			$output .= '</div>';
-		}
-
 		return $errors;
 	}
 

@@ -79,13 +79,4 @@ class URL extends Text {
 	protected function sanitize() {
 		$this->value = esc_url_raw( $this->value );
 	}
-
-	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
-	 */
-	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_url( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
-	}
 }

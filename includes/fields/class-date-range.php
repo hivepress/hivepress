@@ -77,8 +77,6 @@ class Date_Range extends Date {
 		if ( ! is_null( $this->value ) ) {
 			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
 		}
-
-		return $this->value;
 	}
 
 	/**

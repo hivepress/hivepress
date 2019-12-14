@@ -31,10 +31,10 @@ class Attachment_Upload extends Field {
 	 *
 	 * @var array
 	 */
-	protected $file_formats = [];
+	protected $formats = [];
 
 	/**
-	 * Multiple property.
+	 * Multiple flag.
 	 *
 	 * @var bool
 	 */
@@ -46,33 +46,6 @@ class Attachment_Upload extends Field {
 	 * @var int
 	 */
 	protected $max_files;
-
-	/**
-	 * Gets file formats.
-	 *
-	 * @return array
-	 */
-	final public function get_file_formats() {
-		return $this->file_formats;
-	}
-
-	/**
-	 * Checks multiple property.
-	 *
-	 * @return bool
-	 */
-	final public function is_multiple() {
-		return $this->multiple;
-	}
-
-	/**
-	 * Gets maximum files.
-	 *
-	 * @return int
-	 */
-	final public function get_max_files() {
-		return absint( $this->max_files );
-	}
 
 	/**
 	 * Bootstraps field properties.
@@ -89,6 +62,33 @@ class Attachment_Upload extends Field {
 		}
 
 		parent::bootstrap();
+	}
+
+	/**
+	 * Gets file formats.
+	 *
+	 * @return array
+	 */
+	final public function get_formats() {
+		return $this->formats;
+	}
+
+	/**
+	 * Checks multiple flag.
+	 *
+	 * @return bool
+	 */
+	final public function is_multiple() {
+		return $this->multiple;
+	}
+
+	/**
+	 * Gets maximum files.
+	 *
+	 * @return int
+	 */
+	final public function get_max_files() {
+		return absint( $this->max_files );
 	}
 
 	/**
@@ -125,12 +125,11 @@ class Attachment_Upload extends Field {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
+		// Get ID.
+		$id = $this->name . '_' . uniqid();
+
 		// Render attachments.
-		if ( $this->multiple ) {
-			$output .= '<div class="hp-row" data-component="sortable">';
-		} else {
-			$output .= '<div class="hp-row">';
-		}
+		$output .= '<div class="hp-row" ' . ( $this->multiple ? 'data-component="sortable"' : '' ) . '>';
 
 		if ( ! is_null( $this->value ) ) {
 			foreach ( (array) $this->value as $attachment_id ) {
@@ -139,7 +138,7 @@ class Attachment_Upload extends Field {
 		}
 
 		$output .= '</div>';
-		$output .= '<label for="' . esc_attr( $this->name ) . '">';
+		$output .= '<label for="' . esc_attr( $id ) . '">';
 
 		// Render upload button.
 		$output .= '<button type="button" class="button">' . esc_html( $this->caption ) . '</button>';
@@ -147,10 +146,12 @@ class Attachment_Upload extends Field {
 		// Render upload field.
 		$output .= ( new File(
 			[
-				'name'         => $this->name,
-				'multiple'     => $this->multiple,
-				'file_formats' => $this->file_formats,
-				'attributes'   => [
+				'name'       => $this->name,
+				'multiple'   => $this->multiple,
+				'formats'    => $this->formats,
+
+				'attributes' => [
+					'id'             => $id,
 					'data-component' => 'file-upload',
 					'data-url'       => hp\get_rest_url( '/attachments' ),
 				],
