@@ -86,15 +86,6 @@ abstract class Email {
 	}
 
 	/**
-	 * Gets email name.
-	 *
-	 * @return string
-	 */
-	final public static function get_name() {
-		return hp\get_class_name( static::class );
-	}
-
-	/**
 	 * Bootstraps email properties.
 	 */
 	protected function bootstrap() {
@@ -118,11 +109,20 @@ abstract class Email {
 	}
 
 	/**
+	 * Gets email name.
+	 *
+	 * @return string
+	 */
+	final public static function get_name() {
+		return hp\get_class_name( static::class );
+	}
+
+	/**
 	 * Sends email.
 	 *
 	 * @return bool
 	 */
-	public function send() {
+	final public function send() {
 		return wp_mail(
 			$this->recipient,
 			static::$subject,
