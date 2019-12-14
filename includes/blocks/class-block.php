@@ -79,6 +79,11 @@ abstract class Block {
 	}
 
 	/**
+	 * Bootstraps block properties.
+	 */
+	protected function bootstrap() {}
+
+	/**
 	 * Gets block type.
 	 *
 	 * @return string
@@ -123,11 +128,6 @@ abstract class Block {
 	final public static function get_settings() {
 		return static::$settings;
 	}
-
-	/**
-	 * Bootstraps block properties.
-	 */
-	protected function bootstrap() {}
 
 	/**
 	 * Renders block HTML.

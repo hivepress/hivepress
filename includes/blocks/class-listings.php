@@ -70,7 +70,7 @@ class Listings extends Block {
 	protected $order;
 
 	/**
-	 * Featured status.
+	 * Featured flag.
 	 *
 	 * @var bool
 	 */
@@ -93,6 +93,7 @@ class Listings extends Block {
 						'default'  => 3,
 						'required' => true,
 						'order'    => 10,
+
 						'options'  => [
 							2 => '2',
 							3 => '3',
@@ -121,6 +122,7 @@ class Listings extends Block {
 						'label'   => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
 						'order'   => 40,
+
 						'options' => [
 							''       => esc_html__( 'Date', 'hivepress' ),
 							'title'  => esc_html__( 'Title', 'hivepress' ),
@@ -170,7 +172,7 @@ class Listings extends Block {
 
 			// Set category.
 			if ( $this->category ) {
-				$query->filter( [ 'category' => $this->category ] );
+				$query->filter( [ 'category_ids' => $this->category ] );
 			}
 
 			// Set order.
@@ -216,6 +218,7 @@ class Listings extends Block {
 			$featured_query = new \WP_Query(
 				Models\Listing::filter(
 					[
+						'status' => 'publish',
 						'id__in' => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
 					]
 				)->order( 'random' )->limit( get_option( 'hp_listings_featured_per_page' ) )->get_args()
@@ -236,7 +239,7 @@ class Listings extends Block {
 					$featured_query->the_post();
 
 					// Get listing.
-					$listing = Models\Listing::get_by_id( get_the_ID() );
+					$listing = Models\Listing::get_by_object( get_post() );
 
 					if ( ! is_null( $listing ) ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
@@ -262,7 +265,7 @@ class Listings extends Block {
 				$regular_query->the_post();
 
 				// Get listing.
-				$listing = Models\Listing::get_by_id( get_the_ID() );
+				$listing = Models\Listing::get_by_object( get_post() );
 
 				if ( ! is_null( $listing ) ) {
 					if ( 'edit' !== $this->template ) {

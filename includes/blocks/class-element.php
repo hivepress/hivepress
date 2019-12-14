@@ -37,7 +37,7 @@ class Element extends Block {
 		// Get file path.
 		$filepath = locate_template( 'hivepress/' . $this->filepath . '.php' );
 
-		if ( '' === $filepath ) {
+		if ( empty( $filepath ) ) {
 			foreach ( hivepress()->get_dirs() as $dir ) {
 				if ( file_exists( $dir . '/templates/' . $this->filepath . '.php' ) ) {
 					$filepath = $dir . '/templates/' . $this->filepath . '.php';
@@ -47,7 +47,7 @@ class Element extends Block {
 			}
 		}
 
-		if ( '' !== $filepath ) {
+		if ( ! empty( $filepath ) ) {
 
 			// Extract context.
 			unset( $this->context['filepath'] );

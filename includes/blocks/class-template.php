@@ -48,8 +48,7 @@ class Template extends Block {
 
 			// Merge blocks.
 			if ( ! empty( $this->blocks ) ) {
-				$blocks = hp\merge_trees( [ 'blocks' => $blocks ], [ 'blocks' => $this->blocks ], 'blocks' );
-				$blocks = reset( $blocks );
+				$blocks = hp\merge_trees( [ 'blocks' => $blocks ], [ 'blocks' => $this->blocks ], 'blocks' )['blocks'];
 			}
 
 			// Render blocks.

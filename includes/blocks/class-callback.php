@@ -45,7 +45,7 @@ class Callback extends Block {
 			ob_start();
 
 			call_user_func_array( $this->callback, $this->params );
-			$output = ob_get_contents();
+			$output .= ob_get_contents();
 
 			ob_end_clean();
 		}

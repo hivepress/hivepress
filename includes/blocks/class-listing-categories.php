@@ -86,6 +86,7 @@ class Listing_Categories extends Block {
 						'default'  => 3,
 						'required' => true,
 						'order'    => 10,
+
 						'options'  => [
 							2 => '2',
 							3 => '3',
@@ -115,8 +116,8 @@ class Listing_Categories extends Block {
 						'type'    => 'select',
 						'default' => '',
 						'order'   => 40,
+
 						'options' => [
-							''      => esc_html__( 'Default', 'hivepress' ),
 							'name'  => esc_html__( 'Category Name', 'hivepress' ),
 							'count' => esc_html__( 'Listing Count', 'hivepress' ),
 						],
@@ -134,7 +135,7 @@ class Listing_Categories extends Block {
 	 */
 	protected function bootstrap() {
 
-		// Set category ID.
+		// Set category parent.
 		if ( ! isset( $this->parent ) ) {
 			$this->parent = hp\get_array_value( $this->context, 'listing_category_id' );
 		}
@@ -170,7 +171,7 @@ class Listing_Categories extends Block {
 		if ( 'name' === $this->order ) {
 			$query->order( [ 'name' => 'asc' ] );
 		} elseif ( 'count' === $this->order ) {
-			$query->order( [ 'listing_count' => 'desc' ] );
+			$query->order( [ 'count' => 'desc' ] );
 		} else {
 			$query->set_args(
 				[

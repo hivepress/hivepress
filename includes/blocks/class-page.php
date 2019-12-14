@@ -63,14 +63,18 @@ class Page extends Container {
 
 		// Add header.
 		ob_start();
+
 		get_header();
 		$output = ob_get_contents() . $output;
+
 		ob_end_clean();
 
 		// Add footer.
 		ob_start();
+
 		get_footer();
 		$output .= ob_get_contents();
+
 		ob_end_clean();
 
 		return $output;

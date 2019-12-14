@@ -49,7 +49,7 @@ class User_Password_Reset_Form extends Form {
 			]
 		);
 
-		// Set attributes.
+		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

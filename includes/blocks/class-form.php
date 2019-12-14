@@ -65,8 +65,12 @@ class Form extends Block {
 		// Get arguments.
 		$form_args = [];
 
-		// Set instance ID.
-		$form_args['id'] = hp\get_array_value( $this->context, hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_model' ) . '_id' );
+		// Set object ID.
+		$model = hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_model' );
+
+		if ( ! is_null( $model ) ) {
+			$form_args['id'] = hp\get_array_value( $this->context, $model . '_id' );
+		}
 
 		// Set attributes.
 		$form_args['attributes'] = $this->attributes;

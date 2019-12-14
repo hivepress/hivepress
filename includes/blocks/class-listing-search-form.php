@@ -63,7 +63,7 @@ class Listing_Search_Form extends Form {
 	 */
 	protected function bootstrap() {
 
-		// Set attributes.
+		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

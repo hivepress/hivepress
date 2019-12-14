@@ -34,17 +34,17 @@ class Listing extends Template {
 		// Get classes.
 		$classes = [];
 
-		if ( get_post_meta( get_the_ID(), 'hp_featured', true ) ) {
+		if ( $this->context['listing']->is_featured() ) {
 			$classes[] = 'hp-listing--featured';
 		}
 
-		if ( get_post_meta( get_the_ID(), 'hp_verified', true ) ) {
+		if ( $this->context['listing']->is_verified() ) {
 			$classes[] = 'hp-listing--verified';
 		}
 
 		// Add classes.
 		if ( ! empty( $classes ) ) {
-			$blocks = hp\merge_trees(
+			$this->blocks = hp\merge_trees(
 				[
 					'blocks' => [
 						'listing_container' => [
@@ -56,9 +56,7 @@ class Listing extends Template {
 				],
 				[ 'blocks' => $this->blocks ],
 				'blocks'
-			);
-
-			$this->blocks = reset( $blocks );
+			)['blocks'];
 		}
 
 		parent::bootstrap();

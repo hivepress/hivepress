@@ -55,7 +55,7 @@ class Toggle extends Block {
 	protected $attributes = [];
 
 	/**
-	 * Active property.
+	 * Active flag.
 	 *
 	 * @var bool
 	 */
