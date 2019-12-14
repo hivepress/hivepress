@@ -99,6 +99,7 @@ return [
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
 				'type'        => 'checkboxes',
 				'order'       => 10,
+
 				'options'     => [
 					'view_block_primary'   => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'primary', 'area', 'hivepress' ) ),
 					'view_block_secondary' => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'secondary', 'area', 'hivepress' ) ),
@@ -112,7 +113,7 @@ return [
 				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%value%' ),
 				'type'        => 'text',
 				'default'     => '%value%',
-				'html'        => 'post',
+				'html'        => true,
 				'order'       => 20,
 			],
 		],
@@ -123,11 +124,11 @@ return [
 
 		'fields' => [
 			'image_id'              => [
-				'label'        => esc_html__( 'Image', 'hivepress' ),
-				'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-				'type'         => 'attachment_select',
+				'label'   => esc_html__( 'Image', 'hivepress' ),
+				'caption' => esc_html__( 'Select Image', 'hivepress' ),
+				'type'    => 'attachment_select',
 				'formats' => [ 'jpg', 'jpeg', 'png' ],
-				'order'        => 10,
+				'order'   => 10,
 			],
 
 			'order'                 => [
