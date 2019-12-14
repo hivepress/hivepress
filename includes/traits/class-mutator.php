@@ -26,9 +26,9 @@ trait Mutator {
 	 * @param mixed  $value Property value.
 	 */
 	final protected function set_property( $name, $value ) {
-		if ( method_exists( $this, 'set_' . $name ) ) {
+		if ( method_exists( $this, 'set_' . $name ) && ! ( new \ReflectionMethod( $this, 'set_' . $name ) )->isStatic() ) {
 			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
-		} elseif ( property_exists( $this, $name ) ) {
+		} elseif ( property_exists( $this, $name ) && ! ( new \ReflectionProperty( $this, $name ) )->isStatic() ) {
 			$this->$name = $value;
 		}
 	}
@@ -40,9 +40,9 @@ trait Mutator {
 	 * @param mixed  $value Property value.
 	 */
 	final protected static function set_static_property( $name, $value ) {
-		if ( method_exists( static::class, 'set_' . $name ) ) {
+		if ( method_exists( static::class, 'set_' . $name ) && ( new \ReflectionMethod( static::class, 'set_' . $name ) )->isStatic() ) {
 			call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
-		} elseif ( property_exists( static::class, $name ) ) {
+		} elseif ( property_exists( static::class, $name ) && ( new \ReflectionProperty( static::class, $name ) )->isStatic() ) {
 			static::$$name = $value;
 		}
 	}
