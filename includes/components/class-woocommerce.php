@@ -26,7 +26,7 @@ final class WooCommerce {
 	public function __construct() {
 
 		// Check WooCommerce status.
-		if ( ! class_exists( 'WooCommerce' ) ) {
+		if ( ! $this->is_active() ) {
 			return;
 		}
 
@@ -36,47 +36,56 @@ final class WooCommerce {
 			add_filter( 'wc_get_template', [ $this, 'set_page_template' ], 10, 2 );
 
 			// Add menu items.
-			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'add_menu_items' ] );
 
 			// Redirect account page.
 			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
 			// Alter templates.
-			add_filter( 'hivepress/v1/templates/account_page', [ $this, 'alter_account_page' ] );
+			add_filter( 'hivepress/v1/templates/user_account_page', [ $this, 'alter_account_page' ] );
 		}
+	}
+
+	/**
+	 * Checks WooCommerce status.
+	 *
+	 * @return bool
+	 */
+	public function is_active() {
+		return class_exists( 'WooCommerce' );
 	}
 
 	/**
 	 * Sets page template.
 	 *
-	 * @param string $template_path Template path.
-	 * @param string $template Template name.
+	 * @param string $path Template path.
+	 * @param string $name Template name.
 	 * @return string
 	 */
-	public function set_page_template( $template_path, $template ) {
-		if ( 'myaccount/my-account.php' === $template && ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) ) {
-			$template_path = HP_CORE_DIR . '/templates/woocommerce/myaccount/my-account.php';
+	public function set_page_template( $path, $name ) {
+		if ( 'myaccount/my-account.php' === $name && ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) ) {
+			$path = HP_CORE_DIR . '/templates/woocommerce/myaccount/my-account.php';
 		}
 
-		return $template_path;
+		return $path;
 	}
 
 	/**
 	 * Adds menu items.
 	 *
-	 * @param array $menu Menu arguments.
+	 * @param array $args Menu arguments.
 	 * @return array
 	 */
-	public function add_menu_items( $menu ) {
+	public function add_menu_items( $args ) {
 		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
-			$menu['items']['woocommerce_orders'] = [
+			$args['items']['woocommerce_orders'] = [
 				'label' => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 				'order' => 40,
 			];
 		}
 
-		return $menu;
+		return $args;
 	}
 
 	/**
@@ -84,7 +93,7 @@ final class WooCommerce {
 	 */
 	public function redirect_account_page() {
 		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), Controllers\User::get_url( 'login_user' ) ) );
+			wp_safe_redirect( hp\get_redirect_url( Controllers\User::get_url( 'login_user' ) ) );
 
 			exit();
 		}
