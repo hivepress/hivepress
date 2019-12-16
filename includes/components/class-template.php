@@ -32,12 +32,12 @@ final class Template {
 			// Remove theme header.
 			add_filter( 'twentynineteen_can_show_post_thumbnail', [ $this, 'remove_theme_header' ] );
 
-			// Render header.
-			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_header' ] );
-			add_action( 'storefront_header', [ $this, 'render_header' ], 31 );
+			// Render site header.
+			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_site_header' ] );
+			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
 
-			// Render footer.
-			add_action( 'wp_footer', [ $this, 'render_footer' ] );
+			// Render site footer.
+			add_action( 'wp_footer', [ $this, 'render_site_footer' ] );
 		}
 	}
 
@@ -48,13 +48,13 @@ final class Template {
 	 * @return array
 	 */
 	public function add_theme_class( $classes ) {
-		return array_merge( $classes, [ 'hp-theme--' . sanitize_key( get_template() ) ] );
+		return array_merge( $classes, [ 'hp-theme', 'hp-theme--' . hp\sanitize_slug( get_template() ) ] );
 	}
 
 	/**
 	 * Removes theme header.
 	 *
-	 * @param bool $display Display property.
+	 * @param bool $display Display flag.
 	 * @return bool
 	 */
 	public function remove_theme_header( $display ) {
@@ -66,16 +66,16 @@ final class Template {
 	}
 
 	/**
-	 * Renders header.
+	 * Renders site header.
 	 */
-	public function render_header() {
-		echo ( new Blocks\Template( [ 'template' => 'header_block' ] ) )->render();
+	public function render_site_header() {
+		echo ( new Blocks\Template( [ 'template' => 'site_header_block' ] ) )->render();
 	}
 
 	/**
-	 * Renders footer.
+	 * Renders site footer.
 	 */
-	public function render_footer() {
-		echo ( new Blocks\Template( [ 'template' => 'footer_block' ] ) )->render();
+	public function render_site_footer() {
+		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render();
 	}
 }

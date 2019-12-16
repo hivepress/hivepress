@@ -26,120 +26,40 @@ final class Vendor {
 	public function __construct() {
 
 		// Update vendor.
-		add_action( 'added_user_meta', [ $this, 'update_vendor' ], 10, 4 );
-		add_action( 'updated_user_meta', [ $this, 'update_vendor' ], 10, 4 );
-
-		// Update image.
-		add_action( 'added_post_meta', [ $this, 'update_image' ], 10, 4 );
-
-		// Import vendors.
-		add_action( 'import_start', [ $this, 'import_vendors' ] );
-
-		if ( ! is_admin() ) {
-
-			// Disable redirect.
-			add_action( 'template_redirect', [ $this, 'disable_page_redirect' ], 1 );
-
-			// Set page title.
-			add_filter( 'hivepress/v1/controllers/vendor/routes/view_vendor', [ $this, 'set_page_title' ] );
-		}
+		add_action( 'hivepress/v1/models/user/update_image_id', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
 	}
 
 	/**
 	 * Updates vendor.
 	 *
-	 * @param int    $meta_id Meta ID.
-	 * @param int    $user_id User ID.
-	 * @param string $meta_key Meta key.
-	 * @param string $meta_value Meta value.
+	 * @param int $user_id User ID.
 	 */
-	public function update_vendor( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( in_array( $meta_key, [ 'first_name', 'description' ], true ) ) {
+	public function update_vendor( $user_id ) {
 
-			// Get vendor ID.
-			$vendor_id = Models\Vendor::filter(
-				[
-					'status'  => 'publish',
-					'user_id' => $user_id,
-				]
-			)->get_first_id();
+		// Get vendor.
+		$vendor = Models\Vendor::filter(
+			[
+				'status'  => 'publish',
+				'user_id' => $user_id,
+			]
+		)->get_first();
 
-			if ( ! empty( $vendor_id ) ) {
-
-				// Get user.
-				$user = get_userdata( $user_id );
-
-				if ( false !== $user ) {
-
-					// Update vendor.
-					wp_update_post(
-						[
-							'ID'           => $vendor_id,
-							'post_title'   => $user->display_name,
-							'post_content' => get_user_meta( $user_id, 'description', true ),
-						]
-					);
-				}
-			}
+		if ( is_null( $vendor ) ) {
+			return;
 		}
-	}
 
-	/**
-	 * Updates image.
-	 *
-	 * @param int    $meta_id Meta ID.
-	 * @param int    $attachment_id Attachment ID.
-	 * @param string $meta_key Meta key.
-	 * @param string $meta_value Meta value.
-	 */
-	public function update_image( $meta_id, $attachment_id, $meta_key, $meta_value ) {
-		if ( 'hp_parent_field' === $meta_key && 'image_id' === $meta_value ) {
+		// Get user.
+		$user = Models\User::get_by_id( $user_id );
 
-			// Get attachment.
-			$attachment = get_post( $attachment_id );
-
-			if ( 'attachment' === $attachment->post_type && 0 === $attachment->post_parent ) {
-
-				// Get vendor ID.
-				$vendor_id = Models\Vendor::filter(
-					[
-						'status'  => 'publish',
-						'user_id' => $attachment->post_author,
-					]
-				)->get_first_id();
-
-				if ( ! empty( $vendor_id ) ) {
-
-					// Update image.
-					set_post_thumbnail( $vendor_id, $attachment_id );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Imports vendors.
-	 */
-	public function import_vendors() {
-		remove_action( 'added_post_meta', [ $this, 'update_image' ] );
-	}
-
-	/**
-	 * Disables page redirect.
-	 */
-	public function disable_page_redirect() {
-		if ( is_singular( 'hp_vendor' ) ) {
-			remove_action( 'template_redirect', 'redirect_canonical' );
-		}
-	}
-
-	/**
-	 * Sets page title.
-	 *
-	 * @param array $route Route arguments.
-	 * @return array
-	 */
-	public function set_page_title( $route ) {
-		return array_merge( $route, [ 'title' => sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), get_the_title() ) ] );
+		// Update vendor.
+		$vendor->fill(
+			[
+				'image_id'    => $user->get_image_id(),
+				'name'        => $user->get_first_name(),
+				'description' => $user->get_description(),
+			]
+		)->save();
 	}
 }
