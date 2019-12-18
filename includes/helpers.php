@@ -426,3 +426,8 @@ function call_class_method( $class, $method, $args = [] ) {
 function get_class_name( $class ) {
 	return strtolower( ( new \ReflectionClass( $class ) )->getShortName() );
 }
+
+// todo.
+function get_redirect_url( $url ) {
+	return add_query_arg( 'redirect', rawurlencode( get_current_url() ), $url );
+}
