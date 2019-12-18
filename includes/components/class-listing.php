@@ -30,8 +30,7 @@ final class Listing {
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
 
 		// Set image.
-		add_action( 'add_attachment', [ $this, 'set_image' ] );
-		add_action( 'edit_attachment', [ $this, 'set_image' ] );
+		add_action( 'hivepress/v1/models/listing/update_image_ids', [ $this, 'set_image' ] );
 
 		// Update status.
 		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
@@ -39,41 +38,18 @@ final class Listing {
 		// Expire listings.
 		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
 
-		// Import listings.
-		add_action( 'import_start', [ $this, 'import_listings' ] );
+		// Add submission fields.
+		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
 
 		if ( is_admin() ) {
 
-			// Add states.
-			add_filter( 'display_post_states', [ $this, 'add_states' ], 10, 2 );
+			// Add listing states.
+			add_filter( 'display_post_states', [ $this, 'add_listing_states' ], 10, 2 );
 		} else {
 
 			// Add menu items.
-			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'add_menu_items' ] );
 		}
-	}
-
-	// todo.
-	public function add_todo_fields($form) {
-		// Add terms checkbox.
-		$page_id = hp\get_post_id(
-			[
-				'post_type'   => 'page',
-				'post_status' => 'publish',
-				'post__in'    => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
-			]
-		);
-
-		if ( 0 !== $page_id ) {
-			$fields['terms'] = [
-				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'     => 'checkbox',
-				'required' => true,
-				'order'    => 1000,
-			];
-		}
-
-		return $form;
 	}
 
 	/**
@@ -346,21 +322,13 @@ final class Listing {
 	}
 
 	/**
-	 * Imports listings.
-	 */
-	public function import_listings() {
-		remove_action( 'add_attachment', [ $this, 'set_image' ] );
-		remove_action( 'edit_attachment', [ $this, 'set_image' ] );
-	}
-
-	/**
-	 * Adds states.
+	 * Adds listing states.
 	 *
 	 * @param array   $states Listing states.
 	 * @param WP_Post $listing Listing object.
 	 * @return array
 	 */
-	public function add_states( $states, $listing ) {
+	public function add_listing_states( $states, $listing ) {
 		if ( 'hp_listing' === $listing->post_type ) {
 			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
 				$states[] = esc_html_x( 'Featured', 'listing', 'hivepress' );
@@ -395,5 +363,40 @@ final class Listing {
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Adds submission fields.
+	 *
+	 * @param array $args Form arguments.
+	 * @return array
+	 */
+	public function add_submission_fields( $args ) {
+
+		// Get terms page ID.
+		$page_id = reset(
+			( get_posts(
+				[
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			) )
+		);
+
+		if ( $page_id ) {
+
+			// Add terms field.
+			$args['fields']['submission_terms'] = [
+				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
+				'type'     => 'checkbox',
+				'required' => true,
+				'order'    => 1000,
+			];
+		}
+
+		return $args;
 	}
 }

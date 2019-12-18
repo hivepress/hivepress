@@ -38,6 +38,9 @@ final class Attribute {
 	 */
 	public function __construct() {
 
+		// todo.
+		return;
+
 		// Register attributes.
 		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
 

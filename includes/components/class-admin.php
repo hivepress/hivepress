@@ -34,6 +34,9 @@ final class Admin {
 		// Register post types.
 		add_action( 'init', [ $this, 'register_post_types' ] );
 
+		// todo.
+		add_action( 'template_redirect', [ $this, 'todo_post_types' ], 1 );
+
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
@@ -79,6 +82,17 @@ final class Admin {
 	public function register_post_types() {
 		foreach ( hivepress()->get_config( 'post_types' ) as $post_type => $post_type_args ) {
 			register_post_type( hp\prefix( $post_type ), $post_type_args );
+		}
+	}
+
+	// todo.
+	public function todo_post_types() {
+		foreach ( hivepress()->get_config( 'post_types' ) as $post_type => $post_type_args ) {
+			if ( is_singular( hp\prefix( $post_type ) ) ) {
+				remove_action( 'template_redirect', 'redirect_canonical' );
+
+				break;
+			}
 		}
 	}
 

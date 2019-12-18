@@ -34,13 +34,14 @@ class Listing extends Template {
 		// Get classes.
 		$classes = [];
 
-		if ( $this->context['listing']->is_featured() ) {
-			$classes[] = 'hp-listing--featured';
-		}
+		// todo.
+		//if ( $this->context['listing']->is_featured() ) {
+			//$classes[] = 'hp-listing--featured';
+		//}
 
-		if ( $this->context['listing']->is_verified() ) {
-			$classes[] = 'hp-listing--verified';
-		}
+		//if ( $this->context['listing']->is_verified() ) {
+			//$classes[] = 'hp-listing--verified';
+		//}
 
 		// Add classes.
 		if ( ! empty( $classes ) ) {
