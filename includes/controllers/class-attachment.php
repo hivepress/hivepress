@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Attachment extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -43,10 +36,10 @@ class Attachment extends Controller {
 					 * @description The attachments API allows you to upload, update and delete attachments.
 					 */
 					[
-						'path'      => '/attachments',
-						'rest'      => true,
+						'path'   => '/attachments',
+						'rest'   => true,
 
-						'endpoints' => [
+						'routes' => [
 
 							/**
 							 * Uploads attachment.
@@ -59,8 +52,8 @@ class Attachment extends Controller {
 							 * @param int $parent_id Parent ID.
 							 */
 							[
-								'methods' => 'POST',
-								'action'  => 'upload_attachment',
+								'method' => 'POST',
+								'action' => [ $this, 'upload_attachment' ],
 							],
 
 							/**
@@ -72,9 +65,9 @@ class Attachment extends Controller {
 							 * @param int $order Order.
 							 */
 							[
-								'path'    => '/(?P<attachment_id>\d+)',
-								'methods' => 'POST',
-								'action'  => 'update_attachment',
+								'path'   => '/(?P<attachment_id>\d+)',
+								'method' => 'POST',
+								'action' => [ $this, 'update_attachment' ],
 							],
 
 							/**
@@ -85,9 +78,9 @@ class Attachment extends Controller {
 							 * @method DELETE
 							 */
 							[
-								'path'    => '/(?P<attachment_id>\d+)',
-								'methods' => 'DELETE',
-								'action'  => 'delete_attachment',
+								'path'   => '/(?P<attachment_id>\d+)',
+								'method' => 'DELETE',
+								'action' => [ $this, 'delete_attachment' ],
 							],
 						],
 					],
@@ -96,7 +89,7 @@ class Attachment extends Controller {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**

@@ -24,18 +24,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -47,10 +40,10 @@ class Listing extends Controller {
 					 * @description The listings API allows you to update and delete listings.
 					 */
 					[
-						'path'      => '/listings',
-						'rest'      => true,
+						'path'   => '/listings',
+						'rest'   => true,
 
-						'endpoints' => [
+						'routes' => [
 
 							/**
 							 * Updates listing.
@@ -62,15 +55,15 @@ class Listing extends Controller {
 							 * @param string $description Description.
 							 */
 							[
-								'path'    => '/(?P<listing_id>\d+)',
-								'methods' => 'POST',
-								'action'  => 'update_listing',
+								'path'   => '/(?P<listing_id>\d+)',
+								'method' => 'POST',
+								'action' => [ $this, 'update_listing' ],
 							],
 
 							[
-								'path'    => '/(?P<listing_id>\d+)/report',
-								'methods' => 'POST',
-								'action'  => 'report_listing',
+								'path'   => '/(?P<listing_id>\d+)/report',
+								'method' => 'POST',
+								'action' => [ $this, 'report_listing' ],
 							],
 
 							/**
@@ -81,68 +74,68 @@ class Listing extends Controller {
 							 * @method DELETE
 							 */
 							[
-								'path'    => '/(?P<listing_id>\d+)',
-								'methods' => 'DELETE',
-								'action'  => 'delete_listing',
+								'path'   => '/(?P<listing_id>\d+)',
+								'method' => 'DELETE',
+								'action' => [ $this, 'delete_listing' ],
 							],
 						],
 					],
 
 					'view_listings'   => [
-						'match'  => 'is_listings_view_page',
-						'action' => 'render_listings_view_page',
+						'match'  => [ $this, 'is_listings_view_page' ],
+						'action' => [ $this, 'render_listings_view_page' ],
 					],
 
 					'view_listing'    => [
-						'match'  => 'is_listing_view_page',
-						'action' => 'render_listing_view_page',
+						'match'  => [ $this, 'is_listing_view_page' ],
+						'action' => [ $this, 'render_listing_view_page' ],
 					],
 
 					'edit_listings'   => [
 						'title'    => hivepress()->translator->get_string( 'listings' ),
 						'path'     => '/account/listings',
-						'redirect' => 'redirect_listings_edit_page',
-						'action'   => 'render_listings_edit_page',
+						'redirect' => [ $this, 'redirect_listings_edit_page' ],
+						'action'   => [ $this, 'render_listings_edit_page' ],
 					],
 
 					'edit_listing'    => [
 						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
 						'path'     => '/account/listings/(?P<listing_id>\d+)',
-						'redirect' => 'redirect_listing_edit_page',
-						'action'   => 'render_listing_edit_page',
+						'redirect' => [ $this, 'redirect_listing_edit_page' ],
+						'action'   => [ $this, 'render_listing_edit_page' ],
 					],
 
 					'submit_listing'  => [
 						'path'     => '/submit-listing',
-						'redirect' => 'redirect_listing_submit_page',
+						'redirect' => [ $this, 'redirect_listing_submit_page' ],
 					],
 
 					'submit_category' => [
 						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
 						'path'     => '/submit-listing/category/?(?P<listing_category_id>\d+)?',
-						'redirect' => 'redirect_listing_submit_category_page',
-						'action'   => 'render_listing_submit_category_page',
+						'redirect' => [ $this, 'redirect_listing_submit_category_page' ],
+						'action'   => [ $this, 'render_listing_submit_category_page' ],
 					],
 
 					'submit_details'  => [
 						'title'    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
 						'path'     => '/submit-listing/details',
-						'redirect' => 'redirect_listing_submit_details_page',
-						'action'   => 'render_listing_submit_details_page',
+						'redirect' => [ $this, 'redirect_listing_submit_details_page' ],
+						'action'   => [ $this, 'render_listing_submit_details_page' ],
 					],
 
 					'submit_complete' => [
 						'title'    => hivepress()->translator->get_string( 'listing_submitted' ),
 						'path'     => '/submit-listing/complete',
-						'redirect' => 'redirect_listing_submit_complete_page',
-						'action'   => 'render_listing_submit_complete_page',
+						'redirect' => [ $this, 'redirect_listing_submit_complete_page' ],
+						'action'   => [ $this, 'render_listing_submit_complete_page' ],
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**

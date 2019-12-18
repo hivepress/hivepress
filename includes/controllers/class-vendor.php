@@ -24,31 +24,24 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
 					'view_vendor' => [
-						'match'  => 'is_vendor_view_page',
-						'action' => 'render_vendor_view_page',
+						'match'  => [ $this, 'is_vendor_view_page' ],
+						'action' => [ $this, 'render_vendor_view_page' ],
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**

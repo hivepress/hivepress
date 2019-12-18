@@ -25,18 +25,11 @@ defined( 'ABSPATH' ) || exit;
 class User extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -48,10 +41,10 @@ class User extends Controller {
 					 * @description The users API allows you to register, update and delete users.
 					 */
 					[
-						'path'      => '/users',
-						'rest'      => true,
+						'path'   => '/users',
+						'rest'   => true,
 
-						'endpoints' => [
+						'routes' => [
 
 							/**
 							 * Registers user.
@@ -64,26 +57,26 @@ class User extends Controller {
 							 * @param string $password Password.
 							 */
 							[
-								'methods' => 'POST',
-								'action'  => 'register_user',
+								'method' => 'POST',
+								'action' => [ $this, 'register_user' ],
 							],
 
 							[
-								'path'    => '/login',
-								'methods' => 'POST',
-								'action'  => 'login_user',
+								'path'   => '/login',
+								'method' => 'POST',
+								'action' => [ $this, 'login_user' ],
 							],
 
 							[
-								'path'    => '/request-password',
-								'methods' => 'POST',
-								'action'  => 'request_password',
+								'path'   => '/request-password',
+								'method' => 'POST',
+								'action' => [ $this, 'request_password' ],
 							],
 
 							[
-								'path'    => '/reset-password',
-								'methods' => 'POST',
-								'action'  => 'reset_password',
+								'path'   => '/reset-password',
+								'method' => 'POST',
+								'action' => [ $this, 'reset_password' ],
 							],
 
 							/**
@@ -99,9 +92,9 @@ class User extends Controller {
 							 * @param string $password Password.
 							 */
 							[
-								'path'    => '/(?P<user_id>\d+)',
-								'methods' => 'POST',
-								'action'  => 'update_user',
+								'path'   => '/(?P<user_id>\d+)',
+								'method' => 'POST',
+								'action' => [ $this, 'update_user' ],
 							],
 
 							/**
@@ -112,9 +105,9 @@ class User extends Controller {
 							 * @method DELETE
 							 */
 							[
-								'path'    => '/(?P<user_id>\d+)',
-								'methods' => 'DELETE',
-								'action'  => 'delete_user',
+								'path'   => '/(?P<user_id>\d+)',
+								'method' => 'DELETE',
+								'action' => [ $this, 'delete_user' ],
 							],
 						],
 					],
@@ -122,34 +115,34 @@ class User extends Controller {
 					'login_user'     => [
 						'title'    => esc_html__( 'Sign In', 'hivepress' ),
 						'path'     => '/account/login',
-						'redirect' => 'redirect_login_page',
-						'action'   => 'render_login_page',
+						'redirect' => [ $this, 'redirect_login_page' ],
+						'action'   => [ $this, 'render_login_page' ],
 					],
 
 					'reset_password' => [
 						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
 						'path'     => '/account/reset-password',
-						'redirect' => 'redirect_password_reset_page',
-						'action'   => 'render_password_reset_page',
+						'redirect' => [ $this, 'redirect_password_reset_page' ],
+						'action'   => [ $this, 'render_password_reset_page' ],
 					],
 
 					'view_account'   => [
 						'path'     => '/account',
-						'redirect' => 'redirect_account_page',
+						'redirect' => [ $this, 'redirect_account_page' ],
 					],
 
 					'edit_settings'  => [
 						'title'    => esc_html__( 'Settings', 'hivepress' ),
 						'path'     => '/account/settings',
-						'redirect' => 'redirect_edit_settings_page',
-						'action'   => 'render_edit_settings_page',
+						'redirect' => [ $this, 'redirect_edit_settings_page' ],
+						'action'   => [ $this, 'render_edit_settings_page' ],
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**

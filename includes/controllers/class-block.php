@@ -20,30 +20,23 @@ defined( 'ABSPATH' ) || exit;
 class Block extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
 					[
-						'path'      => '/templates/(?P<template_name>[a-z\-]+)/blocks',
-						'rest'      => true,
+						'path'   => '/templates/(?P<template_name>[a-z\-]+)/blocks',
+						'rest'   => true,
 
-						'endpoints' => [
+						'routes' => [
 							[
-								'path'    => '/(?P<block_name>[a-z\-]+)',
-								'methods' => 'GET',
-								'action'  => 'get_block',
+								'path'   => '/(?P<block_name>[a-z\-]+)',
+								'method' => 'GET',
+								'action' => [ $this, 'get_block' ],
 							],
 						],
 					],
@@ -52,7 +45,7 @@ class Block extends Controller {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**

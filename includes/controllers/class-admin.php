@@ -20,30 +20,23 @@ defined( 'ABSPATH' ) || exit;
 class Admin extends Controller {
 
 	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
 					[
-						'path'      => '/admin/notices',
-						'rest'      => true,
+						'path'   => '/admin/notices',
+						'rest'   => true,
 
-						'endpoints' => [
+						'routes' => [
 							[
-								'path'    => '/(?P<notice_name>[a-z0-9_]+)',
-								'methods' => 'POST',
-								'action'  => 'update_notice',
+								'path'   => '/(?P<notice_name>[a-z0-9_]+)',
+								'method' => 'POST',
+								'action' => [ $this, 'update_notice' ],
 							],
 						],
 					],
@@ -52,7 +45,7 @@ class Admin extends Controller {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
