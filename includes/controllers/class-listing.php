@@ -101,7 +101,7 @@ class Listing extends Controller {
 					'edit_listing'    => [
 						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
 						'base'     => 'user_account',
-						'path'     => '/listings/(?P<listing_id>\d+)/(?P<todo_id>\d+)',
+						'path'     => '/listings/(?P<listing_id>\d+)',
 						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'action'   => [ $this, 'render_listing_edit_page' ],
 					],

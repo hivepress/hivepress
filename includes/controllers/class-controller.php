@@ -22,7 +22,7 @@ abstract class Controller {
 	use Traits\Mutator;
 
 	/**
-	 * URL routes.
+	 * Controller routes.
 	 *
 	 * @var array
 	 */
