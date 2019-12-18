@@ -122,41 +122,32 @@ abstract class Menu {
 	 * @param array $items Menu items.
 	 */
 	final protected static function set_items( $items ) {
-		static::$items = [];
-
-		foreach ( hp\sort_array( $items ) as $item_name => $item ) {
+		foreach ( hp\sort_array( $items ) as $name => $item ) {
 			if ( isset( $item['route'] ) ) {
-				list($controller_name, $route_name) = explode( '/', $item['route'] );
 
-				// Get controller.
-				$controller = hp\get_array_value( hivepress()->get_controllers(), $controller_name );
+				// Get route.
+				$route = hivepress()->router->get_route( $item['route'] );
 
-				if ( ! is_null( $controller ) ) {
+				if ( $route ) {
 
-					// Get route.
-					$route = hp\get_array_value( $controller::get_routes(), $route_name );
+					// Set label.
+					if ( isset( $route['title'] ) ) {
+						$item['label'] = $route['title'];
+					}
 
-					if ( ! is_null( $route ) ) {
+					// Set URL.
+					if ( ! isset( $item['url'] ) ) {
+						$item['url'] = hivepress()->router->get_url( $item['route'] );
+					}
 
-						// Set label.
-						if ( ! isset( $item['label'] ) ) {
-							$item['label'] = hp\get_array_value( $route, 'title' );
-						}
-
-						// Set URL.
-						if ( ! isset( $item['url'] ) ) {
-							$item['url'] = $controller::get_url( $route_name );
-						}
-
-						// Set current flag.
-						if ( get_query_var( 'hp_route' ) === $item['route'] ) {
-							$item['current'] = true;
-						}
+					// Set current flag.
+					if ( get_query_var( 'hp_route' ) === $item['route'] ) {
+						$item['current'] = true;
 					}
 				}
 			}
 
-			static::$items[ $item_name ] = $item;
+			static::$items[ $name ] = $item;
 		}
 	}
 
@@ -180,7 +171,7 @@ abstract class Menu {
 		if ( ! empty( static::$items ) ) {
 			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
 
-			foreach ( static::$items as $item_name => $item ) {
+			foreach ( static::$items as $name => $item ) {
 				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $item, 'current', false ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
 				$output .= '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
 				$output .= '</li>';

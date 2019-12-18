@@ -357,7 +357,7 @@ final class Listing {
 			]
 		) !== 0 ) {
 			$menu['items']['edit_listings'] = [
-				'route' => 'listing/edit_listings',
+				'route' => 'edit_listings',
 				'order' => 10,
 			];
 		}

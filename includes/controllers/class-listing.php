@@ -100,7 +100,8 @@ class Listing extends Controller {
 
 					'edit_listing'    => [
 						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
-						'path'     => '/account/listings/(?P<listing_id>\d+)',
+						'base'     => 'user_account',
+						'path'     => '/listings/(?P<listing_id>\d+)/(?P<todo_id>\d+)',
 						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'action'   => [ $this, 'render_listing_edit_page' ],
 					],
@@ -471,7 +472,7 @@ class Listing extends Controller {
 		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
 
 		if ( is_null( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
-			return self::get_url( 'edit_listings' );
+			return hivepress()->router->get_url( 'edit_listings' );
 		}
 
 		return false;

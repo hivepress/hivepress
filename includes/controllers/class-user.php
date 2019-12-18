@@ -126,7 +126,7 @@ class User extends Controller {
 						'action'   => [ $this, 'render_password_reset_page' ],
 					],
 
-					'view_account'   => [
+					'user_account'   => [
 						'path'     => '/account',
 						'redirect' => [ $this, 'redirect_account_page' ],
 					],
@@ -623,7 +623,7 @@ class User extends Controller {
 		}
 
 		// Get menu items.
-		$menu_items = Menus\Account::get_items();
+		$menu_items = Menus\User_Account::get_items();
 
 		if ( ! empty( $menu_items ) ) {
 			return reset( $menu_items )['url'];

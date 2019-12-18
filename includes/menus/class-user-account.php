@@ -36,7 +36,7 @@ class User_Account extends Menu {
 			[
 				'items' => [
 					'edit_settings' => [
-						'route' => 'user/edit_settings',
+						'route' => 'edit_settings',
 						'order' => 50,
 					],
 
