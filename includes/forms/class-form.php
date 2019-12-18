@@ -253,8 +253,6 @@ abstract class Form {
 	 * @param array $fields Form fields.
 	 */
 	protected static function set_fields( $fields ) {
-		static::$fields = [];
-
 		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Create field.

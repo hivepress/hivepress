@@ -107,8 +107,6 @@ abstract class Block {
 	 * @param array $settings Block settings.
 	 */
 	final protected static function set_settings( $settings ) {
-		static::$settings = [];
-
 		foreach ( $settings as $field_name => $field_args ) {
 
 			// Create field.

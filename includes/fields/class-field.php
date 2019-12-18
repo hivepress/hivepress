@@ -239,8 +239,6 @@ abstract class Field {
 	 * @param array $settings Field settings.
 	 */
 	final protected static function set_settings( $settings ) {
-		static::$settings = [];
-
 		foreach ( $settings as $field_name => $field_args ) {
 
 			// Create field.

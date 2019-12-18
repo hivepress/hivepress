@@ -118,8 +118,6 @@ abstract class Model {
 	 * @param array $fields Model fields.
 	 */
 	final protected static function set_fields( $fields ) {
-		static::$fields = [];
-
 		foreach ( hp\sort_array( $fields ) as $field_name => $field_args ) {
 
 			// Create field.
