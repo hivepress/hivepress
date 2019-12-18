@@ -138,11 +138,10 @@ abstract class Query extends \ArrayObject {
 	 */
 	final protected static function get_alias( $path ) {
 		$alias = [ 'aliases' => static::$aliases ];
-		$parts = explode( '/', $path );
 
-		foreach ( $parts as $part ) {
-			if ( isset( $alias['aliases'][ $part ] ) ) {
-				$alias = $alias['aliases'][ $part ];
+		foreach ( explode( '/', $path ) as $name ) {
+			if ( isset( $alias['aliases'][ $name ] ) ) {
+				$alias = $alias['aliases'][ $name ];
 			} else {
 				return;
 			}
