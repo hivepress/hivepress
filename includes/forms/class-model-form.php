@@ -40,7 +40,7 @@ abstract class Model_Form extends Form {
 		$attributes = [];
 
 		// Set action.
-		if ( isset( static::$action ) ) {
+		if ( static::$action ) {
 			static::$action = rtrim(
 				hp\replace_tokens(
 					[
@@ -53,20 +53,20 @@ abstract class Model_Form extends Form {
 		}
 
 		// Set model.
-		if ( isset( static::$model ) ) {
+		if ( static::$model ) {
 			$attributes['data-model'] = static::$model;
 		}
 
 		// Set ID.
-		if ( isset( $this->id ) ) {
+		if ( $this->id ) {
 			$attributes['data-id'] = $this->id;
 		}
 
 		// Set values.
-		if ( isset( static::$model ) && isset( $this->id ) ) {
+		if ( static::$model && $this->id ) {
 			$object = hp\call_class_method( '\HivePress\Models\\' . static::$model, 'get_by_id', [ $this->id ] );
 
-			if ( ! is_null( $object ) ) {
+			if ( $object ) {
 				$this->set_values( $object->serialize() );
 			}
 		}

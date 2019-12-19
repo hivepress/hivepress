@@ -44,23 +44,23 @@ class Listing_Submit extends Menu {
 				'chained' => true,
 
 				'items'   => [
-					'submit_listing'  => [
-						'route' => 'listing/submit_listing',
+					'listing_submit_page'          => [
+						'route' => 'listing_submit_page',
 						'order' => 10,
 					],
 
-					'submit_category' => [
-						'route' => 'listing/submit_category',
+					'listing_submit_category_page' => [
+						'route' => 'listing_submit_category_page',
 						'order' => 20,
 					],
 
-					'submit_details'  => [
-						'route' => 'listing/submit_details',
+					'listing_submit_details_page'  => [
+						'route' => 'listing_submit_details_page',
 						'order' => 30,
 					],
 
-					'submit_complete' => [
-						'route' => 'listing/submit_complete',
+					'listing_submit_complete_page' => [
+						'route' => 'listing_submit_complete_page',
 						'order' => 40,
 					],
 				],

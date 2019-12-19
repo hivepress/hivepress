@@ -68,15 +68,19 @@ class Form extends Block {
 		// Set object ID.
 		$model = hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_model' );
 
-		if ( ! is_null( $model ) ) {
-			$form_args['id'] = hp\get_array_value( $this->context, $model . '_id' );
+		if ( $model ) {
+			$object = hp\get_array_value( $this->context, $model );
+
+			if ( is_object( $object ) && strtolower( get_class( $object ) ) === strtolower( 'HivePress\Models\\' . $model ) ) {
+				$form_args['id'] = $object->get_id();
+			}
 		}
 
 		// Set attributes.
 		$form_args['attributes'] = $this->attributes;
 
 		// Render header.
-		if ( ! empty( $this->header ) ) {
+		if ( $this->header ) {
 			$form_args['header'] = ( new Container(
 				[
 					'context' => $this->context,
@@ -87,7 +91,7 @@ class Form extends Block {
 		}
 
 		// Render footer.
-		if ( ! empty( $this->footer ) ) {
+		if ( $this->footer ) {
 			$form_args['footer'] = ( new Container(
 				[
 					'context' => $this->context,
