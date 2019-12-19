@@ -356,8 +356,8 @@ final class Listing {
 				'author'      => get_current_user_id(),
 			]
 		) !== 0 ) {
-			$menu['items']['edit_listings'] = [
-				'route' => 'edit_listings',
+			$menu['items']['listings_edit_page'] = [
+				'route' => 'listings_edit_page',
 				'order' => 10,
 			];
 		}

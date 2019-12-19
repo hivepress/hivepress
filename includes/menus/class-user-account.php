@@ -35,12 +35,12 @@ class User_Account extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					'edit_settings' => [
-						'route' => 'edit_settings',
+					'user_edit_settings_page' => [
+						'route' => 'user_edit_settings_page',
 						'order' => 50,
 					],
 
-					'logout_user'   => [
+					'user_logout_action'      => [
 						'label' => esc_html__( 'Sign Out', 'hivepress' ),
 						'url'   => wp_logout_url( home_url( '/' ) ),
 						'order' => 100,

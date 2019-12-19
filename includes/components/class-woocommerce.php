@@ -78,7 +78,7 @@ final class WooCommerce {
 	 */
 	public function add_menu_items( $args ) {
 		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
-			$args['items']['woocommerce_orders'] = [
+			$args['items']['orders_view_page'] = [
 				'label' => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 				'order' => 40,
@@ -93,7 +93,7 @@ final class WooCommerce {
 	 */
 	public function redirect_account_page() {
 		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( hp\get_redirect_url( Controllers\User::get_url( 'login_user' ) ) );
+			wp_safe_redirect( hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) ) );
 
 			exit();
 		}
