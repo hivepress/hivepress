@@ -431,3 +431,7 @@ function get_class_name( $class ) {
 function get_redirect_url( $url ) {
 	return add_query_arg( 'redirect', rawurlencode( get_current_url() ), $url );
 }
+
+function fetch_redirect_url($default) {
+	hp\get_array_value( $_GET, 'redirect', $default );
+}

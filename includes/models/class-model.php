@@ -243,11 +243,14 @@ abstract class Model {
 	 * Sets instance attributes.
 	 *
 	 * @param array $attributes Instance attributes.
+	 * @return object
 	 */
 	final public function fill( $attributes ) {
 		foreach ( $attributes as $name => $value ) {
 			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
+
+		return $this;
 	}
 
 	/**

@@ -309,6 +309,7 @@ abstract class Form {
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
+	 * @return object
 	 */
 	final public function set_values( $values ) {
 		foreach ( $values as $field_name => $value ) {
@@ -316,6 +317,8 @@ abstract class Form {
 				static::$fields[ $field_name ]->set_value( $value );
 			}
 		}
+
+		return $this;
 	}
 
 	/**
