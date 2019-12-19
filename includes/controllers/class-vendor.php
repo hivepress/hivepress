@@ -54,7 +54,7 @@ class Vendor extends Controller {
 	}
 
 	/**
-	 * Matches vendor view page.
+	 * Matches vendor view URL.
 	 *
 	 * @return bool
 	 */

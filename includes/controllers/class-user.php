@@ -576,7 +576,7 @@ class User extends Controller {
 			return reset( $menu_items )['url'];
 		}
 
-		return false;
+		return home_url( '/' );
 	}
 
 	/**
