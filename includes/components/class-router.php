@@ -188,10 +188,10 @@ final class Router {
 		$route = $this->get_route( $name );
 
 		if ( $route ) {
-			if ( isset( $route['generate'] ) ) {
+			if ( isset( $route['url'] ) ) {
 
-				// Generate URL.
-				$url = call_user_func_array( $route['generate'], [ $query ] );
+				// Set URL.
+				$url = call_user_func_array( $route['url'], [ $query ] );
 			} else {
 
 				// Get URL path.
@@ -398,12 +398,8 @@ final class Router {
 				$redirect = call_user_func( $route['redirect'] );
 
 				if ( $redirect ) {
-					if ( is_bool( $redirect ) ) {
-						if ( $menu_redirect ) {
-							$redirect = $menu_redirect;
-						} else {
-							$redirect = home_url( '/' );
-						}
+					if ( is_bool( $redirect ) || ! hp\validate_redirect( $redirect ) ) {
+						$redirect = $menu_redirect ? $menu_redirect : home_url( '/' );
 					}
 
 					wp_safe_redirect( $redirect );

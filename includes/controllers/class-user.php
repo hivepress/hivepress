@@ -40,102 +40,118 @@ class User extends Controller {
 					 * @resource Users
 					 * @description The users API allows you to register, update and delete users.
 					 */
-					[
-						'path'   => '/users',
+					'users_resource'               => [
+						'path' => '/users',
+						'rest' => true,
+					],
+
+					'user_resource'                => [
+						'base' => 'users_resource',
+						'path' => '/(?P<user_id>\d+)',
+						'rest' => true,
+					],
+
+					/**
+					 * Registers user.
+					 *
+					 * @endpoint Register user
+					 * @route /users
+					 * @method POST
+					 * @param string $username Username.
+					 * @param string $email Email address.
+					 * @param string $password Password.
+					 */
+					'user_register_action'         => [
+						'base'   => 'users_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'register_user' ],
 						'rest'   => true,
-
-						'routes' => [
-
-							/**
-							 * Registers user.
-							 *
-							 * @endpoint Register user
-							 * @route /users
-							 * @method POST
-							 * @param string $username Username.
-							 * @param string $email Email address.
-							 * @param string $password Password.
-							 */
-							[
-								'method' => 'POST',
-								'action' => [ $this, 'register_user' ],
-							],
-
-							[
-								'path'   => '/login',
-								'method' => 'POST',
-								'action' => [ $this, 'login_user' ],
-							],
-
-							[
-								'path'   => '/request-password',
-								'method' => 'POST',
-								'action' => [ $this, 'request_password' ],
-							],
-
-							[
-								'path'   => '/reset-password',
-								'method' => 'POST',
-								'action' => [ $this, 'reset_password' ],
-							],
-
-							/**
-							 * Updates user.
-							 *
-							 * @endpoint Update user
-							 * @route /users/<id>
-							 * @method POST
-							 * @param string $first_name First name.
-							 * @param string $last_name Last name.
-							 * @param string $description Description.
-							 * @param string $email Email address.
-							 * @param string $password Password.
-							 */
-							[
-								'path'   => '/(?P<user_id>\d+)',
-								'method' => 'POST',
-								'action' => [ $this, 'update_user' ],
-							],
-
-							/**
-							 * Deletes user.
-							 *
-							 * @endpoint Delete user
-							 * @route /users/<id>
-							 * @method DELETE
-							 */
-							[
-								'path'   => '/(?P<user_id>\d+)',
-								'method' => 'DELETE',
-								'action' => [ $this, 'delete_user' ],
-							],
-						],
 					],
 
-					'login_user'     => [
-						'title'    => esc_html__( 'Sign In', 'hivepress' ),
-						'path'     => '/account/login',
-						'redirect' => [ $this, 'redirect_login_page' ],
-						'action'   => [ $this, 'render_login_page' ],
+					'user_login_action'            => [
+						'base'   => 'users_resource',
+						'path'   => '/login',
+						'method' => 'POST',
+						'action' => [ $this, 'login_user' ],
+						'rest'   => true,
 					],
 
-					'reset_password' => [
-						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
-						'path'     => '/account/reset-password',
-						'redirect' => [ $this, 'redirect_password_reset_page' ],
-						'action'   => [ $this, 'render_password_reset_page' ],
+					'user_password_request_action' => [
+						'base'   => 'users_resource',
+						'path'   => '/request-password',
+						'method' => 'POST',
+						'action' => [ $this, 'request_user_password' ],
+						'rest'   => true,
 					],
 
-					'user_account'   => [
+					'user_password_reset_action'   => [
+						'base'   => 'users_resource',
+						'path'   => '/reset-password',
+						'method' => 'POST',
+						'action' => [ $this, 'reset_user_password' ],
+						'rest'   => true,
+					],
+
+					/**
+					 * Updates user.
+					 *
+					 * @endpoint Update user
+					 * @route /users/<id>
+					 * @method POST
+					 * @param string $first_name First name.
+					 * @param string $last_name Last name.
+					 * @param string $description Description.
+					 * @param string $email Email address.
+					 * @param string $password Password.
+					 */
+					'user_update_action'           => [
+						'base'   => 'user_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_user' ],
+						'rest'   => true,
+					],
+
+					/**
+					 * Deletes user.
+					 *
+					 * @endpoint Delete user
+					 * @route /users/<id>
+					 * @method DELETE
+					 */
+					'user_delete_action'           => [
+						'base'   => 'user_resource',
+						'method' => 'DELETE',
+						'action' => [ $this, 'delete_user' ],
+						'rest'   => true,
+					],
+
+					'user_account_page'            => [
 						'path'     => '/account',
-						'redirect' => [ $this, 'redirect_account_page' ],
+						'redirect' => [ $this, 'redirect_user_account_page' ],
 					],
 
-					'edit_settings'  => [
+					'user_login_page'              => [
+						'title'    => esc_html__( 'Sign In', 'hivepress' ),
+						'base'     => 'user_account_page',
+						'path'     => '/login',
+						'redirect' => [ $this, 'redirect_user_login_page' ],
+						'action'   => [ $this, 'render_user_login_page' ],
+					],
+
+					'user_password_reset_page'     => [
+						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
+						'base'     => 'user_account_page',
+						'path'     => '/reset-password',
+						'redirect' => [ $this, 'redirect_user_password_reset_page' ],
+						'action'   => [ $this, 'render_user_password_reset_page' ],
+					],
+
+					'user_edit_settings_page'      => [
 						'title'    => esc_html__( 'Settings', 'hivepress' ),
-						'path'     => '/account/settings',
-						'redirect' => [ $this, 'redirect_edit_settings_page' ],
-						'action'   => [ $this, 'render_edit_settings_page' ],
+						'base'     => 'user_account_page',
+						'path'     => '/settings',
+						'redirect' => [ $this, 'redirect_user_edit_settings_page' ],
+						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
 				],
 			],
@@ -154,9 +170,7 @@ class User extends Controller {
 	public function register_user( $request ) {
 
 		// Check authentication.
-		$nonce = hp\get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
-
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return hp\rest_error( 401 );
 		}
 
@@ -166,9 +180,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Register();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\User_Register() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
@@ -196,7 +208,7 @@ class User extends Controller {
 		} else {
 			$username = sanitize_user( $username, true );
 
-			if ( '' === $username ) {
+			if ( empty( $username ) ) {
 				$username = 'user';
 			}
 
@@ -206,9 +218,7 @@ class User extends Controller {
 		}
 
 		// Register user.
-		$user = new Models\User();
-
-		$user->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
+		$user = ( new Models\User() )->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400 );
@@ -220,7 +230,7 @@ class User extends Controller {
 		 * @action /users/register
 		 * @description Fires on user registration.
 		 * @param int $user_id User ID.
-		 * @param object User instance.
+		 * @param object User object.
 		 */
 		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $user );
 
@@ -228,7 +238,7 @@ class User extends Controller {
 		if ( ! is_user_logged_in() ) {
 			wp_signon(
 				[
-					'user_login'    => $username,
+					'user_login'    => $user->get_username(),
 					'user_password' => $form->get_value( 'password' ),
 					'remember'      => true,
 				]
@@ -254,9 +264,7 @@ class User extends Controller {
 	public function login_user( $request ) {
 
 		// Check authentication.
-		$nonce = hp\get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
-
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return hp\rest_error( 401 );
 		}
 
@@ -266,29 +274,29 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Login();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\User_Login() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
-		$user = false;
+		$user_object = null;
 
 		if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
-			$user = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
+			$user_object = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
 		} else {
-			$user = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
+			$user_object = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
 		}
 
-		if ( false === $user ) {
+		if ( empty( $user_object ) ) {
 			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect.', 'hivepress' ) );
 		}
 
+		$user = Models\User::get_by_object( $user_object );
+
 		// Check password.
-		if ( ! wp_check_password( $form->get_value( 'password' ), $user->user_pass, $user->ID ) ) {
+		if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
 			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect.', 'hivepress' ) );
 		}
 
@@ -296,7 +304,7 @@ class User extends Controller {
 		if ( ! is_user_logged_in() ) {
 			wp_signon(
 				[
-					'user_login'    => $user->user_login,
+					'user_login'    => $user->get_username(),
 					'user_password' => $form->get_value( 'password' ),
 					'remember'      => true,
 				]
@@ -306,7 +314,7 @@ class User extends Controller {
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $user->ID,
+					'id' => $user->get_id(),
 				],
 			],
 			200
@@ -314,17 +322,15 @@ class User extends Controller {
 	}
 
 	/**
-	 * Requests password.
+	 * Requests user password.
 	 *
 	 * @param WP_REST_Request $request API request.
 	 * @return WP_Rest_Response
 	 */
-	public function request_password( $request ) {
+	public function request_user_password( $request ) {
 
 		// Check authentication.
-		$nonce = hp\get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
-
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return hp\rest_error( 401 );
 		}
 
@@ -334,43 +340,44 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Password_Request();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\User_Password_Request() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
-		$user = false;
+		$user_object = null;
 
 		if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
-			$user = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
+			$user_object = get_user_by( 'email', $form->get_value( 'username_or_email' ) );
 		} else {
-			$user = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
+			$user_object = get_user_by( 'login', $form->get_value( 'username_or_email' ) );
 		}
 
-		if ( false === $user ) {
+		if ( empty( $user_object ) ) {
 			if ( is_email( $form->get_value( 'username_or_email' ) ) ) {
-				return hp\rest_error( 404, esc_html__( "User with this email doesn't exist.", 'hivepress' ) );
+				return hp\rest_error( 404, esc_html__( 'User with this email doesn\'t exist.', 'hivepress' ) );
 			} else {
-				return hp\rest_error( 404, esc_html__( "User with this username doesn't exist.", 'hivepress' ) );
+				return hp\rest_error( 404, esc_html__( 'User with this username doesn\'t exist.', 'hivepress' ) );
 			}
 		}
+
+		$user = Models\User::get_by_object( $user_object );
 
 		// Send email.
 		( new Emails\User_Password_Request(
 			[
-				'recipient' => $user->user_email,
+				'recipient' => $user->get_email(),
+
 				'tokens'    => [
-					'user_name'          => $user->display_name,
-					'password_reset_url' => add_query_arg(
+					'user_name'          => $user->get_display_name(),
+					'password_reset_url' => hivepress()->router->get_url(
+						'user_password_reset_page',
 						[
-							'username'           => rawurlencode( $user->user_login ),
-							'password_reset_key' => rawurlencode( get_password_reset_key( $user ) ),
-						],
-						self::get_url( 'reset_password' )
+							'username'           => $user->get_username(),
+							'password_reset_key' => get_password_reset_key( $user_object ),
+						]
 					),
 				],
 			]
@@ -379,7 +386,7 @@ class User extends Controller {
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $user->ID,
+					'id' => $user->get_id(),
 				],
 			],
 			200
@@ -387,17 +394,15 @@ class User extends Controller {
 	}
 
 	/**
-	 * Resets password.
+	 * Resets user password.
 	 *
 	 * @param WP_REST_Request $request API request.
 	 * @return WP_Rest_Response
 	 */
-	public function reset_password( $request ) {
+	public function reset_user_password( $request ) {
 
 		// Check authentication.
-		$nonce = hp\get_array_value( $request->get_params(), '_wpnonce', $request->get_header( 'X-WP-Nonce' ) );
-
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return hp\rest_error( 401 );
 		}
 
@@ -407,29 +412,29 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Password_Reset();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\User_Password_Reset() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
 		// Get user.
-		$user = check_password_reset_key( $form->get_value( 'password_reset_key' ), $form->get_value( 'username' ) );
+		$user_object = check_password_reset_key( $form->get_value( 'password_reset_key' ), $form->get_value( 'username' ) );
 
-		if ( is_wp_error( $user ) ) {
+		if ( is_wp_error( $user_object ) ) {
 			return hp\rest_error( 401, esc_html__( 'Password reset key is expired or invalid.', 'hivepress' ) );
 		}
 
+		$user = Models\User::get_by_object( $user_object );
+
 		// Reset password.
-		reset_password( $user, $form->get_value( 'password' ) );
+		reset_password( $user_object, $form->get_value( 'password' ) );
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
 			wp_signon(
 				[
-					'user_login'    => $user->user_login,
+					'user_login'    => $user->get_username(),
 					'user_password' => $form->get_value( 'password' ),
 					'remember'      => true,
 				]
@@ -439,7 +444,7 @@ class User extends Controller {
 		return new \WP_Rest_Response(
 			[
 				'data' => [
-					'id' => $user->ID,
+					'id' => $user->get_id(),
 				],
 			],
 			200
@@ -462,7 +467,7 @@ class User extends Controller {
 		// Get user.
 		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
 
-		if ( is_null( $user ) ) {
+		if ( empty( $user ) ) {
 			return hp\rest_error( 404 );
 		}
 
@@ -472,9 +477,7 @@ class User extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\User_Update();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\User_Update() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
@@ -482,7 +485,7 @@ class User extends Controller {
 
 		// Check password.
 		if ( get_current_user_id() === $user->get_id() && ( $form->get_value( 'email' ) !== $user->get_email() || $form->get_value( 'password' ) ) ) {
-			if ( $form->get_value( 'current_password' ) === null ) {
+			if ( ! $form->get_value( 'current_password' ) ) {
 				return hp\rest_error( 400, esc_html__( 'Current password is required.', 'hivepress' ) );
 			}
 
@@ -492,11 +495,7 @@ class User extends Controller {
 		}
 
 		// Update user.
-		$form_values = $form->get_values();
-
-		unset( $form_values['image_id'] );
-
-		$user->fill( $form_values );
+		$user->fill( $form->get_values() );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400 );
@@ -528,7 +527,7 @@ class User extends Controller {
 		// Get user.
 		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
 
-		if ( is_null( $user ) ) {
+		if ( empty( $user ) ) {
 			return hp\rest_error( 404 );
 		}
 
@@ -539,9 +538,7 @@ class User extends Controller {
 
 		// Check password.
 		if ( get_current_user_id() === $user->get_id() ) {
-			$form = new Forms\User_Delete();
-
-			$form->set_values( $request->get_params() );
+			$form = ( new Forms\User_Delete() )->set_values( $request->get_params() );
 
 			if ( ! $form->validate() ) {
 				return hp\rest_error( 400, $form->get_errors() );
@@ -561,71 +558,21 @@ class User extends Controller {
 	}
 
 	/**
-	 * Redirects login page.
+	 * Redirects user account page.
 	 *
 	 * @return mixed
 	 */
-	public function redirect_login_page() {
-		if ( is_user_logged_in() ) {
-			$redirect = hp\get_array_value( $_GET, 'redirect', self::get_url( 'account' ) );
-
-			if ( hp\validate_redirect( $redirect ) ) {
-				return esc_url( $redirect );
-			} else {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Renders login page.
-	 *
-	 * @return string
-	 */
-	public function render_login_page() {
-		return ( new Blocks\Template( [ 'template' => 'user_login_page' ] ) )->render();
-	}
-
-	/**
-	 * Redirects password page.
-	 *
-	 * @return mixed
-	 */
-	public function redirect_password_reset_page() {
-		if ( is_user_logged_in() ) {
-			return self::get_url( 'account' );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Renders password page.
-	 *
-	 * @return string
-	 */
-	public function render_password_reset_page() {
-		return ( new Blocks\Template( [ 'template' => 'user_password_reset_page' ] ) )->render();
-	}
-
-	/**
-	 * Redirects accunt page.
-	 *
-	 * @return mixed
-	 */
-	public function redirect_account_page() {
+	public function redirect_user_account_page() {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), self::get_url( 'login_user' ) );
+			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
 		}
 
 		// Get menu items.
 		$menu_items = Menus\User_Account::get_items();
 
-		if ( ! empty( $menu_items ) ) {
+		if ( $menu_items ) {
 			return reset( $menu_items )['url'];
 		}
 
@@ -633,32 +580,76 @@ class User extends Controller {
 	}
 
 	/**
-	 * Redirects settings page.
+	 * Redirects user login page.
 	 *
 	 * @return mixed
 	 */
-	public function redirect_edit_settings_page() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), self::get_url( 'login_user' ) );
+	public function redirect_user_login_page() {
+		if ( is_user_logged_in() ) {
+			return hp\fetch_redirect_url( hivepress()->router->get_url( 'user_account_page' ) );
 		}
 
 		return false;
 	}
 
 	/**
-	 * Renders settings page.
+	 * Renders user login page.
 	 *
 	 * @return string
 	 */
-	public function render_edit_settings_page() {
+	public function render_user_login_page() {
+		return ( new Blocks\Template( [ 'template' => 'user_login_page' ] ) )->render();
+	}
+
+	/**
+	 * Redirects user password reset page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_password_reset_page() {
+		if ( is_user_logged_in() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders user password reset page.
+	 *
+	 * @return string
+	 */
+	public function render_user_password_reset_page() {
+		return ( new Blocks\Template( [ 'template' => 'user_password_reset_page' ] ) )->render();
+	}
+
+	/**
+	 * Redirects user edit settings page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_edit_settings_page() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders user edit settings page.
+	 *
+	 * @return string
+	 */
+	public function render_user_edit_settings_page() {
 		return ( new Blocks\Template(
 			[
 				'template' => 'user_edit_settings_page',
 
 				'context'  => [
-					'user_id' => get_current_user_id(),
+					'user' => Models\User::get_by_id( get_current_user_id() ),
 				],
 			]
 		) )->render();

@@ -9,9 +9,7 @@ namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
 use HivePress\Models;
-use HivePress\Forms;
 use HivePress\Blocks;
-use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -32,7 +30,8 @@ class Vendor extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'view_vendor' => [
+					'vendor_view_page' => [
+						'url'    => [ $this, 'get_vendor_view_url' ],
 						'match'  => [ $this, 'is_vendor_view_page' ],
 						'action' => [ $this, 'render_vendor_view_page' ],
 					],
@@ -42,6 +41,16 @@ class Vendor extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets vendor view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return mixed
+	 */
+	public function get_vendor_view_url( $params ) {
+		return get_permalink( hp\get_array_value( $params, 'vendor_id' ) );
 	}
 
 	/**
@@ -61,23 +70,28 @@ class Vendor extends Controller {
 	public function render_vendor_view_page() {
 		the_post();
 
+		// Get vendor.
+		$vendor = Models\Vendor::get_by_object( get_post() );
+
 		// Query listings.
 		query_posts(
-			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'post_parent'    => get_the_ID(),
-				'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-				'paged'          => hp\get_current_page(),
-			]
+			Models\Listing::filter(
+				[
+					'status'    => 'publish',
+					'vendor_id' => $vendor->get_id(),
+				]
+			)->limit( get_option( 'hp_listings_per_page' ) )
+			->paginate( hp\get_current_page() )
+			->get_args()
 		);
 
+		// Render template.
 		return ( new Blocks\Template(
 			[
 				'template' => 'vendor_view_page',
 
 				'context'  => [
-					'vendor' => Models\Vendor::get_by_id( get_the_ID() ),
+					'vendor' => $vendor,
 				],
 			]
 		) )->render();

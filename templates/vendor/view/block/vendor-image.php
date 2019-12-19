@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="hp-vendor__image">
-	<a href="<?php the_permalink(); ?>">
+	<a href="<?php echo esc_url( hivepress()->router->get_url( 'vendor_view_page', [ 'vendor_id' => $vendor->get_id() ] ) ); ?>">
 		<?php
 		if ( has_post_thumbnail() ) :
 			the_post_thumbnail( 'hp_square_small' );
