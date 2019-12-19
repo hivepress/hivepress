@@ -175,7 +175,13 @@ abstract class Model {
 				$method = 'get';
 			}
 
-			return 'set' === $method ? $this : call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) );
+			$value = call_user_func_array( [ $this, $method . '_property' ], array_merge( [ $arg ], $args ) )
+
+			if ( 'set' === $method ) {
+				return $this;
+			}
+
+			return $value;
 		}
 
 		throw new \BadMethodCallException();
