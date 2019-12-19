@@ -8,6 +8,6 @@ defined( 'ABSPATH' ) || exit;
 		the_title();
 	else :
 		?>
-		<a href="<?php echo esc_url( hivepress()->router->get_url( 'edit_listing', [ 'listing_id' => $listing->get_id() ] ) ); ?>" class="hp-link"><i class="hp-icon fas fa-edit"></i><span><?php the_title(); ?></span></a>
+		<a href="<?php echo esc_url( hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ) ); ?>" class="hp-link"><i class="hp-icon fas fa-edit"></i><span><?php the_title(); ?></span></a>
 	<?php endif; ?>
 </td>
