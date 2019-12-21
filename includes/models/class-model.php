@@ -19,7 +19,9 @@ defined( 'ABSPATH' ) || exit;
  * @class Model
  */
 abstract class Model {
-	use Traits\Mutator;
+	use Traits\Mutator {
+		set_property as _set_property;
+	}
 
 	/**
 	 * Model fields.
@@ -72,7 +74,7 @@ abstract class Model {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			$this->_set_property( $name, $value );
+			$this->_set_property( $name, $value, '_' );
 		}
 
 		// Bootstrap properties.
@@ -205,7 +207,7 @@ abstract class Model {
 
 		// Create model object.
 		if ( is_null( $model ) ) {
-			$model = new self();
+			$model = new static();
 		}
 
 		// Get model class.
