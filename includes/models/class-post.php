@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 abstract class Post extends Model {
 
 	/**
-	 * Model relations.
-	 *
-	 * @var array
-	 */
-	protected static $relations = [];
-
-	/**
 	 * Gets model relations.
 	 *
 	 * @return array
