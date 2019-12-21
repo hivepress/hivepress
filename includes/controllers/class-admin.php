@@ -28,17 +28,28 @@ class Admin extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					[
-						'path'   => '/admin/notices',
-						'rest'   => true,
+					'admin_resources'            => [
+						'path' => '/admin',
+						'rest' => true,
+					],
 
-						'routes' => [
-							[
-								'path'   => '/(?P<notice_name>[a-z0-9_]+)',
-								'method' => 'POST',
-								'action' => [ $this, 'update_notice' ],
-							],
-						],
+					'admin_notices_resource'     => [
+						'base' => 'admin_resources',
+						'path' => '/notices',
+						'rest' => true,
+					],
+
+					'admin_notice_resource'      => [
+						'base' => 'admin_notices_resource',
+						'path' => '/(?P<notice_name>[a-z0-9_]+)',
+						'rest' => true,
+					],
+
+					'admin_notice_update_action' => [
+						'base'   => 'admin_notice_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_admin_notice' ],
+						'rest'   => true,
 					],
 				],
 			],
@@ -49,12 +60,12 @@ class Admin extends Controller {
 	}
 
 	/**
-	 * Updates notice.
+	 * Updates admin notice.
 	 *
 	 * @param WP_REST_Request $request API request.
 	 * @return WP_Rest_Response
 	 */
-	public function update_notice( $request ) {
+	public function update_admin_notice( $request ) {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -69,7 +80,7 @@ class Admin extends Controller {
 		// Get notice name.
 		$notice_name = substr( sanitize_key( $request->get_param( 'notice_name' ) ), 0, 32 );
 
-		if ( ! empty( $notice_name ) && $request->get_param( 'dismissed' ) ) {
+		if ( $notice_name && $request->get_param( 'dismissed' ) ) {
 
 			// Get notices.
 			$dismissed_notices = array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) );

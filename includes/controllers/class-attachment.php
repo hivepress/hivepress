@@ -35,54 +35,61 @@ class Attachment extends Controller {
 					 * @resource Attachments
 					 * @description The attachments API allows you to upload, update and delete attachments.
 					 */
-					[
-						'path'   => '/attachments',
+					'attachments_resource'     => [
+						'path' => '/attachments',
+						'rest' => true,
+					],
+
+					'attachment_resource'      => [
+						'base' => 'attachments_resource',
+						'path' => '/(?P<attachment_id>\d+)',
+						'rest' => true,
+					],
+
+					/**
+					 * Uploads attachment.
+					 *
+					 * @endpoint Upload attachment
+					 * @route /attachments
+					 * @method POST
+					 * @param string $parent_model Parent model.
+					 * @param string $parent_field Parent field.
+					 * @param int $parent_id Parent ID.
+					 */
+					'attachment_upload_action' => [
+						'base'   => 'attachments_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'upload_attachment' ],
 						'rest'   => true,
+					],
 
-						'routes' => [
+					/**
+					 * Updates attachment.
+					 *
+					 * @endpoint Update attachment
+					 * @route /attachments/<id>
+					 * @method POST
+					 * @param int $order Order.
+					 */
+					'attachment_update_action' => [
+						'base'   => 'attachment_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_attachment' ],
+						'rest'   => true,
+					],
 
-							/**
-							 * Uploads attachment.
-							 *
-							 * @endpoint Upload attachment
-							 * @route /attachments
-							 * @method POST
-							 * @param string $parent_model Parent model.
-							 * @param string $parent_field Parent field.
-							 * @param int $parent_id Parent ID.
-							 */
-							[
-								'method' => 'POST',
-								'action' => [ $this, 'upload_attachment' ],
-							],
-
-							/**
-							 * Updates attachment.
-							 *
-							 * @endpoint Update attachment
-							 * @route /attachments/<id>
-							 * @method POST
-							 * @param int $order Order.
-							 */
-							[
-								'path'   => '/(?P<attachment_id>\d+)',
-								'method' => 'POST',
-								'action' => [ $this, 'update_attachment' ],
-							],
-
-							/**
-							 * Deletes atachment.
-							 *
-							 * @endpoint Delete attachment
-							 * @route /attachments/<id>
-							 * @method DELETE
-							 */
-							[
-								'path'   => '/(?P<attachment_id>\d+)',
-								'method' => 'DELETE',
-								'action' => [ $this, 'delete_attachment' ],
-							],
-						],
+					/**
+					 * Deletes atachment.
+					 *
+					 * @endpoint Delete attachment
+					 * @route /attachments/<id>
+					 * @method DELETE
+					 */
+					'attachment_delete_action' => [
+						'base'   => 'attachment_resource',
+						'method' => 'DELETE',
+						'action' => [ $this, 'delete_attachment' ],
+						'rest'   => true,
 					],
 				],
 			],
@@ -111,14 +118,14 @@ class Attachment extends Controller {
 		// Get fields.
 		$fields = hp\call_class_method( '\HivePress\Models\\' . $request->get_param( 'parent_model' ), 'get_fields' );
 
-		if ( is_null( $fields ) ) {
+		if ( empty( $fields ) ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get field.
 		$field = hp\get_array_value( $fields, $request->get_param( 'parent_field' ) );
 
-		if ( is_null( $field ) || $field::get_display_type() !== 'attachment_upload' ) {
+		if ( empty( $field ) || $field::get_display_type() !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );
 		}
 
