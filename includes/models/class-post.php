@@ -20,136 +20,110 @@ defined( 'ABSPATH' ) || exit;
 abstract class Post extends Model {
 
 	/**
-	 * Gets model relations.
+	 * Gets object.
 	 *
-	 * @return array
-	 */
-	final public static function get_relations() {
-		return static::$relations;
-	}
-
-	/**
-	 * Gets instance by ID.
-	 *
-	 * @param int $id Instance ID.
+	 * @param int $id Object ID.
 	 * @return mixed
 	 */
-	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_post( $id ) );
-	}
+	final public function get( $id ) {
 
-	/**
-	 * Gets instance by object.
-	 *
-	 * @param object $object Object.
-	 * @return mixed
-	 */
-	final public static function get_by_object( $object ) {
+		// Get post.
+		$post = null;
 
-		// Get instance data.
-		$data = get_object_vars( $object );
-
-		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['post_type'] ) {
-			$attributes = [];
-
-			// Get instance meta.
-			$meta = array_map(
-				function( $meta_values ) {
-					return reset( $meta_values );
-				},
-				get_post_meta( $data['ID'] )
-			);
-
-			// Get instance attributes.
-			foreach ( array_keys( static::$fields ) as $field_name ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} elseif ( ! in_array( $field_name, static::$relations, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
-				} else {
-					$taxonomy = hp\prefix( array_search( $field_name, static::$relations, true ) );
-					$term_ids = hivepress()->cache->get_post_cache( $data['ID'], [ 'fields' => 'ids' ], hp\unprefix( $taxonomy ) );
-
-					if ( is_null( $term_ids ) ) {
-						$term_ids = wp_get_post_terms( $data['ID'], $taxonomy, [ 'fields' => 'ids' ] );
-
-						if ( is_array( $term_ids ) && count( $term_ids ) <= 100 ) {
-							hivepress()->cache->set_post_cache( $data['ID'], [ 'fields' => 'ids' ], hp\unprefix( $taxonomy ), $term_ids );
-						}
-					}
-
-					$attributes[ $field_name ] = $term_ids;
-				}
-			}
-
-			// Create and fill instance.
-			$instance = new static();
-
-			$instance->set_id( $data['ID'] );
-			$instance->fill( $attributes );
-
-			return $instance;
+		if ( is_object( $id ) ) {
+			$post = get_object_vars( $id );
+		} else {
+			$post = get_post( absint( $id ), ARRAY_A );
 		}
+
+		if ( is_null( $post ) || hp\prefix( static::_get_name() ) !== $post['post_type'] ) {
+			return;
+		}
+
+		// Get post meta.
+		$meta = array_map(
+			function( $values ) {
+				return reset( $values );
+			},
+			get_post_meta( $post['ID'] )
+		);
+
+		// Get object attributes.
+		$attributes = [];
+
+		foreach ( array_keys( $this->fields ) as $field_name ) {
+			if ( in_array( $field_name, $this->aliases, true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $post, array_search( $field_name, $this->aliases, true ) );
+			} elseif ( ! in_array( $field_name, $this->relations, true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+			} else {
+				$taxonomy = array_search( $field_name, $this->relations, true );
+				$term_ids = hivepress()->cache->get_post_cache( $post['ID'], [ 'fields' => 'ids' ], $taxonomy );
+
+				if ( is_null( $term_ids ) ) {
+					$term_ids = wp_get_post_terms( $post['ID'], hp\prefix( $taxonomy ), [ 'fields' => 'ids' ] );
+
+					if ( is_array( $term_ids ) && count( $term_ids ) <= 100 ) {
+						hivepress()->cache->set_post_cache( $post['ID'], [ 'fields' => 'ids' ], $taxonomy, $term_ids );
+					}
+				}
+
+				$attributes[ $field_name ] = $term_ids;
+			}
+		}
+
+		return ( new static() )->set_id( $post['ID'] )->fill( $attributes );
 	}
 
 	/**
-	 * Deletes instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return bool
-	 */
-	final public static function delete_by_id( $id ) {
-		return boolval( wp_delete_post( $id, true ) );
-	}
-
-	/**
-	 * Saves instance to the database.
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	final public function save() {
 
-		// Alias instance attributes.
-		$data  = [];
+		// Get post data.
+		$post  = [];
 		$meta  = [];
 		$terms = [];
 
-		foreach ( static::$fields as $field_name => $field ) {
+		foreach ( $this->fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
-				} elseif ( in_array( $field_name, static::$relations, true ) ) {
-					$terms[ array_search( $field_name, static::$relations, true ) ] = $field->get_value();
+				if ( in_array( $field_name, $this->aliases, true ) ) {
+					$post[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
+				} elseif ( in_array( $field_name, $this->relations, true ) ) {
+					$terms[ array_search( $field_name, $this->relations, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
 			} else {
-				$this->add_errors( $field->get_errors() );
+				$this->_add_errors( $field->get_errors() );
 			}
 		}
 
-		// Create or update instance.
 		if ( empty( $this->errors ) ) {
-			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $data, [ 'post_type' => hp\prefix( static::get_name() ) ] ) );
 
-				if ( 0 !== $id ) {
+			// Create or update post.
+			if ( is_null( $this->id ) ) {
+				$id = wp_insert_post( array_merge( $post, [ 'post_type' => hp\prefix( static::_get_name() ) ] ) );
+
+				if ( $id ) {
 					$this->set_id( $id );
 				} else {
 					return false;
 				}
-			} elseif ( wp_update_post( array_merge( $data, [ 'ID' => $this->id ] ) ) === 0 ) {
+			} elseif ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
 				return false;
 			}
 
-			// Update instance meta.
+			// Update post meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
 				update_post_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
 			}
 
-			// Update instance terms.
+			// Update post terms.
 			foreach ( $terms as $taxonomy => $term_ids ) {
 				wp_set_post_terms( $this->id, (array) $term_ids, hp\prefix( $taxonomy ) );
 			}
@@ -158,5 +132,19 @@ abstract class Post extends Model {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Deletes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function delete( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_delete_post( absint( $id ), true );
 	}
 }

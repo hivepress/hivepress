@@ -8,6 +8,7 @@
 namespace HivePress\Models;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Model
  */
 abstract class Model {
+	use Traits\Mutator;
 
 	/**
 	 * Model fields.
@@ -62,6 +64,101 @@ abstract class Model {
 	protected $errors = [];
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Model arguments.
+	 */
+	public function __construct( $args = [] ) {
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			$this->_set_property( $name, $value );
+		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
+	}
+
+	/**
+	 * Bootstraps model properties.
+	 */
+	protected function bootstrap() {}
+
+	/**
+	 * Gets model name.
+	 *
+	 * @return string
+	 */
+	final public static function _get_name() {
+		return hp\get_class_name( static::class );
+	}
+
+	/**
+	 * Sets model fields.
+	 *
+	 * @param array $fields Model fields.
+	 */
+	final protected function _set_fields( $fields ) {
+		$this->fields = [];
+
+		foreach ( hp\sort_array( $fields ) as $name => $args ) {
+
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+			// Add field.
+			if ( $field ) {
+				$this->fields[ $name ] = $field;
+			}
+		}
+	}
+
+	/**
+	 * Gets model fields.
+	 *
+	 * @return array
+	 */
+	final public function _get_fields() {
+		return $this->fields;
+	}
+
+	/**
+	 * Gets model aliases.
+	 *
+	 * @return array
+	 */
+	final public function _get_aliases() {
+		return $this->aliases;
+	}
+
+	/**
+	 * Gets model relations.
+	 *
+	 * @return array
+	 */
+	final public function _get_relations() {
+		return $this->relations;
+	}
+
+	/**
+	 * Routes static methods.
+	 *
+	 * @param string $name Method name.
+	 * @param array  $args Method arguments.
+	 * @throws \BadMethodCallException Invalid method.
+	 * @return mixed
+	 */
+	final public static function __callStatic( $name, $args ) {
+
+		// Get model query.
+		if ( 'query' === $name ) {
+			return static::_get_query();
+		}
+
+		throw new \BadMethodCallException();
+	}
+
+	/**
 	 * Routes methods.
 	 *
 	 * @param string $name Method name.
@@ -70,11 +167,21 @@ abstract class Model {
 	 * @return mixed
 	 */
 	final public function __call( $name, $args ) {
+
+		// Get model query.
+		if ( 'query' === $name ) {
+			return $this->_get_query( $this );
+		}
+
+		// Get or set object attribute.
 		foreach ( [ 'set', 'get', 'is' ] as $prefix ) {
 			if ( strpos( $name, $prefix . '_' ) === 0 ) {
+
+				// Get attribute name.
 				$action    = 'is' === $prefix ? 'get' : $prefix;
 				$attribute = substr( $name, strlen( $prefix . '_' ) );
 
+				// Get attrute value.
 				$value = call_user_func_array( [ $this, '_' . $action . '_attribute' ], array_merge( [ $attribute ], $args ) );
 
 				if ( 'set' === $action ) {
@@ -86,6 +193,36 @@ abstract class Model {
 		}
 
 		throw new \BadMethodCallException();
+	}
+
+	/**
+	 * Gets model query.
+	 *
+	 * @param object $model Model object.
+	 * @return object
+	 */
+	final protected static function _get_query( $model = null ) {
+
+		// Create model object.
+		if ( is_null( $model ) ) {
+			$model = new self();
+		}
+
+		// Get model class.
+		$class = static::class;
+
+		while ( $class ) {
+
+			// Create query.
+			$query = hp\create_class_instance( '\HivePress\Queries\\' . hp\get_class_name( $class ), [ [ 'model' => $model ] ] );
+
+			if ( $query ) {
+				return $query;
+			}
+
+			// Get parent class.
+			$class = get_parent_class( $class );
+		}
 	}
 
 	/**
@@ -133,8 +270,17 @@ abstract class Model {
 	 *
 	 * @param mixed $errors Object errors.
 	 */
-	final protected function add_errors( $errors ) {
+	final protected function _add_errors( $errors ) {
 		$this->errors = array_merge( $this->errors, (array) $errors );
+	}
+
+	/**
+	 * Gets object errors.
+	 *
+	 * @return array
+	 */
+	final public function _get_errors() {
+		return $this->errors;
 	}
 
 	/**
@@ -161,9 +307,25 @@ abstract class Model {
 	}
 
 	/**
-	 * Saves object to the database.
+	 * Gets object.
+	 *
+	 * @param int $id Object ID.
+	 * @return mixed
+	 */
+	abstract public function get( $id );
+
+	/**
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	abstract public function save();
+
+	/**
+	 * Deletes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	abstract public function delete( $id = null );
 }
