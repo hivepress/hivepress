@@ -66,8 +66,10 @@ class User extends Model {
 					],
 
 					'image_id'    => [
-						'type'      => 'number',
-						'min_value' => 1,
+						'label'   => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption' => esc_html__( 'Select Image', 'hivepress' ),
+						'type'    => 'attachment_upload',
+						'formats' => [ 'jpg', 'jpeg', 'png' ],
 					],
 				],
 
