@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Post extends Query {
 
 	/**
-	 * Query aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -52,22 +45,8 @@ class Post extends Query {
 						],
 					],
 				],
-			],
-			$args
-		);
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Query arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'args' => [
+				'args'    => [
 					'post_status'         => 'any',
 					'posts_per_page'      => -1,
 					'orderby'             => [ 'ID' => 'ASC' ],
@@ -87,7 +66,9 @@ class Post extends Query {
 	protected function bootstrap() {
 
 		// Set post type.
-		$this->args['post_type'] = hp\prefix( $this->model );
+		$model = $this->model;
+
+		$this->args['post_type'] = hp\prefix( $model::_get_name() );
 
 		parent::bootstrap();
 	}
@@ -122,7 +103,7 @@ class Post extends Query {
 			$this->args
 		);
 
-		// Set IDs.
+		// Set post IDs.
 		if ( isset( $this->args['post__in'] ) && empty( $this->args['post__in'] ) ) {
 			$this->args['post__in'] = [ 0 ];
 		}
@@ -136,7 +117,7 @@ class Post extends Query {
 			// Get operator.
 			$operator = '=';
 
-			if ( strpos( $name, '__' ) !== false ) {
+			if ( strpos( $name, '__' ) ) {
 				list($name, $operator) = explode( '__', $name );
 
 				$operator = $this->get_operator( $operator );
@@ -146,11 +127,11 @@ class Post extends Query {
 				$operator = 'AND';
 			}
 
-			if ( in_array( $name, $this->get_model_relations(), true ) && in_array( $operator, [ 'AND', 'IN', 'NOT IN', 'EXISTS', 'NOT EXISTS' ], true ) ) {
+			if ( in_array( $name, $this->model->_get_relations(), true ) && in_array( $operator, [ 'AND', 'IN', 'NOT IN', 'EXISTS', 'NOT EXISTS' ], true ) ) {
 
 				// Set term clause.
 				$clause = [
-					'taxonomy' => hp\prefix( array_search( $name, $this->get_model_relations(), true ) ),
+					'taxonomy' => hp\prefix( array_search( $name, $this->model->_get_relations(), true ) ),
 					'operator' => $operator,
 				];
 
@@ -172,21 +153,21 @@ class Post extends Query {
 	}
 
 	/**
+	 * Gets query results.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	final protected function get_results( $args ) {
+		return get_posts( $args );
+	}
+
+	/**
 	 * Gets object count.
 	 *
 	 * @return int
 	 */
 	final public function get_count() {
 		return count( $this->get_ids() );
-	}
-
-	/**
-	 * Gets WordPress objects.
-	 *
-	 * @param array $args Query arguments.
-	 * @return array
-	 */
-	final protected function get_objects( $args ) {
-		return get_posts( $args );
 	}
 }

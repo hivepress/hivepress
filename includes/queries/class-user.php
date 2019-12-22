@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User extends Query {
 
 	/**
-	 * Query aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -58,22 +51,8 @@ class User extends Query {
 						],
 					],
 				],
-			],
-			$args
-		);
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Query arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'args' => [
+				'args'    => [
 					'orderby'     => 'ID',
 					'count_total' => false,
 				],
@@ -99,11 +78,11 @@ class User extends Query {
 				function( $name ) {
 					$operator = '';
 
-					if ( strpos( $name, '__' ) !== false ) {
+					if ( strpos( $name, '__' ) ) {
 						list($name, $operator) = explode( '__', $name );
 					}
 
-					if ( in_array( $name, $this->get_model_aliases(), true ) ) {
+					if ( in_array( $name, $this->model->_get_aliases(), true ) ) {
 						$name = preg_replace( '/^user_/', '', $name );
 					}
 
@@ -118,12 +97,12 @@ class User extends Query {
 	}
 
 	/**
-	 * Gets WordPress objects.
+	 * Gets query results.
 	 *
 	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	final protected function get_objects( $args ) {
+	final protected function get_results( $args ) {
 		return get_users( $args );
 	}
 

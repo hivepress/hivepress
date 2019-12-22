@@ -26,14 +26,7 @@ abstract class Query extends \ArrayObject {
 	 *
 	 * @var array
 	 */
-	protected static $aliases = [];
-
-	/**
-	 * Query model.
-	 *
-	 * @var string
-	 */
-	protected $model;
+	protected $aliases = [];
 
 	/**
 	 * Query arguments.
@@ -43,11 +36,18 @@ abstract class Query extends \ArrayObject {
 	protected $args = [];
 
 	/**
-	 * Class initializer.
+	 * Model object.
+	 *
+	 * @var object
+	 */
+	protected $model;
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -85,19 +85,6 @@ abstract class Query extends \ArrayObject {
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
-		}
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Query arguments.
-	 */
-	public function __construct( $args = [] ) {
-
-		// Set properties.
-		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
 
@@ -111,33 +98,13 @@ abstract class Query extends \ArrayObject {
 	protected function bootstrap() {}
 
 	/**
-	 * Routes methods.
-	 *
-	 * @param string $name Method name.
-	 * @param array  $args Method arguments.
-	 * @throws \BadMethodCallException Invalid method.
-	 * @return mixed
-	 */
-	final public function __call( $name, $args ) {
-		$prefixes = [ 'get', 'delete' ];
-
-		foreach ( $prefixes as $prefix ) {
-			if ( strpos( $name, $prefix . '_model_' ) === 0 ) {
-				return hp\call_class_method( '\HivePress\Models\\' . $this->model, $prefix . '_' . substr( $name, strlen( $prefix . '_model_' ) ), $args );
-			}
-		}
-
-		throw new \BadMethodCallException();
-	}
-
-	/**
 	 * Gets query alias.
 	 *
 	 * @param string $path Alias path.
 	 * @return mixed
 	 */
-	final protected static function get_alias( $path ) {
-		$alias = [ 'aliases' => static::$aliases ];
+	final protected function get_alias( $path ) {
+		$alias = [ 'aliases' => $this->aliases ];
 
 		foreach ( explode( '/', $path ) as $name ) {
 			if ( isset( $alias['aliases'][ $name ] ) ) {
@@ -160,7 +127,7 @@ abstract class Query extends \ArrayObject {
 	 * @param string $alias Operator alias.
 	 * @return string
 	 */
-	final protected static function get_operator( $alias ) {
+	final protected function get_operator( $alias ) {
 		return hp\get_array_value(
 			[
 				'not'         => '!=',
@@ -183,15 +150,6 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Gets query arguments.
-	 *
-	 * @return array
-	 */
-	final public function get_args() {
-		return $this->args;
-	}
-
-	/**
 	 * Sets query arguments.
 	 *
 	 * @param array $args Query arguments.
@@ -201,6 +159,15 @@ abstract class Query extends \ArrayObject {
 		$this->args = hp\merge_arrays( $this->args, $args );
 
 		return $this;
+	}
+
+	/**
+	 * Gets query arguments.
+	 *
+	 * @return array
+	 */
+	final public function get_args() {
+		return $this->args;
 	}
 
 	/**
@@ -224,23 +191,25 @@ abstract class Query extends \ArrayObject {
 				// Get operator alias.
 				$operator_alias = '';
 
-				if ( strpos( $name, '__' ) !== false ) {
+				if ( strpos( $name, '__' ) ) {
 					list($name, $operator_alias) = explode( '__', $name );
 				}
 
-				if ( in_array( $name, $this->get_model_aliases(), true ) ) {
+				if ( in_array( $name, $this->model->_get_aliases(), true ) ) {
 
 					// Normalize operator alias.
+					$operator_alias = strtolower( $operator_alias );
+
 					if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
 						$operator_alias = '';
 					}
 
 					// Set alias filter.
-					$this->args[ rtrim( array_search( $name, $this->get_model_aliases(), true ) . '__' . $operator_alias, '_' ) ] = $value;
-				} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+					$this->args[ rtrim( array_search( $name, $this->model->_get_aliases(), true ) . '__' . $operator_alias, '_' ) ] = $value;
+				} elseif ( isset( $this->model->_get_fields()[ $name ] ) ) {
 
 					// Get field.
-					$field = $this->get_model_fields()[ $name ];
+					$field = $this->model->_get_fields()[ $name ];
 
 					// Get operator.
 					$operator = $this->get_operator( $operator_alias );
@@ -297,11 +266,11 @@ abstract class Query extends \ArrayObject {
 
 						// Set query order.
 						$args[ $this->get_alias( 'order/' . $name ) ] = $order;
-					} elseif ( in_array( $name, $this->get_model_aliases(), true ) ) {
+					} elseif ( in_array( $name, $this->model->_get_aliases(), true ) ) {
 
 						// Set alias order.
-						$args[ array_search( $name, $this->get_model_aliases(), true ) ] = $order;
-					} elseif ( isset( $this->get_model_fields()[ $name ] ) ) {
+						$args[ array_search( $name, $this->model->_get_aliases(), true ) ] = $order;
+					} elseif ( isset( $this->model->_get_fields()[ $name ] ) ) {
 
 						// Set meta order.
 						$args[ $name . '_clause' ] = $order;
@@ -359,12 +328,12 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Gets WordPress objects.
+	 * Gets query results.
 	 *
 	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	abstract protected function get_objects( $args );
+	abstract protected function get_results( $args );
 
 	/**
 	 * Gets all objects.
@@ -374,10 +343,10 @@ abstract class Query extends \ArrayObject {
 	final public function get_all() {
 		$this->exchangeArray(
 			array_map(
-				function( $object ) {
-					return $this->get_model_by_object( $object );
+				function( $result ) {
+					return $this->model->get( $result );
 				},
-				$this->get_objects( $this->args )
+				$this->get_results( $this->args )
 			)
 		);
 
@@ -390,7 +359,7 @@ abstract class Query extends \ArrayObject {
 	 * @return array
 	 */
 	public function get_ids() {
-		return array_map( 'absint', $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'select' ) => $this->get_alias( 'select/id' ) ] ) ) );
+		return array_map( 'absint', $this->get_results( array_merge( $this->args, [ $this->get_alias( 'select' ) => $this->get_alias( 'select/id' ) ] ) ) );
 	}
 
 	/**
@@ -416,12 +385,21 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
+	 * Gets object by ID.
+	 *
+	 * @param int $id Object ID.
+	 */
+	final public function get_by_id( $id ) {
+		return $this->model->get( $id );
+	}
+
+	/**
 	 * Gets object count.
 	 *
 	 * @return int
 	 */
 	public function get_count() {
-		return $this->get_objects( array_merge( $this->args, [ $this->get_alias( 'aggregate/count' ) => true ] ) );
+		return $this->get_results( array_merge( $this->args, [ $this->get_alias( 'aggregate/count' ) => true ] ) );
 	}
 
 	/**
@@ -429,7 +407,16 @@ abstract class Query extends \ArrayObject {
 	 */
 	final public function delete() {
 		foreach ( $this->get_ids() as $id ) {
-			$this->delete_model_by_id( $id );
+			$this->delete_by_id( $id );
 		}
+	}
+
+	/**
+	 * Deletes object by ID.
+	 *
+	 * @param int $id Object ID.
+	 */
+	final public function delete_by_id( $id ) {
+		$this->model->delete( $id );
 	}
 }

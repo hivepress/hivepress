@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Comment extends Query {
 
 	/**
-	 * Query aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -49,22 +42,8 @@ class Comment extends Query {
 						],
 					],
 				],
-			],
-			$args
-		);
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Query arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'args' => [
+				'args'    => [
 					'orderby' => [ 'comment_ID' => 'ASC' ],
 				],
 			],
@@ -80,7 +59,9 @@ class Comment extends Query {
 	protected function bootstrap() {
 
 		// Set comment type.
-		$this->args['type'] = hp\prefix( $this->model );
+		$model = $this->model;
+
+		$this->args['type'] = hp\prefix( $model::_get_name() );
 
 		parent::bootstrap();
 	}
@@ -100,11 +81,11 @@ class Comment extends Query {
 				function( $name ) {
 					$operator = '';
 
-					if ( strpos( $name, '__' ) !== false ) {
+					if ( strpos( $name, '__' ) ) {
 						list($name, $operator) = explode( '__', $name );
 					}
 
-					if ( in_array( $name, $this->get_model_aliases(), true ) ) {
+					if ( in_array( $name, $this->model->_get_aliases(), true ) ) {
 						$name = preg_replace( '/^comment_/', '', $name );
 					}
 
@@ -126,7 +107,7 @@ class Comment extends Query {
 			$this->args
 		);
 
-		// Set status.
+		// Set comment status.
 		if ( isset( $this->args['approved'] ) ) {
 			$this->args['status'] = $this->args['approved'] ? 'approve' : 'hold';
 
@@ -137,12 +118,12 @@ class Comment extends Query {
 	}
 
 	/**
-	 * Gets WordPress objects.
+	 * Gets query results.
 	 *
 	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	final protected function get_objects( $args ) {
+	final protected function get_results( $args ) {
 		return get_comments( $args );
 	}
 }

@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Term extends Query {
 
 	/**
-	 * Query aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
@@ -49,22 +42,8 @@ class Term extends Query {
 						],
 					],
 				],
-			],
-			$args
-		);
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Query arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'args' => [
+				'args'    => [
 					'orderby'    => 'term_id',
 					'hide_empty' => false,
 				],
@@ -81,7 +60,9 @@ class Term extends Query {
 	protected function bootstrap() {
 
 		// Set taxonomy.
-		$this->args['taxonomy'] = hp\prefix( $this->model );
+		$model = $this->model;
+
+		$this->args['taxonomy'] = hp\prefix( $model::_get_name() );
 
 		parent::bootstrap();
 	}
@@ -148,12 +129,12 @@ class Term extends Query {
 	}
 
 	/**
-	 * Gets WordPress objects.
+	 * Gets query results.
 	 *
 	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	final protected function get_objects( $args ) {
+	final protected function get_results( $args ) {
 		return get_terms( $args );
 	}
 }
