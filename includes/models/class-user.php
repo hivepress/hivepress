@@ -20,25 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'fields'  => [
@@ -80,10 +66,8 @@ class User extends Model {
 					],
 
 					'image_id'    => [
-						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
-						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-						'type'         => 'attachment_upload',
-						'formats' => [ 'jpg', 'jpeg', 'png' ],
+						'type'      => 'number',
+						'min_value' => 1,
 					],
 				],
 
@@ -96,113 +80,99 @@ class User extends Model {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Gets instance by ID.
+	 * Gets object.
 	 *
-	 * @param int $id Instance ID.
+	 * @param int $id Object ID.
 	 * @return mixed
 	 */
-	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_userdata( $id ) );
-	}
+	final public function get( $id ) {
 
-	/**
-	 * Gets instance by object.
-	 *
-	 * @param object $object Object.
-	 * @return mixed
-	 */
-	final public static function get_by_object( $object ) {
+		// Get user.
+		$user = null;
 
-		// Get instance data.
-		$data = get_object_vars( $object->data );
+		if ( is_object( $id ) ) {
+			$user = get_object_vars( $id->data );
+		} else {
+			$data = get_userdata( absint( $id ) );
 
-		if ( ! is_null( $data ) ) {
-			$attributes = [];
-
-			// Get instance meta.
-			$meta = array_map(
-				function( $meta_values ) {
-					return reset( $meta_values );
-				},
-				get_user_meta( $data['ID'] )
-			);
-
-			// Get instance attributes.
-			foreach ( array_keys( static::$fields ) as $field_name ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} elseif ( in_array( $field_name, [ 'first_name', 'last_name', 'description' ], true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, $field_name );
-				} else {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
-				}
+			if ( $data ) {
+				$user = get_object_vars( $data->data );
 			}
-
-			// Create and fill instance.
-			$instance = new static();
-
-			$instance->set_id( $data['ID'] );
-			$instance->fill( $attributes );
-
-			return $instance;
 		}
+
+		if ( is_null( $user ) ) {
+			return;
+		}
+
+		// Get user meta.
+		$meta = array_map(
+			function( $values ) {
+				return reset( $values );
+			},
+			get_user_meta( $user['ID'] )
+		);
+
+		// Get object attributes.
+		$attributes = [];
+
+		foreach ( array_keys( $this->fields ) as $field_name ) {
+			if ( in_array( $field_name, $this->aliases, true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $user, array_search( $field_name, $this->aliases, true ) );
+			} elseif ( in_array( $field_name, [ 'first_name', 'last_name', 'description' ], true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $meta, $field_name );
+			} else {
+				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+			}
+		}
+
+		return ( new static() )->set_id( $user['ID'] )->fill( $attributes );
 	}
 
 	/**
-	 * Deletes instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return bool
-	 */
-	final public static function delete_by_id( $id ) {
-		require_once ABSPATH . 'wp-admin/includes/user.php';
-
-		return boolval( wp_delete_user( $id ) );
-	}
-
-	/**
-	 * Saves instance to the database.
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	final public function save() {
 
-		// Alias instance attributes.
-		$data = [];
+		// Get user data.
+		$user = [];
 		$meta = [];
 
-		foreach ( static::$fields as $field_name => $field ) {
+		foreach ( $this->fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
+				if ( in_array( $field_name, $this->aliases, true ) ) {
+					$user[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
 			} else {
-				$this->add_errors( $field->get_errors() );
+				$this->_add_errors( $field->get_errors() );
 			}
 		}
 
-		// Create or update instance.
 		if ( empty( $this->errors ) ) {
+
+			// Create or update user.
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_user( $data );
+				$id = wp_insert_user( $user );
 
 				if ( ! is_wp_error( $id ) ) {
 					$this->set_id( $id );
 				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_user( array_merge( $data, [ 'ID' => $this->id ] ) ) ) ) {
+			} elseif ( is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
 				return false;
 			}
 
+			// Update user meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
 				if ( in_array( $meta_key, [ 'first_name', 'last_name', 'description' ], true ) ) {
 					update_user_meta( $this->id, $meta_key, $meta_value );
@@ -218,21 +188,18 @@ class User extends Model {
 	}
 
 	/**
-	 * Gets image ID.
+	 * Deletes object.
 	 *
-	 * @return mixed
+	 * @param int $id Object ID.
+	 * @return bool
 	 */
-	final public function get_image_id() {
-		$image_id = hp\get_post_id(
-			[
-				'post_type'   => 'attachment',
-				'post_parent' => 0,
-				'author'      => $this->id,
-				'meta_key'    => 'hp_parent_field',
-				'meta_value'  => 'image_id',
-			]
-		);
+	final public function delete( $id = null ) {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
 
-		return 0 !== $image_id ? $image_id : null;
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_delete_user( absint( $id ) );
 	}
 }

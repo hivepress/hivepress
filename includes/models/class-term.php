@@ -20,105 +20,89 @@ defined( 'ABSPATH' ) || exit;
 abstract class Term extends Model {
 
 	/**
-	 * Gets instance by ID.
+	 * Gets object.
 	 *
-	 * @param int $id Instance ID.
+	 * @param int $id Object ID.
 	 * @return mixed
 	 */
-	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_term( $id, hp\prefix( static::get_name() ) ) );
-	}
+	final public function get( $id ) {
 
-	/**
-	 * Gets instance by object.
-	 *
-	 * @param object $object Object.
-	 * @return mixed
-	 */
-	final public static function get_by_object( $object ) {
+		// Get term.
+		$term = null;
 
-		// Get instance data.
-		$data = get_object_vars( $object );
-
-		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['taxonomy'] ) {
-			$attributes = [];
-
-			// Get instance meta.
-			$meta = array_map(
-				function( $meta_values ) {
-					return reset( $meta_values );
-				},
-				get_term_meta( $data['term_id'] )
-			);
-
-			// Get instance attributes.
-			foreach ( array_keys( static::$fields ) as $field_name ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} else {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
-				}
-			}
-
-			// Create and fill instance.
-			$instance = new static();
-
-			$instance->set_id( $data['term_id'] );
-			$instance->fill( $attributes );
-
-			return $instance;
+		if ( is_object( $id ) ) {
+			$term = get_object_vars( $id );
+		} else {
+			$term = get_term( absint( $id ), hp\prefix( static::_get_name() ), ARRAY_A );
 		}
+
+		if ( is_null( $term ) || hp\prefix( static::_get_name() ) !== $term['taxonomy'] ) {
+			return;
+		}
+
+		// Get term meta.
+		$meta = array_map(
+			function( $values ) {
+				return reset( $values );
+			},
+			get_term_meta( $term['term_id'] )
+		);
+
+		// Get object attributes.
+		$attributes = [];
+
+		foreach ( array_keys( $this->fields ) as $field_name ) {
+			if ( in_array( $field_name, $this->aliases, true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $term, array_search( $field_name, $this->aliases, true ) );
+			} else {
+				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+			}
+		}
+
+		return ( new static() )->set_id( $term['term_id'] )->fill( $attributes );
 	}
 
 	/**
-	 * Deletes instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return bool
-	 */
-	final public static function delete_by_id( $id ) {
-		return boolval( wp_delete_term( $id, hp\prefix( static::get_name() ) ) );
-	}
-
-	/**
-	 * Saves instance to the database.
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	final public function save() {
 
-		// Alias instance attributes.
-		$data = [];
+		// Get term data.
+		$term = [];
 		$meta = [];
 
-		foreach ( static::$fields as $field_name => $field ) {
+		foreach ( $this->fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
+				if ( in_array( $field_name, $this->aliases, true ) ) {
+					$term[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
 			} else {
-				$this->add_errors( $field->get_errors() );
+				$this->_add_errors( $field->get_errors() );
 			}
 		}
 
-		// Create or update instance.
 		if ( empty( $this->errors ) ) {
+
+			// Create or update term.
 			if ( is_null( $this->id ) ) {
-				$ids = wp_insert_term( uniqid(), hp\prefix( static::get_name() ), $data );
+				$ids = wp_insert_term( uniqid(), hp\prefix( static::_get_name() ), $term );
 
 				if ( ! is_wp_error( $ids ) ) {
 					$this->set_id( reset( $ids ) );
 				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::get_name() ), $data ) ) ) {
+			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::_get_name() ), $term ) ) ) {
 				return false;
 			}
 
+			// Update term meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
 				update_term_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
 			}
@@ -127,5 +111,19 @@ abstract class Term extends Model {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Deletes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function delete( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_delete_term( absint( $id ), hp\prefix( static::_get_name() ) );
 	}
 }

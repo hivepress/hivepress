@@ -253,9 +253,12 @@ abstract class Model {
 	 * Sets object ID.
 	 *
 	 * @param int $id Object ID.
+	 * @return object
 	 */
 	final protected function set_id( $id ) {
 		$this->id = absint( $id );
+
+		return $this;
 	}
 
 	/**

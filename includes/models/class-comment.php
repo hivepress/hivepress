@@ -20,105 +20,89 @@ defined( 'ABSPATH' ) || exit;
 abstract class Comment extends Model {
 
 	/**
-	 * Gets instance by ID.
+	 * Gets object.
 	 *
-	 * @param int $id Instance ID.
+	 * @param int $id Object ID.
 	 * @return mixed
 	 */
-	final public static function get_by_id( $id ) {
-		return static::get_by_object( get_comment( $id ) );
-	}
+	final public function get( $id ) {
 
-	/**
-	 * Gets instance by object.
-	 *
-	 * @param object $object Object.
-	 * @return mixed
-	 */
-	final public static function get_by_object( $object ) {
+		// Get comment.
+		$comment = null;
 
-		// Get instance data.
-		$data = get_object_vars( $object );
-
-		if ( ! is_null( $data ) && hp\prefix( static::get_name() ) === $data['comment_type'] ) {
-			$attributes = [];
-
-			// Get instance meta.
-			$meta = array_map(
-				function( $meta_values ) {
-					return reset( $meta_values );
-				},
-				get_comment_meta( $data['comment_ID'] )
-			);
-
-			// Get instance attributes.
-			foreach ( array_keys( static::$fields ) as $field_name ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} else {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
-				}
-			}
-
-			// Create and fill instance.
-			$instance = new static();
-
-			$instance->set_id( $data['comment_ID'] );
-			$instance->fill( $attributes );
-
-			return $instance;
+		if ( is_object( $id ) ) {
+			$comment = get_object_vars( $id );
+		} else {
+			$comment = get_comment( absint( $id ), ARRAY_A );
 		}
+
+		if ( is_null( $comment ) || hp\prefix( static::_get_name() ) !== $comment['comment_type'] ) {
+			return;
+		}
+
+		// Get comment meta.
+		$meta = array_map(
+			function( $values ) {
+				return reset( $values );
+			},
+			get_comment_meta( $comment['comment_ID'] )
+		);
+
+		// Get object attributes.
+		$attributes = [];
+
+		foreach ( array_keys( $this->fields ) as $field_name ) {
+			if ( in_array( $field_name, $this->aliases, true ) ) {
+				$attributes[ $field_name ] = hp\get_array_value( $comment, array_search( $field_name, $this->aliases, true ) );
+			} else {
+				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+			}
+		}
+
+		return ( new static() )->set_id( $comment['comment_ID'] )->fill( $attributes );
 	}
 
 	/**
-	 * Deletes instance by ID.
-	 *
-	 * @param int $id Instance ID.
-	 * @return bool
-	 */
-	final public static function delete_by_id( $id ) {
-		return boolval( wp_delete_comment( $id, true ) );
-	}
-
-	/**
-	 * Saves instance to the database.
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	final public function save() {
 
-		// Alias instance attributes.
-		$data = [];
-		$meta = [];
+		// Get comment data.
+		$comment = [];
+		$meta    = [];
 
-		foreach ( static::$fields as $field_name => $field ) {
+		foreach ( $this->fields as $field_name => $field ) {
 			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
 
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
+				if ( in_array( $field_name, $this->aliases, true ) ) {
+					$comment[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
 				} else {
 					$meta[ $field_name ] = $field->get_value();
 				}
 			} else {
-				$this->add_errors( $field->get_errors() );
+				$this->_add_errors( $field->get_errors() );
 			}
 		}
 
-		// Create or update instance.
 		if ( empty( $this->errors ) ) {
-			if ( is_null( $this->id ) ) {
-				$id = wp_insert_comment( array_merge( $data, [ 'comment_type' => hp\prefix( static::get_name() ) ] ) );
 
-				if ( false !== $id ) {
+			// Create or update comment.
+			if ( is_null( $this->id ) ) {
+				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => hp\prefix( static::_get_name() ) ] ) );
+
+				if ( $id ) {
 					$this->set_id( $id );
 				} else {
 					return false;
 				}
-			} elseif ( wp_update_comment( array_merge( $data, [ 'comment_ID' => $this->id ] ) ) === 0 ) {
+			} elseif ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
 				return false;
 			}
 
+			// Update comment meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
 				update_comment_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
 			}
@@ -127,5 +111,19 @@ abstract class Comment extends Model {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Deletes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function delete( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_delete_comment( absint( $id ), true );
 	}
 }

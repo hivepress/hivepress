@@ -20,25 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Post {
 
 	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'fields'  => [
@@ -77,6 +63,6 @@ class Vendor extends Post {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }
