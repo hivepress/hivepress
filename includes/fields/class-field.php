@@ -108,10 +108,12 @@ abstract class Field {
 		$args = hp\merge_arrays(
 			[
 				'meta' => [
-					'name'     => hp\get_class_name( static::class ),
-					'type'     => 'CHAR',
+					'name'       => hp\get_class_name( static::class ),
+					'type'       => 'CHAR',
+					'filterable' => false,
+					'sortable'   => false,
 
-					'settings' => [
+					'settings'   => [
 						'required' => [
 							'label'   => esc_html__( 'Required', 'hivepress' ),
 							'caption' => esc_html__( 'Make this field required', 'hivepress' ),

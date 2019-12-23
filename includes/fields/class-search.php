@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Search extends Text {
 
 	/**
-	 * Field title.
+	 * Field meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $title;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -34,27 +34,14 @@ class Search extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => null,
+				'meta' => [
+					'label'      => null,
+					'filterable' => false,
+				],
 			],
 			$args
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 }

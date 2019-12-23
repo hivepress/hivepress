@@ -134,6 +134,18 @@ abstract class Form {
 	 * @param array $args Form arguments.
 	 */
 	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'button' => [
+					'label'      => esc_html__( 'Submit', 'hivepress' ),
+
+					'attributes' => [
+						'class' => [ 'hp-form__button', 'button', 'alt' ],
+					],
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -233,19 +245,8 @@ abstract class Form {
 	 * @param array $button Button arguments.
 	 */
 	final protected function set_button( $button ) {
-		if ( $button ) {
-			$this->button = new Fields\Button(
-				hp\merge_arrays(
-					[
-						'label'      => esc_html__( 'Submit', 'hivepress' ),
-
-						'attributes' => [
-							'class' => [ 'hp-form__button', 'button', 'alt' ],
-						],
-					],
-					$button
-				)
-			);
+		if ( is_array( $button ) ) {
+			$this->button = new Fields\Button( $button );
 		}
 	}
 
@@ -370,33 +371,35 @@ abstract class Form {
 		}
 
 		// Render fields.
-		$output .= '<div class="hp-form__fields">';
+		if ( $this->fields ) {
+			$output .= '<div class="hp-form__fields">';
 
-		foreach ( $this->fields as $field ) {
-			if ( $field::get_display_type() !== 'hidden' ) {
-				$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_display_type() ) ) . '">';
+			foreach ( $this->fields as $field ) {
+				if ( $field::get_display_type() !== 'hidden' ) {
+					$output .= '<div class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_display_type() ) ) . '">';
 
-				// Render label.
-				if ( $field->get_label() ) {
-					$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+					// Render label.
+					if ( $field->get_label() ) {
+						$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
-					if ( $field->get_statuses() ) {
-						$output .= ' <small>(' . implode( ', ', array_map( 'esc_html', $field->get_statuses() ) ) . ')</small>';
+						if ( $field->get_statuses() ) {
+							$output .= ' <small>(' . implode( ', ', array_map( 'esc_html', $field->get_statuses() ) ) . ')</small>';
+						}
+
+						$output .= '</label>';
 					}
+				}
 
-					$output .= '</label>';
+				// Render field.
+				$output .= $field->render();
+
+				if ( $field::get_display_type() !== 'hidden' ) {
+					$output .= '</div>';
 				}
 			}
 
-			// Render field.
-			$output .= $field->render();
-
-			if ( $field::get_display_type() !== 'hidden' ) {
-				$output .= '</div>';
-			}
+			$output .= '</div>';
 		}
-
-		$output .= '</div>';
 
 		// Render footer.
 		if ( $this->button || $this->footer ) {

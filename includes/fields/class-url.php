@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class URL extends Text {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -41,11 +34,14 @@ class URL extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'URL', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'URL', 'hivepress' ),
+					'filterable' => false,
 
-				'settings' => [
-					'min_length' => null,
-					'max_length' => null,
+					'settings'   => [
+						'min_length' => null,
+						'max_length' => null,
+					],
 				],
 			],
 			$args
@@ -61,9 +57,6 @@ class URL extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
 			$args,
 			[
 				'max_length' => 2048,

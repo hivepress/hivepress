@@ -20,25 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Text extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Field placeholder.
@@ -76,29 +62,31 @@ class Text extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'type'     => 'CHAR',
-				'title'    => esc_html__( 'Text', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'Text', 'hivepress' ),
+					'filterable' => true,
 
-				'settings' => [
-					'placeholder' => [
-						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 2048,
-						'_order'      => 10,
-					],
+					'settings'   => [
+						'placeholder' => [
+							'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+							'type'       => 'text',
+							'max_length' => 2048,
+							'_order'     => 10,
+						],
 
-					'min_length'  => [
-						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
-						'type'      => 'number',
-						'min_value' => 0,
-						'_order'     => 20,
-					],
+						'min_length'  => [
+							'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
+							'type'      => 'number',
+							'min_value' => 0,
+							'_order'    => 20,
+						],
 
-					'max_length'  => [
-						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
-						'type'      => 'number',
-						'min_value' => 1,
-						'_order'     => 30,
+						'max_length'  => [
+							'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
+							'type'      => 'number',
+							'min_value' => 1,
+							'_order'    => 30,
+						],
 					],
 				],
 			],
@@ -106,22 +94,6 @@ class Text extends Field {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 
 	/**
@@ -156,12 +128,12 @@ class Text extends Field {
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['operator'] = 'LIKE';
+		$this->filter['operator'] = 'LIKE';
 	}
 
 	/**
@@ -170,7 +142,9 @@ class Text extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		$this->value = wp_unslash( $this->value );
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_unslash( $this->value );
+		}
 	}
 
 	/**
@@ -194,11 +168,11 @@ class Text extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
-				$this->add_errors( [ sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
-				$this->add_errors( [ sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
 			}
 		}
 
@@ -211,6 +185,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

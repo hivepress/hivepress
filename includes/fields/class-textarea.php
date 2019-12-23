@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Editor flag.
@@ -48,14 +41,17 @@ class Textarea extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Textarea', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'Textarea', 'hivepress' ),
+					'filterable' => false,
 
-				'settings' => [
-					'editor' => [
-						'label'   => esc_html__( 'Formatting', 'hivepress' ),
-						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'   => 40,
+					'settings'   => [
+						'editor' => [
+							'label'   => esc_html__( 'Formatting', 'hivepress' ),
+							'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
+							'type'    => 'checkbox',
+							'_order'  => 40,
+						],
 					],
 				],
 			],
@@ -63,22 +59,6 @@ class Textarea extends Text {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 
 	/**
