@@ -72,6 +72,16 @@ abstract class Model {
 	 */
 	public function __construct( $args = [] ) {
 
+		/**
+		 * Filters model arguments.
+		 *
+		 * @filter /models/{$name}
+		 * @description Filters model arguments.
+		 * @param string $name Model name.
+		 * @param array $args Model arguments.
+		 */
+		$args = apply_filters( 'hivepress/v1/models/' . static::_get_name(), $args );
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->_set_property( $name, $value, '_' );
@@ -103,7 +113,7 @@ abstract class Model {
 	final protected function _set_fields( $fields ) {
 		$this->fields = [];
 
-		foreach ( hp\sort_array( $fields ) as $name => $args ) {
+		foreach ( $fields as $name => $args ) {
 
 			// Create field.
 			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
