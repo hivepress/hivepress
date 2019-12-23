@@ -41,7 +41,7 @@ class User_Account_Page extends Page {
 						'blocks' => [
 							'page_columns' => [
 								'type'       => 'container',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -51,7 +51,7 @@ class User_Account_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -62,7 +62,7 @@ class User_Account_Page extends Page {
 											'user_account_menu' => [
 												'type'  => 'menu',
 												'menu'  => 'user_account',
-												'order' => 10,
+												'_order' => 10,
 
 												'attributes' => [
 													'class' => [ 'hp-widget', 'widget', 'widget_nav_menu' ],
@@ -72,7 +72,7 @@ class User_Account_Page extends Page {
 											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'account_sidebar',
-												'order' => 20,
+												'_order' => 20,
 											],
 										],
 									],
@@ -80,7 +80,7 @@ class User_Account_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'order'      => 20,
+										'_order'      => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -90,7 +90,7 @@ class User_Account_Page extends Page {
 											'page_title' => [
 												'type'     => 'element',
 												'filepath' => 'page/page-title',
-												'order'    => 5,
+												'_order'    => 5,
 											],
 										],
 									],

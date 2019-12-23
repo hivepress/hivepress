@@ -42,13 +42,13 @@ class Listing_Submit_Page extends Page {
 							'page_content' => [
 								'type'   => 'container',
 								'tag'    => 'main',
-								'order'  => 10,
+								'_order'  => 10,
 
 								'blocks' => [
 									'page_title' => [
 										'type'     => 'element',
 										'filepath' => 'page/page-title',
-										'order'    => 5,
+										'_order'    => 5,
 									],
 								],
 							],

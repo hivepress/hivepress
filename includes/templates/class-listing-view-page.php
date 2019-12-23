@@ -45,7 +45,7 @@ class Listing_View_Page extends Page {
 						'blocks'     => [
 							'page_columns' => [
 								'type'       => 'container',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -55,7 +55,7 @@ class Listing_View_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -65,7 +65,7 @@ class Listing_View_Page extends Page {
 											'listing_title' => [
 												'type'   => 'container',
 												'tag'    => 'h1',
-												'order'  => 10,
+												'_order'  => 10,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__title' ],
@@ -75,20 +75,20 @@ class Listing_View_Page extends Page {
 													'listing_title_text'           => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/page/listing-title',
-														'order'    => 10,
+														'_order'    => 10,
 													],
 
 													'listing_verified_badge' => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/listing-verified-badge',
-														'order'    => 20,
+														'_order'    => 20,
 													],
 												],
 											],
 
 											'listing_details_primary' => [
 												'type'   => 'container',
-												'order'  => 20,
+												'_order'  => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
@@ -98,13 +98,13 @@ class Listing_View_Page extends Page {
 													'listing_category' => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/listing-category',
-														'order'    => 10,
+														'_order'    => 10,
 													],
 
 													'listing_date'     => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/listing-date',
-														'order'    => 20,
+														'_order'    => 20,
 													],
 												],
 											],
@@ -112,19 +112,19 @@ class Listing_View_Page extends Page {
 											'listing_images'          => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-images',
-												'order'    => 30,
+												'_order'    => 30,
 											],
 
 											'listing_attributes_secondary' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-attributes-secondary',
-												'order'    => 40,
+												'_order'    => 40,
 											],
 
 											'listing_description'     => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-description',
-												'order'    => 50,
+												'_order'    => 50,
 											],
 										],
 									],
@@ -132,7 +132,7 @@ class Listing_View_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'order'      => 20,
+										'_order'      => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -143,12 +143,12 @@ class Listing_View_Page extends Page {
 											'listing_attributes_primary' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-attributes-primary',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 
 											'listing_actions_primary' => [
 												'type'   => 'container',
-												'order'  => 20,
+												'_order'  => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'hp-widget', 'widget' ],
@@ -163,7 +163,7 @@ class Listing_View_Page extends Page {
 															'listing_report_form' => [
 																'type' => 'form',
 																'form' => 'listing_report',
-																'order' => 10,
+																'_order' => 10,
 
 																'attributes' => [
 																	'class' => [ 'hp-form--narrow' ],
@@ -175,14 +175,14 @@ class Listing_View_Page extends Page {
 													'listing_report_link' => [
 														'type'     => 'element',
 														'filepath' => 'listing/view/page/listing-report-link',
-														'order'    => 100,
+														'_order'    => 100,
 													],
 												],
 											],
 
 											'vendor' => [
 												'type'  => 'vendor',
-												'order' => 30,
+												'_order' => 30,
 
 												'attributes' => [
 													'class' => [ 'hp-widget', 'widget' ],
@@ -192,7 +192,7 @@ class Listing_View_Page extends Page {
 											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'listing_sidebar',
-												'order' => 40,
+												'_order' => 40,
 											],
 										],
 									],

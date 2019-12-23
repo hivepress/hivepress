@@ -44,7 +44,7 @@ class Site_Footer_Block extends Template {
 						'blocks'  => [
 							'user_login_form' => [
 								'type'  => 'user_login_form',
-								'order' => 10,
+								'_order' => 10,
 							],
 						],
 					],
@@ -57,7 +57,7 @@ class Site_Footer_Block extends Template {
 							'user_register_form' => [
 								'type'       => 'form',
 								'form'       => 'user_register',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-form--narrow' ],
@@ -66,7 +66,7 @@ class Site_Footer_Block extends Template {
 								'footer'     => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -76,7 +76,7 @@ class Site_Footer_Block extends Template {
 											'user_login_link' => [
 												'type'     => 'element',
 												'filepath' => 'user/register/user-login-link',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],
@@ -93,7 +93,7 @@ class Site_Footer_Block extends Template {
 							'user_password_request_form' => [
 								'type'       => 'form',
 								'form'       => 'user_password_request',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-form--narrow' ],

@@ -41,7 +41,7 @@ class User_Login_Page extends Page {
 						'blocks' => [
 							'page_columns' => [
 								'type'       => 'container',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -50,7 +50,7 @@ class User_Login_Page extends Page {
 								'blocks'     => [
 									'page_content' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
@@ -60,12 +60,12 @@ class User_Login_Page extends Page {
 											'page_title' => [
 												'type'     => 'element',
 												'filepath' => 'page/page-title',
-												'order'    => 5,
+												'_order'    => 5,
 											],
 
 											'user_login_form' => [
 												'type'  => 'user_login_form',
-												'order' => 10,
+												'_order' => 10,
 											],
 										],
 									],

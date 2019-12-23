@@ -42,12 +42,12 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 							'listing_submit_form' => [
 								'type'   => 'form',
 								'form'   => 'listing_submit',
-								'order'  => 10,
+								'_order'  => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -57,7 +57,7 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 											'listing_category_change_link' => [
 												'type'     => 'element',
 												'filepath' => 'listing/submit/listing-category-change-link',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],

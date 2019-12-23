@@ -42,13 +42,13 @@ class User_Edit_Settings_Page extends User_Account_Page {
 							'user_delete_modal' => [
 								'type'    => 'modal',
 								'caption' => esc_html__( 'Delete Account', 'hivepress' ),
-								'order'   => 5,
+								'_order'   => 5,
 
 								'blocks'  => [
 									'user_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'user_delete',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form--narrow' ],
@@ -60,12 +60,12 @@ class User_Edit_Settings_Page extends User_Account_Page {
 							'user_update_form'  => [
 								'type'   => 'form',
 								'form'   => 'user_update',
-								'order'  => 10,
+								'_order'  => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -75,7 +75,7 @@ class User_Edit_Settings_Page extends User_Account_Page {
 											'user_delete_link' => [
 												'type'     => 'element',
 												'filepath' => 'user/edit/user-delete-link',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],

@@ -42,7 +42,7 @@ class Listing_Categories_View_Page extends Page {
 							'page_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-page__header' ],
@@ -51,7 +51,7 @@ class Listing_Categories_View_Page extends Page {
 								'blocks'     => [
 									'listing_search_form' => [
 										'type'  => 'listing_search_form',
-										'order' => 10,
+										'_order' => 10,
 									],
 								],
 							],
@@ -59,7 +59,7 @@ class Listing_Categories_View_Page extends Page {
 							'page_content' => [
 								'type'       => 'container',
 								'tag'        => 'main',
-								'order'      => 20,
+								'_order'      => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-page__content' ],
@@ -69,7 +69,7 @@ class Listing_Categories_View_Page extends Page {
 									'listing_categories' => [
 										'type'    => 'listing_categories',
 										'columns' => 3,
-										'order'   => 10,
+										'_order'   => 10,
 									],
 								],
 							],

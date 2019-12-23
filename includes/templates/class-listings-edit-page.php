@@ -42,7 +42,7 @@ class Listings_Edit_Page extends User_Account_Page {
 							'listings' => [
 								'type'     => 'listings',
 								'template' => 'edit',
-								'order'    => 10,
+								'_order'    => 10,
 							],
 						],
 					],

@@ -45,7 +45,7 @@ class Vendor_View_Page extends Page {
 						'blocks'     => [
 							'page_columns' => [
 								'type'       => 'container',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -55,7 +55,7 @@ class Vendor_View_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -65,7 +65,7 @@ class Vendor_View_Page extends Page {
 										'blocks'     => [
 											'vendor_summary' => [
 												'type'   => 'container',
-												'order'  => 10,
+												'_order'  => 10,
 
 												'attributes' => [
 													'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
@@ -75,18 +75,18 @@ class Vendor_View_Page extends Page {
 													'vendor_image' => [
 														'type'     => 'element',
 														'filepath' => 'vendor/view/page/vendor-image',
-														'order'    => 10,
+														'_order'    => 10,
 													],
 
 													'vendor_name'  => [
 														'type'     => 'element',
 														'filepath' => 'vendor/view/page/vendor-name',
-														'order'    => 20,
+														'_order'    => 20,
 													],
 
 													'vendor_details_primary' => [
 														'type'       => 'container',
-														'order'      => 30,
+														'_order'      => 30,
 
 														'attributes' => [
 															'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
@@ -96,7 +96,7 @@ class Vendor_View_Page extends Page {
 															'vendor_date' => [
 																'type' => 'element',
 																'filepath' => 'vendor/view/vendor-date',
-																'order' => 10,
+																'_order' => 10,
 															],
 														],
 													],
@@ -104,14 +104,14 @@ class Vendor_View_Page extends Page {
 													'vendor_description' => [
 														'type'     => 'element',
 														'filepath' => 'vendor/view/page/vendor-description',
-														'order'    => 40,
+														'_order'    => 40,
 													],
 												],
 											],
 
 											'vendor_actions_primary' => [
 												'type'   => 'container',
-												'order'  => 20,
+												'_order'  => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
@@ -123,7 +123,7 @@ class Vendor_View_Page extends Page {
 											'page_sidebar_widgets' => [
 												'type'  => 'widgets',
 												'area'  => 'vendor_sidebar',
-												'order' => 30,
+												'_order' => 30,
 											],
 										],
 									],
@@ -131,7 +131,7 @@ class Vendor_View_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'order'      => 20,
+										'_order'      => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -141,19 +141,19 @@ class Vendor_View_Page extends Page {
 											'page_title' => [
 												'type'     => 'element',
 												'filepath' => 'page/page-title',
-												'order'    => 5,
+												'_order'    => 5,
 											],
 
 											'listings'   => [
 												'type'    => 'listings',
 												'columns' => 2,
-												'order'   => 10,
+												'_order'   => 10,
 											],
 
 											'listing_pagination' => [
 												'type'     => 'element',
 												'filepath' => 'page/pagination',
-												'order'    => 20,
+												'_order'    => 20,
 											],
 										],
 									],

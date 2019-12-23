@@ -42,13 +42,13 @@ class Listing_Edit_Page extends User_Account_Page {
 							'listing_delete_modal' => [
 								'type'    => 'modal',
 								'caption' => hivepress()->translator->get_string( 'delete_listing' ),
-								'order'   => 5,
+								'_order'   => 5,
 
 								'blocks'  => [
 									'listing_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'listing_delete',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form--narrow' ],
@@ -60,12 +60,12 @@ class Listing_Edit_Page extends User_Account_Page {
 							'listing_update_form'  => [
 								'type'   => 'form',
 								'form'   => 'listing_update',
-								'order'  => 10,
+								'_order'  => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -75,7 +75,7 @@ class Listing_Edit_Page extends User_Account_Page {
 											'listing_delete_link' => [
 												'type'     => 'element',
 												'filepath' => 'listing/edit/page/listing-delete-link',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],

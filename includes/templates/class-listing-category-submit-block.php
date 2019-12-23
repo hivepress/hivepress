@@ -40,7 +40,7 @@ class Listing_Category_Submit_Block extends Template {
 					'listing_category_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'order'      => 10,
+						'_order'      => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing-category', 'hp-listing-category--submit-block' ],
@@ -50,7 +50,7 @@ class Listing_Category_Submit_Block extends Template {
 							'listing_category_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__header' ],
@@ -60,14 +60,14 @@ class Listing_Category_Submit_Block extends Template {
 									'listing_category_image' => [
 										'type'     => 'element',
 										'filepath' => 'listing-category/submit/block/listing-category-image',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 								],
 							],
 
 							'listing_category_content' => [
 								'type'       => 'container',
-								'order'      => 20,
+								'_order'      => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__content' ],
@@ -77,7 +77,7 @@ class Listing_Category_Submit_Block extends Template {
 									'listing_category_name' => [
 										'type'     => 'element',
 										'filepath' => 'listing-category/submit/block/listing-category-name',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 								],
 							],

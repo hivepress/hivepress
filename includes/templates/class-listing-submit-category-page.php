@@ -43,7 +43,7 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 								'type'     => 'listing_categories',
 								'template' => 'submit',
 								'columns'  => 3,
-								'order'    => 10,
+								'_order'    => 10,
 							],
 						],
 					],

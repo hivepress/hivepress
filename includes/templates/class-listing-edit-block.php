@@ -40,7 +40,7 @@ class Listing_Edit_Block extends Template {
 					'listing_container' => [
 						'type'       => 'container',
 						'tag'        => 'tr',
-						'order'      => 10,
+						'_order'      => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--edit-block' ],
@@ -50,25 +50,25 @@ class Listing_Edit_Block extends Template {
 							'listing_title'           => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-title',
-								'order'    => 10,
+								'_order'    => 10,
 							],
 
 							'listing_status'          => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-status',
-								'order'    => 20,
+								'_order'    => 20,
 							],
 
 							'listing_date'            => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-date',
-								'order'    => 30,
+								'_order'    => 30,
 							],
 
 							'listing_actions_primary' => [
 								'type'       => 'container',
 								'tag'        => 'td',
-								'order'      => 40,
+								'_order'      => 40,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
@@ -78,7 +78,7 @@ class Listing_Edit_Block extends Template {
 									'listing_view_link' => [
 										'type'     => 'element',
 										'filepath' => 'listing/edit/block/listing-view-link',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 								],
 							],

@@ -42,7 +42,7 @@ class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 							'listing_complete_message' => [
 								'type'     => 'element',
 								'filepath' => 'listing/submit/listing-complete-message',
-								'order'    => 10,
+								'_order'    => 10,
 							],
 						],
 					],

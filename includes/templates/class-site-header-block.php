@@ -39,7 +39,7 @@ class Site_Header_Block extends Template {
 				'blocks' => [
 					'main_menu' => [
 						'type'       => 'container',
-						'order'      => 10,
+						'_order'      => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-menu', 'hp-menu--main' ],
@@ -49,13 +49,13 @@ class Site_Header_Block extends Template {
 							'user_account_link'   => [
 								'type'     => 'element',
 								'filepath' => 'user/login/user-login-link',
-								'order'    => 10,
+								'_order'    => 10,
 							],
 
 							'listing_submit_link' => [
 								'type'     => 'element',
 								'filepath' => 'listing/submit/listing-submit-link',
-								'order'    => 20,
+								'_order'    => 20,
 							],
 						],
 					],

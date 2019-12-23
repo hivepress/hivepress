@@ -40,7 +40,7 @@ class Vendor_View_Block extends Template {
 					'vendor_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'order'      => 10,
+						'_order'      => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-vendor', 'hp-vendor--view-block' ],
@@ -50,7 +50,7 @@ class Vendor_View_Block extends Template {
 							'vendor_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__header' ],
@@ -60,14 +60,14 @@ class Vendor_View_Block extends Template {
 									'vendor_image' => [
 										'type'     => 'element',
 										'filepath' => 'vendor/view/block/vendor-image',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 								],
 							],
 
 							'vendor_content' => [
 								'type'       => 'container',
-								'order'      => 20,
+								'_order'      => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__content' ],
@@ -77,12 +77,12 @@ class Vendor_View_Block extends Template {
 									'vendor_name' => [
 										'type'     => 'element',
 										'filepath' => 'vendor/view/block/vendor-name',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 
 									'vendor_details_primary' => [
 										'type'       => 'container',
-										'order'      => 20,
+										'_order'      => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
@@ -92,7 +92,7 @@ class Vendor_View_Block extends Template {
 											'vendor_date' => [
 												'type'     => 'element',
 												'filepath' => 'vendor/view/vendor-date',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],
@@ -102,7 +102,7 @@ class Vendor_View_Block extends Template {
 							'vendor_footer'  => [
 								'type'       => 'container',
 								'tag'        => 'footer',
-								'order'      => 30,
+								'_order'      => 30,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__footer' ],
@@ -111,7 +111,7 @@ class Vendor_View_Block extends Template {
 								'blocks'     => [
 									'vendor_actions_primary'    => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'      => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],

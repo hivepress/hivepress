@@ -20,13 +20,14 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Template {
 	use Traits\Mutator;
+	use Traits\Meta;
 
 	/**
 	 * Template blocks.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected $blocks = [];
 
 	/**
 	 * Class initializer.
@@ -34,16 +35,14 @@ abstract class Template {
 	 * @param array $args Template arguments.
 	 */
 	public static function init( $args = [] ) {
-
-		/**
-		 * Filters template arguments.
-		 *
-		 * @filter /templates/{$name}
-		 * @description Filters template arguments.
-		 * @param string $name Template name.
-		 * @param array $args Template arguments.
-		 */
-		$args = apply_filters( 'hivepress/v1/templates/' . static::get_name(), $args );
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name' => hp\get_class_name( static::class ),
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -52,20 +51,32 @@ abstract class Template {
 	}
 
 	/**
-	 * Gets template name.
+	 * Class constructor.
 	 *
-	 * @return string
+	 * @param array $args Template arguments.
 	 */
-	final public static function get_name() {
-		return hp\get_class_name( static::class );
+	public function __construct( $args = [] ) {
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			$this->set_property( $name, $value );
+		}
+
+		// Bootstrap properties.
+		$this->bootstrap();
 	}
+
+	/**
+	 * Bootstraps template properties.
+	 */
+	protected function bootstrap() {}
 
 	/**
 	 * Gets template blocks.
 	 *
 	 * @return array
 	 */
-	final public static function get_blocks() {
-		return static::$blocks;
+	final public function get_blocks() {
+		return $this->blocks;
 	}
 }

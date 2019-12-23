@@ -40,7 +40,7 @@ class Listing_Category_View_Block extends Template {
 					'listing_category_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'order'      => 10,
+						'_order'      => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing-category', 'hp-listing-category--view-block' ],
@@ -50,7 +50,7 @@ class Listing_Category_View_Block extends Template {
 							'listing_category_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'      => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__header' ],
@@ -60,14 +60,14 @@ class Listing_Category_View_Block extends Template {
 									'listing_category_image' => [
 										'type'     => 'element',
 										'filepath' => 'listing-category/view/block/listing-category-image',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 								],
 							],
 
 							'listing_category_content' => [
 								'type'       => 'container',
-								'order'      => 20,
+								'_order'      => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__content' ],
@@ -77,12 +77,12 @@ class Listing_Category_View_Block extends Template {
 									'listing_category_name'            => [
 										'type'     => 'element',
 										'filepath' => 'listing-category/view/block/listing-category-name',
-										'order'    => 10,
+										'_order'    => 10,
 									],
 
 									'listing_category_details_primary' => [
 										'type'       => 'container',
-										'order'      => 20,
+										'_order'      => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-listing-category__details', 'hp-listing-category__details--primary' ],
@@ -92,7 +92,7 @@ class Listing_Category_View_Block extends Template {
 											'listing_category_count' => [
 												'type'     => 'element',
 												'filepath' => 'listing-category/view/listing-category-count',
-												'order'    => 10,
+												'_order'    => 10,
 											],
 										],
 									],
@@ -100,7 +100,7 @@ class Listing_Category_View_Block extends Template {
 									'listing_category_description'     => [
 										'type'     => 'element',
 										'filepath' => 'listing-category/view/listing-category-description',
-										'order'    => 30,
+										'_order'    => 30,
 									],
 								],
 							],
