@@ -72,6 +72,13 @@ abstract class Field {
 	protected $value;
 
 	/**
+	 * Field filter.
+	 *
+	 * @var mixed
+	 */
+	protected $filter;
+
+	/**
 	 * Required flag.
 	 *
 	 * @var bool
@@ -84,13 +91,6 @@ abstract class Field {
 	 * @var array
 	 */
 	protected $errors = [];
-
-	/**
-	 * Field criteria.
-	 *
-	 * @var mixed
-	 */
-	protected $criteria;
 
 	/**
 	 * Field attributes.
@@ -109,6 +109,7 @@ abstract class Field {
 			[
 				'meta' => [
 					'name'     => hp\get_class_name( static::class ),
+					'type'     => 'CHAR',
 
 					'settings' => [
 						'required' => [
@@ -256,8 +257,8 @@ abstract class Field {
 	 * @return object
 	 */
 	final public function set_value( $value ) {
-		$this->value = $value;
-		$this->criteria=null;
+		$this->value  = $value;
+		$this->filter = null;
 
 		if ( ! is_null( $this->value ) ) {
 			$this->normalize();
@@ -265,8 +266,8 @@ abstract class Field {
 			if ( ! is_null( $this->value ) ) {
 				$this->sanitize();
 
-				if ( ! is_null( $this->value ) ) {
-					$this->set_criteria();
+				if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
+					$this->add_filter();
 				}
 			}
 		}
@@ -293,6 +294,27 @@ abstract class Field {
 	}
 
 	/**
+	 * Adds field filter.
+	 */
+	final protected function add_filter() {
+		$this->filter = [
+			'name'     => $this->name,
+			'type'     => static::get_meta( 'type' ),
+			'value'    => $this->value,
+			'operator' => '=',
+		];
+	}
+
+	/**
+	 * Gets field filter.
+	 *
+	 * @return mixed
+	 */
+	final public function get_filter() {
+		return $this->filter;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param mixed $errors Field errors.
@@ -308,31 +330,6 @@ abstract class Field {
 	 */
 	final public function get_errors() {
 		return $this->errors;
-	}
-
-	/**
-	 * Sets field criteria.
-	 */
-	final protected function set_criteria() {
-		// todo.
-		$this->filters = [
-			'name'     => $this->name,
-			'value'    => $this->value,
-			'operator' => '=',
-		];
-
-		if ( static::get_type() ) {
-			$this->filters['type'] = static::get_type();
-		}
-	}
-
-	/**
-	 * Gets field criteria.
-	 *
-	 * @return mixed
-	 */
-	final public function get_criteria() {
-		return $this->criteria;
 	}
 
 	/**

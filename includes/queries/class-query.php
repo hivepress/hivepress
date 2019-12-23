@@ -231,7 +231,7 @@ abstract class Query extends \ArrayObject {
 						$clause = array_merge(
 							$clause,
 							[
-								'type'  => $field::get_type(),
+								'type'  => $field::get_meta( 'type' ),
 								'value' => $value,
 							]
 						);
