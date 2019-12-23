@@ -21,6 +21,11 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model {
 	use Traits\Mutator {
 		set_property as _set_property;
+		set_static_property as _set_static_property;
+	}
+
+	use Traits\Meta {
+		get_meta as _get_meta;
 	}
 
 	/**
@@ -66,6 +71,27 @@ abstract class Model {
 	protected $errors = [];
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Model arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name' => hp\get_class_name( static::class ),
+				],
+			],
+			$args
+		);
+
+		// Set properties.
+		foreach ( $args as $name => $value ) {
+			static::_set_static_property( $name, $value, '_' );
+		}
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
@@ -80,7 +106,7 @@ abstract class Model {
 		 * @param string $name Model name.
 		 * @param array $args Model arguments.
 		 */
-		$args = apply_filters( 'hivepress/v1/models/' . static::_get_name(), $args );
+		$args = apply_filters( 'hivepress/v1/models/' . static::_get_meta( 'name' ), $args );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -95,15 +121,6 @@ abstract class Model {
 	 * Bootstraps model properties.
 	 */
 	protected function bootstrap() {}
-
-	/**
-	 * Gets model name.
-	 *
-	 * @return string
-	 */
-	final public static function _get_name() {
-		return hp\get_class_name( static::class );
-	}
 
 	/**
 	 * Sets model fields.

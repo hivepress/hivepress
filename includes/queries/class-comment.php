@@ -61,7 +61,7 @@ class Comment extends Query {
 		// Set comment type.
 		$model = $this->model;
 
-		$this->args['type'] = hp\prefix( $model::_get_name() );
+		$this->args['type'] = hp\prefix( $model::_get_meta( 'name' ) );
 
 		parent::bootstrap();
 	}

@@ -36,7 +36,7 @@ abstract class Post extends Model {
 			$post = get_post( absint( $id ), ARRAY_A );
 		}
 
-		if ( is_null( $post ) || hp\prefix( static::_get_name() ) !== $post['post_type'] ) {
+		if ( is_null( $post ) || hp\prefix( static::_get_meta( 'name' ) ) !== $post['post_type'] ) {
 			return;
 		}
 
@@ -107,7 +107,7 @@ abstract class Post extends Model {
 
 			// Create or update post.
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $post, [ 'post_type' => hp\prefix( static::_get_name() ) ] ) );
+				$id = wp_insert_post( array_merge( $post, [ 'post_type' => hp\prefix( static::_get_meta( 'name' ) ) ] ) );
 
 				if ( $id ) {
 					$this->set_id( $id );

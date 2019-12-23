@@ -62,7 +62,7 @@ class Term extends Query {
 		// Set taxonomy.
 		$model = $this->model;
 
-		$this->args['taxonomy'] = hp\prefix( $model::_get_name() );
+		$this->args['taxonomy'] = hp\prefix( $model::_get_meta( 'name' ) );
 
 		parent::bootstrap();
 	}

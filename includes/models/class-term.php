@@ -33,10 +33,10 @@ abstract class Term extends Model {
 		if ( is_object( $id ) ) {
 			$term = get_object_vars( $id );
 		} else {
-			$term = get_term( absint( $id ), hp\prefix( static::_get_name() ), ARRAY_A );
+			$term = get_term( absint( $id ), hp\prefix( static::_get_meta( 'name' ) ), ARRAY_A );
 		}
 
-		if ( is_null( $term ) || hp\prefix( static::_get_name() ) !== $term['taxonomy'] ) {
+		if ( is_null( $term ) || hp\prefix( static::_get_meta( 'name' ) ) !== $term['taxonomy'] ) {
 			return;
 		}
 
@@ -91,14 +91,14 @@ abstract class Term extends Model {
 
 			// Create or update term.
 			if ( is_null( $this->id ) ) {
-				$ids = wp_insert_term( uniqid(), hp\prefix( static::_get_name() ), $term );
+				$ids = wp_insert_term( uniqid(), hp\prefix( static::_get_meta( 'name' ) ), $term );
 
 				if ( ! is_wp_error( $ids ) ) {
 					$this->set_id( reset( $ids ) );
 				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::_get_name() ), $term ) ) ) {
+			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::_get_meta( 'name' ) ), $term ) ) ) {
 				return false;
 			}
 
@@ -124,6 +124,6 @@ abstract class Term extends Model {
 			$id = $this->id;
 		}
 
-		return $id && wp_delete_term( absint( $id ), hp\prefix( static::_get_name() ) );
+		return $id && wp_delete_term( absint( $id ), hp\prefix( static::_get_meta( 'name' ) ) );
 	}
 }

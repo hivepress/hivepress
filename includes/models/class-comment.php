@@ -36,7 +36,7 @@ abstract class Comment extends Model {
 			$comment = get_comment( absint( $id ), ARRAY_A );
 		}
 
-		if ( is_null( $comment ) || hp\prefix( static::_get_name() ) !== $comment['comment_type'] ) {
+		if ( is_null( $comment ) || hp\prefix( static::_get_meta( 'name' ) ) !== $comment['comment_type'] ) {
 			return;
 		}
 
@@ -91,7 +91,7 @@ abstract class Comment extends Model {
 
 			// Create or update comment.
 			if ( is_null( $this->id ) ) {
-				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => hp\prefix( static::_get_name() ) ] ) );
+				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => hp\prefix( static::_get_meta( 'name' ) ) ] ) );
 
 				if ( $id ) {
 					$this->set_id( $id );
