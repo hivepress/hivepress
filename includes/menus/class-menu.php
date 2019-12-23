@@ -23,6 +23,13 @@ abstract class Menu {
 	use Traits\Meta;
 
 	/**
+	 * Menu meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Menu items.
 	 *
 	 * @var array

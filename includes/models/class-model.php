@@ -29,6 +29,13 @@ abstract class Model {
 	}
 
 	/**
+	 * Model meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Model fields.
 	 *
 	 * @var array

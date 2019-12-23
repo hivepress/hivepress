@@ -24,6 +24,13 @@ abstract class Form {
 	use Traits\Meta;
 
 	/**
+	 * Form meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Form description.
 	 *
 	 * @var string

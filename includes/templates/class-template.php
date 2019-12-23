@@ -23,6 +23,13 @@ abstract class Template {
 	use Traits\Meta;
 
 	/**
+	 * Template meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Template blocks.
 	 *
 	 * @var array
