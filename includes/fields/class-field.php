@@ -290,6 +290,7 @@ abstract class Field {
 	 * Sets field value.
 	 *
 	 * @param mixed $value Field value.
+	 * @return object
 	 */
 	final public function set_value( $value ) {
 		$this->value = $value;
@@ -309,6 +310,8 @@ abstract class Field {
 				$this->filters = [];
 			}
 		}
+
+		return $this;
 	}
 
 	/**
