@@ -20,60 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Report extends Model_Form {
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -83,11 +34,28 @@ class Listing_Report extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'       => hivepress()->translator->get_string( 'report_listing' ),
+				'meta' => [
+					'label'   => hivepress()->translator->get_string( 'report_listing' ),
+					'model'   => 'listing',
+					'captcha' => false,
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'description' => hivepress()->translator->get_string( 'provide_details_to_verify_listing_report' ),
 				'message'     => hivepress()->translator->get_string( 'listing_has_been_reported' ),
-				'model'       => 'listing',
-				'action'      => hp\get_rest_url( '/listings/%id%/report' ),
 
 				'fields'      => [
 					'details' => [
@@ -95,8 +63,8 @@ class Listing_Report extends Model_Form {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,
-						'excluded'   => true,
-						'order'      => 10,
+						'_excluded'  => true,
+						'_order'     => 10,
 					],
 				],
 
@@ -107,6 +75,24 @@ class Listing_Report extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'listing_report_action',
+				[
+					'listing_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::bootstrap();
 	}
 }

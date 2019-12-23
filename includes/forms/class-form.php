@@ -21,20 +21,14 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Form {
 	use Traits\Mutator;
+	use Traits\Meta;
 
 	/**
-	 * Form title.
+	 * Form meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $title;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha;
+	protected static $meta;
 
 	/**
 	 * Form description.
@@ -119,6 +113,14 @@ abstract class Form {
 	 * @param array $args Form arguments.
 	 */
 	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name' => hp\get_class_name( static::class ),
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -182,36 +184,9 @@ abstract class Form {
 		$attributes['data-component'] = 'form';
 
 		// Set class.
-		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_name() ) ];
+		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_meta( 'name' ) ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
-	}
-
-	/**
-	 * Gets form name.
-	 *
-	 * @return string
-	 */
-	final public static function get_name() {
-		return hp\get_class_name( static::class );
-	}
-
-	/**
-	 * Gets form title.
-	 *
-	 * @return string
-	 */
-	final public static function get_title() {
-		return static::$title;
-	}
-
-	/**
-	 * Gets form captcha.
-	 *
-	 * @return bool
-	 */
-	final public static function get_captcha() {
-		return static::$captcha;
 	}
 
 	/**

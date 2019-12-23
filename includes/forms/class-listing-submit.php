@@ -20,46 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Listing_Update {
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -69,8 +34,26 @@ class Listing_Submit extends Listing_Update {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => hivepress()->translator->get_string( 'submit_listing' ),
-				'message'  => null,
+				'meta' => [
+					'label'   => hivepress()->translator->get_string( 'submit_listing' ),
+					'captcha' => false,
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'message'  => false,
 				'redirect' => true,
 
 				'button'   => [
@@ -80,6 +63,6 @@ class Listing_Submit extends Listing_Update {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

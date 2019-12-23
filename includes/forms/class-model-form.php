@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model_Form extends Form {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
 	 * Model object.
 	 *
 	 * @var object
 	 */
-	protected $object;
+	protected $model;
 
 	/**
 	 * Class constructor.
@@ -41,7 +34,7 @@ abstract class Model_Form extends Form {
 	public function __construct( $args = [] ) {
 
 		// Set model object.
-		$this->set_object( hp\get_array_value( $args, 'object' ) );
+		$this->set_model( hp\get_array_value( $args, 'model' ) );
 
 		parent::__construct( $args );
 	}
@@ -53,15 +46,16 @@ abstract class Model_Form extends Form {
 		$attributes = [];
 
 		// Set model name.
-		$attributes['data-model'] = static::$model;
+		$attributes['data-model'] = static::get_meta( 'model' );
 
-		// Set object ID.
-		if ( $this->object->get_id() ) {
-			$attributes['data-id'] = $this->object->get_id();
+		if ( $this->model->get_id() ) {
+
+			// Set object ID.
+			$attributes['data-id'] = $this->model->get_id();
+
+			// Set field values.
+			$this->set_values( $this->model->serialize() );
 		}
-
-		// Set field values.
-		$this->set_values( $this->object->serialize() );
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
@@ -69,26 +63,17 @@ abstract class Model_Form extends Form {
 	}
 
 	/**
-	 * Gets model name.
-	 *
-	 * @return string
-	 */
-	final public static function get_model() {
-		return static::$model;
-	}
-
-	/**
 	 * Sets model object.
 	 *
-	 * @param mixed $object Model object.
+	 * @param mixed $model Model object.
 	 */
-	final protected function set_object( $object ) {
-		if ( ! isset( $this->object ) ) {
-			if ( ! is_object( $object ) || strtolower( get_class( $object ) ) !== strtolower( 'HivePress\Models\\' . static::$model ) ) {
-				$object = hp\create_class_instance( '\HivePress\Models\\' . static::$model );
+	final protected function set_model( $model ) {
+		if ( ! isset( $this->model ) ) {
+			if ( ! is_object( $model ) || strtolower( get_class( $model ) ) !== strtolower( 'HivePress\Models\\' . static::get_meta( 'model' ) ) ) {
+				$model = hp\create_class_instance( '\HivePress\Models\\' . static::get_meta( 'model' ) );
 			}
 
-			$this->object = $object;
+			$this->model = $model;
 		}
 	}
 
@@ -99,8 +84,8 @@ abstract class Model_Form extends Form {
 	 */
 	final protected function set_fields( $fields ) {
 		foreach ( $fields as $name => $args ) {
-			if ( isset( $this->object->_get_fields()[ $name ] ) ) {
-				$fields[ $name ] = hp\merge_arrays( $this->object->_get_fields()[ $name ]->get_args(), $args );
+			if ( ! hp\get_array_value( $args, '_excluded' ) && isset( $this->model->_get_fields()[ $name ] ) ) {
+				$fields[ $name ] = hp\merge_arrays( $this->model->_get_fields()[ $name ]->get_args(), $args );
 			}
 		}
 

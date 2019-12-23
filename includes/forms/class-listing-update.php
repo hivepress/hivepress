@@ -20,39 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Update extends Model_Form {
 
 	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -62,21 +34,37 @@ class Listing_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'meta' => [
+					'model' => 'listing',
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
-				'model'   => 'listing',
-				'action'  => hp\get_rest_url( '/listings/%id%' ),
 
 				'fields'  => [
 					'image_ids'   => [
-						'order' => 10,
+						'_order' => 10,
 					],
 
 					'title'       => [
-						'order' => 20,
+						'_order' => 20,
 					],
 
 					'description' => [
-						'order' => 30,
+						'_order' => 30,
 					],
 				],
 
@@ -87,6 +75,24 @@ class Listing_Update extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'listing_update_action',
+				[
+					'listing_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::bootstrap();
 	}
 }

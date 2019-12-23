@@ -20,39 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Filter extends Form {
 
 	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
+	protected static $meta;
 
 	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
@@ -62,14 +41,14 @@ class Listing_Filter extends Form {
 					'category'  => [
 						'type'    => 'radio',
 						'options' => [],
-						'order'   => 10,
-					],
-
-					's'         => [
-						'type' => 'hidden',
+						'_order'  => 10,
 					],
 
 					'sort'      => [
+						'type' => 'hidden',
+					],
+
+					's'         => [
 						'type' => 'hidden',
 					],
 
@@ -86,6 +65,6 @@ class Listing_Filter extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

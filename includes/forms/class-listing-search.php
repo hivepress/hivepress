@@ -20,39 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search extends Form {
 
 	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
+	protected static $meta;
 
 	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
@@ -63,7 +42,7 @@ class Listing_Search extends Form {
 						'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
 						'type'        => 'search',
 						'max_length'  => 256,
-						'order'       => 10,
+						'_order'      => 10,
 					],
 
 					'post_type' => [
@@ -79,6 +58,6 @@ class Listing_Search extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

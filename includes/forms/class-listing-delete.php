@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Delete extends Model_Form {
 
 	/**
-	 * Model name.
+	 * Form meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $model;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -34,7 +34,9 @@ class Listing_Delete extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'model' => 'listing',
+				'meta' => [
+					'model' => 'listing',
+				],
 			],
 			$args
 		);
@@ -70,11 +72,11 @@ class Listing_Delete extends Model_Form {
 	protected function bootstrap() {
 
 		// Set action.
-		if ( $this->object->get_id() ) {
+		if ( $this->model->get_id() ) {
 			$this->action = hivepress()->router->get_url(
 				'listing_delete_action',
 				[
-					'listing_id' => $this->object->get_id(),
+					'listing_id' => $this->model->get_id(),
 				]
 			);
 		}

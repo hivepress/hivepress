@@ -20,53 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User_Delete extends Model_Form {
 
 	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -76,9 +34,25 @@ class User_Delete extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'meta' => [
+					'model' => 'user',
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'description' => esc_html__( 'Please enter your password below to permanently delete your account.', 'hivepress' ),
-				'model'       => 'user',
-				'action'      => hp\get_rest_url( '/users/%id%' ),
 				'method'      => 'DELETE',
 				'redirect'    => true,
 
@@ -86,7 +60,7 @@ class User_Delete extends Model_Form {
 					'password' => [
 						'min_length' => null,
 						'required'   => true,
-						'order'      => 10,
+						'_order'     => 10,
 					],
 				],
 
@@ -97,6 +71,24 @@ class User_Delete extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'user_delete_action',
+				[
+					'user_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::bootstrap();
 	}
 }

@@ -20,53 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Form {
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -76,10 +34,28 @@ class User_Password_Request extends Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'       => esc_html__( 'Reset Password', 'hivepress' ),
+				'meta' => [
+					'label'   => esc_html__( 'Reset Password', 'hivepress' ),
+					'captcha' => false,
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
 				'message'     => esc_html__( 'Password reset email has been sent.', 'hivepress' ),
-				'action'      => hp\get_rest_url( '/users/request-password' ),
+				'action'      => hivepress()->router->get_url( 'user_password_request_action' ),
 
 				'fields'      => [
 					'username_or_email' => [
@@ -87,7 +63,7 @@ class User_Password_Request extends Form {
 						'type'       => 'text',
 						'max_length' => 254,
 						'required'   => true,
-						'order'      => 10,
+						'_order'     => 10,
 					],
 				],
 
@@ -98,6 +74,6 @@ class User_Password_Request extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

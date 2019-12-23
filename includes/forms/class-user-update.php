@@ -20,39 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User_Update extends Model_Form {
 
 	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -62,41 +34,57 @@ class User_Update extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'meta' => [
+					'model' => 'user',
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
-				'model'   => 'user',
-				'action'  => hp\get_rest_url( '/users/%id%' ),
 
 				'fields'  => [
 					'image_id'         => [
-						'order' => 10,
+						'_order' => 10,
 					],
 
 					'first_name'       => [
-						'order' => 20,
+						'_order' => 20,
 					],
 
 					'last_name'        => [
-						'order' => 30,
+						'_order' => 30,
 					],
 
 					'description'      => [
-						'order' => 40,
+						'_order' => 40,
 					],
 
 					'email'            => [
-						'order' => 50,
+						'_order' => 50,
 					],
 
 					'password'         => [
-						'label' => esc_html__( 'New Password', 'hivepress' ),
-						'order' => 60,
+						'label'  => esc_html__( 'New Password', 'hivepress' ),
+						'_order' => 60,
 					],
 
 					'current_password' => [
-						'label'    => esc_html__( 'Current Password', 'hivepress' ),
-						'type'     => 'password',
-						'excluded' => true,
-						'order'    => 70,
+						'label'     => esc_html__( 'Current Password', 'hivepress' ),
+						'type'      => 'password',
+						'_excluded' => true,
+						'_order'    => 70,
 					],
 				],
 
@@ -107,6 +95,24 @@ class User_Update extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'user_update_action',
+				[
+					'user_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::bootstrap();
 	}
 }

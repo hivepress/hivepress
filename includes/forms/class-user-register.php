@@ -20,53 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User_Register extends Model_Form {
 
 	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -76,19 +34,37 @@ class User_Register extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Register User', 'hivepress' ),
-				'model'    => 'user',
-				'action'   => hp\get_rest_url( '/users' ),
+				'meta' => [
+					'label'   => esc_html__( 'Register User', 'hivepress' ),
+					'model'   => 'user',
+					'captcha' => false,
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'action'   => hivepress()->router->get_url( 'user_register_action' ),
 				'redirect' => true,
 
 				'fields'   => [
 					'email'    => [
-						'order' => 10,
+						'_order' => 10,
 					],
 
 					'password' => [
 						'required' => true,
-						'order'    => 20,
+						'_order'   => 20,
 					],
 				],
 
@@ -99,6 +75,6 @@ class User_Register extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

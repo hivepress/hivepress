@@ -20,46 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset extends Model_Form {
 
 	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
+	 * Form meta.
 	 *
 	 * @var array
 	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -69,16 +34,33 @@ class User_Password_Reset extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'meta' => [
+					'model' => 'user',
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'description' => esc_html__( 'Please enter a new password below.', 'hivepress' ),
-				'model'       => 'user',
-				'action'      => hp\get_rest_url( '/users/reset-password' ),
+				'action'      => hivepress()->router->get_url( 'user_password_reset_action' ),
 				'redirect'    => true,
 
 				'fields'      => [
 					'password'           => [
 						'label'    => esc_html__( 'New Password', 'hivepress' ),
 						'required' => true,
-						'order'    => 10,
+						'_order'   => 10,
 					],
 
 					'username'           => [
@@ -86,9 +68,9 @@ class User_Password_Reset extends Model_Form {
 					],
 
 					'password_reset_key' => [
-						'type'     => 'hidden',
-						'required' => true,
-						'excluded' => true,
+						'type'      => 'hidden',
+						'required'  => true,
+						'_excluded' => true,
 					],
 				],
 
@@ -99,6 +81,6 @@ class User_Password_Reset extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }
