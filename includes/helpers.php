@@ -118,15 +118,15 @@ function sort_array( $array ) {
 
 	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
-			if ( ! isset( $value['order'] ) ) {
-				$value['order'] = 0;
+			if ( ! isset( $value['_order'] ) ) {
+				$value['_order'] = 0;
 			}
 
 			$sorted[ $key ] = $value;
 		}
 	}
 
-	$sorted = wp_list_sort( $sorted, 'order', 'ASC', true );
+	$sorted = wp_list_sort( $sorted, '_order', 'ASC', true );
 
 	return $sorted;
 }
