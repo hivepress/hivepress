@@ -51,13 +51,6 @@ abstract class Form {
 	protected $message;
 
 	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected $redirect;
-
-	/**
 	 * Form action.
 	 *
 	 * @var string
@@ -70,6 +63,13 @@ abstract class Form {
 	 * @var string
 	 */
 	protected $method = 'POST';
+
+	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected $redirect;
 
 	/**
 	 * Form fields.
@@ -153,15 +153,6 @@ abstract class Form {
 			$attributes['data-message'] = $this->message;
 		}
 
-		// Set redirect.
-		if ( $this->redirect ) {
-			if ( is_bool( $this->redirect ) ) {
-				$attributes['data-redirect'] = 'true';
-			} else {
-				$attributes['data-redirect'] = esc_url( $this->redirect );
-			}
-		}
-
 		// Set action.
 		if ( strpos( $this->action, get_rest_url() ) === 0 ) {
 			$attributes['action']      = '#';
@@ -176,6 +167,15 @@ abstract class Form {
 			$attributes['data-method'] = $this->method;
 		} else {
 			$attributes['method'] = $this->method;
+		}
+
+		// Set redirect.
+		if ( $this->redirect ) {
+			if ( is_bool( $this->redirect ) ) {
+				$attributes['data-redirect'] = 'true';
+			} else {
+				$attributes['data-redirect'] = esc_url( $this->redirect );
+			}
 		}
 
 		// Set component.

@@ -20,53 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Delete extends Model_Form {
 
 	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
 	 * Model name.
 	 *
 	 * @var string
 	 */
 	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
 
 	/**
 	 * Class initializer.
@@ -76,12 +34,25 @@ class Listing_Delete extends Model_Form {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
+				'model' => 'listing',
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
 				'description' => hivepress()->translator->get_string( 'confirm_listing_deletion' ),
-				'model'       => 'listing',
-				'action'      => hp\get_rest_url( '/listings/%id%' ),
 				'method'      => 'DELETE',
 				'redirect'    => true,
-				'fields'      => [],
 
 				'button'      => [
 					'label' => hivepress()->translator->get_string( 'delete_listing' ),
@@ -90,6 +61,24 @@ class Listing_Delete extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function bootstrap() {
+
+		// Set action.
+		if ( $this->object->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'listing_delete_action',
+				[
+					'listing_id' => $this->object->get_id(),
+				]
+			);
+		}
+
+		parent::bootstrap();
 	}
 }
