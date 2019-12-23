@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Menu {
 
 	/**
-	 * Chained flag.
-	 *
-	 * @var bool
-	 */
-	protected static $chained = false;
-
-	/**
-	 * Menu items.
+	 * Menu meta.
 	 *
 	 * @var array
 	 */
-	protected static $items = [];
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -41,33 +34,49 @@ class Listing_Submit extends Menu {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'chained' => true,
-
-				'items'   => [
-					'listing_submit_page'          => [
-						'route' => 'listing_submit_page',
-						'order' => 10,
-					],
-
-					'listing_submit_category_page' => [
-						'route' => 'listing_submit_category_page',
-						'order' => 20,
-					],
-
-					'listing_submit_details_page'  => [
-						'route' => 'listing_submit_details_page',
-						'order' => 30,
-					],
-
-					'listing_submit_complete_page' => [
-						'route' => 'listing_submit_complete_page',
-						'order' => 40,
-					],
+				'meta' => [
+					'chained' => true,
 				],
 			],
 			$args
 		);
 
 		parent::init( $args );
+	}
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Menu arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'items' => [
+					'listing_submit_page'          => [
+						'route'  => 'listing_submit_page',
+						'_order' => 10,
+					],
+
+					'listing_submit_category_page' => [
+						'route'  => 'listing_submit_category_page',
+						'_order' => 20,
+					],
+
+					'listing_submit_details_page'  => [
+						'route'  => 'listing_submit_details_page',
+						'_order' => 30,
+					],
+
+					'listing_submit_complete_page' => [
+						'route'  => 'listing_submit_complete_page',
+						'_order' => 100,
+					],
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
 	}
 }

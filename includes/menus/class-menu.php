@@ -20,20 +20,14 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Menu {
 	use Traits\Mutator;
-
-	/**
-	 * Chained flag.
-	 *
-	 * @var bool
-	 */
-	protected static $chained = false;
+	use Traits\Meta;
 
 	/**
 	 * Menu items.
 	 *
 	 * @var array
 	 */
-	protected static $items = [];
+	protected $items = [];
 
 	/**
 	 * Menu attributes.
@@ -48,16 +42,14 @@ abstract class Menu {
 	 * @param array $args Menu arguments.
 	 */
 	public static function init( $args = [] ) {
-
-		/**
-		 * Filters menu arguments.
-		 *
-		 * @filter /menus/{$name}
-		 * @description Filters menu arguments.
-		 * @param string $name Menu name.
-		 * @param array $args Menu arguments.
-		 */
-		$args = apply_filters( 'hivepress/v1/menus/' . static::get_name(), $args );
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name' => hp\get_class_name( static::class ),
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -92,28 +84,10 @@ abstract class Menu {
 			[
 				'class' => [
 					'hp-menu',
-					'hp-menu--' . hp\sanitize_slug( static::get_name() ),
+					'hp-menu--' . hp\sanitize_slug( static::get_meta( 'name' ) ),
 				],
 			]
 		);
-	}
-
-	/**
-	 * Gets menu name.
-	 *
-	 * @return string
-	 */
-	final public static function get_name() {
-		return hp\get_class_name( static::class );
-	}
-
-	/**
-	 * Checks chained flag.
-	 *
-	 * @return bool
-	 */
-	final public static function is_chained() {
-		return static::$chained;
 	}
 
 	/**
@@ -121,33 +95,35 @@ abstract class Menu {
 	 *
 	 * @param array $items Menu items.
 	 */
-	final protected static function set_items( $items ) {
-		foreach ( hp\sort_array( $items ) as $name => $item ) {
-			if ( isset( $item['route'] ) ) {
+	final protected function set_items( $items ) {
+		$this->items = [];
+
+		foreach ( hp\sort_array( $items ) as $name => $args ) {
+			if ( isset( $args['route'] ) ) {
 
 				// Get route.
-				$route = hivepress()->router->get_route( $item['route'] );
+				$route = hivepress()->router->get_route( $args['route'] );
 
 				if ( $route ) {
 
 					// Set label.
 					if ( isset( $route['title'] ) ) {
-						$item['label'] = $route['title'];
+						$args['label'] = $route['title'];
 					}
 
 					// Set URL.
-					if ( ! isset( $item['url'] ) ) {
-						$item['url'] = hivepress()->router->get_url( $item['route'] );
+					if ( ! isset( $args['url'] ) ) {
+						$args['url'] = hivepress()->router->get_url( $args['route'] );
 					}
 
 					// Set current flag.
-					if ( get_query_var( 'hp_route' ) === $item['route'] ) {
-						$item['current'] = true;
+					if ( hivepress()->router->get_current_url() === $args['url'] ) {
+						$args['current'] = true;
 					}
 				}
 			}
 
-			static::$items[ $name ] = $item;
+			$this->items[ $name ] = $args;
 		}
 	}
 
@@ -156,8 +132,8 @@ abstract class Menu {
 	 *
 	 * @return array
 	 */
-	final public static function get_items() {
-		return static::$items;
+	final public function get_items() {
+		return $this->items;
 	}
 
 	/**
@@ -168,12 +144,12 @@ abstract class Menu {
 	public function render() {
 		$output = '';
 
-		if ( ! empty( static::$items ) ) {
+		if ( $this->items ) {
 			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
 
-			foreach ( static::$items as $name => $item ) {
-				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $item, 'current', false ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
-				$output .= '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
+			foreach ( $this->items as $name => $args ) {
+				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $args, 'current' ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
+				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
 				$output .= '</li>';
 			}
 
