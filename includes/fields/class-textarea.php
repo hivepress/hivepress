@@ -55,7 +55,7 @@ class Textarea extends Text {
 						'label'   => esc_html__( 'Formatting', 'hivepress' ),
 						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
 						'type'    => 'checkbox',
-						'order'   => 40,
+						'_order'   => 40,
 					],
 				],
 			],

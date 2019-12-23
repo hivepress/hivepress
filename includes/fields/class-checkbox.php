@@ -70,7 +70,7 @@ class Checkbox extends Field {
 						'label'      => esc_html__( 'Caption', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 2048,
-						'order'      => 10,
+						'_order'      => 10,
 					],
 				],
 			],

@@ -77,14 +77,14 @@ class Select extends Field {
 						'label'   => esc_html__( 'Multiple', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
-						'order'   => 10,
+						'_order'   => 10,
 					],
 
 					'options'  => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
 						'multiple' => true,
-						'order'    => 20,
+						'_order'    => 20,
 					],
 				],
 			],

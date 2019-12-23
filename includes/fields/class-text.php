@@ -84,21 +84,21 @@ class Text extends Field {
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 2048,
-						'order'      => 10,
+						'_order'      => 10,
 					],
 
 					'min_length'  => [
 						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
-						'order'     => 20,
+						'_order'     => 20,
 					],
 
 					'max_length'  => [
 						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
-						'order'     => 30,
+						'_order'     => 30,
 					],
 				],
 			],
