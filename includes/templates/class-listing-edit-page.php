@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Edit_Page extends User_Account_Page {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -42,13 +42,13 @@ class Listing_Edit_Page extends User_Account_Page {
 							'listing_delete_modal' => [
 								'type'    => 'modal',
 								'caption' => hivepress()->translator->get_string( 'delete_listing' ),
-								'_order'   => 5,
+								'_order'  => 5,
 
 								'blocks'  => [
 									'listing_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'listing_delete',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form--narrow' ],
@@ -60,12 +60,12 @@ class Listing_Edit_Page extends User_Account_Page {
 							'listing_update_form'  => [
 								'type'   => 'form',
 								'form'   => 'listing_update',
-								'_order'  => 10,
+								'_order' => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -75,7 +75,7 @@ class Listing_Edit_Page extends User_Account_Page {
 											'listing_delete_link' => [
 												'type'     => 'element',
 												'filepath' => 'listing/edit/page/listing-delete-link',
-												'_order'    => 10,
+												'_order'   => 10,
 											],
 										],
 									],
@@ -89,6 +89,6 @@ class Listing_Edit_Page extends User_Account_Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

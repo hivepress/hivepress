@@ -22,25 +22,25 @@ defined( 'ABSPATH' ) || exit;
 class Listing_View_Block extends Template {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'listing_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'_order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--view-block' ],
@@ -50,7 +50,7 @@ class Listing_View_Block extends Template {
 							'listing_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__header' ],
@@ -60,20 +60,20 @@ class Listing_View_Block extends Template {
 									'listing_featured_badge' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/listing-featured-badge',
-										'_order'    => 10,
+										'_order'   => 10,
 									],
 
 									'listing_image' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/block/listing-image',
-										'_order'    => 20,
+										'_order'   => 20,
 									],
 								],
 							],
 
 							'listing_content' => [
 								'type'       => 'container',
-								'_order'      => 20,
+								'_order'     => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__content' ],
@@ -83,7 +83,7 @@ class Listing_View_Block extends Template {
 									'listing_title' => [
 										'type'       => 'container',
 										'tag'        => 'h4',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-listing__title' ],
@@ -93,20 +93,20 @@ class Listing_View_Block extends Template {
 											'listing_title_text'           => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/block/listing-title',
-												'_order'    => 10,
+												'_order'   => 10,
 											],
 
 											'listing_verified_badge' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/listing-verified-badge',
-												'_order'    => 20,
+												'_order'   => 20,
 											],
 										],
 									],
 
 									'listing_details_primary' => [
 										'type'       => 'container',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
@@ -116,13 +116,13 @@ class Listing_View_Block extends Template {
 											'listing_category' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/listing-category',
-												'_order'    => 10,
+												'_order'   => 10,
 											],
 
 											'listing_date' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/listing-date',
-												'_order'    => 20,
+												'_order'   => 20,
 											],
 										],
 									],
@@ -130,7 +130,7 @@ class Listing_View_Block extends Template {
 									'listing_attributes_secondary' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/block/listing-attributes-secondary',
-										'_order'    => 30,
+										'_order'   => 30,
 									],
 								],
 							],
@@ -138,7 +138,7 @@ class Listing_View_Block extends Template {
 							'listing_footer'  => [
 								'type'       => 'container',
 								'tag'        => 'footer',
-								'_order'      => 30,
+								'_order'     => 30,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__footer' ],
@@ -148,12 +148,12 @@ class Listing_View_Block extends Template {
 									'listing_attributes_primary' => [
 										'type'     => 'element',
 										'filepath' => 'listing/view/block/listing-attributes-primary',
-										'_order'    => 10,
+										'_order'   => 10,
 									],
 
 									'listing_actions_primary'    => [
 										'type'       => 'container',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
@@ -171,6 +171,6 @@ class Listing_View_Block extends Template {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

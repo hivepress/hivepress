@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Site_Footer_Block extends Template {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -43,7 +43,7 @@ class Site_Footer_Block extends Template {
 
 						'blocks'  => [
 							'user_login_form' => [
-								'type'  => 'user_login_form',
+								'type'   => 'user_login_form',
 								'_order' => 10,
 							],
 						],
@@ -57,7 +57,7 @@ class Site_Footer_Block extends Template {
 							'user_register_form' => [
 								'type'       => 'form',
 								'form'       => 'user_register',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-form--narrow' ],
@@ -66,7 +66,7 @@ class Site_Footer_Block extends Template {
 								'footer'     => [
 									'form_actions' => [
 										'type'       => 'container',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -76,7 +76,7 @@ class Site_Footer_Block extends Template {
 											'user_login_link' => [
 												'type'     => 'element',
 												'filepath' => 'user/register/user-login-link',
-												'_order'    => 10,
+												'_order'   => 10,
 											],
 										],
 									],
@@ -93,7 +93,7 @@ class Site_Footer_Block extends Template {
 							'user_password_request_form' => [
 								'type'       => 'form',
 								'form'       => 'user_password_request',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-form--narrow' ],
@@ -107,6 +107,6 @@ class Site_Footer_Block extends Template {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_View_Page extends Page {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -45,7 +45,7 @@ class Listing_View_Page extends Page {
 						'blocks'     => [
 							'page_columns' => [
 								'type'       => 'container',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -55,7 +55,7 @@ class Listing_View_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -65,7 +65,7 @@ class Listing_View_Page extends Page {
 											'listing_title' => [
 												'type'   => 'container',
 												'tag'    => 'h1',
-												'_order'  => 10,
+												'_order' => 10,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__title' ],
@@ -88,7 +88,7 @@ class Listing_View_Page extends Page {
 
 											'listing_details_primary' => [
 												'type'   => 'container',
-												'_order'  => 20,
+												'_order' => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__details', 'hp-listing__details--primary' ],
@@ -112,19 +112,19 @@ class Listing_View_Page extends Page {
 											'listing_images'          => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-images',
-												'_order'    => 30,
+												'_order'   => 30,
 											],
 
 											'listing_attributes_secondary' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-attributes-secondary',
-												'_order'    => 40,
+												'_order'   => 40,
 											],
 
 											'listing_description'     => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-description',
-												'_order'    => 50,
+												'_order'   => 50,
 											],
 										],
 									],
@@ -132,7 +132,7 @@ class Listing_View_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -143,12 +143,12 @@ class Listing_View_Page extends Page {
 											'listing_attributes_primary' => [
 												'type'     => 'element',
 												'filepath' => 'listing/view/page/listing-attributes-primary',
-												'_order'    => 10,
+												'_order'   => 10,
 											],
 
 											'listing_actions_primary' => [
 												'type'   => 'container',
-												'_order'  => 20,
+												'_order' => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary', 'hp-widget', 'widget' ],
@@ -181,7 +181,7 @@ class Listing_View_Page extends Page {
 											],
 
 											'vendor' => [
-												'type'  => 'vendor',
+												'type'   => 'vendor',
 												'_order' => 30,
 
 												'attributes' => [
@@ -190,8 +190,8 @@ class Listing_View_Page extends Page {
 											],
 
 											'page_sidebar_widgets' => [
-												'type'  => 'widgets',
-												'area'  => 'listing_sidebar',
+												'type'   => 'widgets',
+												'area'   => 'listing_sidebar',
 												'_order' => 40,
 											],
 										],
@@ -206,6 +206,6 @@ class Listing_View_Page extends Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

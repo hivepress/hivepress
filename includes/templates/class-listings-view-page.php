@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listings_View_Page extends Page {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -42,7 +42,7 @@ class Listings_View_Page extends Page {
 							'page_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-page__header' ],
@@ -50,7 +50,7 @@ class Listings_View_Page extends Page {
 
 								'blocks'     => [
 									'listing_search_form' => [
-										'type'  => 'listing_search_form',
+										'type'   => 'listing_search_form',
 										'_order' => 10,
 									],
 								],
@@ -58,7 +58,7 @@ class Listings_View_Page extends Page {
 
 							'page_columns' => [
 								'type'       => 'container',
-								'_order'      => 20,
+								'_order'     => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -68,7 +68,7 @@ class Listings_View_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -77,8 +77,8 @@ class Listings_View_Page extends Page {
 
 										'blocks'     => [
 											'listing_filter_form' => [
-												'type'  => 'form',
-												'form'  => 'listing_filter',
+												'type'   => 'form',
+												'form'   => 'listing_filter',
 												'_order' => 10,
 
 												'attributes' => [
@@ -87,8 +87,8 @@ class Listings_View_Page extends Page {
 											],
 
 											'page_sidebar_widgets'         => [
-												'type'  => 'widgets',
-												'area'  => 'listings_sidebar',
+												'type'   => 'widgets',
+												'area'   => 'listings_sidebar',
 												'_order' => 20,
 											],
 										],
@@ -97,7 +97,7 @@ class Listings_View_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -106,7 +106,7 @@ class Listings_View_Page extends Page {
 										'blocks'     => [
 											'listings_container' => [
 												'type'   => 'results',
-												'_order'  => 10,
+												'_order' => 10,
 
 												'blocks' => [
 													'page_topbar' => [
@@ -160,6 +160,6 @@ class Listings_View_Page extends Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

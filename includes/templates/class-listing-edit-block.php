@@ -22,25 +22,25 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Edit_Block extends Template {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'listing_container' => [
 						'type'       => 'container',
 						'tag'        => 'tr',
-						'_order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--edit-block' ],
@@ -50,25 +50,25 @@ class Listing_Edit_Block extends Template {
 							'listing_title'           => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-title',
-								'_order'    => 10,
+								'_order'   => 10,
 							],
 
 							'listing_status'          => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-status',
-								'_order'    => 20,
+								'_order'   => 20,
 							],
 
 							'listing_date'            => [
 								'type'     => 'element',
 								'filepath' => 'listing/edit/block/listing-date',
-								'_order'    => 30,
+								'_order'   => 30,
 							],
 
 							'listing_actions_primary' => [
 								'type'       => 'container',
 								'tag'        => 'td',
-								'_order'      => 40,
+								'_order'     => 40,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
@@ -78,7 +78,7 @@ class Listing_Edit_Block extends Template {
 									'listing_view_link' => [
 										'type'     => 'element',
 										'filepath' => 'listing/edit/block/listing-view-link',
-										'_order'    => 10,
+										'_order'   => 10,
 									],
 								],
 							],
@@ -90,6 +90,6 @@ class Listing_Edit_Block extends Template {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

@@ -22,24 +22,24 @@ defined( 'ABSPATH' ) || exit;
 class Site_Header_Block extends Template {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'main_menu' => [
 						'type'       => 'container',
-						'_order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-menu', 'hp-menu--main' ],
@@ -49,13 +49,13 @@ class Site_Header_Block extends Template {
 							'user_account_link'   => [
 								'type'     => 'element',
 								'filepath' => 'user/login/user-login-link',
-								'_order'    => 10,
+								'_order'   => 10,
 							],
 
 							'listing_submit_link' => [
 								'type'     => 'element',
 								'filepath' => 'listing/submit/listing-submit-link',
-								'_order'    => 20,
+								'_order'   => 20,
 							],
 						],
 					],
@@ -65,6 +65,6 @@ class Site_Header_Block extends Template {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

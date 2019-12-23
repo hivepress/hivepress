@@ -2,8 +2,6 @@
 /**
  * User account page template.
  *
- * @template user_account_page
- * @description User account page.
  * @package HivePress\Templates
  */
 
@@ -19,21 +17,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Account_Page
  */
-class User_Account_Page extends Page {
+abstract class User_Account_Page extends Page {
 
 	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -41,7 +32,7 @@ class User_Account_Page extends Page {
 						'blocks' => [
 							'page_columns' => [
 								'type'       => 'container',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -51,7 +42,7 @@ class User_Account_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -60,8 +51,8 @@ class User_Account_Page extends Page {
 
 										'blocks'     => [
 											'user_account_menu' => [
-												'type'  => 'menu',
-												'menu'  => 'user_account',
+												'type'   => 'menu',
+												'menu'   => 'user_account',
 												'_order' => 10,
 
 												'attributes' => [
@@ -70,8 +61,8 @@ class User_Account_Page extends Page {
 											],
 
 											'page_sidebar_widgets' => [
-												'type'  => 'widgets',
-												'area'  => 'account_sidebar',
+												'type'   => 'widgets',
+												'area'   => 'account_sidebar',
 												'_order' => 20,
 											],
 										],
@@ -80,7 +71,7 @@ class User_Account_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -90,7 +81,7 @@ class User_Account_Page extends Page {
 											'page_title' => [
 												'type'     => 'element',
 												'filepath' => 'page/page-title',
-												'_order'    => 5,
+												'_order'   => 5,
 											],
 										],
 									],
@@ -104,6 +95,6 @@ class User_Account_Page extends Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

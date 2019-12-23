@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_View_Page extends Page {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -45,7 +45,7 @@ class Vendor_View_Page extends Page {
 						'blocks'     => [
 							'page_columns' => [
 								'type'       => 'container',
-								'_order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-row' ],
@@ -55,7 +55,7 @@ class Vendor_View_Page extends Page {
 									'page_sidebar' => [
 										'type'       => 'container',
 										'tag'        => 'aside',
-										'_order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
@@ -65,7 +65,7 @@ class Vendor_View_Page extends Page {
 										'blocks'     => [
 											'vendor_summary' => [
 												'type'   => 'container',
-												'_order'  => 10,
+												'_order' => 10,
 
 												'attributes' => [
 													'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
@@ -111,7 +111,7 @@ class Vendor_View_Page extends Page {
 
 											'vendor_actions_primary' => [
 												'type'   => 'container',
-												'_order'  => 20,
+												'_order' => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
@@ -121,8 +121,8 @@ class Vendor_View_Page extends Page {
 											],
 
 											'page_sidebar_widgets' => [
-												'type'  => 'widgets',
-												'area'  => 'vendor_sidebar',
+												'type'   => 'widgets',
+												'area'   => 'vendor_sidebar',
 												'_order' => 30,
 											],
 										],
@@ -131,7 +131,7 @@ class Vendor_View_Page extends Page {
 									'page_content' => [
 										'type'       => 'container',
 										'tag'        => 'main',
-										'_order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
@@ -141,19 +141,19 @@ class Vendor_View_Page extends Page {
 											'page_title' => [
 												'type'     => 'element',
 												'filepath' => 'page/page-title',
-												'_order'    => 5,
+												'_order'   => 5,
 											],
 
 											'listings'   => [
 												'type'    => 'listings',
 												'columns' => 2,
-												'_order'   => 10,
+												'_order'  => 10,
 											],
 
 											'listing_pagination' => [
 												'type'     => 'element',
 												'filepath' => 'page/pagination',
-												'_order'    => 20,
+												'_order'   => 20,
 											],
 										],
 									],
@@ -167,6 +167,6 @@ class Vendor_View_Page extends Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

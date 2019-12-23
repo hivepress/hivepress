@@ -22,18 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listings_Edit_Page extends User_Account_Page {
 
 	/**
-	 * Template blocks.
+	 * Template meta.
 	 *
 	 * @var array
 	 */
-	protected static $blocks = [];
+	protected static $meta;
 
 	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -42,7 +42,7 @@ class Listings_Edit_Page extends User_Account_Page {
 							'listings' => [
 								'type'     => 'listings',
 								'template' => 'edit',
-								'_order'    => 10,
+								'_order'   => 10,
 							],
 						],
 					],
@@ -52,6 +52,6 @@ class Listings_Edit_Page extends User_Account_Page {
 			'blocks'
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }
