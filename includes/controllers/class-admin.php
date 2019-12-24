@@ -91,13 +91,11 @@ class Admin extends Controller {
 			update_option( 'hp_admin_dismissed_notices', array_unique( $dismissed_notices ) );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'name' => $notice_name,
-				],
-			],
-			200
+				'name' => $notice_name,
+			]
 		);
 	}
 }

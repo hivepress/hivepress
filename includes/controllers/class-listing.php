@@ -166,13 +166,11 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) ) {
 			return hp\rest_error( 404 );
 		}
-
-		set_query_var( 'hp_listing_id', $listing->get_id() );
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
@@ -180,10 +178,10 @@ class Listing extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\Listing_Update();
+		$form = new Forms\Listing_Update( [ 'model' => $listing ] );
 
 		if ( $listing->get_status() === 'auto-draft' ) {
-			$form = new Forms\Listing_Submit();
+			$form = new Forms\Listing_Submit( [ 'model' => $listing ] );
 		}
 
 		$form->set_values( $request->get_params() );
@@ -199,13 +197,11 @@ class Listing extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $listing->get_id(),
-				],
-			],
-			200
+				'id' => $listing->get_id(),
+			]
 		);
 	}
 
@@ -223,7 +219,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) || $listing->get_status() !== 'publish' ) {
 			return hp\rest_error( 404 );
@@ -249,13 +245,11 @@ class Listing extends Controller {
 			]
 		) )->send();
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $listing->get_id(),
-				],
-			],
-			200
+				'id' => $listing->get_id(),
+			]
 		);
 	}
 
@@ -273,7 +267,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) ) {
 			return hp\rest_error( 404 );
@@ -289,14 +283,14 @@ class Listing extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response( (object) [], 204 );
+		return hp\rest_response( 204 );
 	}
 
 	/**
 	 * Gets listings view URL.
 	 *
 	 * @param array $params URL parameters.
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_listings_view_url( $params ) {
 		return get_post_type_archive_link( 'hp_listing' );
@@ -327,7 +321,7 @@ class Listing extends Controller {
 		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, 'category' ) );
 
 		if ( $category_id ) {
-			$category = Models\Listing_Category::get_by_id( $category_id );
+			$category = Models\Listing_Category::query()->get_by_id( $category_id );
 		}
 
 		if ( ( is_page() && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
@@ -350,7 +344,7 @@ class Listing extends Controller {
 
 				// Query listings.
 				query_posts(
-					Models\Listing::filter(
+					Models\Listing::query()->filter(
 						[
 							'status'     => 'publish',
 							'id__not_in' => $featured_ids,
@@ -367,23 +361,15 @@ class Listing extends Controller {
 			}
 
 			// Render listings.
-			if ( $category ) {
-				return ( new Blocks\Template(
-					[
-						'template' => 'listing_category_view_page',
+			return ( new Blocks\Template(
+				[
+					'template' => 'listings_view_page',
 
-						'context'  => [
-							'listing_category' => $category,
-						],
-					]
-				) )->render();
-			} else {
-				return ( new Blocks\Template(
-					[
-						'template' => 'listings_view_page',
-					]
-				) )->render();
-			}
+					'context'  => [
+						'listing_category' => $category,
+					],
+				]
+			) )->render();
 		}
 	}
 
@@ -391,7 +377,7 @@ class Listing extends Controller {
 	 * Gets listing view URL.
 	 *
 	 * @param array $params URL parameters.
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_listing_view_url( $params ) {
 		return get_permalink( hp\get_array_value( $params, 'listing_id' ) );
@@ -419,7 +405,7 @@ class Listing extends Controller {
 				'template' => 'listing_view_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get_by_object( get_post() ),
+					'listing' => Models\Listing::query()->get_by_id( get_post() ),
 				],
 			]
 		) )->render();
@@ -434,11 +420,16 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Check listings.
-		if ( ! Models\Listing::filter(
+		if ( ! Models\Listing::query()->filter(
 			[
 				'status__in' => [ 'draft', 'pending', 'publish' ],
 				'user_id'    => get_current_user_id(),
@@ -456,38 +447,20 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
-		global $wp_query;
-
-		// Set query.
-		$query = Models\Listing::filter(
-			[
-				'status__in' => [ 'draft', 'pending', 'publish' ],
-				'user_id'    => get_current_user_id(),
-			]
-		);
-
-		// Get cached IDs.
-		$listing_ids = hivepress()->cache->get_user_cache( get_current_user_id(), array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing' );
-
-		if ( is_array( $listing_ids ) ) {
-			$query = Models\Listing::filter(
-				[
-					'status__in' => [ 'draft', 'pending', 'publish' ],
-					'id__in'     => $listing_ids,
-				]
-			)->order( 'id__in' )->limit( count( $listing_ids ) );
-		}
 
 		// Query listings.
-		query_posts( $query->get_args() );
+		query_posts(
+			Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'draft', 'pending', 'publish' ],
+					'user_id'    => get_current_user_id(),
+				]
+			)->get_args()
+		);
 
 		set_query_var( 'post_type', 'hp_listing' );
 
-		// Cache IDs.
-		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
-			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
-		}
-
+		// Render template.
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
 	}
 
@@ -500,11 +473,16 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
 			return hivepress()->router->get_url( 'listings_edit_page' );
@@ -524,7 +502,7 @@ class Listing extends Controller {
 				'template' => 'listing_edit_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
 				],
 			]
 		) )->render();
@@ -539,7 +517,12 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Check permissions.
@@ -548,7 +531,7 @@ class Listing extends Controller {
 		}
 
 		// Get listing ID.
-		$listing_id = Models\Listing::filter(
+		$listing_id = Models\Listing::query()->filter(
 			[
 				'status'    => 'auto-draft',
 				'vendor_id' => null,
@@ -590,22 +573,23 @@ class Listing extends Controller {
 	public function redirect_listing_submit_category_page() {
 
 		// Check categories.
-		if ( Models\Listing_Category::get_count() === 0 ) {
+		if ( Models\Listing_Category::query()->get_count() === 0 ) {
 			return true;
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
 
-		// Get category.
-		$category = Models\Listing_Category::get_by_id( get_query_var( 'hp_listing_category_id' ) );
+		if ( get_query_var( 'hp_listing_category_id' ) ) {
 
-		if ( $category && ! $category->get_child_ids() ) {
+			// Get category.
+			$category = Models\Listing_Category::query()->get_by_id( get_query_var( 'hp_listing_category_id' ) );
 
-			// Set category.
-			$listing->set_category_ids( [ $category->get_id() ] );
+			if ( $category && ! $category->get_child_ids() ) {
 
-			return true;
+				// Set category.
+				$listing->set_category_ids( $category->get_id() )->save();
+			}
 		}
 
 		// Check category.
@@ -627,7 +611,7 @@ class Listing extends Controller {
 				'template' => 'listing_submit_category_page',
 
 				'context'  => [
-					'listing_category' => Models\Listing_Category::get_by_id( get_query_var( 'hp_listing_category_id' ) ),
+					'listing_category' => Models\Listing_Category::query()->get_by_id( get_query_var( 'hp_listing_category_id' ) ),
 				],
 			]
 		) )->render();
@@ -641,10 +625,10 @@ class Listing extends Controller {
 	public function redirect_listing_submit_details_page() {
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
 
 		// Check listing.
-		if ( $listing && $listing->get_title() ) {
+		if ( $listing->get_title() ) {
 			return true;
 		}
 
@@ -662,7 +646,7 @@ class Listing extends Controller {
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
 				],
 			]
 		) )->render();
@@ -676,7 +660,7 @@ class Listing extends Controller {
 	public function redirect_listing_submit_complete_page() {
 
 		// Get listing.
-		$listing = Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
 
 		// Get status.
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
@@ -714,7 +698,7 @@ class Listing extends Controller {
 				'template' => 'listing_submit_complete_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
 				],
 			]
 		) )->render();

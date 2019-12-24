@@ -47,7 +47,7 @@ class Vendor extends Controller {
 	 * Gets vendor view URL.
 	 *
 	 * @param array $params URL parameters.
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_vendor_view_url( $params ) {
 		return get_permalink( hp\get_array_value( $params, 'vendor_id' ) );
@@ -71,11 +71,11 @@ class Vendor extends Controller {
 		the_post();
 
 		// Get vendor.
-		$vendor = Models\Vendor::get_by_object( get_post() );
+		$vendor = Models\Vendor::query()->get_by_id( get_post() );
 
 		// Query listings.
 		query_posts(
-			Models\Listing::filter(
+			Models\Listing::query()->filter(
 				[
 					'status'    => 'publish',
 					'vendor_id' => $vendor->get_id(),

@@ -115,8 +115,16 @@ class Attachment extends Controller {
 			return hp\rest_error( 401 );
 		}
 
+		// Check file.
+		if ( ! isset( $_FILES['file'] ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get parent model.
+		$parent_model = sanitize_key( $request->get_param( 'parent_model' ) );
+
 		// Get fields.
-		$fields = hp\call_class_method( '\HivePress\Models\\' . $request->get_param( 'parent_model' ), 'get_fields' );
+		$fields = hp\call_class_method( '\HivePress\Models\\' . $parent_model, '_get_fields' );
 
 		if ( empty( $fields ) ) {
 			return hp\rest_error( 400 );
@@ -125,24 +133,28 @@ class Attachment extends Controller {
 		// Get field.
 		$field = hp\get_array_value( $fields, $request->get_param( 'parent_field' ) );
 
-		if ( empty( $field ) || $field::get_display_type() !== 'attachment_upload' ) {
+		if ( empty( $field ) || $field::get_meta( 'name' ) !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get parent ID.
 		$parent_id = 0;
 
-		if ( $request->get_param( 'parent_model' ) !== 'user' ) {
-			$parent_id = hp\get_post_id(
-				[
-					'post_type'   => hp\prefix( $request->get_param( 'parent_model' ) ),
-					'post_status' => [ 'auto-draft', 'draft', 'publish' ],
-					'post__in'    => [ absint( $request->get_param( 'parent_id' ) ) ],
-					'author'      => get_current_user_id(),
-				]
+		if ( post_type_exists( hp\prefix( $parent_model ) ) ) {
+			$parent_id = reset(
+				( get_posts(
+					[
+						'post_type'      => hp\prefix( $parent_model ),
+						'post_status'    => [ 'auto-draft', 'draft', 'publish' ],
+						'post__in'       => [ absint( $request->get_param( 'parent_id' ) ) ],
+						'author'         => get_current_user_id(),
+						'posts_per_page' => 1,
+						'fields'         => 'ids',
+					]
+				) )
 			);
 
-			if ( 0 === $parent_id ) {
+			if ( empty( $parent_id ) ) {
 				return hp\rest_error( 400 );
 			}
 		}
@@ -209,12 +221,7 @@ class Attachment extends Controller {
 			$data['html'] = $field->render_attachment( $attachment_id );
 		}
 
-		return new \WP_Rest_Response(
-			[
-				'data' => $data,
-			],
-			201
-		);
+		return hp\rest_response( 201, $data );
 	}
 
 	/**
@@ -231,35 +238,37 @@ class Attachment extends Controller {
 		}
 
 		// Get attachment ID.
-		$attachment_id = hp\get_post_id(
-			[
-				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
-				'author'    => get_current_user_id(),
-			]
+		$attachment_id = reset(
+			( get_posts(
+				[
+					'post_type'      => 'attachment',
+					'post__in'       => [ absint( $request->get_param( 'attachment_id' ) ) ],
+					'author'         => get_current_user_id(),
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			) )
 		);
 
-		if ( 0 === $attachment_id ) {
+		if ( empty( $attachment_id ) ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Update attachment.
-		if ( wp_update_post(
+		if ( ! wp_update_post(
 			[
 				'ID'         => $attachment_id,
 				'menu_order' => absint( $request->get_param( 'order' ) ),
 			]
-		) === 0 ) {
+		) ) {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $attachment_id,
-				],
-			],
-			200
+				'id' => $attachment_id,
+			]
 		);
 	}
 
@@ -277,23 +286,27 @@ class Attachment extends Controller {
 		}
 
 		// Get attachment ID.
-		$attachment_id = hp\get_post_id(
-			[
-				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
-				'author'    => get_current_user_id(),
-			]
+		$attachment_id = reset(
+			( get_posts(
+				[
+					'post_type'      => 'attachment',
+					'post__in'       => [ absint( $request->get_param( 'attachment_id' ) ) ],
+					'author'         => get_current_user_id(),
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			) )
 		);
 
-		if ( 0 === $attachment_id ) {
+		if ( ! $attachment_id ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Delete attachment.
-		if ( wp_delete_attachment( $attachment_id, true ) === false ) {
+		if ( ! wp_delete_attachment( $attachment_id, true ) ) {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response( (object) [], 204 );
+		return hp\rest_response( 204 );
 	}
 }

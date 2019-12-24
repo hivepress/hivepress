@@ -201,7 +201,7 @@ class User extends Controller {
 		}
 
 		// Get username.
-		list($username, $domain) = explode( '@', $form->get_value( 'email' ) );
+		$username = explode( '@', $form->get_value( 'email' ) )[0];
 
 		if ( $form->get_value( 'username' ) ) {
 			$username = $form->get_value( 'username' );
@@ -229,10 +229,9 @@ class User extends Controller {
 		 *
 		 * @action /users/register
 		 * @description Fires on user registration.
-		 * @param int $user_id User ID.
-		 * @param object User object.
+		 * @param object $user User object.
 		 */
-		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $user );
+		do_action( 'hivepress/v1/models/user/register', $user );
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
@@ -245,13 +244,11 @@ class User extends Controller {
 			);
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			201,
 			[
-				'data' => [
-					'id' => $user->get_id(),
-				],
-			],
-			201
+				'id' => $user->get_id(),
+			]
 		);
 	}
 
@@ -293,7 +290,7 @@ class User extends Controller {
 			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect.', 'hivepress' ) );
 		}
 
-		$user = Models\User::get_by_object( $user_object );
+		$user = Models\User::query()->get_by_id( $user_object );
 
 		// Check password.
 		if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
@@ -311,13 +308,11 @@ class User extends Controller {
 			);
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $user->get_id(),
-				],
-			],
-			200
+				'id' => $user->get_id(),
+			]
 		);
 	}
 
@@ -363,7 +358,7 @@ class User extends Controller {
 			}
 		}
 
-		$user = Models\User::get_by_object( $user_object );
+		$user = Models\User::query()->get_by_id( $user_object );
 
 		// Send email.
 		( new Emails\User_Password_Request(
@@ -383,13 +378,11 @@ class User extends Controller {
 			]
 		) )->send();
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $user->get_id(),
-				],
-			],
-			200
+				'id' => $user->get_id(),
+			]
 		);
 	}
 
@@ -425,7 +418,7 @@ class User extends Controller {
 			return hp\rest_error( 401, esc_html__( 'Password reset key is expired or invalid.', 'hivepress' ) );
 		}
 
-		$user = Models\User::get_by_object( $user_object );
+		$user = Models\User::query()->get_by_id( $user_object );
 
 		// Reset password.
 		reset_password( $user_object, $form->get_value( 'password' ) );
@@ -441,13 +434,11 @@ class User extends Controller {
 			);
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $user->get_id(),
-				],
-			],
-			200
+				'id' => $user->get_id(),
+			]
 		);
 	}
 
@@ -465,7 +456,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
+		$user = Models\User::query()->get_by_id( $request->get_param( 'user_id' ) );
 
 		if ( empty( $user ) ) {
 			return hp\rest_error( 404 );
@@ -501,13 +492,11 @@ class User extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $user->get_id(),
-				],
-			],
-			200
+				'id' => $user->get_id(),
+			]
 		);
 	}
 
@@ -525,7 +514,7 @@ class User extends Controller {
 		}
 
 		// Get user.
-		$user = Models\User::get_by_id( $request->get_param( 'user_id' ) );
+		$user = Models\User::query()->get_by_id( $request->get_param( 'user_id' ) );
 
 		if ( empty( $user ) ) {
 			return hp\rest_error( 404 );
@@ -554,7 +543,7 @@ class User extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response( (object) [], 204 );
+		return hp\rest_response( 204 );
 	}
 
 	/**
@@ -566,11 +555,16 @@ class User extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Get menu items.
-		$menu_items = Menus\User_Account::get_items();
+		$menu_items = ( new Menus\User_Account() )->get_items();
 
 		if ( $menu_items ) {
 			return reset( $menu_items )['url'];
@@ -586,7 +580,7 @@ class User extends Controller {
 	 */
 	public function redirect_user_login_page() {
 		if ( is_user_logged_in() ) {
-			return hp\fetch_redirect_url( hivepress()->router->get_url( 'user_account_page' ) );
+			return hivepress()->router->get_redirect_url( 'user_account_page' );
 		}
 
 		return false;
@@ -629,10 +623,13 @@ class User extends Controller {
 	 * @return mixed
 	 */
 	public function redirect_user_edit_settings_page() {
-
-		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hp\get_redirect_url( hivepress()->router->get_url( 'user_login_page' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		return false;
@@ -649,7 +646,7 @@ class User extends Controller {
 				'template' => 'user_edit_settings_page',
 
 				'context'  => [
-					'user' => Models\User::get_by_id( get_current_user_id() ),
+					'user' => Models\User::query()->get_by_id( get_current_user_id() ),
 				],
 			]
 		) )->render();
