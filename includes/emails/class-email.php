@@ -20,20 +20,14 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Email {
 	use Traits\Mutator;
+	use Traits\Meta;
 
 	/**
-	 * Email subject.
+	 * Email meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $subject;
-
-	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
+	protected static $meta;
 
 	/**
 	 * Email recipient.
@@ -41,6 +35,20 @@ abstract class Email {
 	 * @var string
 	 */
 	protected $recipient;
+
+	/**
+	 * Email subject.
+	 *
+	 * @var string
+	 */
+	protected $subject;
+
+	/**
+	 * Email body.
+	 *
+	 * @var string
+	 */
+	protected $body;
 
 	/**
 	 * Email headers.
@@ -62,6 +70,14 @@ abstract class Email {
 	 * @param array $args Email arguments.
 	 */
 	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name' => hp\get_class_name( static::class ),
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -75,6 +91,16 @@ abstract class Email {
 	 * @param array $args Email arguments.
 	 */
 	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'body'    => get_option( 'hp_email_' . static::get_meta( 'name' ) ),
+
+				'headers' => [
+					'Content-Type' => 'text/html; charset=UTF-8',
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -90,31 +116,8 @@ abstract class Email {
 	 */
 	protected function bootstrap() {
 
-		// Set content type.
-		$this->headers = hp\merge_arrays(
-			$this->headers,
-			[
-				'Content-Type' => 'text/html; charset=UTF-8',
-			]
-		);
-
-		// Set body.
-		$body = get_option( 'hp_email_' . static::get_name() );
-
-		if ( ! empty( $body ) ) {
-			static::$body = $body;
-		}
-
-		static::$body = hp\replace_tokens( $this->tokens, static::$body );
-	}
-
-	/**
-	 * Gets email name.
-	 *
-	 * @return string
-	 */
-	final public static function get_name() {
-		return hp\get_class_name( static::class );
+		// Replace tokens.
+		$this->body = hp\replace_tokens( $this->tokens, $this->body );
 	}
 
 	/**
@@ -123,17 +126,19 @@ abstract class Email {
 	 * @return bool
 	 */
 	final public function send() {
-		return wp_mail(
-			$this->recipient,
-			static::$subject,
-			static::$body,
-			array_map(
-				function( $name, $value ) {
-					return $name . ': ' . $value;
-				},
-				array_keys( $this->headers ),
-				$this->headers
-			)
-		);
+		if ( $this->body ) {
+			return wp_mail(
+				$this->recipient,
+				$this->subject,
+				$this->body,
+				array_map(
+					function( $name, $value ) {
+						return $name . ': ' . $value;
+					},
+					array_keys( $this->headers ),
+					$this->headers
+				)
+			);
+		}
 	}
 }
