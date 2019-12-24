@@ -29,7 +29,7 @@ class Captcha extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set class.
@@ -40,7 +40,7 @@ class Captcha extends Field {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

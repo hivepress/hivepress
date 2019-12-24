@@ -154,13 +154,13 @@ abstract class Form {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps form properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set message.

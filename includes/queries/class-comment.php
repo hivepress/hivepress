@@ -56,14 +56,14 @@ class Comment extends Query {
 	/**
 	 * Bootstraps query properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set comment type.
 		$model = $this->model;
 
 		$this->args['type'] = hp\prefix( $model::_get_meta( 'name' ) );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

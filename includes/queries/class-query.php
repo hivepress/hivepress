@@ -89,13 +89,13 @@ abstract class Query extends \ArrayObject {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps query properties.
 	 */
-	protected function bootstrap() {}
+	protected function boot() {}
 
 	/**
 	 * Gets query alias.

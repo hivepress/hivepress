@@ -61,7 +61,7 @@ class Listing_Search_Form extends Form {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set class.
 		$this->attributes = hp\merge_arrays(
@@ -71,6 +71,6 @@ class Listing_Search_Form extends Form {
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }

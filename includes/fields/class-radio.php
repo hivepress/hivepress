@@ -67,8 +67,8 @@ class Radio extends Select {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
-		Field::bootstrap();
+	protected function boot() {
+		Field::boot();
 	}
 
 	/**

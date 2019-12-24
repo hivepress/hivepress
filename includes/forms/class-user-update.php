@@ -101,7 +101,7 @@ class User_Update extends Model_Form {
 	/**
 	 * Bootstraps form properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set action.
 		if ( $this->model->get_id() ) {
@@ -113,6 +113,6 @@ class User_Update extends Model_Form {
 			);
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }

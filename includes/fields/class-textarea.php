@@ -64,7 +64,7 @@ class Textarea extends Text {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		if ( $this->editor ) {
 
 			// Set HTML flag.
@@ -94,7 +94,7 @@ class Textarea extends Text {
 			}
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

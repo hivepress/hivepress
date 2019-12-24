@@ -78,13 +78,13 @@ abstract class Menu {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps menu properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set class.
 		$this->attributes = hp\merge_arrays(

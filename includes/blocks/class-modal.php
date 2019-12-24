@@ -36,7 +36,7 @@ class Modal extends Container {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Get ID.
 		$id = $this->name;
@@ -67,6 +67,6 @@ class Modal extends Container {
 			)
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }

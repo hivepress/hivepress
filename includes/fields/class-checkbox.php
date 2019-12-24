@@ -89,7 +89,7 @@ class Checkbox extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set caption.
@@ -107,7 +107,7 @@ class Checkbox extends Field {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

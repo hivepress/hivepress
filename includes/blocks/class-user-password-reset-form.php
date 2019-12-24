@@ -38,7 +38,7 @@ class User_Password_Reset_Form extends Form {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set values.
 		$this->values = array_merge(
@@ -57,7 +57,7 @@ class User_Password_Reset_Form extends Form {
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

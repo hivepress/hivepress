@@ -108,13 +108,13 @@ abstract class Email {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps email properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Replace tokens.
 		$this->body = hp\replace_tokens( $this->tokens, $this->body );

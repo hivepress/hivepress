@@ -133,14 +133,14 @@ class Listing_Categories extends Block {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set category parent.
 		if ( ! isset( $this->parent ) ) {
 			$this->parent = hp\get_array_value( $this->context, 'listing_category_id' );
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

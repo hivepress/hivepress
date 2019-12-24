@@ -154,13 +154,13 @@ abstract class Field {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set default value.
 		$this->set_value( hp\get_array_value( $this->args, 'default' ) );

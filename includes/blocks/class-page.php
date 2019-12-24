@@ -22,7 +22,7 @@ class Page extends Container {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set attributes.
 		$this->attributes = hp\merge_arrays(
@@ -32,7 +32,7 @@ class Page extends Container {
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

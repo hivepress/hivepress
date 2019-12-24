@@ -61,13 +61,13 @@ class Date_Range extends Date {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Create fields.
 		$this->min_field = new Date( array_merge( $this->args, [ 'required' => false ] ) );
 		$this->max_field = new Date( array_merge( $this->args, [ 'required' => false ] ) );
 
-		Field::bootstrap();
+		Field::boot();
 	}
 
 	/**

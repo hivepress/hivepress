@@ -75,13 +75,13 @@ abstract class Block {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {}
+	protected function boot() {}
 
 	/**
 	 * Gets block type.

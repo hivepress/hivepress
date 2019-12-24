@@ -57,14 +57,14 @@ class Term extends Query {
 	/**
 	 * Bootstraps query properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set taxonomy.
 		$model = $this->model;
 
 		$this->args['taxonomy'] = hp\prefix( $model::_get_meta( 'name' ) );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

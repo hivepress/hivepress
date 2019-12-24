@@ -65,7 +65,7 @@ class Number_Range extends Number {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Create fields.
@@ -98,7 +98,7 @@ class Number_Range extends Number {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		Field::bootstrap();
+		Field::boot();
 	}
 
 	/**

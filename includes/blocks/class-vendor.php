@@ -23,7 +23,7 @@ class Vendor extends Template {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set template.
 		if ( ! isset( $this->template ) ) {
@@ -32,7 +32,7 @@ class Vendor extends Template {
 
 		$this->template = 'vendor_' . $this->template . '_block';
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

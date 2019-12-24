@@ -57,7 +57,7 @@ class Attachment_Upload extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
@@ -68,7 +68,7 @@ class Attachment_Upload extends Field {
 			}
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

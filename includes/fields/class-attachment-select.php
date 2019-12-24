@@ -36,14 +36,14 @@ class Attachment_Select extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
 			$this->caption = esc_html__( 'Select File', 'hivepress' );
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

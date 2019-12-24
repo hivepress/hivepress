@@ -70,13 +70,13 @@ abstract class Template {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps template properties.
 	 */
-	protected function bootstrap() {}
+	protected function boot() {}
 
 	/**
 	 * Gets template blocks.

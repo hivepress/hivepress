@@ -71,7 +71,7 @@ class Listing_Sort extends Form {
 	/**
 	 * Bootstraps form properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set submission.
 		$this->attributes = hp\merge_arrays(
@@ -81,6 +81,6 @@ class Listing_Sort extends Form {
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }

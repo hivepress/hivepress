@@ -64,7 +64,7 @@ class Toggle extends Block {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set attributes.
@@ -98,7 +98,7 @@ class Toggle extends Block {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

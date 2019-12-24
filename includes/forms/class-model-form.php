@@ -42,7 +42,7 @@ abstract class Model_Form extends Form {
 	/**
 	 * Bootstraps form properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set model name.
@@ -59,7 +59,7 @@ abstract class Model_Form extends Form {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

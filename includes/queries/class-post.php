@@ -63,14 +63,14 @@ class Post extends Query {
 	/**
 	 * Bootstraps query properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set post type.
 		$model = $this->model;
 
 		$this->args['post_type'] = hp\prefix( $model::_get_meta( 'name' ) );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

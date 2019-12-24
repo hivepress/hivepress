@@ -107,7 +107,7 @@ class Number extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set placeholder.
@@ -135,7 +135,7 @@ class Number extends Field {
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**

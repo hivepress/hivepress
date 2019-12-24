@@ -121,13 +121,13 @@ abstract class Model {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps model properties.
 	 */
-	protected function bootstrap() {}
+	protected function boot() {}
 
 	/**
 	 * Sets model fields.

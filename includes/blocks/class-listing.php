@@ -22,7 +22,7 @@ class Listing extends Template {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set template.
 		if ( ! isset( $this->template ) ) {
@@ -60,6 +60,6 @@ class Listing extends Template {
 			)['blocks'];
 		}
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }
