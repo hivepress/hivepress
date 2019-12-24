@@ -20,33 +20,25 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Reject extends Email {
 
 	/**
-	 * Email subject.
+	 * Email meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $subject;
+	protected static $meta;
 
 	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => hivepress()->translator->get_string( 'listing_rejected' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

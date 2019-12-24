@@ -20,33 +20,25 @@ defined( 'ABSPATH' ) || exit;
 class User_Register extends Email {
 
 	/**
-	 * Email subject.
+	 * Email meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $subject;
+	protected static $meta;
 
 	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Registration Complete', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

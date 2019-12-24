@@ -20,25 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Email {
 
 	/**
-	 * Email subject.
+	 * Email meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $subject;
+	protected static $meta;
 
 	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => hivepress()->translator->get_string( 'listing_submitted' ),
@@ -47,6 +40,6 @@ class Listing_Submit extends Email {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

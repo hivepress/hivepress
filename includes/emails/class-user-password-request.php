@@ -20,33 +20,25 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Email {
 
 	/**
-	 * Email subject.
+	 * Email meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $subject;
+	protected static $meta;
 
 	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Password Reset', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }
