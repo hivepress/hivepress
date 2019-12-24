@@ -52,7 +52,8 @@ abstract class Menu {
 		$args = hp\merge_arrays(
 			[
 				'meta' => [
-					'name' => hp\get_class_name( static::class ),
+					'name'    => hp\get_class_name( static::class ),
+					'chained' => false,
 				],
 			],
 			$args
