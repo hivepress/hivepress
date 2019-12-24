@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Radio extends Select {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -41,10 +34,12 @@ class Radio extends Select {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Radio Buttons', 'hivepress' ),
+				'meta' => [
+					'label'    => esc_html__( 'Radio Buttons', 'hivepress' ),
 
-				'settings' => [
-					'multiple' => null,
+					'settings' => [
+						'multiple' => null,
+					],
 				],
 			],
 			$args
@@ -112,7 +107,7 @@ class Radio extends Select {
 		);
 
 		// Render options.
-		if ( ! empty( $options ) ) {
+		if ( $options ) {
 			$output .= '<ul>';
 
 			foreach ( $options as $value => $option ) {
@@ -121,15 +116,15 @@ class Radio extends Select {
 				// Get label.
 				$label = $option;
 
-				if ( is_array( $option ) ) {
-					$label = $option['label'];
+				if ( is_array( $label ) ) {
+					$label = hp\get_array_value( $label, 'label' );
 				}
 
 				// Get ID.
 				$id = $this->name . '_' . uniqid();
 
 				// Render option.
-				$output .= '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+				$output .= '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
 
 				// Render child options.
 				$output .= $this->render_options( $value );

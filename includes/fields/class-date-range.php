@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Date_Range extends Date {
 
 	/**
-	 * Field title.
+	 * Field meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $title;
+	protected static $meta;
 
 	/**
 	 * Minimum field.
@@ -48,7 +48,9 @@ class Date_Range extends Date {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Date Range', 'hivepress' ),
+				'meta' => [
+					'label' => esc_html__( 'Date Range', 'hivepress' ),
+				],
 			],
 			$args
 		);
@@ -80,12 +82,12 @@ class Date_Range extends Date {
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['operator'] = 'BETWEEN';
+		$this->filter['operator'] = 'BETWEEN';
 	}
 
 	/**
@@ -131,8 +133,7 @@ class Date_Range extends Date {
 			$this->max_field->validate();
 
 			// Add errors.
-			$this->add_errors( $this->min_field->get_errors() );
-			$this->add_errors( $this->max_field->get_errors() );
+			$this->add_errors( array_unique( array_merge( $this->min_field->get_errors(), $this->max_field->get_errors() ) ) );
 		}
 
 		return empty( $this->errors );

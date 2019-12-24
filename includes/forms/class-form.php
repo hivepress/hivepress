@@ -137,9 +137,10 @@ abstract class Form {
 		$args = hp\merge_arrays(
 			[
 				'button' => [
-					'label'      => esc_html__( 'Submit', 'hivepress' ),
+					'label'        => esc_html__( 'Submit', 'hivepress' ),
+					'display_type' => 'submit',
 
-					'attributes' => [
+					'attributes'   => [
 						'class' => [ 'hp-form__button', 'button', 'alt' ],
 					],
 				],
@@ -380,7 +381,7 @@ abstract class Form {
 
 					// Render label.
 					if ( $field->get_label() ) {
-						$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+						$output .= '<label class="hp-form__label"><span>' . hp\sanitize_html( $field->get_label() ) . '</span>';
 
 						if ( $field->get_statuses() ) {
 							$output .= ' <small>(' . implode( ', ', array_map( 'esc_html', $field->get_statuses() ) ) . ')</small>';

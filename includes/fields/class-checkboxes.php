@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Checkboxes extends Select {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -41,10 +34,12 @@ class Checkboxes extends Select {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Checkboxes', 'hivepress' ),
+				'meta' => [
+					'label'    => esc_html__( 'Checkboxes', 'hivepress' ),
 
-				'settings' => [
-					'multiple' => null,
+					'settings' => [
+						'multiple' => null,
+					],
 				],
 			],
 			$args
@@ -112,7 +107,7 @@ class Checkboxes extends Select {
 		);
 
 		// Render options.
-		if ( ! empty( $options ) ) {
+		if ( $options ) {
 			$output .= '<ul>';
 
 			foreach ( $options as $value => $option ) {
@@ -121,8 +116,8 @@ class Checkboxes extends Select {
 				// Get label.
 				$label = $option;
 
-				if ( is_array( $option ) ) {
-					$label = $option['label'];
+				if ( is_array( $label ) ) {
+					$label = hp\get_array_value( $label, 'label' );
 				}
 
 				// Get default value.

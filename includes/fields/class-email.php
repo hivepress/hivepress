@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -41,11 +34,14 @@ class Email extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Email', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'Email', 'hivepress' ),
+					'filterable' => false,
 
-				'settings' => [
-					'min_length' => null,
-					'max_length' => null,
+					'settings'   => [
+						'min_length' => null,
+						'max_length' => null,
+					],
 				],
 			],
 			$args
@@ -61,9 +57,6 @@ class Email extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
 			$args,
 			[
 				'max_length' => 254,
@@ -87,7 +80,7 @@ class Email extends Text {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) ] );
+			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 
 		return empty( $this->errors );

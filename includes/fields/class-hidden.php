@@ -20,12 +20,21 @@ defined( 'ABSPATH' ) || exit;
 class Hidden extends Field {
 
 	/**
+	 * Field meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
 		parent::normalize();
 
-		$this->value = wp_unslash( $this->value );
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_unslash( $this->value );
+		}
 	}
 
 	/**
@@ -41,6 +50,6 @@ class Hidden extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

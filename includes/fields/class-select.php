@@ -163,6 +163,51 @@ class Select extends Field {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( $this->multiple && ! is_null( $this->value ) ) {
+			if ( [] !== $this->value ) {
+				$this->value = (array) $this->value;
+			} else {
+				$this->value = null;
+			}
+		} elseif ( ! $this->multiple && is_array( $this->value ) ) {
+			if ( $this->value ) {
+				$this->value = reset( $this->value );
+			} else {
+				$this->value = null;
+			}
+		}
+	}
+
+	/**
+	 * Sanitizes field value.
+	 */
+	protected function sanitize() {
+		if ( $this->multiple ) {
+			$this->value = array_map( 'sanitize_text_field', $this->value );
+		} else {
+			$this->value = sanitize_text_field( $this->value );
+		}
+	}
+
+	/**
+	 * Validates field value.
+	 *
+	 * @return bool
+	 */
+	public function validate() {
+		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_map( 'strval', array_keys( $this->options ) ) ) ) !== count( (array) $this->value ) ) {
+			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+		}
+
+		return empty( $this->errors );
+	}
+
+	/**
 	 * Renders field HTML.
 	 *
 	 * @return string

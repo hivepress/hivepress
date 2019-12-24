@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Number_Range extends Number {
 
 	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Minimum field.
@@ -55,10 +48,12 @@ class Number_Range extends Number {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Number Range', 'hivepress' ),
+				'meta' => [
+					'label'    => esc_html__( 'Number Range', 'hivepress' ),
 
-				'settings' => [
-					'placeholder' => null,
+					'settings' => [
+						'placeholder' => null,
+					],
 				],
 			],
 			$args
@@ -96,7 +91,7 @@ class Number_Range extends Number {
 			)
 		);
 
-		// Set range slider.
+		// Set component.
 		if ( ! is_null( $this->min_value ) && ! is_null( $this->max_value ) ) {
 			$attributes['data-component'] = 'range-slider';
 		}
@@ -118,12 +113,12 @@ class Number_Range extends Number {
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['operator'] = 'BETWEEN';
+		$this->filter['operator'] = 'BETWEEN';
 	}
 
 	/**
@@ -169,8 +164,7 @@ class Number_Range extends Number {
 			$this->max_field->validate();
 
 			// Add errors.
-			$this->add_errors( $this->min_field->get_errors() );
-			$this->add_errors( $this->max_field->get_errors() );
+			$this->add_errors( array_unique( array_merge( $this->min_field->get_errors(), $this->max_field->get_errors() ) ) );
 		}
 
 		return empty( $this->errors );

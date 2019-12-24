@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Attachment_Upload extends Field {
 
 	/**
+	 * Field meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Button caption.
 	 *
 	 * @var string
@@ -88,33 +95,71 @@ class Attachment_Upload extends Field {
 	 * @return int
 	 */
 	final public function get_max_files() {
-		return absint( $this->max_files );
+		return $this->max_files;
+	}
+
+	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( $this->multiple && ! is_null( $this->value ) ) {
+			if ( [] !== $this->value ) {
+				$this->value = (array) $this->value;
+			} else {
+				$this->value = null;
+			}
+		} elseif ( ! $this->multiple && is_array( $this->value ) ) {
+			if ( $this->value ) {
+				$this->value = reset( $this->value );
+			} else {
+				$this->value = null;
+			}
+		}
 	}
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$attachment_ids = get_posts(
-			[
-				'post_type'      => 'attachment',
-				'post__in'       => array_merge( [ 0 ], array_map( 'absint', (array) $this->value ) ),
-				'orderby'        => 'menu_order',
-				'order'          => 'ASC',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			]
-		);
+		if ( $this->multiple ) {
+			$this->value = array_filter( array_map( 'absint', $this->value ) );
 
-		if ( ! empty( $attachment_ids ) ) {
-			if ( $this->multiple ) {
-				$this->value = $attachment_ids;
-			} else {
-				$this->value = reset( $attachment_ids );
+			if ( empty( $this->value ) ) {
+				$this->value = null;
 			}
 		} else {
-			$this->value = null;
+			$this->value = absint( $this->value );
+
+			if ( 0 === $this->value ) {
+				$this->value = null;
+			}
 		}
+	}
+
+	/**
+	 * Validates field value.
+	 *
+	 * @return bool
+	 */
+	public function validate() {
+		if ( parent::validate() && ! is_null( $this->value ) ) {
+			$attachment_ids = get_posts(
+				[
+					'post_type'      => 'attachment',
+					'post__in'       => (array) $this->value,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				]
+			);
+
+			if ( count( $attachment_ids ) !== count( (array) $this->value ) ) {
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+			}
+		}
+
+		return empty( $this->errors );
 	}
 
 	/**
@@ -141,7 +186,15 @@ class Attachment_Upload extends Field {
 		$output .= '<label for="' . esc_attr( $id ) . '">';
 
 		// Render upload button.
-		$output .= '<button type="button" class="button">' . esc_html( $this->caption ) . '</button>';
+		$output .= ( new Button(
+			[
+				'label'      => $this->caption,
+
+				'attributes' => [
+					'class' => [ 'button' ],
+				],
+			]
+		) )->render();
 
 		// Render upload field.
 		$output .= ( new File(
@@ -153,7 +206,7 @@ class Attachment_Upload extends Field {
 				'attributes' => [
 					'id'             => $id,
 					'data-component' => 'file-upload',
-					'data-url'       => hp\get_rest_url( '/attachments' ),
+					'data-url'       => hivepress()->router->get_url( 'attachment_upload_action' ),
 				],
 			]
 		) )->render();
@@ -171,14 +224,22 @@ class Attachment_Upload extends Field {
 	 * @return string
 	 */
 	public function render_attachment( $attachment_id ) {
-		$output = '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hp\get_rest_url( '/attachments/' . $attachment_id ) ) . '">';
+		$output = '';
 
-		// Render attachment image.
-		$output .= wp_get_attachment_image( $attachment_id, 'thumbnail' );
+		// Get attachment image.
+		$image = wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
-		// Render remove button.
-		$output .= '<a href="#" data-component="file-delete"><i class="hp-icon fas fa-times"></i></a>';
-		$output .= '</div>';
+		if ( $image ) {
+			$output .= '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment_id ] ) ) . '">';
+
+			// Render attachment image.
+			$output .= $image;
+
+			// Render remove button.
+			$output .= '<a href="#" data-component="file-delete"><i class="hp-icon fas fa-times"></i></a>';
+
+			$output .= '</div>';
+		}
 
 		return $output;
 	}

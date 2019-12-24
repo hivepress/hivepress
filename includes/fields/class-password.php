@@ -20,11 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Password extends Text {
 
 	/**
-	 * Field title.
+	 * Field meta.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected static $title;
+	protected static $meta;
 
 	/**
 	 * Class initializer.
@@ -34,7 +34,10 @@ class Password extends Text {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title' => null,
+				'meta' => [
+					'label'      => null,
+					'filterable' => false,
+				],
 			],
 			$args
 		);
@@ -49,9 +52,6 @@ class Password extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
 			$args,
 			[
 				'max_length' => 64,
@@ -72,6 +72,6 @@ class Password extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

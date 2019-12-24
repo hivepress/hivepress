@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Button extends Field {
 
 	/**
+	 * Field meta.
+	 *
+	 * @var array
+	 */
+	protected static $meta;
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}
@@ -30,6 +37,6 @@ class Button extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<button type="submit" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->label ) . '</button>';
+		return '<button type="' . esc_attr( $this->display_type ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->label ) . '</button>';
 	}
 }

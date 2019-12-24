@@ -20,25 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Number extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Field placeholder.
@@ -76,36 +62,39 @@ class Number extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'type'     => 'NUMERIC',
-				'title'    => esc_html__( 'Number', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'Number', 'hivepress' ),
+					'type'       => 'DECIMAL',
+					'filterable' => true,
 
-				'settings' => [
-					'placeholder' => [
-						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 2048,
-						'_order'      => 10,
-					],
+					'settings'   => [
+						'placeholder' => [
+							'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+							'type'       => 'text',
+							'max_length' => 2048,
+							'_order'     => 10,
+						],
 
-					'decimals'    => [
-						'label'     => esc_html__( 'Decimals', 'hivepress' ),
-						'type'      => 'number',
-						'default'   => 0,
-						'min_value' => 0,
-						'max_value' => 5,
-						'_order'     => 20,
-					],
+						'decimals'    => [
+							'label'     => esc_html__( 'Decimals', 'hivepress' ),
+							'type'      => 'number',
+							'default'   => 0,
+							'min_value' => 0,
+							'max_value' => 6,
+							'_order'    => 20,
+						],
 
-					'min_value'   => [
-						'label' => esc_html__( 'Minimum Value', 'hivepress' ),
-						'type'  => 'number',
-						'_order' => 30,
-					],
+						'min_value'   => [
+							'label'  => esc_html__( 'Minimum Value', 'hivepress' ),
+							'type'   => 'number',
+							'_order' => 30,
+						],
 
-					'max_value'   => [
-						'label' => esc_html__( 'Maximum Value', 'hivepress' ),
-						'type'  => 'number',
-						'_order' => 40,
+						'max_value'   => [
+							'label'  => esc_html__( 'Maximum Value', 'hivepress' ),
+							'type'   => 'number',
+							'_order' => 40,
+						],
 					],
 				],
 			],
@@ -113,22 +102,6 @@ class Number extends Field {
 		);
 
 		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 
 	/**
@@ -206,11 +179,11 @@ class Number extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
-				$this->add_errors( [ sprintf( esc_html__( '"%1$s" can\'t be lower than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be lower than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) );
 			}
 
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
-				$this->add_errors( [ sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) );
 			}
 		}
 
@@ -223,6 +196,6 @@ class Number extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::get_display_type() ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

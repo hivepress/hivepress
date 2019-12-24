@@ -20,25 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Date extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
+	 * Field meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Field placeholder.
@@ -83,27 +69,30 @@ class Date extends Field {
 	public static function init( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'type'     => 'DATE',
-				'title'    => esc_html__( 'Date', 'hivepress' ),
+				'meta' => [
+					'label'      => esc_html__( 'Date', 'hivepress' ),
+					'type'       => 'DATE',
+					'filterable' => true,
 
-				'settings' => [
-					'placeholder' => [
-						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 2048,
-						'_order'      => 10,
-					],
+					'settings'   => [
+						'placeholder' => [
+							'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+							'type'       => 'text',
+							'max_length' => 2048,
+							'_order'     => 10,
+						],
 
-					'min_date'    => [
-						'label' => esc_html__( 'Minimum Date', 'hivepress' ),
-						'type'  => 'date',
-						'_order' => 20,
-					],
+						'min_date'    => [
+							'label'  => esc_html__( 'Minimum Date', 'hivepress' ),
+							'type'   => 'date',
+							'_order' => 20,
+						],
 
-					'max_date'    => [
-						'label' => esc_html__( 'Maximum Date', 'hivepress' ),
-						'type'  => 'date',
-						'_order' => 30,
+						'max_date'    => [
+							'label'  => esc_html__( 'Maximum Date', 'hivepress' ),
+							'type'   => 'date',
+							'_order' => 30,
+						],
 					],
 				],
 			],
@@ -121,7 +110,7 @@ class Date extends Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'filters'        => true,
+				'display_type'   => 'text',
 				'display_format' => get_option( 'date_format' ),
 			],
 			$args
@@ -166,7 +155,7 @@ class Date extends Field {
 			$attributes['data-max-date'] = $this->max_date;
 		}
 
-		// Set datepicker.
+		// Set component.
 		$attributes['data-component'] = 'date';
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -191,7 +180,9 @@ class Date extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		$this->value = wp_unslash( $this->value );
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_unslash( $this->value );
+		}
 	}
 
 	/**
@@ -210,14 +201,14 @@ class Date extends Field {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			$date = date_create_from_format( '!' . $this->format, $this->value );
 
-			if ( false === $date || $date->format( $this->format ) !== $this->value ) {
-				$this->add_errors( [ sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) ] );
+			if ( ! $date || $date->format( $this->format ) !== $this->value ) {
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			} else {
 				if ( ! is_null( $this->min_date ) ) {
 					$min_date = date_create( $this->min_date );
 
 					if ( $date < $min_date ) {
-						$this->add_errors( [ sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->label, $min_date->format( $this->display_format ) ) ] );
+						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->label, $min_date->format( $this->display_format ) ) );
 					}
 				}
 
@@ -225,7 +216,7 @@ class Date extends Field {
 					$max_date = date_create( $this->max_date );
 
 					if ( $date > $max_date ) {
-						$this->add_errors( [ sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->label, $max_date->format( $this->display_format ) ) ] );
+						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->label, $max_date->format( $this->display_format ) ) );
 					}
 				}
 			}
@@ -240,6 +231,6 @@ class Date extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="text" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }
