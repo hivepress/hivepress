@@ -298,7 +298,7 @@ abstract class Field {
 	/**
 	 * Adds field filter.
 	 */
-	final protected function add_filter() {
+	protected function add_filter() {
 		$this->filter = [
 			'name'     => $this->name,
 			'type'     => static::get_meta( 'type' ),
