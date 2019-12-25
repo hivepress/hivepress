@@ -35,44 +35,49 @@ class User extends Model {
 		$args = hp\merge_arrays(
 			[
 				'fields'  => [
-					'username'    => [
+					'username'     => [
 						'label'      => esc_html__( 'Username', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 60,
 						'required'   => true,
 					],
 
-					'email'       => [
+					'email'        => [
 						'label'    => esc_html__( 'Email', 'hivepress' ),
 						'type'     => 'email',
 						'required' => true,
 					],
 
-					'password'    => [
+					'password'     => [
 						'label'      => esc_html__( 'Password', 'hivepress' ),
 						'type'       => 'password',
 						'min_length' => 8,
 					],
 
-					'first_name'  => [
+					'first_name'   => [
 						'label'      => esc_html__( 'First Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
 					],
 
-					'last_name'   => [
+					'last_name'    => [
 						'label'      => esc_html__( 'Last Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
 					],
 
-					'description' => [
+					'display_name' => [
+						'type'       => 'text',
+						'max_length' => 256,
+					],
+
+					'description'  => [
 						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 					],
 
-					'image_id'    => [
+					'image_id'     => [
 						'label'   => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption' => esc_html__( 'Select Image', 'hivepress' ),
 						'type'    => 'attachment_upload',
@@ -81,9 +86,10 @@ class User extends Model {
 				],
 
 				'aliases' => [
-					'user_login' => 'username',
-					'user_email' => 'email',
-					'user_pass'  => 'password',
+					'user_login'   => 'username',
+					'user_email'   => 'email',
+					'user_pass'    => 'password',
+					'display_name' => 'display_name',
 				],
 			],
 			$args
