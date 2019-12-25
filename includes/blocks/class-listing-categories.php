@@ -85,7 +85,7 @@ class Listing_Categories extends Block {
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
-						'order'    => 10,
+						'_order'   => 10,
 
 						'options'  => [
 							2 => '2',
@@ -99,7 +99,7 @@ class Listing_Categories extends Block {
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
-						'order'     => 20,
+						'_order'    => 20,
 					],
 
 					'parent'  => [
@@ -108,14 +108,14 @@ class Listing_Categories extends Block {
 						'options'  => 'terms',
 						'taxonomy' => 'hp_listing_category',
 						'default'  => '',
-						'order'    => 30,
+						'_order'   => 30,
 					],
 
 					'order'   => [
 						'label'   => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
 						'default' => '',
-						'order'   => 40,
+						'_order'  => 40,
 
 						'options' => [
 							'name'  => esc_html__( 'Category Name', 'hivepress' ),

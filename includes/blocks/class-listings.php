@@ -92,7 +92,7 @@ class Listings extends Block {
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
-						'order'    => 10,
+						'_order'   => 10,
 
 						'options'  => [
 							2 => '2',
@@ -106,7 +106,7 @@ class Listings extends Block {
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
-						'order'     => 20,
+						'_order'    => 20,
 					],
 
 					'category' => [
@@ -115,13 +115,13 @@ class Listings extends Block {
 						'options'  => 'terms',
 						'taxonomy' => 'hp_listing_category',
 						'default'  => '',
-						'order'    => 30,
+						'_order'   => 30,
 					],
 
 					'order'    => [
 						'label'   => esc_html__( 'Order', 'hivepress' ),
 						'type'    => 'select',
-						'order'   => 40,
+						'_order'  => 40,
 
 						'options' => [
 							''       => esc_html__( 'Date', 'hivepress' ),
@@ -131,9 +131,9 @@ class Listings extends Block {
 					],
 
 					'featured' => [
-						'label' => hivepress()->translator->get_string( 'display_only_featured_listings' ),
-						'type'  => 'checkbox',
-						'order' => 50,
+						'label'  => hivepress()->translator->get_string( 'display_only_featured_listings' ),
+						'type'   => 'checkbox',
+						'_order' => 50,
 					],
 				],
 			],

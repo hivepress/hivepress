@@ -79,9 +79,9 @@ final class WooCommerce {
 	public function add_menu_items( $args ) {
 		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
 			$args['items']['orders_view_page'] = [
-				'label' => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
-				'url'   => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
-				'order' => 40,
+				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
+				'url'    => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
+				'_order' => 40,
 			];
 		}
 
@@ -126,7 +126,7 @@ final class WooCommerce {
 									'type'     => 'callback',
 									'callback' => 'do_action',
 									'params'   => [ 'woocommerce_account_content' ],
-									'order'    => 10,
+									'_order'   => 10,
 								],
 							],
 						],

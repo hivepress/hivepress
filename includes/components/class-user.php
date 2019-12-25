@@ -142,7 +142,7 @@ final class User {
 				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
 				'type'     => 'checkbox',
 				'required' => true,
-				'order'    => 1000,
+				'_order'   => 1000,
 			];
 		}
 

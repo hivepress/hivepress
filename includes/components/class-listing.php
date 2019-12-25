@@ -357,8 +357,8 @@ final class Listing {
 			]
 		) !== 0 ) {
 			$menu['items']['listings_edit_page'] = [
-				'route' => 'listings_edit_page',
-				'order' => 10,
+				'route'  => 'listings_edit_page',
+				'_order' => 10,
 			];
 		}
 
@@ -393,7 +393,7 @@ final class Listing {
 				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
 				'type'     => 'checkbox',
 				'required' => true,
-				'order'    => 1000,
+				'_order'   => 1000,
 			];
 		}
 

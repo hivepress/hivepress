@@ -32,7 +32,7 @@ class User_Login_Form extends Form {
 				'footer' => [
 					'form_actions' => [
 						'type'       => 'container',
-						'order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-form__actions' ],
@@ -42,13 +42,13 @@ class User_Login_Form extends Form {
 							'user_register_link'         => [
 								'type'     => 'element',
 								'filepath' => 'user/login/user-register-link',
-								'order'    => 10,
+								'_order'   => 10,
 							],
 
 							'user_password_request_link' => [
 								'type'     => 'element',
 								'filepath' => 'user/login/user-password-request-link',
-								'order'    => 20,
+								'_order'   => 20,
 							],
 						],
 					],

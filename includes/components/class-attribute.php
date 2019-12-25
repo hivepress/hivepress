@@ -151,9 +151,9 @@ final class Attribute {
 
 						// Set defaults.
 						$field_args = [
-							'label' => $attribute_args['label'],
-							'type'  => 'text',
-							'order' => 100 + absint( $attribute_post->menu_order ),
+							'label'  => $attribute_args['label'],
+							'type'   => 'text',
+							'_order' => 100 + absint( $attribute_post->menu_order ),
 						];
 
 						// Get field type.
@@ -331,7 +331,7 @@ final class Attribute {
 						}
 
 						if ( 'required' !== $field_name ) {
-							$field_args['order'] = hp\get_array_value( $field_args, 'order', 10 ) + 100;
+							$field_args['_order'] = hp\get_array_value( $field_args, '_order', 10 ) + 100;
 						}
 
 						// Add field.
