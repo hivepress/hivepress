@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Attachment
  */
-class Attachment extends Controller {
+final class Attachment extends Controller {
 
 	/**
 	 * Class constructor.

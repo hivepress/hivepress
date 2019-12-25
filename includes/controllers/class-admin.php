@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Admin
  */
-class Admin extends Controller {
+final class Admin extends Controller {
 
 	/**
 	 * Class constructor.

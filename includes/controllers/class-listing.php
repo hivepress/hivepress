@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing
  */
-class Listing extends Controller {
+final class Listing extends Controller {
 
 	/**
 	 * Class constructor.

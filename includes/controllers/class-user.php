@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User
  */
-class User extends Controller {
+final class User extends Controller {
 
 	/**
 	 * Class constructor.

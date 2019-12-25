@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor
  */
-class Vendor extends Controller {
+final class Vendor extends Controller {
 
 	/**
 	 * Class constructor.
