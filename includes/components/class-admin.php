@@ -24,7 +24,7 @@ final class Admin {
 	 *
 	 * @var array
 	 */
-	private $post_states = [];
+	protected $post_states = [];
 
 	/**
 	 * Class constructor.
@@ -266,7 +266,7 @@ final class Admin {
 	 * @param string $name Setting name.
 	 * @return mixed
 	 */
-	private function validate_setting( $name ) {
+	protected function validate_setting( $name ) {
 
 		// Get current tab.
 		$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
@@ -365,7 +365,7 @@ final class Admin {
 	 *
 	 * @return array
 	 */
-	private function get_settings_tabs() {
+	protected function get_settings_tabs() {
 		return array_map(
 			function( $section ) {
 				return hp\get_array_value( $section, 'title' );
@@ -379,7 +379,7 @@ final class Admin {
 	 *
 	 * @return mixed
 	 */
-	private function get_settings_tab() {
+	protected function get_settings_tab() {
 		$current_tab = false;
 
 		// Get all tabs.
@@ -402,7 +402,7 @@ final class Admin {
 	 * @param string $status Extensions status.
 	 * @return array
 	 */
-	private function get_extensions( $status = 'all' ) {
+	protected function get_extensions( $status = 'all' ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 		// Get cached extensions.
@@ -509,7 +509,7 @@ final class Admin {
 	 *
 	 * @return array
 	 */
-	private function get_extensions_tabs() {
+	protected function get_extensions_tabs() {
 
 		// Set tabs.
 		$tabs = [
@@ -553,7 +553,7 @@ final class Admin {
 	 *
 	 * @return mixed
 	 */
-	private function get_extensions_tab() {
+	protected function get_extensions_tab() {
 		$current_tab = false;
 
 		// Get all tabs.
@@ -575,7 +575,7 @@ final class Admin {
 	 *
 	 * @return array
 	 */
-	private function get_themes() {
+	protected function get_themes() {
 
 		// Get cached themes.
 		$themes = hivepress()->cache->get_cache( 'themes' );
@@ -1129,7 +1129,7 @@ final class Admin {
 	 * @param string $text Tooltip text.
 	 * @return string
 	 */
-	private function render_tooltip( $text ) {
+	protected function render_tooltip( $text ) {
 		$output = '';
 
 		if ( ! empty( $text ) ) {

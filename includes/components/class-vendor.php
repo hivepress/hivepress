@@ -18,17 +18,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor
  */
-final class Vendor {
+final class Vendor extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Update vendor.
 		add_action( 'hivepress/v1/models/user/update_image_id', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
+
+		parent::__construct( $args );
 	}
 
 	/**

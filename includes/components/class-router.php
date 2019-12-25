@@ -24,14 +24,14 @@ final class Router {
 	 *
 	 * @var mixed
 	 */
-	private $route = false;
+	protected $route = false;
 
 	/**
 	 * All routes.
 	 *
 	 * @var array
 	 */
-	private $routes = [];
+	protected $routes = [];
 
 	/**
 	 * Class constructor.
@@ -63,7 +63,7 @@ final class Router {
 	 *
 	 * @return array
 	 */
-	private function get_routes() {
+	protected function get_routes() {
 		if ( empty( $this->routes ) ) {
 
 			// Merge routes.
@@ -99,7 +99,7 @@ final class Router {
 	 *
 	 * @return mixed
 	 */
-	private function get_current_route() {
+	protected function get_current_route() {
 		if ( false === $this->route ) {
 			$this->route = null;
 
@@ -136,7 +136,7 @@ final class Router {
 	 * @param string $name Route name.
 	 * @return string
 	 */
-	private function get_url_path( $name ) {
+	protected function get_url_path( $name ) {
 		$path = '';
 
 		// Get route.
@@ -164,7 +164,7 @@ final class Router {
 	 * @param string $name Route name.
 	 * @return array
 	 */
-	private function get_url_params( $name ) {
+	protected function get_url_params( $name ) {
 		preg_match_all( '/<([a-z_]+)>/i', $this->get_url_path( $name ), $params );
 
 		array_shift( $params );
@@ -417,5 +417,10 @@ final class Router {
 		}
 
 		return $template;
+	}
+
+	// todo.
+	public function get_redirect_url($route) {
+		// todo.
 	}
 }

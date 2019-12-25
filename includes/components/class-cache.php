@@ -135,7 +135,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return mixed
 	 */
-	private function get_meta_cache( $type, $id, $key, $group = null ) {
+	protected function get_meta_cache( $type, $id, $key, $group = null ) {
 		$cache = null;
 
 		// Check status.
@@ -213,7 +213,7 @@ final class Cache {
 	 * @param mixed  $value Cache value.
 	 * @param int    $expiration Expiration period.
 	 */
-	private function set_meta_cache( $type, $id, $key, $group, $value, $expiration = DAY_IN_SECONDS ) {
+	protected function set_meta_cache( $type, $id, $key, $group, $value, $expiration = DAY_IN_SECONDS ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -270,7 +270,7 @@ final class Cache {
 	 * @param mixed  $key Cache key.
 	 * @param string $group Cache group.
 	 */
-	private function delete_meta_cache( $type, $id, $key, $group = null ) {
+	protected function delete_meta_cache( $type, $id, $key, $group = null ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -306,7 +306,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return string
 	 */
-	private function get_cache_name( $key, $group = null ) {
+	protected function get_cache_name( $key, $group = null ) {
 		$name = $this->serialize_cache_key( $key );
 
 		if ( ! is_null( $group ) ) {
@@ -327,7 +327,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return string
 	 */
-	private function get_meta_cache_name( $type, $id, $key, $group = null ) {
+	protected function get_meta_cache_name( $type, $id, $key, $group = null ) {
 		$name = $this->serialize_cache_key( $key );
 
 		if ( ! is_null( $group ) ) {
@@ -372,7 +372,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return string
 	 */
-	private function get_meta_cache_version( $type, $id, $group ) {
+	protected function get_meta_cache_version( $type, $id, $group ) {
 		$version = $this->get_meta_cache( $type, $id, $group . '/version' );
 
 		if ( is_null( $version ) ) {
@@ -388,7 +388,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return string
 	 */
-	private function update_cache_version( $group ) {
+	protected function update_cache_version( $group ) {
 
 		// Get version.
 		$version = uniqid( '', true );
@@ -414,7 +414,7 @@ final class Cache {
 	 * @param string $group Cache group.
 	 * @return string
 	 */
-	private function update_meta_cache_version( $type, $id, $group ) {
+	protected function update_meta_cache_version( $type, $id, $group ) {
 		$version = uniqid( '', true );
 
 		$this->set_meta_cache( $type, $id, $group . '/version', null, $version, WEEK_IN_SECONDS );
@@ -428,7 +428,7 @@ final class Cache {
 	 * @param mixed $key Cache key.
 	 * @return string
 	 */
-	private function serialize_cache_key( $key ) {
+	protected function serialize_cache_key( $key ) {
 		if ( is_array( $key ) ) {
 			$key = wp_json_encode( $this->sort_cache_key( $key ) );
 		}
@@ -442,7 +442,7 @@ final class Cache {
 	 * @param mixed $key Cache key.
 	 * @return mixed
 	 */
-	private function sort_cache_key( $key ) {
+	protected function sort_cache_key( $key ) {
 		if ( is_array( $key ) ) {
 			ksort( $key );
 
@@ -459,7 +459,7 @@ final class Cache {
 	 *
 	 * @return bool
 	 */
-	private function is_cache_enabled() {
+	protected function is_cache_enabled() {
 		return ! defined( 'HP_CACHE' ) || HP_CACHE;
 	}
 

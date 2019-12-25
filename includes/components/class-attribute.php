@@ -24,14 +24,14 @@ final class Attribute {
 	 *
 	 * @var array
 	 */
-	private $models = [ 'listing' ];
+	protected $models = [ 'listing' ];
 
 	/**
 	 * Array of attributes.
 	 *
 	 * @var array
 	 */
-	private $attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Class constructor.
@@ -704,7 +704,7 @@ final class Attribute {
 	 * @param string $name Name.
 	 * @return string
 	 */
-	private function get_model_name( $name ) {
+	protected function get_model_name( $name ) {
 		$parts = explode( '_', $name );
 
 		return reset( $parts );
@@ -717,7 +717,7 @@ final class Attribute {
 	 * @param string $prefix Attribute prefix.
 	 * @return string
 	 */
-	private function get_attribute_name( $slug, $prefix = '' ) {
+	protected function get_attribute_name( $slug, $prefix = '' ) {
 		if ( '' !== $prefix ) {
 			$prefix .= '_';
 		}
@@ -731,7 +731,7 @@ final class Attribute {
 	 * @param string $model Model name.
 	 * @return int
 	 */
-	private function get_category_id( $model ) {
+	protected function get_category_id( $model ) {
 		$category_id = hp\get_array_value( $_GET, 'category' );
 
 		if ( is_tax( hp\prefix( $model . '_category' ) ) ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * WordPress component.
+ * Hook component.
  *
  * @package HivePress\Components
  */
@@ -13,16 +13,18 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress component class.
+ * Hook component class.
  *
- * @class WordPress
+ * @class Hook
  */
-final class WordPress {
+final class Hook extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Update users.
 		add_action( 'user_register', [ $this, 'update_user' ] );
@@ -61,6 +63,8 @@ final class WordPress {
 
 		// Start import.
 		add_action( 'import_start', [ $this, 'start_import' ] );
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -329,7 +333,7 @@ final class WordPress {
 	 *
 	 * @return bool
 	 */
-	private function is_import_started() {
+	protected function is_import_started() {
 		return defined( 'HP_IMPORT' ) && HP_IMPORT;
 	}
 }
