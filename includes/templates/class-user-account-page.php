@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Account_Page
  */
-abstract class User_Account_Page extends Page {
+class User_Account_Page extends Page {
 
 	/**
 	 * Class constructor.
