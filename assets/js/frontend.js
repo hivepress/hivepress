@@ -54,7 +54,7 @@
 						method: form.data('method') ? form.data('method') : form.attr('method'),
 						data: form.serializeJSON(),
 						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+							xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
 						},
 						complete: function(xhr) {
 							var response = xhr.responseJSON;
@@ -133,7 +133,7 @@
 					url: button.data('url'),
 					method: 'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+						xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
 					},
 				});
 
@@ -158,7 +158,7 @@
 					'parent_field': field.attr('name'),
 					'parent_id': field.closest('form').data('id'),
 					'render': true,
-					'_wpnonce': hpCoreFrontendData.apiNonce,
+					'_wpnonce': hpCoreCommonData.apiNonce,
 				},
 				start: function() {
 					field.prop('disabled', true);
@@ -192,7 +192,7 @@
 				url: container.data('url'),
 				method: 'DELETE',
 				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+					xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
 				},
 			});
 
@@ -217,7 +217,7 @@
 									'order': index,
 								},
 								beforeSend: function(xhr) {
-									xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+									xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
 								},
 							});
 						});

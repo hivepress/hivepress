@@ -9,13 +9,13 @@
 
 			notice.find('button').on('click', function() {
 				$.ajax({
-					url: hpCoreBackendData.apiURL + '/admin/notices/' + notice.data('name'),
+					url: hpCoreCommonData.apiURL + '/admin/notices/' + notice.data('name'),
 					method: 'POST',
 					data: {
 						'dismissed': true,
 					},
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hpCoreBackendData.apiNonce);
+						xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
 					},
 				});
 			});

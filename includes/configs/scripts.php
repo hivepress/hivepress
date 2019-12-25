@@ -61,18 +61,9 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
-			'language' => hivepress()->translator->get_language(),
-		],
-	],
-
-	'core_frontend'         => [
-		'handle' => 'hp-core-frontend',
-		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
-
-		'data'   => [
 			'apiURL'   => hp\get_rest_url(),
 			'apiNonce' => wp_create_nonce( 'wp_rest' ),
+			'language' => hivepress()->translator->get_language(),
 		],
 	],
 
@@ -81,10 +72,11 @@ return [
 		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
 		'deps'   => [ 'hp-core-common' ],
 		'scope'  => 'backend',
+	],
 
-		'data'   => [
-			'apiURL'   => hp\get_rest_url(),
-			'apiNonce' => wp_create_nonce( 'wp_rest' ),
-		],
+	'core_frontend'         => [
+		'handle' => 'hp-core-frontend',
+		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
+		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 ];

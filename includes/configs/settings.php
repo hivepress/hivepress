@@ -13,12 +13,12 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'listings'     => [
 		'title'    => hivepress()->translator->get_string( 'listings' ),
-		'order'    => 10,
+		'_order'   => 10,
 
 		'sections' => [
 			'display'    => [
 				'title'  => esc_html__( 'Display', 'hivepress' ),
-				'order'  => 10,
+				'_order' => 10,
 
 				'fields' => [
 					'page_listings'                    => [
@@ -27,14 +27,14 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'post_type'   => 'page',
-						'order'       => 10,
+						'_order'      => 10,
 					],
 
 					'page_listings_display_categories' => [
 						'label'   => hivepress()->translator->get_string( 'listings_page_display' ),
 						'caption' => esc_html__( 'Display categories', 'hivepress' ),
 						'type'    => 'checkbox',
-						'order'   => 20,
+						'_order'  => 20,
 					],
 
 					'listings_per_page'                => [
@@ -43,7 +43,7 @@ return [
 						'default'   => 8,
 						'min_value' => 1,
 						'required'  => true,
-						'order'     => 30,
+						'_order'    => 30,
 					],
 
 					'listings_featured_per_page'       => [
@@ -52,14 +52,14 @@ return [
 						'default'   => 2,
 						'min_value' => 0,
 						'required'  => true,
-						'order'     => 40,
+						'_order'    => 40,
 					],
 				],
 			],
 
 			'submission' => [
 				'title'  => esc_html__( 'Submission', 'hivepress' ),
-				'order'  => 20,
+				'_order' => 20,
 
 				'fields' => [
 					'page_listing_submission_terms' => [
@@ -68,7 +68,7 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'post_type'   => 'page',
-						'order'       => 10,
+						'_order'      => 10,
 					],
 
 					'listing_enable_submission'     => [
@@ -76,7 +76,7 @@ return [
 						'caption' => hivepress()->translator->get_string( 'allow_submitting_listings' ),
 						'type'    => 'checkbox',
 						'default' => true,
-						'order'   => 20,
+						'_order'  => 20,
 					],
 
 					'listing_enable_moderation'     => [
@@ -84,14 +84,14 @@ return [
 						'caption' => hivepress()->translator->get_string( 'manually_approve_listings' ),
 						'type'    => 'checkbox',
 						'default' => true,
-						'order'   => 30,
+						'_order'  => 30,
 					],
 				],
 			],
 
 			'expiration' => [
 				'title'  => esc_html__( 'Expiration', 'hivepress' ),
-				'order'  => 30,
+				'_order' => 30,
 
 				'fields' => [
 					'listing_expiration_period' => [
@@ -99,14 +99,14 @@ return [
 						'description' => hivepress()->translator->get_string( 'set_number_of_days_until_listing_expires' ),
 						'type'        => 'number',
 						'min_value'   => 1,
-						'order'       => 10,
+						'_order'      => 10,
 					],
 				],
 			],
 
 			'emails'     => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'order'  => 100,
+				'_order' => 100,
 
 				'fields' => [
 					'email_listing_approve' => [
@@ -116,9 +116,8 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
-						'required'    => true,
-						'autoload'    => false,
-						'order'       => 10,
+						'_autoload'   => false,
+						'_order'      => 10,
 					],
 
 					'email_listing_reject'  => [
@@ -128,9 +127,8 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
-						'required'    => true,
-						'autoload'    => false,
-						'order'       => 20,
+						'_autoload'   => false,
+						'_order'      => 20,
 					],
 
 					'email_listing_expire'  => [
@@ -140,9 +138,8 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
-						'required'    => true,
-						'autoload'    => false,
-						'order'       => 30,
+						'_autoload'   => false,
+						'_order'      => 30,
 					],
 				],
 			],
@@ -151,12 +148,12 @@ return [
 
 	'users'        => [
 		'title'    => esc_html__( 'Users', 'hivepress' ),
-		'order'    => 20,
+		'_order'   => 20,
 
 		'sections' => [
 			'registration' => [
 				'title'  => esc_html__( 'Registration', 'hivepress' ),
-				'order'  => 10,
+				'_order' => 10,
 
 				'fields' => [
 					'page_user_registration_terms' => [
@@ -165,26 +162,25 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'post_type'   => 'page',
-						'order'       => 10,
+						'_order'      => 10,
 					],
 				],
 			],
 
 			'emails'       => [
 				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'order'  => 100,
+				'_order' => 100,
 
 				'fields' => [
 					'email_user_register'         => [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
 						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
-						'required'    => true,
-						'autoload'    => false,
-						'order'       => 10,
+						'_autoload'   => false,
+						'_order'      => 10,
 					],
 
 					'email_user_request_password' => [
@@ -194,9 +190,8 @@ return [
 						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
-						'required'    => true,
-						'autoload'    => false,
-						'order'       => 20,
+						'_autoload'   => false,
+						'_order'      => 20,
 					],
 				],
 			],
@@ -205,33 +200,33 @@ return [
 
 	'integrations' => [
 		'title'    => esc_html__( 'Integrations', 'hivepress' ),
-		'order'    => 100,
+		'_order'   => 100,
 
 		'sections' => [
 			'recaptcha' => [
 				'title'  => 'reCAPTCHA',
-				'order'  => 10,
+				'_order' => 10,
 
 				'fields' => [
 					'recaptcha_site_key'   => [
 						'label'      => esc_html__( 'Site Key', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'order'      => 10,
+						'_order'     => 10,
 					],
 
 					'recaptcha_secret_key' => [
 						'label'      => esc_html__( 'Secret Key', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'order'      => 20,
+						'_order'     => 20,
 					],
 
 					'recaptcha_forms'      => [
 						'label'   => esc_html__( 'Protected Forms', 'hivepress' ),
 						'type'    => 'checkboxes',
 						'options' => 'forms',
-						'order'   => 30,
+						'_order'  => 30,
 					],
 				],
 			],

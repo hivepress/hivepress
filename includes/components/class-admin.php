@@ -208,7 +208,7 @@ final class Admin {
 		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
-					$autoload = hp\get_array_value( $field, 'autoload', true ) ? 'yes' : 'no';
+					$autoload = hp\get_array_value( $field, '_autoload', true ) ? 'yes' : 'no';
 
 					add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
 				}

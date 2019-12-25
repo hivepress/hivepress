@@ -55,12 +55,13 @@ return [
 	],
 
 	'vendor'            => [
-		'public'       => true,
-		'show_in_menu' => false,
-		'supports'     => [ 'title', 'editor', 'thumbnail', 'author' ],
-		'rewrite'      => [ 'slug' => 'vendor' ],
+		'public'             => true,
+		'show_in_menu'       => false,
+		'redirect_canonical' => false,
+		'supports'           => [ 'title', 'editor', 'thumbnail', 'author' ],
+		'rewrite'            => [ 'slug' => 'vendor' ],
 
-		'labels'       => [
+		'labels'             => [
 			'name'               => hivepress()->translator->get_string( 'vendors' ),
 			'singular_name'      => hivepress()->translator->get_string( 'vendor' ),
 			'add_new'            => esc_html_x( 'Add New', 'vendor', 'hivepress' ),
