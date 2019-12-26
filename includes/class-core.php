@@ -47,6 +47,13 @@ final class Core {
 	 */
 	private $objects = [];
 
+	/**
+	 * Array of HivePress classes.
+	 *
+	 * @var array
+	 */
+	private $classes = [];
+
 	// Forbid cloning and duplicating instances.
 	private function __clone() {}
 	private function __wakeup() {}
@@ -285,7 +292,7 @@ final class Core {
 						// Create object.
 						$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
 
-						if ( ! is_null( $object ) ) {
+						if ( $object ) {
 							$this->objects[ $object_type ][ $object_name ] = $object;
 						}
 					}
@@ -323,20 +330,49 @@ final class Core {
 	}
 
 	/**
-	 * Gets HivePress configuration.
+	 * Gets HivePress classes.
 	 *
-	 * @param string $name Configuration name.
+	 * @param string $type Class type.
 	 * @return array
 	 */
-	public function get_config( $name ) {
-		if ( ! isset( $this->configs[ $name ] ) ) {
-			$this->configs[ $name ] = [];
+	public function get_classes( $type ) {
+		if ( ! isset( $this->classes[ $type ] ) ) {
+			$this->classes[ $type ] = [];
 
 			foreach ( $this->dirs as $dir ) {
-				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $name ) . '.php';
+				foreach ( glob( $dir . '/includes/' . $type . '/*.php' ) as $filepath ) {
+
+					// Get name.
+					$name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
+
+					// Get class.
+					$class = '\HivePress\\' . $type . '\\' . $name;
+
+					if ( class_exists( $class ) ) {
+						$this->classes[ $type ][ $name ] = $class;
+					}
+				}
+			}
+		}
+
+		return $this->classes[ $type ];
+	}
+
+	/**
+	 * Gets HivePress configuration.
+	 *
+	 * @param string $type Configuration type.
+	 * @return array
+	 */
+	public function get_config( $type ) {
+		if ( ! isset( $this->configs[ $type ] ) ) {
+			$this->configs[ $type ] = [];
+
+			foreach ( $this->dirs as $dir ) {
+				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $type ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
-					$this->configs[ $name ] = hp\merge_arrays( $this->configs[ $name ], include $filepath );
+					$this->configs[ $type ] = hp\merge_arrays( $this->configs[ $type ], include $filepath );
 				}
 			}
 
@@ -348,9 +384,9 @@ final class Core {
 			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies".
 			 * @param array $args Configuration arguments.
 			 */
-			$this->configs[ $name ] = apply_filters( 'hivepress/v1/' . $name, $this->configs[ $name ] );
+			$this->configs[ $type ] = apply_filters( 'hivepress/v1/' . $type, $this->configs[ $type ] );
 		}
 
-		return $this->configs[ $name ];
+		return $this->configs[ $type ];
 	}
 }
