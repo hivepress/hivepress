@@ -20,20 +20,14 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Block {
 	use Traits\Mutator;
+	use Traits\Meta;
 
 	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Block settings.
+	 * Block meta.
 	 *
 	 * @var array
 	 */
-	protected static $settings = [];
+	protected static $meta;
 
 	/**
 	 * Block name.
@@ -55,6 +49,15 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'name'     => hp\get_class_name( static::class ),
+					'settings' => [],
+				],
+			],
+			$args
+		);
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -84,47 +87,31 @@ abstract class Block {
 	protected function boot() {}
 
 	/**
-	 * Gets block type.
+	 * Sets block meta.
 	 *
-	 * @return string
+	 * @param array $meta Block meta.
 	 */
-	final public static function get_type() {
-		return hp\get_class_name( static::class );
-	}
+	final protected static function set_meta( $meta ) {
 
-	/**
-	 * Gets block title.
-	 *
-	 * @return string
-	 */
-	final public static function get_title() {
-		return static::$title;
-	}
+		// Set settings.
+		if ( isset( $meta['settings'] ) ) {
+			$settings = [];
 
-	/**
-	 * Sets block settings.
-	 *
-	 * @param array $settings Block settings.
-	 */
-	final protected static function set_settings( $settings ) {
-		foreach ( $settings as $field_name => $field_args ) {
+			foreach ( hp\sort_array( $meta['settings'] ) as $name => $args ) {
 
-			// Create field.
-			$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => $field_name ] ) ] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
 
-			if ( ! is_null( $field ) ) {
-				static::$settings[ $field_name ] = $field;
+				// Add field.
+				if ( $field ) {
+					$settings[ $name ] = $field;
+				}
 			}
-		}
-	}
 
-	/**
-	 * Gets block settings.
-	 *
-	 * @return array
-	 */
-	final public static function get_settings() {
-		return static::$settings;
+			$meta['settings'] = $settings;
+		}
+
+		static::$meta = $meta;
 	}
 
 	/**
