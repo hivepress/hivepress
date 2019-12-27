@@ -11,7 +11,7 @@ use HivePress\Helpers as hp;
 		<ul class="subsubsub">
 			<?php foreach ( $tabs as $active_tab => $tab_info ) : ?>
 			<li>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_extensions&extension_status=' . $active_tab ) ); ?>" <?php if ( $active_tab === $current_tab ) : ?>class="current"<?php endif; ?>>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_extensions&tab=' . $active_tab ) ); ?>" <?php if ( $active_tab === $current_tab ) : ?>class="current"<?php endif; ?>>
 					<?php echo esc_html( $tab_info['name'] ); ?>
 					<span class="count">(<?php echo esc_html( $tab_info['count'] ); ?>)</span>
 				</a>
