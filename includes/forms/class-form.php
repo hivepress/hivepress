@@ -381,10 +381,10 @@ abstract class Form {
 
 					// Render label.
 					if ( $field->get_label() ) {
-						$output .= '<label class="hp-form__label"><span>' . hp\sanitize_html( $field->get_label() ) . '</span>';
+						$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
 						if ( $field->get_statuses() ) {
-							$output .= ' <small>(' . implode( ', ', array_map( 'esc_html', $field->get_statuses() ) ) . ')</small>';
+							$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
 						}
 
 						$output .= '</label>';

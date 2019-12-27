@@ -58,6 +58,13 @@ abstract class Field {
 	protected $label;
 
 	/**
+	 * Field description.
+	 *
+	 * @var string
+	 */
+	protected $description;
+
+	/**
 	 * Field statuses.
 	 *
 	 * @var array
@@ -110,6 +117,7 @@ abstract class Field {
 				'meta' => [
 					'name'       => hp\get_class_name( static::class ),
 					'type'       => 'CHAR',
+					'editable'   => true,
 					'filterable' => false,
 					'sortable'   => false,
 
@@ -241,6 +249,15 @@ abstract class Field {
 	 */
 	final public function get_label() {
 		return $this->label;
+	}
+
+	/**
+	 * Gets field description.
+	 *
+	 * @return string
+	 */
+	final public function get_description() {
+		return $this->description;
 	}
 
 	/**
