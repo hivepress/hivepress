@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Debug
  */
-final class Debug {
+final class Debug extends Component {
 
 	/**
 	 * Array of styles.
@@ -28,48 +28,66 @@ final class Debug {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
-		// Check status.
-		if ( ! defined( 'HP_DEBUG' ) || ! HP_DEBUG ) {
+		// Check debug status.
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		// Filter styles.
-		add_filter( 'hivepress/v1/styles', [ $this, 'filter_styles' ] );
-		add_filter( 'hivetheme/v1/styles', [ $this, 'filter_styles' ] );
+		// Alter styles.
+		add_filter( 'hivepress/v1/styles', [ $this, 'alter_styles' ] );
+		add_filter( 'hivetheme/v1/styles', [ $this, 'alter_styles' ] );
 
 		// Enqueue styles.
-		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 99 );
-		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 99 );
+		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 999 );
+		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 999 );
 
-		// Filter scripts.
-		add_filter( 'hivepress/v1/scripts', [ $this, 'filter_scripts' ] );
-		add_filter( 'hivetheme/v1/scripts', [ $this, 'filter_scripts' ] );
+		// Alter scripts.
+		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );
+		add_filter( 'hivetheme/v1/scripts', [ $this, 'alter_scripts' ] );
+
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Filters styles.
+	 * Checks debug status.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return defined( 'HP_DEBUG' ) && HP_DEBUG;
+	}
+
+	/**
+	 * Alters styles.
 	 *
 	 * @param array $styles Styles.
 	 * @return array
 	 */
-	public function filter_styles( $styles ) {
-		foreach ( array_filter(
+	public function alter_styles( $styles ) {
+
+		// Filter styles.
+		$styles = array_filter(
 			$styles,
 			function( $style ) {
 				$scope = (array) hp\get_array_value( $style, 'scope' );
 
 				return ! array_diff( [ 'frontend', 'backend' ], $scope ) || ( ! is_admin() xor in_array( 'backend', $scope, true ) );
 			}
-		) as $style_name => $style ) {
-			$style_url = explode( '/', hp\get_array_value( $style, 'src' ) );
+		);
 
-			if ( in_array( end( $style_url ), [ 'style.css', 'frontend.min.css', 'backend.min.css' ], true ) ) {
+		// Alter styles.
+		foreach ( $styles as $name => $style ) {
+			$parts = explode( '/', hp\get_array_value( $style, 'src' ) );
+
+			if ( in_array( end( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css' ], true ) ) {
 				$this->styles[] = $style;
 
-				unset( $styles[ $style_name ] );
+				unset( $styles[ $name ] );
 			}
 		}
 
@@ -84,9 +102,9 @@ final class Debug {
 
 		// Enqueue styles.
 		foreach ( $this->styles as $style ) {
-			$style_url = preg_replace( '/(\.min)?\.css$/', '.less', $style['src'] );
+			$url = preg_replace( '/(\.min)?\.css$/', '.less', $style['src'] );
 
-			$output .= '<link rel="stylesheet/less" type="text/css" href="' . esc_url( $style_url ) . '" />';
+			$output .= '<link rel="stylesheet/less" type="text/css" href="' . esc_url( $url ) . '">';
 		}
 
 		// Enqueue LESS.
@@ -96,17 +114,17 @@ final class Debug {
 	}
 
 	/**
-	 * Filters scripts.
+	 * Alters scripts.
 	 *
 	 * @param array $scripts Scripts.
 	 * @return array
 	 */
-	public function filter_scripts( $scripts ) {
-		foreach ( $scripts as $script_name => $script ) {
-			$script_url = explode( '/', hp\get_array_value( $script, 'src' ) );
+	public function alter_scripts( $scripts ) {
+		foreach ( $scripts as $name => $script ) {
+			$parts = explode( '/', hp\get_array_value( $script, 'src' ) );
 
-			if ( in_array( end( $script_url ), [ 'frontend.min.js', 'backend.min.js', 'common.min.js' ], true ) ) {
-				$scripts[ $script_name ]['src'] = preg_replace( '/\.min\.js$/', '.js', $scripts[ $script_name ]['src'] );
+			if ( in_array( end( $parts ), [ 'frontend.min.js', 'backend.min.js', 'common.min.js' ], true ) ) {
+				$scripts[ $name ]['src'] = preg_replace( '/\.min\.js$/', '.js', $scripts[ $name ]['src'] );
 			}
 		}
 

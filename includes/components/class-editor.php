@@ -17,12 +17,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Editor
  */
-final class Editor {
+final class Editor extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Register blocks.
 		add_action( 'init', [ $this, 'register_blocks' ] );
@@ -32,6 +34,8 @@ final class Editor {
 			// Enqueue styles.
 			add_action( 'admin_init', [ $this, 'enqueue_styles' ] );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -42,33 +46,29 @@ final class Editor {
 		// Get blocks.
 		$blocks = [];
 
-		foreach ( hivepress()->get_blocks() as $block_type => $block ) {
-			if ( $block::get_title() ) {
+		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block_class ) {
+			if ( $block_class::get_meta( 'label' ) ) {
 				$block_slug = hp\sanitize_slug( $block_type );
 
+				// Add block.
 				$blocks[ $block_type ] = [
-					'title'      => HP_CORE_NAME . ' ' . $block::get_title(),
+					'title'      => HP_CORE_NAME . ' ' . $block_class::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hp-block-' . $block_slug,
 					'attributes' => [],
 					'settings'   => [],
 				];
 
-				foreach ( $block::get_settings() as $field_name => $field ) {
-					$field_args = $field->get_args();
-
-					if ( isset( $field_args['options'] ) && ! isset( $field_args['options'][''] ) && ! hp\get_array_value( $field_args, 'required', false ) ) {
-						$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
-					}
+				foreach ( $block_class::get_meta( 'settings' ) as $field_name => $field ) {
 
 					// Add attribute.
 					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
-						'default' => hp\get_array_value( $field_args, 'default' ),
+						'default' => $field->get_value(),
 					];
 
 					// Add setting.
-					$blocks[ $block_type ]['settings'][ $field_name ] = $field_args;
+					$blocks[ $block_type ]['settings'][ $field_name ] = $field->get_args();
 				}
 			}
 		}
@@ -92,7 +92,7 @@ final class Editor {
 				);
 			}
 
-			if ( ! empty( $blocks ) ) {
+			if ( $blocks ) {
 				wp_localize_script( reset( $blocks )['script'], 'hpBlocks', $blocks );
 			}
 		}
@@ -118,7 +118,7 @@ final class Editor {
 			// Create block.
 			$block = hp\create_class_instance( '\HivePress\Blocks\\' . substr( $name, strlen( 'render_' ) ), [ (array) reset( $args ) ] );
 
-			if ( ! is_null( $block ) ) {
+			if ( $block ) {
 
 				// Render block.
 				$output .= $block->render();

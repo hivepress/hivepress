@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Translator
  */
-final class Translator {
+final class Translator extends Component {
 
 	/**
 	 * Gets language code.
@@ -25,7 +25,7 @@ final class Translator {
 	 * @return string
 	 */
 	public function get_language() {
-		return reset( ( explode( '_', get_locale() ) ) );
+		return explode( '_', get_locale() )[0];
 	}
 
 	/**
@@ -36,7 +36,7 @@ final class Translator {
 	public function get_region() {
 		$parts = explode( '_', get_locale() );
 
-		if ( count( $parts ) === 2 ) {
+		if ( count( $parts ) > 1 ) {
 			return end( $parts );
 		}
 	}

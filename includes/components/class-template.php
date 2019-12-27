@@ -18,12 +18,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Template
  */
-final class Template {
+final class Template extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 		if ( ! is_admin() ) {
 
 			// Add theme class.
@@ -33,12 +35,14 @@ final class Template {
 			add_filter( 'twentynineteen_can_show_post_thumbnail', [ $this, 'remove_theme_header' ] );
 
 			// Render site header.
-			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_site_header' ] );
+			add_action( 'hivetheme/v1/areas/site_header', [ $this, 'render_site_header' ] );
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
 
 			// Render site footer.
 			add_action( 'wp_footer', [ $this, 'render_site_footer' ] );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**

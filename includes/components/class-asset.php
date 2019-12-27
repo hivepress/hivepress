@@ -17,12 +17,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Asset
  */
-final class Asset {
+final class Asset extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Add image sizes.
 		add_action( 'init', [ $this, 'add_image_sizes' ] );
@@ -35,16 +37,18 @@ final class Asset {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
-		// Filter scripts.
-		add_filter( 'script_loader_tag', [ $this, 'filter_script' ], 10, 2 );
+		// Add script attributes.
+		add_filter( 'script_loader_tag', [ $this, 'add_script_attributes' ], 10, 2 );
+
+		parent::__construct( $args );
 	}
 
 	/**
 	 * Adds image sizes.
 	 */
 	public function add_image_sizes() {
-		foreach ( hivepress()->get_config( 'image_sizes' ) as $image_size => $image_size_args ) {
-			add_image_size( hp\prefix( $image_size ), $image_size_args['width'], hp\get_array_value( $image_size_args, 'height', 9999 ), hp\get_array_value( $image_size_args, 'crop', false ) );
+		foreach ( hivepress()->get_config( 'image_sizes' ) as $name => $args ) {
+			add_image_size( hp\prefix( $name ), $args['width'], hp\get_array_value( $args, 'height', 0 ), hp\get_array_value( $args, 'crop', false ) );
 		}
 	}
 
@@ -102,13 +106,13 @@ final class Asset {
 	}
 
 	/**
-	 * Filters script HTML.
+	 * Adds script attributes.
 	 *
 	 * @param string $tag Script tag.
 	 * @param string $handle Script handle.
 	 * @return string
 	 */
-	public function filter_script( $tag, $handle ) {
+	public function add_script_attributes( $tag, $handle ) {
 
 		// Set attributes.
 		$attributes = [ 'async', 'defer', 'crossorigin' ];
