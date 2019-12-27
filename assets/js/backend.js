@@ -9,7 +9,7 @@
 
 			notice.find('button').on('click', function() {
 				$.ajax({
-					url: hpCoreCommonData.apiURL + '/admin/notices/' + notice.data('name'),
+					url: notice.data('url'),
 					method: 'POST',
 					data: {
 						'dismissed': true,

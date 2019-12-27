@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 final class Admin extends Component {
 
 	/**
+	 * Array of meta boxes.
+	 *
+	 * @var array
+	 */
+	protected $meta_boxes = [];
+
+	/**
 	 * Array of post states.
 	 *
 	 * @var array
@@ -64,7 +71,7 @@ final class Admin extends Component {
 
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
-			add_action( 'hivepress/v1/models/post/update', [ $this, 'update_meta_box' ] );
+			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -689,18 +696,15 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Adds meta boxes.
+	 * Gets meta boxes.
 	 *
-	 * @param string  $post_type Post type.
-	 * @param WP_Post $post Post object.
+	 * @return array
 	 */
-	public function add_meta_boxes( $post_type, $post ) {
-		foreach ( hivepress()->get_config( 'meta_boxes' ) as $name => $args ) {
+	protected function get_meta_boxes() {
+		if ( empty( $this->meta_boxes ) ) {
+			$this->meta_boxes = [];
 
-			// Get post types.
-			$post_types = (array) hp\prefix( $args['screen'] );
-
-			if ( in_array( $post_type, $post_types, true ) ) {
+			foreach ( hivepress()->get_config( 'meta_boxes' ) as $name => $args ) {
 
 				/**
 				 * Filters meta box arguments.
@@ -713,9 +717,29 @@ final class Admin extends Component {
 				$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
 				// Add meta box.
-				if ( $args['fields'] ) {
-					add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), hp\get_array_value( $args, 'context', 'normal' ), hp\get_array_value( $args, 'priority', 'default' ) );
-				}
+				$this->meta_boxes[ $name ] = $args;
+			}
+		}
+
+		return $this->meta_boxes;
+	}
+
+	/**
+	 * Adds meta boxes.
+	 *
+	 * @param string  $post_type Post type.
+	 * @param WP_Post $post Post object.
+	 */
+	public function add_meta_boxes( $post_type, $post ) {
+		foreach ( $this->get_meta_boxes() as $name => $args ) {
+
+			// Get post types.
+			$post_types = (array) hp\prefix( $args['screen'] );
+
+			if ( in_array( $post_type, $post_types, true ) && $args['fields'] ) {
+
+				// Add meta box.
+				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), hp\get_array_value( $args, 'context', 'normal' ), hp\get_array_value( $args, 'priority', 'default' ) );
 			}
 		}
 	}
@@ -733,22 +757,18 @@ final class Admin extends Component {
 		}
 
 		// Remove action.
-		remove_action( 'hivepress/v1/models/post/update', [ $this, 'update_meta_box' ] );
+		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Get post type.
 		$post_type = get_post_type( $post_id );
 
 		// Update field values.
-		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
 
 			// Get post types.
 			$post_types = (array) hp\prefix( $meta_box['screen'] );
 
 			if ( in_array( $post_type, $post_types, true ) ) {
-
-				// Filter arguments.
-				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
-
 				foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 					// Create field.
@@ -792,12 +812,9 @@ final class Admin extends Component {
 		$meta_box_name = hp\unprefix( $args['id'] );
 
 		// Get meta box.
-		$meta_box = hp\get_array_value( hivepress()->get_config( 'meta_boxes' ), $meta_box_name );
+		$meta_box = hp\get_array_value( $this->get_meta_boxes(), $meta_box_name );
 
 		if ( $meta_box ) {
-
-			// Filter arguments.
-			$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
 
 			// Render fields.
 			$output .= '<table class="form-table hp-form">';
@@ -864,22 +881,27 @@ final class Admin extends Component {
 	 * Adds term boxes.
 	 */
 	public function add_term_boxes() {
-		foreach ( hivepress()->get_config( 'meta_boxes' ) as $name => $args ) {
 
-			// Get taxonomies.
-			$taxonomies = (array) hp\prefix( $args['screen'] );
+		// Get taxonomies.
+		$taxonomies = [];
 
-			foreach ( $taxonomies as $taxonomy ) {
-				if ( taxonomy_exists( $taxonomy ) ) {
+		foreach ( $this->get_meta_boxes() as $name => $args ) {
+			$taxonomies = array_merge( $taxonomies, (array) hp\prefix( $args['screen'] ) );
+		}
 
-					// Update term boxes.
-					add_action( 'edit_' . $taxonomy, [ $this, 'update_term_box' ] );
-					add_action( 'create_' . $taxonomy, [ $this, 'update_term_box' ] );
+		$taxonomies = array_unique( $taxonomies );
 
-					// Render term boxes.
-					add_action( $taxonomy . '_edit_form_fields', [ $this, 'render_term_box' ], 10, 2 );
-					add_action( $taxonomy . '_add_form_fields', [ $this, 'render_term_box' ], 10, 2 );
-				}
+		// Add term boxes.
+		foreach ( $taxonomies as $taxonomy ) {
+			if ( taxonomy_exists( $taxonomy ) ) {
+
+				// Update term boxes.
+				add_action( 'edit_' . $taxonomy, [ $this, 'update_term_box' ] );
+				add_action( 'create_' . $taxonomy, [ $this, 'update_term_box' ] );
+
+				// Render term boxes.
+				add_action( $taxonomy . '_edit_form_fields', [ $this, 'render_term_box' ], 10, 2 );
+				add_action( $taxonomy . '_add_form_fields', [ $this, 'render_term_box' ], 10, 2 );
 			}
 		}
 	}
@@ -903,16 +925,12 @@ final class Admin extends Component {
 		remove_action( 'create_' . $term->taxonomy, [ $this, 'update_term_box' ] );
 
 		// Update field values.
-		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
 
 			// Get taxonomies.
 			$taxonomies = (array) hp\prefix( $meta_box['screen'] );
 
 			if ( in_array( $term->taxonomy, $taxonomies, true ) ) {
-
-				// Filter arguments.
-				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
-
 				foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 					// Create field.
@@ -962,16 +980,12 @@ final class Admin extends Component {
 			$term_id = $term->term_id;
 		}
 
-		foreach ( hivepress()->get_config( 'meta_boxes' ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
 
 			// Get taxonomies.
 			$taxonomies = (array) hp\prefix( $meta_box['screen'] );
 
 			if ( in_array( $taxonomy, $taxonomies, true ) ) {
-
-				// Filter arguments.
-				$meta_box = apply_filters( 'hivepress/v1/meta_boxes/' . $meta_box_name, array_merge( $meta_box, [ 'name' => $meta_box_name ] ) );
-
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
 					// Create field.
@@ -1098,44 +1112,50 @@ final class Admin extends Component {
 
 		$output = '';
 
-		// Render setting errors.
-		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
-			settings_errors();
-		}
+		// Get notices.
+		$notices = [];
 
-		// todo.
-		$notices=[];
-
-		if ( ! current_theme_supports( 'hivepress' )) {
-			$notices['incompatible_theme']=[
+		if ( ! current_theme_supports( 'hivepress' ) ) {
+			$notices['incompatible_theme'] = [
 				'type' => 'warning',
-				'text' => sprintf( esc_html__( "The current theme doesn't declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.", 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ),
-			]
-		}
-
-
-
-		// Get dismissed notices.
-		$dismissed_notices = (array) get_option( 'hp_admin_dismissed_notices' );
-
-		// Render theme notice.
-		if ( ! current_theme_supports( 'hivepress' ) && ! in_array( 'incompatible_theme', $dismissed_notices, true ) ) {
-			$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="incompatible_theme"><p>' .  . '</p></div>';
-		}
-
-		// Render update notice.
-		if ( current_theme_supports( 'hivepress' ) ) {
+				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ),
+			];
+		} else {
 			foreach ( $this->get_themes() as $theme ) {
 				if ( get_template() === $theme['slug'] ) {
+
+					// Get notice name.
 					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
 
-					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) && ! in_array( $notice_name, $dismissed_notices, true ) ) {
-						$output .= '<div class="notice notice-warning is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '"><p>' . sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ) . '</p></div>';
+					// Add notice.
+					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) ) {
+						$notices[ $notice_name ] = [
+							'type' => 'warning',
+							'text' => sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ),
+						];
 					}
 
 					break;
 				}
 			}
+		}
+
+		// Filter notices.
+		$notices = array_diff_key( $notices, array_flip( (array) get_option( 'hp_admin_dismissed_notices' ) ) );
+
+		// Render notices.
+		foreach ( $notice as $notice_name => $notice ) {
+			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action' ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
+		}
+
+		// Render settings errors.
+		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
+			ob_start();
+
+			settings_errors();
+			$output .= ob_get_contents();
+
+			ob_end_clean();
 		}
 
 		echo $output;
@@ -1150,7 +1170,7 @@ final class Admin extends Component {
 	protected function render_tooltip( $text ) {
 		$output = '';
 
-		if ( ! empty( $text ) ) {
+		if ( $text ) {
 			$output .= '<div class="hp-tooltip"><span class="hp-tooltip__icon dashicons dashicons-editor-help"></span><div class="hp-tooltip__text">' . esc_html( $text ) . '</div></div>';
 		}
 
