@@ -148,6 +148,21 @@ abstract class Form {
 			$args
 		);
 
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters form arguments.
+			 *
+			 * @filter /forms/{$name}
+			 * @description Filters form arguments.
+			 * @param string $name Form name.
+			 * @param array $args Form arguments.
+			 * @param array $meta Form meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
