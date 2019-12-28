@@ -32,7 +32,15 @@ abstract class Component {
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// Bootstrap properties.
+		$this->boot();
 	}
+
+	/**
+	 * Bootstraps component properties.
+	 */
+	protected function boot() {}
 
 	/**
 	 * Sets callbacks.
