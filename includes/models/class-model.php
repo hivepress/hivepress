@@ -19,12 +19,12 @@ defined( 'ABSPATH' ) || exit;
  * @class Model
  */
 abstract class Model {
-	use Traits\Mutator {
+	use Traits \Mutator {
 		set_property as _set_property;
 		set_static_property as _set_static_property;
 	}
 
-	use Traits\Meta {
+	use Traits \Meta {
 		get_meta as _get_meta;
 	}
 
@@ -244,10 +244,7 @@ abstract class Model {
 			$model = new static();
 		}
 
-		// Get model class.
-		$class = static::class;
-
-		while ( $class ) {
+		foreach ( array_reverse( hp\get_class_parents( static::class ) ) as $class ) {
 
 			// Create query.
 			$query = hp\create_class_instance( '\HivePress\Queries\\' . hp\get_class_name( $class ), [ [ 'model' => $model ] ] );
@@ -255,9 +252,6 @@ abstract class Model {
 			if ( $query ) {
 				return $query;
 			}
-
-			// Get parent class.
-			$class = get_parent_class( $class );
 		}
 	}
 
