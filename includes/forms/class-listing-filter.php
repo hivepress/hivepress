@@ -27,6 +27,24 @@ class Listing_Filter extends Form {
 	protected static $meta;
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $args Form arguments.
+	 */
+	public static function init( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'meta' => [
+					'model' => 'listing',
+				],
+			],
+			$args
+		);
+
+		parent::init( $args );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
