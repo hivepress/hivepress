@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Report extends Email {
 
 	/**
-	 * Email meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.

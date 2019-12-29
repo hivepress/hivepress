@@ -20,29 +20,20 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Form {
 
 	/**
-	 * Form meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array $meta Form meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'   => esc_html__( 'Reset Password', 'hivepress' ),
-					'captcha' => false,
-				],
+				'label'   => esc_html__( 'Reset Password', 'hivepress' ),
+				'captcha' => false,
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

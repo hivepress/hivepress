@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Hidden extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {

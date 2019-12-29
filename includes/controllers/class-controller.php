@@ -39,7 +39,15 @@ abstract class Controller {
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
 		}
+
+		// Bootstrap properties.
+		$this->boot();
 	}
+
+	/**
+	 * Bootstraps controller properties.
+	 */
+	protected function boot() {}
 
 	/**
 	 * Gets controller routes.

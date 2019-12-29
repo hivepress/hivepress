@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Text extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Field placeholder.
 	 *
 	 * @var string
@@ -57,43 +50,41 @@ class Text extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'      => esc_html__( 'Text', 'hivepress' ),
-					'filterable' => true,
+				'label'      => esc_html__( 'Text', 'hivepress' ),
+				'filterable' => true,
 
-					'settings'   => [
-						'placeholder' => [
-							'label'      => esc_html__( 'Placeholder', 'hivepress' ),
-							'type'       => 'text',
-							'max_length' => 2048,
-							'_order'     => 10,
-						],
+				'settings'   => [
+					'placeholder' => [
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'_order'     => 10,
+					],
 
-						'min_length'  => [
-							'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
-							'type'      => 'number',
-							'min_value' => 0,
-							'_order'    => 20,
-						],
+					'min_length'  => [
+						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 0,
+						'_order'    => 20,
+					],
 
-						'max_length'  => [
-							'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
-							'type'      => 'number',
-							'min_value' => 1,
-							'_order'    => 30,
-						],
+					'max_length'  => [
+						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+						'_order'    => 30,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

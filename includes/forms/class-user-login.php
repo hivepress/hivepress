@@ -20,30 +20,21 @@ defined( 'ABSPATH' ) || exit;
 class User_Login extends Model_Form {
 
 	/**
-	 * Form meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array $meta Form meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'   => esc_html__( 'Login User', 'hivepress' ),
-					'model'   => 'user',
-					'captcha' => false,
-				],
+				'label'   => esc_html__( 'Login User', 'hivepress' ),
+				'model'   => 'user',
+				'captcha' => false,
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

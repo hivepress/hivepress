@@ -83,6 +83,20 @@ abstract class Model {
 			$meta
 		);
 
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters model meta.
+			 *
+			 * @filter /models/{$name}/meta
+			 * @description Filters model meta.
+			 * @param string $name Model name.
+			 * @param array $meta Model meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/meta', $meta );
+		}
+
 		// Set meta.
 		static::_set_meta( $meta );
 	}

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Account extends Menu {
 
 	/**
-	 * Menu meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Menu arguments.

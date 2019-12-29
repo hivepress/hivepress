@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Date_Range extends Date {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Minimum field.
 	 *
 	 * @var object
@@ -43,19 +36,17 @@ class Date_Range extends Date {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label' => esc_html__( 'Date Range', 'hivepress' ),
-				],
+				'label' => esc_html__( 'Date Range', 'hivepress' ),
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Captcha extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {

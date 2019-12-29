@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Block extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Field block.
 	 *
 	 * @var object

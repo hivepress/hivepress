@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Date extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Field placeholder.
 	 *
 	 * @var string
@@ -64,42 +57,40 @@ class Date extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'      => esc_html__( 'Date', 'hivepress' ),
-					'type'       => 'DATE',
-					'filterable' => true,
+				'label'      => esc_html__( 'Date', 'hivepress' ),
+				'type'       => 'DATE',
+				'filterable' => true,
 
-					'settings'   => [
-						'placeholder' => [
-							'label'      => esc_html__( 'Placeholder', 'hivepress' ),
-							'type'       => 'text',
-							'max_length' => 2048,
-							'_order'     => 10,
-						],
+				'settings'   => [
+					'placeholder' => [
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'_order'     => 10,
+					],
 
-						'min_date'    => [
-							'label'  => esc_html__( 'Minimum Date', 'hivepress' ),
-							'type'   => 'date',
-							'_order' => 20,
-						],
+					'min_date'    => [
+						'label'  => esc_html__( 'Minimum Date', 'hivepress' ),
+						'type'   => 'date',
+						'_order' => 20,
+					],
 
-						'max_date'    => [
-							'label'  => esc_html__( 'Maximum Date', 'hivepress' ),
-							'type'   => 'date',
-							'_order' => 30,
-						],
+					'max_date'    => [
+						'label'  => esc_html__( 'Maximum Date', 'hivepress' ),
+						'type'   => 'date',
+						'_order' => 30,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

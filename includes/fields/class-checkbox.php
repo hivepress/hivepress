@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Checkbox extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Checkbox caption.
 	 *
 	 * @var string
@@ -43,29 +36,27 @@ class Checkbox extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'      => esc_html__( 'Checkbox', 'hivepress' ),
-					'filterable' => true,
+				'label'      => esc_html__( 'Checkbox', 'hivepress' ),
+				'filterable' => true,
 
-					'settings'   => [
-						'caption' => [
-							'label'      => esc_html__( 'Caption', 'hivepress' ),
-							'type'       => 'text',
-							'max_length' => 2048,
-							'_order'     => 10,
-						],
+				'settings'   => [
+					'caption' => [
+						'label'      => esc_html__( 'Caption', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 2048,
+						'_order'     => 10,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

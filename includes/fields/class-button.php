@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Button extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}

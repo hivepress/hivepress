@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Field placeholder.
 	 *
 	 * @var string
@@ -50,36 +43,34 @@ class Select extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'      => esc_html__( 'Select', 'hivepress' ),
-					'filterable' => true,
+				'label'      => esc_html__( 'Select', 'hivepress' ),
+				'filterable' => true,
 
-					'settings'   => [
-						'multiple' => [
-							'label'   => esc_html__( 'Multiple', 'hivepress' ),
-							'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_order'  => 10,
-						],
+				'settings'   => [
+					'multiple' => [
+						'label'   => esc_html__( 'Multiple', 'hivepress' ),
+						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
+					],
 
-						'options'  => [
-							'label'    => esc_html__( 'Options', 'hivepress' ),
-							'type'     => 'select',
-							'multiple' => true,
-							'_order'   => 20,
-						],
+					'options'  => [
+						'label'    => esc_html__( 'Options', 'hivepress' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'_order'   => 20,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

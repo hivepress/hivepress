@@ -23,13 +23,6 @@ abstract class Field {
 	use Traits\Meta;
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Field arguments.
 	 *
 	 * @var array
@@ -109,35 +102,45 @@ abstract class Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name'       => hp\get_class_name( static::class ),
-					'type'       => 'CHAR',
-					'editable'   => true,
-					'filterable' => false,
-					'sortable'   => false,
+				'name'       => hp\get_class_name( static::class ),
+				'type'       => 'CHAR',
+				'editable'   => true,
+				'filterable' => false,
+				'sortable'   => false,
 
-					'settings'   => [
-						'required' => [
-							'label'   => esc_html__( 'Required', 'hivepress' ),
-							'caption' => esc_html__( 'Make this field required', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_order'  => 5,
-						],
+				'settings'   => [
+					'required' => [
+						'label'   => esc_html__( 'Required', 'hivepress' ),
+						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters field meta.
+			 *
+			 * @filter /fields/{$type}/meta
+			 * @description Filters field meta.
+			 * @param string $type Field type.
+			 * @param array $meta Field meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -152,6 +155,21 @@ abstract class Field {
 			],
 			$args
 		);
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters field arguments.
+			 *
+			 * @filter /fields/{$type}
+			 * @description Filters field arguments.
+			 * @param string $type Field type.
+			 * @param array $args Field arguments.
+			 * @param array $meta Field meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
 
 		// Set arguments.
 		$this->args = $args;
@@ -185,34 +203,6 @@ abstract class Field {
 				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $this->get_display_type() ) ],
 			]
 		);
-	}
-
-	/**
-	 * Sets field meta.
-	 *
-	 * @param array $meta Field meta.
-	 */
-	final protected static function set_meta( $meta ) {
-
-		// Set settings.
-		if ( isset( $meta['settings'] ) ) {
-			$settings = [];
-
-			foreach ( hp\sort_array( $meta['settings'] ) as $name => $args ) {
-
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
-
-				// Add field.
-				if ( $field ) {
-					$settings[ $name ] = $field;
-				}
-			}
-
-			$meta['settings'] = $settings;
-		}
-
-		static::$meta = $meta;
 	}
 
 	/**

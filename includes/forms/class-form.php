@@ -24,13 +24,6 @@ abstract class Form {
 	use Traits\Meta;
 
 	/**
-	 * Form meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Form description.
 	 *
 	 * @var string
@@ -110,22 +103,32 @@ abstract class Form {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array $meta Form meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name' => hp\get_class_name( static::class ),
-				],
+				'name' => hp\get_class_name( static::class ),
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters form meta.
+			 *
+			 * @filter /forms/{$name}/meta
+			 * @description Filters form meta.
+			 * @param string $name Form name.
+			 * @param array $meta Form meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**

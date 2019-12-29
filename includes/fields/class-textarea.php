@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Editor flag.
 	 *
 	 * @var mixed
@@ -36,29 +29,27 @@ class Textarea extends Text {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'      => esc_html__( 'Textarea', 'hivepress' ),
-					'filterable' => false,
+				'label'      => esc_html__( 'Textarea', 'hivepress' ),
+				'filterable' => false,
 
-					'settings'   => [
-						'editor' => [
-							'label'   => esc_html__( 'Formatting', 'hivepress' ),
-							'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_order'  => 40,
-						],
+				'settings'   => [
+					'editor' => [
+						'label'   => esc_html__( 'Formatting', 'hivepress' ),
+						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 40,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

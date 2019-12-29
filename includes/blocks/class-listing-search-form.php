@@ -20,26 +20,19 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search_Form extends Form {
 
 	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
 				'title' => hivepress()->translator->get_string( 'listing_search_form' ),
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

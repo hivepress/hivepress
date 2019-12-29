@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Number_Range extends Number {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Minimum field.
 	 *
 	 * @var object
@@ -43,23 +36,21 @@ class Number_Range extends Number {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'label'    => esc_html__( 'Number Range', 'hivepress' ),
+				'label'    => esc_html__( 'Number Range', 'hivepress' ),
 
-					'settings' => [
-						'placeholder' => null,
-					],
+				'settings' => [
+					'placeholder' => null,
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

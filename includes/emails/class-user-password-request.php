@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Email {
 
 	/**
-	 * Email meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.

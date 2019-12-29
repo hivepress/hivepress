@@ -23,13 +23,6 @@ abstract class Email {
 	use Traits\Meta;
 
 	/**
-	 * Email meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Email recipient.
 	 *
 	 * @var string
@@ -67,22 +60,32 @@ abstract class Email {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Email arguments.
+	 * @param array $meta Email meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name' => hp\get_class_name( static::class ),
-				],
+				'name' => hp\get_class_name( static::class ),
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters email meta.
+			 *
+			 * @filter /emails/{$name}/meta
+			 * @description Filters email meta.
+			 * @param string $name Email name.
+			 * @param array $meta Email meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -101,6 +104,21 @@ abstract class Email {
 			],
 			$args
 		);
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters email arguments.
+			 *
+			 * @filter /emails/{$name}
+			 * @description Filters email arguments.
+			 * @param string $name Email name.
+			 * @param array $args Email arguments.
+			 * @param array $meta Email meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {

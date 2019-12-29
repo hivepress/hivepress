@@ -23,13 +23,6 @@ abstract class Menu {
 	use Traits\Meta;
 
 	/**
-	 * Menu meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Menu items.
 	 *
 	 * @var array
@@ -46,23 +39,33 @@ abstract class Menu {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Menu arguments.
+	 * @param array $meta Menu meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name'    => hp\get_class_name( static::class ),
-					'chained' => false,
-				],
+				'name'    => hp\get_class_name( static::class ),
+				'chained' => false,
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters menu meta.
+			 *
+			 * @filter /menus/{$name}/meta
+			 * @description Filters menu meta.
+			 * @param string $name Menu name.
+			 * @param array $meta Menu meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -71,6 +74,21 @@ abstract class Menu {
 	 * @param array $args Menu arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters menu arguments.
+			 *
+			 * @filter /menus/{$name}
+			 * @description Filters menu arguments.
+			 * @param string $name Menu name.
+			 * @param array $args Menu arguments.
+			 * @param array $meta Menu meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {

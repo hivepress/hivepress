@@ -42,6 +42,20 @@ abstract class Template {
 			$meta
 		);
 
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters template meta.
+			 *
+			 * @filter /templates/{$name}/meta
+			 * @description Filters template meta.
+			 * @param string $name Template name.
+			 * @param array $meta Template meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ) . '/meta', $meta );
+		}
+
 		// Set meta.
 		static::set_meta( $meta );
 	}

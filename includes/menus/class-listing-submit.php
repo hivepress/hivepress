@@ -20,28 +20,19 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Menu {
 
 	/**
-	 * Menu meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Menu arguments.
+	 * @param array $meta Menu meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'chained' => true,
-				],
+				'chained' => true,
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

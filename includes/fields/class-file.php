@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
-	 * Field meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * File formats.
 	 *
 	 * @var array

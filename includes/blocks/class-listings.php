@@ -21,20 +21,6 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Block settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Template type.
 	 *
 	 * @var string
@@ -79,10 +65,10 @@ class Listings extends Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
 				'title'    => hivepress()->translator->get_string( 'listings' ),
 
@@ -137,10 +123,10 @@ class Listings extends Block {
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**

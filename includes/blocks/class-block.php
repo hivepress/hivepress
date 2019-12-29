@@ -23,13 +23,6 @@ abstract class Block {
 	use Traits\Meta;
 
 	/**
-	 * Block meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Block name.
 	 *
 	 * @var string
@@ -46,23 +39,33 @@ abstract class Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name'     => hp\get_class_name( static::class ),
-					'settings' => [],
-				],
+				'name'     => hp\get_class_name( static::class ),
+				'settings' => [],
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters block meta.
+			 *
+			 * @filter /blocks/{$type}/meta
+			 * @description Filters block meta.
+			 * @param string $type Block type.
+			 * @param array $meta Block meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -71,6 +74,21 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters block arguments.
+			 *
+			 * @filter /blocks/{$type}
+			 * @description Filters block arguments.
+			 * @param string $type Block type.
+			 * @param array $args Block arguments.
+			 * @param array $meta Block meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -85,34 +103,6 @@ abstract class Block {
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {}
-
-	/**
-	 * Sets block meta.
-	 *
-	 * @param array $meta Block meta.
-	 */
-	final protected static function set_meta( $meta ) {
-
-		// Set settings.
-		if ( isset( $meta['settings'] ) ) {
-			$settings = [];
-
-			foreach ( hp\sort_array( $meta['settings'] ) as $name => $args ) {
-
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
-
-				// Add field.
-				if ( $field ) {
-					$settings[ $name ] = $field;
-				}
-			}
-
-			$meta['settings'] = $settings;
-		}
-
-		static::$meta = $meta;
-	}
 
 	/**
 	 * Renders block HTML.
