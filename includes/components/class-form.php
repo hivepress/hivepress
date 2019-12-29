@@ -25,10 +25,10 @@ final class Form {
 	public function __construct() {
 
 		// Set form captcha.
-		add_filter( 'hivepress/v1/forms/form', [ $this, 'set_form_captcha' ], 10, 2 );
+		add_filter( 'hivepress/v1/forms/form/meta', [ $this, 'set_form_captcha' ] );
 
 		// Set field options.
-		add_filter( 'hivepress/v1/fields/field/args', [ $this, 'set_field_options' ] );
+		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
 
 		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -59,16 +59,15 @@ final class Form {
 	/**
 	 * Sets form captcha.
 	 *
-	 * @param array  $args Form arguments.
-	 * @param string $form Form name.
+	 * @param string $meta Form meta.
 	 * @return array
 	 */
-	public function set_form_captcha( $args, $form ) {
-		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $form, (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
-			$args['captcha'] = true;
+	public function set_form_captcha( $meta ) {
+		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $meta['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
+			$meta['captcha'] = true;
 		}
 
-		return $args;
+		return $meta;
 	}
 
 	/**

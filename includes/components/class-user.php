@@ -27,7 +27,7 @@ final class User {
 	public function __construct() {
 
 		// Register user.
-		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ] );
 
 		// Update user.
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user' ] );
@@ -42,10 +42,12 @@ final class User {
 	/**
 	 * Registers user.
 	 *
-	 * @param int    $user_id User ID.
-	 * @param object $user User object.
+	 * @param int $user_id User ID.
 	 */
-	public function register_user( $user_id, $user ) {
+	public function register_user( $user_id ) {
+
+		// Get user.
+		$user = Models\User::get_by_id( $user_id );
 
 		// Hide admin bar.
 		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
@@ -117,10 +119,10 @@ final class User {
 	/**
 	 * Adds registration fields.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_register_fields( $args ) {
+	public function add_register_fields( $form ) {
 
 		// Get terms page ID.
 		$page_id = reset(
@@ -138,7 +140,7 @@ final class User {
 		if ( $page_id ) {
 
 			// Add terms field.
-			$args['fields']['registration_terms'] = [
+			$form['fields']['registration_terms'] = [
 				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
 				'type'     => 'checkbox',
 				'required' => true,
@@ -146,6 +148,6 @@ final class User {
 			];
 		}
 
-		return $args;
+		return $form;
 	}
 }

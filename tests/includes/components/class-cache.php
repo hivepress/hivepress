@@ -82,7 +82,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 	 */
 	public function schedule_events() {
 		foreach ( $this->cron_periods as $period ) {
-			$this->assertNotSame( false, wp_next_scheduled( 'hivepress/v1/cron/' . $period ) );
+			$this->assertNotSame( false, wp_next_scheduled( 'hivepress/v1/events/' . $period ) );
 		}
 	}
 
@@ -95,7 +95,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 		hivepress()->cache->unschedule_events();
 
 		foreach ( $this->cron_periods as $period ) {
-			$this->assertSame( false, wp_next_scheduled( 'hivepress/v1/cron/' . $period ) );
+			$this->assertSame( false, wp_next_scheduled( 'hivepress/v1/events/' . $period ) );
 		}
 	}
 
@@ -456,7 +456,7 @@ class Cache extends \PHPUnit\Framework\TestCase {
 
 		sleep( 1 );
 
-		do_action( 'hivepress/v1/cron/daily' );
+		do_action( 'hivepress/v1/events/daily' );
 
 		foreach ( $this->cache_types as $type ) {
 			$this->assertNull( call_user_func_array( [ hivepress()->cache, 'get_' . $type . '_cache' ], [ $this->object_ids[ $type ], 'key7' ] ) );

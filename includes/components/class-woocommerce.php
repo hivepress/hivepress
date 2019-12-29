@@ -94,36 +94,36 @@ final class WooCommerce extends Component {
 	/**
 	 * Alters account menu.
 	 *
-	 * @param array $args Menu arguments.
+	 * @param array $menu Menu arguments.
 	 * @return array
 	 */
-	public function alter_account_menu( $args ) {
+	public function alter_account_menu( $menu ) {
 		if ( wc_get_customer_order_count( get_current_user_id() ) > 0 ) {
-			$args['items']['orders_view_page'] = [
+			$menu['items']['orders_view_page'] = [
 				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'    => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
 				'_order' => 40,
 			];
 		}
 
-		return $args;
+		return $menu;
 	}
 
 	/**
 	 * Alters account page.
 	 *
-	 * @param array $args Template arguments.
+	 * @param array $template Template arguments.
 	 * @return array
 	 */
-	public function alter_account_page( $args ) {
+	public function alter_account_page( $template ) {
 		if ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) {
 
 			// Set page title.
 			add_filter( 'the_title', 'wc_page_endpoint_title' );
 
 			// Alter page template.
-			$args = hp\merge_trees(
-				$args,
+			$template = hp\merge_trees(
+				$template,
 				[
 					'blocks' => [
 						'page_container' => [
@@ -146,6 +146,6 @@ final class WooCommerce extends Component {
 			);
 		}
 
-		return $args;
+		return $template;
 	}
 }

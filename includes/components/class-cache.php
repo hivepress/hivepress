@@ -31,7 +31,7 @@ final class Cache {
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
 		// Clear cache.
-		add_action( 'hivepress/v1/cron/daily', [ $this, 'clear_meta_cache' ] );
+		add_action( 'hivepress/v1/events/daily', [ $this, 'clear_meta_cache' ] );
 
 		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ] );
 		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ] );
@@ -55,8 +55,8 @@ final class Cache {
 		$periods = [ 'hourly', 'twicedaily', 'daily' ];
 
 		foreach ( $periods as $period ) {
-			if ( ! wp_next_scheduled( 'hivepress/v1/cron/' . $period ) ) {
-				wp_schedule_event( time(), $period, 'hivepress/v1/cron/' . $period );
+			if ( ! wp_next_scheduled( 'hivepress/v1/events/' . $period ) ) {
+				wp_schedule_event( time(), $period, 'hivepress/v1/events/' . $period );
 			}
 		}
 	}
@@ -68,10 +68,10 @@ final class Cache {
 		$periods = [ 'hourly', 'twicedaily', 'daily' ];
 
 		foreach ( $periods as $period ) {
-			$timestamp = wp_next_scheduled( 'hivepress/v1/cron/' . $period );
+			$timestamp = wp_next_scheduled( 'hivepress/v1/events/' . $period );
 
 			if ( ! empty( $timestamp ) ) {
-				wp_unschedule_event( $timestamp, 'hivepress/v1/cron/' . $period );
+				wp_unschedule_event( $timestamp, 'hivepress/v1/events/' . $period );
 			}
 		}
 	}

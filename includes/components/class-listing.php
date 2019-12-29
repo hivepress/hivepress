@@ -36,7 +36,7 @@ final class Listing {
 		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
 
 		// Expire listings.
-		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
+		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
 		// Add submission fields.
 		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
@@ -368,10 +368,10 @@ final class Listing {
 	/**
 	 * Adds submission fields.
 	 *
-	 * @param array $args Form arguments.
+	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_submission_fields( $args ) {
+	public function add_submission_fields( $form ) {
 
 		// Get terms page ID.
 		$page_id = reset(
@@ -389,7 +389,7 @@ final class Listing {
 		if ( $page_id ) {
 
 			// Add terms field.
-			$args['fields']['submission_terms'] = [
+			$form['fields']['submission_terms'] = [
 				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
 				'type'     => 'checkbox',
 				'required' => true,
@@ -397,6 +397,6 @@ final class Listing {
 			];
 		}
 
-		return $args;
+		return $form;
 	}
 }
