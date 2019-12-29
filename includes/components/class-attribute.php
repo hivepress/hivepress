@@ -179,9 +179,17 @@ final class Attribute extends Component {
 								$field_args['type'] = $field_type;
 
 								// Set field settings.
-								foreach ( $field_settings as $field_name => $field ) {
-									$field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $field_name ), true ) );
-									$field_args[ $field_name ] = $field->get_value();
+								foreach ( $field_settings as $settings_field_name => $settings_field_args ) {
+
+									// Create settings field.
+									$settings_field = hp\create_class_instance( '\HivePress\Fields\\' . $settings_field_args['type'], [ $settings_field_args ] );
+
+									if ( $settings_field ) {
+										$settings_field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
+
+										// Set settings value.
+										$field_args[ $settings_field_name ] = $settings_field->get_value();
+									}
 								}
 							}
 						}
@@ -314,12 +322,10 @@ final class Attribute extends Component {
 
 			// Add field settings.
 			if ( $field_settings ) {
-				foreach ( $field_settings as $field_name => $field ) {
+				foreach ( $field_settings as $field_name => $field_args ) {
 					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
 
-						// Get field arguments.
-						$field_args = $field->get_args();
-
+						// Set field arguments.
 						if ( 'options' === $field_name ) {
 							$field_args = array_merge(
 								$field_args,

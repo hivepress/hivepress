@@ -59,16 +59,16 @@ final class Editor extends Component {
 					'settings'   => [],
 				];
 
-				foreach ( $block_class::get_meta( 'settings' ) as $field_name => $field ) {
+				foreach ( $block_class::get_meta( 'settings' ) as $field_name => $field_args ) {
 
 					// Add attribute.
 					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
-						'default' => $field->get_value(),
+						'default' => hp\get_array_value( $field_args, 'default' ),
 					];
 
 					// Add setting.
-					$blocks[ $block_type ]['settings'][ $field_name ] = $field->get_args();
+					$blocks[ $block_type ]['settings'][ $field_name ] = $field_args;
 				}
 			}
 		}
