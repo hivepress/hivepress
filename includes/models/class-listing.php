@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing extends Post {
 
 	/**
-	 * Model meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.

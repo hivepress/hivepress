@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Category extends Term {
 
 	/**
-	 * Model meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
@@ -91,4 +84,6 @@ class Listing_Category extends Term {
 			}
 		}
 	}
+
+	// todo get_child_ids.
 }

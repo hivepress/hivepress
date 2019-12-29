@@ -21,19 +21,12 @@ defined( 'ABSPATH' ) || exit;
 abstract class Model {
 	use Traits \Mutator {
 		set_property as _set_property;
-		set_static_property as _set_static_property;
 	}
 
 	use Traits \Meta {
 		get_meta as _get_meta;
+		set_meta as _set_meta;
 	}
-
-	/**
-	 * Model meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
 
 	/**
 	 * Model fields.
@@ -80,22 +73,18 @@ abstract class Model {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Model arguments.
+	 * @param array $meta Model meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name' => hp\get_class_name( static::class ),
-				],
+				'name' => hp\get_class_name( static::class ),
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::_set_static_property( $name, $value, '_' );
-		}
+		// Set meta.
+		static::_set_meta( $meta );
 	}
 
 	/**
@@ -105,15 +94,20 @@ abstract class Model {
 	 */
 	public function __construct( $args = [] ) {
 
-		/**
-		 * Filters model arguments.
-		 *
-		 * @filter /models/{$name}
-		 * @description Filters model arguments.
-		 * @param string $name Model name.
-		 * @param array $args Model arguments.
-		 */
-		$args = apply_filters( 'hivepress/v1/models/' . static::_get_meta( 'name' ), $args );
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters model arguments.
+			 *
+			 * @filter /models/{$name}
+			 * @description Filters model arguments.
+			 * @param string $name Model name.
+			 * @param array $args Model arguments.
+			 * @param array $meta Model meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ), $args, static::_get_meta() );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
