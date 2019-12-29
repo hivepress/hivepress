@@ -69,7 +69,7 @@ final class Listing {
 		$user_id = absint( $listing->post_author );
 
 		// Get vendor ID.
-		$vendor_id = Models\Vendor::filter(
+		$vendor_id = Models\Vendor::query()->filter(
 			[
 				'user_id' => $user_id,
 			]

@@ -356,11 +356,11 @@ final class Router {
 			$menu_redirect = null;
 
 			foreach ( hivepress()->get_menus() as $menu ) {
-				if ( $menu::is_chained() && in_array( $route['name'], wp_list_pluck( $menu::get_items(), 'route' ), true ) ) {
+				if ( $menu::get_meta( 'chained' ) && in_array( $route['name'], wp_list_pluck( $menu->get_items(), 'route' ), true ) ) {
 
 					// Get menu items.
-					$menu_items      = $menu::get_items();
-					$menu_item_names = array_keys( $menu::get_items() );
+					$menu_items      = $menu->get_items();
+					$menu_item_names = array_keys( $menu->get_items() );
 
 					foreach ( $menu_items as $menu_item_name => $menu_item ) {
 						if ( isset( $menu_item['route'] ) ) {
@@ -422,5 +422,9 @@ final class Router {
 	// todo.
 	public function get_redirect_url($route) {
 		// todo.
+	}
+
+	public function get_current_url() {
+		return hp\get_current_url();
 	}
 }

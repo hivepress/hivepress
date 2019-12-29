@@ -14,6 +14,7 @@ return [
 	'listing_settings'          => [
 		'title'  => esc_html__( 'Settings', 'hivepress' ),
 		'screen' => 'listing',
+		'model'  => 'listing',
 
 		'fields' => [
 			'featured' => [
@@ -35,12 +36,14 @@ return [
 	'listing_attributes'        => [
 		'title'  => esc_html__( 'Attributes', 'hivepress' ),
 		'screen' => 'listing',
+		'model'  => 'listing',
 		'fields' => [],
 	],
 
 	'listing_attribute_edit'    => [
 		'title'  => esc_html__( 'Editing', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'editable'        => [
@@ -63,6 +66,7 @@ return [
 	'listing_attribute_search'  => [
 		'title'  => esc_html_x( 'Search', 'noun', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'filterable'        => [
@@ -91,6 +95,7 @@ return [
 	'listing_attribute_display' => [
 		'title'  => esc_html__( 'Display', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'display_areas'  => [

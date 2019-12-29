@@ -48,7 +48,7 @@ class Vendor extends Template {
 		if ( is_singular( 'hp_listing' ) ) {
 
 			// Get vendor.
-			$vendor = Models\Vendor::get_by_id( wp_get_post_parent_id( get_the_ID() ) );
+			$vendor = Models\Vendor::query()->get_by_id( wp_get_post_parent_id( get_the_ID() ) );
 
 			if ( ! is_null( $vendor ) ) {
 

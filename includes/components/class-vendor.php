@@ -43,7 +43,7 @@ final class Vendor extends Component {
 	public function update_vendor( $user_id ) {
 
 		// Get vendor.
-		$vendor = Models\Vendor::filter(
+		$vendor = Models\Vendor::query()->filter(
 			[
 				'status'  => 'publish',
 				'user_id' => $user_id,
@@ -55,7 +55,7 @@ final class Vendor extends Component {
 		}
 
 		// Get user.
-		$user = Models\User::get_by_id( $user_id );
+		$user = Models\User::query()->get_by_id( $user_id );
 
 		// Update vendor.
 		$vendor->fill(

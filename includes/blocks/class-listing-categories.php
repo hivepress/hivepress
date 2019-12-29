@@ -172,7 +172,7 @@ class Listing_Categories extends Block {
 		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing_category' );
 
 		if ( is_array( $listing_category_ids ) ) {
-			$query = Models\Listing_Category::filter(
+			$query = Models\Listing_Category::query()->filter(
 				[
 					'id__in' => $listing_category_ids,
 				]

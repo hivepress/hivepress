@@ -154,7 +154,7 @@ class Listings extends Block {
 		if ( is_single() || ( hp\get_array_value( $regular_query->query_vars, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
 
 			// Set query.
-			$query = Models\Listing::filter( [ 'status' => 'publish' ] )->limit( $this->number );
+			$query = Models\Listing::query()->filter( [ 'status' => 'publish' ] )->limit( $this->number );
 
 			// Set category.
 			if ( $this->category ) {
@@ -182,7 +182,7 @@ class Listings extends Block {
 				$listing_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing' );
 
 				if ( is_array( $listing_ids ) ) {
-					$query = Models\Listing::filter(
+					$query = Models\Listing::query()->filter(
 						[
 							'status' => 'publish',
 							'id__in' => $listing_ids,
@@ -202,7 +202,7 @@ class Listings extends Block {
 
 			// Query featured listings.
 			$featured_query = new \WP_Query(
-				Models\Listing::filter(
+				Models\Listing::query()->filter(
 					[
 						'status' => 'publish',
 						'id__in' => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
@@ -225,7 +225,7 @@ class Listings extends Block {
 					$featured_query->the_post();
 
 					// Get listing.
-					$listing = Models\Listing::get_by_object( get_post() );
+					$listing = Models\Listing::query()->get_by_id( get_post() );
 
 					if ( ! is_null( $listing ) ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
@@ -251,7 +251,7 @@ class Listings extends Block {
 				$regular_query->the_post();
 
 				// Get listing.
-				$listing = Models\Listing::get_by_object( get_post() );
+				$listing = Models\Listing::query()->get_by_id( get_post() );
 
 				if ( ! is_null( $listing ) ) {
 					if ( 'edit' !== $this->template ) {

@@ -451,5 +451,5 @@ function fetch_redirect_url( $default ) {
 }
 
 function get_class_parents($class) {
-	return array_reverse(array_merge($class, class_parents($class)));
+	return array_reverse(array_merge([$class], class_parents($class)));
 }

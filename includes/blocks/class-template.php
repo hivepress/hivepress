@@ -42,7 +42,10 @@ class Template extends Block {
 		$output = '';
 
 		// Get blocks.
-		$blocks = hp\call_class_method( '\HivePress\Templates\\' . $this->template, 'get_blocks' );
+		// todo.
+		$template = hp\create_class_instance( '\HivePress\Templates\\' . $this->template );
+
+		$blocks = $template->get_blocks();
 
 		if ( ! is_null( $blocks ) ) {
 

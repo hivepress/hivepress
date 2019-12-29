@@ -47,7 +47,7 @@ final class User {
 	public function register_user( $user_id ) {
 
 		// Get user.
-		$user = Models\User::get_by_id( $user_id );
+		$user = Models\User::query()->get_by_id( $user_id );
 
 		// Hide admin bar.
 		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
@@ -75,7 +75,7 @@ final class User {
 	public function update_user( $user_id ) {
 
 		// Get user.
-		$user = Models\User::get_by_id( $user_id );
+		$user = Models\User::query()->get_by_id( $user_id );
 
 		// Update user.
 		$user->fill(
@@ -101,11 +101,11 @@ final class User {
 		$user = null;
 
 		if ( is_numeric( $id_or_email ) ) {
-			$user = Models\User::get_by_id( $id_or_email );
+			$user = Models\User::query()->get_by_id( $id_or_email );
 		} elseif ( is_object( $id_or_email ) ) {
-			$user = Models\User::get_by_id( $id_or_email->user_id );
+			$user = Models\User::query()->get_by_id( $id_or_email->user_id );
 		} elseif ( is_email( $id_or_email ) ) {
-			$user = Models\User::filter( [ 'email' => $id_or_email ] )->get_first();
+			$user = Models\User::query()->filter( [ 'email' => $id_or_email ] )->get_first();
 		}
 
 		// Render image.

@@ -105,9 +105,9 @@ class Form extends Block {
 		$form = hp\create_class_instance( '\HivePress\Forms\\' . $this->form, [ $form_args ] );
 
 		if ( ! is_null( $form ) ) {
-			if ( $form::get_method() === 'POST' ) {
+			if ( $form->get_method() === 'POST' ) {
 				$form->set_values( array_merge( $this->values, $_POST ) );
-			} elseif ( $form::get_method() === 'GET' ) {
+			} elseif ( $form->get_method() === 'GET' ) {
 				$form->set_values( array_merge( $this->values, $_GET ) );
 			}
 
