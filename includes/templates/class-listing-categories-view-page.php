@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Categories_View_Page extends Page {
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.

@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Site_Header_Block extends Template {
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.

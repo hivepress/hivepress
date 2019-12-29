@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit_Details_Page extends Listing_Submit_Page {
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.

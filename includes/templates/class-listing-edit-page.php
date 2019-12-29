@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Edit_Page extends User_Account_Page {
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.

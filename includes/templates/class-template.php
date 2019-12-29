@@ -23,13 +23,6 @@ abstract class Template {
 	use Traits\Meta;
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Template blocks.
 	 *
 	 * @var array
@@ -39,22 +32,18 @@ abstract class Template {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Template arguments.
+	 * @param array $meta Template meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'meta' => [
-					'name' => hp\get_class_name( static::class ),
-				],
+				'name' => hp\get_class_name( static::class ),
 			],
-			$args
+			$meta
 		);
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
-		}
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -63,6 +52,21 @@ abstract class Template {
 	 * @param array $args Template arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters template arguments.
+			 *
+			 * @filter /templates/{$name}
+			 * @description Filters template arguments.
+			 * @param string $name Template name.
+			 * @param array $args Template arguments.
+			 * @param array $meta Template meta.
+			 */
+			$args = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ), $args, static::get_meta() );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {

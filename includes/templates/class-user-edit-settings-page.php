@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Edit_Settings_Page extends User_Account_Page {
 
 	/**
-	 * Template meta.
-	 *
-	 * @var array
-	 */
-	protected static $meta;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
