@@ -27,11 +27,11 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Sample value.
+	 * Checked value.
 	 *
 	 * @var mixed
 	 */
-	protected $sample = true;
+	protected $checked_value = true;
 
 	/**
 	 * Class initializer.
@@ -125,7 +125,7 @@ class Checkbox extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( is_bool( $this->sample ) ) {
+		if ( is_bool( $this->checked_value ) ) {
 			$this->value = boolval( $this->value );
 		} else {
 			$this->value = sanitize_text_field( $this->value );
@@ -142,7 +142,7 @@ class Checkbox extends Field {
 
 		unset( $this->attributes['class'] );
 
-		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

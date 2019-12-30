@@ -121,10 +121,10 @@ class Checkboxes extends Select {
 				// Render option.
 				$output .= ( new Checkbox(
 					[
-						'name'    => $this->name . '[]',
-						'caption' => $label,
-						'sample'  => $value,
-						'default' => $default,
+						'name'          => $this->name . '[]',
+						'caption'       => $label,
+						'checked_value' => $value,
+						'default'       => $default,
 					]
 				) )->render();
 
