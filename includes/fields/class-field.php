@@ -166,9 +166,9 @@ abstract class Field {
 			 * @description Filters field arguments.
 			 * @param string $type Field type.
 			 * @param array $args Field arguments.
-			 * @param array $meta Field meta.
+			 * @param array $object Form object.
 			 */
-			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set arguments.
@@ -193,7 +193,7 @@ abstract class Field {
 
 		// Set optional status.
 		if ( ! $this->required ) {
-			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
+			$this->statuses = array_filter( hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses ) );
 		}
 
 		// Set class.

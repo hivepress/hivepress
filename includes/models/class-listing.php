@@ -85,10 +85,10 @@ class Listing extends Post {
 					],
 
 					'category_ids'  => [
-						'type'     => 'select',
-						'options'  => 'terms',
-						'taxonomy' => 'hp_listing_category',
-						'multiple' => true,
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'multiple'    => true,
 					],
 				],
 

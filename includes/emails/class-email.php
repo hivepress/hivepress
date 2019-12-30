@@ -115,9 +115,9 @@ abstract class Email {
 			 * @description Filters email arguments.
 			 * @param string $name Email name.
 			 * @param array $args Email arguments.
-			 * @param array $meta Email meta.
+			 * @param array $object Email object.
 			 */
-			$args = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.

@@ -42,6 +42,7 @@ class Number_Range extends Number {
 		$meta = hp\merge_arrays(
 			[
 				'label'    => esc_html__( 'Number Range', 'hivepress' ),
+				'editable' => false,
 
 				'settings' => [
 					'placeholder' => null,

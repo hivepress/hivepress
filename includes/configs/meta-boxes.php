@@ -54,11 +54,12 @@ return [
 			],
 
 			'edit_field_type' => [
-				'label'    => esc_html__( 'Field Type', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'fields',
-				'required' => true,
-				'_order'   => 100,
+				'label'       => esc_html__( 'Field Type', 'hivepress' ),
+				'type'        => 'select',
+				'options'     => 'fields',
+				'option_args' => [ 'editable' => true ],
+				'required'    => true,
+				'_order'      => 100,
 			],
 		],
 	],
@@ -84,10 +85,11 @@ return [
 			],
 
 			'search_field_type' => [
-				'label'   => esc_html__( 'Field Type', 'hivepress' ),
-				'type'    => 'select',
-				'options' => 'fields',
-				'_order'  => 100,
+				'label'       => esc_html__( 'Field Type', 'hivepress' ),
+				'type'        => 'select',
+				'options'     => 'fields',
+				'option_args' => [ 'filterable' => true ],
+				'_order'      => 100,
 			],
 		],
 	],

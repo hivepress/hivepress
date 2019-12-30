@@ -41,7 +41,8 @@ class Date_Range extends Date {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => esc_html__( 'Date Range', 'hivepress' ),
+				'label'    => esc_html__( 'Date Range', 'hivepress' ),
+				'editable' => false,
 			],
 			$meta
 		);

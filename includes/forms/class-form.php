@@ -161,9 +161,9 @@ abstract class Form {
 			 * @description Filters form arguments.
 			 * @param string $name Form name.
 			 * @param array $args Form arguments.
-			 * @param array $meta Form meta.
+			 * @param array $object Form object.
 			 */
-			$args = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.
@@ -352,12 +352,25 @@ abstract class Form {
 		$this->errors = [];
 
 		// Validate fields.
-		if ( empty( $this->errors ) ) {
-			foreach ( $this->fields as $field ) {
-				if ( ! $field->validate() ) {
-					$this->add_errors( $field->get_errors() );
-				}
+		foreach ( $this->fields as $field ) {
+			if ( ! $field->validate() ) {
+				$this->add_errors( $field->get_errors() );
 			}
+		}
+
+		// Filter errors.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters form errors.
+			 *
+			 * @filter /forms/{$name}/errors
+			 * @description Filters form errors.
+			 * @param string $name Form name.
+			 * @param array $errors Form errors.
+			 * @param object $object Form object.
+			 */
+			$this->errors = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/errors', $this->errors );
 		}
 
 		return empty( $this->errors );

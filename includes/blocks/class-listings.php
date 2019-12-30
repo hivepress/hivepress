@@ -96,12 +96,12 @@ class Listings extends Block {
 					],
 
 					'category' => [
-						'label'    => esc_html__( 'Category', 'hivepress' ),
-						'type'     => 'select',
-						'options'  => 'terms',
-						'taxonomy' => 'hp_listing_category',
-						'default'  => '',
-						'_order'   => 30,
+						'label'       => esc_html__( 'Category', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'default'     => '',
+						'_order'      => 30,
 					],
 
 					'order'    => [

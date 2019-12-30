@@ -85,9 +85,9 @@ abstract class Block {
 			 * @description Filters block arguments.
 			 * @param string $type Block type.
 			 * @param array $args Block arguments.
-			 * @param array $meta Block meta.
+			 * @param array $object Block object.
 			 */
-			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.

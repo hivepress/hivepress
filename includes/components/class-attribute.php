@@ -310,8 +310,8 @@ final class Attribute extends Component {
 
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
-							$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
-							$attribute_args[ $field_context . '_field' ]['taxonomy'] = hp\prefix( $model . '_' . $attribute_name );
+							$attribute_args[ $field_context . '_field' ]['options']     = 'terms';
+							$attribute_args[ $field_context . '_field' ]['option_args'] = [ 'taxonomy' => hp\prefix( $model . '_' . $attribute_name ) ];
 						}
 					}
 
@@ -506,14 +506,14 @@ final class Attribute extends Component {
 	/**
 	 * Adds edit fields.
 	 *
-	 * @param array $form_args Form arguments.
-	 * @param array $form_meta Form meta.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_edit_fields( $form_args, $form_meta ) {
+	public function add_edit_fields( $form_args, $form ) {
 
 		// Get model.
-		$model = $form_meta['model'];
+		$model = $form::get_meta( 'model' );
 
 		// Get category IDs.
 		$category_ids = $form_args['model']->get_category_ids();
@@ -527,7 +527,7 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form_meta['name'] ) {
+				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
@@ -547,14 +547,14 @@ final class Attribute extends Component {
 	/**
 	 * Adds sort options.
 	 *
-	 * @param array $form_args Form arguments.
-	 * @param array $form_meta Form meta.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_sort_options( $form_args, $form_meta ) {
+	public function add_sort_options( $form_args, $form ) {
 
 		// Get model.
-		$model = $form_meta['model'];
+		$model = $form::get_meta( 'model' );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
@@ -603,14 +603,14 @@ final class Attribute extends Component {
 	/**
 	 * Adds category options.
 	 *
-	 * @param array $form_args Form arguments.
-	 * @param array $form_meta Form meta.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_category_options( $form_args, $form_meta ) {
+	public function add_category_options( $form_args, $form ) {
 
 		// Get model.
-		$model = $form_meta['model'];
+		$model = $form::get_meta( 'model' );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
@@ -683,14 +683,14 @@ final class Attribute extends Component {
 	/**
 	 * Sets category value.
 	 *
-	 * @param array $form_args Form arguments.
-	 * @param array $form_meta Form meta.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function set_category_value( $form_args, $form_meta ) {
+	public function set_category_value( $form_args, $form ) {
 
 		// Get model.
-		$model = $form_meta['model'];
+		$model = $form::get_meta( 'model' );
 
 		// Set value.
 		$form_args['fields']['category']['default'] = $this->get_category_id( $model );
@@ -701,14 +701,14 @@ final class Attribute extends Component {
 	/**
 	 * Sets range values.
 	 *
-	 * @param array $form_args Form arguments.
-	 * @param array $form_meta Form meta.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function set_range_values( $form_args, $form_meta ) {
+	public function set_range_values( $form_args, $form ) {
 
 		// Get model.
-		$model = $form_meta['model'];
+		$model = $form::get_meta( 'model' );
 
 		// Filter fields.
 		foreach ( $form_args['fields'] as $field_name => $field_args ) {

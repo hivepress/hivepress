@@ -89,12 +89,12 @@ class Listing_Categories extends Block {
 					],
 
 					'parent'  => [
-						'label'    => esc_html__( 'Parent Category', 'hivepress' ),
-						'type'     => 'select',
-						'options'  => 'terms',
-						'taxonomy' => 'hp_listing_category',
-						'default'  => '',
-						'_order'   => 30,
+						'label'       => esc_html__( 'Parent Category', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'default'     => '',
+						'_order'      => 30,
 					],
 
 					'order'   => [

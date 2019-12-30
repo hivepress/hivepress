@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -43,8 +43,8 @@ final class Debug extends Component {
 		add_filter( 'hivetheme/v1/styles', [ $this, 'alter_styles' ] );
 
 		// Enqueue styles.
-		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 999 );
-		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 999 );
+		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 1000 );
+		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 1000 );
 
 		// Alter scripts.
 		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );

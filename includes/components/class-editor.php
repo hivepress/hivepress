@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -46,25 +46,25 @@ final class Editor extends Component {
 		// Get blocks.
 		$blocks = [];
 
-		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block_class ) {
-			if ( $block_class::get_meta( 'label' ) ) {
+		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block ) {
+			if ( $block::get_meta( 'label' ) ) {
 				$block_slug = hp\sanitize_slug( $block_type );
 
 				// Add block.
 				$blocks[ $block_type ] = [
-					'title'      => HP_CORE_NAME . ' ' . $block_class::get_meta( 'label' ),
+					'title'      => HP_CORE_NAME . ' ' . $block::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hp-block-' . $block_slug,
 					'attributes' => [],
 					'settings'   => [],
 				];
 
-				foreach ( $block_class::get_meta( 'settings' ) as $field_name => $field_args ) {
+				foreach ( $block::get_meta( 'settings' ) as $field_name => $field_args ) {
 
 					// Add attribute.
 					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
-						'default' => hp\get_array_value( $field_args, 'default' ),
+						'default' => hp\get_array_value( $field_args, 'default', '' ),
 					];
 
 					// Add setting.

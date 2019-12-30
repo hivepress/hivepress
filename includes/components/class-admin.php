@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;

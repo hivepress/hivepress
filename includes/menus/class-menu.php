@@ -85,9 +85,9 @@ abstract class Menu {
 			 * @description Filters menu arguments.
 			 * @param string $name Menu name.
 			 * @param array $args Menu arguments.
-			 * @param array $meta Menu meta.
+			 * @param array $object Menu object.
 			 */
-			$args = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.

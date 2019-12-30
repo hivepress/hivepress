@@ -77,9 +77,9 @@ abstract class Template {
 			 * @description Filters template arguments.
 			 * @param string $name Template name.
 			 * @param array $args Template arguments.
-			 * @param array $meta Template meta.
+			 * @param array $object Template object.
 			 */
-			$args = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ), $args, static::get_meta() );
+			$args = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.

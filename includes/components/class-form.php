@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -17,57 +17,30 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Form
  */
-final class Form {
+final class Form extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
-
-		// Set form captcha.
-		add_filter( 'hivepress/v1/forms/form/meta', [ $this, 'set_form_captcha' ] );
+	public function __construct( $args = [] ) {
 
 		// Set field options.
 		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
 
+		// Manage captcha.
+		if ( $this->is_captcha_enabled() ) {
+			add_filter( 'hivepress/v1/forms/form/meta', [ $this, 'set_captcha' ] );
+			add_filter( 'hivepress/v1/forms/form', [ $this, 'add_captcha' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/form/errors', [ $this, 'validate_captcha' ], 10, 2 );
+		}
+
 		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-	}
 
-	// todo.
-	function validate_form_captcha($errors) {
-		// Verify captcha.
-		if ( static::$captcha ) {
-			$response = wp_remote_get(
-				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
-					[
-						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
-					]
-				)
-			);
-
-			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
-				$this->add_errors( [ esc_html__( 'Captcha is invalid.', 'hivepress' ) ] );
-			}
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Sets form captcha.
-	 *
-	 * @param string $meta Form meta.
-	 * @return array
-	 */
-	public function set_form_captcha( $meta ) {
-		if ( get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) && in_array( $meta['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
-			$meta['captcha'] = true;
-		}
-
-		return $meta;
+		parent::__construct( $args );
 	}
 
 	/**
@@ -80,97 +53,214 @@ final class Form {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
-			switch ( $args['options'] ) {
+			$option_method = 'get_' . $args['options'];
+			$option_args   = hp\get_array_value( $args, 'option_args', [] );
 
-				// Posts.
-				case 'posts':
-					if ( post_type_exists( $args['post_type'] ) ) {
-						$titles = null;
-
-						$query_args = [
-							'post_type'      => $args['post_type'],
-							'post_status'    => 'publish',
-							'posts_per_page' => -1,
-							'orderby'        => 'title',
-							'order'          => 'ASC',
-						];
-
-						if ( substr( $args['post_type'], 0, 3 ) === 'hp_' ) {
-							$titles = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ) );
-						}
-
-						if ( is_null( $titles ) ) {
-							$titles = wp_list_pluck( get_posts( $query_args ), 'post_title', 'ID' );
-
-							if ( substr( $args['post_type'], 0, 3 ) === 'hp_' && count( $titles ) <= 1000 ) {
-								hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ), $titles );
-							}
-						}
-
-						$options += $titles;
-					}
-
-					break;
-
-				// Terms.
-				case 'terms':
-					if ( taxonomy_exists( $args['taxonomy'] ) ) {
-						$names = null;
-
-						$query_args = [
-							'taxonomy'   => $args['taxonomy'],
-							'fields'     => 'id=>name',
-							'hide_empty' => false,
-						];
-
-						if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' ) {
-							$names = hivepress()->cache->get_cache( $query_args, hp\unprefix( $args['taxonomy'] ) );
-						}
-
-						if ( is_null( $names ) ) {
-							$names = get_terms( $query_args );
-
-							if ( substr( $args['taxonomy'], 0, 3 ) === 'hp_' && count( $names ) <= 1000 ) {
-								hivepress()->cache->set_cache( $query_args, hp\unprefix( $args['taxonomy'] ), $names );
-							}
-						}
-
-						$options += $names;
-					}
-
-					break;
-
-				// Forms.
-				case 'forms':
-					foreach ( hivepress()->get_forms() as $form_name => $form ) {
-						if ( $form::get_title() ) {
-							$options[ $form_name ] = $form::get_title();
-						}
-					}
-
-					asort( $options );
-
-					break;
-
-				// Fields.
-				case 'fields':
-					$filters = hp\get_array_value( $args, 'field_filters', false );
-
-					foreach ( hivepress()->get_fields() as $field_name => $field ) {
-						if ( $field::get_title() && ( ( ! $filters && ! in_array( $field_name, [ 'number_range', 'date_range' ], true ) ) || ( $filters && false !== $field->get_filters() ) ) ) {
-							$options[ $field_name ] = $field::get_title();
-						}
-					}
-
-					asort( $options );
-
-					break;
+			if ( method_exists( $this, $option_method ) ) {
+				$options = call_user_func_array( [ $this, $option_method ], [ $option_args ] );
 			}
 
 			$args['options'] = $options;
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Gets post options.
+	 *
+	 * @param array $args Post arguments.
+	 * @return array
+	 */
+	protected function get_posts( $args ) {
+
+		// Set default arguments.
+		$args = hp\merge_arrays(
+			[
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			],
+			$args
+		);
+
+		// Get options.
+		$options = [];
+
+		if ( post_type_exists( $args['post_type'] ) ) {
+			$options = null;
+
+			if ( strpos( $args['post_type'], 'hp_' ) === 0 ) {
+				$options = hivepress()->cache->get_cache( array_merge( $args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ) );
+			}
+
+			if ( is_null( $options ) ) {
+				$options = wp_list_pluck( get_posts( $args ), 'post_title', 'ID' );
+
+				if ( strpos( $args['post_type'], 'hp_' ) === 0 && count( $options ) <= 1000 ) {
+					hivepress()->cache->set_cache( array_merge( $args, [ 'fields' => 'titles' ] ), hp\unprefix( $args['post_type'] ), $options );
+				}
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Gets term options.
+	 *
+	 * @param array $args Term arguments.
+	 * @return array
+	 */
+	protected function get_terms( $args ) {
+
+		// Set default arguments.
+		$args = hp\merge_arrays(
+			[
+				'taxonomy'   => 'category',
+				'fields'     => 'id=>name',
+				'hide_empty' => false,
+			],
+			$args
+		);
+
+		// Get options.
+		$options = [];
+
+		if ( taxonomy_exists( $args['taxonomy'] ) ) {
+			$options = null;
+
+			if ( strpos( $args['taxonomy'], 'hp_' ) === 0 ) {
+				$options = hivepress()->cache->get_cache( $args, hp\unprefix( $args['taxonomy'] ) );
+			}
+
+			if ( is_null( $options ) ) {
+				$options = get_terms( $args );
+
+				if ( strpos( $args['taxonomy'], 'hp_' ) === 0 && count( $options ) <= 1000 ) {
+					hivepress()->cache->set_cache( $args, hp\unprefix( $args['taxonomy'] ), $options );
+				}
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Gets form options.
+	 *
+	 * @param array $args Form arguments.
+	 * @return array
+	 */
+	protected function get_forms( $args ) {
+		$options = [];
+
+		foreach ( hivepress()->get_classes( 'forms' ) as $form_name => $form ) {
+			if ( $form::get_meta( 'label' ) && ! array_diff( $args, array_intersect_key( $form::get_meta(), $args ) ) ) {
+				$options[ $form_name ] = $form::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		return $options;
+	}
+
+	/**
+	 * Gets field options.
+	 *
+	 * @param array $args Field arguments.
+	 * @return array
+	 */
+	protected function get_fields( $args ) {
+		$options = [];
+
+		foreach ( hivepress()->get_classes( 'fields' ) as $field_name => $field ) {
+			if ( $field::get_meta( 'label' ) && ! array_diff( $args, array_intersect_key( $field::get_meta(), $args ) ) ) {
+				$options[ $field_name ] = $field::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		return $options;
+	}
+
+	/**
+	 * Checks captcha status.
+	 *
+	 * @return bool
+	 */
+	protected function is_captcha_enabled() {
+		return get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' );
+	}
+
+	/**
+	 * Sets captcha.
+	 *
+	 * @param string $meta Form meta.
+	 * @return array
+	 */
+	public function set_captcha( $meta ) {
+		if ( isset( $meta['captcha'] ) && in_array( $meta['name'], (array) get_option( 'hp_recaptcha_forms' ), true ) ) {
+
+			// Set captcha flag.
+			$meta['captcha'] = true;
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Adds captcha.
+	 *
+	 * @param array  $args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function add_captcha( $args, $form ) {
+		if ( $form::get_meta( 'captcha' ) ) {
+
+			// Add captcha field.
+			$args['fields']['_captcha'] = [
+				'type'      => 'captcha',
+				'_excluded' => true,
+				'_order'    => 1000,
+			];
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Validates captcha.
+	 *
+	 * @param array  $errors Form errors.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function validate_captcha( $errors, $form ) {
+		if ( $form::get_meta( 'captcha' ) ) {
+
+			// Get ReCAPTCHA response.
+			$response = wp_remote_get(
+				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
+					[
+						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
+						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
+					]
+				)
+			);
+
+			// Add form error.
+			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
+				$errors[] = esc_html__( 'Captcha is invalid.', 'hivepress' );
+			}
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -195,10 +285,10 @@ final class Form {
 		}
 
 		// Enqueue ReCAPTCHA.
-		if ( ! is_admin() && get_option( 'hp_recaptcha_site_key' ) && get_option( 'hp_recaptcha_secret_key' ) ) {
+		if ( ! is_admin() && $this->is_captcha_enabled() ) {
 			wp_enqueue_script(
 				'recaptcha',
-				'https://www.google.com/recaptcha/api.js?hl=' . $language,
+				'https://www.google.com/recaptcha/api.js',
 				[],
 				null,
 				false

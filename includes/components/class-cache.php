@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -17,35 +17,44 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Cache
  */
-final class Cache {
+final class Cache extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
-		// Manage events.
+		// Schedule events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'schedule_events' ] );
 
+		// Unschedule events.
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
-		// Clear cache.
+		// Clear meta cache.
 		add_action( 'hivepress/v1/events/daily', [ $this, 'clear_meta_cache' ] );
 
+		// Clear post cache.
 		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ] );
 		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ] );
 		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ] );
 
+		// Clear post term cache.
 		add_action( 'set_object_terms', [ $this, 'clear_post_term_cache' ], 10, 6 );
 
+		// Clear term cache.
 		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ] );
 		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ] );
 		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ] );
 
+		// Clear comment cache.
 		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ] );
 		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ] );
 		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ] );
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -70,7 +79,7 @@ final class Cache {
 		foreach ( $periods as $period ) {
 			$timestamp = wp_next_scheduled( 'hivepress/v1/events/' . $period );
 
-			if ( ! empty( $timestamp ) ) {
+			if ( $timestamp ) {
 				wp_unschedule_event( $timestamp, 'hivepress/v1/events/' . $period );
 			}
 		}
@@ -498,7 +507,7 @@ final class Cache {
 				);
 
 				// Delete values.
-				if ( ! empty( $meta_values ) ) {
+				if ( $meta_values ) {
 					foreach ( $meta_values as $meta_value ) {
 						call_user_func_array( $callback, [ $meta_value[ $column ], $meta_value['meta_key'] ] );
 						call_user_func_array( $callback, [ $meta_value[ $column ], preg_replace( '/^_transient_timeout/', '_transient', $meta_value['meta_key'] ) ] );
@@ -527,7 +536,7 @@ final class Cache {
 		$this->delete_cache( null, hp\unprefix( $post->post_type ) );
 
 		// Delete meta cache.
-		if ( ! empty( $post->post_author ) ) {
+		if ( $post->post_author ) {
 			$this->delete_user_cache( $post->post_author, null, hp\unprefix( $post->post_type ) );
 		}
 	}
@@ -552,14 +561,17 @@ final class Cache {
 		if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
 			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
 
+			// Get post type.
+			$post_type = get_post_type( $post_id );
+
 			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
 
 				// Get term.
 				$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
 
 				// Delete meta cache.
-				if ( false !== $term ) {
-					$this->delete_term_cache( $term->term_id, null, hp\unprefix( get_post_type( $post_id ) ) );
+				if ( $term ) {
+					$this->delete_term_cache( $term->term_id, null, hp\unprefix( $post_type ) );
 				}
 			}
 
@@ -606,11 +618,11 @@ final class Cache {
 		$this->delete_cache( null, hp\unprefix( $comment->comment_type ) );
 
 		// Delete meta cache.
-		if ( ! empty( $comment->user_id ) ) {
+		if ( $comment->user_id ) {
 			$this->delete_user_cache( $comment->user_id, null, hp\unprefix( $comment->comment_type ) );
 		}
 
-		if ( ! empty( $comment->comment_post_ID ) ) {
+		if ( $comment->comment_post_ID ) {
 			$this->delete_post_cache( $comment->comment_post_ID, null, hp\unprefix( $comment->comment_type ) );
 		}
 	}
