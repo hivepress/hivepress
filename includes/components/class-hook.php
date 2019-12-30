@@ -31,6 +31,7 @@ final class Hook extends Component {
 		add_action( 'profile_update', [ $this, 'update_user' ] );
 		add_action( 'delete_user', [ $this, 'update_user' ] );
 
+		// Update user meta.
 		add_action( 'added_user_meta', [ $this, 'update_user_meta' ], 10, 4 );
 		add_action( 'updated_user_meta', [ $this, 'update_user_meta' ], 10, 4 );
 
@@ -38,8 +39,10 @@ final class Hook extends Component {
 		add_action( 'save_post', [ $this, 'update_post' ], 10, 3 );
 		add_action( 'delete_post', [ $this, 'update_post' ] );
 
+		// Update post status.
 		add_action( 'transition_post_status', [ $this, 'update_post_status' ], 10, 3 );
 
+		// Update post meta.
 		add_action( 'added_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 		add_action( 'updated_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 
@@ -48,6 +51,7 @@ final class Hook extends Component {
 		add_action( 'edit_term', [ $this, 'update_term' ], 10, 3 );
 		add_action( 'delete_term', [ $this, 'update_term' ], 10, 3 );
 
+		// Update term meta.
 		add_action( 'added_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
 		add_action( 'updated_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
 
@@ -56,8 +60,10 @@ final class Hook extends Component {
 		add_action( 'edit_comment', [ $this, 'update_comment' ] );
 		add_action( 'delete_comment', [ $this, 'update_comment' ] );
 
+		// Update comment status.
 		add_action( 'wp_set_comment_status', [ $this, 'update_comment_status' ], 10, 2 );
 
+		// Update comment meta.
 		add_action( 'added_comment_meta', [ $this, 'update_comment_meta' ], 10, 4 );
 		add_action( 'updated_comment_meta', [ $this, 'update_comment_meta' ], 10, 4 );
 
@@ -320,20 +326,20 @@ final class Hook extends Component {
 	}
 
 	/**
-	 * Starts import.
-	 */
-	public function start_import() {
-		if ( ! defined( 'HP_IMPORT' ) ) {
-			define( 'HP_IMPORT', true );
-		}
-	}
-
-	/**
 	 * Checks import status.
 	 *
 	 * @return bool
 	 */
 	protected function is_import_started() {
 		return defined( 'HP_IMPORT' ) && HP_IMPORT;
+	}
+
+	/**
+	 * Starts import.
+	 */
+	public function start_import() {
+		if ( ! defined( 'HP_IMPORT' ) ) {
+			define( 'HP_IMPORT', true );
+		}
 	}
 }

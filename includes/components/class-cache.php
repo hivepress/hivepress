@@ -58,6 +58,15 @@ final class Cache extends Component {
 	}
 
 	/**
+	 * Checks cache status.
+	 *
+	 * @return bool
+	 */
+	protected function is_cache_enabled() {
+		return ! defined( 'HP_CACHE' ) || HP_CACHE;
+	}
+
+	/**
 	 * Schedules events.
 	 */
 	public function schedule_events() {
@@ -461,15 +470,6 @@ final class Cache extends Component {
 		}
 
 		return $key;
-	}
-
-	/**
-	 * Checks cache status.
-	 *
-	 * @return bool
-	 */
-	protected function is_cache_enabled() {
-		return ! defined( 'HP_CACHE' ) || HP_CACHE;
 	}
 
 	/**
