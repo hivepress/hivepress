@@ -29,6 +29,7 @@ class Email extends Text {
 			[
 				'label'      => esc_html__( 'Email', 'hivepress' ),
 				'filterable' => false,
+				'sortable'   => false,
 
 				'settings'   => [
 					'min_length' => null,

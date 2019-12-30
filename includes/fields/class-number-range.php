@@ -43,6 +43,7 @@ class Number_Range extends Number {
 			[
 				'label'    => esc_html__( 'Number Range', 'hivepress' ),
 				'editable' => false,
+				'sortable' => false,
 
 				'settings' => [
 					'placeholder' => null,

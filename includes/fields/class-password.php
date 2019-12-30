@@ -29,6 +29,7 @@ class Password extends Text {
 			[
 				'label'      => null,
 				'filterable' => false,
+				'sortable'   => false,
 			],
 			$meta
 		);

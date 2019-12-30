@@ -43,6 +43,7 @@ class Date_Range extends Date {
 			[
 				'label'    => esc_html__( 'Date Range', 'hivepress' ),
 				'editable' => false,
+				'sortable' => false,
 			],
 			$meta
 		);

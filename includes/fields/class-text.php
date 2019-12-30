@@ -57,6 +57,7 @@ class Text extends Field {
 			[
 				'label'      => esc_html__( 'Text', 'hivepress' ),
 				'filterable' => true,
+				'sortable'   => true,
 
 				'settings'   => [
 					'placeholder' => [

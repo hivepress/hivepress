@@ -36,6 +36,7 @@ class Textarea extends Text {
 			[
 				'label'      => esc_html__( 'Textarea', 'hivepress' ),
 				'filterable' => false,
+				'sortable'   => false,
 
 				'settings'   => [
 					'editor' => [

@@ -29,6 +29,7 @@ class URL extends Text {
 			[
 				'label'      => esc_html__( 'URL', 'hivepress' ),
 				'filterable' => false,
+				'sortable'   => false,
 
 				'settings'   => [
 					'min_length' => null,

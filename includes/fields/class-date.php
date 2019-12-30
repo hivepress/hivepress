@@ -65,6 +65,7 @@ class Date extends Field {
 				'label'      => esc_html__( 'Date', 'hivepress' ),
 				'type'       => 'DATE',
 				'filterable' => true,
+				'sortable'   => true,
 
 				'settings'   => [
 					'placeholder' => [

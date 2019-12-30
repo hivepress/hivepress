@@ -58,6 +58,7 @@ class Number extends Field {
 				'label'      => esc_html__( 'Number', 'hivepress' ),
 				'type'       => 'DECIMAL',
 				'filterable' => true,
+				'sortable'   => true,
 
 				'settings'   => [
 					'placeholder' => [
