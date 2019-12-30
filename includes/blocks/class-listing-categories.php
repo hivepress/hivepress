@@ -146,7 +146,7 @@ class Listing_Categories extends Block {
 		}
 
 		// Set query.
-		$query = Models\Listing_Category::limit( $this->number );
+		$query = Models\Listing_Category::query()->limit( $this->number );
 
 		// Set parent.
 		if ( $this->parent ) {

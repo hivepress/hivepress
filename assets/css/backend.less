@@ -3,6 +3,12 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		&__field {
+			&--hidden {
+				display: none;
+			}
+		}
+
 		th {
 			@media screen and (max-width: 782px) {
 				padding-bottom: 10px;
@@ -33,6 +39,10 @@
 	}
 
 	&-field {
+		&--hidden {
+			display: none;
+		}
+
 		&--textarea {
 			width: 500px;
 			min-height: 7em;

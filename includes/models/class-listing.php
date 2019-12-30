@@ -146,4 +146,9 @@ class Listing extends Post {
 
 		return $image_urls;
 	}
+
+	// todo.
+	public function get_display_fields( $todo ) {
+		return [];
+	}
 }

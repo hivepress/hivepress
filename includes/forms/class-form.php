@@ -370,7 +370,7 @@ abstract class Form {
 			 * @param array $errors Form errors.
 			 * @param object $object Form object.
 			 */
-			$this->errors = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/errors', $this->errors );
+			$this->errors = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/errors', $this->errors, $this );
 		}
 
 		return empty( $this->errors );

@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-
+// ok.
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -71,13 +71,17 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ] );
 
+			// Add model fields.
+			add_filter( 'hivepress/v1/models/' . $model . '/fields', [ $this, 'add_model_fields' ], 10, 2 );
+
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 10, 2 );
 
 			// Add search fields.
-			// add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 10, 2 );
-			// add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 10, 2 );
-			// add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 10, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 10, 2 );
+
 			// Add sort options.
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 10, 2 );
 
@@ -105,106 +109,6 @@ final class Attribute extends Component {
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
 		}
-	}
-
-	/**
-	 * Adds model fields.
-	 *
-	 * @param array $model Model arguments.
-	 * @return array
-	 */
-	// todo.
-	public function add_model_fields( $model ) {
-
-		// Add fields.
-		foreach ( $this->attributes[ $model['name'] ] as $attribute_name => $attribute ) {
-			if ( ! isset( $model['fields'][ $attribute_name ] ) ) {
-				$model['fields'][ $attribute_name ] = array_merge(
-					$attribute['edit_field'],
-					[
-						'required'                 => false,
-						'attribute_display_areas'  => $attribute['display_areas'],
-						'attribute_display_format' => $attribute['display_format'],
-					]
-				);
-
-				if ( array_key_exists( 'options', $attribute['edit_field'] ) ) {
-					$model['relations'][ $model['name'] . '_' . $attribute_name ] = $attribute_name;
-				}
-			}
-		}
-
-		return $model;
-	}
-
-	/**
-	 * Adds search fields.
-	 *
-	 * @param array  $form_args Form arguments.
-	 * @param string $form_name Form name.
-	 * @return array
-	 */
-	// todo.
-	public function add_search_fields( $form_args, $form_name ) {
-
-		// Get model name.
-		$model = $this->get_model_name( $form_name );
-
-		// Filter attributes.
-		$category_id = $this->get_category_id( $model );
-
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
-
-		// Add fields.
-		foreach ( $attributes as $attribute_name => $attribute ) {
-
-			// Get field arguments.
-			$field_args = hp\merge_arrays(
-				$attribute['search_field'],
-				[
-					'statuses' => [ 'optional' => null ],
-				]
-			);
-
-			if ( ! isset( $form_args['fields'][ $attribute_name ] ) ) {
-				if ( ( $attribute['searchable'] && $model . '_search' === $form_name ) || ( $attribute['filterable'] && $model . '_filter' === $form_name ) ) {
-
-					// Add field.
-					$form_args['fields'][ $attribute_name ] = $field_args;
-				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_name, [ $model . '_filter', $model . '_sort' ], true ) ) {
-
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
-
-					if ( ! is_null( $field ) ) {
-
-						// Set value.
-						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
-
-						if ( $field->validate() ) {
-							$field_args  = array_merge( $field_args, [ 'type' => 'hidden' ] );
-							$field_value = $field->get_value();
-
-							// Add field.
-							if ( is_array( $field_value ) ) {
-								foreach ( $field_value as $option_name => $option_value ) {
-									$form_args['fields'][ $attribute_name . '[' . $option_name . ']' ] = array_merge( $field_args, [ 'default' => $option_value ] );
-								}
-							} else {
-								$form_args['fields'][ $attribute_name ] = $field_args;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $form_args;
 	}
 
 	/**
@@ -504,6 +408,42 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds model fields.
+	 *
+	 * @param array  $fields Model fields.
+	 * @param object $model Model object.
+	 * @return array
+	 */
+	public function add_model_fields( $fields, $model ) {
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model::get_meta( 'name' ), $model->get_category_ids() );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
+
+				// Get field arguments.
+				$field_args = array_merge(
+					$attribute['edit_field'],
+					[
+						'_areas'  => $attribute['display_areas'],
+						'_format' => $attribute['display_format'],
+					]
+				);
+
+				if ( isset( $field_args['options'] ) ) {
+					$field_args['_relation'] = $model::get_meta( 'name' ) . '_' . $attribute_name;
+				}
+
+				// Add field.
+				$fields[ $attribute_name ] = $field_args;
+			}
+		}
+
+		return $fields;
+	}
+
+	/**
 	 * Adds edit fields.
 	 *
 	 * @param array  $form_args Form arguments.
@@ -534,6 +474,50 @@ final class Attribute extends Component {
 							'statuses' => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
 						]
 					);
+				}
+
+				// Add field.
+				$form_args['fields'][ $attribute_name ] = $field_args;
+			}
+		}
+
+		return $form_args;
+	}
+
+	/**
+	 * Adds search fields.
+	 *
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function add_search_fields( $form_args, $form ) {
+
+		// Get form context.
+		$form_context = end( ( explode( '_', $form::get_meta( 'name' ) ) ) );
+
+		// Get model.
+		$model = $form::get_meta( 'model' );
+
+		// Get category ID.
+		$category_id = $this->get_category_id( $model );
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_id );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ( ( $attribute['searchable'] && 'search' === $form_context ) || ( $attribute['filterable'] && 'filter' === $form_context ) || 'sort' === $form_context ) && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
+
+				// Get field arguments.
+				$field_args = hp\merge_arrays(
+					$attribute['search_field'],
+					[
+						'statuses' => [ 'optional' => null ],
+					]
+				);
+
+				if ( ( ! $attribute['filterable'] && 'filter' === $form_context ) || 'sort' === $form_context ) {
+					$field_args['display_type'] = 'hidden';
 				}
 
 				// Add field.
