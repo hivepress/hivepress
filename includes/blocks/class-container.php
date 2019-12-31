@@ -48,13 +48,13 @@ class Container extends Block {
 	final protected function set_blocks( $blocks ) {
 		$this->blocks = [];
 
-		foreach ( hp\sort_array( $blocks ) as $block_name => $block_args ) {
+		foreach ( hp\sort_array( $blocks ) as $name => $args ) {
 
 			// Create block.
-			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_args['type'], [ hp\merge_arrays( [ 'context' => $this->context ], $block_args, [ 'name' => $block_name ] ) ] );
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $args['type'], [ hp\merge_arrays( [ 'context' => $this->context ], $args, [ 'name' => $name ] ) ] );
 
-			if ( ! is_null( $block ) ) {
-				$this->blocks[ $block_name ] = $block;
+			if ( $block ) {
+				$this->blocks[ $name ] = $block;
 			}
 		}
 	}

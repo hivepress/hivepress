@@ -41,21 +41,21 @@ class Listing_Edit_Block extends Template {
 
 						'blocks'     => [
 							'listing_title'           => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-title',
-								'_order'   => 10,
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-title',
+								'_order' => 10,
 							],
 
 							'listing_status'          => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-status',
-								'_order'   => 20,
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-status',
+								'_order' => 20,
 							],
 
 							'listing_date'            => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-date',
-								'_order'   => 30,
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-date',
+								'_order' => 30,
 							],
 
 							'listing_actions_primary' => [
@@ -69,9 +69,9 @@ class Listing_Edit_Block extends Template {
 
 								'blocks'     => [
 									'listing_view_link' => [
-										'type'     => 'element',
-										'filepath' => 'listing/edit/block/listing-view-link',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing/edit/block/listing-view-link',
+										'_order' => 10,
 									],
 								],
 							],

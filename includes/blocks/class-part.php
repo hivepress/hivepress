@@ -1,6 +1,6 @@
 <?php
 /**
- * Element block.
+ * Part block.
  *
  * @package HivePress\Blocks
  */
@@ -13,18 +13,18 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Element block class.
+ * Part block class.
  *
- * @class Element
+ * @class Part
  */
-class Element extends Block {
+class Part extends Block {
 
 	/**
 	 * File path.
 	 *
 	 * @var string
 	 */
-	protected $filepath;
+	protected $path;
 
 	/**
 	 * Renders block HTML.
@@ -35,19 +35,21 @@ class Element extends Block {
 		$output = '';
 
 		// Get file path.
-		$filepath = locate_template( 'hivepress/' . $this->filepath . '.php' );
+		$filepath = locate_template( 'hivepress/' . $this->path . '.php' );
 
 		if ( empty( $filepath ) ) {
 			foreach ( hivepress()->get_dirs() as $dir ) {
-				if ( file_exists( $dir . '/templates/' . $this->filepath . '.php' ) ) {
-					$filepath = $dir . '/templates/' . $this->filepath . '.php';
+				$dirpath = $dir . '/templates/' . $this->path . '.php';
+
+				if ( file_exists( $dirpath ) ) {
+					$filepath = $dirpath;
 
 					break;
 				}
 			}
 		}
 
-		if ( ! empty( $filepath ) ) {
+		if ( $filepath ) {
 
 			// Extract context.
 			unset( $this->context['filepath'] );
@@ -55,7 +57,7 @@ class Element extends Block {
 
 			extract( $this->context );
 
-			// Render element.
+			// Render part.
 			ob_start();
 
 			include $filepath;

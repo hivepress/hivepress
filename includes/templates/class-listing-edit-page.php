@@ -66,9 +66,9 @@ class Listing_Edit_Page extends User_Account_Page {
 
 										'blocks'     => [
 											'listing_delete_link' => [
-												'type'     => 'element',
-												'filepath' => 'listing/edit/page/listing-delete-link',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing/edit/page/listing-delete-link',
+												'_order' => 10,
 											],
 										],
 									],

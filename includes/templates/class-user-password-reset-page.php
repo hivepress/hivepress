@@ -51,9 +51,9 @@ class User_Password_Reset_Page extends Page {
 
 										'blocks'     => [
 											'page_title' => [
-												'type'     => 'element',
-												'filepath' => 'page/page-title',
-												'_order'   => 5,
+												'type'   => 'part',
+												'path'   => 'page/page-title',
+												'_order' => 5,
 											],
 
 											'user_password_reset_form' => [

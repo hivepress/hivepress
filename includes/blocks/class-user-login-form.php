@@ -40,15 +40,15 @@ class User_Login_Form extends Form {
 
 						'blocks'     => [
 							'user_register_link'         => [
-								'type'     => 'element',
-								'filepath' => 'user/login/user-register-link',
-								'_order'   => 10,
+								'type'   => 'part',
+								'path'   => 'user/login/user-register-link',
+								'_order' => 10,
 							],
 
 							'user_password_request_link' => [
-								'type'     => 'element',
-								'filepath' => 'user/login/user-password-request-link',
-								'_order'   => 20,
+								'type'   => 'part',
+								'path'   => 'user/login/user-password-request-link',
+								'_order' => 20,
 							],
 						],
 					],

@@ -66,14 +66,14 @@ class Vendor_View_Page extends Page {
 
 												'blocks' => [
 													'vendor_image' => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-image',
+														'type'     => 'part',
+														'path' => 'vendor/view/page/vendor-image',
 														'_order'    => 10,
 													],
 
 													'vendor_name'  => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-name',
+														'type'     => 'part',
+														'path' => 'vendor/view/page/vendor-name',
 														'_order'    => 20,
 													],
 
@@ -87,16 +87,16 @@ class Vendor_View_Page extends Page {
 
 														'blocks'     => [
 															'vendor_date' => [
-																'type' => 'element',
-																'filepath' => 'vendor/view/vendor-date',
+																'type' => 'part',
+																'path' => 'vendor/view/vendor-date',
 																'_order' => 10,
 															],
 														],
 													],
 
 													'vendor_description' => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-description',
+														'type'     => 'part',
+														'path' => 'vendor/view/page/vendor-description',
 														'_order'    => 40,
 													],
 												],
@@ -132,9 +132,9 @@ class Vendor_View_Page extends Page {
 
 										'blocks'     => [
 											'page_title' => [
-												'type'     => 'element',
-												'filepath' => 'page/page-title',
-												'_order'   => 5,
+												'type'   => 'part',
+												'path'   => 'page/page-title',
+												'_order' => 5,
 											],
 
 											'listings'   => [
@@ -144,9 +144,9 @@ class Vendor_View_Page extends Page {
 											],
 
 											'listing_pagination' => [
-												'type'     => 'element',
-												'filepath' => 'page/pagination',
-												'_order'   => 20,
+												'type'   => 'part',
+												'path'   => 'page/pagination',
+												'_order' => 20,
 											],
 										],
 									],

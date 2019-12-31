@@ -48,9 +48,9 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 
 										'blocks'     => [
 											'listing_category_change_link' => [
-												'type'     => 'element',
-												'filepath' => 'listing/submit/listing-category-change-link',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing/submit/listing-category-change-link',
+												'_order' => 10,
 											],
 										],
 									],

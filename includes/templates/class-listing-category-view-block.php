@@ -51,9 +51,9 @@ class Listing_Category_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_category_image' => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/block/listing-category-image',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing-category/view/block/listing-category-image',
+										'_order' => 10,
 									],
 								],
 							],
@@ -68,9 +68,9 @@ class Listing_Category_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_category_name'            => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/block/listing-category-name',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing-category/view/block/listing-category-name',
+										'_order' => 10,
 									],
 
 									'listing_category_details_primary' => [
@@ -83,17 +83,17 @@ class Listing_Category_View_Block extends Template {
 
 										'blocks'     => [
 											'listing_category_count' => [
-												'type'     => 'element',
-												'filepath' => 'listing-category/view/listing-category-count',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing-category/view/listing-category-count',
+												'_order' => 10,
 											],
 										],
 									],
 
 									'listing_category_description'     => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/listing-category-description',
-										'_order'   => 30,
+										'type'   => 'part',
+										'path'   => 'listing-category/view/listing-category-description',
+										'_order' => 30,
 									],
 								],
 							],

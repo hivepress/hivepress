@@ -135,8 +135,8 @@ class Listings_View_Page extends Page {
 													],
 
 													'listing_pagination' => [
-														'type'     => 'element',
-														'filepath' => 'page/pagination',
+														'type'     => 'part',
+														'path' => 'page/pagination',
 														'_order'    => 30,
 													],
 												],

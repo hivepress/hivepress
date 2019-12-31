@@ -58,11 +58,11 @@ class Modal extends Container {
 		// Add title.
 		array_unshift(
 			$this->blocks,
-			new Element(
+			new Part(
 				[
-					'type'     => 'element',
-					'filepath' => 'page/modal-title',
-					'context'  => array_merge( $this->context, [ 'modal_title' => $this->caption ] ),
+					'type'    => 'part',
+					'path'    => 'page/modal-title',
+					'context' => array_merge( $this->context, [ 'modal_title' => $this->caption ] ),
 				]
 			)
 		);

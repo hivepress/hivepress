@@ -66,14 +66,14 @@ class Listing_View_Page extends Page {
 
 												'blocks' => [
 													'listing_title_text'           => [
-														'type'     => 'element',
-														'filepath' => 'listing/view/page/listing-title',
+														'type'     => 'part',
+														'path' => 'listing/view/page/listing-title',
 														'_order'    => 10,
 													],
 
 													'listing_verified_badge' => [
-														'type'     => 'element',
-														'filepath' => 'listing/view/listing-verified-badge',
+														'type'     => 'part',
+														'path' => 'listing/view/listing-verified-badge',
 														'_order'    => 20,
 													],
 												],
@@ -89,35 +89,35 @@ class Listing_View_Page extends Page {
 
 												'blocks' => [
 													'listing_category' => [
-														'type'     => 'element',
-														'filepath' => 'listing/view/listing-category',
+														'type'     => 'part',
+														'path' => 'listing/view/listing-category',
 														'_order'    => 10,
 													],
 
 													'listing_date'     => [
-														'type'     => 'element',
-														'filepath' => 'listing/view/listing-date',
+														'type'     => 'part',
+														'path' => 'listing/view/listing-date',
 														'_order'    => 20,
 													],
 												],
 											],
 
 											'listing_images'          => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/page/listing-images',
-												'_order'   => 30,
+												'type'   => 'part',
+												'path'   => 'listing/view/page/listing-images',
+												'_order' => 30,
 											],
 
 											'listing_attributes_secondary' => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/page/listing-attributes-secondary',
-												'_order'   => 40,
+												'type'   => 'part',
+												'path'   => 'listing/view/page/listing-attributes-secondary',
+												'_order' => 40,
 											],
 
 											'listing_description'     => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/page/listing-description',
-												'_order'   => 50,
+												'type'   => 'part',
+												'path'   => 'listing/view/page/listing-description',
+												'_order' => 50,
 											],
 										],
 									],
@@ -134,9 +134,9 @@ class Listing_View_Page extends Page {
 
 										'blocks'     => [
 											'listing_attributes_primary' => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/page/listing-attributes-primary',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing/view/page/listing-attributes-primary',
+												'_order' => 10,
 											],
 
 											'listing_actions_primary' => [
@@ -166,8 +166,8 @@ class Listing_View_Page extends Page {
 													],
 
 													'listing_report_link' => [
-														'type'     => 'element',
-														'filepath' => 'listing/view/page/listing-report-link',
+														'type'     => 'part',
+														'path' => 'listing/view/page/listing-report-link',
 														'_order'    => 100,
 													],
 												],

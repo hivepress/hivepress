@@ -33,9 +33,9 @@ class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 					'page_content' => [
 						'blocks' => [
 							'listing_complete_message' => [
-								'type'     => 'element',
-								'filepath' => 'listing/submit/listing-complete-message',
-								'_order'   => 10,
+								'type'   => 'part',
+								'path'   => 'listing/submit/listing-complete-message',
+								'_order' => 10,
 							],
 						],
 					],

@@ -51,9 +51,9 @@ class Listing_Category_Submit_Block extends Template {
 
 								'blocks'     => [
 									'listing_category_image' => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/submit/block/listing-category-image',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing-category/submit/block/listing-category-image',
+										'_order' => 10,
 									],
 								],
 							],
@@ -68,9 +68,9 @@ class Listing_Category_Submit_Block extends Template {
 
 								'blocks'     => [
 									'listing_category_name' => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/submit/block/listing-category-name',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing-category/submit/block/listing-category-name',
+										'_order' => 10,
 									],
 								],
 							],

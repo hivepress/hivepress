@@ -37,9 +37,9 @@ abstract class Listing_Submit_Page extends Page {
 
 								'blocks' => [
 									'page_title' => [
-										'type'     => 'element',
-										'filepath' => 'page/page-title',
-										'_order'   => 5,
+										'type'   => 'part',
+										'path'   => 'page/page-title',
+										'_order' => 5,
 									],
 								],
 							],

@@ -67,9 +67,9 @@ class Site_Footer_Block extends Template {
 
 										'blocks'     => [
 											'user_login_link' => [
-												'type'     => 'element',
-												'filepath' => 'user/register/user-login-link',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'user/register/user-login-link',
+												'_order' => 10,
 											],
 										],
 									],

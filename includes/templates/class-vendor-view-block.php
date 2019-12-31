@@ -51,9 +51,9 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_image' => [
-										'type'     => 'element',
-										'filepath' => 'vendor/view/block/vendor-image',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'vendor/view/block/vendor-image',
+										'_order' => 10,
 									],
 								],
 							],
@@ -68,9 +68,9 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_name' => [
-										'type'     => 'element',
-										'filepath' => 'vendor/view/block/vendor-name',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'vendor/view/block/vendor-name',
+										'_order' => 10,
 									],
 
 									'vendor_details_primary' => [
@@ -83,9 +83,9 @@ class Vendor_View_Block extends Template {
 
 										'blocks'     => [
 											'vendor_date' => [
-												'type'     => 'element',
-												'filepath' => 'vendor/view/vendor-date',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-date',
+												'_order' => 10,
 											],
 										],
 									],

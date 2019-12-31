@@ -51,15 +51,15 @@ class Listing_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_featured_badge' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/listing-featured-badge',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing/view/listing-featured-badge',
+										'_order' => 10,
 									],
 
 									'listing_image' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/block/listing-image',
-										'_order'   => 20,
+										'type'   => 'part',
+										'path'   => 'listing/view/block/listing-image',
+										'_order' => 20,
 									],
 								],
 							],
@@ -84,15 +84,15 @@ class Listing_View_Block extends Template {
 
 										'blocks'     => [
 											'listing_title_text'           => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/block/listing-title',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing/view/block/listing-title',
+												'_order' => 10,
 											],
 
 											'listing_verified_badge' => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/listing-verified-badge',
-												'_order'   => 20,
+												'type'   => 'part',
+												'path'   => 'listing/view/listing-verified-badge',
+												'_order' => 20,
 											],
 										],
 									],
@@ -107,23 +107,23 @@ class Listing_View_Block extends Template {
 
 										'blocks'     => [
 											'listing_category' => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/listing-category',
-												'_order'   => 10,
+												'type'   => 'part',
+												'path'   => 'listing/view/listing-category',
+												'_order' => 10,
 											],
 
 											'listing_date' => [
-												'type'     => 'element',
-												'filepath' => 'listing/view/listing-date',
-												'_order'   => 20,
+												'type'   => 'part',
+												'path'   => 'listing/view/listing-date',
+												'_order' => 20,
 											],
 										],
 									],
 
 									'listing_attributes_secondary' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/block/listing-attributes-secondary',
-										'_order'   => 30,
+										'type'   => 'part',
+										'path'   => 'listing/view/block/listing-attributes-secondary',
+										'_order' => 30,
 									],
 								],
 							],
@@ -139,9 +139,9 @@ class Listing_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_attributes_primary' => [
-										'type'     => 'element',
-										'filepath' => 'listing/view/block/listing-attributes-primary',
-										'_order'   => 10,
+										'type'   => 'part',
+										'path'   => 'listing/view/block/listing-attributes-primary',
+										'_order' => 10,
 									],
 
 									'listing_actions_primary'    => [
