@@ -65,7 +65,7 @@ class User_Login_Form extends Form {
 	 */
 	protected function boot() {
 
-		// Set class.
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

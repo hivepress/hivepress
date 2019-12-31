@@ -69,7 +69,7 @@ abstract class Model_Form extends Form {
 	 */
 	final protected function set_model( $model ) {
 		if ( ! isset( $this->model ) ) {
-			if ( ! is_object( $model ) || strtolower( get_class( $model ) ) !== strtolower( 'HivePress\Models\\' . static::get_meta( 'model' ) ) ) {
+			if ( ! hp\is_class_instance( $model, '\HivePress\Models\\' . static::get_meta( 'model' ) ) ) {
 				$model = hp\create_class_instance( '\HivePress\Models\\' . static::get_meta( 'model' ) );
 			}
 

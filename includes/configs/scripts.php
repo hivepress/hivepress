@@ -61,7 +61,7 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
-			'apiURL'   => hp\get_rest_url(),
+			'apiURL'   => get_rest_url( null, 'hivepress/v1' ),
 			'apiNonce' => wp_create_nonce( 'wp_rest' ),
 			'language' => hivepress()->translator->get_language(),
 		],

@@ -105,6 +105,22 @@ abstract class Block {
 	protected function boot() {}
 
 	/**
+	 * Gets context values.
+	 *
+	 * @param string $name Context name.
+	 * @return mixed
+	 */
+	final protected function get_context( $name = '' ) {
+		$context = $this->context;
+
+		if ( $name ) {
+			$context = hp\get_array_value( $context, $name );
+		}
+
+		return $context;
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

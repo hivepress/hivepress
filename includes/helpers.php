@@ -75,6 +75,174 @@ function get_array_value( $array, $key, $default = null ) {
 }
 
 /**
+ * Gets class name.
+ *
+ * @param string $class Class name.
+ * @return string
+ */
+function get_class_name( $class ) {
+	return strtolower( ( new \ReflectionClass( $class ) )->getShortName() );
+}
+
+/**
+ * Gets class parents.
+ *
+ * @param string $class Class name.
+ * @return array
+ */
+function get_class_parents( $class ) {
+	return array_reverse( array_merge( [ $class ], class_parents( $class ) ) );
+}
+
+/**
+ * Checks object class.
+ *
+ * @param object $object Class object.
+ * @param string $class Class name.
+ * @return bool
+ */
+function is_class_instance( $object, $class ) {
+	return is_object( $object ) && strtolower( get_class( $object ) ) === ltrim( strtolower( $class ), '\\' );
+}
+
+/**
+ * Creates class instance.
+ *
+ * @param string $class Class name.
+ * @param array  $args Instance arguments.
+ * @return mixed
+ */
+function create_class_instance( $class, $args = [] ) {
+	if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
+		$instance = null;
+
+		if ( empty( $args ) ) {
+			$instance = new $class();
+		} else {
+			$instance = new $class( ...$args );
+		}
+
+		return $instance;
+	}
+}
+
+/**
+ * Calls class method.
+ *
+ * @param string $class Class name.
+ * @param string $method Method name.
+ * @param array  $args Method arguments.
+ * @return mixed
+ */
+function call_class_method( $class, $method, $args = [] ) {
+	if ( class_exists( $class ) && method_exists( $class, $method ) ) {
+		return call_user_func_array( [ $class, $method ], $args );
+	}
+}
+
+/**
+ * Replaces tokens with values.
+ *
+ * @param array  $tokens Array of tokens.
+ * @param string $text Text to be processed.
+ * @return string
+ */
+function replace_tokens( $tokens, $text ) {
+	foreach ( $tokens as $name => $value ) {
+		if ( ! is_array( $value ) ) {
+			$text = str_replace( '%' . $name . '%', $value, $text );
+		}
+	}
+
+	return $text;
+}
+
+/**
+ * Renders HTML attributes.
+ *
+ * @param array $attributes Array of attributes.
+ * @return string
+ */
+function html_attributes( $attributes ) {
+	$output = '';
+
+	if ( is_array( $attributes ) ) {
+		foreach ( $attributes as $name => $value ) {
+			if ( true === $value ) {
+				$value = $name;
+			} elseif ( is_array( $value ) ) {
+				$value = implode( ' ', $value );
+			}
+
+			$output .= esc_attr( $name ) . '="' . esc_attr( $value ) . '" ';
+		}
+	}
+
+	return trim( $output );
+}
+
+/**
+ * Sanitizes HTML.
+ *
+ * @param string $html HTML to sanitize.
+ * @param array  $tags Allowed HTML tags.
+ * @return string
+ */
+function sanitize_html( $html, $tags = [] ) {
+	if ( empty( $tags ) ) {
+		$tags = [
+			'strong' => [],
+			'a'      => [
+				'href'   => [],
+				'target' => [],
+			],
+			'i'      => [
+				'class' => [],
+			],
+		];
+	}
+
+	return wp_kses( $html, $tags );
+}
+
+/**
+ * Sanitizes slug.
+ *
+ * @param string $text Text to sanitize.
+ * @return string
+ */
+function sanitize_slug( $text ) {
+	return str_replace( '_', '-', sanitize_key( $text ) );
+}
+
+/**
+ * Sanitizes key.
+ *
+ * @param string $text Text to sanitize.
+ * @return string
+ */
+function sanitize_key( $text ) {
+	$key = $text;
+
+	if ( function_exists( 'transliterator_transliterate' ) ) {
+		$key = transliterator_transliterate( 'Any-Latin; Latin-ASCII; Lower()', $key );
+	} else {
+		$key = strtolower( $key );
+	}
+
+	$key = preg_replace( '/[^a-z0-9]+/', '_', $key );
+	$key = ltrim( trim( $key, '_' ), '0..9' );
+
+	if ( empty( $key ) ) {
+		$key = 'a' . substr( md5( $text ), 0, 31 );
+	}
+
+	return $key;
+}
+
+// --------------------------------------------------------
+
+/**
  * Searches array item value by keys.
  *
  * @param array $array Source array.
@@ -188,123 +356,6 @@ function merge_trees( $parent_tree, $child_tree, $tree_key, $node_key = null ) {
 }
 
 /**
- * Renders HTML attributes.
- *
- * @param array $atts Array of attributes.
- * @return string
- */
-function html_attributes( $atts ) {
-	$output = '';
-
-	if ( is_array( $atts ) ) {
-		foreach ( $atts as $name => $value ) {
-			if ( true === $value ) {
-				$value = $name;
-			} elseif ( is_array( $value ) ) {
-				$value = implode( ' ', $value );
-			}
-
-			$output .= esc_attr( $name ) . '="' . esc_attr( trim( $value ) ) . '" ';
-		}
-	}
-
-	return trim( $output );
-}
-
-/**
- * Sanitizes HTML.
- *
- * @param string $html HTML to sanitize.
- * @return string
- */
-function sanitize_html( $html ) {
-	$tags = [
-		'strong' => [],
-		'a'      => [
-			'href'   => [],
-			'target' => [],
-		],
-		'i'      => [
-			'class' => [],
-		],
-	];
-
-	return wp_kses( $html, $tags );
-}
-
-/**
- * Sanitizes slug.
- *
- * @param string $text Text to sanitize.
- * @return string
- */
-function sanitize_slug( $text ) {
-	return str_replace( '_', '-', strtolower( $text ) );
-}
-
-/**
- * Sanitizes key.
- *
- * @param string $text Text to sanitize.
- * @return string
- */
-function sanitize_key( $text ) {
-	$key = $text;
-
-	if ( function_exists( 'transliterator_transliterate' ) ) {
-		$key = transliterator_transliterate( 'Any-Latin; Latin-ASCII; Lower()', $key );
-	} else {
-		$key = strtolower( $key );
-	}
-
-	$key = preg_replace( '/[^a-z0-9]+/', '_', $key );
-	$key = ltrim( trim( $key, '_' ), '0..9' );
-
-	if ( '' === $key ) {
-		$key = 'a' . substr( md5( $text ), 0, 31 );
-	}
-
-	return $key;
-}
-
-/**
- * Replaces tokens with values.
- *
- * @param array  $tokens Array of tokens.
- * @param string $text Text to be processed.
- * @return string
- */
-function replace_tokens( $tokens, $text ) {
-	foreach ( $tokens as $name => $value ) {
-		if ( ! is_array( $value ) ) {
-			$text = str_replace( '%' . $name . '%', $value, $text );
-		}
-	}
-
-	return $text;
-}
-
-/**
- * Gets post ID.
- *
- * @param array $args Post arguments.
- * @return int
- */
-function get_post_id( $args ) {
-	$args = array_merge(
-		$args,
-		[
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-		]
-	);
-
-	$post_ids = get_posts( $args );
-
-	return absint( reset( $post_ids ) );
-}
-
-/**
  * Gets REST API URL.
  *
  * @param string $url Redirect URL.
@@ -312,33 +363,6 @@ function get_post_id( $args ) {
  */
 function validate_redirect( $url ) {
 	return wp_validate_redirect( $url ) && ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 );
-}
-
-/**
- * Gets current URL.
- *
- * @return string
- */
-function get_current_url() {
-	global $wp;
-
-	$query_string = '';
-
-	if ( ! empty( $_GET ) ) {
-		$query_string = '/?' . http_build_query( $_GET );
-	}
-
-	return home_url( $wp->request . $query_string );
-}
-
-/**
- * Gets REST API URL.
- *
- * @param string $path URL path.
- * @return string
- */
-function get_rest_url( $path = '' ) {
-	return \get_rest_url( null, 'hivepress/v1' . $path );
 }
 
 /**
@@ -373,8 +397,8 @@ function rest_error( $code, $errors = [] ) {
 }
 
 // todo.
-function rest_response( $code, $data=null ) {
-	if(is_null($data)) {
+function rest_response( $code, $data = null ) {
+	if ( is_null( $data ) ) {
 		return new \WP_Rest_Response( (object) [], $code );
 	}
 
@@ -398,56 +422,7 @@ function get_current_page() {
 	return absint( $page );
 }
 
-/**
- * Creates class instance.
- *
- * @param string $class Class name.
- * @param array  $args Instance arguments.
- * @return mixed
- */
-function create_class_instance( $class, $args = [] ) {
-	if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
-		if ( empty( $args ) ) {
-			return new $class();
-		} else {
-			return new $class( ...$args );
-		}
-	}
-}
-
-/**
- * Calls class method.
- *
- * @param string $class Class name.
- * @param string $method Method name.
- * @param array  $args Method arguments.
- * @return mixed
- */
-function call_class_method( $class, $method, $args = [] ) {
-	if ( class_exists( $class ) && method_exists( $class, $method ) ) {
-		return call_user_func_array( [ $class, $method ], $args );
-	}
-}
-
-/**
- * Gets class name.
- *
- * @param string $class Class name.
- * @return string
- */
-function get_class_name( $class ) {
-	return strtolower( ( new \ReflectionClass( $class ) )->getShortName() );
-}
-
 // todo.
 function get_redirect_url( $url ) {
 	return add_query_arg( 'redirect', rawurlencode( get_current_url() ), $url );
-}
-
-function fetch_redirect_url( $default ) {
-	hp\get_array_value( $_GET, 'redirect', $default );
-}
-
-function get_class_parents($class) {
-	return array_reverse(array_merge([$class], class_parents($class)));
 }

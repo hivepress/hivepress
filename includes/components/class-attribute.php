@@ -411,13 +411,16 @@ final class Attribute extends Component {
 	 * Adds model fields.
 	 *
 	 * @param array  $fields Model fields.
-	 * @param object $model Model object.
+	 * @param object $object Model object.
 	 * @return array
 	 */
-	public function add_model_fields( $fields, $model ) {
+	public function add_model_fields( $fields, $object ) {
+
+		// Get model.
+		$model = $object::_get_meta( 'name' );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model::get_meta( 'name' ), $model->get_category_ids() );
+		$attributes = $this->get_attributes( $model, $object->get_category_ids() );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
@@ -432,7 +435,7 @@ final class Attribute extends Component {
 				);
 
 				if ( isset( $field_args['options'] ) ) {
-					$field_args['_relation'] = $model::get_meta( 'name' ) . '_' . $attribute_name;
+					$field_args['_relation'] = $model . '_' . $attribute_name;
 				}
 
 				// Add field.

@@ -215,6 +215,16 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field argument.
+	 *
+	 * @param string $name Argument name.
+	 * @return mixed
+	 */
+	final public function get_arg( $name ) {
+		return hp\get_array_value( $this->args, $name );
+	}
+
+	/**
 	 * Gets display type.
 	 *
 	 * @return string

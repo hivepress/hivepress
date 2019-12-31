@@ -420,11 +420,19 @@ final class Router {
 	}
 
 	// todo.
-	public function get_redirect_url($route) {
+	public function get_redirect_url( $route ) {
 		// todo.
 	}
 
 	public function get_current_url() {
-		return hp\get_current_url();
+		global $wp;
+
+		$query = '';
+
+		if ( ! empty( $_GET ) ) {
+			$query = '/?' . http_build_query( $_GET );
+		}
+
+		return home_url( $wp->request . $query );
 	}
 }

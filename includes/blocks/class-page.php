@@ -43,7 +43,7 @@ class Page extends Container {
 	public function render() {
 		$output = parent::render();
 
-		// Add container.
+		// Add wrapper.
 		switch ( get_template() ) {
 			case 'twentyseventeen':
 				$output = '<div class="wrap"><div class="content-area">' . $output . '</div></div>';

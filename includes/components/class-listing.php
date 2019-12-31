@@ -88,20 +88,24 @@ final class Listing {
 				]
 			);
 
-			if ( 0 !== $vendor_id ) {
+			if ( $vendor_id ) {
 
 				// Get image ID.
-				$image_id = hp\get_post_id(
-					[
-						'post_type'   => 'attachment',
-						'post_parent' => 0,
-						'author'      => $user_id,
-						'meta_key'    => 'hp_parent_field',
-						'meta_value'  => 'image_id',
-					]
+				$image_id = reset(
+					( get_posts(
+						[
+							'post_type'      => 'attachment',
+							'post_parent'    => 0,
+							'author'         => $user_id,
+							'meta_key'       => 'hp_parent_field',
+							'meta_value'     => 'image_id',
+							'posts_per_page' => 1,
+							'fields'         => 'ids',
+						]
+					) )
 				);
 
-				if ( 0 !== $image_id ) {
+				if ( $image_id ) {
 
 					// Update image.
 					set_post_thumbnail( $vendor_id, $image_id );
@@ -119,7 +123,7 @@ final class Listing {
 				]
 			);
 
-			if ( 0 !== $listing->post_parent ) {
+			if ( $listing->post_parent ) {
 
 				// Get attachment IDs.
 				$attachment_ids = get_posts(
@@ -349,13 +353,17 @@ final class Listing {
 	 * @return array
 	 */
 	public function add_menu_items( $menu ) {
-		if ( hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => [ 'draft', 'pending', 'publish' ],
-				'author'      => get_current_user_id(),
-			]
-		) !== 0 ) {
+		if ( reset(
+			( get_posts(
+				[
+					'post_type'      => 'hp_listing',
+					'post_status'    => [ 'draft', 'pending', 'publish' ],
+					'author'         => get_current_user_id(),
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			) )
+		) ) {
 			$menu['items']['listings_edit_page'] = [
 				'route'  => 'listings_edit_page',
 				'_order' => 10,
