@@ -33,11 +33,11 @@ class User_Edit_Settings_Page extends User_Account_Page {
 					'page_content' => [
 						'blocks' => [
 							'user_delete_modal' => [
-								'type'    => 'modal',
-								'caption' => esc_html__( 'Delete Account', 'hivepress' ),
-								'_order'  => 5,
+								'type'   => 'modal',
+								'title'  => esc_html__( 'Delete Account', 'hivepress' ),
+								'_order' => 5,
 
-								'blocks'  => [
+								'blocks' => [
 									'user_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'user_delete',

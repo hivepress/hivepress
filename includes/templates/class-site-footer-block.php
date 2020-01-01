@@ -31,10 +31,10 @@ class Site_Footer_Block extends Template {
 			[
 				'blocks' => [
 					'user_login_modal'            => [
-						'type'    => 'modal',
-						'caption' => esc_html__( 'Sign In', 'hivepress' ),
+						'type'   => 'modal',
+						'title'  => esc_html__( 'Sign In', 'hivepress' ),
 
-						'blocks'  => [
+						'blocks' => [
 							'user_login_form' => [
 								'type'   => 'user_login_form',
 								'_order' => 10,
@@ -43,10 +43,10 @@ class Site_Footer_Block extends Template {
 					],
 
 					'user_register_modal'         => [
-						'type'    => 'modal',
-						'caption' => esc_html__( 'Register', 'hivepress' ),
+						'type'   => 'modal',
+						'title'  => esc_html__( 'Register', 'hivepress' ),
 
-						'blocks'  => [
+						'blocks' => [
 							'user_register_form' => [
 								'type'       => 'form',
 								'form'       => 'user_register',
@@ -79,10 +79,10 @@ class Site_Footer_Block extends Template {
 					],
 
 					'user_password_request_modal' => [
-						'type'    => 'modal',
-						'caption' => esc_html__( 'Reset Password', 'hivepress' ),
+						'type'   => 'modal',
+						'title'  => esc_html__( 'Reset Password', 'hivepress' ),
 
-						'blocks'  => [
+						'blocks' => [
 							'user_password_request_form' => [
 								'type'       => 'form',
 								'form'       => 'user_password_request',

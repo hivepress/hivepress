@@ -33,11 +33,11 @@ class Listing_Edit_Page extends User_Account_Page {
 					'page_content' => [
 						'blocks' => [
 							'listing_delete_modal' => [
-								'type'    => 'modal',
-								'caption' => hivepress()->translator->get_string( 'delete_listing' ),
-								'_order'  => 5,
+								'type'   => 'modal',
+								'title'  => hivepress()->translator->get_string( 'delete_listing' ),
+								'_order' => 5,
 
-								'blocks'  => [
+								'blocks' => [
 									'listing_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'listing_delete',
