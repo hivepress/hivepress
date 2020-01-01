@@ -29,27 +29,6 @@ abstract class Model {
 	}
 
 	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected $aliases = [];
-
-	/**
-	 * Model relations.
-	 *
-	 * @var array
-	 */
-	protected $relations = [];
-
-	/**
 	 * Object ID.
 	 *
 	 * @var int
@@ -57,11 +36,11 @@ abstract class Model {
 	protected $id;
 
 	/**
-	 * Object attributes.
+	 * Object fields.
 	 *
 	 * @var array
 	 */
-	protected $attributes = [];
+	protected $fields = [];
 
 	/**
 	 * Object errors.
@@ -167,24 +146,6 @@ abstract class Model {
 	}
 
 	/**
-	 * Gets model aliases.
-	 *
-	 * @return array
-	 */
-	final public function _get_aliases() {
-		return $this->aliases;
-	}
-
-	/**
-	 * Gets model relations.
-	 *
-	 * @return array
-	 */
-	final public function _get_relations() {
-		return $this->relations;
-	}
-
-	/**
 	 * Routes static methods.
 	 *
 	 * @param string $name Method name.
@@ -217,16 +178,16 @@ abstract class Model {
 			return $this->_get_query( $this );
 		}
 
-		// Get or set object attribute.
+		// Get or set field value.
 		foreach ( [ 'set', 'get', 'is' ] as $prefix ) {
 			if ( strpos( $name, $prefix . '_' ) === 0 ) {
 
-				// Get attribute name.
-				$action    = 'is' === $prefix ? 'get' : $prefix;
-				$attribute = substr( $name, strlen( $prefix . '_' ) );
+				// Get field name.
+				$action = 'is' === $prefix ? 'get' : $prefix;
+				$field  = substr( $name, strlen( $prefix . '_' ) );
 
-				// Get attrute value.
-				$value = call_user_func_array( [ $this, '_' . $action . '_attribute' ], array_merge( [ $attribute ], $args ) );
+				// Get field value.
+				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], array_merge( [ $field ], $args ) );
 
 				if ( 'set' === $action ) {
 					return $this;
@@ -264,25 +225,27 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets object attribute.
+	 * Sets field value.
 	 *
-	 * @param string $name Attribute name.
-	 * @param mixed  $value Attribute value.
+	 * @param string $name Field name.
+	 * @param mixed  $value Field value.
 	 */
-	final protected function _set_attribute( $name, $value ) {
+	final protected function _set_value( $name, $value ) {
 		if ( isset( $this->fields[ $name ] ) ) {
-			$this->attributes[ $name ] = $this->fields[ $name ]->set_value( $value )->get_value();
+			$this->fields[ $name ]->set_value( $value );
 		}
 	}
 
 	/**
-	 * Gets object attribute.
+	 * Gets field value.
 	 *
-	 * @param string $name Attribute name.
+	 * @param string $name Field name.
 	 * @return mixed
 	 */
-	final protected function _get_attribute( $name ) {
-		return hp\get_array_value( $this->attributes, $name );
+	final protected function _get_value( $name ) {
+		if ( isset( $this->fields[ $name ] ) ) {
+			return $this->fields[ $name ]->get_value( $value );
+		}
 	}
 
 	/**
@@ -325,13 +288,13 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets object attributes.
+	 * Sets field values.
 	 *
-	 * @param array $attributes Object attributes.
+	 * @param array $values Field values.
 	 * @return object
 	 */
-	final public function fill( $attributes ) {
-		foreach ( $attributes as $name => $value ) {
+	final public function fill( $values ) {
+		foreach ( $values as $name => $value ) {
 			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
 		}
 
@@ -339,12 +302,18 @@ abstract class Model {
 	}
 
 	/**
-	 * Gets object attributes.
+	 * Gets field values.
 	 *
 	 * @return array
 	 */
 	final public function serialize() {
-		return $this->attributes;
+		$values = [];
+
+		foreach ( array_keys( $this->fields ) as $name ) {
+			$values[ $name ] = call_user_func_array( [ $this, 'get_' . $name ] );
+		}
+
+		return $values;
 	}
 
 	/**
