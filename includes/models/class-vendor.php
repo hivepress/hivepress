@@ -27,37 +27,43 @@ class Vendor extends Post {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
+				'fields' => [
 					'name'        => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 128,
+						'max_length' => 256,
 						'required'   => true,
+						'_alias'     => 'post_title',
 					],
 
 					'description' => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
+						'_alias'     => 'post_content',
 					],
 
 					'status'      => [
 						'type'       => 'text',
 						'max_length' => 128,
+						'_alias'     => 'post_status',
 					],
 
-					'user_id'     => [
+					'user'        => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
+						'_alias'    => 'post_author',
+						'_model'    => 'user',
 					],
-				],
 
-				'aliases' => [
-					'post_title'   => 'name',
-					'post_content' => 'description',
-					'post_status'  => 'status',
-					'post_author'  => 'user_id',
+					'image'       => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'_alias'    => '_thumbnail_id',
+						'_model'    => 'attachment',
+						'_external' => true,
+					],
 				],
 			],
 			$args

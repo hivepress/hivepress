@@ -74,7 +74,7 @@ class User_Update extends Model_Form {
 					'current_password' => [
 						'label'     => esc_html__( 'Current Password', 'hivepress' ),
 						'type'      => 'password',
-						'_excluded' => true,
+						'_separate' => true,
 						'_order'    => 70,
 					],
 				],

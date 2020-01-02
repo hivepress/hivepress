@@ -84,7 +84,7 @@ abstract class Model_Form extends Form {
 	 */
 	final protected function set_fields( $fields ) {
 		foreach ( $fields as $name => $args ) {
-			if ( ! hp\get_array_value( $args, '_excluded' ) && isset( $this->model->_get_fields()[ $name ] ) ) {
+			if ( ! hp\get_array_value( $args, '_separate' ) && isset( $this->model->_get_fields()[ $name ] ) ) {
 				$fields[ $name ] = hp\merge_arrays( $this->model->_get_fields()[ $name ]->get_args(), $args );
 			}
 		}

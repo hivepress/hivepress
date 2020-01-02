@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 abstract class Post extends Model {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Model meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'alias' => hp\prefix( hp\get_class_name( static::class ) ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Gets object.
 	 *
 	 * @param int $id Object ID.
@@ -36,7 +52,7 @@ abstract class Post extends Model {
 			$post = get_post( absint( $id ), ARRAY_A );
 		}
 
-		if ( is_null( $post ) || hp\prefix( static::_get_meta( 'name' ) ) !== $post['post_type'] ) {
+		if ( empty( $post ) || static::_get_meta( 'alias' ) !== $post['post_type'] ) {
 			return;
 		}
 
@@ -48,16 +64,22 @@ abstract class Post extends Model {
 			get_post_meta( $post['ID'] )
 		);
 
-		// Get object attributes.
-		$attributes = [];
+		// Get field values.
+		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $field_name ) {
-			if ( in_array( $field_name, $this->aliases, true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $post, array_search( $field_name, $this->aliases, true ) );
-			} elseif ( ! in_array( $field_name, $this->relations, true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
-			} else {
-				$taxonomy = array_search( $field_name, $this->relations, true );
+		foreach ( $this->fields as $field_name => $field ) {
+
+			// Get field alias.
+			$field_alias = hp\prefix( $field_name );
+
+			if ( $field->get_arg( '_alias' ) ) {
+				$field_alias = $field->get_arg( '_alias' );
+			}
+
+			if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
+
+				// Get post terms.
+				$taxonomy = $field->get_arg( '_model' );
 				$term_ids = hivepress()->cache->get_post_cache( $post['ID'], [ 'fields' => 'ids' ], $taxonomy );
 
 				if ( is_null( $term_ids ) ) {
@@ -68,11 +90,19 @@ abstract class Post extends Model {
 					}
 				}
 
-				$attributes[ $field_name ] = $term_ids;
+				$values[ $field_name ] = $term_ids;
+			} elseif ( $field->get_arg( '_external' ) ) {
+
+				// Get meta value.
+				$values[ $field_name ] = hp\get_array_value( $meta, $field_alias );
+			} else {
+
+				// Get post value.
+				$values[ $field_name ] = hp\get_array_value( $post, $field_alias );
 			}
 		}
 
-		return ( new static() )->set_id( $post['ID'] )->fill( $attributes );
+		return ( new static() )->set_id( $post['ID'] )->fill( $values );
 	}
 
 	/**
@@ -82,21 +112,33 @@ abstract class Post extends Model {
 	 */
 	final public function save() {
 
-		// Get post data.
+		// Set post values.
 		$post  = [];
 		$meta  = [];
 		$terms = [];
 
 		foreach ( $this->fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
-
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, $this->aliases, true ) ) {
-					$post[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
-				} elseif ( in_array( $field_name, $this->relations, true ) ) {
-					$terms[ array_search( $field_name, $this->relations, true ) ] = $field->get_value();
+
+				// Get field alias.
+				$field_alias = hp\prefix( $field_name );
+
+				if ( $field->get_arg( '_alias' ) ) {
+					$field_alias = $field->get_arg( '_alias' );
+				}
+
+				if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
+
+					// Set post terms.
+					$terms[ hp\prefix( $field->get_arg( '_model' ) ) ] = $field->get_value();
+				} elseif ( $field->get_arg( '_external' ) ) {
+
+					// Set meta value.
+					$meta[ $field_alias ] = $field->get_value();
 				} else {
-					$meta[ $field_name ] = $field->get_value();
+
+					// Set post value.
+					$post[ $field_alias ] = $field->get_value();
 				}
 			} else {
 				$this->_add_errors( $field->get_errors() );
@@ -106,8 +148,8 @@ abstract class Post extends Model {
 		if ( empty( $this->errors ) ) {
 
 			// Create or update post.
-			if ( is_null( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $post, [ 'post_type' => hp\prefix( static::_get_meta( 'name' ) ) ] ) );
+			if ( empty( $this->id ) ) {
+				$id = wp_insert_post( array_merge( $post, [ 'post_type' => static::_get_meta( 'alias' ) ] ) );
 
 				if ( $id ) {
 					$this->set_id( $id );
@@ -118,14 +160,14 @@ abstract class Post extends Model {
 				return false;
 			}
 
-			// Update post meta.
-			foreach ( $meta as $meta_key => $meta_value ) {
-				update_post_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
-			}
-
 			// Update post terms.
 			foreach ( $terms as $taxonomy => $term_ids ) {
-				wp_set_post_terms( $this->id, (array) $term_ids, hp\prefix( $taxonomy ) );
+				wp_set_post_terms( $this->id, (array) $term_ids, $taxonomy );
+			}
+
+			// Update post meta.
+			foreach ( $meta as $meta_key => $meta_value ) {
+				update_post_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -141,7 +183,7 @@ abstract class Post extends Model {
 	 * @return bool
 	 */
 	final public function delete( $id = null ) {
-		if ( is_null( $id ) ) {
+		if ( empty( $id ) ) {
 			$id = $this->id;
 		}
 

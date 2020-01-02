@@ -54,7 +54,7 @@ class User_Login extends Model_Form {
 						'type'       => 'text',
 						'max_length' => 254,
 						'required'   => true,
-						'_excluded'  => true,
+						'_separate'  => true,
 						'_order'     => 10,
 					],
 

@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 abstract class Term extends Model {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Model meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'alias' => hp\prefix( hp\get_class_name( static::class ) ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Gets object.
 	 *
 	 * @param int $id Object ID.
@@ -33,10 +49,10 @@ abstract class Term extends Model {
 		if ( is_object( $id ) ) {
 			$term = get_object_vars( $id );
 		} else {
-			$term = get_term( absint( $id ), hp\prefix( static::_get_meta( 'name' ) ), ARRAY_A );
+			$term = get_term( absint( $id ), static::_get_meta( 'alias' ), ARRAY_A );
 		}
 
-		if ( is_null( $term ) || hp\prefix( static::_get_meta( 'name' ) ) !== $term['taxonomy'] ) {
+		if ( empty( $term ) || static::_get_meta( 'alias' ) !== $term['taxonomy'] ) {
 			return;
 		}
 
@@ -48,18 +64,30 @@ abstract class Term extends Model {
 			get_term_meta( $term['term_id'] )
 		);
 
-		// Get object attributes.
-		$attributes = [];
+		// Get field values.
+		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $field_name ) {
-			if ( in_array( $field_name, $this->aliases, true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $term, array_search( $field_name, $this->aliases, true ) );
+		foreach ( $this->fields as $field_name => $field ) {
+
+			// Get field alias.
+			$field_alias = hp\prefix( $field_name );
+
+			if ( $field->get_arg( '_alias' ) ) {
+				$field_alias = $field->get_arg( '_alias' );
+			}
+
+			if ( $field->get_arg( '_external' ) ) {
+
+				// Get meta value.
+				$values[ $field_name ] = hp\get_array_value( $meta, $field_alias );
 			} else {
-				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+
+				// Get term value.
+				$values[ $field_name ] = hp\get_array_value( $term, $field_alias );
 			}
 		}
 
-		return ( new static() )->set_id( $term['term_id'] )->fill( $attributes );
+		return ( new static() )->set_id( $term['term_id'] )->fill( $values );
 	}
 
 	/**
@@ -69,18 +97,28 @@ abstract class Term extends Model {
 	 */
 	final public function save() {
 
-		// Get term data.
+		// Get term values.
 		$term = [];
 		$meta = [];
 
 		foreach ( $this->fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
-
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, $this->aliases, true ) ) {
-					$term[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
+
+				// Get field alias.
+				$field_alias = hp\prefix( $field_name );
+
+				if ( $field->get_arg( '_alias' ) ) {
+					$field_alias = $field->get_arg( '_alias' );
+				}
+
+				if ( $field->get_arg( '_external' ) ) {
+
+					// Set meta value.
+					$meta[ $field_alias ] = $field->get_value();
 				} else {
-					$meta[ $field_name ] = $field->get_value();
+
+					// Set term value.
+					$term[ $field_alias ] = $field->get_value();
 				}
 			} else {
 				$this->_add_errors( $field->get_errors() );
@@ -90,21 +128,21 @@ abstract class Term extends Model {
 		if ( empty( $this->errors ) ) {
 
 			// Create or update term.
-			if ( is_null( $this->id ) ) {
-				$ids = wp_insert_term( uniqid(), hp\prefix( static::_get_meta( 'name' ) ), $term );
+			if ( empty( $this->id ) ) {
+				$ids = wp_insert_term( uniqid(), static::_get_meta( 'alias' ), $term );
 
 				if ( ! is_wp_error( $ids ) ) {
 					$this->set_id( reset( $ids ) );
 				} else {
 					return false;
 				}
-			} elseif ( is_wp_error( wp_update_term( $this->id, hp\prefix( static::_get_meta( 'name' ) ), $term ) ) ) {
+			} elseif ( is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) ) ) {
 				return false;
 			}
 
 			// Update term meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_term_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
+				update_term_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -120,10 +158,10 @@ abstract class Term extends Model {
 	 * @return bool
 	 */
 	final public function delete( $id = null ) {
-		if ( is_null( $id ) ) {
+		if ( empty( $id ) ) {
 			$id = $this->id;
 		}
 
-		return $id && wp_delete_term( absint( $id ), hp\prefix( static::_get_meta( 'name' ) ) );
+		return $id && wp_delete_term( absint( $id ), static::_get_meta( 'alias' ) );
 	}
 }

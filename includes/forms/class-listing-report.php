@@ -54,7 +54,7 @@ class Listing_Report extends Model_Form {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,
-						'_excluded'  => true,
+						'_separate'  => true,
 						'_order'     => 10,
 					],
 				],

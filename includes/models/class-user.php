@@ -27,62 +27,67 @@ class User extends Model {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
+				'fields' => [
 					'username'     => [
 						'label'      => esc_html__( 'Username', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 60,
 						'required'   => true,
+						'_alias'     => 'user_login',
 					],
 
 					'email'        => [
 						'label'    => esc_html__( 'Email', 'hivepress' ),
 						'type'     => 'email',
 						'required' => true,
+						'_alias'   => 'user_email',
 					],
 
 					'password'     => [
 						'label'      => esc_html__( 'Password', 'hivepress' ),
 						'type'       => 'password',
 						'min_length' => 8,
+						'_alias'     => 'user_pass',
 					],
 
 					'first_name'   => [
 						'label'      => esc_html__( 'First Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
+						'_alias'     => 'first_name',
+						'_external'  => true,
 					],
 
 					'last_name'    => [
 						'label'      => esc_html__( 'Last Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
+						'_alias'     => 'last_name',
+						'_external'  => true,
 					],
 
 					'display_name' => [
 						'type'       => 'text',
 						'max_length' => 256,
+						'_alias'     => 'display_name',
 					],
 
 					'description'  => [
 						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
+						'_alias'     => 'description',
+						'_external'  => true,
 					],
 
-					'image_id'     => [
-						'label'   => esc_html__( 'Profile Image', 'hivepress' ),
-						'caption' => esc_html__( 'Select Image', 'hivepress' ),
-						'type'    => 'attachment_upload',
-						'formats' => [ 'jpg', 'jpeg', 'png' ],
+					'image'        => [
+						'label'     => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption'   => esc_html__( 'Select Image', 'hivepress' ),
+						'type'      => 'attachment_upload',
+						'formats'   => [ 'jpg', 'jpeg', 'png' ],
+						'_model'    => 'attachment',
+						'_external' => true,
 					],
-				],
-
-				'aliases' => [
-					'user_login'   => 'username',
-					'user_email'   => 'email',
-					'user_pass'    => 'password',
-					'display_name' => 'display_name',
 				],
 			],
 			$args
@@ -112,7 +117,7 @@ class User extends Model {
 			}
 		}
 
-		if ( is_null( $user ) ) {
+		if ( empty( $user ) ) {
 			return;
 		}
 
@@ -124,20 +129,30 @@ class User extends Model {
 			get_user_meta( $user['ID'] )
 		);
 
-		// Get object attributes.
-		$attributes = [];
+		// Get field values.
+		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $field_name ) {
-			if ( in_array( $field_name, $this->aliases, true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $user, array_search( $field_name, $this->aliases, true ) );
-			} elseif ( in_array( $field_name, [ 'first_name', 'last_name', 'description' ], true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $meta, $field_name );
+		foreach ( $this->fields as $field_name => $field ) {
+
+			// Get field alias.
+			$field_alias = hp\prefix( $field_name );
+
+			if ( $field->get_arg( '_alias' ) ) {
+				$field_alias = $field->get_arg( '_alias' );
+			}
+
+			if ( $field->get_arg( '_external' ) ) {
+
+				// Get meta value.
+				$values[ $field_name ] = hp\get_array_value( $meta, $field_alias );
 			} else {
-				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+
+				// Get user value.
+				$values[ $field_name ] = hp\get_array_value( $user, $field_alias );
 			}
 		}
 
-		return ( new static() )->set_id( $user['ID'] )->fill( $attributes );
+		return ( new static() )->set_id( $user['ID'] )->fill( $values );
 	}
 
 	/**
@@ -152,13 +167,23 @@ class User extends Model {
 		$meta = [];
 
 		foreach ( $this->fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
-
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, $this->aliases, true ) ) {
-					$user[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
+
+				// Get field alias.
+				$field_alias = hp\prefix( $field_name );
+
+				if ( $field->get_arg( '_alias' ) ) {
+					$field_alias = $field->get_arg( '_alias' );
+				}
+
+				if ( $field->get_arg( '_external' ) ) {
+
+					// Set meta value.
+					$meta[ $field_alias ] = $field->get_value();
 				} else {
-					$meta[ $field_name ] = $field->get_value();
+
+					// Set user value.
+					$user[ $field_alias ] = $field->get_value();
 				}
 			} else {
 				$this->_add_errors( $field->get_errors() );
@@ -168,7 +193,7 @@ class User extends Model {
 		if ( empty( $this->errors ) ) {
 
 			// Create or update user.
-			if ( is_null( $this->id ) ) {
+			if ( empty( $this->id ) ) {
 				$id = wp_insert_user( $user );
 
 				if ( ! is_wp_error( $id ) ) {
@@ -182,11 +207,7 @@ class User extends Model {
 
 			// Update user meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( in_array( $meta_key, [ 'first_name', 'last_name', 'description' ], true ) ) {
-					update_user_meta( $this->id, $meta_key, $meta_value );
-				} else {
-					update_user_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
-				}
+				update_user_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -204,7 +225,7 @@ class User extends Model {
 	final public function delete( $id = null ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
-		if ( is_null( $id ) ) {
+		if ( empty( $id ) ) {
 			$id = $this->id;
 		}
 

@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 abstract class Comment extends Model {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Model meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'alias' => hp\prefix( hp\get_class_name( static::class ) ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Gets object.
 	 *
 	 * @param int $id Object ID.
@@ -36,7 +52,7 @@ abstract class Comment extends Model {
 			$comment = get_comment( absint( $id ), ARRAY_A );
 		}
 
-		if ( is_null( $comment ) || hp\prefix( static::_get_meta( 'name' ) ) !== $comment['comment_type'] ) {
+		if ( empty( $comment ) || static::_get_meta( 'alias' ) !== $comment['comment_type'] ) {
 			return;
 		}
 
@@ -48,18 +64,30 @@ abstract class Comment extends Model {
 			get_comment_meta( $comment['comment_ID'] )
 		);
 
-		// Get object attributes.
-		$attributes = [];
+		// Get field values.
+		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $field_name ) {
-			if ( in_array( $field_name, $this->aliases, true ) ) {
-				$attributes[ $field_name ] = hp\get_array_value( $comment, array_search( $field_name, $this->aliases, true ) );
+		foreach ( $this->fields as $field_name => $field ) {
+
+			// Get field alias.
+			$field_alias = hp\prefix( $field_name );
+
+			if ( $field->get_arg( '_alias' ) ) {
+				$field_alias = $field->get_arg( '_alias' );
+			}
+
+			if ( $field->get_arg( '_external' ) ) {
+
+				// Get meta value.
+				$values[ $field_name ] = hp\get_array_value( $meta, $field_alias );
 			} else {
-				$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+
+				// Get comment value.
+				$values[ $field_name ] = hp\get_array_value( $comment, $field_alias );
 			}
 		}
 
-		return ( new static() )->set_id( $comment['comment_ID'] )->fill( $attributes );
+		return ( new static() )->set_id( $comment['comment_ID'] )->fill( $values );
 	}
 
 	/**
@@ -69,18 +97,28 @@ abstract class Comment extends Model {
 	 */
 	final public function save() {
 
-		// Get comment data.
+		// Get comment values.
 		$comment = [];
 		$meta    = [];
 
 		foreach ( $this->fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
-
 			if ( $field->validate() ) {
-				if ( in_array( $field_name, $this->aliases, true ) ) {
-					$comment[ array_search( $field_name, $this->aliases, true ) ] = $field->get_value();
+
+				// Get field alias.
+				$field_alias = hp\prefix( $field_name );
+
+				if ( $field->get_arg( '_alias' ) ) {
+					$field_alias = $field->get_arg( '_alias' );
+				}
+
+				if ( $field->get_arg( '_external' ) ) {
+
+					// Set meta value.
+					$meta[ $field_alias ] = $field->get_value();
 				} else {
-					$meta[ $field_name ] = $field->get_value();
+
+					// Set comment value.
+					$comment[ $field_alias ] = $field->get_value();
 				}
 			} else {
 				$this->_add_errors( $field->get_errors() );
@@ -90,8 +128,8 @@ abstract class Comment extends Model {
 		if ( empty( $this->errors ) ) {
 
 			// Create or update comment.
-			if ( is_null( $this->id ) ) {
-				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => hp\prefix( static::_get_meta( 'name' ) ) ] ) );
+			if ( empty( $this->id ) ) {
+				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => static::_get_meta( 'alias' ) ] ) );
 
 				if ( $id ) {
 					$this->set_id( $id );
@@ -104,7 +142,7 @@ abstract class Comment extends Model {
 
 			// Update comment meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_comment_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
+				update_comment_meta( $this->id, $meta_key, $meta_value );
 			}
 
 			return true;
@@ -120,7 +158,7 @@ abstract class Comment extends Model {
 	 * @return bool
 	 */
 	final public function delete( $id = null ) {
-		if ( is_null( $id ) ) {
+		if ( empty( $id ) ) {
 			$id = $this->id;
 		}
 
