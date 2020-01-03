@@ -43,6 +43,13 @@ abstract class Model {
 	protected $fields = [];
 
 	/**
+	 * Object values.
+	 *
+	 * @var array
+	 */
+	protected $values = [];
+
+	/**
 	 * Object errors.
 	 *
 	 * @var array
@@ -141,7 +148,7 @@ abstract class Model {
 	 *
 	 * @return array
 	 */
-	final public function _get_fields() {
+	public function _get_fields() {
 		return $this->fields;
 	}
 

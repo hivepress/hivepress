@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-// ok.
+
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -1049,7 +1049,7 @@ final class Attribute extends Component {
 		return array_filter(
 			$this->attributes[ $model ],
 			function( $attribute ) use ( $category_ids ) {
-				return empty( $attribute['category_ids'] ) || array_intersect( (array) $category_ids, $attribute['category_ids'] );
+				return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
 			}
 		);
 	}

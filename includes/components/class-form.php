@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-// ok.
+
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -226,7 +226,7 @@ final class Form extends Component {
 			// Add captcha field.
 			$args['fields']['_captcha'] = [
 				'type'      => 'captcha',
-				'_excluded' => true,
+				'_separate' => true,
 				'_order'    => 1000,
 			];
 		}

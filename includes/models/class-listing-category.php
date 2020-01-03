@@ -27,40 +27,50 @@ class Listing_Category extends Term {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
+				'fields' => [
 					'name'        => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 128,
+						'max_length' => 256,
 						'required'   => true,
+						'_alias'     => 'name',
 					],
 
 					'description' => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
+						'_alias'     => 'description',
 					],
 
 					'count'       => [
 						'type'      => 'number',
 						'min_value' => 0,
+						'_external' => true,
 					],
 
-					'parent_id'   => [
+					'parent'      => [
 						'type'      => 'number',
 						'min_value' => 1,
+						'_alias'    => 'parent',
+						'_model'    => 'listing_category',
 					],
 
-					'image_id'    => [
+					'children'    => [
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'multiple'    => true,
+						'_model'      => 'listing_category',
+						'_relation'   => 'one_to_many',
+					],
+
+					'image'       => [
 						'type'      => 'number',
 						'min_value' => 1,
+						'_model'    => 'attachment',
+						'_external' => true,
 					],
-				],
-
-				'aliases' => [
-					'name'        => 'name',
-					'description' => 'description',
-					'parent'      => 'parent_id',
 				],
 			],
 			$args
@@ -70,20 +80,44 @@ class Listing_Category extends Term {
 	}
 
 	/**
+	 * Gets children IDs.
+	 *
+	 * @return array
+	 */
+	final public function get_children__id() {
+		if ( ! isset( $this->values['children__id'] ) ) {
+			$this->values['children__id'] = get_terms(
+				[
+					'taxonomy'   => static::_get_meta( 'alias' ),
+					'parent'     => $this->id,
+					'hide_empty' => false,
+					'fields'     => 'ids',
+				]
+			);
+		}
+
+		return $this->values['children__id'];
+	}
+
+	/**
 	 * Gets image URL.
 	 *
 	 * @param string $size Image size.
-	 * @return mixed
+	 * @return string
 	 */
-	final public function get_image_url( $size = 'thumbnail' ) {
-		if ( $this->get_image_id() ) {
-			$urls = wp_get_attachment_image_src( $this->get_image_id(), $size );
+	final public function get_image__url( $size = 'thumbnail' ) {
+		if ( ! isset( $this->values['image__url'] ) ) {
+			$this->values['image__url'] = '';
 
-			if ( $urls ) {
-				return reset( $urls );
+			if ( $this->get_image__id() ) {
+				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
+
+				if ( $urls ) {
+					$this->values['image__url'] = reset( $urls );
+				}
 			}
 		}
-	}
 
-	// todo get_child_ids.
+		return $this->values['image__url'];
+	}
 }
