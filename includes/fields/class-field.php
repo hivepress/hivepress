@@ -37,6 +37,13 @@ abstract class Field {
 	protected $display_type;
 
 	/**
+	 * Field display template.
+	 *
+	 * @var string
+	 */
+	protected $display_template;
+
+	/**
 	 * Field name.
 	 *
 	 * @var string
@@ -151,7 +158,8 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'display_type' => static::get_meta( 'name' ),
+				'display_type'     => static::get_meta( 'name' ),
+				'display_template' => '%value%',
 			],
 			$args
 		);
@@ -386,4 +394,19 @@ abstract class Field {
 	 * @return string
 	 */
 	abstract public function render();
+
+	/**
+	 * Displays field HTML.
+	 *
+	 * @return string
+	 */
+	public function display() {
+		return hp\replace_tokens(
+			[
+				'label' => $this->label,
+				'value' => $this->get_display_value(),
+			],
+			$this->display_template
+		);
+	}
 }
