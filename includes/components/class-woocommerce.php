@@ -67,7 +67,7 @@ final class WooCommerce extends Component {
 	 */
 	public function set_account_template( $path, $name ) {
 		if ( 'myaccount/my-account.php' === $name && ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) ) {
-			$path = HP_CORE_DIR . '/templates/woocommerce/myaccount/my-account.php';
+			$path = hivepress()->get_path() . '/templates/woocommerce/myaccount/my-account.php';
 		}
 
 		return $path;
@@ -141,8 +141,7 @@ final class WooCommerce extends Component {
 							],
 						],
 					],
-				],
-				'blocks'
+				]
 			);
 		}
 

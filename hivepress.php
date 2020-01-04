@@ -15,8 +15,8 @@
 defined( 'ABSPATH' ) || exit;
 
 // Define the core file.
-if ( ! defined( 'HP_CORE_FILE' ) ) {
-	define( 'HP_CORE_FILE', __FILE__ );
+if ( ! defined( 'HP_FILE' ) ) {
+	define( 'HP_FILE', __FILE__ );
 }
 
 // Include the core class.

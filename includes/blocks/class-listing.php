@@ -55,8 +55,7 @@ class Listing extends Template {
 						],
 					],
 				],
-				[ 'blocks' => $this->blocks ],
-				'blocks'
+				[ 'blocks' => $this->blocks ]
 			)['blocks'];
 		}
 

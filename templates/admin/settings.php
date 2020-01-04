@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wrap hp-page">
-	<h1 class="hp-page__title"><?php echo esc_html( HP_CORE_NAME ); ?> <span>/</span> <?php esc_html_e( 'Settings', 'hivepress' ); ?></h1>
+	<h1 class="hp-page__title"><?php echo esc_html( hivepress()->get_name() ); ?> <span>/</span> <?php esc_html_e( 'Settings', 'hivepress' ); ?></h1>
 	<?php if ( ! empty( $tabs ) ) : ?>
 	<nav class="nav-tab-wrapper">
 		<?php foreach ( $tabs as $active_tab => $tab_name ) : ?>

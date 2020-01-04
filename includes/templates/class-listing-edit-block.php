@@ -79,8 +79,7 @@ class Listing_Edit_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

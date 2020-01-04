@@ -72,7 +72,7 @@ final class Asset extends Component {
 
 		// Enqueue styles.
 		foreach ( $styles as $style ) {
-			wp_enqueue_style( $style['handle'], $style['src'], hp\get_array_value( $style, 'deps', [] ), hp\get_array_value( $style, 'version', HP_CORE_VERSION ) );
+			wp_enqueue_style( $style['handle'], $style['src'], hp\get_array_value( $style, 'deps', [] ), hp\get_array_value( $style, 'version', hivepress()->get_version() ) );
 		}
 	}
 
@@ -96,7 +96,7 @@ final class Asset extends Component {
 
 		// Enqueue scripts.
 		foreach ( $scripts as $script ) {
-			wp_enqueue_script( $script['handle'], $script['src'], hp\get_array_value( $script, 'deps', [] ), hp\get_array_value( $script, 'version', HP_CORE_VERSION ), hp\get_array_value( $script, 'in_footer', true ) );
+			wp_enqueue_script( $script['handle'], $script['src'], hp\get_array_value( $script, 'deps', [] ), hp\get_array_value( $script, 'version', hivepress()->get_version() ), hp\get_array_value( $script, 'in_footer', true ) );
 
 			// Add script data.
 			if ( isset( $script['data'] ) ) {

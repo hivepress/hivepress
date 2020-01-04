@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -35,8 +35,8 @@ class Result_Count extends Block {
 			// Get first result.
 			$first_result = 1;
 
-			if ( hp\get_current_page() > 1 ) {
-				$first_result = $wp_query->query_vars['posts_per_page'] * ( hp\get_current_page() - 1 ) + 1;
+			if ( hivepress()->router->get_current_page() > 1 ) {
+				$first_result = $wp_query->query_vars['posts_per_page'] * ( hivepress()->router->get_current_page() - 1 ) + 1;
 			}
 
 			// Get last result.

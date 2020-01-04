@@ -36,8 +36,7 @@ abstract class Page extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

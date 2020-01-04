@@ -68,8 +68,7 @@ class User_Password_Reset_Page extends Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

@@ -118,8 +118,7 @@ class Vendor_View_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

@@ -47,8 +47,7 @@ abstract class Listing_Submit_Page extends Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

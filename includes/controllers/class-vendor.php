@@ -81,7 +81,7 @@ final class Vendor extends Controller {
 					'vendor_id' => $vendor->get_id(),
 				]
 			)->limit( get_option( 'hp_listings_per_page' ) )
-			->paginate( hp\get_current_page() )
+			->paginate( hivepress()->router->get_current_page() )
 			->get_args()
 		);
 

@@ -38,7 +38,7 @@ class Part extends Block {
 		$filepath = locate_template( 'hivepress/' . $this->path . '.php' );
 
 		if ( empty( $filepath ) ) {
-			foreach ( hivepress()->get_dirs() as $dir ) {
+			foreach ( hivepress()->get_paths() as $dir ) {
 				$dirpath = $dir . '/templates/' . $this->path . '.php';
 
 				if ( file_exists( $dirpath ) ) {

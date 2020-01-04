@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 use HivePress\Helpers as hp;
 ?>
 <div class="wrap hp-page">
-	<h1 class="hp-page__title"><?php echo esc_html( HP_CORE_NAME ); ?> <span>/</span> <?php esc_html_e( 'Extensions', 'hivepress' ); ?></h1>
+	<h1 class="hp-page__title"><?php echo esc_html( hivepress()->get_name() ); ?> <span>/</span> <?php esc_html_e( 'Extensions', 'hivepress' ); ?></h1>
 	<hr class="wp-header-end">
 	<?php if ( count( $tabs ) > 1 ) : ?>
 		<ul class="subsubsub">

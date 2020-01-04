@@ -78,8 +78,7 @@ class User_Edit_Settings_Page extends User_Account_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

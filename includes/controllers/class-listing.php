@@ -350,7 +350,7 @@ final class Listing extends Controller {
 							'id__not_in' => $featured_ids,
 						]
 					)->limit( get_option( 'hp_listings_per_page' ) )
-					->paginate( hp\get_current_page() )
+					->paginate( hivepress()->router->get_current_page() )
 					->get_args()
 				);
 

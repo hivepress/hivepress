@@ -274,12 +274,12 @@ final class Form extends Component {
 		// Enqueue Flatpickr.
 		$filepath = '/assets/js/flatpickr/l10n/' . $language . '.js';
 
-		if ( file_exists( HP_CORE_DIR . $filepath ) ) {
+		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 			wp_enqueue_script(
 				'flatpickr-' . $language,
-				HP_CORE_URL . $filepath,
+				hivepress()->get_url() . $filepath,
 				[ 'flatpickr' ],
-				HP_CORE_VERSION,
+				hivepress()->get_version(),
 				true
 			);
 		}

@@ -41,8 +41,7 @@ class Listings_Edit_Page extends User_Account_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

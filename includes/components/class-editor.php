@@ -52,7 +52,7 @@ final class Editor extends Component {
 
 				// Add block.
 				$blocks[ $block_type ] = [
-					'title'      => HP_CORE_NAME . ' ' . $block::get_meta( 'label' ),
+					'title'      => hivepress()->get_name() . ' ' . $block::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hp-block-' . $block_slug,
 					'attributes' => [],
@@ -78,7 +78,7 @@ final class Editor extends Component {
 			foreach ( $blocks as $block_type => $block ) {
 
 				// Register block script.
-				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
+				wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
 				wp_localize_script( $block['script'], 'hpBlock', $block );
 
 				// Register block type.

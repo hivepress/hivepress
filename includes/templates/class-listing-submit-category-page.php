@@ -42,8 +42,7 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

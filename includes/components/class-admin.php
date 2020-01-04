@@ -135,10 +135,10 @@ final class Admin extends Component {
 		$menu[] = [ '', 'manage_options', 'hp_separator', '', 'wp-menu-separator' ];
 
 		// Set page title.
-		$title = ' &lsaquo; ' . HP_CORE_NAME;
+		$title = ' &lsaquo; ' . hivepress()->get_name();
 
 		// Add pages.
-		add_menu_page( esc_html__( 'Settings', 'hivepress' ) . $title, HP_CORE_NAME, 'manage_options', 'hp_settings', [ $this, 'render_settings' ], HP_CORE_URL . '/assets/images/logo.svg' );
+		add_menu_page( esc_html__( 'Settings', 'hivepress' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
 		add_submenu_page( 'hp_settings', esc_html__( 'Settings', 'hivepress' ) . $title, esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
@@ -190,7 +190,7 @@ final class Admin extends Component {
 
 			// Render admin page.
 			$template_name = hp\sanitize_slug( substr( $name, strlen( 'render_' ) ) );
-			$template_path = HP_CORE_DIR . '/templates/admin/' . $template_name . '.php';
+			$template_path = hivepress()->get_path() . '/templates/admin/' . $template_name . '.php';
 
 			if ( file_exists( $template_path ) ) {
 				if ( 'settings' === $template_name ) {
@@ -531,7 +531,7 @@ final class Admin extends Component {
 				$extension,
 				$extension_status,
 				[
-					'name' => substr( $extension['name'], strlen( HP_CORE_NAME ) + 1 ),
+					'name' => substr( $extension['name'], strlen( hivepress()->get_name() ) + 1 ),
 				]
 			);
 		}

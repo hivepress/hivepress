@@ -60,8 +60,7 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

@@ -91,8 +91,7 @@ class User_Account_Page extends Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

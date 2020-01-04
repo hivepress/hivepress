@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 			the_post_thumbnail( 'hp_square_small' );
 		else :
 			?>
-			<img src="<?php echo esc_url( HP_CORE_URL . '/assets/images/placeholders/user-square.svg' ); ?>" alt="<?php echo esc_attr( $vendor->get_name() ); ?>">
+			<img src="<?php echo esc_url( hivepress()->get_url() . '/assets/images/placeholders/user-square.svg' ); ?>" alt="<?php echo esc_attr( $vendor->get_name() ); ?>">
 		<?php endif; ?>
 	</a>
 </div>

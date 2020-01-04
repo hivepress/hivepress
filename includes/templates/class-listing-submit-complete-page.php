@@ -41,8 +41,7 @@ class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

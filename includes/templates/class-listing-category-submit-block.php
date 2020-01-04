@@ -78,8 +78,7 @@ class Listing_Category_Submit_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );

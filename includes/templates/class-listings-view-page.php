@@ -149,8 +149,7 @@ class Listings_View_Page extends Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
 		parent::__construct( $args );
