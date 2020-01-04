@@ -68,7 +68,7 @@ class Post extends Query {
 		// Set post type.
 		$model = $this->model;
 
-		$this->args['post_type'] = hp\prefix( $model::_get_meta( 'name' ) );
+		$this->args['post_type'] = $model::_get_meta( 'alias' );
 
 		parent::boot();
 	}
@@ -127,11 +127,14 @@ class Post extends Query {
 				$operator = 'AND';
 			}
 
-			if ( in_array( $name, $this->model->_get_relations(), true ) && in_array( $operator, [ 'AND', 'IN', 'NOT IN', 'EXISTS', 'NOT EXISTS' ], true ) ) {
+			// Get field.
+			$field = hp\get_array_value( $this->model->_get_fields(), $name );
+
+			if ( $field && $field->get_arg( '_relation' ) === 'many_to_many' && in_array( $operator, [ 'AND', 'IN', 'NOT IN', 'EXISTS', 'NOT EXISTS' ], true ) ) {
 
 				// Set term clause.
 				$clause = [
-					'taxonomy' => hp\prefix( array_search( $name, $this->model->_get_relations(), true ) ),
+					'taxonomy' => hp\prefix( $field->get_arg( '_model' ) ),
 					'operator' => $operator,
 				];
 
@@ -143,9 +146,6 @@ class Post extends Query {
 
 				// Set term filter.
 				$this->args['tax_query'][] = $clause;
-
-				// Remove meta clause.
-				unset( $this->args['meta_query'][ $name . '_clause' ] );
 			}
 		}
 

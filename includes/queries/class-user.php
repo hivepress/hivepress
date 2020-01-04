@@ -72,26 +72,44 @@ class User extends Query {
 	final public function filter( $criteria ) {
 		parent::filter( $criteria );
 
+		// Get field aliases.
+		$field_aliases = array_filter(
+			array_map(
+				function( $field ) {
+					return ! $field->get_arg( '_external' ) ? $field->get_arg( '_alias' ) : null;
+				},
+				$this->model->_get_fields()
+			)
+		);
+
 		// Replace aliases.
 		$this->args = array_combine(
 			array_map(
-				function( $name ) {
-					$operator = '';
+				function( $name ) use ( $field_aliases ) {
+
+					// Get operator alias.
+					$operator_alias = '';
 
 					if ( strpos( $name, '__' ) ) {
-						list($name, $operator) = explode( '__', $name );
+						list($name, $operator_alias) = explode( '__', $name );
 					}
 
-					if ( in_array( $name, $this->model->_get_aliases(), true ) ) {
+					// Replace alias.
+					if ( in_array( $name, $field_aliases, true ) ) {
 						$name = preg_replace( '/^user_/', '', $name );
 					}
 
-					return rtrim( $name . '__' . $operator, '_' );
+					return rtrim( $name . '__' . $operator_alias, '_' );
 				},
 				array_keys( $this->args )
 			),
 			$this->args
 		);
+
+		// Set user IDs.
+		if ( isset( $this->args['include'] ) && empty( $this->args['include'] ) ) {
+			$this->args['include'] = [ 0 ];
+		}
 
 		return $this;
 	}

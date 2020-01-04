@@ -195,50 +195,59 @@ abstract class Query extends \ArrayObject {
 					list($name, $operator_alias) = explode( '__', $name );
 				}
 
-				if ( in_array( $name, $this->model->_get_aliases(), true ) ) {
+				// Get field.
+				$field = hp\get_array_value( $this->model->_get_fields(), $name );
 
-					// Normalize operator alias.
-					$operator_alias = strtolower( $operator_alias );
+				if ( $field ) {
+					if ( $field->get_arg( '_external' ) ) {
 
-					if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
-						$operator_alias = '';
-					}
+						// Get field alias.
+						$field_alias = hp\prefix( $name );
 
-					// Set alias filter.
-					$this->args[ rtrim( array_search( $name, $this->model->_get_aliases(), true ) . '__' . $operator_alias, '_' ) ] = $value;
-				} elseif ( isset( $this->model->_get_fields()[ $name ] ) ) {
-
-					// Get field.
-					$field = $this->model->_get_fields()[ $name ];
-
-					// Get operator.
-					$operator = $this->get_operator( $operator_alias );
-
-					// Set meta clause.
-					$clause = [
-						'key'     => hp\prefix( $name ),
-						'compare' => $operator,
-					];
-
-					if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ], true ) ) {
-
-						// Normalize meta value.
-						if ( is_bool( $value ) ) {
-							$value = $value ? '1' : '0';
+						if ( $field->get_arg( '_alias' ) ) {
+							$field_alias = $field->get_arg( '_alias' );
 						}
 
-						// Set meta type and value.
-						$clause = array_merge(
-							$clause,
-							[
-								'type'  => $field::get_meta( 'type' ),
-								'value' => $value,
-							]
-						);
-					}
+						// Get operator.
+						$operator = $this->get_operator( $operator_alias );
 
-					// Set meta filter.
-					$this->args['meta_query'][ $name . '_clause' ] = $clause;
+						// Set meta clause.
+						$clause = [
+							'key'     => $field_alias,
+							'compare' => $operator,
+						];
+
+						if ( ! in_array( $operator, [ 'EXISTS', 'NOT EXISTS' ], true ) ) {
+
+							// Normalize meta value.
+							if ( is_bool( $value ) ) {
+								$value = $value ? '1' : '0';
+							}
+
+							// Set meta type and value.
+							$clause = array_merge(
+								$clause,
+								[
+									'type'  => $field::get_meta( 'type' ),
+									'value' => $value,
+								]
+							);
+						}
+
+						// Set meta filter.
+						$this->args['meta_query'][ $name . '_clause' ] = $clause;
+					} elseif ( $field->get_arg( '_alias' ) ) {
+
+						// Normalize operator alias.
+						$operator_alias = strtolower( $operator_alias );
+
+						if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
+							$operator_alias = '';
+						}
+
+						// Set alias filter.
+						$this->args[ rtrim( $field->get_arg( '_alias' ) . '__' . $operator_alias, '_' ) ] = $value;
+					}
 				}
 			}
 		}
@@ -266,14 +275,22 @@ abstract class Query extends \ArrayObject {
 
 						// Set query order.
 						$args[ $this->get_alias( 'order/' . $name ) ] = $order;
-					} elseif ( in_array( $name, $this->model->_get_aliases(), true ) ) {
+					} else {
 
-						// Set alias order.
-						$args[ array_search( $name, $this->model->_get_aliases(), true ) ] = $order;
-					} elseif ( isset( $this->model->_get_fields()[ $name ] ) ) {
+						// Get field.
+						$field = hp\get_array_value( $this->model->_get_fields(), $name );
 
-						// Set meta order.
-						$args[ $name . '_clause' ] = $order;
+						if ( $field ) {
+							if ( $field->get_arg( '_external' ) ) {
+
+								// Set meta order.
+								$args[ $name . '_clause' ] = $order;
+							} elseif ( $field->get_arg( '_alias' ) ) {
+
+								// Set alias order.
+								$args[ $field->get_arg( '_alias' ) ] = $order;
+							}
+						}
 					}
 				}
 			}
