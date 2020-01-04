@@ -435,4 +435,17 @@ final class Router {
 
 		return home_url( $wp->request . $query );
 	}
+
+	/**
+	 * Gets current page number.
+	 *
+	 * @return int
+	 */
+	// todo.
+	function get_current_page() {
+		$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+		$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
+
+		return absint( $page );
+	}
 }

@@ -75,6 +75,127 @@ function get_array_value( $array, $key, $default = null ) {
 }
 
 /**
+ * Searches array item value by keys.
+ *
+ * @param array $array Source array.
+ * @param mixed $keys Keys to search.
+ * @return mixed
+ */
+function search_array_value( $array, $keys ) {
+	$keys = (array) $keys;
+
+	foreach ( $keys as $key ) {
+		if ( isset( $array[ $key ] ) ) {
+			if ( end( $keys ) === $key ) {
+				return $array[ $key ];
+			} elseif ( is_array( $array[ $key ] ) ) {
+				$array = $array[ $key ];
+			}
+		} else {
+			foreach ( $array as $subarray ) {
+				if ( is_array( $subarray ) ) {
+					$value = search_array_value( $subarray, $keys );
+
+					if ( ! is_null( $value ) ) {
+						return $value;
+					}
+				}
+			}
+
+			break;
+		}
+	}
+}
+
+/**
+ * Merges arrays with mixed values.
+ *
+ * @return array
+ */
+function merge_arrays() {
+	$merged = [];
+
+	foreach ( func_get_args() as $array ) {
+		foreach ( $array as $key => $value ) {
+			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
+				if ( is_numeric( $key ) ) {
+					$merged[] = $value;
+				} else {
+					$merged[ $key ] = $value;
+				}
+			} else {
+				$merged[ $key ] = merge_arrays( $merged[ $key ], $value );
+			}
+		}
+	}
+
+	return $merged;
+}
+
+/**
+ * Merges trees with mixed values.
+ *
+ * @param array  $parent_tree Parent tree.
+ * @param array  $child_tree Child tree.
+ * @param string $tree_key Tree key.
+ * @param string $node_key Node key.
+ * @return array
+ */
+function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = null ) {
+	if ( is_null( $tree_key ) ) {
+		if ( $parent_tree ) {
+			$tree_key = array_keys( $parent_tree )[0];
+		} elseif ( $child_tree ) {
+			$tree_key = array_keys( $child_tree )[0];
+		}
+	}
+
+	if ( isset( $parent_tree[ $tree_key ] ) ) {
+		foreach ( $parent_tree[ $tree_key ] as $parent_node_key => $parent_node ) {
+			$parent_tree[ $tree_key ][ $parent_node_key ] = merge_trees( $parent_node, $child_tree, $tree_key, $parent_node_key );
+		}
+	}
+
+	if ( is_null( $node_key ) ) {
+		unset( $child_tree[ $tree_key ] );
+
+		$parent_tree = merge_arrays( $parent_tree, $child_tree );
+	} else {
+		$child_node = search_array_value( $child_tree, [ $tree_key, $node_key ] );
+
+		if ( ! is_null( $child_node ) ) {
+			$parent_tree = merge_arrays( $parent_tree, $child_node );
+		}
+	}
+
+	return $parent_tree;
+}
+
+/**
+ * Sorts array by custom order.
+ *
+ * @param array $array Source array.
+ * @return array
+ */
+function sort_array( $array ) {
+	$sorted = [];
+
+	foreach ( $array as $key => $value ) {
+		if ( is_array( $value ) ) {
+			if ( ! isset( $value['_order'] ) ) {
+				$value['_order'] = 0;
+			}
+
+			$sorted[ $key ] = $value;
+		}
+	}
+
+	$sorted = wp_list_sort( $sorted, '_order', 'ASC', true );
+
+	return $sorted;
+}
+
+/**
  * Gets class name.
  *
  * @param string $class Class name.
@@ -240,129 +361,24 @@ function sanitize_key( $text ) {
 	return $key;
 }
 
-// --------------------------------------------------------
-
 /**
- * Searches array item value by keys.
+ * Gets REST API response.
  *
- * @param array $array Source array.
- * @param mixed $keys Keys to search.
- * @return mixed
+ * @param int   $code Error code.
+ * @param array $data Response data.
+ * @return WP_Rest_Response
  */
-function search_array_value( $array, $keys ) {
-	$keys = (array) $keys;
-
-	foreach ( $keys as $key ) {
-		if ( isset( $array[ $key ] ) ) {
-			if ( end( $keys ) === $key ) {
-				return $array[ $key ];
-			} elseif ( is_array( $array[ $key ] ) ) {
-				$array = $array[ $key ];
-			}
-		} else {
-			foreach ( $array as $subarray ) {
-				if ( is_array( $subarray ) ) {
-					$value = search_array_value( $subarray, $keys );
-
-					if ( ! is_null( $value ) ) {
-						return $value;
-					}
-				}
-			}
-
-			break;
-		}
-	}
-}
-
-/**
- * Sorts array by custom order.
- *
- * @param array $array Source array.
- * @return array
- */
-function sort_array( $array ) {
-	$sorted = [];
-
-	foreach ( $array as $key => $value ) {
-		if ( is_array( $value ) ) {
-			if ( ! isset( $value['_order'] ) ) {
-				$value['_order'] = 0;
-			}
-
-			$sorted[ $key ] = $value;
-		}
+function rest_response( $code, $data = null ) {
+	if ( is_null( $data ) ) {
+		return new \WP_Rest_Response( (object) [], $code );
 	}
 
-	$sorted = wp_list_sort( $sorted, '_order', 'ASC', true );
-
-	return $sorted;
-}
-
-/**
- * Merges arrays with mixed values.
- *
- * @return array
- */
-function merge_arrays() {
-	$merged = [];
-
-	foreach ( func_get_args() as $array ) {
-		foreach ( $array as $key => $value ) {
-			if ( ! isset( $merged[ $key ] ) || ( ! is_array( $merged[ $key ] ) || ! is_array( $value ) ) ) {
-				if ( is_numeric( $key ) ) {
-					$merged[] = $value;
-				} else {
-					$merged[ $key ] = $value;
-				}
-			} else {
-				$merged[ $key ] = merge_arrays( $merged[ $key ], $value );
-			}
-		}
-	}
-
-	return $merged;
-}
-
-/**
- * Merges trees with mixed values.
- *
- * @param array  $parent_tree Parent tree.
- * @param array  $child_tree Child tree.
- * @param string $tree_key Tree key.
- * @param string $node_key Node key.
- * @return array
- */
-function merge_trees( $parent_tree, $child_tree, $tree_key, $node_key = null ) {
-	if ( isset( $parent_tree[ $tree_key ] ) ) {
-		foreach ( $parent_tree[ $tree_key ] as $parent_node_key => $parent_node ) {
-			$parent_tree[ $tree_key ][ $parent_node_key ] = merge_trees( $parent_node, $child_tree, $tree_key, $parent_node_key );
-		}
-	}
-
-	if ( is_null( $node_key ) ) {
-		unset( $child_tree[ $tree_key ] );
-
-		$parent_tree = merge_arrays( $parent_tree, $child_tree );
-	} else {
-		$child_node = search_array_value( $child_tree, [ $tree_key, $node_key ] );
-
-		if ( ! is_null( $child_node ) ) {
-			$parent_tree = merge_arrays( $parent_tree, $child_node );
-		}
-	}
-
-	return $parent_tree;
-}
-
-/**
- * Gets REST API URL.
- *
- * @param string $url Redirect URL.
- * @return bool
- */
-function validate_redirect( $url ) {
-	return wp_validate_redirect( $url ) && ( strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 );
+	return new \WP_Rest_Response(
+		[
+			'data' => $data,
+		],
+		$code
+	);
 }
 
 /**
@@ -377,7 +393,7 @@ function rest_error( $code, $errors = [] ) {
 		'code' => $code,
 	];
 
-	if ( ! empty( $errors ) ) {
+	if ( $errors ) {
 		$error['errors'] = array_map(
 			function( $error ) {
 				return [
@@ -394,35 +410,4 @@ function rest_error( $code, $errors = [] ) {
 		],
 		$code
 	);
-}
-
-// todo.
-function rest_response( $code, $data = null ) {
-	if ( is_null( $data ) ) {
-		return new \WP_Rest_Response( (object) [], $code );
-	}
-
-	return new \WP_Rest_Response(
-		[
-			'data' => $data,
-		],
-		$code
-	);
-}
-
-/**
- * Gets current page number.
- *
- * @return int
- */
-function get_current_page() {
-	$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-	$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
-
-	return absint( $page );
-}
-
-// todo.
-function get_redirect_url( $url ) {
-	return add_query_arg( 'redirect', rawurlencode( get_current_url() ), $url );
 }
