@@ -24,53 +24,53 @@ final class Core {
 	 *
 	 * @var Core
 	 */
-	private static $instance;
+	protected static $instance;
 
 	/**
-	 * Array of HivePress directories.
+	 * Array of HivePress extensions.
 	 *
 	 * @var array
 	 */
-	private $dirs = [];
+	protected $extensions = [];
 
 	/**
 	 * Array of HivePress configurations.
 	 *
 	 * @var array
 	 */
-	private $configs = [];
+	protected $configs = [];
 
 	/**
 	 * Array of HivePress objects.
 	 *
 	 * @var array
 	 */
-	private $objects = [];
+	protected $objects = [];
 
 	/**
 	 * Array of HivePress classes.
 	 *
 	 * @var array
 	 */
-	private $classes = [];
+	protected $classes = [];
 
 	// Forbid cloning and duplicating instances.
-	private function __clone() {}
-	private function __wakeup() {}
+	protected function __clone() {}
+	protected function __wakeup() {}
 
 	/**
 	 * Class constructor.
 	 */
-	private function __construct() {
+	protected function __construct() {
 
 		// Autoload classes.
 		spl_autoload_register( [ $this, 'autoload' ] );
 
 		// Activate HivePress.
-		register_activation_hook( HP_CORE_FILE, [ __CLASS__, 'activate' ] );
+		register_activation_hook( HP_FILE, [ __CLASS__, 'activate' ] );
 
 		// Deactivate HivePress.
-		register_deactivation_hook( HP_CORE_FILE, [ __CLASS__, 'deactivate' ] );
+		register_deactivation_hook( HP_FILE, [ __CLASS__, 'deactivate' ] );
 
 		// Install HivePress.
 		add_action( 'init', [ $this, 'install' ] );
@@ -107,7 +107,7 @@ final class Core {
 			array_shift( $parts );
 			array_pop( $parts );
 
-			foreach ( $this->dirs as $dir ) {
+			foreach ( $this->get_paths() as $dir ) {
 				$filepath = rtrim( $dir . '/includes/' . implode( '/', $parts ), '/' ) . '/' . $filename;
 
 				if ( file_exists( $filepath ) ) {
@@ -150,7 +150,7 @@ final class Core {
 	 * Installs HivePress.
 	 */
 	public function install() {
-		if ( get_option( 'hp_core_activated' ) || count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
+		if ( get_option( 'hp_core_activated' ) || count( $this->extensions ) !== absint( get_option( 'hp_extensions_number' ) ) ) {
 
 			/**
 			 * Fires on HivePress activation.
@@ -165,13 +165,13 @@ final class Core {
 				update_option( 'hp_core_activated', '0' );
 			}
 
-			// Update directories number.
-			if ( count( $this->dirs ) !== absint( get_option( 'hp_dirs_number' ) ) ) {
-				update_option( 'hp_dirs_number', count( $this->dirs ) );
+			// Update extensions number.
+			if ( count( $this->extensions ) !== absint( get_option( 'hp_extensions_number' ) ) ) {
+				update_option( 'hp_extensions_number', count( $this->extensions ) );
 			}
 		}
 
-		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), HP_CORE_VERSION, '<' ) ) {
+		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), hivepress()->get_version(), '<' ) ) {
 
 			/**
 			 * Fires on HivePress update.
@@ -182,7 +182,7 @@ final class Core {
 			do_action( 'hivepress/v1/update' );
 
 			// Update HivePress version.
-			update_option( 'hp_core_version', HP_CORE_VERSION );
+			update_option( 'hp_core_version', hivepress()->get_version() );
 		}
 	}
 
@@ -191,20 +191,11 @@ final class Core {
 	 */
 	public function setup() {
 
-		/**
-		 * Filters HivePress directories.
-		 *
-		 * @filter /dirs
-		 * @description Filters HivePress directories.
-		 * @param array $dirs Directory paths. If you add a new path HivePress will treat it like an extension.
-		 */
-		$this->dirs = apply_filters( 'hivepress/v1/dirs', [ dirname( HP_CORE_FILE ) ] );
+		// Setup extensions.
+		$this->setup_extensions();
 
-		// Define constants.
-		$this->define_constants();
-
-		// Load helper functions.
-		require_once HP_CORE_DIR . '/includes/helpers.php';
+		// Include helper functions.
+		require_once hivepress()->get_path() . '/includes/helpers.php';
 
 		// Load textdomains.
 		$this->load_textdomains();
@@ -214,41 +205,55 @@ final class Core {
 	}
 
 	/**
-	 * Defines constants.
+	 * Setups extensions.
 	 */
-	private function define_constants() {
-		foreach ( $this->dirs as $dir ) {
-			$dirname  = basename( $dir );
-			$filepath = $dir . '/' . $dirname . '.php';
-			$prefix   = 'HP_' . strtoupper( str_replace( '-', '_', preg_replace( '/^hivepress-/', '', $dirname ) ) ) . '_';
+	protected function setup_extensions() {
 
-			if ( 'hivepress' === $dirname ) {
-				$prefix = 'HP_CORE_';
-			}
+		/**
+		 * Filters HivePress extensions.
+		 *
+		 * @filter /extensions
+		 * @description Filters HivePress extensions.
+		 * @param array $extensions Extension paths or arguments. If you add a new directory path HivePress will treat it like an extension.
+		 */
+		$extensions = apply_filters( 'hivepress/v1/extensions', [ dirname( HP_FILE ) ] );
 
-			if ( file_exists( $filepath ) ) {
-				$filedata = get_file_data(
-					$filepath,
-					[
-						'name'    => 'Plugin Name',
-						'version' => 'Version',
-					]
-				);
+		foreach ( $extensions as $name => $dir ) {
+			if ( is_array( $dir ) ) {
 
-				if ( ! defined( $prefix . 'NAME' ) ) {
-					define( $prefix . 'NAME', $filedata['name'] );
+				// Add extension.
+				$this->extensions[ $name ] = $dir;
+			} else {
+
+				// Get file path.
+				$dirname  = basename( $dir );
+				$filepath = $dir . '/' . $dirname . '.php';
+
+				// Get extension name.
+				$name = str_replace( '-', '_', preg_replace( '/^hivepress-/', '', $dirname ) );
+
+				if ( 'hivepress' === $dirname ) {
+					$name = 'core';
 				}
 
-				if ( ! defined( $prefix . 'VERSION' ) ) {
-					define( $prefix . 'VERSION', $filedata['version'] );
-				}
+				if ( file_exists( $filepath ) ) {
 
-				if ( ! defined( $prefix . 'DIR' ) ) {
-					define( $prefix . 'DIR', $dir );
-				}
+					// Get file data.
+					$filedata = get_file_data(
+						$filepath,
+						[
+							'name'    => 'Plugin Name',
+							'version' => 'Version',
+						]
+					);
 
-				if ( ! defined( $prefix . 'URL' ) ) {
-					define( $prefix . 'URL', rtrim( plugin_dir_url( $filepath ), '/' ) );
+					// Add extension.
+					$this->extensions[ $name ] = [
+						'name'    => $filedata['name'],
+						'version' => $filedata['version'],
+						'path'    => $dir,
+						'url'     => rtrim( plugin_dir_url( $filepath ), '/' ),
+					];
 				}
 			}
 		}
@@ -257,8 +262,8 @@ final class Core {
 	/**
 	 * Loads textdomains.
 	 */
-	private function load_textdomains() {
-		foreach ( $this->dirs as $dir ) {
+	protected function load_textdomains() {
+		foreach ( $this->get_paths() as $dir ) {
 			$dirname    = basename( $dir );
 			$textdomain = hp\sanitize_slug( $dirname );
 
@@ -277,29 +282,52 @@ final class Core {
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
 
-			// Get object type.
-			$object_type = substr( $name, strlen( 'get_' ) );
+			// Get property name.
+			$property = substr( $name, strlen( 'get_' ) );
 
-			if ( ! isset( $this->objects[ $object_type ] ) ) {
-				$this->objects[ $object_type ] = [];
+			if ( in_array( $property, [ 'name', 'version', 'path', 'url' ], true ) ) {
 
-				foreach ( $this->dirs as $dir ) {
-					foreach ( glob( $dir . '/includes/' . $object_type . '/*.php' ) as $filepath ) {
+				// Get extension name.
+				$extension = 'core';
 
-						// Get object name.
-						$object_name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
+				if ( $args ) {
+					$extension = reset( $args );
+				}
 
-						// Create object.
-						$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
+				// Get property value.
+				$value = null;
 
-						if ( $object ) {
-							$this->objects[ $object_type ][ $object_name ] = $object;
+				if ( isset( $this->extensions[ $extension ][ $property ] ) ) {
+					$value = $this->extensions[ $extension ][ $property ];
+				}
+
+				return $value;
+			} else {
+
+				// Set object type.
+				$object_type = $property;
+
+				if ( ! isset( $this->objects[ $object_type ] ) ) {
+					$this->objects[ $object_type ] = [];
+
+					foreach ( $this->get_paths() as $dir ) {
+						foreach ( glob( $dir . '/includes/' . $object_type . '/*.php' ) as $filepath ) {
+
+							// Get object name.
+							$object_name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
+
+							// Create object.
+							$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
+
+							if ( $object ) {
+								$this->objects[ $object_type ][ $object_name ] = $object;
+							}
 						}
 					}
 				}
-			}
 
-			return $this->objects[ $object_type ];
+				return $this->objects[ $object_type ];
+			}
 		}
 
 		throw new \BadMethodCallException();
@@ -309,24 +337,51 @@ final class Core {
 	 * Routes properties.
 	 *
 	 * @param string $name Property name.
-	 * @throws \UnexpectedValueException Invalid property.
 	 * @return object
 	 */
 	public function __get( $name ) {
-		if ( isset( $this->get_components()[ $name ] ) ) {
-			return $this->get_components()[ $name ];
-		}
-
-		throw new \UnexpectedValueException();
+		return hp\get_array_value( $this->get_components(), $name );
 	}
 
 	/**
-	 * Gets HivePress directories.
+	 * Gets HivePress paths.
 	 *
 	 * @return array
 	 */
-	public function get_dirs() {
-		return $this->dirs;
+	public function get_paths() {
+		return array_column( $this->extensions, 'path' );
+	}
+
+	/**
+	 * Gets HivePress configuration.
+	 *
+	 * @param string $type Configuration type.
+	 * @return array
+	 */
+	public function get_config( $type ) {
+		if ( ! isset( $this->configs[ $type ] ) ) {
+			$this->configs[ $type ] = [];
+
+			foreach ( $this->get_paths() as $dir ) {
+				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $type ) . '.php';
+
+				if ( file_exists( $filepath ) ) {
+					$this->configs[ $type ] = hp\merge_arrays( $this->configs[ $type ], include $filepath );
+				}
+			}
+
+			/**
+			 * Filters HivePress configuration.
+			 *
+			 * @filter /{$config}
+			 * @description Filters HivePress configuration.
+			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies", "strings".
+			 * @param array $args Configuration arguments.
+			 */
+			$this->configs[ $type ] = apply_filters( 'hivepress/v1/' . $type, $this->configs[ $type ] );
+		}
+
+		return $this->configs[ $type ];
 	}
 
 	/**
@@ -339,7 +394,7 @@ final class Core {
 		if ( ! isset( $this->classes[ $type ] ) ) {
 			$this->classes[ $type ] = [];
 
-			foreach ( $this->dirs as $dir ) {
+			foreach ( $this->get_paths() as $dir ) {
 				foreach ( glob( $dir . '/includes/' . $type . '/*.php' ) as $filepath ) {
 
 					// Get name.
@@ -356,37 +411,5 @@ final class Core {
 		}
 
 		return $this->classes[ $type ];
-	}
-
-	/**
-	 * Gets HivePress configuration.
-	 *
-	 * @param string $type Configuration type.
-	 * @return array
-	 */
-	public function get_config( $type ) {
-		if ( ! isset( $this->configs[ $type ] ) ) {
-			$this->configs[ $type ] = [];
-
-			foreach ( $this->dirs as $dir ) {
-				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $type ) . '.php';
-
-				if ( file_exists( $filepath ) ) {
-					$this->configs[ $type ] = hp\merge_arrays( $this->configs[ $type ], include $filepath );
-				}
-			}
-
-			/**
-			 * Filters HivePress configuration.
-			 *
-			 * @filter /{$config}
-			 * @description Filters HivePress configuration.
-			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies".
-			 * @param array $args Configuration arguments.
-			 */
-			$this->configs[ $type ] = apply_filters( 'hivepress/v1/' . $type, $this->configs[ $type ] );
-		}
-
-		return $this->configs[ $type ];
 	}
 }
