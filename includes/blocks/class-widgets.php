@@ -36,7 +36,7 @@ class Widgets extends Block {
 
 		ob_start();
 
-		dynamic_sidebar( hp\prefix( $this->area ) );
+		dynamic_sidebar( $this->area );
 		$output .= ob_get_contents();
 
 		ob_end_clean();

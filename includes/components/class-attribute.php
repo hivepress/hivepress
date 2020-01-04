@@ -429,8 +429,8 @@ final class Attribute extends Component {
 				$field_args = array_merge(
 					$attribute['edit_field'],
 					[
-						'_areas'  => $attribute['display_areas'],
-						'_format' => $attribute['display_format'],
+						'display_template' => $attribute['display_format'],
+						'_areas'           => $attribute['display_areas'],
 					]
 				);
 

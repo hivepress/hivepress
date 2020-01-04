@@ -225,7 +225,7 @@ class User extends Model {
 	final public function delete( $id = null ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
-		if ( empty( $id ) ) {
+		if ( is_null( $id ) ) {
 			$id = $this->id;
 		}
 

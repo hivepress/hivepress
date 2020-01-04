@@ -86,7 +86,9 @@ class Listing_Category extends Term {
 	 */
 	final public function get_children__id() {
 		if ( ! isset( $this->values['children__id'] ) ) {
-			$this->values['children__id'] = get_terms(
+
+			// Get term IDs.
+			$term_ids = get_terms(
 				[
 					'taxonomy'   => static::_get_meta( 'alias' ),
 					'parent'     => $this->id,
@@ -94,9 +96,13 @@ class Listing_Category extends Term {
 					'fields'     => 'ids',
 				]
 			);
+
+			// Set field value.
+			$this->set_children( $term_ids );
+			$this->values['children__id'] = $term_ids;
 		}
 
-		return $this->values['children__id'];
+		return $this->fields['children']->get_value();
 	}
 
 	/**
@@ -106,18 +112,23 @@ class Listing_Category extends Term {
 	 * @return string
 	 */
 	final public function get_image__url( $size = 'thumbnail' ) {
-		if ( ! isset( $this->values['image__url'] ) ) {
-			$this->values['image__url'] = '';
 
+		// Get field name.
+		$name = 'image__url__' . $size;
+
+		if ( ! isset( $this->values[ $name ] ) ) {
+			$this->values[ $name ] = '';
+
+			// Get image URL.
 			if ( $this->get_image__id() ) {
 				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
 
 				if ( $urls ) {
-					$this->values['image__url'] = reset( $urls );
+					$this->values[ $name ] = reset( $urls );
 				}
 			}
 		}
 
-		return $this->values['image__url'];
+		return $this->values[ $name ];
 	}
 }

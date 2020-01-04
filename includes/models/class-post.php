@@ -183,7 +183,7 @@ abstract class Post extends Model {
 	 * @return bool
 	 */
 	final public function delete( $id = null ) {
-		if ( empty( $id ) ) {
+		if ( is_null( $id ) ) {
 			$id = $this->id;
 		}
 

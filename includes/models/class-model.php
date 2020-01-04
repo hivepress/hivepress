@@ -216,7 +216,7 @@ abstract class Model {
 	final protected static function _get_query( $model = null ) {
 
 		// Create model object.
-		if ( is_null( $model ) ) {
+		if ( empty( $model ) ) {
 			$model = new static();
 		}
 
@@ -239,6 +239,22 @@ abstract class Model {
 	 */
 	final protected function _set_value( $name, $value ) {
 		if ( isset( $this->fields[ $name ] ) ) {
+
+			// Get object IDs.
+			if ( $this->fields[ $name ]->get_arg( '_model' ) ) {
+				if ( is_array( $value ) ) {
+					$value = array_map(
+						function( $id ) {
+							return is_object( $id ) ? $id->get_id() : $id;
+						},
+						$value
+					);
+				} elseif ( is_object( $value ) ) {
+					$value = $value->get_id();
+				}
+			}
+
+			// Set field value.
 			$this->fields[ $name ]->set_value( $value );
 		}
 	}
@@ -250,8 +266,51 @@ abstract class Model {
 	 * @return mixed
 	 */
 	final protected function _get_value( $name ) {
+
+		// Get model field.
+		$field = null;
+
+		if ( strpos( $name, '__' ) ) {
+			list($name, $field) = explode( '__', $name );
+		}
+
 		if ( isset( $this->fields[ $name ] ) ) {
-			return $this->fields[ $name ]->get_value( $value );
+
+			// Get field value.
+			$value = $this->fields[ $name ]->get_value();
+
+			if ( $this->fields[ $name ]->get_arg( '_model' ) && 'id' !== $field ) {
+
+				// Get model object.
+				$model = hp\create_class_instance( '\HivePress\Models\\' . $this->fields[ $name ]->get_arg( '_model' ) );
+
+				if ( $model ) {
+
+					// Get object fields.
+					if ( is_array( $value ) ) {
+						$value = array_map(
+							function( $id ) use ( $model, $field ) {
+								$object = $model->query()->get_by_id( $id );
+
+								if ( $object && $field ) {
+									$object = call_user_func( [ $object, 'get_' . $field ] );
+								}
+
+								return $object;
+							},
+							$value
+						);
+					} else {
+						$value = $model->query()->get_by_id( $value );
+
+						if ( $value && $field ) {
+							$value = call_user_func( [ $value, 'get_' . $field ] );
+						}
+					}
+				}
+			}
+
+			return $value;
 		}
 	}
 
@@ -302,7 +361,7 @@ abstract class Model {
 	 */
 	final public function fill( $values ) {
 		foreach ( $values as $name => $value ) {
-			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+			call_user_func( [ $this, 'set_' . $name ], $value );
 		}
 
 		return $this;
@@ -316,8 +375,17 @@ abstract class Model {
 	final public function serialize() {
 		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $name ) {
-			$values[ $name ] = call_user_func_array( [ $this, 'get_' . $name ] );
+		foreach ( $this->fields as $field_name => $field ) {
+
+			// Get model field.
+			$name = $field_name;
+
+			if ( $field->get_arg( '_model' ) ) {
+				$name .= '__id';
+			}
+
+			// Get field value.
+			$values[ $field_name ] = call_user_func( [ $this, 'get_' . $name ] );
 		}
 
 		return $values;
