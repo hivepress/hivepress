@@ -66,9 +66,10 @@ class Number_Range extends Number {
 			array_merge(
 				$this->args,
 				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Min', 'hivepress' ),
-					'required'    => false,
+					'display_type' => 'number',
+					'name'         => $this->name . '[]',
+					'placeholder'  => esc_html__( 'Min', 'hivepress' ),
+					'required'     => false,
 				]
 			)
 		);
@@ -77,9 +78,10 @@ class Number_Range extends Number {
 			array_merge(
 				$this->args,
 				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Max', 'hivepress' ),
-					'required'    => false,
+					'display_type' => 'number',
+					'name'         => $this->name . '[]',
+					'placeholder'  => esc_html__( 'Max', 'hivepress' ),
+					'required'     => false,
 				]
 			)
 		);

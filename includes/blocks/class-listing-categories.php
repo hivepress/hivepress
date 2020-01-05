@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -21,11 +21,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Categories extends Block {
 
 	/**
-	 * Template type.
+	 * Template mode.
 	 *
 	 * @var string
 	 */
-	protected $template = 'view';
+	protected $mode = 'view';
 
 	/**
 	 * Columns number.
@@ -63,7 +63,7 @@ class Listing_Categories extends Block {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'title'    => hivepress()->translator->get_string( 'listing_categories' ),
+				'label'    => hivepress()->translator->get_string( 'listing_categories' ),
 
 				'settings' => [
 					'columns' => [
@@ -93,19 +93,19 @@ class Listing_Categories extends Block {
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
-						'default'     => '',
 						'_order'      => 30,
 					],
 
 					'order'   => [
-						'label'   => esc_html__( 'Order', 'hivepress' ),
-						'type'    => 'select',
-						'default' => '',
-						'_order'  => 40,
+						'label'    => esc_html__( 'Order', 'hivepress' ),
+						'type'     => 'select',
+						'required' => true,
+						'_order'   => 40,
 
-						'options' => [
-							'name'  => esc_html__( 'Category Name', 'hivepress' ),
-							'count' => esc_html__( 'Listing Count', 'hivepress' ),
+						'options'  => [
+							'custom' => esc_html__( 'Custom Order', 'hivepress' ),
+							'name'   => esc_html__( 'Category Name', 'hivepress' ),
+							'count'  => esc_html__( 'Listing Count', 'hivepress' ),
 						],
 					],
 				],
@@ -122,8 +122,12 @@ class Listing_Categories extends Block {
 	protected function boot() {
 
 		// Set category parent.
-		if ( ! isset( $this->parent ) ) {
-			$this->parent = hp\get_array_value( $this->context, 'listing_category_id' );
+		if ( empty( $this->parent ) ) {
+			$listing_category = $this->get_context( 'listing_category' );
+
+			if ( hp\is_class_instance( $listing_category, '\HivePress\Models\Listing_Category' ) ) {
+				$this->parent = $listing_category->get_id();
+			}
 		}
 
 		parent::boot();
@@ -150,7 +154,7 @@ class Listing_Categories extends Block {
 
 		// Set parent.
 		if ( $this->parent ) {
-			$query->filter( [ 'parent_id' => $this->parent ] );
+			$query->filter( [ 'parent' => $this->parent ] );
 		}
 
 		// Set order.
@@ -184,20 +188,11 @@ class Listing_Categories extends Block {
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && $categories->count() <= 1000 ) {
-			hivepress()->cache->set_cache(
-				array_merge( $query->get_args(), [ 'fields' => 'ids' ] ),
-				'listing_category',
-				array_map(
-					function( $category ) {
-						return $category->get_id();
-					},
-					$categories->getArrayCopy()
-				)
-			);
+			hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing_category', $categories->get_ids() );
 		}
 
 		// Render categories.
-		if ( ! empty( $categories ) ) {
+		if ( $categories->count() ) {
 			$output  = '<div class="hp-grid hp-block">';
 			$output .= '<div class="hp-row">';
 
@@ -206,7 +201,7 @@ class Listing_Categories extends Block {
 
 				$output .= ( new Template(
 					[
-						'template' => 'listing_category_' . $this->template . '_block',
+						'template' => 'listing_category_' . $this->mode . '_block',
 
 						'context'  => [
 							'listing_category' => $category,

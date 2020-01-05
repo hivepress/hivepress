@@ -398,7 +398,7 @@ final class Router {
 				$redirect = call_user_func( $route['redirect'] );
 
 				if ( $redirect ) {
-					if ( is_bool( $redirect ) || ! hp\validate_redirect( $redirect ) ) {
+					if ( is_bool( $redirect ) || ! $this->validate_redirect() ) {
 						$redirect = $menu_redirect ? $menu_redirect : home_url( '/' );
 					}
 
@@ -442,10 +442,14 @@ final class Router {
 	 * @return int
 	 */
 	// todo.
-	function get_current_page() {
+	public function get_current_page() {
 		$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 		$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
 
 		return absint( $page );
+	}
+
+	protected function validate_redirect() {
+		return true;
 	}
 }

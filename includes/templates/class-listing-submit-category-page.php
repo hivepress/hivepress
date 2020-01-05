@@ -33,10 +33,10 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 					'page_content' => [
 						'blocks' => [
 							'listing_categories' => [
-								'type'     => 'listing_categories',
-								'template' => 'submit',
-								'columns'  => 3,
-								'_order'   => 10,
+								'type'    => 'listing_categories',
+								'mode'    => 'submit',
+								'columns' => 3,
+								'_order'  => 10,
 							],
 						],
 					],

@@ -144,6 +144,10 @@ final class Listing extends Controller {
 						'redirect' => [ $this, 'redirect_listing_submit_complete_page' ],
 						'action'   => [ $this, 'render_listing_submit_complete_page' ],
 					],
+
+					'listing_category_view_page'   => [
+						'url' => [ $this, 'get_listing_category_view_url' ],
+					],
 				],
 			],
 			$args
@@ -702,5 +706,15 @@ final class Listing extends Controller {
 				],
 			]
 		) )->render();
+	}
+
+	/**
+	 * Gets listing category view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_listing_category_view_url( $params ) {
+		return get_term_link( hp\get_array_value( $params, 'listing_category_id' ) );
 	}
 }

@@ -33,9 +33,9 @@ class Listings_Edit_Page extends User_Account_Page {
 					'page_content' => [
 						'blocks' => [
 							'listings' => [
-								'type'     => 'listings',
-								'template' => 'edit',
-								'_order'   => 10,
+								'type'   => 'listings',
+								'mode'   => 'edit',
+								'_order' => 10,
 							],
 						],
 					],

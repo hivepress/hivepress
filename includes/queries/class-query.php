@@ -387,7 +387,7 @@ abstract class Query extends \ArrayObject {
 	final public function get_first() {
 		$query = clone $this;
 
-		return hp\get_array_value( $query->limit( 1 )->get_all()->getArrayCopy(), 0 );
+		return hp\get_array_value( $query->limit( 1 )->get_all()->serialize(), 0 );
 	}
 
 	/**
@@ -435,5 +435,14 @@ abstract class Query extends \ArrayObject {
 	 */
 	final public function delete_by_id( $id ) {
 		$this->model->delete( $id );
+	}
+
+	/**
+	 * Gets objects array.
+	 *
+	 * @return array
+	 */
+	final public function serialize() {
+		return $this->getArrayCopy();
 	}
 }

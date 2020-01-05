@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -21,11 +21,11 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
-	 * Template type.
+	 * Template mode.
 	 *
 	 * @var string
 	 */
-	protected $template = 'view';
+	protected $mode = 'view';
 
 	/**
 	 * Columns number.
@@ -70,7 +70,7 @@ class Listings extends Block {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'title'    => hivepress()->translator->get_string( 'listings' ),
+				'label'    => hivepress()->translator->get_string( 'listings' ),
 
 				'settings' => [
 					'columns'  => [
@@ -100,17 +100,17 @@ class Listings extends Block {
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
-						'default'     => '',
 						'_order'      => 30,
 					],
 
 					'order'    => [
-						'label'   => esc_html__( 'Order', 'hivepress' ),
-						'type'    => 'select',
-						'_order'  => 40,
+						'label'    => esc_html__( 'Order', 'hivepress' ),
+						'type'     => 'select',
+						'required' => true,
+						'_order'   => 40,
 
-						'options' => [
-							''       => esc_html__( 'Date', 'hivepress' ),
+						'options'  => [
+							'date'   => esc_html__( 'Date', 'hivepress' ),
 							'title'  => esc_html__( 'Title', 'hivepress' ),
 							'random' => esc_html_x( 'Random', 'sorting order', 'hivepress' ),
 						],
@@ -158,7 +158,7 @@ class Listings extends Block {
 
 			// Set category.
 			if ( $this->category ) {
-				$query->filter( [ 'category_ids' => $this->category ] );
+				$query->filter( [ 'categories' => $this->category ] );
 			}
 
 			// Set order.
@@ -170,7 +170,7 @@ class Listings extends Block {
 				$query->order( 'random' );
 			}
 
-			// Get featured.
+			// Set featured flag.
 			if ( $this->featured ) {
 				$query->filter( [ 'featured' => true ] );
 			}
@@ -198,21 +198,23 @@ class Listings extends Block {
 			if ( 'random' !== $this->order && is_null( $listing_ids ) && $regular_query->post_count <= 1000 ) {
 				hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing', wp_list_pluck( $regular_query->posts, 'ID' ) );
 			}
-		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
+		} elseif ( 'edit' !== $this->mode && get_query_var( 'hp_featured_ids' ) ) {
 
 			// Query featured listings.
 			$featured_query = new \WP_Query(
 				Models\Listing::query()->filter(
 					[
 						'status' => 'publish',
-						'id__in' => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
+						'id__in' => (array) get_query_var( 'hp_featured_ids' ),
 					]
-				)->order( 'random' )->limit( get_option( 'hp_listings_featured_per_page' ) )->get_args()
+				)->order( 'random' )
+				->limit( get_option( 'hp_listings_featured_per_page' ) )
+				->get_args()
 			);
 		}
 
 		if ( $regular_query->have_posts() ) {
-			if ( 'edit' === $this->template ) {
+			if ( 'edit' === $this->mode ) {
 				$output .= '<table class="hp-table">';
 			} else {
 				$output .= '<div class="hp-grid hp-block">';
@@ -220,20 +222,20 @@ class Listings extends Block {
 			}
 
 			// Render featured listings.
-			if ( ! is_null( $featured_query ) ) {
+			if ( $featured_query ) {
 				while ( $featured_query->have_posts() ) {
 					$featured_query->the_post();
 
 					// Get listing.
 					$listing = Models\Listing::query()->get_by_id( get_post() );
 
-					if ( ! is_null( $listing ) ) {
+					if ( $listing ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 
 						// Render listing.
-						$output .= ( new Listing(
+						$output .= ( new Template(
 							[
-								'template' => $this->template,
+								'template' => 'listing_' . $this->mode . '_block',
 
 								'context'  => [
 									'listing' => $listing,
@@ -253,15 +255,15 @@ class Listings extends Block {
 				// Get listing.
 				$listing = Models\Listing::query()->get_by_id( get_post() );
 
-				if ( ! is_null( $listing ) ) {
-					if ( 'edit' !== $this->template ) {
+				if ( $listing ) {
+					if ( 'edit' !== $this->mode ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 					}
 
 					// Render listing.
-					$output .= ( new Listing(
+					$output .= ( new Template(
 						[
-							'template' => $this->template,
+							'template' => 'listing_' . $this->mode . '_block',
 
 							'context'  => [
 								'listing' => $listing,
@@ -269,13 +271,13 @@ class Listings extends Block {
 						]
 					) )->render();
 
-					if ( 'edit' !== $this->template ) {
+					if ( 'edit' !== $this->mode ) {
 						$output .= '</div>';
 					}
 				}
 			}
 
-			if ( 'edit' === $this->template ) {
+			if ( 'edit' === $this->mode ) {
 				$output .= '</table>';
 			} else {
 				$output .= '</div>';

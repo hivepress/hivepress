@@ -37,6 +37,88 @@ final class User {
 
 		// Add registration fields.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ] );
+
+		// todo.
+		add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+	}
+
+	// todo.
+	public function alter_site_footer_block( $template ) {
+		if ( ! is_user_logged_in() ) {
+			$template = hp\merge_trees(
+				[
+					'blocks' => [
+						'user_login_modal'            => [
+							'type'   => 'modal',
+							'title'  => esc_html__( 'Sign In', 'hivepress' ),
+
+							'blocks' => [
+								'user_login_form' => [
+									'type'   => 'user_login_form',
+									'_order' => 10,
+								],
+							],
+						],
+
+						'user_register_modal'         => [
+							'type'   => 'modal',
+							'title'  => esc_html__( 'Register', 'hivepress' ),
+
+							'blocks' => [
+								'user_register_form' => [
+									'type'       => 'form',
+									'form'       => 'user_register',
+									'_order'     => 10,
+
+									'attributes' => [
+										'class' => [ 'hp-form--narrow' ],
+									],
+
+									'footer'     => [
+										'form_actions' => [
+											'type'       => 'container',
+											'_order'     => 10,
+
+											'attributes' => [
+												'class' => [ 'hp-form__actions' ],
+											],
+
+											'blocks'     => [
+												'user_login_link' => [
+													'type' => 'part',
+													'path' => 'user/register/user-login-link',
+													'_order' => 10,
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+
+						'user_password_request_modal' => [
+							'type'   => 'modal',
+							'title'  => esc_html__( 'Reset Password', 'hivepress' ),
+
+							'blocks' => [
+								'user_password_request_form' => [
+									'type'       => 'form',
+									'form'       => 'user_password_request',
+									'_order'     => 10,
+
+									'attributes' => [
+										'class' => [ 'hp-form--narrow' ],
+									],
+								],
+							],
+						],
+					],
+				],
+				$template
+			);
+		}
+
+		return $template;
 	}
 
 	/**

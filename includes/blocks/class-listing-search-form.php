@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -27,7 +27,7 @@ class Listing_Search_Form extends Form {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'title' => hivepress()->translator->get_string( 'listing_search_form' ),
+				'label' => hivepress()->translator->get_string( 'listing_search_form' ),
 			],
 			$meta
 		);
