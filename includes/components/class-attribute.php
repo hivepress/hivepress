@@ -420,7 +420,7 @@ final class Attribute extends Component {
 		$model = $object::_get_meta( 'name' );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $object->get_category_ids() );
+		$attributes = $this->get_attributes( $model, $object->get_categories__id() );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
@@ -459,7 +459,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		// Get category IDs.
-		$category_ids = $form_args['model']->get_category_ids();
+		$category_ids = $form_args['model']->get_categories__id();
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );

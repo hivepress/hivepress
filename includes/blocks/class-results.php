@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;

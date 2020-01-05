@@ -46,7 +46,7 @@ class Listing_Update extends Model_Form {
 				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
 
 				'fields'  => [
-					'image_ids'   => [
+					'images'      => [
 						'_order' => 10,
 					],
 

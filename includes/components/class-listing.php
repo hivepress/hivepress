@@ -30,7 +30,7 @@ final class Listing {
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'set_vendor' ] );
 
 		// Set image.
-		add_action( 'hivepress/v1/models/listing/update_image_ids', [ $this, 'set_image' ] );
+		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'set_image' ] );
 
 		// Update status.
 		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
@@ -50,6 +50,40 @@ final class Listing {
 			// Add menu items.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'add_menu_items' ] );
 		}
+
+		// todo.
+		add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'todo' ], 10, 2 );
+	}
+
+	public function todo( $blocks, $template ) {
+
+		// Get classes.
+		$classes = [];
+
+		if ( $template->get_context( 'listing' )->is_featured() ) {
+			$classes[] = 'hp-listing--featured';
+		}
+
+		if ( $template->get_context( 'listing' )->is_verified() ) {
+			$classes[] = 'hp-listing--verified';
+		}
+
+		if ( $classes ) {
+			$blocks = hp\merge_trees(
+				[ 'blocks' => $blocks ],
+				[
+					'blocks' => [
+						'listing_container' => [
+							'attributes' => [
+								'class' => $classes,
+							],
+						],
+					],
+				]
+			)['blocks'];
+		}
+
+		return $blocks;
 	}
 
 	/**
@@ -71,7 +105,7 @@ final class Listing {
 		// Get vendor ID.
 		$vendor_id = Models\Vendor::query()->filter(
 			[
-				'user_id' => $user_id,
+				'user' => $user_id,
 			]
 		)->get_first_id();
 
@@ -98,7 +132,7 @@ final class Listing {
 							'post_parent'    => 0,
 							'author'         => $user_id,
 							'meta_key'       => 'hp_parent_field',
-							'meta_value'     => 'image_id',
+							'meta_value'     => 'image',
 							'posts_per_page' => 1,
 							'fields'         => 'ids',
 						]

@@ -110,7 +110,7 @@ abstract class Block {
 	 * @param string $name Context name.
 	 * @return mixed
 	 */
-	final protected function get_context( $name = '' ) {
+	final public function get_context( $name = '' ) {
 		$context = $this->context;
 
 		if ( $name ) {

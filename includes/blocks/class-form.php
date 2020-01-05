@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -65,21 +65,17 @@ class Form extends Block {
 		// Get arguments.
 		$form_args = [];
 
-		// Set object ID.
-		$model = hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_model' );
+		// Set model.
+		$model = hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_meta', [ 'model' ] );
 
 		if ( $model ) {
-			$object = hp\get_array_value( $this->context, $model );
-
-			if ( is_object( $object ) && strtolower( get_class( $object ) ) === strtolower( 'HivePress\Models\\' . $model ) ) {
-				$form_args['id'] = $object->get_id();
-			}
+			$form_args['model'] = $this->get_context( $model );
 		}
 
 		// Set attributes.
 		$form_args['attributes'] = $this->attributes;
 
-		// Render header.
+		// Set header.
 		if ( $this->header ) {
 			$form_args['header'] = ( new Container(
 				[
@@ -90,7 +86,7 @@ class Form extends Block {
 			) )->render();
 		}
 
-		// Render footer.
+		// Set footer.
 		if ( $this->footer ) {
 			$form_args['footer'] = ( new Container(
 				[
@@ -104,7 +100,9 @@ class Form extends Block {
 		// Create form.
 		$form = hp\create_class_instance( '\HivePress\Forms\\' . $this->form, [ $form_args ] );
 
-		if ( ! is_null( $form ) ) {
+		if ( $form ) {
+
+			// Set values.
 			if ( $form->get_method() === 'POST' ) {
 				$form->set_values( array_merge( $this->values, $_POST ) );
 			} elseif ( $form->get_method() === 'GET' ) {

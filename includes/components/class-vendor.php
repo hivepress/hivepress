@@ -28,7 +28,7 @@ final class Vendor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update vendor.
-		add_action( 'hivepress/v1/models/user/update_image_id', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_image_', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
 
@@ -45,8 +45,8 @@ final class Vendor extends Component {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status'  => 'publish',
-				'user_id' => $user_id,
+				'status' => 'publish',
+				'user'   => $user_id,
 			]
 		)->get_first();
 
@@ -60,7 +60,7 @@ final class Vendor extends Component {
 		// Update vendor.
 		$vendor->fill(
 			[
-				'image_id'    => $user->get_image_id(),
+				'image'       => $user->get_image__id(),
 				'name'        => $user->get_first_name(),
 				'description' => $user->get_description(),
 			]

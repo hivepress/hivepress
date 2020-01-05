@@ -4,7 +4,7 @@
  *
  * @package HivePress\Blocks
  */
-// todo.
+
 namespace HivePress\Blocks;
 
 use HivePress\Helpers as hp;
@@ -41,25 +41,25 @@ class Template extends Block {
 	public function render() {
 		$output = '';
 
-		// Get blocks.
-		// todo.
-		$template = hp\create_class_instance( '\HivePress\Templates\\' . $this->template );
+		// Create template.
+		$template = hp\create_class_instance(
+			'\HivePress\Templates\\' . $this->template,
+			[
+				[
+					'blocks'  => $this->blocks,
+					'context' => $this->context,
+				],
+			]
+		);
 
-		$blocks = $template->get_blocks();
+		if ( $template ) {
 
-		if ( ! is_null( $blocks ) ) {
-
-			// Merge blocks.
-			if ( ! empty( $this->blocks ) ) {
-				$blocks = hp\merge_trees( [ 'blocks' => $blocks ], [ 'blocks' => $this->blocks ] )['blocks'];
-			}
-
-			// Render blocks.
+			// Render template.
 			$output .= ( new Container(
 				[
 					'context' => $this->context,
 					'tag'     => false,
-					'blocks'  => $blocks,
+					'blocks'  => $template->get_blocks(),
 				]
 			) )->render();
 		}

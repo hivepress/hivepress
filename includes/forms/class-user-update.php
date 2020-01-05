@@ -46,7 +46,7 @@ class User_Update extends Model_Form {
 				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
 
 				'fields'  => [
-					'image_id'         => [
+					'image'            => [
 						'_order' => 10,
 					],
 

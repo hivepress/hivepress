@@ -30,6 +30,13 @@ abstract class Template {
 	protected $blocks = [];
 
 	/**
+	 * Template context.
+	 *
+	 * @var array
+	 */
+	protected $context = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Template meta.
@@ -94,7 +101,23 @@ abstract class Template {
 	/**
 	 * Bootstraps template properties.
 	 */
-	protected function boot() {}
+	protected function boot() {
+
+		// Filter blocks.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters template blocks.
+			 *
+			 * @filter /templates/{$name}/blocks
+			 * @description Filters template blocks.
+			 * @param string $name Template name.
+			 * @param array $blocks Template blocks.
+			 * @param object $object Template object.
+			 */
+			$this->blocks = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ) . '/blocks', $this->blocks, $this );
+		}
+	}
 
 	/**
 	 * Gets template blocks.
@@ -103,5 +126,21 @@ abstract class Template {
 	 */
 	final public function get_blocks() {
 		return $this->blocks;
+	}
+
+	/**
+	 * Gets context values.
+	 *
+	 * @param string $name Context name.
+	 * @return mixed
+	 */
+	final public function get_context( $name = '' ) {
+		$context = $this->context;
+
+		if ( $name ) {
+			$context = hp\get_array_value( $context, $name );
+		}
+
+		return $context;
 	}
 }

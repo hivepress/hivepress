@@ -177,7 +177,7 @@ final class Listing extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -278,7 +278,7 @@ final class Listing extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -436,7 +436,7 @@ final class Listing extends Controller {
 		if ( ! Models\Listing::query()->filter(
 			[
 				'status__in' => [ 'draft', 'pending', 'publish' ],
-				'user_id'    => get_current_user_id(),
+				'user'       => get_current_user_id(),
 			]
 		)->get_first_id() ) {
 			return hivepress()->router->get_url( 'user_account_page' );
@@ -457,7 +457,7 @@ final class Listing extends Controller {
 			Models\Listing::query()->filter(
 				[
 					'status__in' => [ 'draft', 'pending', 'publish' ],
-					'user_id'    => get_current_user_id(),
+					'user'       => get_current_user_id(),
 				]
 			)->get_args()
 		);
@@ -488,7 +488,7 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
 
-		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
+		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
 			return hivepress()->router->get_url( 'listings_edit_page' );
 		}
 
@@ -537,9 +537,9 @@ final class Listing extends Controller {
 		// Get listing ID.
 		$listing_id = Models\Listing::query()->filter(
 			[
-				'status'    => 'auto-draft',
-				'vendor_id' => null,
-				'user_id'   => get_current_user_id(),
+				'status'  => 'auto-draft',
+				'vendor_' => null,
+				'user'    => get_current_user_id(),
 			]
 		)->get_first_id();
 
@@ -548,8 +548,8 @@ final class Listing extends Controller {
 			// Add listing.
 			$listing = ( new Models\Listing() )->fill(
 				[
-					'status'  => 'auto-draft',
-					'user_id' => get_current_user_id(),
+					'status' => 'auto-draft',
+					'user'   => get_current_user_id(),
 				]
 			);
 
@@ -589,15 +589,15 @@ final class Listing extends Controller {
 			// Get category.
 			$category = Models\Listing_Category::query()->get_by_id( get_query_var( 'hp_listing_category_id' ) );
 
-			if ( $category && ! $category->get_child_ids() ) {
+			if ( $category && ! $category->get_children__id() ) {
 
 				// Set category.
-				$listing->set_category_ids( $category->get_id() )->save();
+				$listing->set_categories( $category->get_id() )->save();
 			}
 		}
 
 		// Check category.
-		if ( $listing->get_category_ids() ) {
+		if ( $listing->get_categories__id() ) {
 			return true;
 		}
 

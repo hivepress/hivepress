@@ -77,8 +77,8 @@ final class Vendor extends Controller {
 		query_posts(
 			Models\Listing::query()->filter(
 				[
-					'status'    => 'publish',
-					'vendor_id' => $vendor->get_id(),
+					'status' => 'publish',
+					'vendor' => $vendor->get_id(),
 				]
 			)->limit( get_option( 'hp_listings_per_page' ) )
 			->paginate( hivepress()->router->get_current_page() )
