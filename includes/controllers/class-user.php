@@ -581,7 +581,7 @@ final class User extends Controller {
 	 */
 	public function redirect_user_login_page() {
 		if ( is_user_logged_in() ) {
-			return hivepress()->router->get_redirect_url( 'user_account_page' );
+			return hivepress()->router->get_url( 'user_account_page' );
 		}
 
 		return false;

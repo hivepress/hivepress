@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-// todo.
+
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -17,14 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Router
  */
-final class Router {
-
-	/**
-	 * The current route.
-	 *
-	 * @var mixed
-	 */
-	protected $route = false;
+final class Router extends Component {
 
 	/**
 	 * All routes.
@@ -34,9 +27,18 @@ final class Router {
 	protected $routes = [];
 
 	/**
-	 * Class constructor.
+	 * The current route.
+	 *
+	 * @var mixed
 	 */
-	public function __construct() {
+	protected $route;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
+	 */
+	public function __construct( $args = [] ) {
 
 		// Register REST routes.
 		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
@@ -56,6 +58,8 @@ final class Router {
 			// Set page template.
 			add_filter( 'template_include', [ $this, 'set_page_template' ], 10000 );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -100,8 +104,8 @@ final class Router {
 	 * @return mixed
 	 */
 	protected function get_current_route() {
-		if ( false === $this->route ) {
-			$this->route = null;
+		if ( ! isset( $this->route ) ) {
+			$this->route = false;
 
 			if ( get_query_var( 'hp_route' ) ) {
 
@@ -124,6 +128,19 @@ final class Router {
 						break;
 					}
 				}
+			}
+
+			if ( $this->route ) {
+
+				/**
+				 * Filters URL route title.
+				 *
+				 * @filter /routes/{$name}/title
+				 * @description Filters URL route title.
+				 * @param string $name Route name.
+				 * @param string $title Route title.
+				 */
+				$this->route['title'] = apply_filters( 'hivepress/v1/routes/' . $this->route['name'] . '/title', null );
 			}
 		}
 
@@ -202,10 +219,13 @@ final class Router {
 					// Get URL params.
 					$params = $this->get_url_params( $name );
 
+					// Get query variables.
+					$vars = array_diff_key( $query, array_flip( $params ) );
+
 					// Set URL query.
 					$query = array_merge(
 						array_flip( $params ),
-						array_intersect_key( $query, array_flip( $params ) ),
+						array_diff_key( $query, $vars ),
 						[
 							'route' => $name,
 						]
@@ -214,7 +234,7 @@ final class Router {
 					// Set URL path.
 					if ( $wp_rewrite->get_page_permastruct() || hp\get_array_value( $route, 'rest' ) ) {
 						foreach ( $params as $param ) {
-							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/i', $query[ $param ], $path );
+							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
 						}
 
 						$path = rtrim( str_replace( '/?', '/', $path ), '/' ) . '/';
@@ -228,11 +248,33 @@ final class Router {
 					} else {
 						$url = home_url( $path );
 					}
+
+					// Add query variables.
+					if ( $vars ) {
+						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
+					}
 				}
 			}
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Gets the current URL.
+	 *
+	 * @return string
+	 */
+	public function get_current_url() {
+		global $wp;
+
+		$query = '';
+
+		if ( $_GET ) {
+			$query = '/?' . http_build_query( $_GET );
+		}
+
+		return home_url( $wp->request . $query );
 	}
 
 	/**
@@ -353,6 +395,7 @@ final class Router {
 			}
 
 			// Redirect menu.
+			// todo.
 			$menu_redirect = null;
 
 			foreach ( hivepress()->get_menus() as $menu ) {
@@ -383,7 +426,7 @@ final class Router {
 								if ( isset( $menu_route['redirect'] ) && call_user_func( $menu_route['redirect'] ) === false ) {
 									wp_safe_redirect( $menu_item['url'] );
 
-									exit();
+									exit;
 								}
 							}
 						}
@@ -398,13 +441,13 @@ final class Router {
 				$redirect = call_user_func( $route['redirect'] );
 
 				if ( $redirect ) {
-					if ( is_bool( $redirect ) || ! $this->validate_redirect() ) {
+					if ( is_bool( $redirect ) ) {
 						$redirect = $menu_redirect ? $menu_redirect : home_url( '/' );
 					}
 
 					wp_safe_redirect( $redirect );
 
-					exit();
+					exit;
 				}
 			}
 
@@ -412,44 +455,22 @@ final class Router {
 			if ( isset( $route['action'] ) ) {
 				echo call_user_func( $route['action'] );
 
-				exit();
+				exit;
 			}
 		}
 
 		return $template;
 	}
 
-	// todo.
-	public function get_redirect_url( $route ) {
-		// todo.
-	}
-
-	public function get_current_url() {
-		global $wp;
-
-		$query = '';
-
-		if ( ! empty( $_GET ) ) {
-			$query = '/?' . http_build_query( $_GET );
-		}
-
-		return home_url( $wp->request . $query );
-	}
-
 	/**
-	 * Gets current page number.
+	 * Gets the current page number.
 	 *
 	 * @return int
 	 */
-	// todo.
 	public function get_current_page() {
 		$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 		$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
 
 		return absint( $page );
-	}
-
-	protected function validate_redirect() {
-		return true;
 	}
 }

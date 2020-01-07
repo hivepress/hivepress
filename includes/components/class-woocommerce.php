@@ -87,7 +87,7 @@ final class WooCommerce extends Component {
 				)
 			);
 
-			exit();
+			exit;
 		}
 	}
 
