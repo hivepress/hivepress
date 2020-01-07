@@ -54,7 +54,7 @@ final class Router {
 			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
 
 			// Set page template.
-			add_filter( 'template_include', [ $this, 'set_page_template' ], 99 );
+			add_filter( 'template_include', [ $this, 'set_page_template' ], 10000 );
 		}
 	}
 

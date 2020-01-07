@@ -227,7 +227,7 @@ final class Form extends Component {
 			$args['fields']['_captcha'] = [
 				'type'      => 'captcha',
 				'_separate' => true,
-				'_order'    => 1000,
+				'_order'    => 10000,
 			];
 		}
 

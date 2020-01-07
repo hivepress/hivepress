@@ -229,9 +229,10 @@ final class User extends Controller {
 		 *
 		 * @action /users/register
 		 * @description Fires on user registration.
-		 * @param object $id User ID.
+		 * @param int $id User ID.
+		 * @param object $object User object.
 		 */
-		do_action( 'hivepress/v1/models/user/register', $user->get_id() );
+		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $user );
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {

@@ -97,6 +97,33 @@ class User extends Model {
 	}
 
 	/**
+	 * Gets image URL.
+	 *
+	 * @param string $size Image size.
+	 * @return string
+	 */
+	final public function get_image__url( $size = 'thumbnail' ) {
+
+		// Get field name.
+		$name = 'image__url__' . $size;
+
+		if ( ! isset( $this->values[ $name ] ) ) {
+			$this->values[ $name ] = '';
+
+			// Get image URL.
+			if ( $this->get_image__id() ) {
+				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
+
+				if ( $urls ) {
+					$this->values[ $name ] = reset( $urls );
+				}
+			}
+		}
+
+		return $this->values[ $name ];
+	}
+
+	/**
 	 * Gets object.
 	 *
 	 * @param int $id Object ID.
@@ -207,7 +234,11 @@ class User extends Model {
 
 			// Update user meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_user_meta( $this->id, $meta_key, $meta_value );
+				if ( is_null( $meta_value ) ) {
+					delete_user_meta( $this->id, $meta_key );
+				} else {
+					update_user_meta( $this->id, $meta_key, $meta_value );
+				}
 			}
 
 			return true;

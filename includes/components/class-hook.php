@@ -135,7 +135,7 @@ final class Hook extends Component {
 		// Update post.
 		$post_type = get_post_type( $post_id );
 
-		if ( strpos( $post_type, 'hp_' ) === 0 ) {
+		if ( strpos( $post_type, 'hp_' ) === 0 || 'attachment' === $post_type ) {
 			list($action, $model) = explode( '_', current_action() );
 
 			if ( 'save' === $action ) {
@@ -166,7 +166,7 @@ final class Hook extends Component {
 		}
 
 		// Update post status.
-		if ( strpos( $post->post_type, 'hp_' ) === 0 && $new_status !== $old_status ) {
+		if ( ( strpos( $post->post_type, 'hp_' ) === 0 || 'attachment' === $post->post_type ) && $new_status !== $old_status ) {
 			do_action( 'hivepress/v1/models/' . hp\unprefix( $post->post_type ) . '/update_status', $post->ID, $new_status, $old_status );
 		}
 	}
@@ -190,7 +190,7 @@ final class Hook extends Component {
 		if ( strpos( $meta_key, 'hp_' ) === 0 ) {
 			$post_type = get_post_type( $post_id );
 
-			if ( strpos( $post_type, 'hp_' ) === 0 ) {
+			if ( strpos( $post_type, 'hp_' ) === 0 || 'attachment' === $post_type ) {
 				do_action( 'hivepress/v1/models/' . hp\unprefix( $post_type ) . '/update_' . hp\unprefix( $meta_key ), $post_id, $meta_value );
 			}
 		}

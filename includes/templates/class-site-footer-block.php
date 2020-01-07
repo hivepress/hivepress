@@ -29,7 +29,13 @@ class Site_Footer_Block extends Template {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
-				'blocks' => [],
+				'blocks' => [
+					'modals' => [
+						'type'   => 'container',
+						'tag'    => false,
+						'blocks' => [],
+					],
+				],
 			],
 			$args
 		);

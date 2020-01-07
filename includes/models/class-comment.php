@@ -142,7 +142,11 @@ abstract class Comment extends Model {
 
 			// Update comment meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_comment_meta( $this->id, $meta_key, $meta_value );
+				if ( is_null( $meta_value ) ) {
+					delete_comment_meta( $this->id, $meta_key );
+				} else {
+					update_comment_meta( $this->id, $meta_key, $meta_value );
+				}
 			}
 
 			return true;

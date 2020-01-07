@@ -4,7 +4,7 @@
  *
  * @package HivePress\Components
  */
-// todo.
+
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
@@ -28,9 +28,15 @@ final class Vendor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update vendor.
-		add_action( 'hivepress/v1/models/user/update_image_', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_image', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
+
+		if ( ! is_admin() ) {
+
+			// Set page title.
+			add_filter( 'hivepress/v1/routes/vendor_view_page/title', [ $this, 'set_page_title' ] );
+		}
 
 		parent::__construct( $args );
 	}
@@ -50,7 +56,7 @@ final class Vendor extends Component {
 			]
 		)->get_first();
 
-		if ( is_null( $vendor ) ) {
+		if ( empty( $vendor ) ) {
 			return;
 		}
 
@@ -61,9 +67,19 @@ final class Vendor extends Component {
 		$vendor->fill(
 			[
 				'image'       => $user->get_image__id(),
-				'name'        => $user->get_first_name(),
+				'name'        => $user->get_display_name(),
 				'description' => $user->get_description(),
 			]
 		)->save();
+	}
+
+	/**
+	 * Sets page title.
+	 *
+	 * @param string $title Page title.
+	 * @return string
+	 */
+	public function set_page_title( $title ) {
+		return sprintf( esc_html__( 'Listings by %s', 'hivepress' ), get_the_title() );
 	}
 }

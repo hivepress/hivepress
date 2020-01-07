@@ -142,7 +142,11 @@ abstract class Term extends Model {
 
 			// Update term meta.
 			foreach ( $meta as $meta_key => $meta_value ) {
-				update_term_meta( $this->id, $meta_key, $meta_value );
+				if ( is_null( $meta_value ) ) {
+					delete_term_meta( $this->id, $meta_key );
+				} else {
+					update_term_meta( $this->id, $meta_key, $meta_value );
+				}
 			}
 
 			return true;
