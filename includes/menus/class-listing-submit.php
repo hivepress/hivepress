@@ -44,22 +44,22 @@ class Listing_Submit extends Menu {
 		$args = hp\merge_arrays(
 			[
 				'items' => [
-					'listing_submit_page'          => [
+					'listing_submit'          => [
 						'route'  => 'listing_submit_page',
 						'_order' => 10,
 					],
 
-					'listing_submit_category_page' => [
+					'listing_submit_category' => [
 						'route'  => 'listing_submit_category_page',
 						'_order' => 20,
 					],
 
-					'listing_submit_details_page'  => [
+					'listing_submit_details'  => [
 						'route'  => 'listing_submit_details_page',
 						'_order' => 30,
 					],
 
-					'listing_submit_complete_page' => [
+					'listing_submit_complete' => [
 						'route'  => 'listing_submit_complete_page',
 						'_order' => 100,
 					],

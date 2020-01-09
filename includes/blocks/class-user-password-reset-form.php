@@ -71,7 +71,7 @@ class User_Password_Reset_Form extends Form {
 		if ( ! is_wp_error( check_password_reset_key( $this->values['password_reset_key'], $this->values['username'] ) ) ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Part( [ 'path' => 'user/password/user-password-reset-message' ] ) )->render();
+			$output .= ( new Part( [ 'path' => 'user/password-reset/user-password-reset-message' ] ) )->render();
 		}
 
 		return $output;

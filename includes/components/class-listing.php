@@ -336,7 +336,7 @@ final class Listing extends Component {
 				'status__in' => [ 'draft', 'pending', 'publish' ],
 			]
 		)->get_first_id() ) {
-			$menu['items']['listings_edit_page'] = [
+			$menu['items']['listings_edit'] = [
 				'route'  => 'listings_edit_page',
 				'_order' => 10,
 			];

@@ -45,9 +45,19 @@ class Listing extends Post {
 					],
 
 					'status'          => [
-						'type'       => 'text',
-						'max_length' => 128,
-						'_alias'     => 'post_status',
+						'type'    => 'select',
+						'_alias'  => 'post_status',
+
+						'options' => [
+							'publish'    => '',
+							'future'     => '',
+							'draft'      => esc_html_x( 'Hidden', 'listing', 'hivepress' ),
+							'pending'    => esc_html_x( 'Pending', 'listing', 'hivepress' ),
+							'private'    => '',
+							'trash'      => '',
+							'auto-draft' => '',
+							'inherit'    => '',
+						],
 					],
 
 					'featured'        => [

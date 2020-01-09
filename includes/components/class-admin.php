@@ -1140,7 +1140,16 @@ final class Admin extends Component {
 			}
 		}
 
-		// Filter notices.
+		/**
+		 * Filters admin notices.
+		 *
+		 * @filter /admin_notices
+		 * @description Filters admin notices.
+		 * @param array $notices Admin notices.
+		 */
+		$notices = apply_filters( 'hivepress/v1/admin_notices', $notices );
+
+		// Remove dismissed notices.
 		$notices = array_diff_key( $notices, array_flip( (array) get_option( 'hp_admin_dismissed_notices' ) ) );
 
 		// Render notices.

@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="hp-listing__image">
-	<a href="<?php the_permalink(); ?>">
+	<a href="<?php echo esc_url( hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ) ); ?>">
 		<?php
 		if ( has_post_thumbnail() ) :
 			the_post_thumbnail( 'hp_landscape_small' );

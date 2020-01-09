@@ -2,4 +2,4 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-<span><?php the_title(); ?></span>
+<span><?php echo esc_html( $listing->get_title() ); ?></span>

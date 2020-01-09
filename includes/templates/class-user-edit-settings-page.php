@@ -67,7 +67,7 @@ class User_Edit_Settings_Page extends User_Account_Page {
 										'blocks'     => [
 											'user_delete_link' => [
 												'type'   => 'part',
-												'path'   => 'user/edit/user-delete-link',
+												'path'   => 'user/edit/page/user-delete-link',
 												'_order' => 10,
 											],
 										],

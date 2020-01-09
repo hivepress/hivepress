@@ -1,8 +1,7 @@
 <?php
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-// todo rename?
 ?>
 <td class="hp-listing__date">
-	<time datetime="<?php echo esc_attr( get_the_time( 'Y-m-d' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
+	<time datetime="<?php echo esc_attr( $listing->get_date_created() ); ?>"><?php echo esc_html( $listing->display_date_created() ); ?></time>
 </td>

@@ -650,7 +650,8 @@ final class Listing extends Controller {
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing'                => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing_category_count' => Models\Listing_Category::query()->get_count(),
 				],
 			]
 		) )->render();
