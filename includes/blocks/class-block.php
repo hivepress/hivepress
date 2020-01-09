@@ -20,7 +20,10 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Block {
 	use Traits\Mutator;
-	use Traits\Meta;
+
+	use Traits \Meta {
+		set_meta as _set_meta;
+	}
 
 	/**
 	 * Block name.
@@ -103,6 +106,34 @@ abstract class Block {
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {}
+
+	/**
+	 * Sets meta values.
+	 *
+	 * @param array $meta Meta values.
+	 */
+	final protected static function set_meta( $meta ) {
+
+		// Set settings.
+		$settings = array_filter( hp\get_array_value( $meta, 'settings', [] ) );
+
+		if ( $settings ) {
+			$meta['settings'] = [];
+
+			foreach ( $settings as $name => $args ) {
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+				// Add field.
+				if ( $field ) {
+					$meta['settings'][ $name ] = $field;
+				}
+			}
+		}
+
+		static::_set_meta( $meta );
+	}
 
 	/**
 	 * Gets context values.
