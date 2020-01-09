@@ -62,11 +62,13 @@ class Listing extends Post {
 
 					'date_created'    => [
 						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_date',
 					],
 
 					'date_modified'   => [
 						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_modified',
 					],
 

@@ -28,7 +28,7 @@ class Vendor extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
-					'name'        => [
+					'name'            => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
@@ -36,20 +36,26 @@ class Vendor extends Post {
 						'_alias'     => 'post_title',
 					],
 
-					'description' => [
+					'description'     => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'_alias'     => 'post_content',
 					],
 
-					'status'      => [
+					'status'          => [
 						'type'       => 'text',
 						'max_length' => 128,
 						'_alias'     => 'post_status',
 					],
 
-					'user'        => [
+					'date_registered' => [
+						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
+						'_alias' => 'post_date',
+					],
+
+					'user'            => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
@@ -57,7 +63,7 @@ class Vendor extends Post {
 						'_model'    => 'user',
 					],
 
-					'image'       => [
+					'image'           => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'_alias'    => '_thumbnail_id',

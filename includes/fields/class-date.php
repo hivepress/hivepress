@@ -162,7 +162,11 @@ class Date extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return date_create_from_format( $this->format, $this->value )->format( $this->display_format );
+			$date = date_create_from_format( $this->format, $this->value );
+
+			if ( $date ) {
+				return $date->format( $this->display_format );
+			}
 		}
 	}
 

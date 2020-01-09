@@ -186,21 +186,25 @@ abstract class Model {
 		}
 
 		// Get or set field value.
-		foreach ( [ 'set', 'get', 'is' ] as $prefix ) {
+		foreach ( [ 'set', 'get', 'is', 'display' ] as $prefix ) {
 			if ( strpos( $name, $prefix . '_' ) === 0 ) {
 
 				// Get field name.
-				$action = 'is' === $prefix ? 'get' : $prefix;
+				$action = 'set' !== $prefix ? 'get' : $prefix;
 				$field  = substr( $name, strlen( $prefix . '_' ) );
+
+				if ( 'display' === $prefix ) {
+					$args[] = true;
+				}
 
 				// Get field value.
 				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], array_merge( [ $field ], $args ) );
 
-				if ( 'set' === $action ) {
-					return $this;
+				if ( 'set' !== $action ) {
+					return $value;
 				}
 
-				return $value;
+				return $this;
 			}
 		}
 
@@ -263,9 +267,10 @@ abstract class Model {
 	 * Gets field value.
 	 *
 	 * @param string $name Field name.
+	 * @param bool   $display Display flag.
 	 * @return mixed
 	 */
-	final protected function _get_value( $name ) {
+	final protected function _get_value( $name, $display = false ) {
 
 		// Get model field.
 		$field = null;
@@ -277,34 +282,47 @@ abstract class Model {
 		if ( isset( $this->fields[ $name ] ) ) {
 
 			// Get field value.
-			$value = $this->fields[ $name ]->get_value();
+			$value = null;
 
-			if ( $this->fields[ $name ]->get_arg( '_model' ) && 'id' !== $field ) {
+			if ( $display && empty( $field ) ) {
+				$value = $this->fields[ $name ]->get_display_value();
+			} else {
+				$value = $this->fields[ $name ]->get_value();
 
-				// Get model object.
-				$model = hp\create_class_instance( '\HivePress\Models\\' . $this->fields[ $name ]->get_arg( '_model' ) );
+				if ( $this->fields[ $name ]->get_arg( '_model' ) && 'id' !== $field ) {
 
-				if ( $model ) {
+					// Get model object.
+					$model = hp\create_class_instance( '\HivePress\Models\\' . $this->fields[ $name ]->get_arg( '_model' ) );
 
-					// Get object fields.
-					if ( is_array( $value ) ) {
-						$value = array_map(
-							function( $id ) use ( $model, $field ) {
-								$object = $model->query()->get_by_id( $id );
+					if ( $model ) {
 
-								if ( $object && $field ) {
-									$object = call_user_func( [ $object, 'get_' . $field ] );
-								}
+						// Get object method.
+						$method = null;
 
-								return $object;
-							},
-							$value
-						);
-					} else {
-						$value = $model->query()->get_by_id( $value );
+						if ( $field ) {
+							$method = ( $display ? 'display' : 'get' ) . '_' . $field;
+						}
 
-						if ( $value && $field ) {
-							$value = call_user_func( [ $value, 'get_' . $field ] );
+						// Get object fields.
+						if ( is_array( $value ) ) {
+							$value = array_map(
+								function( $id ) use ( $model, $method ) {
+									$object = $model->query()->get_by_id( $id );
+
+									if ( $object && $method ) {
+										$object = call_user_func( [ $object, $method ] );
+									}
+
+									return $object;
+								},
+								$value
+							);
+						} else {
+							$value = $model->query()->get_by_id( $value );
+
+							if ( $value && $method ) {
+								$value = call_user_func( [ $value, $method ] );
+							}
 						}
 					}
 				}
