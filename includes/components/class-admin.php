@@ -90,6 +90,17 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Gets option value.
+	 *
+	 * @param string $name Option name.
+	 * @param mixed  $default Default value.
+	 * @return mixed
+	 */
+	public function get_option( $name, $default = false ) {
+		return get_option( hp\prefix( $name ), $default );
+	}
+
+	/**
 	 * Registers post types.
 	 */
 	public function register_post_types() {

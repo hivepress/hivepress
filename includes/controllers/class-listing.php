@@ -343,25 +343,17 @@ final class Listing extends Controller {
 		} else {
 			if ( is_page() ) {
 
-				// Get featured IDs.
-				$featured_ids = array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) );
-
 				// Query listings.
 				query_posts(
 					Models\Listing::query()->filter(
 						[
 							'status'     => 'publish',
-							'id__not_in' => $featured_ids,
+							'id__not_in' => hivepress()->request->get_context( 'featured_ids', [] ),
 						]
 					)->limit( get_option( 'hp_listings_per_page' ) )
-					->paginate( hivepress()->router->get_current_page() )
+					->paginate( hivepress()->request->get_context( 'page_number' ) )
 					->get_args()
 				);
-
-				// Set featured IDs.
-				if ( $featured_ids ) {
-					set_query_var( 'hp_featured_ids', $featured_ids );
-				}
 			}
 
 			// Render listings.
@@ -486,11 +478,14 @@ final class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
 			return hivepress()->router->get_url( 'listings_edit_page' );
 		}
+
+		// Set listing.
+		hivepress()->request->set_context( 'listing', $listing );
 
 		return false;
 	}
@@ -506,7 +501,7 @@ final class Listing extends Controller {
 				'template' => 'listing_edit_page',
 
 				'context'  => [
-					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();
@@ -534,16 +529,16 @@ final class Listing extends Controller {
 			return home_url( '/' );
 		}
 
-		// Get listing ID.
-		$listing_id = Models\Listing::query()->filter(
+		// Get listing.
+		$listing = Models\Listing::query()->filter(
 			[
-				'status'  => 'auto-draft',
-				'vendor_' => null,
-				'user'    => get_current_user_id(),
+				'status' => 'auto-draft',
+				'vendor' => null,
+				'user'   => get_current_user_id(),
 			]
-		)->get_first_id();
+		)->get_first();
 
-		if ( empty( $listing_id ) ) {
+		if ( empty( $listing ) ) {
 
 			// Add listing.
 			$listing = ( new Models\Listing() )->fill(
@@ -553,15 +548,14 @@ final class Listing extends Controller {
 				]
 			);
 
-			// Get listing ID.
-			if ( $listing->save() ) {
-				$listing_id = $listing->get_id();
+			if ( ! $listing->save() ) {
+				return home_url( '/' );
 			}
 		}
 
 		// Check listing.
-		if ( $listing_id ) {
-			set_query_var( 'hp_listing_id', $listing_id );
+		if ( $listing ) {
+			hivepress()->request->set_context( 'listing', $listing );
 
 			return true;
 		}
@@ -582,12 +576,14 @@ final class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = hivepress()->request->get_context( 'listing' );
 
-		if ( get_query_var( 'hp_listing_category_id' ) ) {
+		if ( hivepress()->request->get_param( 'listing_category_id' ) ) {
 
 			// Get category.
-			$category = Models\Listing_Category::query()->get_by_id( get_query_var( 'hp_listing_category_id' ) );
+			$category = Models\Listing_Category::query()->get_by_id( hivepress()->request->get_param( 'listing_category_id' ) );
+
+			hivepress()->request->set_context( 'listing_category', $category );
 
 			if ( $category && ! $category->get_children__id() ) {
 
@@ -615,7 +611,7 @@ final class Listing extends Controller {
 				'template' => 'listing_submit_category_page',
 
 				'context'  => [
-					'listing_category' => Models\Listing_Category::query()->get_by_id( get_query_var( 'hp_listing_category_id' ) ),
+					'listing_category' => hivepress()->request->get_context( 'listing_category' ),
 				],
 			]
 		) )->render();
@@ -629,7 +625,7 @@ final class Listing extends Controller {
 	public function redirect_listing_submit_details_page() {
 
 		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = hivepress()->request->get_context( 'listing' );
 
 		// Check listing.
 		if ( $listing->get_title() ) {
@@ -650,7 +646,7 @@ final class Listing extends Controller {
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing'                => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing'                => hivepress()->request->get_context( 'listing' ),
 					'listing_category_count' => Models\Listing_Category::query()->get_count(),
 				],
 			]
@@ -665,7 +661,7 @@ final class Listing extends Controller {
 	public function redirect_listing_submit_complete_page() {
 
 		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) );
+		$listing = hivepress()->request->get_context( 'listing' );
 
 		// Get status.
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
@@ -680,13 +676,13 @@ final class Listing extends Controller {
 
 				'tokens'    => [
 					'listing_title' => $listing->get_title(),
-					'listing_url'   => 'publish' === $status ? get_permalink( $listing_id ) : get_preview_post_link( $listing_id ),
+					'listing_url'   => 'publish' === $status ? get_permalink( $listing->get_id() ) : get_preview_post_link( $listing->get_id() ),
 				],
 			]
 		) )->send();
 
 		if ( 'publish' === $status ) {
-			return get_permalink( $listing_id );
+			return get_permalink( $listing->get_id() );
 		}
 
 		return false;
@@ -703,7 +699,7 @@ final class Listing extends Controller {
 				'template' => 'listing_submit_complete_page',
 
 				'context'  => [
-					'listing' => Models\Listing::query()->get_by_id( get_query_var( 'hp_listing_id' ) ),
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();

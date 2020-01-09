@@ -1010,7 +1010,7 @@ final class Attribute extends Component {
 				$query->set( 'post__not_in', $featured_ids );
 
 				// Set featured IDs.
-				$query->set( 'hp_featured_ids', $featured_ids );
+				hivepress()->request->set_context( 'featured_ids', $featured_ids );
 			}
 		}
 

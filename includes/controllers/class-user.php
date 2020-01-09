@@ -647,7 +647,7 @@ final class User extends Controller {
 				'template' => 'user_edit_settings_page',
 
 				'context'  => [
-					'user' => Models\User::query()->get_by_id( get_current_user_id() ),
+					'user' => hivepress()->request->get_user(),
 				],
 			]
 		) )->render();

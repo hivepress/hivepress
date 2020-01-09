@@ -103,14 +103,14 @@ final class Router extends Component {
 	 *
 	 * @return mixed
 	 */
-	protected function get_current_route() {
+	public function get_current_route() {
 		if ( ! isset( $this->route ) ) {
 			$this->route = false;
 
-			if ( get_query_var( 'hp_route' ) ) {
+			if ( hivepress()->request->get_param( 'route' ) ) {
 
 				// Get route name.
-				$name = get_query_var( 'hp_route' );
+				$name = hivepress()->request->get_param( 'route' );
 
 				// Get route.
 				$route = $this->get_route( $name );
@@ -366,15 +366,6 @@ final class Router extends Component {
 	}
 
 	/**
-	 * Gets page title.
-	 *
-	 * @return mixed
-	 */
-	public function get_page_title() {
-		return hp\get_array_value( $this->get_current_route(), 'title', get_the_title() );
-	}
-
-	/**
 	 * Sets page template.
 	 *
 	 * @param array $template Template file.
@@ -459,17 +450,5 @@ final class Router extends Component {
 		}
 
 		return $template;
-	}
-
-	/**
-	 * Gets the current page number.
-	 *
-	 * @return int
-	 */
-	public function get_current_page() {
-		$page = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-		$page = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page;
-
-		return absint( $page );
 	}
 }
