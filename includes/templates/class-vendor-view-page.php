@@ -71,10 +71,22 @@ class Vendor_View_Page extends Page {
 														'_order'    => 10,
 													],
 
-													'vendor_name'  => [
-														'type'     => 'part',
-														'path' => 'vendor/view/page/vendor-name',
-														'_order'    => 20,
+													'vendor_name' => [
+														'type'       => 'container',
+														'tag'        => 'h3',
+														'_order'     => 20,
+
+														'attributes' => [
+															'class' => [ 'hp-vendor__name' ],
+														],
+
+														'blocks'     => [
+															'vendor_name_text'           => [
+																'type'   => 'part',
+																'path' => 'vendor/view/page/vendor-name',
+																'_order' => 10,
+															],
+														],
 													],
 
 													'vendor_details_primary' => [

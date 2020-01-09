@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Category_Submit_Block
  */
-class Listing_Category_Submit_Block extends Template {
+class Listing_Category_Submit_Block extends Listing_Category_View_Block {
 
 	/**
 	 * Class constructor.
@@ -30,51 +30,12 @@ class Listing_Category_Submit_Block extends Template {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'listing_category_container' => [
-						'type'       => 'container',
-						'tag'        => 'article',
-						'_order'     => 10,
+					'listing_category_image'     => [
+						'path' => 'listing-category/submit/block/listing-category-image',
+					],
 
-						'attributes' => [
-							'class' => [ 'hp-listing-category', 'hp-listing-category--submit-block' ],
-						],
-
-						'blocks'     => [
-							'listing_category_header'  => [
-								'type'       => 'container',
-								'tag'        => 'header',
-								'_order'     => 10,
-
-								'attributes' => [
-									'class' => [ 'hp-listing-category__header' ],
-								],
-
-								'blocks'     => [
-									'listing_category_image' => [
-										'type'   => 'part',
-										'path'   => 'listing-category/submit/block/listing-category-image',
-										'_order' => 10,
-									],
-								],
-							],
-
-							'listing_category_content' => [
-								'type'       => 'container',
-								'_order'     => 20,
-
-								'attributes' => [
-									'class' => [ 'hp-listing-category__content' ],
-								],
-
-								'blocks'     => [
-									'listing_category_name' => [
-										'type'   => 'part',
-										'path'   => 'listing-category/submit/block/listing-category-name',
-										'_order' => 10,
-									],
-								],
-							],
-						],
+					'listing_category_name_text' => [
+						'path' => 'listing-category/submit/block/listing-category-name',
 					],
 				],
 			],

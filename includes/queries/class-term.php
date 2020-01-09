@@ -113,7 +113,7 @@ class Term extends Query {
 
 		$args = hp\get_array_value( $this->args, $this->get_alias( 'order' ) );
 
-		if ( is_array( $args ) && ! empty( $args ) ) {
+		if ( is_array( $args ) && $args ) {
 			$this->args[ $this->get_alias( 'order' ) ] = array_keys( $args )[0];
 			$this->args['order']                       = reset( $args );
 		}

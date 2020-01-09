@@ -224,7 +224,7 @@ final class Router extends Component {
 
 					// Set URL query.
 					$query = array_merge(
-						array_flip( $params ),
+						array_fill_keys( $params, null ),
 						array_diff_key( $query, $vars ),
 						[
 							'route' => $name,
@@ -394,21 +394,20 @@ final class Router extends Component {
 				$wp_query->is_404  = false;
 			}
 
-			// Redirect menu.
-			// todo.
-			$menu_redirect = null;
+			// Get menu redirect.
+			$menu_redirect = home_url( '/' );
 
 			foreach ( hivepress()->get_menus() as $menu ) {
 				if ( $menu::get_meta( 'chained' ) && in_array( $route['name'], wp_list_pluck( $menu->get_items(), 'route' ), true ) ) {
 
 					// Get menu items.
 					$menu_items      = $menu->get_items();
-					$menu_item_names = array_keys( $menu->get_items() );
+					$menu_item_names = array_keys( $menu_items );
 
 					foreach ( $menu_items as $menu_item_name => $menu_item ) {
 						if ( isset( $menu_item['route'] ) ) {
 
-							// Get menu redirect.
+							// Get redirect URL.
 							if ( $menu_item['route'] === $route['name'] ) {
 								$next_menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
 
@@ -442,7 +441,7 @@ final class Router extends Component {
 
 				if ( $redirect ) {
 					if ( is_bool( $redirect ) ) {
-						$redirect = $menu_redirect ? $menu_redirect : home_url( '/' );
+						$redirect = $menu_redirect;
 					}
 
 					wp_safe_redirect( $redirect );

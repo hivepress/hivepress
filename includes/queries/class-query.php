@@ -301,7 +301,7 @@ abstract class Query extends \ArrayObject {
 		}
 
 		// Set order arguments.
-		if ( ! empty( $args ) ) {
+		if ( $args ) {
 			$this->args[ $this->get_alias( 'order' ) ] = $args;
 		}
 

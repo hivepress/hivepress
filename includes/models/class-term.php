@@ -52,7 +52,7 @@ abstract class Term extends Model {
 			$term = get_term( absint( $id ), static::_get_meta( 'alias' ), ARRAY_A );
 		}
 
-		if ( empty( $term ) || static::_get_meta( 'alias' ) !== $term['taxonomy'] ) {
+		if ( empty( $term ) || is_wp_error( $term ) || static::_get_meta( 'alias' ) !== $term['taxonomy'] ) {
 			return;
 		}
 

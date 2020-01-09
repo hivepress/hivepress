@@ -58,6 +58,13 @@ abstract class Email {
 	protected $tokens = [];
 
 	/**
+	 * Email context.
+	 *
+	 * @var array
+	 */
+	protected $context = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Email meta.
@@ -136,6 +143,22 @@ abstract class Email {
 
 		// Replace tokens.
 		$this->body = hp\replace_tokens( $this->tokens, $this->body );
+	}
+
+	/**
+	 * Gets context values.
+	 *
+	 * @param string $name Context name.
+	 * @return mixed
+	 */
+	final public function get_context( $name = '' ) {
+		$context = $this->context;
+
+		if ( $name ) {
+			$context = hp\get_array_value( $context, $name );
+		}
+
+		return $context;
 	}
 
 	/**

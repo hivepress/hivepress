@@ -577,7 +577,7 @@ final class Listing extends Controller {
 	public function redirect_listing_submit_category_page() {
 
 		// Check categories.
-		if ( Models\Listing_Category::query()->get_count() === 0 ) {
+		if ( ! Models\Listing_Category::query()->get_count() ) {
 			return true;
 		}
 

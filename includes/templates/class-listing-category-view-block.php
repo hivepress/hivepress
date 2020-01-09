@@ -67,10 +67,22 @@ class Listing_Category_View_Block extends Template {
 								],
 
 								'blocks'     => [
-									'listing_category_name'            => [
-										'type'   => 'part',
-										'path'   => 'listing-category/view/block/listing-category-name',
-										'_order' => 10,
+									'listing_category_name' => [
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-listing_category__name' ],
+										],
+
+										'blocks'     => [
+											'listing_category_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'listing-category/view/block/listing-category-name',
+												'_order' => 10,
+											],
+										],
 									],
 
 									'listing_category_details_primary' => [

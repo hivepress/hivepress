@@ -68,9 +68,21 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_name' => [
-										'type'   => 'part',
-										'path'   => 'vendor/view/block/vendor-name',
-										'_order' => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__name' ],
+										],
+
+										'blocks'     => [
+											'vendor_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/block/vendor-name',
+												'_order' => 10,
+											],
+										],
 									],
 
 									'vendor_details_primary' => [

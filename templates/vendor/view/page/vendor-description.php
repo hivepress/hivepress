@@ -2,7 +2,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( get_the_content() ) :
+if ( $vendor->get_description() ) :
 	?>
 	<div class="hp-vendor__description"><?php the_content(); ?></div>
 	<?php
