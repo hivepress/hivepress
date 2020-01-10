@@ -103,18 +103,4 @@ class Attachment extends Post {
 			}
 		}
 	}
-
-	/**
-	 * Deletes object.
-	 *
-	 * @param int $id Object ID.
-	 * @return bool
-	 */
-	final public function delete( $id = null ) {
-		if ( is_null( $id ) ) {
-			$id = $this->id;
-		}
-
-		return $id && wp_delete_attachment( absint( $id ), true );
-	}
 }

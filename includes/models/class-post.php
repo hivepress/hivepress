@@ -186,7 +186,7 @@ abstract class Post extends Model {
 	 * @param int $id Object ID.
 	 * @return bool
 	 */
-	public function delete( $id = null ) {
+	final public function delete( $id = null ) {
 		if ( is_null( $id ) ) {
 			$id = $this->id;
 		}
