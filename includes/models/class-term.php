@@ -64,10 +64,13 @@ abstract class Term extends Model {
 			get_term_meta( $term['term_id'] )
 		);
 
+		// Create object.
+		$object = ( new static() )->set_id( $term['term_id'] );
+
 		// Get field values.
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( $object->_get_fields() as $field_name => $field ) {
 
 			// Get field alias.
 			$field_alias = hp\prefix( $field_name );
@@ -87,7 +90,7 @@ abstract class Term extends Model {
 			}
 		}
 
-		return ( new static() )->set_id( $term['term_id'] )->fill( $values );
+		return $object->fill( $values );
 	}
 
 	/**

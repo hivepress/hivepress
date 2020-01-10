@@ -64,10 +64,13 @@ abstract class Comment extends Model {
 			get_comment_meta( $comment['comment_ID'] )
 		);
 
+		// Create object.
+		$object = ( new static() )->set_id( $comment['comment_ID'] );
+
 		// Get field values.
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( $object->_get_fields() as $field_name => $field ) {
 
 			// Get field alias.
 			$field_alias = hp\prefix( $field_name );
@@ -87,7 +90,7 @@ abstract class Comment extends Model {
 			}
 		}
 
-		return ( new static() )->set_id( $comment['comment_ID'] )->fill( $values );
+		return $object->fill( $values );
 	}
 
 	/**

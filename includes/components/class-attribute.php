@@ -418,8 +418,11 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $object::_get_meta( 'name' );
 
+		// Get category IDs.
+		$category_ids = wp_get_post_terms( $object->get_id(), 'hp_listing_category', [ 'fields' => 'ids' ] );
+
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $object->get_categories__id() );
+		$attributes = $this->get_attributes( $model, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
@@ -434,7 +437,13 @@ final class Attribute extends Component {
 				);
 
 				if ( isset( $field_args['options'] ) ) {
-					$field_args['_relation'] = $model . '_' . $attribute_name;
+					$field_args = array_merge(
+						$field_args,
+						[
+							'_model'    => $model . '_' . $attribute_name,
+							'_relation' => 'many_to_many',
+						]
+					);
 				}
 
 				// Add field.

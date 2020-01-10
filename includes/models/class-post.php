@@ -64,10 +64,13 @@ abstract class Post extends Model {
 			get_post_meta( $post['ID'] )
 		);
 
+		// Create object.
+		$object = ( new static() )->set_id( $post['ID'] );
+
 		// Get field values.
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( $object->_get_fields() as $field_name => $field ) {
 
 			// Get field alias.
 			$field_alias = hp\prefix( $field_name );
@@ -102,7 +105,7 @@ abstract class Post extends Model {
 			}
 		}
 
-		return ( new static() )->set_id( $post['ID'] )->fill( $values );
+		return $object->fill( $values );
 	}
 
 	/**

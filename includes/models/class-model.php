@@ -341,6 +341,31 @@ abstract class Model {
 	final protected function set_id( $id ) {
 		$this->id = absint( $id );
 
+		if ( has_filter( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields' ) ) {
+
+			/**
+			 * Filters model fields.
+			 *
+			 * @filter /models/{$name}/fields
+			 * @description Filters model fields.
+			 * @param string $name Model name.
+			 * @param array $fields Model fields.
+			 * @param object $object Model object.
+			 */
+			$this->_set_fields(
+				apply_filters(
+					'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields',
+					array_map(
+						function( $field ) {
+							return $field->get_args();
+						},
+						$this->fields
+					),
+					$this
+				)
+			);
+		}
+
 		return $this;
 	}
 

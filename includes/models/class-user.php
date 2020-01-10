@@ -156,10 +156,13 @@ class User extends Model {
 			get_user_meta( $user['ID'] )
 		);
 
+		// Create object.
+		$object = ( new static() )->set_id( $user['ID'] );
+
 		// Get field values.
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( $object->_get_fields() as $field_name => $field ) {
 
 			// Get field alias.
 			$field_alias = hp\prefix( $field_name );
@@ -179,7 +182,7 @@ class User extends Model {
 			}
 		}
 
-		return ( new static() )->set_id( $user['ID'] )->fill( $values );
+		return $object->fill( $values );
 	}
 
 	/**
