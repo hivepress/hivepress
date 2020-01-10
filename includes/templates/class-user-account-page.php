@@ -62,7 +62,7 @@ class User_Account_Page extends Page {
 
 											'page_sidebar_widgets' => [
 												'type'   => 'widgets',
-												'area'   => 'account_sidebar',
+												'area'   => 'hp_user_account_sidebar',
 												'_order' => 20,
 											],
 										],

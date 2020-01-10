@@ -333,7 +333,7 @@ function sanitize_html( $html, $tags = [] ) {
  * @return string
  */
 function sanitize_slug( $text ) {
-	return str_replace( '_', '-', sanitize_key( $text ) );
+	return str_replace( '_', '-', \sanitize_key( $text ) );
 }
 
 /**
@@ -369,16 +369,18 @@ function sanitize_key( $text ) {
  * @return WP_Rest_Response
  */
 function rest_response( $code, $data = null ) {
-	if ( is_null( $data ) ) {
-		return new \WP_Rest_Response( (object) [], $code );
+	$response = new \WP_Rest_Response( (object) [], $code );
+
+	if ( ! is_null( $data ) ) {
+		$response = new \WP_Rest_Response(
+			[
+				'data' => $data,
+			],
+			$code
+		);
 	}
 
-	return new \WP_Rest_Response(
-		[
-			'data' => $data,
-		],
-		$code
-	);
+	return $response;
 }
 
 /**

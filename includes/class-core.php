@@ -194,7 +194,7 @@ final class Core {
 		// Setup extensions.
 		$this->setup_extensions();
 
-		// Include helper functions.
+		// Include helpers.
 		require_once hivepress()->get_path() . '/includes/helpers.php';
 
 		// Load textdomains.

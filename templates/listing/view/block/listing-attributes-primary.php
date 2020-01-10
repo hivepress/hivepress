@@ -3,7 +3,13 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="hp-listing__attributes hp-listing__attributes--primary">
-	<?php foreach ( $listing->_get_fields( 'view_block_primary' ) as $field ) : ?>
-		<div class="hp-listing__attribute"><?php echo $field->display(); ?></div>
-	<?php endforeach; ?>
+	<?php
+	foreach ( $listing->_get_fields( 'view_block_primary' ) as $field ) :
+		if ( ! is_null( $field->get_value() ) ) :
+			?>
+			<div class="hp-listing__attribute"><?php echo $field->display(); ?></div>
+			<?php
+		endif;
+	endforeach;
+	?>
 </div>

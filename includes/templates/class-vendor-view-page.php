@@ -127,7 +127,7 @@ class Vendor_View_Page extends Page {
 
 											'page_sidebar_widgets' => [
 												'type'   => 'widgets',
-												'area'   => 'vendor_sidebar',
+												'area'   => 'hp_vendor_view_sidebar',
 												'_order' => 30,
 											],
 										],
