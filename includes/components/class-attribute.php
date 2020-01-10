@@ -444,6 +444,8 @@ final class Attribute extends Component {
 							'_relation' => 'many_to_many',
 						]
 					);
+				} else {
+					$field_args['_external'] = true;
 				}
 
 				// Add field.

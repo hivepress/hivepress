@@ -30,7 +30,7 @@ class Results extends Container {
 		if ( have_posts() ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Part( [ 'path' => 'page/no-results' ] ) )->render();
+			$output .= ( new Part( [ 'path' => 'page/no-results-message' ] ) )->render();
 		}
 
 		return $output;
