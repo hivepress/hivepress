@@ -193,10 +193,10 @@ final class Listing extends Component {
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
 
-			if ( $expiration_period && ! $listing->get_expiration_time() ) {
+			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
 				// Set expiration time.
-				$listing->set_expiration_time( time() + $expiration_period * DAY_IN_SECONDS )->save();
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save();
 			}
 		}
 	}
@@ -210,7 +210,7 @@ final class Listing extends Component {
 		$expired_listings = Models\Listing::query()->filter(
 			[
 				'status'               => 'publish',
-				'expiration_time__lte' => time(),
+				'expired_time__lte' => time(),
 			]
 		)->get();
 
@@ -221,7 +221,7 @@ final class Listing extends Component {
 			$listing->fill(
 				[
 					'status'          => 'trash',
-					'expiration_time' => null,
+					'expired_time' => null,
 				]
 			)->save();
 
@@ -246,7 +246,7 @@ final class Listing extends Component {
 		$featured_listings = Models\Listing::query()->filter(
 			[
 				'status'              => 'publish',
-				'featuring_time__lte' => time(),
+				'featured_time__lte' => time(),
 			]
 		)->get();
 
@@ -255,7 +255,7 @@ final class Listing extends Component {
 			$listing->fill(
 				[
 					'featured'       => null,
-					'featuring_time' => null,
+					'featured_time' => null,
 				]
 			)->save();
 		}

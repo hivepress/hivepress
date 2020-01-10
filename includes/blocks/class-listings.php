@@ -162,7 +162,7 @@ class Listings extends Block {
 			}
 
 			// Set order.
-			$query->order( [ 'date_created' => 'desc' ] );
+			$query->order( [ 'created_date' => 'desc' ] );
 
 			if ( 'title' === $this->order ) {
 				$query->order( [ 'title' => 'asc' ] );
