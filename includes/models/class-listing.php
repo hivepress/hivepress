@@ -105,7 +105,6 @@ class Listing extends Post {
 					'vendor'          => [
 						'type'      => 'number',
 						'min_value' => 1,
-						'required'  => true,
 						'_alias'    => 'post_parent',
 						'_model'    => 'vendor',
 					],

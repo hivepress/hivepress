@@ -109,7 +109,7 @@ final class Listing extends Component {
 						'parent' => $listing->get_id(),
 						'model'  => 'listing',
 					]
-				)->get_all();
+				)->get();
 
 				foreach ( $attachments as $attachment ) {
 					$attachment->set_user( $user->get_id() )->save();
@@ -212,7 +212,7 @@ final class Listing extends Component {
 				'status'               => 'publish',
 				'expiration_time__lte' => time(),
 			]
-		)->get_all();
+		)->get();
 
 		// Update expired listings.
 		foreach ( $expired_listings as $listing ) {
@@ -248,7 +248,7 @@ final class Listing extends Component {
 				'status'              => 'publish',
 				'featuring_time__lte' => time(),
 			]
-		)->get_all();
+		)->get();
 
 		// Update featured listings.
 		foreach ( $featured_listings as $listing ) {

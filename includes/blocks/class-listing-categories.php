@@ -184,7 +184,7 @@ class Listing_Categories extends Block {
 		}
 
 		// Query categories.
-		$categories = $query->get_all();
+		$categories = $query->get();
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && $categories->count() <= 1000 ) {

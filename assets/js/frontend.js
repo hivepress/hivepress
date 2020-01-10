@@ -156,7 +156,7 @@
 				formData: {
 					'parent_model': field.closest('form').data('model'),
 					'parent_field': field.attr('name'),
-					'parent_id': field.closest('form').data('id'),
+					'parent': field.closest('form').data('id'),
 					'render': true,
 					'_wpnonce': hpCoreCommonData.apiNonce,
 				},

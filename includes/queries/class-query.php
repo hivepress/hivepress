@@ -353,11 +353,11 @@ abstract class Query extends \ArrayObject {
 	abstract protected function get_results( $args );
 
 	/**
-	 * Gets all objects.
+	 * Gets objects.
 	 *
 	 * @return object
 	 */
-	final public function get_all() {
+	final public function get() {
 		$this->exchangeArray(
 			array_map(
 				function( $result ) {
@@ -387,7 +387,7 @@ abstract class Query extends \ArrayObject {
 	final public function get_first() {
 		$query = clone $this;
 
-		return hp\get_array_value( $query->limit( 1 )->get_all()->serialize(), 0 );
+		return hp\get_array_value( $query->limit( 1 )->get()->serialize(), 0 );
 	}
 
 	/**

@@ -43,11 +43,78 @@ class Attachment extends Post {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields' => [],
+				'fields' => [
+					'order'        => [
+						'type'      => 'number',
+						'min_value' => 0,
+						'_alias'    => 'menu_order',
+					],
+
+					'parent_model' => [
+						'type'       => 'text',
+						'max_length' => 128,
+						'_external'  => true,
+					],
+
+					'parent_field' => [
+						'type'       => 'text',
+						'max_length' => 128,
+						'_external'  => true,
+					],
+
+					'parent'       => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'_external' => true,
+					],
+
+					'user'         => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'required'  => true,
+						'_alias'    => 'post_author',
+						'_model'    => 'user',
+					],
+				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets parent object.
+	 *
+	 * @return mixed
+	 */
+	final public function get_parent() {
+
+		// Get object ID.
+		$id = $this->fields['parent']->get_value();
+
+		if ( $id ) {
+
+			// Get model object.
+			$model = hp\create_class_instance( '\HivePress\Models\\' . $this->get_parent_model() );
+
+			if ( $model ) {
+				return $model->query()->get_by_id( $id );
+			}
+		}
+	}
+
+	/**
+	 * Deletes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function delete( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_delete_attachment( absint( $id ), true );
 	}
 }
