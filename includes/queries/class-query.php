@@ -156,7 +156,7 @@ abstract class Query extends \ArrayObject {
 	 * @return object
 	 */
 	final public function set_args( $args ) {
-		$this->args = array_merge( $this->args, $args );
+		$this->args = hp\merge_arrays( $this->args, $args );
 
 		return $this;
 	}

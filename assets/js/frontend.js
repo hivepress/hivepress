@@ -37,7 +37,7 @@
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
 
-			if (form.data('submit') === true) {
+			if (form.data('autosubmit') === true) {
 				form.on('change', function() {
 					form.submit();
 				});

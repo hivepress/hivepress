@@ -85,7 +85,7 @@ abstract class Menu {
 			 * @description Filters menu arguments.
 			 * @param string $name Menu name.
 			 * @param array $args Menu arguments.
-			 * @param array $object Menu object.
+			 * @param object $object Menu object.
 			 */
 			$args = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -133,8 +133,8 @@ abstract class Menu {
 				if ( $route ) {
 
 					// Set label.
-					if ( isset( $route['title'] ) ) {
-						$args['label'] = $route['title'];
+					if ( ! isset( $args['label'] ) ) {
+						$args['label'] = hp\get_array_value( $route, 'title' );
 					}
 
 					// Set URL.

@@ -161,7 +161,7 @@ abstract class Form {
 			 * @description Filters form arguments.
 			 * @param string $name Form name.
 			 * @param array $args Form arguments.
-			 * @param array $object Form object.
+			 * @param object $object Form object.
 			 */
 			$args = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -221,15 +221,6 @@ abstract class Form {
 	}
 
 	/**
-	 * Sets form method.
-	 *
-	 * @param string $method Form method.
-	 */
-	final protected function set_method( $method ) {
-		$this->method = strtoupper( $method );
-	}
-
-	/**
 	 * Gets form method.
 	 *
 	 * @return string
@@ -264,7 +255,7 @@ abstract class Form {
 	 * @param array $button Button arguments.
 	 */
 	final protected function set_button( $button ) {
-		if ( is_array( $button ) ) {
+		if ( $button ) {
 			$this->button = new Fields\Button( $button );
 		}
 	}
@@ -275,7 +266,7 @@ abstract class Form {
 	 * @param array $errors Form errors.
 	 */
 	final protected function add_errors( $errors ) {
-		$this->errors = array_merge( $this->errors, $errors );
+		$this->errors = array_merge( $this->errors, (array) $errors );
 	}
 
 	/**

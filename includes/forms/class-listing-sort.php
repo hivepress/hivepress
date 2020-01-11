@@ -86,7 +86,7 @@ class Listing_Sort extends Form {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'data-submit' => 'true',
+				'data-autosubmit' => 'true',
 			]
 		);
 

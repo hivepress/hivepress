@@ -44,7 +44,7 @@ class Listing_Submit extends Listing_Update {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message'  => false,
+				'message'  => null,
 				'redirect' => true,
 
 				'button'   => [

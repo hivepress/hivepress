@@ -84,7 +84,7 @@ abstract class Template {
 			 * @description Filters template arguments.
 			 * @param string $name Template name.
 			 * @param array $args Template arguments.
-			 * @param array $object Template object.
+			 * @param object $object Template object.
 			 */
 			$args = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -104,6 +104,7 @@ abstract class Template {
 	protected function boot() {
 
 		// Filter blocks.
+		// todo (should it filter parents, etc?).
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
@@ -134,13 +135,7 @@ abstract class Template {
 	 * @param string $name Context name.
 	 * @return mixed
 	 */
-	final public function get_context( $name = '' ) {
-		$context = $this->context;
-
-		if ( $name ) {
-			$context = hp\get_array_value( $context, $name );
-		}
-
-		return $context;
+	final public function get_context( $name = null ) {
+		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 }

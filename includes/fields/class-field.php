@@ -177,7 +177,7 @@ abstract class Field {
 			 * @description Filters field arguments.
 			 * @param string $type Field type.
 			 * @param array $args Field arguments.
-			 * @param array $object Form object.
+			 * @param object $object Field object.
 			 */
 			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, $this );
 		}

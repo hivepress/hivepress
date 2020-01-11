@@ -88,7 +88,7 @@ abstract class Block {
 			 * @description Filters block arguments.
 			 * @param string $type Block type.
 			 * @param array $args Block arguments.
-			 * @param array $object Block object.
+			 * @param object $object Block object.
 			 */
 			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
 		}

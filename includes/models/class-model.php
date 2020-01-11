@@ -104,9 +104,9 @@ abstract class Model {
 			 * @description Filters model arguments.
 			 * @param string $name Model name.
 			 * @param array $args Model arguments.
-			 * @param array $meta Model meta.
+			 * @param object $object Model object.
 			 */
-			$args = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ), $args, static::_get_meta() );
+			$args = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ), $args, $this );
 		}
 
 		// Set properties.
@@ -253,8 +253,8 @@ abstract class Model {
 			if ( $this->fields[ $name ]->get_arg( '_model' ) ) {
 				if ( is_array( $value ) ) {
 					$value = array_map(
-						function( $id ) {
-							return is_object( $id ) ? $id->get_id() : $id;
+						function( $object ) {
+							return is_object( $object ) ? $object->get_id() : $object;
 						},
 						$value
 					);
@@ -346,6 +346,7 @@ abstract class Model {
 	final protected function set_id( $id ) {
 		$this->id = absint( $id );
 
+		// todo (ir resets field values).
 		if ( has_filter( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields' ) ) {
 
 			/**
@@ -423,17 +424,17 @@ abstract class Model {
 	final public function serialize() {
 		$values = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
+		foreach ( $this->fields as $name => $field ) {
 
 			// Get model field.
-			$name = $field_name;
+			$field_name = $name;
 
 			if ( $field->get_arg( '_model' ) ) {
-				$name .= '__id';
+				$field_name .= '__id';
 			}
 
 			// Get field value.
-			$values[ $field_name ] = call_user_func( [ $this, 'get_' . $name ] );
+			$values[ $name ] = call_user_func( [ $this, 'get_' . $field_name ] );
 		}
 
 		return $values;
