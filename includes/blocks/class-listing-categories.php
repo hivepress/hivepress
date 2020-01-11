@@ -197,14 +197,26 @@ class Listing_Categories extends Block {
 			$output .= '<div class="hp-row">';
 
 			foreach ( $categories as $category ) {
+
+				// Get category URL.
+				$category_url = null;
+
+				if ( 'submit' === $this->mode ) {
+					$category_url = hivepress()->router->get_url( 'listing_submit_category_page', [ 'listing_category_id' => $category->get_id() ] );
+				} else {
+					$category_url = hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] );
+				}
+
+				// Render category.
 				$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 
 				$output .= ( new Template(
 					[
-						'template' => 'listing_category_' . $this->mode . '_block',
+						'template' => 'listing_category_view_block',
 
 						'context'  => [
-							'listing_category' => $category,
+							'listing_category'     => $category,
+							'listing_category_url' => $category_url,
 						],
 					]
 				) )->render();
