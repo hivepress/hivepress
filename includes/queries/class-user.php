@@ -82,7 +82,7 @@ class User extends Query {
 			)
 		);
 
-		// Replace aliases.
+		// Replace field aliases.
 		$this->args = array_combine(
 			array_map(
 				function( $name ) use ( $field_aliases ) {

@@ -94,9 +94,9 @@ class Vendor_View_Block extends Template {
 										],
 
 										'blocks'     => [
-											'vendor_date' => [
+											'vendor_registered_date' => [
 												'type'   => 'part',
-												'path'   => 'vendor/view/vendor-date',
+												'path'   => 'vendor/view/vendor-registered-date',
 												'_order' => 10,
 											],
 										],
@@ -116,13 +116,12 @@ class Vendor_View_Block extends Template {
 								'blocks'     => [
 									'vendor_actions_primary'    => [
 										'type'       => 'container',
+										'blocks'     => [],
 										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
 										],
-
-										'blocks'     => [],
 									],
 								],
 							],

@@ -81,7 +81,7 @@ class Listings_View_Page extends Page {
 
 											'page_sidebar_widgets'         => [
 												'type'   => 'widgets',
-												'area'   => 'hp_listings_sidebar',
+												'area'   => 'hp_listings_view_sidebar',
 												'_order' => 20,
 											],
 										],

@@ -646,8 +646,7 @@ final class Listing extends Controller {
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing'                => hivepress()->request->get_context( 'listing' ),
-					'listing_category_count' => Models\Listing_Category::query()->get_count(),
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();

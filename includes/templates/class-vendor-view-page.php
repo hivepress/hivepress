@@ -98,9 +98,9 @@ class Vendor_View_Page extends Page {
 														],
 
 														'blocks'     => [
-															'vendor_date' => [
+															'vendor_registered_date' => [
 																'type' => 'part',
-																'path' => 'vendor/view/vendor-date',
+																'path' => 'vendor/view/vendor-registered-date',
 																'_order' => 10,
 															],
 														],
@@ -116,13 +116,12 @@ class Vendor_View_Page extends Page {
 
 											'vendor_actions_primary' => [
 												'type'   => 'container',
+												'blocks' => [],
 												'_order' => 20,
 
 												'attributes' => [
 													'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
 												],
-
-												'blocks' => [],
 											],
 
 											'page_sidebar_widgets' => [

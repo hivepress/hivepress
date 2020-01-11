@@ -106,15 +106,15 @@ class Listing_View_Block extends Template {
 										],
 
 										'blocks'     => [
-											'listing_category' => [
+											'listing_categories' => [
 												'type'   => 'part',
-												'path'   => 'listing/view/listing-category',
+												'path'   => 'listing/view/listing-categories',
 												'_order' => 10,
 											],
 
-											'listing_date' => [
+											'listing_created_date' => [
 												'type'   => 'part',
-												'path'   => 'listing/view/listing-date',
+												'path'   => 'listing/view/listing-created-date',
 												'_order' => 20,
 											],
 										],
@@ -146,13 +146,12 @@ class Listing_View_Block extends Template {
 
 									'listing_actions_primary'    => [
 										'type'       => 'container',
+										'blocks'     => [],
 										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
 										],
-
-										'blocks'     => [],
 									],
 								],
 							],

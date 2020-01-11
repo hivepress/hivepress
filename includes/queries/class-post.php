@@ -51,7 +51,6 @@ class Post extends Query {
 					'posts_per_page'      => -1,
 					'orderby'             => [ 'ID' => 'ASC' ],
 					'ignore_sticky_posts' => true,
-					'no_found_rows'       => true,
 				],
 			],
 			$args
@@ -82,7 +81,7 @@ class Post extends Query {
 	public function filter( $criteria ) {
 		parent::filter( $criteria );
 
-		// Replace aliases.
+		// Replace field aliases.
 		$this->args = array_combine(
 			array_map(
 				function( $name ) {

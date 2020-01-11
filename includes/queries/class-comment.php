@@ -85,7 +85,7 @@ class Comment extends Query {
 			)
 		);
 
-		// Replace aliases.
+		// Replace field aliases.
 		$this->args = array_combine(
 			array_map(
 				function( $name ) use ( $field_aliases ) {
@@ -97,7 +97,7 @@ class Comment extends Query {
 						list($name, $operator_alias) = explode( '__', $name );
 					}
 
-					// Replace alias.
+					// Replace field alias.
 					if ( in_array( $name, $field_aliases, true ) ) {
 						$name = preg_replace( '/^comment_/', '', $name );
 					}

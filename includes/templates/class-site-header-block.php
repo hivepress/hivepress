@@ -30,12 +30,12 @@ class Site_Header_Block extends Template {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'main_menu' => [
+					'site_header_menu' => [
 						'type'       => 'container',
 						'_order'     => 10,
 
 						'attributes' => [
-							'class' => [ 'hp-menu', 'hp-menu--main' ],
+							'class' => [ 'hp-menu', 'hp-menu--site-header' ],
 						],
 
 						'blocks'     => [

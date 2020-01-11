@@ -133,6 +133,11 @@ abstract class Model {
 
 		foreach ( $fields as $name => $args ) {
 
+			// Set alias.
+			if ( hp\get_array_value( $args, '_external' ) && ! isset( $args['_alias'] ) ) {
+				$args['_alias'] = hp\prefix( $name );
+			}
+
 			// Create field.
 			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
 

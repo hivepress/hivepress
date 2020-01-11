@@ -163,22 +163,14 @@ class User extends Model {
 		$values = [];
 
 		foreach ( $object->_get_fields() as $field_name => $field ) {
-
-			// Get field alias.
-			$field_alias = hp\prefix( $field_name );
-
-			if ( $field->get_arg( '_alias' ) ) {
-				$field_alias = $field->get_arg( '_alias' );
-			}
-
 			if ( $field->get_arg( '_external' ) ) {
 
 				// Get meta value.
-				$values[ $field_name ] = hp\get_array_value( $meta, $field_alias );
+				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
 			} else {
 
 				// Get user value.
-				$values[ $field_name ] = hp\get_array_value( $user, $field_alias );
+				$values[ $field_name ] = hp\get_array_value( $user, $field->get_arg( '_alias' ) );
 			}
 		}
 
@@ -198,22 +190,14 @@ class User extends Model {
 
 		foreach ( $this->fields as $field_name => $field ) {
 			if ( $field->validate() ) {
-
-				// Get field alias.
-				$field_alias = hp\prefix( $field_name );
-
-				if ( $field->get_arg( '_alias' ) ) {
-					$field_alias = $field->get_arg( '_alias' );
-				}
-
 				if ( $field->get_arg( '_external' ) ) {
 
 					// Set meta value.
-					$meta[ $field_alias ] = $field->get_value();
+					$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
 				} else {
 
 					// Set user value.
-					$user[ $field_alias ] = $field->get_value();
+					$user[ $field->get_arg( '_alias' ) ] = $field->get_value();
 				}
 			} else {
 				$this->_add_errors( $field->get_errors() );

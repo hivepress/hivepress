@@ -30,9 +30,8 @@ abstract class Page extends Template {
 				'blocks' => [
 					'page_container' => [
 						'type'   => 'page',
-						'_order' => 10,
-
 						'blocks' => [],
+						'_order' => 10,
 					],
 				],
 			],

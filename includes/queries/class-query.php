@@ -156,7 +156,7 @@ abstract class Query extends \ArrayObject {
 	 * @return object
 	 */
 	final public function set_args( $args ) {
-		$this->args = hp\merge_arrays( $this->args, $args );
+		$this->args = array_merge( $this->args, $args );
 
 		return $this;
 	}
@@ -201,19 +201,12 @@ abstract class Query extends \ArrayObject {
 				if ( $field ) {
 					if ( $field->get_arg( '_external' ) ) {
 
-						// Get field alias.
-						$field_alias = hp\prefix( $name );
-
-						if ( $field->get_arg( '_alias' ) ) {
-							$field_alias = $field->get_arg( '_alias' );
-						}
-
 						// Get operator.
 						$operator = $this->get_operator( $operator_alias );
 
 						// Set meta clause.
 						$clause = [
-							'key'     => $field_alias,
+							'key'     => $field->get_arg( '_alias' ),
 							'compare' => $operator,
 						];
 
@@ -234,13 +227,16 @@ abstract class Query extends \ArrayObject {
 							);
 						}
 
+						// Normalize operator alias.
+						if ( empty( $operator_alias ) ) {
+							$operator_alias = 'equals';
+						}
+
 						// Set meta filter.
-						$this->args['meta_query'][ $name . '_clause' ] = $clause;
+						$this->args['meta_query'][ $name . '__' . $operator_alias ] = $clause;
 					} elseif ( $field->get_arg( '_alias' ) ) {
 
 						// Normalize operator alias.
-						$operator_alias = strtolower( $operator_alias );
-
 						if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
 							$operator_alias = '';
 						}
@@ -283,8 +279,15 @@ abstract class Query extends \ArrayObject {
 						if ( $field ) {
 							if ( $field->get_arg( '_external' ) ) {
 
+								// Add meta clause.
+								$this->args['meta_query'][ $name . '__order' ] = [
+									'key'     => $field->get_arg( '_alias' ),
+									'type'    => $field::get_meta( 'type' ),
+									'compare' => 'EXISTS',
+								];
+
 								// Set meta order.
-								$args[ $name . '_clause' ] = $order;
+								$args[ $name . '__order' ] = $order;
 							} elseif ( $field->get_arg( '_alias' ) ) {
 
 								// Set alias order.
@@ -387,7 +390,7 @@ abstract class Query extends \ArrayObject {
 	final public function get_first() {
 		$query = clone $this;
 
-		return hp\get_array_value( $query->limit( 1 )->get()->serialize(), 0 );
+		return reset( ( $query->limit( 1 )->get()->serialize() ) );
 	}
 
 	/**
@@ -398,7 +401,7 @@ abstract class Query extends \ArrayObject {
 	final public function get_first_id() {
 		$query = clone $this;
 
-		return hp\get_array_value( $query->limit( 1 )->get_ids(), 0 );
+		return reset( ( $query->limit( 1 )->get_ids() ) );
 	}
 
 	/**
