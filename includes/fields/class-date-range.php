@@ -142,12 +142,15 @@ class Date_Range extends Date {
 
 		// Render date field.
 		$output .= ( new Date(
-			hp\merge_arrays(
+			array_merge(
 				$this->args,
 				[
 					'name'       => null,
 					'default'    => null,
-					'attributes' => [ 'data-mode' => 'range' ],
+
+					'attributes' => [
+						'data-mode' => 'range',
+					],
 				]
 			)
 		) )->render();
@@ -157,9 +160,11 @@ class Date_Range extends Date {
 			array_merge(
 				$this->args,
 				[
-					'name'     => $this->name . '[]',
-					'required' => false,
-					'default'  => $this->min_field->get_value(),
+					'display_type' => 'hidden',
+					'name'         => $this->name . '[]',
+					'required'     => false,
+					'default'      => $this->min_field->get_value(),
+					'attributes'   => [],
 				]
 			)
 		) )->render();
@@ -168,9 +173,11 @@ class Date_Range extends Date {
 			array_merge(
 				$this->args,
 				[
-					'name'     => $this->name . '[]',
-					'required' => false,
-					'default'  => $this->max_field->get_value(),
+					'display_type' => 'hidden',
+					'name'         => $this->name . '[]',
+					'required'     => false,
+					'default'      => $this->max_field->get_value(),
+					'attributes'   => [],
 				]
 			)
 		) )->render();

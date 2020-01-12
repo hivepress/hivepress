@@ -70,6 +70,7 @@ class Number_Range extends Number {
 					'name'         => $this->name . '[]',
 					'placeholder'  => esc_html__( 'Min', 'hivepress' ),
 					'required'     => false,
+					'attributes'   => [],
 				]
 			)
 		);
@@ -82,6 +83,7 @@ class Number_Range extends Number {
 					'name'         => $this->name . '[]',
 					'placeholder'  => esc_html__( 'Max', 'hivepress' ),
 					'required'     => false,
+					'attributes'   => [],
 				]
 			)
 		);

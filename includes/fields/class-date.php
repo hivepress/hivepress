@@ -71,7 +71,7 @@ class Date extends Field {
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 2048,
+						'max_length' => 256,
 						'_order'     => 10,
 					],
 

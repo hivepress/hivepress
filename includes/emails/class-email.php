@@ -106,7 +106,7 @@ abstract class Email {
 				'body'    => get_option( 'hp_email_' . static::get_meta( 'name' ) ),
 
 				'headers' => [
-					'Content-Type' => 'text/html; charset=UTF-8',
+					'content-type' => 'text/html; charset=UTF-8',
 				],
 			],
 			$args
@@ -151,14 +151,8 @@ abstract class Email {
 	 * @param string $name Context name.
 	 * @return mixed
 	 */
-	final public function get_context( $name = '' ) {
-		$context = $this->context;
-
-		if ( $name ) {
-			$context = hp\get_array_value( $context, $name );
-		}
-
-		return $context;
+	final public function get_context( $name = null ) {
+		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 
 	/**
@@ -181,5 +175,7 @@ abstract class Email {
 				)
 			);
 		}
+
+		return false;
 	}
 }

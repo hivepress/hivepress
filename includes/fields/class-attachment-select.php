@@ -8,6 +8,7 @@
 namespace HivePress\Fields;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -27,16 +28,19 @@ class Attachment_Select extends Field {
 	protected $caption;
 
 	/**
-	 * Bootstraps field properties.
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
 	 */
-	protected function boot() {
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'caption' => esc_html__( 'Select File', 'hivepress' ),
+			],
+			$args
+		);
 
-		// Set caption.
-		if ( is_null( $this->caption ) ) {
-			$this->caption = esc_html__( 'Select File', 'hivepress' );
-		}
-
-		parent::boot();
+		parent::__construct( $args );
 	}
 
 	/**
@@ -45,7 +49,7 @@ class Attachment_Select extends Field {
 	protected function sanitize() {
 		$this->value = absint( $this->value );
 
-		if ( 0 === $this->value ) {
+		if ( empty( $this->value ) ) {
 			$this->value = null;
 		}
 	}
@@ -57,16 +61,9 @@ class Attachment_Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$attachment_ids = get_posts(
-				[
-					'post_type'      => 'attachment',
-					'post__in'       => [ $this->value ],
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				]
-			);
+			$attachment_id = Models\Attachment::query()->filter( [ 'id__in' => (array) $this->value ] )->get_first_id();
 
-			if ( empty( $attachment_ids ) ) {
+			if ( empty( $attachment_id ) ) {
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			}
 		}

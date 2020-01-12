@@ -17,17 +17,6 @@
 			});
 		});
 
-		// Link
-		hivepress.getComponent('link').on('click', function(e) {
-			var url = $(this).data('url');
-
-			if (url.indexOf('#') !== 0) {
-				window.location.href = url;
-			}
-
-			e.preventDefault();
-		});
-
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),

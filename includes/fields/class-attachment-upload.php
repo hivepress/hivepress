@@ -8,6 +8,7 @@
 namespace HivePress\Fields;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -118,16 +119,12 @@ class Attachment_Upload extends Field {
 	protected function sanitize() {
 		if ( $this->multiple ) {
 			$this->value = array_filter( array_map( 'absint', $this->value ) );
-
-			if ( empty( $this->value ) ) {
-				$this->value = null;
-			}
 		} else {
 			$this->value = absint( $this->value );
+		}
 
-			if ( 0 === $this->value ) {
-				$this->value = null;
-			}
+		if ( empty( $this->value ) ) {
+			$this->value = null;
 		}
 	}
 
@@ -138,14 +135,7 @@ class Attachment_Upload extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$attachment_ids = get_posts(
-				[
-					'post_type'      => 'attachment',
-					'post__in'       => (array) $this->value,
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-				]
-			);
+			$attachment_ids = Models\Attachment::query()->filter( [ 'id__in' => (array) $this->value ] )->get_ids();
 
 			if ( count( $attachment_ids ) !== count( (array) $this->value ) ) {
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
@@ -199,7 +189,7 @@ class Attachment_Upload extends Field {
 				'attributes' => [
 					'id'             => $id,
 					'data-component' => 'file-upload',
-					'data-url'       => hivepress()->router->get_url( 'attachment_upload_action' ),
+					'data-url'       => esc_url( hivepress()->router->get_url( 'attachment_upload_action' ) ),
 				],
 			]
 		) )->render();

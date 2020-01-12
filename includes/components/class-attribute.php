@@ -340,18 +340,22 @@ final class Attribute extends Component {
 								$field_args = array_merge(
 									$field_args,
 									[
-										'type'    => 'block',
-										'block'   => 'content',
-										'content' => '<a href="' . esc_url(
-											admin_url(
-												'edit-tags.php?' . http_build_query(
-													[
-														'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-														'post_type' => hp\prefix( $model ),
-													]
+										'label'      => esc_html__( 'Edit Options', 'hivepress' ),
+										'type'       => 'button',
+
+										'attributes' => [
+											'data-component' => 'link',
+											'data-url' => esc_url(
+												admin_url(
+													'edit-tags.php?' . http_build_query(
+														[
+															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
+															'post_type' => hp\prefix( $model ),
+														]
+													)
 												)
-											)
-										) . '" class="button">' . esc_html__( 'Edit Options', 'hivepress' ) . '</a>',
+											),
+										],
 									]
 								);
 							}

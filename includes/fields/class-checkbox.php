@@ -48,7 +48,7 @@ class Checkbox extends Field {
 					'caption' => [
 						'label'      => esc_html__( 'Caption', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 2048,
+						'max_length' => 256,
 						'_order'     => 10,
 					],
 				],
@@ -66,12 +66,12 @@ class Checkbox extends Field {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
+			$args,
 			[
 				'statuses' => [
 					'optional' => null,
 				],
-			],
-			$args
+			]
 		);
 
 		parent::__construct( $args );
@@ -87,9 +87,6 @@ class Checkbox extends Field {
 		if ( is_null( $this->caption ) ) {
 			$this->caption = $this->label;
 		}
-
-		// Set ID.
-		$attributes['id'] = explode( '[', $this->name )[0] . '_' . uniqid();
 
 		// Set required flag.
 		if ( $this->required ) {
@@ -138,11 +135,19 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '" class="' . esc_attr( implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) ) ) . '">';
+
+		// Get ID.
+		$id = sanitize_key( $this->name ) . '_' . uniqid();
+
+		// Get class.
+		$class = implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) );
 
 		unset( $this->attributes['class'] );
 
-		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		// Render field.
+		$output = '<label for="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '">';
+
+		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';
