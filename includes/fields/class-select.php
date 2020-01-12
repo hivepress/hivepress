@@ -122,12 +122,10 @@ class Select extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			$options = $this->options;
-
 			$labels = array_filter(
 				array_map(
-					function( $value ) use ( $options ) {
-						return hp\get_array_value( $options, $value );
+					function( $value ) {
+						return hp\get_array_value( $this->options, $value );
 					},
 					(array) $this->value
 				),
@@ -191,7 +189,7 @@ class Select extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_map( 'strval', array_keys( $this->options ) ) ) ) !== count( (array) $this->value ) ) {
+		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
 			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 

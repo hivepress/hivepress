@@ -64,7 +64,7 @@ class Number extends Field {
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 2048,
+						'max_length' => 256,
 						'_order'     => 10,
 					],
 
@@ -156,7 +156,7 @@ class Number extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( $this->decimals > 0 ) {
+		if ( $this->decimals ) {
 			$this->value = round( floatval( $this->value ), $this->decimals );
 		} else {
 			$this->value = intval( $this->value );

@@ -200,11 +200,13 @@ abstract class Field {
 	protected function boot() {
 
 		// Set default value.
-		$this->set_value( hp\get_array_value( $this->args, 'default' ) );
+		if ( isset( $this->args['default'] ) ) {
+			$this->set_value( $this->args['default'] );
+		}
 
 		// Set optional status.
 		if ( ! $this->required ) {
-			$this->statuses = array_filter( hp\merge_arrays( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses ) );
+			$this->statuses = array_filter( array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses ) );
 		}
 
 		// Set class.
@@ -223,7 +225,7 @@ abstract class Field {
 	 */
 	final protected static function set_meta( $meta ) {
 
-		// Set settings.
+		// Get settings.
 		$settings = array_filter( hp\get_array_value( $meta, 'settings', [] ) );
 
 		if ( $settings ) {
