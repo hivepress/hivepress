@@ -182,10 +182,10 @@ final class Listing extends Controller {
 		}
 
 		// Validate form.
-		$form = new Forms\Listing_Update( [ 'model' => $listing ] );
-
 		if ( $listing->get_status() === 'auto-draft' ) {
 			$form = new Forms\Listing_Submit( [ 'model' => $listing ] );
+		} else {
+			$form = new Forms\Listing_Update( [ 'model' => $listing ] );
 		}
 
 		$form->set_values( $request->get_params() );
@@ -350,7 +350,8 @@ final class Listing extends Controller {
 							'status'     => 'publish',
 							'id__not_in' => hivepress()->request->get_context( 'featured_ids', [] ),
 						]
-					)->limit( get_option( 'hp_listings_per_page' ) )
+					)->order( [ 'created_date' => 'desc' ] )
+					->limit( get_option( 'hp_listings_per_page' ) )
 					->paginate( hivepress()->request->get_context( 'page_number' ) )
 					->get_args()
 				);
@@ -396,12 +397,16 @@ final class Listing extends Controller {
 	public function render_listing_view_page() {
 		the_post();
 
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( get_post() );
+
+		// Render template.
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_view_page',
 
 				'context'  => [
-					'listing' => Models\Listing::query()->get_by_id( get_post() ),
+					'listing' => $listing,
 				],
 			]
 		) )->render();
@@ -451,10 +456,9 @@ final class Listing extends Controller {
 					'status__in' => [ 'draft', 'pending', 'publish' ],
 					'user'       => get_current_user_id(),
 				]
-			)->get_args()
+			)->order( [ 'created_date' => 'desc' ] )
+			->get_args()
 		);
-
-		set_query_var( 'post_type', 'hp_listing' );
 
 		// Render template.
 		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
@@ -533,10 +537,10 @@ final class Listing extends Controller {
 		$listing = Models\Listing::query()->filter(
 			[
 				'status' => 'auto-draft',
-				'vendor' => null,
 				'user'   => get_current_user_id(),
 			]
-		)->get_first();
+		)->set_args( [ 'meta_key' => 'hp_drafted' ] )
+		->get_first();
 
 		if ( empty( $listing ) ) {
 
@@ -551,16 +555,15 @@ final class Listing extends Controller {
 			if ( ! $listing->save() ) {
 				return home_url( '/' );
 			}
+
+			// Set draft flag.
+			update_post_meta( $listing->get_id(), 'hp_drafted', '1' );
 		}
 
-		// Check listing.
-		if ( $listing ) {
-			hivepress()->request->set_context( 'listing', $listing );
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
 
-			return true;
-		}
-
-		return home_url( '/' );
+		return true;
 	}
 
 	/**
@@ -571,7 +574,7 @@ final class Listing extends Controller {
 	public function redirect_listing_submit_category_page() {
 
 		// Check categories.
-		if ( ! Models\Listing_Category::query()->get_count() ) {
+		if ( ! Models\Listing_Category::query()->get_first_id() ) {
 			return true;
 		}
 
@@ -583,12 +586,15 @@ final class Listing extends Controller {
 			// Get category.
 			$category = Models\Listing_Category::query()->get_by_id( hivepress()->request->get_param( 'listing_category_id' ) );
 
-			hivepress()->request->set_context( 'listing_category', $category );
+			if ( $category ) {
+				if ( ! $category->get_children__id() ) {
 
-			if ( $category && ! $category->get_children__id() ) {
+					// Set listing category.
+					$listing->set_categories( $category->get_id() )->save();
+				}
 
-				// Set category.
-				$listing->set_categories( $category->get_id() )->save();
+				// Set request context.
+				hivepress()->request->set_context( 'listing_category', $category );
 			}
 		}
 
@@ -667,6 +673,9 @@ final class Listing extends Controller {
 
 		// Update listing.
 		$listing->set_status( $status )->save();
+
+		// Remove draft flag.
+		delete_post_meta( $listing->get_id(), 'hp_drafted' );
 
 		// Send email.
 		( new Emails\Listing_Submit(

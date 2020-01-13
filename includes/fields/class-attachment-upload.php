@@ -46,7 +46,7 @@ class Attachment_Upload extends Field {
 	 *
 	 * @var int
 	 */
-	protected $max_files;
+	protected $max_files = 1;
 
 	/**
 	 * Bootstraps field properties.

@@ -470,7 +470,7 @@ final class User extends Controller {
 		}
 
 		// Validate form.
-		$form = ( new Forms\User_Update() )->set_values( $request->get_params() );
+		$form = ( new Forms\User_Update( [ 'model' => $user ] ) )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
