@@ -41,14 +41,15 @@ final class Listing extends Component {
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
 		// Add submission fields.
-		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submit_fields' ] );
+		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
 
 		if ( is_admin() ) {
 
-			// Add post states.
-			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
+			// Add admin states.
+			add_filter( 'display_post_states', [ $this, 'add_admin_states' ], 10, 2 );
 
 		} else {
+
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
 
@@ -72,17 +73,17 @@ final class Listing extends Component {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Get user.
-		$user = $listing->get_user();
-
-		if ( empty( $user ) ) {
+		if ( ! $listing->get_user__id() ) {
 			return;
 		}
 
 		// Get vendor.
-		$vendor = Models\Vendor::query()->filter( [ 'user' => $user->get_id() ] )->get_first();
+		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
 
 		if ( empty( $vendor ) ) {
+
+			// Get user.
+			$user = $listing->get_user();
 
 			// Add vendor.
 			$vendor = ( new Models\Vendor() )->fill(
@@ -106,13 +107,13 @@ final class Listing extends Component {
 			if ( $listing->get_vendor__id() ) {
 				$attachments = Models\Attachment::query()->filter(
 					[
-						'parent' => $listing->get_id(),
-						'model'  => 'listing',
+						'parent_model' => 'listing',
+						'parent'       => $listing->get_id(),
 					]
 				)->get();
 
 				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $user->get_id() )->save();
+					$attachment->set_user( $listing->get_user__id() )->save();
 				}
 			}
 
@@ -209,7 +210,7 @@ final class Listing extends Component {
 		// Get expired listings.
 		$expired_listings = Models\Listing::query()->filter(
 			[
-				'status'               => 'publish',
+				'status'            => 'publish',
 				'expired_time__lte' => time(),
 			]
 		)->get();
@@ -220,7 +221,7 @@ final class Listing extends Component {
 			// Update listing.
 			$listing->fill(
 				[
-					'status'          => 'trash',
+					'status'       => 'trash',
 					'expired_time' => null,
 				]
 			)->save();
@@ -245,7 +246,7 @@ final class Listing extends Component {
 		// Get featured listings.
 		$featured_listings = Models\Listing::query()->filter(
 			[
-				'status'              => 'publish',
+				'status'             => 'publish',
 				'featured_time__lte' => time(),
 			]
 		)->get();
@@ -254,7 +255,7 @@ final class Listing extends Component {
 		foreach ( $featured_listings as $listing ) {
 			$listing->fill(
 				[
-					'featured'       => null,
+					'featured'      => null,
 					'featured_time' => null,
 				]
 			)->save();
@@ -267,7 +268,7 @@ final class Listing extends Component {
 	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_submit_fields( $form ) {
+	public function add_submission_fields( $form ) {
 
 		// Get terms page ID.
 		$page_id = reset(
@@ -298,13 +299,13 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Adds post states.
+	 * Adds admin states.
 	 *
 	 * @param array   $states Post states.
 	 * @param WP_Post $post Post object.
 	 * @return array
 	 */
-	public function add_post_states( $states, $post ) {
+	public function add_admin_states( $states, $post ) {
 		if ( 'hp_listing' === $post->post_type ) {
 
 			// Get listing.

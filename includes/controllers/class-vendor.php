@@ -92,7 +92,8 @@ final class Vendor extends Controller {
 				'template' => 'vendor_view_page',
 
 				'context'  => [
-					'vendor' => $vendor,
+					'vendor'   => $vendor,
+					'listings' => [],
 				],
 			]
 		) )->render();

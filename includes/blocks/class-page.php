@@ -24,7 +24,7 @@ class Page extends Container {
 	 */
 	protected function boot() {
 
-		// Set attributes.
+		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

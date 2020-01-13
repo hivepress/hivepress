@@ -43,27 +43,15 @@ class Listing_Search_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form' => 'listing_search',
+				'form'       => 'listing_search',
+
+				'attributes' => [
+					'class' => [ 'hp-form--wide', 'hp-block' ],
+				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Bootstraps block properties.
-	 */
-	protected function boot() {
-
-		// Set class.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--wide', 'hp-block' ],
-			]
-		);
-
-		parent::boot();
 	}
 }

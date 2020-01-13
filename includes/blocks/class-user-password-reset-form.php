@@ -27,7 +27,11 @@ class User_Password_Reset_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form' => 'user_password_reset',
+				'form'       => 'user_password_reset',
+
+				'attributes' => [
+					'class' => [ 'hp-form--narrow' ],
+				],
 			],
 			$args
 		);
@@ -46,14 +50,6 @@ class User_Password_Reset_Form extends Form {
 			[
 				'username'           => hp\get_array_value( $_GET, 'username' ),
 				'password_reset_key' => hp\get_array_value( $_GET, 'password_reset_key' ),
-			]
-		);
-
-		// Set class.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--narrow' ],
 			]
 		);
 

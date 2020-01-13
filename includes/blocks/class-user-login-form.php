@@ -27,9 +27,13 @@ class User_Login_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form'   => 'user_login',
+				'form'       => 'user_login',
 
-				'footer' => [
+				'attributes' => [
+					'class' => [ 'hp-form--narrow' ],
+				],
+
+				'footer'     => [
 					'form_actions' => [
 						'type'       => 'container',
 						'_order'     => 10,
@@ -58,21 +62,5 @@ class User_Login_Form extends Form {
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Bootstraps block properties.
-	 */
-	protected function boot() {
-
-		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--narrow' ],
-			]
-		);
-
-		parent::boot();
 	}
 }

@@ -88,7 +88,7 @@ class Listings extends Block {
 					],
 
 					'number'   => [
-						'label'     => esc_html__( 'Number', 'hivepress' ),
+						'label'     => esc_html_x( 'Number', 'quantity', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
@@ -110,9 +110,9 @@ class Listings extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							'date'   => esc_html__( 'Date', 'hivepress' ),
-							'title'  => esc_html__( 'Title', 'hivepress' ),
-							'random' => esc_html_x( 'Random', 'sorting order', 'hivepress' ),
+							'date'   => esc_html_x( 'Date', 'order', 'hivepress' ),
+							'title'  => esc_html_x( 'Title', 'order', 'hivepress' ),
+							'random' => esc_html_x( 'Random', 'order', 'hivepress' ),
 						],
 					],
 
@@ -151,23 +151,23 @@ class Listings extends Block {
 		$regular_query  = $wp_query;
 		$featured_query = null;
 
-		if ( is_single() || ( hp\get_array_value( $regular_query->query_vars, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
+		if ( ! isset( $this->context['listings'] ) ) {
 
 			// Set query.
 			$query = Models\Listing::query()->filter( [ 'status' => 'publish' ] )->limit( $this->number );
 
 			// Set category.
 			if ( $this->category ) {
-				$query->filter( [ 'categories' => $this->category ] );
+				$query->filter( [ 'categories__in' => $this->category ] );
 			}
 
 			// Set order.
-			$query->order( [ 'created_date' => 'desc' ] );
-
 			if ( 'title' === $this->order ) {
 				$query->order( [ 'title' => 'asc' ] );
 			} elseif ( 'random' === $this->order ) {
 				$query->order( 'random' );
+			} else {
+				$query->order( [ 'created_date' => 'desc' ] );
 			}
 
 			// Set featured flag.

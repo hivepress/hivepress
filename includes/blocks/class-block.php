@@ -141,14 +141,8 @@ abstract class Block {
 	 * @param string $name Context name.
 	 * @return mixed
 	 */
-	final public function get_context( $name = '' ) {
-		$context = $this->context;
-
-		if ( $name ) {
-			$context = hp\get_array_value( $context, $name );
-		}
-
-		return $context;
+	final public function get_context( $name = null ) {
+		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 
 	/**

@@ -29,7 +29,7 @@ class Result_Count extends Block {
 
 		$output = '';
 
-		if ( $wp_query->found_posts > 0 ) {
+		if ( $wp_query->found_posts ) {
 			$output = '<div class="hp-result-count">';
 
 			// Get first result.

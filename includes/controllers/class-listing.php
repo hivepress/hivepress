@@ -364,6 +364,7 @@ final class Listing extends Controller {
 
 					'context'  => [
 						'listing_category' => $category,
+						'listings'         => [],
 					],
 				]
 			) )->render();
@@ -461,7 +462,15 @@ final class Listing extends Controller {
 		);
 
 		// Render template.
-		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
+		return ( new Blocks\Template(
+			[
+				'template' => 'listings_edit_page',
+
+				'context'  => [
+					'listings' => [],
+				],
+			]
+		) )->render();
 	}
 
 	/**
