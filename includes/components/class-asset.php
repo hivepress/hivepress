@@ -121,11 +121,11 @@ final class Asset extends Component {
 		foreach ( $attributes as $attribute ) {
 			$value = wp_scripts()->get_data( $handle, $attribute );
 
-			if ( false !== $value ) {
+			if ( $value ) {
 				$output = ' ' . $attribute;
 
 				if ( strpos( $tag, $output . '>' ) === false && strpos( $tag, $output . ' ' ) === false && strpos( $tag, $output . '="' ) === false ) {
-					if ( true !== $value ) {
+					if ( ! is_bool( $value ) ) {
 						$output .= '="' . esc_attr( $value ) . '"';
 					}
 

@@ -35,7 +35,7 @@ final class User extends Component {
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user' ] );
 
 		// Add registration fields.
-		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ] );
+		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ] );
 
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
@@ -99,7 +99,7 @@ final class User extends Component {
 	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_register_fields( $form ) {
+	public function add_registration_fields( $form ) {
 
 		// Get terms page ID.
 		$page_id = reset(

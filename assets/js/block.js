@@ -7,8 +7,8 @@ var registerBlockType = wp.blocks.registerBlockType,
 	SelectControl = wp.components.SelectControl,
 	CheckboxControl = wp.components.CheckboxControl;
 
-registerBlockType(hpBlock.type, {
-	title: hpBlock.title,
+registerBlockType(hivepressBlock.type, {
+	title: hivepressBlock.title,
 	category: 'widgets',
 	icon: createElement('svg', {
 			width: 24,
@@ -22,9 +22,9 @@ registerBlockType(hpBlock.type, {
 	edit: function(props) {
 		var controls = [];
 
-		for (var blockType in hpBlocks) {
-			if (hpBlocks[blockType].type === props.name) {
-				var block = hpBlocks[blockType];
+		for (var blockType in hivepressBlocks) {
+			if (hivepressBlocks[blockType].type === props.name) {
+				var block = hivepressBlocks[blockType];
 
 				for (var fieldName in block.settings) {
 					var field = block.settings[fieldName],

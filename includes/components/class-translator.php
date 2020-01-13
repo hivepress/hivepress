@@ -25,7 +25,7 @@ final class Translator extends Component {
 	 * @return string
 	 */
 	public function get_language() {
-		return explode( '_', get_locale() )[0];
+		return reset( ( explode( '_', get_locale() ) ) );
 	}
 
 	/**

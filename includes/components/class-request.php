@@ -70,14 +70,8 @@ final class Request extends Component {
 	 * @param mixed  $default Default value.
 	 * @return mixed
 	 */
-	public function get_context( $name = '', $default = null ) {
-		$context = $this->context;
-
-		if ( $name ) {
-			$context = hp\get_array_value( $context, $name, $default );
-		}
-
-		return $context;
+	public function get_context( $name = null, $default = null ) {
+		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name, $default );
 	}
 
 	/**

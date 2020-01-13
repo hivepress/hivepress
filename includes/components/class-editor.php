@@ -48,6 +48,8 @@ final class Editor extends Component {
 
 		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block ) {
 			if ( $block::get_meta( 'label' ) ) {
+
+				// Get slug.
 				$block_slug = hp\sanitize_slug( $block_type );
 
 				// Add block.
@@ -79,7 +81,7 @@ final class Editor extends Component {
 
 				// Register block script.
 				wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
-				wp_localize_script( $block['script'], 'hpBlock', $block );
+				wp_localize_script( $block['script'], 'hivepressBlock', $block );
 
 				// Register block type.
 				register_block_type(
@@ -93,7 +95,7 @@ final class Editor extends Component {
 			}
 
 			if ( $blocks ) {
-				wp_localize_script( reset( $blocks )['script'], 'hpBlocks', $blocks );
+				wp_localize_script( reset( $blocks )['script'], 'hivepressBlocks', $blocks );
 			}
 		}
 

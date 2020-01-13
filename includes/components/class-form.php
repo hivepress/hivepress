@@ -53,13 +53,15 @@ final class Form extends Component {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
+			// Get options.
 			$option_method = 'get_' . $args['options'];
 			$option_args   = hp\get_array_value( $args, 'option_args', [] );
 
 			if ( method_exists( $this, $option_method ) ) {
-				$options = call_user_func_array( [ $this, $option_method ], [ $option_args ] );
+				$options = call_user_func( [ $this, $option_method ], $option_args );
 			}
 
+			// Set options.
 			$args['options'] = $options;
 		}
 
@@ -75,7 +77,7 @@ final class Form extends Component {
 	protected function get_posts( $args ) {
 
 		// Set default arguments.
-		$args = hp\merge_arrays(
+		$args = array_merge(
 			[
 				'post_type'      => 'post',
 				'post_status'    => 'publish',
@@ -117,7 +119,7 @@ final class Form extends Component {
 	protected function get_terms( $args ) {
 
 		// Set default arguments.
-		$args = hp\merge_arrays(
+		$args = array_merge(
 			[
 				'taxonomy'   => 'category',
 				'fields'     => 'id=>name',
@@ -249,7 +251,7 @@ final class Form extends Component {
 				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 					[
 						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => hp\get_array_value( $_POST, 'g-recaptcha-response' ),
+						'response' => sanitize_text_field( hp\get_array_value( $_POST, 'g-recaptcha-response' ) ),
 					]
 				)
 			);

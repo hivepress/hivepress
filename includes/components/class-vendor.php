@@ -80,6 +80,6 @@ final class Vendor extends Component {
 	 * @return string
 	 */
 	public function set_page_title( $title ) {
-		return sprintf( esc_html__( 'Listings by %s', 'hivepress' ), get_the_title() );
+		return sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), get_the_title() );
 	}
 }
