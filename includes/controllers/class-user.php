@@ -201,7 +201,7 @@ final class User extends Controller {
 		}
 
 		// Get username.
-		$username = explode( '@', $form->get_value( 'email' ) )[0];
+		$username = reset( ( explode( '@', $form->get_value( 'email' ) ) ) );
 
 		if ( $form->get_value( 'username' ) ) {
 			$username = $form->get_value( 'username' );
@@ -227,11 +227,12 @@ final class User extends Controller {
 		/**
 		 * Fires on user registration.
 		 *
-		 * @action /users/register
+		 * @action /models/user/register
 		 * @description Fires on user registration.
 		 * @param int $id User ID.
 		 * @param object $object User object.
 		 */
+		// todo.
 		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $user );
 
 		// Authenticate user.
@@ -568,7 +569,7 @@ final class User extends Controller {
 		$menu_items = ( new Menus\User_Account() )->get_items();
 
 		if ( $menu_items ) {
-			return reset( $menu_items )['url'];
+			return hp\get_array_value( reset( $menu_items ), 'url' );
 		}
 
 		return home_url( '/' );
