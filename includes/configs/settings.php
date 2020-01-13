@@ -176,7 +176,7 @@ return [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
 						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,

@@ -11,15 +11,15 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'serializejson'         => [
+		'handle' => 'serializejson',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.serializejson.min.js',
+	],
+
 	'jquery_ui_touch_punch' => [
 		'handle' => 'jquery-ui-touch-punch',
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.ui.touch-punch.min.js',
 		'deps'   => [ 'jquery-ui-mouse' ],
-	],
-
-	'serializejson'         => [
-		'handle' => 'serializejson',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.serializejson.min.js',
 	],
 
 	'iframe_transport'      => [
@@ -67,16 +67,16 @@ return [
 		],
 	],
 
+	'core_frontend'         => [
+		'handle' => 'hp-core-frontend',
+		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
+		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+	],
+
 	'core_backend'          => [
 		'handle' => 'hp-core-backend',
 		'src'    => hivepress()->get_url() . '/assets/js/backend.min.js',
 		'deps'   => [ 'hp-core-common' ],
 		'scope'  => 'backend',
-	],
-
-	'core_frontend'         => [
-		'handle' => 'hp-core-frontend',
-		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 ];

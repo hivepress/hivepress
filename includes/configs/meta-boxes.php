@@ -107,10 +107,10 @@ return [
 				'_order'      => 10,
 
 				'options'     => [
-					'view_block_primary'   => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'primary', 'area', 'hivepress' ) ),
-					'view_block_secondary' => sprintf( esc_html__( 'Block (%s)', 'hivepress' ), esc_html_x( 'secondary', 'area', 'hivepress' ) ),
-					'view_page_primary'    => sprintf( esc_html__( 'Page (%s)', 'hivepress' ), esc_html_x( 'primary', 'area', 'hivepress' ) ),
-					'view_page_secondary'  => sprintf( esc_html__( 'Page (%s)', 'hivepress' ), esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+					'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+					'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
 				],
 			],
 
@@ -118,6 +118,7 @@ return [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
 				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%value%' ),
 				'type'        => 'text',
+				'max_length'  => 2048,
 				'default'     => '%value%',
 				'html'        => true,
 				'_order'      => 20,

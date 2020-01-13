@@ -11,6 +11,8 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+
+	// Common.
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'moderation'                                => esc_html__( 'Moderation', 'hivepress' ),
