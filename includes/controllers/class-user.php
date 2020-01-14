@@ -582,7 +582,11 @@ final class User extends Controller {
 	 */
 	public function redirect_user_login_page() {
 		if ( is_user_logged_in() ) {
-			return hivepress()->router->get_url( 'user_account_page' );
+			if ( hivepress()->router->get_redirect_url() ) {
+				return hivepress()->router->get_redirect_url();
+			} else {
+				return hivepress()->router->get_url( 'user_account_page' );
+			}
 		}
 
 		return false;
@@ -604,7 +608,11 @@ final class User extends Controller {
 	 */
 	public function redirect_user_password_reset_page() {
 		if ( is_user_logged_in() ) {
-			return hivepress()->router->get_url( 'user_account_page' );
+			if ( hivepress()->router->get_redirect_url() ) {
+				return hivepress()->router->get_redirect_url();
+			} else {
+				return hivepress()->router->get_url( 'user_account_page' );
+			}
 		}
 
 		return false;

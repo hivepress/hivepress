@@ -554,19 +554,23 @@ final class Listing extends Controller {
 		if ( empty( $listing ) ) {
 
 			// Add listing.
-			$listing = ( new Models\Listing() )->fill(
+			$listing_id = wp_insert_post(
 				[
-					'status' => 'auto-draft',
-					'user'   => get_current_user_id(),
+					'post_type'   => 'hp_listing',
+					'post_status' => 'auto-draft',
+					'post_author' => get_current_user_id(),
 				]
 			);
 
-			if ( ! $listing->save() ) {
+			if ( ! $listing_id ) {
 				return home_url( '/' );
 			}
 
 			// Set draft flag.
-			update_post_meta( $listing->get_id(), 'hp_drafted', '1' );
+			update_post_meta( $listing_id, 'hp_drafted', '1' );
+
+			// Get listing.
+			$listing = Models\Listing::query()->get_by_id( $listing_id );
 		}
 
 		// Set request context.
@@ -599,7 +603,9 @@ final class Listing extends Controller {
 				if ( ! $category->get_children__id() ) {
 
 					// Set listing category.
-					$listing->set_categories( $category->get_id() )->save();
+					wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
+
+					return true;
 				}
 
 				// Set request context.
@@ -609,7 +615,7 @@ final class Listing extends Controller {
 
 		// Check category.
 		if ( $listing->get_categories__id() ) {
-			return true;
+			return;
 		}
 
 		return false;

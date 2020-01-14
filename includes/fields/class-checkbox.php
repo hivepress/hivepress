@@ -81,19 +81,11 @@ class Checkbox extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
-		$attributes = [];
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
 			$this->caption = $this->label;
 		}
-
-		// Set required flag.
-		if ( $this->required ) {
-			$attributes['required'] = true;
-		}
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();
 	}
@@ -139,15 +131,10 @@ class Checkbox extends Field {
 		// Get ID.
 		$id = sanitize_key( $this->name ) . '_' . uniqid();
 
-		// Get class.
-		$class = implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) );
-
-		unset( $this->attributes['class'] );
-
 		// Render field.
-		$output = '<label for="' . esc_attr( $id ) . '" class="' . esc_attr( $class ) . '">';
+		$output = '<label for="' . esc_attr( $id ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
-		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

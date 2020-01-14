@@ -269,13 +269,22 @@ final class Router extends Component {
 	public function get_current_url() {
 		global $wp;
 
-		$query = '';
+		$path = rtrim( $wp->request, '/' ) . '/';
 
 		if ( $_GET ) {
-			$query = '/?' . http_build_query( $_GET );
+			$path .= '?' . http_build_query( $_GET );
 		}
 
-		return home_url( $wp->request . $query );
+		return home_url( $path );
+	}
+
+	/**
+	 * Gets redirect URL.
+	 *
+	 * @return string
+	 */
+	public function get_redirect_url() {
+		return wp_validate_redirect( hp\get_array_value( $_GET, 'redirect' ) );
 	}
 
 	/**
@@ -389,41 +398,47 @@ final class Router extends Component {
 			// Get menu redirect.
 			$menu_redirect = home_url( '/' );
 
-			foreach ( hivepress()->get_menus() as $menu ) {
-				if ( $menu::get_meta( 'chained' ) && in_array( $route['name'], wp_list_pluck( $menu->get_items(), 'route' ), true ) ) {
+			foreach ( hivepress()->get_classes( 'menus' ) as $menu_class ) {
+				if ( $menu_class::get_meta( 'chained' ) ) {
 
-					// Get menu items.
-					$menu_items      = $menu->get_items();
-					$menu_item_names = array_keys( $menu_items );
+					// Create menu.
+					$menu = hp\create_class_instance( $menu_class );
 
-					foreach ( $menu_items as $menu_item_name => $menu_item ) {
-						if ( isset( $menu_item['route'] ) ) {
+					if ( in_array( $route['name'], wp_list_pluck( $menu->get_items(), 'route' ), true ) ) {
 
-							// Get redirect URL.
-							if ( $menu_item['route'] === $route['name'] ) {
-								$next_menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
+						// Get menu items.
+						$menu_items      = $menu->get_items();
+						$menu_item_names = array_keys( $menu_items );
 
-								if ( $next_menu_item ) {
-									$menu_redirect = $next_menu_item['url'];
+						foreach ( $menu_items as $menu_item_name => $menu_item ) {
+							if ( isset( $menu_item['route'] ) ) {
+
+								// Get redirect URL.
+								if ( $menu_item['route'] === $route['name'] ) {
+									$next_menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
+
+									if ( $next_menu_item ) {
+										$menu_redirect = $next_menu_item['url'];
+									}
+
+									break;
 								}
 
-								break;
-							}
+								// Get menu route.
+								$menu_route = $this->get_route( $menu_item['route'] );
 
-							// Get menu route.
-							$menu_route = $this->get_route( $menu_item['route'] );
+								if ( $menu_route ) {
+									if ( isset( $menu_route['redirect'] ) && call_user_func( $menu_route['redirect'] ) === false ) {
+										wp_safe_redirect( $menu_item['url'] );
 
-							if ( $menu_route ) {
-								if ( isset( $menu_route['redirect'] ) && call_user_func( $menu_route['redirect'] ) === false ) {
-									wp_safe_redirect( $menu_item['url'] );
-
-									exit;
+										exit;
+									}
 								}
 							}
 						}
-					}
 
-					break;
+						break;
+					}
 				}
 			}
 

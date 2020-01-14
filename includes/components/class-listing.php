@@ -29,6 +29,7 @@ final class Listing extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update vendor.
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
 
 		// Update image.
@@ -118,7 +119,12 @@ final class Listing extends Component {
 			}
 
 			// Update listing.
-			$listing->set_vendor( $vendor->get_id() )->save();
+			wp_update_post(
+				[
+					'ID'          => $listing->get_id(),
+					'post_parent' => $vendor->get_id(),
+				]
+			);
 		}
 	}
 
@@ -136,7 +142,7 @@ final class Listing extends Component {
 		$image_ids = $listing->get_images__id();
 
 		if ( $image_ids ) {
-			$listing->set_image( reset( $image_ids ) )->save();
+			set_post_thumbnail( $listing->get_id(), reset( $image_ids ) );
 		}
 	}
 
