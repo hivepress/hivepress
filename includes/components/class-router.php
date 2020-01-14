@@ -58,6 +58,9 @@ final class Router extends Component {
 
 			// Set page template.
 			add_filter( 'template_include', [ $this, 'set_page_template' ], 10000 );
+
+			// Disable page redirect.
+			add_filter( 'redirect_canonical', [ $this, 'disable_page_redirect' ] );
 		}
 
 		parent::__construct( $args );
@@ -141,7 +144,7 @@ final class Router extends Component {
 				 * @param string $name Route name.
 				 * @param string $title Route title.
 				 */
-				$this->route['title'] = apply_filters( 'hivepress/v1/routes/' . $this->route['name'] . '/title', null );
+				$this->route['title'] = apply_filters( 'hivepress/v1/routes/' . $this->route['name'] . '/title', hp\get_array_value( $this->route, 'title' ) );
 			}
 		}
 
@@ -466,5 +469,23 @@ final class Router extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Disables page redirect.
+	 *
+	 * @param string $url Redirect URL.
+	 * @return string
+	 */
+	public function disable_page_redirect( $url ) {
+		foreach ( hivepress()->get_config( 'post_types' ) as $type => $args ) {
+			if ( ! hp\get_array_value( $args, 'redirect_canonical', true ) && is_singular( hp\prefix( $type ) ) ) {
+				$url = false;
+
+				break;
+			}
+		}
+
+		return $url;
 	}
 }

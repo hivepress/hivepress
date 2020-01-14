@@ -46,9 +46,6 @@ final class Admin extends Component {
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
-		// Disable post redirect.
-		add_filter( 'redirect_canonical', [ $this, 'disable_post_redirect' ] );
-
 		if ( is_admin() ) {
 
 			// Add admin pages.
@@ -70,7 +67,7 @@ final class Admin extends Component {
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 
 			// Manage meta boxes.
-			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
+			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
@@ -90,17 +87,6 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets option value.
-	 *
-	 * @param string $name Option name.
-	 * @param mixed  $default Default value.
-	 * @return mixed
-	 */
-	public function get_option( $name, $default = false ) {
-		return get_option( hp\prefix( $name ), $default );
-	}
-
-	/**
 	 * Registers post types.
 	 */
 	public function register_post_types() {
@@ -116,24 +102,6 @@ final class Admin extends Component {
 		foreach ( hivepress()->get_config( 'taxonomies' ) as $taxonomy => $args ) {
 			register_taxonomy( hp\prefix( $taxonomy ), hp\prefix( $args['post_type'] ), $args );
 		}
-	}
-
-	/**
-	 * Disables post redirect.
-	 *
-	 * @param string $url Redirect URL.
-	 * @return string
-	 */
-	public function disable_post_redirect( $url ) {
-		foreach ( hivepress()->get_config( 'post_types' ) as $type => $args ) {
-			if ( ! hp\get_array_value( $args, 'redirect_canonical', true ) && is_singular( hp\prefix( $type ) ) ) {
-				$url = false;
-
-				break;
-			}
-		}
-
-		return $url;
 	}
 
 	/**
@@ -466,7 +434,7 @@ final class Admin extends Component {
 			$extensions = [];
 
 			// Query plugins.
-			$api = plugins_api(
+			$response = plugins_api(
 				'query_plugins',
 				[
 					'author' => 'hivepress',
@@ -477,7 +445,7 @@ final class Admin extends Component {
 				]
 			);
 
-			if ( ! is_wp_error( $api ) ) {
+			if ( ! is_wp_error( $response ) ) {
 
 				// Filter extensions.
 				$extensions = array_filter(
@@ -500,7 +468,7 @@ final class Admin extends Component {
 								)
 							);
 						},
-						$api->plugins
+						$response->plugins
 					),
 					function( $extension ) {
 						return 'hivepress' !== $extension['slug'];
@@ -644,7 +612,7 @@ final class Admin extends Component {
 			// Query themes.
 			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( 'https://hivepress.io/wp-json/hivepress/v1/themes' ) ), true );
 
-			if ( ! is_null( $response ) && isset( $response['data'] ) ) {
+			if ( is_array( $response ) && isset( $response['data'] ) ) {
 				$themes = (array) $response['data'];
 
 				// Cache themes.
@@ -700,7 +668,7 @@ final class Admin extends Component {
 	 */
 	public function add_post_states( $states, $post ) {
 		if ( isset( $this->post_states[ $post->ID ] ) ) {
-			$states[] = $this->post_states[ $post->ID ];
+			$states[] = esc_html( $this->post_states[ $post->ID ] );
 		}
 
 		return $states;
@@ -727,6 +695,19 @@ final class Admin extends Component {
 				 */
 				$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
+				// Set field aliases.
+				foreach ( $args['fields'] as $field_name => $field ) {
+					if ( ! isset( $field['_alias'] ) ) {
+						$args['fields'][ $field_name ] = array_merge(
+							$field,
+							[
+								'_external' => true,
+								'_alias'    => hp\prefix( $field_name ),
+							]
+						);
+					}
+				}
+
 				// Add meta box.
 				$this->meta_boxes[ $name ] = $args;
 			}
@@ -738,10 +719,9 @@ final class Admin extends Component {
 	/**
 	 * Adds meta boxes.
 	 *
-	 * @param string  $post_type Post type.
-	 * @param WP_Post $post Post object.
+	 * @param string $post_type Post type.
 	 */
-	public function add_meta_boxes( $post_type, $post ) {
+	public function add_meta_boxes( $post_type ) {
 		foreach ( $this->get_meta_boxes() as $name => $args ) {
 
 			// Get post types.
@@ -793,13 +773,13 @@ final class Admin extends Component {
 						if ( $field->validate() ) {
 
 							// Update field value.
-							if ( ! isset( $field_args['_alias'] ) ) {
-								update_post_meta( $post_id, hp\prefix( $field_name ), $field->get_value() );
+							if ( $field->get_arg( '_external' ) ) {
+								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
 							} else {
 								wp_update_post(
 									[
 										'ID' => $post_id,
-										$field_args['_alias'] => $field->get_value(),
+										$field->get_arg( '_alias' ) => $field->get_value(),
 									]
 								);
 							}
@@ -840,10 +820,10 @@ final class Admin extends Component {
 					// Get field value.
 					$value = null;
 
-					if ( ! isset( $field_args['_alias'] ) ) {
-						$value = get_post_meta( $post->ID, hp\prefix( $field_name ), true );
+					if ( $field->get_arg( '_external' ) ) {
+						$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
 					} else {
-						$value = get_post_field( $field_args['_alias'], $post );
+						$value = get_post_field( $field->get_arg( '_alias' ), $post );
 					}
 
 					// Set field value.
@@ -854,7 +834,7 @@ final class Admin extends Component {
 						// Render field.
 						$output .= $field->render();
 					} else {
-						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field::get_meta( 'name' ) ) ) . '">';
+						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
 
 						// Render field label.
 						if ( $field->get_label() ) {
@@ -865,15 +845,12 @@ final class Admin extends Component {
 							}
 
 							$output .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div></th>';
-						}
-
-						// Render field.
-						if ( $field->get_label() ) {
 							$output .= '<td>';
 						} else {
 							$output .= '<td colspan="2">';
 						}
 
+						// Render field.
 						$output .= $field->render();
 
 						$output .= '</td>';
@@ -955,14 +932,14 @@ final class Admin extends Component {
 						if ( $field->validate() ) {
 
 							// Update field value.
-							if ( ! isset( $field_args['_alias'] ) ) {
-								update_term_meta( $term->term_id, hp\prefix( $field_name ), $field->get_value() );
+							if ( $field->get_arg( '_external' ) ) {
+								update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
 							} else {
 								wp_update_term(
 									$term->term_id,
 									$term->taxonomy,
 									[
-										$field_args['_alias'] => $field->get_value(),
+										$field->get_arg( '_alias' ) => $field->get_value(),
 									]
 								);
 							}
@@ -1039,10 +1016,10 @@ final class Admin extends Component {
 							// Get field value.
 							$value = null;
 
-							if ( ! isset( $field_args['_alias'] ) ) {
-								$value = get_term_meta( $term->term_id, hp\prefix( $field_name ), true );
+							if ( $field->get_arg( '_external' ) ) {
+								$value = get_term_meta( $term->term_id, $field->get_arg( '_alias' ), true );
 							} else {
-								$value = get_term_field( $field_args['_alias'], $term );
+								$value = get_term_field( $field->get_arg( '_alias' ), $term );
 							}
 
 							// Set field value.
@@ -1087,7 +1064,7 @@ final class Admin extends Component {
 			$comment_types = array_filter(
 				$comment_types,
 				function( $args ) {
-					return ! isset( $args['show_ui'] ) || ! $args['show_ui'];
+					return ! hp\get_array_value( $args, 'show_ui', true );
 				}
 			);
 
@@ -1195,5 +1172,16 @@ final class Admin extends Component {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Gets option value.
+	 *
+	 * @param string $name Option name.
+	 * @param mixed  $default Default value.
+	 * @return mixed
+	 */
+	public function get_option( $name, $default = null ) {
+		return get_option( hp\prefix( $name ), $default );
 	}
 }
