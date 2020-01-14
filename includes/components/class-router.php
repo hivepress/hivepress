@@ -49,6 +49,7 @@ final class Router extends Component {
 		// Flush rewrite rules.
 		add_action( 'hivepress/v1/activate', [ $this, 'flush_rewrite_rules' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'flush_rewrite_rules' ] );
+		add_action( 'hivepress/v1/deactivate', [ $this, 'flush_rewrite_rules' ] );
 
 		if ( ! is_admin() ) {
 
@@ -182,7 +183,7 @@ final class Router extends Component {
 	 * @return array
 	 */
 	protected function get_url_params( $name ) {
-		preg_match_all( '/<([a-z_]+)>/i', $this->get_url_path( $name ), $params );
+		preg_match_all( '/<([a-z_]+)>/', $this->get_url_path( $name ), $params );
 
 		array_shift( $params );
 
@@ -208,7 +209,7 @@ final class Router extends Component {
 			if ( isset( $route['url'] ) ) {
 
 				// Set URL.
-				$url = call_user_func_array( $route['url'], [ $query ] );
+				$url = call_user_func( $route['url'], $query );
 			} else {
 
 				// Get URL path.
