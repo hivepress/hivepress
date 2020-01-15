@@ -57,7 +57,7 @@ final class Attribute extends Component {
 	protected function boot() {
 
 		// Register attributes.
-		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
+		add_action( 'init', [ $this, 'register_attributes' ], 10000 );
 
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
@@ -132,28 +132,28 @@ final class Attribute extends Component {
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
 
-				// Get attribute posts.
-				$attribute_posts = get_posts( $query_args );
+				// Get attribute objects.
+				$attribute_objects = get_posts( $query_args );
 
-				foreach ( $attribute_posts as $attribute_post ) {
+				foreach ( $attribute_objects as $attribute_object ) {
 
 					// Set defaults.
 					$attribute_args = [
-						'label'          => $attribute_post->post_title,
-						'display_areas'  => (array) $attribute_post->hp_display_areas,
-						'display_format' => (string) $attribute_post->hp_display_format,
-						'editable'       => (bool) $attribute_post->hp_editable,
-						'moderated'      => (bool) $attribute_post->hp_moderated,
-						'searchable'     => (bool) $attribute_post->hp_searchable,
-						'filterable'     => (bool) $attribute_post->hp_filterable,
-						'sortable'       => (bool) $attribute_post->hp_sortable,
+						'label'          => $attribute_object->post_title,
+						'display_areas'  => (array) $attribute_object->hp_display_areas,
+						'display_format' => (string) $attribute_object->hp_display_format,
+						'editable'       => (bool) $attribute_object->hp_editable,
+						'moderated'      => (bool) $attribute_object->hp_moderated,
+						'searchable'     => (bool) $attribute_object->hp_searchable,
+						'filterable'     => (bool) $attribute_object->hp_filterable,
+						'sortable'       => (bool) $attribute_object->hp_sortable,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
 					];
 
 					// Get categories.
-					$category_ids = wp_get_post_terms( $attribute_post->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+					$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 					foreach ( $category_ids as $category_id ) {
 						$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $model . '_category' ) ) );
@@ -170,11 +170,11 @@ final class Attribute extends Component {
 						$field_args = [
 							'label'  => $attribute_args['label'],
 							'type'   => 'text',
-							'_order' => 100 + absint( $attribute_post->menu_order ),
+							'_order' => 100 + absint( $attribute_object->menu_order ),
 						];
 
 						// Get field type.
-						$field_type = sanitize_key( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_type' ), true ) );
+						$field_type = sanitize_key( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_type' ), true ) );
 
 						if ( $field_type ) {
 
@@ -190,10 +190,12 @@ final class Attribute extends Component {
 								foreach ( $field_settings as $settings_field_name => $settings_field ) {
 
 									// Set field value.
-									$settings_field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
+									$settings_field->set_value( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
 
 									// Get field value.
-									$field_args[ $settings_field_name ] = $settings_field->get_value();
+									if ( $settings_field->validate() ) {
+										$field_args[ $settings_field_name ] = $settings_field->get_value();
+									}
 								}
 							}
 						}
@@ -201,12 +203,12 @@ final class Attribute extends Component {
 						// Add field.
 						$attribute_args[ $field_context . '_field' ] = $field_args;
 					}
-
+					// todo below.
 					// Get attribute name.
-					$attribute_name = $this->get_attribute_name( $attribute_post->post_name );
+					$attribute_name = $this->get_attribute_name( $attribute_object->post_name );
 
 					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
-						$attribute_name = $this->get_attribute_name( $attribute_post->post_name, $model );
+						$attribute_name = $this->get_attribute_name( $attribute_object->post_name, $model );
 
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
@@ -423,7 +425,7 @@ final class Attribute extends Component {
 		$model = $object::_get_meta( 'name' );
 
 		// Get category IDs.
-		$category_ids = wp_get_post_terms( $object->get_id(), 'hp_listing_category', [ 'fields' => 'ids' ] );
+		$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );
