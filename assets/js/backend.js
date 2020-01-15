@@ -15,7 +15,7 @@
 						'dismissed': true,
 					},
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 					},
 				});
 			});

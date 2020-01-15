@@ -177,9 +177,14 @@ class Select extends Field {
 	 */
 	protected function sanitize() {
 		if ( $this->multiple ) {
-			$this->value = array_map( 'sanitize_text_field', $this->value );
+			$this->value = array_map(
+				function( $value ) {
+					return is_numeric( $value ) ? floatval( $value ) : sanitize_text_field( $value );
+				},
+				$this->value
+			);
 		} else {
-			$this->value = sanitize_text_field( $this->value );
+			$this->value = is_numeric( $this->value ) ? floatval( $this->value ) : sanitize_text_field( $this->value );
 		}
 	}
 
@@ -205,7 +210,7 @@ class Select extends Field {
 		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]' : '' ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
-			$output .= '<option value="' . esc_attr( $value ) . '" ' . ( in_array( (string) $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
+			$output .= '<option value="' . esc_attr( $value ) . '" ' . ( in_array( $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
 		}
 
 		$output .= '</select>';

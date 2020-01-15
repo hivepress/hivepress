@@ -54,8 +54,8 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
-	'core_common'           => [
-		'handle' => 'hp-core-common',
+	'core'                  => [
+		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
 		'deps'   => [ 'jquery', 'flatpickr' ],
 		'scope'  => [ 'frontend', 'backend' ],
@@ -68,15 +68,15 @@ return [
 	],
 
 	'core_frontend'         => [
-		'handle' => 'hp-core-frontend',
+		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [
-		'handle' => 'hp-core-backend',
+		'handle' => 'hivepress-core-backend',
 		'src'    => hivepress()->get_url() . '/assets/js/backend.min.js',
-		'deps'   => [ 'hp-core-common' ],
+		'deps'   => [ 'hivepress-core' ],
 		'scope'  => 'backend',
 	],
 ];

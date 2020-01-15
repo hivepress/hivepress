@@ -346,7 +346,6 @@ abstract class Model {
 	final protected function set_id( $id ) {
 		$this->id = absint( $id );
 
-		// todo (ir resets field values).
 		if ( has_filter( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields' ) ) {
 
 			/**
@@ -363,7 +362,12 @@ abstract class Model {
 					'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields',
 					array_map(
 						function( $field ) {
-							return $field->get_args();
+							return array_merge(
+								$field->get_args(),
+								[
+									'default' => $field->get_value(),
+								]
+							);
 						},
 						$this->fields
 					),

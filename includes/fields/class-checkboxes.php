@@ -114,7 +114,7 @@ class Checkboxes extends Select {
 				// Get default value.
 				$default = null;
 
-				if ( in_array( (string) $value, (array) $this->value, true ) ) {
+				if ( in_array( $value, (array) $this->value, true ) ) {
 					$default = $value;
 				}
 

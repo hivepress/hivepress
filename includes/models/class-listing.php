@@ -154,7 +154,7 @@ class Listing extends Post {
 		return array_filter(
 			$this->fields,
 			function( $field ) use ( $area ) {
-				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_areas' ), true );
+				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_display_areas' ), true );
 			}
 		);
 	}

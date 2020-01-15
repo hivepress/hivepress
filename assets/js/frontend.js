@@ -20,7 +20,7 @@
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
-				messageContainer = form.find('[data-element=messages]'),
+				messageContainer = form.find(hivepress.getSelector('messages')).eq(0),
 				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
@@ -43,7 +43,7 @@
 						method: form.data('method') ? form.data('method') : form.attr('method'),
 						data: form.serializeJSON(),
 						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
+							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 						},
 						complete: function(xhr) {
 							var response = xhr.responseJSON;
@@ -122,7 +122,7 @@
 					url: button.data('url'),
 					method: 'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 					},
 				});
 
@@ -135,7 +135,6 @@
 			var field = $(this),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
-				messageContainer = $('<div />').insertBefore(selectLabel),
 				responseContainer = selectLabel.parent().children('div').first();
 
 			field.fileupload({
@@ -147,7 +146,7 @@
 					'parent_field': field.attr('name'),
 					'parent': field.closest('form').data('id'),
 					'render': true,
-					'_wpnonce': hpCoreCommonData.apiNonce,
+					'_wpnonce': hivepressCoreData.apiNonce,
 				},
 				start: function() {
 					field.prop('disabled', true);
@@ -181,7 +180,7 @@
 				url: container.data('url'),
 				method: 'DELETE',
 				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
+					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 				},
 			});
 
@@ -192,8 +191,7 @@
 
 		// Sortable
 		hivepress.getComponent('sortable').each(function() {
-			var container = $(this),
-				form = container.closest('form');
+			var container = $(this);
 
 			container.sortable({
 				stop: function() {
@@ -206,7 +204,7 @@
 									'order': index,
 								},
 								beforeSend: function(xhr) {
-									xhr.setRequestHeader('X-WP-Nonce', hpCoreCommonData.apiNonce);
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 								},
 							});
 						});
@@ -220,7 +218,7 @@
 			var container = $(this),
 				fields = $(this).find('input[type=number]'),
 				minField = fields.eq(0),
-				maxField = fields.eq(-1),
+				maxField = fields.eq(1),
 				slider = null;
 
 			if (!minField.val()) {

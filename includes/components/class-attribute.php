@@ -396,7 +396,7 @@ final class Attribute extends Component {
 
 		return $meta_box;
 	}
-// todo below.
+
 	/**
 	 * Adds model fields.
 	 *
@@ -410,7 +410,15 @@ final class Attribute extends Component {
 		$model = $object::_get_meta( 'name' );
 
 		// Get category IDs.
-		$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], $model . '_category' );
+
+		if ( is_null( $category_ids ) ) {
+			$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+
+			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
+				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], $model . '_category', $category_ids );
+			}
+		}
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );
@@ -423,7 +431,7 @@ final class Attribute extends Component {
 					$attribute['edit_field'],
 					[
 						'display_template' => $attribute['display_format'],
-						'_areas'           => $attribute['display_areas'],
+						'_display_areas'   => $attribute['display_areas'],
 					]
 				);
 
@@ -460,7 +468,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		// Get category IDs.
-		$category_ids = $form_args['model']->get_categories__id();
+		$category_ids = $form->get_model()->get_categories__id();
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );
@@ -569,7 +577,7 @@ final class Attribute extends Component {
 				if ( $order ) {
 
 					// Get option label.
-					$label = $attribute['search_field']['label'];
+					$label = $attribute['edit_field']['label'];
 
 					// Add option.
 					if ( is_bool( $order ) ) {
@@ -605,28 +613,20 @@ final class Attribute extends Component {
 
 		// Set query arguments.
 		$query_args = [
-			'parent' => $category_id,
-			'fields' => 'ids',
+			'taxonomy'   => hp\prefix( $model . '_category' ),
+			'parent'     => $category_id,
+			'fields'     => 'ids',
+			'hide_empty' => false,
 		];
 
 		// Get cached IDs.
 		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'include_tree' => true ] ), $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
-			$category_ids = [];
+			$category_ids = get_terms( $query_args );
 
-			// Get category IDs.
-			if ( empty( $category_id ) ) {
-
-				// Get top-level categories.
-				$category_ids = get_terms( hp\prefix( $model . '_category' ), $query_args );
-			} else {
-
-				// Get parent categories.
-				$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
-
-				// Get child categories.
-				$category_ids = array_merge( $category_ids, get_terms( hp\prefix( $model . '_category' ), $query_args ) );
+			if ( ! empty( $category_id ) ) {
+				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
 			}
 
 			// Cache IDs.
@@ -717,8 +717,8 @@ final class Attribute extends Component {
 					array_merge(
 						$query_args,
 						[
-							'fields'    => 'meta_values',
-							'aggregate' => 'minmax',
+							'fields' => 'meta_values',
+							'format' => 'range',
 						]
 					),
 					$model
@@ -737,8 +737,8 @@ final class Attribute extends Component {
 						array_merge(
 							$query_args,
 							[
-								'fields'    => 'meta_values',
-								'aggregate' => 'minmax',
+								'fields' => 'meta_values',
+								'format' => 'range',
 							]
 						),
 						$model,
@@ -789,8 +789,8 @@ final class Attribute extends Component {
 			// Get attributes.
 			$attributes = $this->get_attributes( $model, $category_ids );
 
-			foreach ( array_keys( $this->attributes[ $model ] ) as $attribute_name ) {
-				if ( ! isset( $attributes[ $attribute_name ] ) ) {
+			foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+				if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
 					remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 				}
 			}
@@ -817,7 +817,7 @@ final class Attribute extends Component {
 			// Get page ID.
 			$page_id = absint( get_option( 'hp_page_' . $model_name . 's' ) );
 
-			if ( ( $page_id && get_queried_object_id() && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) || ( $page_id && is_page( $page_id ) ) ) {
 
 				// Set model.
 				$model = $model_name;
@@ -871,14 +871,14 @@ final class Attribute extends Component {
 					if ( $sort_type ) {
 
 						// Add meta clause.
-						$meta_query[ $sort_param . '_clause' ] = [
+						$meta_query[ $sort_param . '__order' ] = [
 							'key'     => hp\prefix( $sort_param ),
 							'compare' => 'EXISTS',
 							'type'    => $sort_type,
 						];
 
 						// Set sort parameter.
-						$query->set( 'orderby', $sort_param . '_clause' );
+						$query->set( 'orderby', $sort_param . '__order' );
 
 						// Set sort order.
 						$query->set( 'order', strtoupper( $sort_order ) );
@@ -1011,7 +1011,7 @@ final class Attribute extends Component {
 				// Exclude featured IDs.
 				$query->set( 'post__not_in', $featured_ids );
 
-				// Set featured IDs.
+				// Set request context.
 				hivepress()->request->set_context( 'featured_ids', $featured_ids );
 			}
 		}

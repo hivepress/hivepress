@@ -45,19 +45,19 @@ return [
 	],
 
 	'grid'              => [
-		'handle' => 'hp-grid',
+		'handle' => 'hivepress-grid',
 		'src'    => hivepress()->get_url() . '/assets/css/grid.min.css',
 		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'core_frontend'     => [
-		'handle' => 'hp-core-frontend',
+		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/css/frontend.min.css',
 		'scope'  => [ 'frontend', 'editor' ],
 	],
 
 	'core_backend'      => [
-		'handle' => 'hp-core-backend',
+		'handle' => 'hivepress-core-backend',
 		'src'    => hivepress()->get_url() . '/assets/css/backend.min.css',
 		'scope'  => 'backend',
 	],

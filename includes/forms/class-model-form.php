@@ -96,4 +96,13 @@ abstract class Model_Form extends Form {
 
 		parent::set_fields( $fields );
 	}
+
+	/**
+	 * Gets model object.
+	 *
+	 * @return object
+	 */
+	final public function get_model() {
+		return $this->model;
+	}
 }

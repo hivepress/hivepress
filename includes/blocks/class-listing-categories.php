@@ -103,10 +103,9 @@ class Listing_Categories extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							// todo.
-							'custom' => esc_html__( 'Custom Order', 'hivepress' ),
-							'name'   => esc_html__( 'Category Name', 'hivepress' ),
-							'count'  => esc_html__( 'Listing Count', 'hivepress' ),
+							'custom' => esc_html_x( 'Default', 'order', 'hivepress' ),
+							'name'   => esc_html_x( 'Name', 'order', 'hivepress' ),
+							'count'  => esc_html_x( 'Count', 'order', 'hivepress' ),
 						],
 					],
 				],

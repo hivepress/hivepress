@@ -104,7 +104,6 @@ abstract class Template {
 	protected function boot() {
 
 		// Filter blocks.
-		// todo (should it filter parents, etc?).
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**

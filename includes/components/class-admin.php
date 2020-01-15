@@ -677,40 +677,42 @@ final class Admin extends Component {
 	/**
 	 * Gets meta boxes.
 	 *
+	 * @param string $screen Screen name.
 	 * @return array
 	 */
-	protected function get_meta_boxes() {
-		// todo.
+	protected function get_meta_boxes( $screen ) {
 		if ( empty( $this->meta_boxes ) ) {
 			$this->meta_boxes = [];
 
 			foreach ( hivepress()->get_config( 'meta_boxes' ) as $name => $args ) {
+				if ( in_array( $screen, (array) hp\prefix( $args['screen'] ), true ) ) {
 
-				/**
-				 * Filters meta box arguments.
-				 *
-				 * @filter /meta_boxes/{$name}
-				 * @description Filters meta box arguments.
-				 * @param string $name Meta box name.
-				 * @param array $args Meta box arguments.
-				 */
-				$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
+					/**
+					 * Filters meta box arguments.
+					 *
+					 * @filter /meta_boxes/{$name}
+					 * @description Filters meta box arguments.
+					 * @param string $name Meta box name.
+					 * @param array $args Meta box arguments.
+					 */
+					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
-				// Set field aliases.
-				foreach ( $args['fields'] as $field_name => $field ) {
-					if ( ! isset( $field['_alias'] ) ) {
-						$args['fields'][ $field_name ] = array_merge(
-							$field,
-							[
-								'_external' => true,
-								'_alias'    => hp\prefix( $field_name ),
-							]
-						);
+					// Set field aliases.
+					foreach ( $args['fields'] as $field_name => $field ) {
+						if ( ! isset( $field['_alias'] ) ) {
+							$args['fields'][ $field_name ] = array_merge(
+								$field,
+								[
+									'_external' => true,
+									'_alias'    => hp\prefix( $field_name ),
+								]
+							);
+						}
 					}
-				}
 
-				// Add meta box.
-				$this->meta_boxes[ $name ] = $args;
+					// Add meta box.
+					$this->meta_boxes[ $name ] = $args;
+				}
 			}
 		}
 
@@ -723,12 +725,8 @@ final class Admin extends Component {
 	 * @param string $post_type Post type.
 	 */
 	public function add_meta_boxes( $post_type ) {
-		foreach ( $this->get_meta_boxes() as $name => $args ) {
-
-			// Get post types.
-			$post_types = (array) hp\prefix( $args['screen'] );
-
-			if ( in_array( $post_type, $post_types, true ) && $args['fields'] ) {
+		foreach ( $this->get_meta_boxes( $post_type ) as $name => $args ) {
+			if ( $args['fields'] ) {
 
 				// Add meta box.
 				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), hp\get_array_value( $args, 'context', 'normal' ), hp\get_array_value( $args, 'priority', 'default' ) );
@@ -755,35 +753,29 @@ final class Admin extends Component {
 		$post_type = get_post_type( $post_id );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( $post_type ) as $meta_box_name => $meta_box ) {
+			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
-			// Get post types.
-			$post_types = (array) hp\prefix( $meta_box['screen'] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-			if ( in_array( $post_type, $post_types, true ) ) {
-				foreach ( $meta_box['fields'] as $field_name => $field_args ) {
+				if ( $field ) {
 
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+					// Validate field.
+					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
 
-					if ( $field ) {
+					if ( $field->validate() ) {
 
-						// Validate field.
-						$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
-
-						if ( $field->validate() ) {
-
-							// Update field value.
-							if ( $field->get_arg( '_external' ) ) {
-								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
-							} else {
-								wp_update_post(
-									[
-										'ID' => $post_id,
-										$field->get_arg( '_alias' ) => $field->get_value(),
-									]
-								);
-							}
+						// Update field value.
+						if ( $field->get_arg( '_external' ) ) {
+							update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+						} else {
+							wp_update_post(
+								[
+									'ID' => $post_id,
+									$field->get_arg( '_alias' ) => $field->get_value(),
+								]
+							);
 						}
 					}
 				}
@@ -804,7 +796,7 @@ final class Admin extends Component {
 		$meta_box_name = hp\unprefix( $args['id'] );
 
 		// Get meta box.
-		$meta_box = hp\get_array_value( $this->get_meta_boxes(), $meta_box_name );
+		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type ), $meta_box_name );
 
 		if ( $meta_box ) {
 
@@ -874,7 +866,7 @@ final class Admin extends Component {
 		// Get taxonomies.
 		$taxonomies = [];
 
-		foreach ( $this->get_meta_boxes() as $name => $args ) {
+		foreach ( hivepress()->get_config( 'meta_boxes' ) as $name => $args ) {
 			$taxonomies = array_merge( $taxonomies, (array) hp\prefix( $args['screen'] ) );
 		}
 
@@ -914,36 +906,30 @@ final class Admin extends Component {
 		remove_action( 'create_' . $term->taxonomy, [ $this, 'update_term_box' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( $term->taxonomy ) as $meta_box_name => $meta_box ) {
+			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
-			// Get taxonomies.
-			$taxonomies = (array) hp\prefix( $meta_box['screen'] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-			if ( in_array( $term->taxonomy, $taxonomies, true ) ) {
-				foreach ( $meta_box['fields'] as $field_name => $field_args ) {
+				if ( $field ) {
 
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+					// Validate field.
+					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
 
-					if ( $field ) {
+					if ( $field->validate() ) {
 
-						// Validate field.
-						$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
-
-						if ( $field->validate() ) {
-
-							// Update field value.
-							if ( $field->get_arg( '_external' ) ) {
-								update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
-							} else {
-								wp_update_term(
-									$term->term_id,
-									$term->taxonomy,
-									[
-										$field->get_arg( '_alias' ) => $field->get_value(),
-									]
-								);
-							}
+						// Update field value.
+						if ( $field->get_arg( '_external' ) ) {
+							update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
+						} else {
+							wp_update_term(
+								$term->term_id,
+								$term->taxonomy,
+								[
+									$field->get_arg( '_alias' ) => $field->get_value(),
+								]
+							);
 						}
 					}
 				}
@@ -969,76 +955,70 @@ final class Admin extends Component {
 			$term_id = $term->term_id;
 		}
 
-		foreach ( $this->get_meta_boxes() as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( $taxonomy ) as $meta_box_name => $meta_box ) {
+			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
-			// Get taxonomies.
-			$taxonomies = (array) hp\prefix( $meta_box['screen'] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
 
-			if ( in_array( $taxonomy, $taxonomies, true ) ) {
-				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+				if ( $field ) {
+					if ( ! is_object( $term ) ) {
+						$output .= '<div class="form-field">';
 
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+						// Render label.
+						$output .= '<label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
-					if ( $field ) {
-						if ( ! is_object( $term ) ) {
-							$output .= '<div class="form-field">';
-
-							// Render label.
-							$output .= '<label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-							if ( $field->get_statuses() ) {
-								$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-							}
-
-							$output .= '</label>';
-
-							// Render field.
-							$output .= $field->render();
-
-							// Render description.
-							if ( $field->get_description() ) {
-								$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
-							}
-
-							$output .= '</div>';
-						} else {
-							$output .= '<tr class="form-field">';
-
-							// Render label.
-							$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-							if ( $field->get_statuses() ) {
-								$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-							}
-
-							$output .= '</label></th>';
-
-							// Get field value.
-							$value = null;
-
-							if ( $field->get_arg( '_external' ) ) {
-								$value = get_term_meta( $term->term_id, $field->get_arg( '_alias' ), true );
-							} else {
-								$value = get_term_field( $field->get_arg( '_alias' ), $term );
-							}
-
-							// Set field value.
-							$field->set_value( $value );
-
-							// Render field.
-							$output .= '<td>';
-
-							$output .= $field->render();
-
-							// Render description.
-							if ( $field->get_description() ) {
-								$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
-							}
-
-							$output .= '</td>';
-							$output .= '</tr>';
+						if ( $field->get_statuses() ) {
+							$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
 						}
+
+						$output .= '</label>';
+
+						// Render field.
+						$output .= $field->render();
+
+						// Render description.
+						if ( $field->get_description() ) {
+							$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
+						}
+
+						$output .= '</div>';
+					} else {
+						$output .= '<tr class="form-field">';
+
+						// Render label.
+						$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+						if ( $field->get_statuses() ) {
+							$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+						}
+
+						$output .= '</label></th>';
+
+						// Get field value.
+						$value = null;
+
+						if ( $field->get_arg( '_external' ) ) {
+							$value = get_term_meta( $term->term_id, $field->get_arg( '_alias' ), true );
+						} else {
+							$value = get_term_field( $field->get_arg( '_alias' ), $term );
+						}
+
+						// Set field value.
+						$field->set_value( $value );
+
+						// Render field.
+						$output .= '<td>';
+
+						$output .= $field->render();
+
+						// Render description.
+						if ( $field->get_description() ) {
+							$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+						}
+
+						$output .= '</td>';
+						$output .= '</tr>';
 					}
 				}
 			}

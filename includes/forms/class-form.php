@@ -387,10 +387,10 @@ abstract class Form {
 				$output .= $this->header;
 			}
 
-			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
+			$output .= '<div class="hp-form__messages" data-component="messages"></div>';
 			$output .= '</div>';
 		} else {
-			$output .= '<div class="hp-form__messages" data-element="messages"></div>';
+			$output .= '<div class="hp-form__messages" data-component="messages"></div>';
 		}
 
 		// Render fields.

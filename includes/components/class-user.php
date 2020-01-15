@@ -52,10 +52,13 @@ final class User extends Component {
 	/**
 	 * Registers user.
 	 *
-	 * @param int    $user_id User ID.
-	 * @param object $user User object.
+	 * @param int   $user_id User ID.
+	 * @param array $values User values.
 	 */
-	public function register_user( $user_id, $user ) {
+	public function register_user( $user_id, $values ) {
+
+		// Get user.
+		$user = Models\User::query()->get_by_id( $user_id );
 
 		// Hide admin bar.
 		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
@@ -69,7 +72,7 @@ final class User extends Component {
 
 				'tokens'    => [
 					'user_name'     => $user->get_display_name(),
-					'user_password' => $user->get_password(),
+					'user_password' => $values['password'],
 				],
 			]
 		) )->send();

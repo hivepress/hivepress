@@ -32,8 +32,8 @@ var hivepress = {
 		});
 
 		// Date
-		if (flatpickr.l10ns.hasOwnProperty(hpCoreCommonData.language)) {
-			flatpickr.localize(flatpickr.l10ns[hpCoreCommonData.language]);
+		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
+			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
 		}
 
 		hivepress.getComponent('date').each(function() {
