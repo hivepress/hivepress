@@ -203,7 +203,7 @@ final class Attribute extends Component {
 						// Add field.
 						$attribute_args[ $field_context . '_field' ] = $field_args;
 					}
-					// todo below.
+
 					// Get attribute name.
 					$attribute_name = $this->get_attribute_name( $attribute_object->post_name );
 
@@ -268,7 +268,7 @@ final class Attribute extends Component {
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $args ) {
-					return hp\merge_arrays(
+					return array_merge(
 						[
 							'label'          => '',
 							'display_areas'  => [],
@@ -311,64 +311,60 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_field_settings( $meta_box ) {
-		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+		// Get model.
+		$model = $meta_box['model'];
 
-			// Get model.
-			$model = $meta_box['model'];
+		// Get field context.
+		$field_context = end( ( explode( '_', $meta_box['name'] ) ) );
 
-			// Get field context.
-			$field_context = end( ( explode( '_', $meta_box['name'] ) ) );
+		// Get field type.
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
 
-			// Get field type.
-			$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
+		if ( $field_type ) {
 
-			if ( $field_type ) {
+			// Get field settings.
+			$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'settings' ] );
 
-				// Get field settings.
-				$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'settings' ] );
+			// Add field settings.
+			if ( $field_settings ) {
+				foreach ( $field_settings as $field_name => $field ) {
+					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
 
-				// Add field settings.
-				if ( $field_settings ) {
-					foreach ( $field_settings as $field_name => $field ) {
-						if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
+						// Get field arguments.
+						$field_args = $field->get_args();
 
-							// Get field arguments.
-							$field_args = $field->get_args();
+						// Set field arguments.
+						if ( 'options' === $field_name ) {
+							$field_args = array_merge(
+								$field_args,
+								[
+									'label'      => esc_html__( 'Edit Options', 'hivepress' ),
+									'type'       => 'button',
 
-							// Set field arguments.
-							if ( 'options' === $field_name ) {
-								$field_args = array_merge(
-									$field_args,
-									[
-										'label'      => esc_html__( 'Edit Options', 'hivepress' ),
-										'type'       => 'button',
-
-										'attributes' => [
-											'data-component' => 'link',
-											'data-url' => esc_url(
-												admin_url(
-													'edit-tags.php?' . http_build_query(
-														[
-															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-															'post_type' => hp\prefix( $model ),
-														]
-													)
+									'attributes' => [
+										'data-component' => 'link',
+										'data-url'       => esc_url(
+											admin_url(
+												'edit-tags.php?' . http_build_query(
+													[
+														'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
+														'post_type' => hp\prefix( $model ),
+													]
 												)
-											),
-										],
-									]
-								);
-							}
-
-							if ( 'required' !== $field_name ) {
-								$field_args['_order'] = hp\get_array_value( $field_args, '_order', 10 ) + 100;
-							}
-
-							// Add field.
-							$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
+											)
+										),
+									],
+								]
+							);
 						}
+
+						if ( 'required' !== $field_name ) {
+							$field_args['_order'] = hp\get_array_value( $field_args, '_order', 10 ) + 100;
+						}
+
+						// Add field.
+						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
 					}
 				}
 			}
@@ -384,34 +380,23 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_admin_fields( $meta_box ) {
-		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+		// Get model.
+		$model = $meta_box['model'];
 
-			// Get model.
-			$model = $meta_box['model'];
+		// Get category IDs.
+		$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
-			// Get category IDs.
-			$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
-
-			// Add fields.
-			foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-				if ( ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
-
-					// Get field arguments.
-					$field_args = $attribute['edit_field'];
-
-					// Add field.
-					if ( ! isset( $field_args['options'] ) ) {
-						$meta_box['fields'][ $attribute_name ] = $field_args;
-					}
-				}
+		// Add fields.
+		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
+			if ( ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
 
 		return $meta_box;
 	}
-
+// todo below.
 	/**
 	 * Adds model fields.
 	 *
