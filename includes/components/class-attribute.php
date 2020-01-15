@@ -815,13 +815,7 @@ final class Attribute extends Component {
 		$model = null;
 
 		foreach ( $this->models as $model_name ) {
-
-			// Get page ID.
-			$page_id = absint( get_option( 'hp_page_' . $model_name . 's' ) );
-
-			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) || ( $page_id && is_page( $page_id ) ) ) {
-
-				// Set model.
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) ) {
 				$model = $model_name;
 
 				break;

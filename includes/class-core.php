@@ -178,8 +178,9 @@ final class Core {
 			 *
 			 * @action /update
 			 * @description Fires on HivePress update.
+			 * @param string $version Old version.
 			 */
-			do_action( 'hivepress/v1/update' );
+			do_action( 'hivepress/v1/update', get_option( 'hp_core_version' ) );
 
 			// Update HivePress version.
 			update_option( 'hp_core_version', hivepress()->get_version() );
