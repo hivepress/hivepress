@@ -147,6 +147,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'managed'        => true,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -278,6 +279,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'managed'        => true,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -389,7 +391,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+			if ( $attribute['managed'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
