@@ -1050,7 +1050,7 @@ final class Admin extends Component {
 			$comment_types = array_filter(
 				$comment_types,
 				function( $args ) {
-					return ! hp\get_array_value( $args, 'show_ui', true );
+					return ! hp\get_array_value( $args, 'public', true );
 				}
 			);
 

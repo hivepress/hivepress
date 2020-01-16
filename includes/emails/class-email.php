@@ -161,7 +161,7 @@ abstract class Email {
 	 * @return bool
 	 */
 	final public function send() {
-		if ( $this->body ) {error_log($this->body);
+		if ( $this->body ) {
 			return wp_mail(
 				$this->recipient,
 				$this->subject,
