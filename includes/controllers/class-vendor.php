@@ -73,12 +73,29 @@ final class Vendor extends Controller {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->get_by_id( get_post() );
 
+		// Get featured IDs.
+		if ( get_option( 'hp_listings_featured_per_page' ) ) {
+			hivepress()->request->set_context(
+				'featured_ids',
+				Models\Listing::query()->filter(
+					[
+						'status'   => 'publish',
+						'vendor'   => $vendor->get_id(),
+						'featured' => true,
+					]
+				)->order( 'random' )
+				->limit( get_option( 'hp_listings_featured_per_page' ) )
+				->get_ids()
+			);
+		}
+
 		// Query listings.
 		query_posts(
 			Models\Listing::query()->filter(
 				[
-					'status' => 'publish',
-					'vendor' => $vendor->get_id(),
+					'status'     => 'publish',
+					'vendor'     => $vendor->get_id(),
+					'id__not_in' => hivepress()->request->get_context( 'featured_ids', [] ),
 				]
 			)->order( [ 'created_date' => 'desc' ] )
 			->limit( get_option( 'hp_listings_per_page' ) )

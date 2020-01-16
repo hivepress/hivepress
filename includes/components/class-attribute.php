@@ -665,7 +665,7 @@ final class Attribute extends Component {
 		}
 
 		// Set options.
-		$form_args['fields']['category']['options'] = array_merge( $form_args['fields']['category']['options'], $options );
+		$form_args['fields']['category']['options'] = $options;
 
 		return $form_args;
 	}
@@ -991,6 +991,7 @@ final class Attribute extends Component {
 				'meta_key'       => 'hp_featured',
 				'meta_value'     => '1',
 				'posts_per_page' => $featured_count,
+				'paged'          => 1,
 				'orderby'        => 'rand',
 				'fields'         => 'ids',
 			];

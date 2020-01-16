@@ -179,12 +179,12 @@ class Select extends Field {
 		if ( $this->multiple ) {
 			$this->value = array_map(
 				function( $value ) {
-					return is_numeric( $value ) ? floatval( $value ) : sanitize_text_field( $value );
+					return is_numeric( $value ) ? absint( $value ) : sanitize_text_field( $value );
 				},
 				$this->value
 			);
 		} else {
-			$this->value = is_numeric( $this->value ) ? floatval( $this->value ) : sanitize_text_field( $this->value );
+			$this->value = is_numeric( $this->value ) ? absint( $this->value ) : sanitize_text_field( $this->value );
 		}
 	}
 

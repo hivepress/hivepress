@@ -538,12 +538,12 @@ final class Admin extends Component {
 		// Set tabs.
 		$tabs = [
 			'all'       => [
-				'name'  => esc_html_x( 'All', 'plural', 'hivepress' ),
+				'name'  => esc_html_x( 'All', 'extensions', 'hivepress' ),
 				'count' => 0,
 			],
 
 			'installed' => [
-				'name'  => esc_html_x( 'Installed', 'plural', 'hivepress' ),
+				'name'  => esc_html_x( 'Installed', 'extensions', 'hivepress' ),
 				'count' => 0,
 			],
 		];
@@ -893,6 +893,11 @@ final class Admin extends Component {
 	 * @param int $term_id Term ID.
 	 */
 	public function update_term_box( $term_id ) {
+
+		// Check quick edit.
+		if ( isset( $_POST['_inline_edit'] ) ) {
+			return;
+		}
 
 		// Get term.
 		$term = get_term( $term_id );

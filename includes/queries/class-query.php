@@ -214,7 +214,7 @@ abstract class Query extends \ArrayObject {
 
 							// Normalize meta value.
 							if ( is_bool( $value ) ) {
-								$value = $value ? '1' : '0';
+								$value = $value ? '1' : '';
 							}
 
 							// Set meta type and value.

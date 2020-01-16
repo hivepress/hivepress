@@ -29,6 +29,9 @@ final class Updater extends Component {
 		// Update meta.
 		add_action( 'hivepress/v1/update', [ $this, 'update_meta' ] );
 
+		// Update options.
+		add_action( 'hivepress/v1/update', [ $this, 'update_options' ] );
+
 		// Update events.
 		add_action( 'hivepress/v1/update', [ $this, 'update_events' ] );
 
@@ -50,6 +53,19 @@ final class Updater extends Component {
 
 			// Update term meta.
 			$wpdb->update( $wpdb->termmeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
+		}
+	}
+
+	/**
+	 * Updates options.
+	 *
+	 * @param string $version Old version.
+	 */
+	public function update_options( $version ) {
+		global $wpdb;
+
+		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_request_password' ], [ 'option_name' => 'hp_email_user_password_request' ] );
 		}
 	}
 

@@ -147,19 +147,21 @@ final class User extends Component {
 		// Get user.
 		$user_object = null;
 
-		if ( is_numeric( $id_or_email ) ) {
+		if ( is_object( $id_or_email ) ) {
+			$user_object = get_userdata( $id_or_email->user_id );
+		} elseif ( is_numeric( $id_or_email ) ) {
 			$user_object = get_userdata( $id_or_email );
 		} elseif ( is_email( $id_or_email ) ) {
 			$user_object = get_user_by( 'email', $id_or_email );
-		} elseif ( is_object( $id_or_email ) && $id_or_email->user_id ) {
-			$user_object = get_userdata( $id_or_email->user_id );
 		}
 
-		$user = Models\User::query()->get_by_id( $user_object );
+		if ( $user_object ) {
+			$user = Models\User::query()->get_by_id( $user_object );
 
-		// Render image.
-		if ( $user && $user->get_image__url( 'thumbnail' ) ) {
-			$image = '<img src="' . esc_url( $user->get_image__url( 'thumbnail' ) ) . '" class="avatar avatar-' . esc_attr( $size ) . ' photo" height="' . esc_attr( $size ) . '" width="' . esc_attr( $size ) . '" alt="' . esc_attr( $alt ) . '">';
+			// Render image.
+			if ( $user->get_image__url( 'thumbnail' ) ) {
+				$image = '<img src="' . esc_url( $user->get_image__url( 'thumbnail' ) ) . '" class="avatar avatar-' . esc_attr( $size ) . ' photo" height="' . esc_attr( $size ) . '" width="' . esc_attr( $size ) . '" alt="' . esc_attr( $alt ) . '">';
+			}
 		}
 
 		return $image;

@@ -183,7 +183,7 @@ return [
 						'_order'      => 10,
 					],
 
-					'email_user_request_password' => [
+					'email_user_password_request' => [
 						'label'       => esc_html__( 'Password Reset', 'hivepress' ),
 						'description' => esc_html__( 'This email is sent to users when a password reset is requested.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %password_reset_url%' ),
 						'type'        => 'textarea',

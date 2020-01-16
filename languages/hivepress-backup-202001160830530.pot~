@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-16 08:30+0000\n"
+"POT-Creation-Date: 2020-01-16 08:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -168,13 +168,13 @@ msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-listing.php:322 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:322
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr ""
 
-#: includes/components/class-listing.php:326 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:326
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
@@ -200,6 +200,14 @@ msgstr ""
 #: includes/forms/class-user-password-reset.php:69
 #: templates/user/password-reset/user-password-reset-message.php:6
 msgid "Reset Password"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:21
+msgid "Featured"
+msgstr ""
+
+#: includes/configs/meta-boxes.php:28
+msgid "Verified"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:37 includes/configs/post-types.php:44

@@ -162,7 +162,7 @@ final class Core {
 
 			// Unset activation flag.
 			if ( get_option( 'hp_core_activated' ) ) {
-				update_option( 'hp_core_activated', '0' );
+				update_option( 'hp_core_activated', '' );
 			}
 
 			// Update extensions number.
