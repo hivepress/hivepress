@@ -165,7 +165,7 @@ class Date extends Field {
 			$date = date_create_from_format( $this->format, $this->value );
 
 			if ( $date ) {
-				return $date->format( $this->display_format );
+				return date_i18n( $this->display_format, $date->format( 'U' ) );
 			}
 		}
 	}
