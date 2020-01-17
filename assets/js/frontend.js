@@ -272,8 +272,8 @@
 			}
 		});
 
-		// Slider
-		hivepress.getComponent('slider').each(function() {
+		// Carousel slider
+		hivepress.getComponent('carousel-slider').each(function() {
 			if ($(this).find('img').length > 1) {
 				var container = $(this),
 					containerClass = container.attr('class').split(' ')[0],

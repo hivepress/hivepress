@@ -984,24 +984,23 @@ final class Attribute extends Component {
 
 		if ( $featured_count ) {
 
-			// Set query arguments.
-			$featured_query_args = [
-				'post_type'      => hp\prefix( $model ),
-				'post_status'    => 'publish',
-				'meta_key'       => 'hp_featured',
-				'meta_value'     => '1',
-				'posts_per_page' => $featured_count,
-				'paged'          => 1,
-				'orderby'        => 'rand',
-				'fields'         => 'ids',
-			];
-
-			if ( ! is_page() ) {
-				$featured_query_args = array_merge( $query->query_vars, $featured_query_args );
-			}
-
 			// Get featured IDs.
-			$featured_ids = get_posts( $featured_query_args );
+			$featured_ids = get_posts(
+				array_merge(
+					$query->query_vars,
+					[
+						'post_status'    => 'publish',
+						'meta_key'       => 'hp_featured',
+						'meta_value'     => '1',
+						'posts_per_page' => $featured_count,
+						'paged'          => 1,
+						'orderby'        => 'rand',
+						'fields'         => 'ids',
+						'meta_query'     => $meta_query,
+						'tax_query'      => $tax_query,
+					]
+				)
+			);
 
 			if ( $featured_ids ) {
 
