@@ -141,7 +141,13 @@ abstract class Menu {
 
 					// Set label.
 					if ( ! isset( $args['label'] ) ) {
-						$args['label'] = hp\get_array_value( $route, 'title' );
+						$title = hp\get_array_value( $route, 'title' );
+
+						if ( is_callable( $title ) ) {
+							$title = call_user_func( $title );
+						}
+
+						$args['label'] = $title;
 					}
 
 					// Set URL.
