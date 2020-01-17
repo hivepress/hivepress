@@ -134,17 +134,15 @@ final class Router extends Component {
 				}
 			}
 
+			// Set title.
 			if ( $this->route ) {
+				$title = hp\get_array_value( $this->route, 'title' );
 
-				/**
-				 * Filters URL route title.
-				 *
-				 * @filter /routes/{$name}/title
-				 * @description Filters URL route title.
-				 * @param string $name Route name.
-				 * @param string $title Route title.
-				 */
-				$this->route['title'] = apply_filters( 'hivepress/v1/routes/' . $this->route['name'] . '/title', hp\get_array_value( $this->route, 'title' ) );
+				if ( is_callable( $title ) ) {
+					$title = call_user_func( $title );
+				}
+
+				$this->route['title'] = $title;
 			}
 		}
 

@@ -32,12 +32,6 @@ final class Vendor extends Component {
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
 
-		if ( ! is_admin() ) {
-
-			// Set page title.
-			add_filter( 'hivepress/v1/routes/vendor_view_page/title', [ $this, 'set_page_title' ] );
-		}
-
 		parent::__construct( $args );
 	}
 
@@ -66,15 +60,5 @@ final class Vendor extends Component {
 				'description' => $user->get_description(),
 			]
 		)->save();
-	}
-
-	/**
-	 * Sets page title.
-	 *
-	 * @param string $title Page title.
-	 * @return string
-	 */
-	public function set_page_title( $title ) {
-		return sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), get_the_title() );
 	}
 }

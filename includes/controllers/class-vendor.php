@@ -31,8 +31,9 @@ final class Vendor extends Controller {
 			[
 				'routes' => [
 					'vendor_view_page' => [
-						'url'    => [ $this, 'get_vendor_view_url' ],
 						'match'  => [ $this, 'is_vendor_view_page' ],
+						'url'    => [ $this, 'get_vendor_view_url' ],
+						'title'  => [ $this, 'get_vendor_view_title' ],
 						'action' => [ $this, 'render_vendor_view_page' ],
 					],
 				],
@@ -41,6 +42,15 @@ final class Vendor extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Matches vendor view URL.
+	 *
+	 * @return bool
+	 */
+	public function is_vendor_view_page() {
+		return is_singular( 'hp_vendor' );
 	}
 
 	/**
@@ -54,12 +64,20 @@ final class Vendor extends Controller {
 	}
 
 	/**
-	 * Matches vendor view URL.
+	 * Gets vendor view title.
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function is_vendor_view_page() {
-		return is_singular( 'hp_vendor' );
+	public function get_vendor_view_title() {
+		the_post();
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( get_post() );
+
+		// Set request context.
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		return sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), $vendor->get_name() );
 	}
 
 	/**
@@ -68,10 +86,9 @@ final class Vendor extends Controller {
 	 * @return string
 	 */
 	public function render_vendor_view_page() {
-		the_post();
 
 		// Get vendor.
-		$vendor = Models\Vendor::query()->get_by_id( get_post() );
+		$vendor = hivepress()->request->get_context( 'vendor' );
 
 		// Get featured IDs.
 		if ( get_option( 'hp_listings_featured_per_page' ) ) {
