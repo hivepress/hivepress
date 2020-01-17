@@ -27,11 +27,11 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Checked value.
+	 * Check value.
 	 *
 	 * @var mixed
 	 */
-	protected $checked_value = true;
+	protected $check_value = true;
 
 	/**
 	 * Class initializer.
@@ -114,7 +114,7 @@ class Checkbox extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( is_bool( $this->checked_value ) ) {
+		if ( is_bool( $this->check_value ) ) {
 			$this->value = boolval( $this->value );
 		} else {
 			$this->value = sanitize_text_field( $this->value );
@@ -134,7 +134,7 @@ class Checkbox extends Field {
 		// Render field.
 		$output = '<label for="' . esc_attr( $id ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
-		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->checked_value ) . '" ' . checked( $this->value, $this->checked_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
+		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

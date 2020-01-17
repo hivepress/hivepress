@@ -54,6 +54,9 @@ final class Cache extends Component {
 		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ] );
 		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ] );
 
+		// Clear import cache.
+		add_action( 'import_end', [ $this, 'clear_import_cache' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -625,5 +628,16 @@ final class Cache extends Component {
 		if ( $comment->comment_post_ID ) {
 			$this->delete_post_cache( $comment->comment_post_ID, null, hp\unprefix( $comment->comment_type ) );
 		}
+	}
+
+	/**
+	 * Clears import cache.
+	 */
+	public function clear_import_cache() {
+		global $wpdb;
+
+		// Delete transients.
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
 	}
 }

@@ -82,6 +82,13 @@ abstract class Field {
 	protected $value;
 
 	/**
+	 * Parent field value.
+	 *
+	 * @var mixed
+	 */
+	protected $parent_value;
+
+	/**
 	 * Field filter.
 	 *
 	 * @var mixed
