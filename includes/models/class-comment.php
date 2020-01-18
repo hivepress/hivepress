@@ -49,7 +49,7 @@ abstract class Comment extends Model {
 		if ( is_object( $id ) ) {
 			$comment = get_object_vars( $id );
 		} else {
-			$comment = get_comment( absint( $id ), ARRAY_A );
+			$comment = get_comment( ( absint( $id ) ), ARRAY_A );
 		}
 
 		if ( empty( $comment ) || static::_get_meta( 'alias' ) !== $comment['comment_type'] ) {
@@ -92,54 +92,50 @@ abstract class Comment extends Model {
 	 */
 	final public function save() {
 
-		// Get comment values.
+		// Validate fields.
+		if ( ! $this->validate() ) {
+			return false;
+		}
+
+		// Get comment data.
 		$comment = [];
 		$meta    = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
-			if ( $field->validate() ) {
-				if ( $field->get_arg( '_external' ) ) {
+		foreach ( $this->fields as $field ) {
+			if ( $field->get_arg( '_external' ) ) {
 
-					// Set meta value.
-					$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				} else {
-
-					// Set comment value.
-					$comment[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				}
+				// Set meta value.
+				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			} else {
-				$this->_add_errors( $field->get_errors() );
+
+				// Set comment value.
+				$comment[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			}
 		}
 
-		if ( empty( $this->errors ) ) {
+		// Create or update comment.
+		if ( empty( $this->id ) ) {
+			$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => static::_get_meta( 'alias' ) ] ) );
 
-			// Create or update comment.
-			if ( empty( $this->id ) ) {
-				$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => static::_get_meta( 'alias' ) ] ) );
-
-				if ( $id ) {
-					$this->set_id( $id );
-				} else {
-					return false;
-				}
-			} elseif ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
+			if ( $id ) {
+				$this->set_id( $id );
+			} else {
 				return false;
 			}
-
-			// Update comment meta.
-			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( is_null( $meta_value ) ) {
-					delete_comment_meta( $this->id, $meta_key );
-				} else {
-					update_comment_meta( $this->id, $meta_key, $meta_value );
-				}
-			}
-
-			return true;
+		} elseif ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
+			return false;
 		}
 
-		return false;
+		// Update comment meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( is_null( $meta_value ) ) {
+				delete_comment_meta( $this->id, $meta_key );
+			} else {
+				update_comment_meta( $this->id, $meta_key, $meta_value );
+			}
+		}
+
+		return true;
 	}
 
 	/**

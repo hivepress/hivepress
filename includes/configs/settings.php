@@ -148,7 +148,7 @@ return [
 
 	'users'        => [
 		'title'    => esc_html__( 'Users', 'hivepress' ),
-		'_order'   => 20,
+		'_order'   => 50,
 
 		'sections' => [
 			'registration' => [
@@ -200,7 +200,7 @@ return [
 
 	'integrations' => [
 		'title'    => esc_html__( 'Integrations', 'hivepress' ),
-		'_order'   => 100,
+		'_order'   => 1000,
 
 		'sections' => [
 			'recaptcha' => [

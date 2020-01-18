@@ -96,7 +96,7 @@ class User extends Query {
 
 					// Replace alias.
 					if ( in_array( $name, $field_aliases, true ) ) {
-						$name = preg_replace( '/^user_/', '', $name );
+						$name = strtolower( preg_replace( '/^user_/', '', $name ) );
 					}
 
 					return rtrim( $name . '__' . $operator_alias, '_' );

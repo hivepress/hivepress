@@ -221,7 +221,7 @@ final class User extends Controller {
 		$user = ( new Models\User() )->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
 
 		if ( ! $user->save() ) {
-			return hp\rest_error( 400 );
+			return hp\rest_error( 400, $user->_get_errors() );
 		}
 
 		/**
@@ -490,7 +490,7 @@ final class User extends Controller {
 		$user->fill( $form->get_values() );
 
 		if ( ! $user->save() ) {
-			return hp\rest_error( 400 );
+			return hp\rest_error( 400, $user->_get_errors() );
 		}
 
 		return hp\rest_response(

@@ -150,6 +150,7 @@ class Listing_View_Page extends Page {
 												'blocks' => [
 													'listing_report_modal' => [
 														'type'    => 'modal',
+														'model'   => 'listing',
 														'title'   => hivepress()->translator->get_string( 'report_listing' ),
 
 														'blocks'  => [
@@ -168,7 +169,7 @@ class Listing_View_Page extends Page {
 													'listing_report_link' => [
 														'type'     => 'part',
 														'path' => 'listing/view/page/listing-report-link',
-														'_order'    => 100,
+														'_order'    => 1000,
 													],
 												],
 											],

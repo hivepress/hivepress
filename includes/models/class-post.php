@@ -107,64 +107,60 @@ abstract class Post extends Model {
 	 */
 	final public function save() {
 
-		// Set post values.
+		// Validate fields.
+		if ( ! $this->validate() ) {
+			return false;
+		}
+
+		// Set post data.
 		$post  = [];
 		$meta  = [];
 		$terms = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
-			if ( $field->validate() ) {
-				if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
+		foreach ( $this->fields as $field ) {
+			if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
 
-					// Set post terms.
-					$terms[ hp\prefix( $field->get_arg( '_model' ) ) ] = $field->get_value();
-				} elseif ( $field->get_arg( '_external' ) ) {
+				// Set post terms.
+				$terms[ hp\prefix( $field->get_arg( '_model' ) ) ] = $field->get_value();
+			} elseif ( $field->get_arg( '_external' ) ) {
 
-					// Set meta value.
-					$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				} else {
-
-					// Set post value.
-					$post[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				}
+				// Set meta value.
+				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			} else {
-				$this->_add_errors( $field->get_errors() );
+
+				// Set post value.
+				$post[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			}
 		}
 
-		if ( empty( $this->errors ) ) {
+		// Create or update post.
+		if ( empty( $this->id ) ) {
+			$id = wp_insert_post( array_merge( $post, [ 'post_type' => static::_get_meta( 'alias' ) ] ) );
 
-			// Create or update post.
-			if ( empty( $this->id ) ) {
-				$id = wp_insert_post( array_merge( $post, [ 'post_type' => static::_get_meta( 'alias' ) ] ) );
-
-				if ( $id ) {
-					$this->set_id( $id );
-				} else {
-					return false;
-				}
-			} elseif ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
+			if ( $id ) {
+				$this->set_id( $id );
+			} else {
 				return false;
 			}
-
-			// Update post terms.
-			foreach ( $terms as $taxonomy => $term_ids ) {
-				wp_set_post_terms( $this->id, (array) $term_ids, $taxonomy );
-			}
-
-			// Update post meta.
-			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( is_null( $meta_value ) ) {
-					delete_post_meta( $this->id, $meta_key );
-				} else {
-					update_post_meta( $this->id, $meta_key, $meta_value );
-				}
-			}
-
-			return true;
+		} elseif ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
+			return false;
 		}
 
-		return false;
+		// Update post terms.
+		foreach ( $terms as $taxonomy => $term_ids ) {
+			wp_set_post_terms( $this->id, (array) $term_ids, $taxonomy );
+		}
+
+		// Update post meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( is_null( $meta_value ) ) {
+				delete_post_meta( $this->id, $meta_key );
+			} else {
+				update_post_meta( $this->id, $meta_key, $meta_value );
+			}
+		}
+
+		return true;
 	}
 
 	/**

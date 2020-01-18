@@ -15,6 +15,7 @@ return [
 	// Common.
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
+	'submission'                                => esc_html__( 'Submission', 'hivepress' ),
 	'moderation'                                => esc_html__( 'Moderation', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),

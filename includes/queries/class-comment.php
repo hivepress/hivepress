@@ -99,7 +99,7 @@ class Comment extends Query {
 
 					// Replace field alias.
 					if ( in_array( $name, $field_aliases, true ) ) {
-						$name = preg_replace( '/^comment_/', '', $name );
+						$name = strtolower( preg_replace( '/^comment_/', '', $name ) );
 					}
 
 					$name = rtrim( $name . '__' . $operator_alias, '_' );

@@ -198,7 +198,7 @@ final class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp\rest_error( 400 );
+			return hp\rest_error( 400, $listing->_get_errors() );
 		}
 
 		return hp\rest_response(

@@ -204,7 +204,7 @@ final class Attachment extends Controller {
 		);
 
 		if ( ! $attachment->save() ) {
-			return hp\rest_error( 400 );
+			return hp\rest_error( 400, $attachment->_get_errors() );
 		}
 
 		if ( ! $parent_field->is_multiple() ) {
@@ -264,7 +264,7 @@ final class Attachment extends Controller {
 		$attachment->set_order( $request->get_param( 'order' ) );
 
 		if ( ! $attachment->save() ) {
-			return hp\rest_error( 400 );
+			return hp\rest_error( 400, $attachment->_get_errors() );
 		}
 
 		// Fire update action.

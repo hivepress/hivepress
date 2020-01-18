@@ -147,7 +147,6 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
-						'managed'        => true,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -274,12 +273,12 @@ final class Attribute extends Component {
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '',
+							'protected'      => false,
 							'editable'       => false,
 							'moderated'      => false,
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
-							'managed'        => true,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -391,7 +390,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( $attribute['managed'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
@@ -520,7 +519,7 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, $category_id );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ( ( $attribute['searchable'] && 'search' === $form_context ) || ( $attribute['filterable'] && 'filter' === $form_context ) || 'sort' === $form_context ) && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
+			if ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && 'sort' === $form_context ) || ( $attribute['searchable'] && 'search' === $form_context ) || ( $attribute['filterable'] && 'filter' === $form_context ) ) {
 
 				// Get field arguments.
 				$field_args = hp\merge_arrays(

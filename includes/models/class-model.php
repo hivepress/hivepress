@@ -445,6 +445,39 @@ abstract class Model {
 	}
 
 	/**
+	 * Validates field values.
+	 *
+	 * @return bool
+	 */
+	final public function validate() {
+		$this->errors = [];
+
+		// Validate fields.
+		foreach ( $this->fields as $field ) {
+			if ( ! $field->validate() ) {
+				$this->_add_errors( $field->get_errors() );
+			}
+		}
+
+		// Filter errors.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters model errors.
+			 *
+			 * @filter /models/{$name}/errors
+			 * @description Filters model errors.
+			 * @param string $name Model name.
+			 * @param array $errors Model errors.
+			 * @param object $object Model object.
+			 */
+			$this->errors = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/errors', $this->errors, $this );
+		}
+
+		return empty( $this->errors );
+	}
+
+	/**
 	 * Gets object.
 	 *
 	 * @param int $id Object ID.

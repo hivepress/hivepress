@@ -184,54 +184,50 @@ class User extends Model {
 	 */
 	final public function save() {
 
+		// Validate fields.
+		if ( ! $this->validate() ) {
+			return false;
+		}
+
 		// Get user data.
 		$user = [];
 		$meta = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
-			if ( $field->validate() ) {
-				if ( $field->get_arg( '_external' ) ) {
+		foreach ( $this->fields as $field ) {
+			if ( $field->get_arg( '_external' ) ) {
 
-					// Set meta value.
-					$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				} else {
-
-					// Set user value.
-					$user[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				}
+				// Set meta value.
+				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			} else {
-				$this->_add_errors( $field->get_errors() );
+
+				// Set user value.
+				$user[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			}
 		}
 
-		if ( empty( $this->errors ) ) {
+		// Create or update user.
+		if ( empty( $this->id ) ) {
+			$id = wp_insert_user( $user );
 
-			// Create or update user.
-			if ( empty( $this->id ) ) {
-				$id = wp_insert_user( $user );
-
-				if ( ! is_wp_error( $id ) ) {
-					$this->set_id( $id );
-				} else {
-					return false;
-				}
-			} elseif ( is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
+			if ( ! is_wp_error( $id ) ) {
+				$this->set_id( $id );
+			} else {
 				return false;
 			}
-
-			// Update user meta.
-			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( is_null( $meta_value ) ) {
-					delete_user_meta( $this->id, $meta_key );
-				} else {
-					update_user_meta( $this->id, $meta_key, $meta_value );
-				}
-			}
-
-			return true;
+		} elseif ( is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
+			return false;
 		}
 
-		return false;
+		// Update user meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( is_null( $meta_value ) ) {
+				delete_user_meta( $this->id, $meta_key );
+			} else {
+				update_user_meta( $this->id, $meta_key, $meta_value );
+			}
+		}
+
+		return true;
 	}
 
 	/**

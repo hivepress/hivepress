@@ -92,54 +92,50 @@ abstract class Term extends Model {
 	 */
 	final public function save() {
 
-		// Get term values.
+		// Validate fields.
+		if ( ! $this->validate() ) {
+			return false;
+		}
+
+		// Get term data.
 		$term = [];
 		$meta = [];
 
-		foreach ( $this->fields as $field_name => $field ) {
-			if ( $field->validate() ) {
-				if ( $field->get_arg( '_external' ) ) {
+		foreach ( $this->fields as $field ) {
+			if ( $field->get_arg( '_external' ) ) {
 
-					// Set meta value.
-					$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				} else {
-
-					// Set term value.
-					$term[ $field->get_arg( '_alias' ) ] = $field->get_value();
-				}
+				// Set meta value.
+				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			} else {
-				$this->_add_errors( $field->get_errors() );
+
+				// Set term value.
+				$term[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			}
 		}
 
-		if ( empty( $this->errors ) ) {
+		// Create or update term.
+		if ( empty( $this->id ) ) {
+			$ids = wp_insert_term( uniqid(), static::_get_meta( 'alias' ), $term );
 
-			// Create or update term.
-			if ( empty( $this->id ) ) {
-				$ids = wp_insert_term( uniqid(), static::_get_meta( 'alias' ), $term );
-
-				if ( ! is_wp_error( $ids ) ) {
-					$this->set_id( reset( $ids ) );
-				} else {
-					return false;
-				}
-			} elseif ( is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) ) ) {
+			if ( ! is_wp_error( $ids ) ) {
+				$this->set_id( reset( $ids ) );
+			} else {
 				return false;
 			}
-
-			// Update term meta.
-			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( is_null( $meta_value ) ) {
-					delete_term_meta( $this->id, $meta_key );
-				} else {
-					update_term_meta( $this->id, $meta_key, $meta_value );
-				}
-			}
-
-			return true;
+		} elseif ( is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) ) ) {
+			return false;
 		}
 
-		return false;
+		// Update term meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( is_null( $meta_value ) ) {
+				delete_term_meta( $this->id, $meta_key );
+			} else {
+				update_term_meta( $this->id, $meta_key, $meta_value );
+			}
+		}
+
+		return true;
 	}
 
 	/**

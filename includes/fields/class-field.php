@@ -216,7 +216,11 @@ abstract class Field {
 			$this->statuses = array_filter( array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses ) );
 		}
 
-		// Set class.
+		// Set attributes.
+		if ( 'hidden' === $this->display_type ) {
+			$this->attributes = [];
+		}
+
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
