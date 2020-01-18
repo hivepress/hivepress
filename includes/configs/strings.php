@@ -15,8 +15,10 @@ return [
 	// Common.
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
+	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
 	'submission'                                => esc_html__( 'Submission', 'hivepress' ),
 	'moderation'                                => esc_html__( 'Moderation', 'hivepress' ),
+	'expiration'                                => esc_html__( 'Expiration', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),

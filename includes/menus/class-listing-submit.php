@@ -61,7 +61,7 @@ class Listing_Submit extends Menu {
 
 					'listing_submit_complete' => [
 						'route'  => 'listing_submit_complete_page',
-						'_order' => 100,
+						'_order' => 1000,
 					],
 				],
 			],
