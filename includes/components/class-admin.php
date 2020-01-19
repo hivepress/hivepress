@@ -1159,15 +1159,4 @@ final class Admin extends Component {
 
 		return $output;
 	}
-
-	/**
-	 * Gets option value.
-	 *
-	 * @param string $name Option name.
-	 * @param mixed  $default Default value.
-	 * @return mixed
-	 */
-	public function get_option( $name, $default = null ) {
-		return get_option( hp\prefix( $name ), $default );
-	}
 }

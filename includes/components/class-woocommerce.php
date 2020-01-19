@@ -27,7 +27,7 @@ final class WooCommerce extends Component {
 	public function __construct( $args = [] ) {
 
 		// Check WooCommerce status.
-		if ( ! $this->is_active() ) {
+		if ( ! hp\is_plugin_active( 'woocommerce' ) ) {
 			return;
 		}
 
@@ -47,15 +47,6 @@ final class WooCommerce extends Component {
 		}
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Checks WooCommerce status.
-	 *
-	 * @return bool
-	 */
-	public function is_active() {
-		return class_exists( 'WooCommerce' );
 	}
 
 	/**
