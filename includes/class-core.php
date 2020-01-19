@@ -317,11 +317,14 @@ final class Core {
 							// Get object name.
 							$object_name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
 
-							// Create object.
-							$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
+							if ( ! isset( $this->objects[ $object_type ][ $object_name ] ) ) {
 
-							if ( $object ) {
-								$this->objects[ $object_type ][ $object_name ] = $object;
+								// Create object.
+								$object = hp\create_class_instance( '\HivePress\\' . $object_type . '\\' . $object_name );
+
+								if ( $object ) {
+									$this->objects[ $object_type ][ $object_name ] = $object;
+								}
 							}
 						}
 					}
@@ -341,7 +344,21 @@ final class Core {
 	 * @return object
 	 */
 	public function __get( $name ) {
-		return hp\get_array_value( $this->get_components(), $name );
+
+		// Get component.
+		$component = hp\get_array_value( $this->get_components(), $name );
+
+		if ( empty( $component ) ) {
+
+			// Create component.
+			$component = hp\create_class_instance( '\HivePress\Components\\' . $name );
+
+			if ( $component ) {
+				$this->objects['components'][ $name ] = $component;
+			}
+		}
+
+		return $component;
 	}
 
 	/**

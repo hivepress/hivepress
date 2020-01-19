@@ -59,6 +59,31 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Gets order product IDs.
+	 *
+	 * @param WC_Order $order Order object.
+	 * @return array
+	 */
+	public function get_order_product_ids( $order ) {
+		return array_map(
+			function( $item ) {
+				return $item->get_product_id();
+			},
+			$order->get_items()
+		);
+	}
+
+	/**
+	 * Gets product price text.
+	 *
+	 * @param WC_Product $product Product object.
+	 * @return string
+	 */
+	public function get_product_price_text( $product ) {
+		return wp_strip_all_tags( wc_price( $product->get_price() ) );
+	}
+
+	/**
 	 * Sets account template.
 	 *
 	 * @param string $path Template path.

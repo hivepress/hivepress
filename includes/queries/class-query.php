@@ -390,7 +390,9 @@ abstract class Query extends \ArrayObject {
 	final public function get_first() {
 		$query = clone $this;
 
-		return reset( ( $query->limit( 1 )->get()->serialize() ) );
+		$objects = $query->limit( 1 )->get()->serialize();
+
+		return empty( $objects ) ? null : reset( $objects );
 	}
 
 	/**
@@ -401,7 +403,9 @@ abstract class Query extends \ArrayObject {
 	final public function get_first_id() {
 		$query = clone $this;
 
-		return reset( ( $query->limit( 1 )->get_ids() ) );
+		$ids = $query->limit( 1 )->get_ids();
+
+		return empty( $ids ) ? null : reset( $ids );
 	}
 
 	/**
