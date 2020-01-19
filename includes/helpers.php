@@ -362,6 +362,16 @@ function sanitize_key( $text ) {
 }
 
 /**
+ * Checks plugin status.
+ *
+ * @param string $name Plugin name.
+ * @return bool
+ */
+function is_plugin_active( $name ) {
+	return class_exists( $name );
+}
+
+/**
  * Gets REST API response.
  *
  * @param int   $code Error code.

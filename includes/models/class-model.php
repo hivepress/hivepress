@@ -413,6 +413,8 @@ abstract class Model {
 	 * @return object
 	 */
 	final public function fill( $values ) {
+		unset( $values['id'] );
+
 		foreach ( $values as $name => $value ) {
 			call_user_func( [ $this, 'set_' . $name ], $value );
 		}

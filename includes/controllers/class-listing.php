@@ -560,11 +560,11 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = Models\Listing::query()->filter(
 			[
-				'status' => 'auto-draft',
-				'user'   => get_current_user_id(),
+				'status'  => 'auto-draft',
+				'drafted' => true,
+				'user'    => get_current_user_id(),
 			]
-		)->set_args( [ 'meta_key' => 'hp_drafted' ] )
-		->get_first();
+		)->get_first();
 
 		if ( empty( $listing ) ) {
 
@@ -614,18 +614,20 @@ final class Listing extends Controller {
 			// Get category.
 			$category = Models\Listing_Category::query()->get_by_id( hivepress()->request->get_param( 'listing_category_id' ) );
 
-			if ( $category ) {
-				if ( ! $category->get_children__id() ) {
-
-					// Set listing category.
-					wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
-
-					return true;
-				}
-
-				// Set request context.
-				hivepress()->request->set_context( 'listing_category', $category );
+			if ( empty( $category ) ) {
+				return hivepress()->router->get_url( 'listing_submit_category_page' );
 			}
+
+			if ( ! $category->get_children__id() ) {
+
+				// Set listing category.
+				wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
+
+				return true;
+			}
+
+			// Set request context.
+			hivepress()->request->set_context( 'listing_category', $category );
 		}
 
 		// Check category.
@@ -702,10 +704,12 @@ final class Listing extends Controller {
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
 
 		// Update listing.
-		$listing->set_status( $status )->save();
-
-		// Remove draft flag.
-		delete_post_meta( $listing->get_id(), 'hp_drafted' );
+		$listing->fill(
+			[
+				'status'  => $status,
+				'drafted' => null,
+			]
+		)->save();
 
 		// Send email.
 		( new Emails\Listing_Submit(

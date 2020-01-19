@@ -60,6 +60,11 @@ class Listing extends Post {
 						],
 					],
 
+					'drafted'       => [
+						'type'      => 'checkbox',
+						'_external' => true,
+					],
+
 					'featured'      => [
 						'type'      => 'checkbox',
 						'_external' => true,

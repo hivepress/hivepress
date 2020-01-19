@@ -1,6 +1,6 @@
 <?php
 /**
- * Updater component.
+ * Upgrader component.
  *
  * @package HivePress\Components
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Updater component class.
+ * Upgrader component class.
  *
- * @class Updater
+ * @class Upgrader
  */
-final class Updater extends Component {
+final class Upgrader extends Component {
 
 	/**
 	 * Class constructor.
@@ -26,42 +26,46 @@ final class Updater extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Update database.
-		add_action( 'hivepress/v1/update', [ $this, 'update_database' ] );
+		// Upgrade database.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_database' ] );
 
-		// Update events.
-		add_action( 'hivepress/v1/update', [ $this, 'update_events' ] );
+		// Upgrade events.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_events' ] );
 
 		parent::__construct( $args );
 	}
 
 	/**
-	 * Updates database.
+	 * Upgrades database.
 	 *
 	 * @param string $version Old version.
 	 */
-	public function update_database( $version ) {
+	public function upgrade_database( $version ) {
 		global $wpdb;
 
 		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
 
-			// Update user meta.
+			// Upgrade user meta.
 			$wpdb->update( $wpdb->usermeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
 
-			// Update term meta.
+			// Upgrade post meta.
+			$wpdb->update( $wpdb->postmeta, [ 'meta_key' => 'hp_submit_limit' ], [ 'meta_key' => 'hp_submission_limit' ] );
+			$wpdb->update( $wpdb->postmeta, [ 'meta_key' => 'hp_expire_period' ], [ 'meta_key' => 'hp_expiration_period' ] );
+
+			// Upgrade term meta.
 			$wpdb->update( $wpdb->termmeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
 
-			// Update options.
-			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_request_password' ], [ 'option_name' => 'hp_email_user_password_request' ] );
+			// Upgrade options.
+			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_password_request' ], [ 'option_name' => 'hp_email_user_request_password' ] );
 		}
 	}
 
 	/**
-	 * Updates events.
+	 * Upgrades events.
 	 *
 	 * @param string $version Old version.
 	 */
-	public function update_events( $version ) {
+	public function upgrade_events( $version ) {
 		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
 
 			// Unchedule events.
