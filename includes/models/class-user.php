@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Model meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'type' => 'user',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.

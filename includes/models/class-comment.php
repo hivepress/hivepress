@@ -27,6 +27,7 @@ abstract class Comment extends Model {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
+				'type'  => 'comment',
 				'alias' => hp\prefix( hp\get_class_name( static::class ) ),
 			],
 			$meta

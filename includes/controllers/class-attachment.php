@@ -70,7 +70,7 @@ final class Attachment extends Controller {
 					 * @endpoint Update attachment
 					 * @route /attachments/<id>
 					 * @method POST
-					 * @param int $order Order.
+					 * @param int $sort_order Sorting order.
 					 */
 					'attachment_update_action' => [
 						'base'   => 'attachment_resource',
@@ -196,7 +196,7 @@ final class Attachment extends Controller {
 		// Update attachment.
 		$attachment->fill(
 			[
-				'order'        => $attachments->count(),
+				'sort_order'   => $attachments->count(),
 				'parent_model' => $parent_model::_get_meta( 'name' ),
 				'parent_field' => $parent_field->get_name(),
 				'parent'       => $parent_model->get_id(),
@@ -261,7 +261,7 @@ final class Attachment extends Controller {
 		}
 
 		// Update attachment.
-		$attachment->set_order( $request->get_param( 'order' ) );
+		$attachment->set_sort_order( $request->get_param( 'sort_order' ) );
 
 		if ( ! $attachment->save() ) {
 			return hp\rest_error( 400, $attachment->_get_errors() );

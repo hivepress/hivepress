@@ -44,7 +44,7 @@ class Attachment extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
-					'order'        => [
+					'sort_order'   => [
 						'type'      => 'number',
 						'min_value' => 0,
 						'_alias'    => 'menu_order',

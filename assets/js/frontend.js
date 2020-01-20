@@ -201,7 +201,7 @@
 								url: $(this).data('url'),
 								method: 'POST',
 								data: {
-									'order': index,
+									'sort_order': index,
 								},
 								beforeSend: function(xhr) {
 									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);

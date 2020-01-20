@@ -404,7 +404,7 @@ final class Core {
 					// Get class.
 					$class = '\HivePress\\' . $type . '\\' . $name;
 
-					if ( class_exists( $class ) ) {
+					if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
 						$this->classes[ $type ][ $name ] = $class;
 					}
 				}

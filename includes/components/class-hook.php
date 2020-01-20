@@ -46,6 +46,9 @@ final class Hook extends Component {
 		add_action( 'added_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 		add_action( 'updated_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 
+		// Update post terms.
+		add_action( 'set_object_terms', [ $this, 'update_post_terms' ], 10, 6 );
+
 		// Update terms.
 		add_action( 'create_term', [ $this, 'update_term' ], 10, 3 );
 		add_action( 'edit_term', [ $this, 'update_term' ], 10, 3 );
@@ -71,6 +74,57 @@ final class Hook extends Component {
 		add_action( 'import_start', [ $this, 'start_import' ] );
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets model name.
+	 *
+	 * @param string $type Model type.
+	 * @param string $alias Model alias.
+	 * @return mixed
+	 */
+	protected function get_model_name( $type, $alias ) {
+		foreach ( hivepress()->get_classes( 'models' ) as $model ) {
+			if ( $model::_get_meta( 'type' ) === $type && $model::_get_meta( 'alias' ) === $alias ) {
+				return hp\get_class_name( $model );
+			}
+		}
+	}
+
+	/**
+	 * Gets field name.
+	 *
+	 * @param string $model Model name.
+	 * @param string $alias Field alias.
+	 * @return string
+	 */
+	protected function get_field_name( $model, $alias ) {
+
+		// Create model.
+		$object = hp\create_class_instance( '\HivePress\Models\\' . $model );
+
+		if ( $object ) {
+
+			// Get fields.
+			$aliases = array_map(
+				function( $field ) {
+					$alias = null;
+
+					if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
+						$alias = hp\call_class_method( '\HivePress\Models\\' . $field->get_arg( '_model' ), '_get_meta', [ 'alias' ] );
+					} elseif ( $field->get_arg( '_external' ) ) {
+						$alias = $field->get_arg( '_alias' );
+					}
+
+					return $alias;
+				},
+				$object->_get_fields()
+			);
+
+			if ( in_array( $alias, $aliases, true ) ) {
+				return array_search( $alias, $aliases, true );
+			}
+		}
 	}
 
 	/**
@@ -114,7 +168,13 @@ final class Hook extends Component {
 
 		// Update user meta.
 		if ( strpos( $meta_key, 'hp_' ) === 0 || in_array( $meta_key, [ 'first_name', 'last_name', 'description' ], true ) ) {
-			do_action( 'hivepress/v1/models/user/update_' . hp\unprefix( $meta_key ), $user_id, $meta_value );
+
+			// Get field name.
+			$field = $this->get_field_name( 'user', $meta_key );
+
+			if ( $field ) {
+				do_action( 'hivepress/v1/models/user/update_' . $field, $user_id, $meta_value );
+			}
 		}
 	}
 
@@ -147,7 +207,13 @@ final class Hook extends Component {
 			}
 
 			do_action( 'hivepress/v1/models/post/' . $action, $post_id );
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $post_type ) . '/' . $action, $post_id );
+
+			// Get model name.
+			$model = $this->get_model_name( 'post', $post_type );
+
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $post_id );
+			}
 		}
 	}
 
@@ -167,7 +233,13 @@ final class Hook extends Component {
 
 		// Update post status.
 		if ( ( strpos( $post->post_type, 'hp_' ) === 0 || 'attachment' === $post->post_type ) && $new_status !== $old_status ) {
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $post->post_type ) . '/update_status', $post->ID, $new_status, $old_status );
+
+			// Get model name.
+			$model = $this->get_model_name( 'post', $post->post_type );
+
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/update_status', $post->ID, $new_status, $old_status );
+			}
 		}
 	}
 
@@ -191,7 +263,81 @@ final class Hook extends Component {
 			$post_type = get_post_type( $post_id );
 
 			if ( strpos( $post_type, 'hp_' ) === 0 || 'attachment' === $post_type ) {
-				do_action( 'hivepress/v1/models/' . hp\unprefix( $post_type ) . '/update_' . hp\unprefix( $meta_key ), $post_id, $meta_value );
+
+				// Get model name.
+				$model = $this->get_model_name( 'post', $post_type );
+
+				if ( $model ) {
+
+					// Get field name.
+					$field = $this->get_field_name( $model, $meta_key );
+
+					if ( $field && 'status' !== $field ) {
+						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $post_id, $meta_value );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates post terms.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param array  $terms Terms.
+	 * @param array  $term_taxonomy_ids Term taxonomy IDs.
+	 * @param string $taxonomy Taxonomy name.
+	 * @param bool   $append Append property.
+	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
+	 */
+	public function update_post_terms( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
+
+		// Check import status.
+		if ( $this->is_import_started() ) {
+			return;
+		}
+
+		if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
+
+			// Get post type.
+			$post_type = get_post_type( $post_id );
+
+			if ( strpos( $post_type, 'hp_' ) === 0 ) {
+
+				// Get new term IDs.
+				$new_term_ids = get_terms(
+					[
+						'taxonomy'         => $taxonomy,
+						'term_taxonomy_id' => $term_taxonomy_ids,
+						'fields'           => 'ids',
+						'hide_empty'       => false,
+					]
+				);
+
+				// Get old term IDs.
+				$old_term_ids = get_terms(
+					[
+						'taxonomy'         => $taxonomy,
+						'term_taxonomy_id' => $old_term_taxonomy_ids,
+						'fields'           => 'ids',
+						'hide_empty'       => false,
+					]
+				);
+
+				do_action( 'hivepress/v1/models/post/update_terms', $post_id, $new_term_ids, $old_term_ids, $post_type, $taxonomy );
+
+				// Get model.
+				$model = $this->get_model_name( 'post', $post_type );
+
+				if ( $model ) {
+
+					// Get field.
+					$field = $this->get_field_name( $model, $taxonomy );
+
+					if ( $field ) {
+						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $post_id, $new_term_ids, $old_term_ids );
+					}
+				}
 			}
 		}
 	}
@@ -219,7 +365,13 @@ final class Hook extends Component {
 			}
 
 			do_action( 'hivepress/v1/models/term/' . $action, $term_id );
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $taxonomy ) . '/' . $action, $term_id );
+
+			// Get model name.
+			$model = $this->get_model_name( 'term', $taxonomy );
+
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $term_id );
+			}
 		}
 	}
 
@@ -243,7 +395,19 @@ final class Hook extends Component {
 			$taxonomy = get_term( $term_id )->taxonomy;
 
 			if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
-				do_action( 'hivepress/v1/models/' . hp\unprefix( $taxonomy ) . '/update_' . hp\unprefix( $meta_key ), $term_id, $meta_value );
+
+				// Get model name.
+				$model = $this->get_model_name( 'term', $taxonomy );
+
+				if ( $model ) {
+
+					// Get field name.
+					$field = $this->get_field_name( $model, $meta_key );
+
+					if ( $field ) {
+						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $term_id, $meta_value );
+					}
+				}
 			}
 		}
 	}
@@ -273,7 +437,13 @@ final class Hook extends Component {
 			}
 
 			do_action( 'hivepress/v1/models/comment/' . $action, $comment_id );
-			do_action( 'hivepress/v1/models/' . hp\unprefix( $comment_type ) . '/' . $action, $comment_id );
+
+			// Get model name.
+			$model = $this->get_model_name( 'comment', $comment_type );
+
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $comment_id );
+			}
 		}
 	}
 
@@ -295,7 +465,13 @@ final class Hook extends Component {
 			$comment_type = get_comment_type( $comment_id );
 
 			if ( strpos( $comment_type, 'hp_' ) === 0 ) {
-				do_action( 'hivepress/v1/models/' . hp\unprefix( $comment_type ) . '/update_status', $comment_id, $new_status );
+
+				// Get model name.
+				$model = $this->get_model_name( 'comment', $comment_type );
+
+				if ( $model ) {
+					do_action( 'hivepress/v1/models/' . $model . '/update_status', $comment_id, $new_status );
+				}
 			}
 		}
 	}
@@ -320,7 +496,18 @@ final class Hook extends Component {
 			$comment_type = get_comment_type( $comment_id );
 
 			if ( strpos( $comment_type, 'hp_' ) === 0 ) {
-				do_action( 'hivepress/v1/models/' . hp\unprefix( $comment_type ) . '/update_' . hp\unprefix( $meta_key ), $comment_id, $meta_value );
+
+				// Get model name.
+				$model = $this->get_model_name( 'comment', $comment_type );
+
+				if ( $model ) {
+
+					$field = $this->get_field_type( $model, $meta_key );
+
+					if ( $field && 'status' !== $field ) {
+						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $comment_id, $meta_value );
+					}
+				}
 			}
 		}
 	}

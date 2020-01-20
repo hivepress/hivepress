@@ -42,7 +42,7 @@ final class Cache extends Component {
 		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ] );
 
 		// Clear post term cache.
-		add_action( 'set_object_terms', [ $this, 'clear_post_term_cache' ], 10, 6 );
+		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 10, 5 );
 
 		// Clear term cache.
 		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ] );
@@ -67,6 +67,27 @@ final class Cache extends Component {
 	 */
 	protected function is_cache_enabled() {
 		return ! defined( 'HP_CACHE' ) || HP_CACHE;
+	}
+
+	/**
+	 * Gets model name.
+	 *
+	 * @param string $type Model type.
+	 * @param string $alias Model alias.
+	 * @return mixed
+	 */
+	protected function get_model_name( $type, $alias ) {
+		$name = hp\unprefix( $alias );
+
+		foreach ( hivepress()->get_classes( 'models' ) as $model ) {
+			if ( $model::_get_meta( 'type' ) === $type && $model::_get_meta( 'alias' ) === $alias ) {
+				$name = hp\get_class_name( $model );
+
+				break;
+			}
+		}
+
+		return $name;
 	}
 
 	/**
@@ -535,12 +556,19 @@ final class Cache extends Component {
 		// Get post.
 		$post = get_post( $post_id );
 
+		// Get model name.
+		$model = $this->get_model_name( 'post', $post->post_type );
+
 		// Delete transient cache.
-		$this->delete_cache( null, hp\unprefix( $post->post_type ) );
+		$this->delete_cache( null, $model );
 
 		// Delete meta cache.
 		if ( $post->post_author ) {
-			$this->delete_user_cache( $post->post_author, null, hp\unprefix( $post->post_type ) );
+			$this->delete_user_cache( $post->post_author, null, $model );
+		}
+
+		if ( $post->post_parent ) {
+			$this->delete_post_cache( $post->post_parent, null, $model );
 		}
 	}
 
@@ -548,39 +576,30 @@ final class Cache extends Component {
 	 * Clears post term cache.
 	 *
 	 * @param int    $post_id Post ID.
-	 * @param array  $terms Terms.
-	 * @param array  $term_taxonomy_ids Term taxonomy IDs.
+	 * @param array  $new_term_ids New term IDs.
+	 * @param array  $old_term_ids Old term IDs.
+	 * @param string $post_type Post type.
 	 * @param string $taxonomy Taxonomy name.
-	 * @param bool   $append Append property.
-	 * @param array  $old_term_taxonomy_ids Old term taxonomy IDs.
 	 */
-	public function clear_post_term_cache( $post_id, $terms, $term_taxonomy_ids, $taxonomy, $append, $old_term_taxonomy_ids ) {
+	public function clear_post_term_cache( $post_id, $new_term_ids, $old_term_ids, $post_type, $taxonomy ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
 			return;
 		}
 
-		if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
-			$term_taxonomy_ids = array_unique( array_merge( $term_taxonomy_ids, $old_term_taxonomy_ids ) );
+		// Get model name.
+		$model = $this->get_model_name( 'post', $post_type );
 
-			// Get post type.
-			$post_type = get_post_type( $post_id );
+		// Delete term cache.
+		$term_ids = array_unique( array_merge( $new_term_ids, $old_term_ids ) );
 
-			foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
-
-				// Get term.
-				$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
-
-				// Delete meta cache.
-				if ( $term ) {
-					$this->delete_term_cache( $term->term_id, null, hp\unprefix( $post_type ) );
-				}
-			}
-
-			// Delete meta cache.
-			$this->delete_post_cache( $post_id, null, hp\unprefix( $taxonomy ) );
+		foreach ( $term_ids as $term_id ) {
+			$this->delete_term_cache( $term_id, null, $model );
 		}
+
+		// Delete post cache.
+		$this->delete_post_cache( $post_id, null, $this->get_model_name( 'term', $taxonomy ) );
 	}
 
 	/**
@@ -599,7 +618,7 @@ final class Cache extends Component {
 		$term = get_term( $term_id );
 
 		// Delete transient cache.
-		$this->delete_cache( null, hp\unprefix( $term->taxonomy ) );
+		$this->delete_cache( null, $this->get_model_name( 'term', $term->taxonomy ) );
 	}
 
 	/**
@@ -617,16 +636,19 @@ final class Cache extends Component {
 		// Get comment.
 		$comment = get_comment( $comment_id );
 
+		// Get model name.
+		$model = $this->get_model_name( 'comment', $comment->comment_type );
+
 		// Delete transient cache.
-		$this->delete_cache( null, hp\unprefix( $comment->comment_type ) );
+		$this->delete_cache( null, $model );
 
 		// Delete meta cache.
 		if ( $comment->user_id ) {
-			$this->delete_user_cache( $comment->user_id, null, hp\unprefix( $comment->comment_type ) );
+			$this->delete_user_cache( $comment->user_id, null, $model );
 		}
 
 		if ( $comment->comment_post_ID ) {
-			$this->delete_post_cache( $comment->comment_post_ID, null, hp\unprefix( $comment->comment_type ) );
+			$this->delete_post_cache( $comment->comment_post_ID, null, $model );
 		}
 	}
 
