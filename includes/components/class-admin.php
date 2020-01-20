@@ -768,7 +768,11 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
-							update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+							if ( is_null( $field->get_value() ) ) {
+								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+							} else {
+								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+							}
 						} else {
 							wp_update_post(
 								[
@@ -926,7 +930,11 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
-							update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
+							if ( is_null( $field->get_value() ) ) {
+								delete_term_meta( $term->term_id, $field->get_arg( '_alias' ) );
+							} else {
+								update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
+							}
 						} else {
 							wp_update_term(
 								$term->term_id,

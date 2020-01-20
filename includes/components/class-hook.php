@@ -34,6 +34,7 @@ final class Hook extends Component {
 		// Update user meta.
 		add_action( 'added_user_meta', [ $this, 'update_user_meta' ], 10, 4 );
 		add_action( 'updated_user_meta', [ $this, 'update_user_meta' ], 10, 4 );
+		add_action( 'deleted_user_meta', [ $this, 'update_user_meta' ], 10, 4 );
 
 		// Update posts.
 		add_action( 'save_post', [ $this, 'update_post' ], 10, 3 );
@@ -45,6 +46,7 @@ final class Hook extends Component {
 		// Update post meta.
 		add_action( 'added_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 		add_action( 'updated_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
+		add_action( 'deleted_post_meta', [ $this, 'update_post_meta' ], 10, 4 );
 
 		// Update post terms.
 		add_action( 'set_object_terms', [ $this, 'update_post_terms' ], 10, 6 );
@@ -57,6 +59,7 @@ final class Hook extends Component {
 		// Update term meta.
 		add_action( 'added_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
 		add_action( 'updated_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
+		add_action( 'deleted_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
 
 		// Update comments.
 		add_action( 'wp_insert_comment', [ $this, 'update_comment' ] );
@@ -69,6 +72,7 @@ final class Hook extends Component {
 		// Update comment meta.
 		add_action( 'added_comment_meta', [ $this, 'update_comment_meta' ], 10, 4 );
 		add_action( 'updated_comment_meta', [ $this, 'update_comment_meta' ], 10, 4 );
+		add_action( 'deleted_comment_meta', [ $this, 'update_comment_meta' ], 10, 4 );
 
 		// Start import.
 		add_action( 'import_start', [ $this, 'start_import' ] );
@@ -166,15 +170,17 @@ final class Hook extends Component {
 			return;
 		}
 
-		// Update user meta.
-		if ( strpos( $meta_key, 'hp_' ) === 0 || in_array( $meta_key, [ 'first_name', 'last_name', 'description' ], true ) ) {
+		// Get field name.
+		$field = $this->get_field_name( 'user', $meta_key );
 
-			// Get field name.
-			$field = $this->get_field_name( 'user', $meta_key );
+		if ( $field ) {
 
-			if ( $field ) {
-				do_action( 'hivepress/v1/models/user/update_' . $field, $user_id, $meta_value );
+			// Normalize meta value.
+			if ( strpos( current_action(), 'deleted_' ) === 0 ) {
+				$meta_value = null;
 			}
+
+			do_action( 'hivepress/v1/models/user/update_' . $field, $user_id, $meta_value );
 		}
 	}
 
@@ -258,23 +264,27 @@ final class Hook extends Component {
 			return;
 		}
 
-		// Update post meta.
-		if ( strpos( $meta_key, 'hp_' ) === 0 ) {
-			$post_type = get_post_type( $post_id );
+		// Get post type.
+		$post_type = get_post_type( $post_id );
 
-			if ( strpos( $post_type, 'hp_' ) === 0 || 'attachment' === $post_type ) {
+		if ( strpos( $post_type, 'hp_' ) === 0 || 'attachment' === $post_type ) {
 
-				// Get model name.
-				$model = $this->get_model_name( 'post', $post_type );
+			// Get model name.
+			$model = $this->get_model_name( 'post', $post_type );
 
-				if ( $model ) {
+			if ( $model ) {
 
-					// Get field name.
-					$field = $this->get_field_name( $model, $meta_key );
+				// Get field name.
+				$field = $this->get_field_name( $model, $meta_key );
 
-					if ( $field && 'status' !== $field ) {
-						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $post_id, $meta_value );
+				if ( $field && 'status' !== $field ) {
+
+					// Normalize meta value.
+					if ( strpos( current_action(), 'deleted_' ) === 0 ) {
+						$meta_value = null;
 					}
+
+					do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $post_id, $meta_value );
 				}
 			}
 		}
@@ -390,23 +400,27 @@ final class Hook extends Component {
 			return;
 		}
 
-		// Update term meta.
-		if ( strpos( $meta_key, 'hp_' ) === 0 ) {
-			$taxonomy = get_term( $term_id )->taxonomy;
+		// Get taxonomy.
+		$taxonomy = get_term( $term_id )->taxonomy;
 
-			if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
+		if ( strpos( $taxonomy, 'hp_' ) === 0 ) {
 
-				// Get model name.
-				$model = $this->get_model_name( 'term', $taxonomy );
+			// Get model name.
+			$model = $this->get_model_name( 'term', $taxonomy );
 
-				if ( $model ) {
+			if ( $model ) {
 
-					// Get field name.
-					$field = $this->get_field_name( $model, $meta_key );
+				// Get field name.
+				$field = $this->get_field_name( $model, $meta_key );
 
-					if ( $field ) {
-						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $term_id, $meta_value );
+				if ( $field ) {
+
+					// Normalize meta value.
+					if ( strpos( current_action(), 'deleted_' ) === 0 ) {
+						$meta_value = null;
 					}
+
+					do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $term_id, $meta_value );
 				}
 			}
 		}
@@ -491,22 +505,26 @@ final class Hook extends Component {
 			return;
 		}
 
-		// Update comment meta.
-		if ( strpos( $meta_key, 'hp_' ) === 0 ) {
-			$comment_type = get_comment_type( $comment_id );
+		// Get comment type.
+		$comment_type = get_comment_type( $comment_id );
 
-			if ( strpos( $comment_type, 'hp_' ) === 0 ) {
+		if ( strpos( $comment_type, 'hp_' ) === 0 ) {
 
-				// Get model name.
-				$model = $this->get_model_name( 'comment', $comment_type );
+			// Get model name.
+			$model = $this->get_model_name( 'comment', $comment_type );
 
-				if ( $model ) {
+			if ( $model ) {
 
-					$field = $this->get_field_type( $model, $meta_key );
+				$field = $this->get_field_type( $model, $meta_key );
 
-					if ( $field && 'status' !== $field ) {
-						do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $comment_id, $meta_value );
+				if ( $field && 'status' !== $field ) {
+
+					// Normalize meta value.
+					if ( strpos( current_action(), 'deleted_' ) === 0 ) {
+						$meta_value = null;
 					}
+
+					do_action( 'hivepress/v1/models/' . $model . '/update_' . $field, $comment_id, $meta_value );
 				}
 			}
 		}
