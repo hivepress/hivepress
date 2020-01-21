@@ -284,7 +284,7 @@ abstract class Model {
 		// Get model field.
 		$field = null;
 
-		if ( strpos( $name, '__' ) ) {
+		if ( strpos( $name, '__' ) && ! isset( $this->fields[ $name ] ) ) {
 			list($name, $field) = explode( '__', $name );
 		}
 

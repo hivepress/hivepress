@@ -47,13 +47,13 @@ class Listing_Filter extends Form {
 				'method' => 'GET',
 
 				'fields' => [
-					'category'  => [
+					'_category' => [
 						'type'    => 'radio',
 						'options' => [],
 						'_order'  => 10,
 					],
 
-					'sort'      => [
+					'_sort'     => [
 						'type' => 'hidden',
 					],
 

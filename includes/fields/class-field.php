@@ -365,6 +365,18 @@ abstract class Field {
 	}
 
 	/**
+	 * Sets parent field value.
+	 *
+	 * @param mixed $value Field value.
+	 * @return object
+	 */
+	public function set_parent_value( $value ) {
+		$this->parent_value = $value;
+
+		return $this;
+	}
+
+	/**
 	 * Adds field filter.
 	 */
 	protected function add_filter() {
@@ -374,6 +386,13 @@ abstract class Field {
 			'value'    => $this->value,
 			'operator' => '=',
 		];
+	}
+
+	/**
+	 * Updates field filter.
+	 */
+	public function update_filter() {
+		$this->add_filter();
 	}
 
 	/**

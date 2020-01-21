@@ -48,7 +48,7 @@ class Listing_Sort extends Form {
 				'button' => null,
 
 				'fields' => [
-					'sort'      => [
+					'_sort'     => [
 						'label'       => esc_html__( 'Sort by', 'hivepress' ),
 						'type'        => 'select',
 						'placeholder' => null,
@@ -57,7 +57,7 @@ class Listing_Sort extends Form {
 						'_order'      => 10,
 					],
 
-					'category'  => [
+					'_category' => [
 						'type' => 'hidden',
 					],
 

@@ -50,6 +50,9 @@ final class Debug extends Component {
 		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );
 		add_filter( 'hivetheme/v1/scripts', [ $this, 'alter_scripts' ] );
 
+		// Log emails.
+		add_filter( 'wp_mail', [ $this, 'log_email' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -129,5 +132,17 @@ final class Debug extends Component {
 		}
 
 		return $scripts;
+	}
+
+	/**
+	 * Logs email.
+	 *
+	 * @param array $args Email arguments.
+	 * @return array
+	 */
+	public function log_email( $args ) {
+		error_log( hp\get_array_value( $args, 'message' ) );
+
+		return $args;
 	}
 }

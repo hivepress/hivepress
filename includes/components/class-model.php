@@ -49,7 +49,7 @@ final class Model extends Component {
 		if ( $model ) {
 			$group .= $model;
 		} else {
-			$group .= $type . '/' . $alias;
+			$group .= $type . '/' . hp\unprefix( $alias );
 		}
 
 		return $group;

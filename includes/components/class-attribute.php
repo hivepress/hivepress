@@ -596,7 +596,7 @@ final class Attribute extends Component {
 		}
 
 		// Set options.
-		$form_args['fields']['sort']['options'] = array_merge( $form_args['fields']['sort']['options'], $options );
+		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
 
 		return $form_args;
 	}
@@ -668,7 +668,7 @@ final class Attribute extends Component {
 		}
 
 		// Set options.
-		$form_args['fields']['category']['options'] = $options;
+		$form_args['fields']['_category']['options'] = $options;
 
 		return $form_args;
 	}
@@ -686,7 +686,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		// Set value.
-		$form_args['fields']['category']['default'] = $this->get_category_id( $model );
+		$form_args['fields']['_category']['default'] = $this->get_category_id( $model );
 
 		return $form_args;
 	}
@@ -853,7 +853,7 @@ final class Attribute extends Component {
 			if ( $sort_form->validate() ) {
 
 				// Get sort parameter.
-				$sort_param = $sort_form->get_value( 'sort' );
+				$sort_param = $sort_form->get_value( '_sort' );
 
 				// Get sort order.
 				$sort_order = 'ASC';
@@ -899,7 +899,9 @@ final class Attribute extends Component {
 				];
 			}
 
-			// Set attributes.
+			// Get attribute fields.
+			$attribute_fields = [];
+
 			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['searchable'] || $attribute['filterable'] ) {
 
@@ -920,63 +922,81 @@ final class Attribute extends Component {
 						// Set field value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
+						// Add field.
 						if ( $field->validate() ) {
-
-							// Get field filter.
-							$field_filter = $field->get_filter();
-
-							if ( $field_filter ) {
-								if ( isset( $field_args['options'] ) ) {
-
-									// Set taxonomy filter.
-									$field_filter = array_combine(
-										array_map(
-											function( $key ) {
-												return hp\get_array_value(
-													[
-														'name' => 'taxonomy',
-														'value' => 'terms',
-													],
-													$key,
-													$key
-												);
-											},
-											array_keys( $field_filter )
-										),
-										$field_filter
-									);
-
-									unset( $field_filter['type'] );
-
-									$field_filter['include_children'] = false;
-
-									// Add taxonomy clause.
-									$tax_query[] = $field_filter;
-								} else {
-
-									// Set meta filter.
-									$field_filter = array_combine(
-										array_map(
-											function( $key ) {
-												return hp\get_array_value(
-													[
-														'name' => 'key',
-														'operator' => 'compare',
-													],
-													$key,
-													$key
-												);
-											},
-											array_keys( $field_filter )
-										),
-										$field_filter
-									);
-
-									// Add meta clause.
-									$meta_query[] = $field_filter;
-								}
-							}
+							$attribute_fields[ $attribute_name ] = $field;
 						}
+					}
+				}
+			}
+
+			// Set attribute filters.
+			foreach ( $attribute_fields as $field ) {
+
+				// Get parent field.
+				$parent_field = hp\get_array_value( $fields, $field->get_arg( '_parent' ) );
+
+				if ( $parent_field ) {
+
+					// Set parent value.
+					$field->set_parent_value( $parent_field->get_value() );
+
+					// Update field filter.
+					$field->update_filter();
+				}
+
+				// Get field filter.
+				$field_filter = $field->get_filter();
+
+				if ( $field_filter ) {
+					if ( isset( $field_args['options'] ) ) {
+
+						// Set taxonomy filter.
+						$field_filter = array_combine(
+							array_map(
+								function( $key ) {
+									return hp\get_array_value(
+										[
+											'name'  => 'taxonomy',
+											'value' => 'terms',
+										],
+										$key,
+										$key
+									);
+								},
+								array_keys( $field_filter )
+							),
+							$field_filter
+						);
+
+						unset( $field_filter['type'] );
+
+						$field_filter['include_children'] = false;
+
+						// Add taxonomy clause.
+						$tax_query[] = $field_filter;
+					} else {
+
+						// Set meta filter.
+						$field_filter = array_combine(
+							array_map(
+								function( $key ) {
+									return hp\get_array_value(
+										[
+											'name'     => 'key',
+											'operator' => 'compare',
+										],
+										$key,
+										$key
+									);
+								},
+								array_keys( $field_filter )
+							),
+							$field_filter
+						);
+
+						// Add meta clause.
+						$meta_query[] = $field_filter;
 					}
 				}
 			}
@@ -1029,8 +1049,8 @@ final class Attribute extends Component {
 	protected function get_category_id( $model ) {
 		$category_id = null;
 
-		if ( isset( $_GET['category'] ) ) {
-			$category_id = absint( $_GET['category'] );
+		if ( isset( $_GET['_category'] ) ) {
+			$category_id = absint( $_GET['_category'] );
 		} elseif ( is_tax( hp\prefix( $model . '_category' ) ) ) {
 			$category_id = get_queried_object_id();
 		}

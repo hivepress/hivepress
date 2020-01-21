@@ -322,7 +322,7 @@ final class Listing extends Controller {
 
 		// Get category.
 		$category    = null;
-		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, 'category' ) );
+		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, '_category' ) );
 
 		if ( $category_id ) {
 			$category = Models\Listing_Category::query()->get_by_id( $category_id );
