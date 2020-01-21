@@ -1,6 +1,6 @@
 <?php
 /**
- * Upgrader component.
+ * Upgrade component.
  *
  * @package HivePress\Components
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Upgrader component class.
+ * Upgrade component class.
  *
- * @class Upgrader
+ * @class Upgrade
  */
-final class Upgrader extends Component {
+final class Upgrade extends Component {
 
 	/**
 	 * Class constructor.

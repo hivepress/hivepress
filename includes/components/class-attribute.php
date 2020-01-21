@@ -440,7 +440,8 @@ final class Attribute extends Component {
 					$field_args = array_merge(
 						$field_args,
 						[
-							'_model'    => $model . '_' . $attribute_name,
+							'_model'    => 'listing_category',
+							'_alias'    => hp\prefix( $model . '_' . $attribute_name ),
 							'_relation' => 'many_to_many',
 						]
 					);

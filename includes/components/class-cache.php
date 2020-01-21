@@ -26,36 +26,34 @@ final class Cache extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Schedule events.
-		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
-		add_action( 'hivepress/v1/update', [ $this, 'schedule_events' ] );
-
-		// Unschedule events.
-		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
+		// Clear import cache.
+		add_action( 'import_end', [ $this, 'clear_import_cache' ] );
 
 		// Clear meta cache.
 		add_action( 'hivepress/v1/events/daily', [ $this, 'clear_meta_cache' ] );
 
+		// Clear user cache.
+		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/update', [ $this, 'clear_user_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/delete', [ $this, 'clear_user_cache' ], 10, 2 );
+
 		// Clear post cache.
-		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ] );
-		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ] );
-		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ] );
+		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ], 10, 2 );
 
 		// Clear post term cache.
 		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 10, 5 );
 
 		// Clear term cache.
-		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ] );
-		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ] );
-		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ] );
+		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ], 10, 2 );
 
 		// Clear comment cache.
-		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ] );
-		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ] );
-		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ] );
-
-		// Clear import cache.
-		add_action( 'import_end', [ $this, 'clear_import_cache' ] );
+		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ], 10, 2 );
 
 		parent::__construct( $args );
 	}
@@ -67,55 +65,6 @@ final class Cache extends Component {
 	 */
 	protected function is_cache_enabled() {
 		return ! defined( 'HP_CACHE' ) || HP_CACHE;
-	}
-
-	/**
-	 * Gets model name.
-	 *
-	 * @param string $type Model type.
-	 * @param string $alias Model alias.
-	 * @return mixed
-	 */
-	protected function get_model_name( $type, $alias ) {
-		$name = hp\unprefix( $alias );
-
-		foreach ( hivepress()->get_classes( 'models' ) as $model ) {
-			if ( $model::_get_meta( 'type' ) === $type && $model::_get_meta( 'alias' ) === $alias ) {
-				$name = hp\get_class_name( $model );
-
-				break;
-			}
-		}
-
-		return $name;
-	}
-
-	/**
-	 * Schedules events.
-	 */
-	public function schedule_events() {
-		$periods = [ 'hourly', 'twicedaily', 'daily' ];
-
-		foreach ( $periods as $period ) {
-			if ( ! wp_next_scheduled( 'hivepress/v1/events/' . $period ) ) {
-				wp_schedule_event( time(), $period, 'hivepress/v1/events/' . $period );
-			}
-		}
-	}
-
-	/**
-	 * Unschedules events.
-	 */
-	public function unschedule_events() {
-		$periods = [ 'hourly', 'twicedaily', 'daily' ];
-
-		foreach ( $periods as $period ) {
-			$timestamp = wp_next_scheduled( 'hivepress/v1/events/' . $period );
-
-			if ( $timestamp ) {
-				wp_unschedule_event( $timestamp, 'hivepress/v1/events/' . $period );
-			}
-		}
 	}
 
 	/**
@@ -497,6 +446,17 @@ final class Cache extends Component {
 	}
 
 	/**
+	 * Clears import cache.
+	 */
+	public function clear_import_cache() {
+		global $wpdb;
+
+		// Delete transients.
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+	}
+
+	/**
 	 * Clears meta cache.
 	 */
 	public function clear_meta_cache() {
@@ -542,11 +502,28 @@ final class Cache extends Component {
 	}
 
 	/**
+	 * Clears user cache.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function clear_user_cache( $user_id ) {
+
+		// Check status.
+		if ( ! $this->is_cache_enabled() ) {
+			return;
+		}
+
+		// Delete transient cache.
+		$this->delete_cache( null, 'user' );
+	}
+
+	/**
 	 * Clears post cache.
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int    $post_id Post ID.
+	 * @param string $model Model name.
 	 */
-	public function clear_post_cache( $post_id ) {
+	public function clear_post_cache( $post_id, $model ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -555,9 +532,6 @@ final class Cache extends Component {
 
 		// Get post.
 		$post = get_post( $post_id );
-
-		// Get model name.
-		$model = $this->get_model_name( 'post', $post->post_type );
 
 		// Delete transient cache.
 		$this->delete_cache( null, $model );
@@ -582,7 +556,7 @@ final class Cache extends Component {
 	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function clear_post_term_cache( $post_id, $new_term_ids, $old_term_ids, $post_type, $taxonomy ) {
-
+		// todo.
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
 			return;
@@ -605,9 +579,10 @@ final class Cache extends Component {
 	/**
 	 * Clears term cache.
 	 *
-	 * @param int $term_id Term ID.
+	 * @param int    $term_id Term ID.
+	 * @param string $model Model name.
 	 */
-	public function clear_term_cache( $term_id ) {
+	public function clear_term_cache( $term_id, $model ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -618,15 +593,16 @@ final class Cache extends Component {
 		$term = get_term( $term_id );
 
 		// Delete transient cache.
-		$this->delete_cache( null, $this->get_model_name( 'term', $term->taxonomy ) );
+		$this->delete_cache( null, $model );
 	}
 
 	/**
 	 * Clears comment cache.
 	 *
-	 * @param int $comment_id Comment ID.
+	 * @param int    $comment_id Comment ID.
+	 * @param string $model Model name.
 	 */
-	public function clear_comment_cache( $comment_id ) {
+	public function clear_comment_cache( $comment_id, $model ) {
 
 		// Check status.
 		if ( ! $this->is_cache_enabled() ) {
@@ -635,9 +611,6 @@ final class Cache extends Component {
 
 		// Get comment.
 		$comment = get_comment( $comment_id );
-
-		// Get model name.
-		$model = $this->get_model_name( 'comment', $comment->comment_type );
 
 		// Delete transient cache.
 		$this->delete_cache( null, $model );
@@ -650,16 +623,5 @@ final class Cache extends Component {
 		if ( $comment->comment_post_ID ) {
 			$this->delete_post_cache( $comment->comment_post_ID, null, $model );
 		}
-	}
-
-	/**
-	 * Clears import cache.
-	 */
-	public function clear_import_cache() {
-		global $wpdb;
-
-		// Delete transients.
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
 	}
 }

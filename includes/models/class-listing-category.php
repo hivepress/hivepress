@@ -46,7 +46,7 @@ class Listing_Category extends Term {
 					'count'       => [
 						'type'      => 'number',
 						'min_value' => 0,
-						'_external' => true,
+						'_alias'    => 'count',
 					],
 
 					'parent'      => [
