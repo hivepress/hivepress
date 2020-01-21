@@ -103,7 +103,7 @@ class Listing_Categories extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							'sort_order' => esc_html_x( 'Default', 'order', 'hivepress' ),
+							'sort_order' => '&mdash;',
 							'name'       => esc_html_x( 'Name', 'order', 'hivepress' ),
 							'item_count' => esc_html_x( 'Item Count', 'order', 'hivepress' ),
 						],
