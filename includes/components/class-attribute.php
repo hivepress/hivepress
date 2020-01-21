@@ -126,8 +126,11 @@ final class Attribute extends Component {
 				'order'          => 'ASC',
 			];
 
+			// Get cache group.
+			$cache_group = hivepress()->model->get_cache_group( 'post', hp\prefix( $model . '_attribute' ) );
+
 			// Get cached attributes.
-			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $model . '_attribute' );
+			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $cache_group );
 
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
@@ -223,7 +226,7 @@ final class Attribute extends Component {
 
 				// Cache attributes.
 				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $model . '_attribute', $attributes );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $cache_group, $attributes );
 				}
 			}
 
@@ -411,13 +414,13 @@ final class Attribute extends Component {
 		$model = $object::_get_meta( 'name' );
 
 		// Get category IDs.
-		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], $model . '_category' );
+		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
 			$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
-				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], $model . '_category', $category_ids );
+				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $model . '_category', $category_ids );
 			}
 		}
 
@@ -622,7 +625,7 @@ final class Attribute extends Component {
 		];
 
 		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'include_tree' => true ] ), $model . '_category' );
+		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'models/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
 			$category_ids = get_terms( $query_args );
@@ -633,7 +636,7 @@ final class Attribute extends Component {
 
 			// Cache IDs.
 			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'include_tree' => true ] ), $model . '_category', $category_ids );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'models/' . $model . '_category', $category_ids );
 			}
 		}
 
@@ -723,7 +726,7 @@ final class Attribute extends Component {
 							'format' => 'range',
 						]
 					),
-					$model
+					'models/' . $model
 				);
 
 				if ( is_null( $range ) ) {
@@ -743,7 +746,7 @@ final class Attribute extends Component {
 								'format' => 'range',
 							]
 						),
-						$model,
+						'models/' . $model,
 						$range
 					);
 				}

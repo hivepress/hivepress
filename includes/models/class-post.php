@@ -74,15 +74,17 @@ abstract class Post extends Model {
 		foreach ( $object->_get_fields() as $field_name => $field ) {
 			if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
 
+				// Get cache group.
+				$cache_group = hivepress()->model->get_cache_group( 'term', $field->get_arg( '_alias' ) );
+
 				// Get post terms.
-				$taxonomy = $field->get_arg( '_model' );
-				$term_ids = hivepress()->cache->get_post_cache( $post['ID'], [ 'fields' => 'ids' ], $taxonomy );
+				$term_ids = hivepress()->cache->get_post_cache( $post['ID'], [ 'fields' => 'ids' ], $cache_group );
 
 				if ( is_null( $term_ids ) ) {
-					$term_ids = wp_get_post_terms( $post['ID'], hp\prefix( $taxonomy ), [ 'fields' => 'ids' ] );
+					$term_ids = wp_get_post_terms( $post['ID'], $field->get_arg( '_alias' ), [ 'fields' => 'ids' ] );
 
 					if ( is_array( $term_ids ) && count( $term_ids ) <= 100 ) {
-						hivepress()->cache->set_post_cache( $post['ID'], [ 'fields' => 'ids' ], $taxonomy, $term_ids );
+						hivepress()->cache->set_post_cache( $post['ID'], [ 'fields' => 'ids' ], $cache_group, $term_ids );
 					}
 				}
 
@@ -122,7 +124,7 @@ abstract class Post extends Model {
 			if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
 
 				// Set post terms.
-				$terms[ hp\prefix( $field->get_arg( '_model' ) ) ] = $field->get_value();
+				$terms[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			} elseif ( $field->get_arg( '_external' ) ) {
 
 				// Set meta value.

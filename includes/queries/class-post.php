@@ -133,7 +133,7 @@ class Post extends Query {
 
 				// Set term clause.
 				$clause = [
-					'taxonomy' => hp\prefix( $field->get_arg( '_model' ) ),
+					'taxonomy' => $field->get_arg( '_alias' ),
 					'operator' => $operator,
 				];
 

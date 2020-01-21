@@ -35,13 +35,35 @@ final class Model extends Component {
 	}
 
 	/**
+	 * Gets cache group.
+	 *
+	 * @param string $type Model type.
+	 * @param string $alias Model alias.
+	 * @return string
+	 */
+	public function get_cache_group( $type, $alias ) {
+		$group = 'models/';
+
+		$model = $this->get_model_name( $type, $alias );
+
+		if ( $model ) {
+			$group .= $model;
+		} else {
+			$group .= $type . '/' . $alias;
+		}
+
+		return $group;
+	}
+
+	/**
 	 * Gets field name.
 	 *
 	 * @param string $model Model name.
+	 * @param string $type Field type.
 	 * @param string $alias Field alias.
 	 * @return string
 	 */
-	public function get_field_name( $model, $alias ) {
+	public function get_field_name( $model, $type, $alias ) {
 
 		// Create model.
 		$model = hp\create_class_instance( '\HivePress\Models\\' . $model );
@@ -50,20 +72,10 @@ final class Model extends Component {
 
 			// Get fields aliases.
 			$aliases = array_map(
-				function( $field ) {
-					$alias = null;
-
-					if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
-						if ( $field->get_arg( '_alias' ) ) {
-							$alias = $field->get_arg( '_alias' );
-						} else {
-							$alias = hp\call_class_method( '\HivePress\Models\\' . $field->get_arg( '_model' ), '_get_meta', [ 'alias' ] );
-						}
-					} elseif ( $field->get_arg( '_external' ) ) {
-						$alias = $field->get_arg( '_alias' );
+				function( $field ) use ( $type ) {
+					if ( ( 'term' === $type && $field->get_arg( '_relation' ) === 'many_to_many' ) || ( 'meta' === $type && $field->get_arg( '_external' ) ) ) {
+						return $field->get_arg( '_alias' );
 					}
-
-					return $alias;
 				},
 				$model->_get_fields()
 			);

@@ -173,7 +173,7 @@ class Listing_Categories extends Block {
 		}
 
 		// Get cached IDs.
-		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing_category' );
+		$listing_category_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/listing_category' );
 
 		if ( is_array( $listing_category_ids ) ) {
 			$query = Models\Listing_Category::query()->filter(
@@ -188,7 +188,7 @@ class Listing_Categories extends Block {
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && $categories->count() <= 1000 ) {
-			hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'listing_category', $categories->get_ids() );
+			hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/listing_category', $categories->get_ids() );
 		}
 
 		// Render categories.

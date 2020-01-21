@@ -134,8 +134,12 @@ abstract class Model {
 		foreach ( $fields as $name => $args ) {
 
 			// Set alias.
-			if ( hp\get_array_value( $args, '_external' ) && ! isset( $args['_alias'] ) ) {
-				$args['_alias'] = hp\prefix( $name );
+			if ( ! isset( $args['_alias'] ) ) {
+				if ( hp\get_array_value( $args, '_relation' ) === 'many_to_many' ) {
+					$args['_alias'] = hp\call_class_method( '\HivePress\Models\\' . hp\get_array_value( $args, '_model' ), '_get_meta', [ 'alias' ] );
+				} elseif ( hp\get_array_value( $args, '_external' ) ) {
+					$args['_alias'] = hp\prefix( $name );
+				}
 			}
 
 			// Create field.

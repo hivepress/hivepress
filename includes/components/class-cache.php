@@ -26,16 +26,16 @@ final class Cache extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Clear import cache.
-		add_action( 'import_end', [ $this, 'clear_import_cache' ] );
+		// Clear transient cache.
+		add_action( 'import_end', [ $this, 'clear_transient_cache' ] );
 
 		// Clear meta cache.
 		add_action( 'hivepress/v1/events/daily', [ $this, 'clear_meta_cache' ] );
 
 		// Clear user cache.
-		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/user/update', [ $this, 'clear_user_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/user/delete', [ $this, 'clear_user_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ] );
+		add_action( 'hivepress/v1/models/user/update', [ $this, 'clear_user_cache' ] );
+		add_action( 'hivepress/v1/models/user/delete', [ $this, 'clear_user_cache' ] );
 
 		// Clear post cache.
 		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ], 10, 2 );
@@ -43,7 +43,7 @@ final class Cache extends Component {
 		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ], 10, 2 );
 
 		// Clear post term cache.
-		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 10, 5 );
+		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 10, 3 );
 
 		// Clear term cache.
 		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ], 10, 2 );
@@ -63,7 +63,7 @@ final class Cache extends Component {
 	 *
 	 * @return bool
 	 */
-	protected function is_cache_enabled() {
+	protected function is_enabled() {
 		return ! defined( 'HP_CACHE' ) || HP_CACHE;
 	}
 
@@ -102,7 +102,7 @@ final class Cache extends Component {
 	public function get_cache( $key, $group = null ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -130,7 +130,7 @@ final class Cache extends Component {
 		$cache = null;
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -175,7 +175,7 @@ final class Cache extends Component {
 	public function set_cache( $key, $group, $value, $expiration = 0 ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -207,7 +207,7 @@ final class Cache extends Component {
 	protected function set_meta_cache( $type, $id, $key, $group, $value, $expiration = DAY_IN_SECONDS ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -238,7 +238,7 @@ final class Cache extends Component {
 	public function delete_cache( $key, $group = null ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -264,7 +264,7 @@ final class Cache extends Component {
 	protected function delete_meta_cache( $type, $id, $key, $group = null ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -339,7 +339,7 @@ final class Cache extends Component {
 	public function get_cache_version( $group ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -446,9 +446,9 @@ final class Cache extends Component {
 	}
 
 	/**
-	 * Clears import cache.
+	 * Clears transient cache.
 	 */
-	public function clear_import_cache() {
+	public function clear_transient_cache() {
 		global $wpdb;
 
 		// Delete transients.
@@ -463,7 +463,7 @@ final class Cache extends Component {
 		global $wpdb;
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
@@ -509,40 +509,43 @@ final class Cache extends Component {
 	public function clear_user_cache( $user_id ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
 		// Delete transient cache.
-		$this->delete_cache( null, 'user' );
+		$this->delete_cache( null, 'models/user' );
 	}
 
 	/**
 	 * Clears post cache.
 	 *
 	 * @param int    $post_id Post ID.
-	 * @param string $model Model name.
+	 * @param string $post_type Post type.
 	 */
-	public function clear_post_cache( $post_id, $model ) {
+	public function clear_post_cache( $post_id, $post_type ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
 		// Get post.
 		$post = get_post( $post_id );
 
+		// Get cache group.
+		$group = hivepress()->model->get_cache_group( 'post', $post_type );
+
 		// Delete transient cache.
-		$this->delete_cache( null, $model );
+		$this->delete_cache( null, $group );
 
 		// Delete meta cache.
 		if ( $post->post_author ) {
-			$this->delete_user_cache( $post->post_author, null, $model );
+			$this->delete_user_cache( $post->post_author, null, $group );
 		}
 
 		if ( $post->post_parent ) {
-			$this->delete_post_cache( $post->post_parent, null, $model );
+			$this->delete_post_cache( $post->post_parent, null, $group );
 		}
 	}
 
@@ -550,78 +553,66 @@ final class Cache extends Component {
 	 * Clears post term cache.
 	 *
 	 * @param int    $post_id Post ID.
-	 * @param array  $new_term_ids New term IDs.
-	 * @param array  $old_term_ids Old term IDs.
 	 * @param string $post_type Post type.
-	 * @param string $taxonomy Taxonomy name.
+	 * @param string $taxonomy Taxonomy.
 	 */
-	public function clear_post_term_cache( $post_id, $new_term_ids, $old_term_ids, $post_type, $taxonomy ) {
-		// todo.
+	public function clear_post_term_cache( $post_id, $post_type, $taxonomy ) {
+
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		// Get model name.
-		$model = $this->get_model_name( 'post', $post_type );
-
-		// Delete term cache.
-		$term_ids = array_unique( array_merge( $new_term_ids, $old_term_ids ) );
-
-		foreach ( $term_ids as $term_id ) {
-			$this->delete_term_cache( $term_id, null, $model );
-		}
-
-		// Delete post cache.
-		$this->delete_post_cache( $post_id, null, $this->get_model_name( 'term', $taxonomy ) );
+		// Delete meta cache.
+		$this->delete_post_cache( $post_id, null, hivepress()->model->get_cache_group( 'term', $taxonomy ) );
 	}
 
 	/**
 	 * Clears term cache.
 	 *
 	 * @param int    $term_id Term ID.
-	 * @param string $model Model name.
+	 * @param string $taxonomy Taxonomy.
 	 */
-	public function clear_term_cache( $term_id, $model ) {
+	public function clear_term_cache( $term_id, $taxonomy ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		// Get term.
-		$term = get_term( $term_id );
-
 		// Delete transient cache.
-		$this->delete_cache( null, $model );
+		$this->delete_cache( null, hivepress()->model->get_cache_group( 'term', $taxonomy ) );
 	}
 
 	/**
 	 * Clears comment cache.
 	 *
 	 * @param int    $comment_id Comment ID.
-	 * @param string $model Model name.
+	 * @param string $comment_type Comment type.
 	 */
-	public function clear_comment_cache( $comment_id, $model ) {
+	public function clear_comment_cache( $comment_id, $comment_type ) {
 
 		// Check status.
-		if ( ! $this->is_cache_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
 		// Get comment.
 		$comment = get_comment( $comment_id );
 
+		// Get cache group.
+		$group = hivepress()->model->get_cache_group( 'comment', $comment_type );
+
 		// Delete transient cache.
-		$this->delete_cache( null, $model );
+		$this->delete_cache( null, $group );
 
 		// Delete meta cache.
 		if ( $comment->user_id ) {
-			$this->delete_user_cache( $comment->user_id, null, $model );
+			$this->delete_user_cache( $comment->user_id, null, $group );
 		}
 
 		if ( $comment->comment_post_ID ) {
-			$this->delete_post_cache( $comment->comment_post_ID, null, $model );
+			$this->delete_post_cache( $comment->comment_post_ID, null, $group );
 		}
 	}
 }
