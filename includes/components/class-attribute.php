@@ -934,7 +934,7 @@ final class Attribute extends Component {
 			foreach ( $attribute_fields as $field ) {
 
 				// Get parent field.
-				$parent_field = hp\get_array_value( $fields, $field->get_arg( '_parent' ) );
+				$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
 
 				if ( $parent_field ) {
 
