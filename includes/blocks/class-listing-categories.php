@@ -67,7 +67,7 @@ class Listing_Categories extends Block {
 
 				'settings' => [
 					'columns' => [
-						'label'    => esc_html__( 'Columns', 'hivepress' ),
+						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
@@ -97,15 +97,15 @@ class Listing_Categories extends Block {
 					],
 
 					'order'   => [
-						'label'    => esc_html__( 'Order', 'hivepress' ),
+						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
 						'type'     => 'select',
 						'required' => true,
 						'_order'   => 40,
 
 						'options'  => [
 							'sort_order' => '&mdash;',
-							'name'       => esc_html_x( 'Name', 'order', 'hivepress' ),
-							'item_count' => esc_html_x( 'Item Count', 'order', 'hivepress' ),
+							'name'       => esc_html_x( 'Name', 'sort by', 'hivepress' ),
+							'item_count' => esc_html_x( 'Item Count', 'sort by', 'hivepress' ),
 						],
 					],
 				],

@@ -62,7 +62,7 @@ class Listing_Search extends Form {
 				],
 
 				'button' => [
-					'label' => esc_html_x( 'Search', 'verb', 'hivepress' ),
+					'label' => esc_html__( 'Search', 'hivepress' ),
 				],
 			],
 			$args

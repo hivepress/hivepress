@@ -48,12 +48,12 @@ class Select extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Select', 'hivepress' ),
+				'label'      => esc_html_x( 'Select', 'field', 'hivepress' ),
 				'filterable' => true,
 
 				'settings'   => [
 					'multiple' => [
-						'label'   => esc_html__( 'Multiple', 'hivepress' ),
+						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 10,

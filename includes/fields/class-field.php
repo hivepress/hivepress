@@ -132,7 +132,7 @@ abstract class Field {
 
 				'settings'   => [
 					'required' => [
-						'label'   => esc_html__( 'Required', 'hivepress' ),
+						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
 						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 5,

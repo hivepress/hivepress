@@ -69,7 +69,7 @@ class Number extends Field {
 					],
 
 					'decimals'    => [
-						'label'     => esc_html__( 'Decimals', 'hivepress' ),
+						'label'     => esc_html_x( 'Decimals', 'quantity', 'hivepress' ),
 						'type'      => 'number',
 						'default'   => 0,
 						'min_value' => 0,

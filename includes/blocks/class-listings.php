@@ -74,7 +74,7 @@ class Listings extends Block {
 
 				'settings' => [
 					'columns'  => [
-						'label'    => esc_html__( 'Columns', 'hivepress' ),
+						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
@@ -104,15 +104,15 @@ class Listings extends Block {
 					],
 
 					'order'    => [
-						'label'    => esc_html__( 'Order', 'hivepress' ),
+						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
 						'type'     => 'select',
 						'required' => true,
 						'_order'   => 40,
 
 						'options'  => [
-							'created_date' => esc_html_x( 'Date', 'order', 'hivepress' ),
-							'title'        => esc_html_x( 'Title', 'order', 'hivepress' ),
-							'random'       => esc_html_x( 'Random', 'order', 'hivepress' ),
+							'created_date' => esc_html_x( 'Date', 'sort by', 'hivepress' ),
+							'title'        => esc_html_x( 'Title', 'sort by', 'hivepress' ),
+							'random'       => esc_html_x( 'Random', 'sort by', 'hivepress' ),
 						],
 					],
 

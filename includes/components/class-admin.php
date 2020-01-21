@@ -538,12 +538,12 @@ final class Admin extends Component {
 		// Set tabs.
 		$tabs = [
 			'all'       => [
-				'name'  => esc_html_x( 'All', 'extensions', 'hivepress' ),
+				'name'  => esc_html_x( 'All', 'plural', 'hivepress' ),
 				'count' => 0,
 			],
 
 			'installed' => [
-				'name'  => esc_html_x( 'Installed', 'extensions', 'hivepress' ),
+				'name'  => esc_html_x( 'Installed', 'plural', 'hivepress' ),
 				'count' => 0,
 			],
 		];

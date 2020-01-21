@@ -47,7 +47,7 @@ return [
 
 		'fields' => [
 			'editable'        => [
-				'label'   => esc_html__( 'Editable', 'hivepress' ),
+				'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 1,
@@ -71,14 +71,14 @@ return [
 
 		'fields' => [
 			'filterable'        => [
-				'label'   => esc_html__( 'Searchable', 'hivepress' ),
+				'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 10,
 			],
 
 			'sortable'          => [
-				'label'   => esc_html__( 'Sortable', 'hivepress' ),
+				'label'   => esc_html_x( 'Sortable', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Display as a sorting option', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 20,
@@ -139,7 +139,7 @@ return [
 			],
 
 			'sort_order'            => [
-				'label'     => esc_html__( 'Order', 'hivepress' ),
+				'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
 				'type'      => 'number',
 				'min_value' => 0,
 				'_order'    => 20,

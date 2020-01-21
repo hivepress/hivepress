@@ -567,9 +567,9 @@ final class Attribute extends Component {
 		$options = [];
 
 		if ( is_search() ) {
-			$options[''] = esc_html__( 'Relevance', 'hivepress' );
+			$options[''] = esc_html_x( 'Relevance', 'sort by', 'hivepress' );
 		} else {
-			$options[''] = esc_html__( 'Date', 'hivepress' );
+			$options[''] = esc_html_x( 'Date', 'sort by', 'hivepress' );
 		}
 
 		// Add attribute options.
