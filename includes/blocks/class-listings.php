@@ -110,9 +110,9 @@ class Listings extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							'date'   => esc_html_x( 'Date', 'order', 'hivepress' ),
-							'title'  => esc_html_x( 'Title', 'order', 'hivepress' ),
-							'random' => esc_html_x( 'Random', 'order', 'hivepress' ),
+							'created_date' => esc_html_x( 'Date', 'order', 'hivepress' ),
+							'title'        => esc_html_x( 'Title', 'order', 'hivepress' ),
+							'random'       => esc_html_x( 'Random', 'order', 'hivepress' ),
 						],
 					],
 

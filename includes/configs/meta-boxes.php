@@ -138,7 +138,7 @@ return [
 				'_order'  => 10,
 			],
 
-			'order'                 => [
+			'sort_order'            => [
 				'label'     => esc_html__( 'Order', 'hivepress' ),
 				'type'      => 'number',
 				'min_value' => 0,

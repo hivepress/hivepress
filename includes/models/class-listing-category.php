@@ -43,10 +43,16 @@ class Listing_Category extends Term {
 						'_alias'     => 'description',
 					],
 
-					'count'       => [
+					'item_count'  => [
 						'type'      => 'number',
 						'min_value' => 0,
 						'_alias'    => 'count',
+					],
+
+					'sort_order'  => [
+						'type'      => 'number',
+						'min_value' => 0,
+						'_external' => 'true',
 					],
 
 					'parent'      => [

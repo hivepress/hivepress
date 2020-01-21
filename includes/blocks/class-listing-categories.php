@@ -103,9 +103,9 @@ class Listing_Categories extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							'custom' => esc_html_x( 'Default', 'order', 'hivepress' ),
-							'name'   => esc_html_x( 'Name', 'order', 'hivepress' ),
-							'count'  => esc_html_x( 'Count', 'order', 'hivepress' ),
+							'sort_order' => esc_html_x( 'Default', 'order', 'hivepress' ),
+							'name'       => esc_html_x( 'Name', 'order', 'hivepress' ),
+							'item_count' => esc_html_x( 'Item Count', 'order', 'hivepress' ),
 						],
 					],
 				],
@@ -160,16 +160,10 @@ class Listing_Categories extends Block {
 		// Set order.
 		if ( 'name' === $this->order ) {
 			$query->order( [ 'name' => 'asc' ] );
-		} elseif ( 'count' === $this->order ) {
-			$query->order( [ 'count' => 'desc' ] );
+		} elseif ( 'item_count' === $this->order ) {
+			$query->order( [ 'item_count' => 'desc' ] );
 		} else {
-			$query->set_args(
-				[
-					'meta_key' => 'hp_order',
-					'orderby'  => 'meta_value_num',
-					'order'    => 'ASC',
-				]
-			);
+			$query->order( [ 'sort_order' => 'asc' ] );
 		}
 
 		// Get cached IDs.

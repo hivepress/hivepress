@@ -54,6 +54,7 @@ final class Upgrade extends Component {
 
 			// Upgrade term meta.
 			$wpdb->update( $wpdb->termmeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
+			$wpdb->update( $wpdb->termmeta, [ 'meta_key' => 'hp_sort_order' ], [ 'meta_key' => 'hp_order' ] );
 
 			// Upgrade options.
 			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_password_request' ], [ 'option_name' => 'hp_email_user_request_password' ] );
