@@ -76,7 +76,7 @@ abstract class Term extends Model {
 
 				// Get meta value.
 				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Get term value.
 				$values[ $field_name ] = hp\get_array_value( $term, $field->get_arg( '_alias' ) );
@@ -107,7 +107,7 @@ abstract class Term extends Model {
 
 				// Set meta value.
 				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Set term value.
 				$term[ $field->get_arg( '_alias' ) ] = $field->get_value();

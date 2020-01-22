@@ -101,12 +101,10 @@ class Radio extends Select {
 		if ( $options ) {
 			$output .= '<ul>';
 
-			foreach ( $options as $value => $option ) {
+			foreach ( $options as $value => $label ) {
 				$output .= '<li>';
 
 				// Get label.
-				$label = $option;
-
 				if ( is_array( $label ) ) {
 					$label = hp\get_array_value( $label, 'label' );
 				}
@@ -115,7 +113,7 @@ class Radio extends Select {
 				$id = $this->name . '_' . uniqid();
 
 				// Render option.
-				$output .= '<label for="' . esc_attr( $id ) . '"><input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+				$output .= '<label for="' . esc_attr( $id ) . '"><input type="radio" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
 
 				// Render child options.
 				$output .= $this->render_options( $value );

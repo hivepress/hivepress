@@ -29,9 +29,13 @@ abstract class Page extends Template {
 			[
 				'blocks' => [
 					'page_container' => [
-						'type'   => 'page',
-						'blocks' => [],
-						'_order' => 10,
+						'type'       => 'page',
+						'blocks'     => [],
+						'_order'     => 10,
+
+						'attributes' => [
+							'class' => [ 'hp-page' ],
+						],
 					],
 				],
 			],

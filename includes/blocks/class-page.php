@@ -28,7 +28,7 @@ class Page extends Container {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-page', 'site-main' ],
+				'class' => [ 'site-main' ],
 			]
 		);
 

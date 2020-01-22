@@ -30,7 +30,7 @@ trait Mutator {
 		$method = $prefix . 'set_' . $name;
 
 		if ( method_exists( $this, $method ) ) {
-			call_user_func_array( [ $this, $method ], [ $value ] );
+			call_user_func( [ $this, $method ], $value );
 		} elseif ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
 		}

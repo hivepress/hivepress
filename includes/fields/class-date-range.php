@@ -145,10 +145,11 @@ class Date_Range extends Date {
 			array_merge(
 				$this->args,
 				[
-					'name'       => null,
-					'default'    => null,
+					'display_type' => 'text',
+					'name'         => null,
+					'default'      => null,
 
-					'attributes' => [
+					'attributes'   => [
 						'data-mode' => 'range',
 					],
 				]

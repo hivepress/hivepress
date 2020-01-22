@@ -284,7 +284,7 @@ abstract class Form {
 	 * @param array $values Field values.
 	 * @return object
 	 */
-	final public function set_values( $values ) {
+	public function set_values( $values ) {
 		foreach ( $values as $name => $value ) {
 			$this->set_value( $name, $value );
 		}

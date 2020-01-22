@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor_View_Page
  */
-class Vendor_View_Page extends Page {
+class Vendor_View_Page extends Page_Sidebar_Left {
 
 	/**
 	 * Class constructor.
@@ -34,134 +34,102 @@ class Vendor_View_Page extends Page {
 						'attributes' => [
 							'class' => [ 'hp-vendor', 'hp-vendor--view-page' ],
 						],
+					],
+
+					'page_sidebar'   => [
+						'attributes' => [
+							'data-component' => 'sticky',
+						],
 
 						'blocks'     => [
-							'page_columns' => [
+							'vendor_summary'         => [
 								'type'       => 'container',
 								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'hp-row' ],
+									'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
 								],
 
 								'blocks'     => [
-									'page_sidebar' => [
-										'type'       => 'container',
-										'tag'        => 'aside',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-											'data-component' => 'sticky',
-										],
-
-										'blocks'     => [
-											'vendor_summary' => [
-												'type'   => 'container',
-												'_order' => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
-												],
-
-												'blocks' => [
-													'vendor_image' => [
-														'type'     => 'part',
-														'path' => 'vendor/view/page/vendor-image',
-														'_order'    => 10,
-													],
-
-													'vendor_name' => [
-														'type'       => 'container',
-														'tag'        => 'h3',
-														'_order'     => 20,
-
-														'attributes' => [
-															'class' => [ 'hp-vendor__name' ],
-														],
-
-														'blocks'     => [
-															'vendor_name_text'           => [
-																'type'   => 'part',
-																'path' => 'vendor/view/page/vendor-name',
-																'_order' => 10,
-															],
-														],
-													],
-
-													'vendor_details_primary' => [
-														'type'       => 'container',
-														'_order'      => 30,
-
-														'attributes' => [
-															'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
-														],
-
-														'blocks'     => [
-															'vendor_registered_date' => [
-																'type' => 'part',
-																'path' => 'vendor/view/vendor-registered-date',
-																'_order' => 10,
-															],
-														],
-													],
-
-													'vendor_description' => [
-														'type'     => 'part',
-														'path' => 'vendor/view/page/vendor-description',
-														'_order'    => 40,
-													],
-												],
-											],
-
-											'vendor_actions_primary' => [
-												'type'   => 'container',
-												'blocks' => [],
-												'_order' => 20,
-
-												'attributes' => [
-													'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
-												],
-											],
-
-											'page_sidebar_widgets' => [
-												'type'   => 'widgets',
-												'area'   => 'hp_vendor_view_sidebar',
-												'_order' => 30,
-											],
-										],
+									'vendor_image'       => [
+										'type'   => 'part',
+										'path'   => 'vendor/view/page/vendor-image',
+										'_order' => 10,
 									],
 
-									'page_content' => [
+									'vendor_name'        => [
 										'type'       => 'container',
-										'tag'        => 'main',
+										'tag'        => 'h3',
 										'_order'     => 20,
 
 										'attributes' => [
-											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+											'class' => [ 'hp-vendor__name' ],
 										],
 
 										'blocks'     => [
-											'page_title' => [
+											'vendor_name_text'           => [
 												'type'   => 'part',
-												'path'   => 'page/page-title',
-												'_order' => 5,
-											],
-
-											'listings'   => [
-												'type'    => 'listings',
-												'columns' => 2,
-												'_order'  => 10,
-											],
-
-											'listing_pagination' => [
-												'type'   => 'part',
-												'path'   => 'page/pagination',
-												'_order' => 20,
+												'path'   => 'vendor/view/page/vendor-name',
+												'_order' => 10,
 											],
 										],
 									],
+
+									'vendor_details_primary' => [
+										'type'       => 'container',
+										'_order'     => 30,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
+										],
+
+										'blocks'     => [
+											'vendor_registered_date' => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-registered-date',
+												'_order' => 10,
+											],
+										],
+									],
+
+									'vendor_description' => [
+										'type'   => 'part',
+										'path'   => 'vendor/view/page/vendor-description',
+										'_order' => 40,
+									],
 								],
+							],
+
+							'vendor_actions_primary' => [
+								'type'       => 'container',
+								'blocks'     => [],
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
+								],
+							],
+
+							'page_sidebar_widgets'   => [
+								'type'   => 'widgets',
+								'area'   => 'hp_vendor_view_sidebar',
+								'_order' => 30,
+							],
+						],
+					],
+
+					'page_content'   => [
+						'blocks' => [
+							'listings'           => [
+								'type'    => 'listings',
+								'columns' => 2,
+								'_order'  => 10,
+							],
+
+							'listing_pagination' => [
+								'type'   => 'part',
+								'path'   => 'page/pagination',
+								'_order' => 20,
 							],
 						],
 					],

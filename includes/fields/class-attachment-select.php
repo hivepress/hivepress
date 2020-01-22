@@ -61,7 +61,11 @@ class Attachment_Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$attachment_id = Models\Attachment::query()->filter( [ 'id__in' => (array) $this->value ] )->get_first_id();
+			$attachment_id = Models\Attachment::query()->filter(
+				[
+					'id__in' => (array) $this->value,
+				]
+			)->get_first_id();
 
 			if ( empty( $attachment_id ) ) {
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );

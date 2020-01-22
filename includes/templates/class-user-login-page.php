@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class User_Login_Page
  */
-class User_Login_Page extends Page {
+class User_Login_Page extends Page_Narrow {
 
 	/**
 	 * Class constructor.
@@ -30,39 +30,11 @@ class User_Login_Page extends Page {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [
+					'page_content' => [
 						'blocks' => [
-							'page_columns' => [
-								'type'       => 'container',
-								'_order'     => 10,
-
-								'attributes' => [
-									'class' => [ 'hp-row' ],
-								],
-
-								'blocks'     => [
-									'page_content' => [
-										'type'       => 'container',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-page__content', 'hp-col-sm-4', 'hp-col-sm-offset-4', 'hp-col-xs-12' ],
-										],
-
-										'blocks'     => [
-											'page_title' => [
-												'type'   => 'part',
-												'path'   => 'page/page-title',
-												'_order' => 5,
-											],
-
-											'user_login_form' => [
-												'type'   => 'user_login_form',
-												'_order' => 10,
-											],
-										],
-									],
-								],
+							'user_login_form' => [
+								'type'   => 'user_login_form',
+								'_order' => 10,
 							],
 						],
 					],

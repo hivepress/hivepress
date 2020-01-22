@@ -93,19 +93,20 @@ class Listing_Category extends Term {
 	final public function get_children__id() {
 		if ( ! isset( $this->values['children__id'] ) ) {
 
-			// Get term IDs.
-			$term_ids = get_terms(
-				[
-					'taxonomy'   => static::_get_meta( 'alias' ),
-					'parent'     => $this->id,
-					'hide_empty' => false,
-					'fields'     => 'ids',
-				]
-			);
+			// Get children IDs.
+			$children_ids = [];
+
+			if ( $this->id ) {
+				$children_ids = static::query()->filter(
+					[
+						'parent' => $this->id,
+					]
+				)->get_ids();
+			}
 
 			// Set field value.
-			$this->set_children( $term_ids );
-			$this->values['children__id'] = $term_ids;
+			$this->set_children( $children_ids );
+			$this->values['children__id'] = $children_ids;
 		}
 
 		return $this->fields['children']->get_value();

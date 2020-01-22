@@ -79,7 +79,7 @@ class Comment extends Query {
 		$field_aliases = array_filter(
 			array_map(
 				function( $field ) {
-					return ! $field->get_arg( '_external' ) ? $field->get_arg( '_alias' ) : null;
+					return ! $field->get_arg( '_external' ) && ! $field->get_arg( '_relation' ) ? $field->get_arg( '_alias' ) : null;
 				},
 				$this->model->_get_fields()
 			)

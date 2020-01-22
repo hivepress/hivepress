@@ -55,7 +55,7 @@ class User_Password_Reset extends Model_Form {
 					],
 
 					'username'           => [
-						'type' => 'hidden',
+						'display_type' => 'hidden',
 					],
 
 					'password_reset_key' => [

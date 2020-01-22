@@ -76,7 +76,7 @@ abstract class Comment extends Model {
 
 				// Get meta value.
 				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Get comment value.
 				$values[ $field_name ] = hp\get_array_value( $comment, $field->get_arg( '_alias' ) );
@@ -107,7 +107,7 @@ abstract class Comment extends Model {
 
 				// Set meta value.
 				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Set comment value.
 				$comment[ $field->get_arg( '_alias' ) ] = $field->get_value();

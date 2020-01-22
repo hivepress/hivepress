@@ -191,7 +191,7 @@ abstract class Model {
 
 		// Get model query.
 		if ( 'query' === $name ) {
-			return $this->_get_query( $this );
+			return static::_get_query( $this );
 		}
 
 		// Get or set field value.
@@ -316,7 +316,7 @@ abstract class Model {
 						if ( is_array( $value ) ) {
 							$value = array_map(
 								function( $id ) use ( $model, $method ) {
-									$object = $model->query()->get_by_id( $id );
+									$object = $model::query()->get_by_id( $id );
 
 									if ( $object && $method ) {
 										$object = call_user_func( [ $object, $method ] );
@@ -327,7 +327,7 @@ abstract class Model {
 								$value
 							);
 						} else {
-							$value = $model->query()->get_by_id( $value );
+							$value = $model::query()->get_by_id( $value );
 
 							if ( $value && $method ) {
 								$value = call_user_func( [ $value, $method ] );
@@ -350,7 +350,21 @@ abstract class Model {
 	final protected function set_id( $id ) {
 		$this->id = absint( $id );
 
-		if ( has_filter( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields' ) ) {
+		// Get fields.
+		$fields = array_map(
+			function( $field ) {
+				return array_merge(
+					$field->get_args(),
+					[
+						'default' => $field->get_value(),
+					]
+				);
+			},
+			$this->fields
+		);
+
+		// Filter fields.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
 			 * Filters model fields.
@@ -361,24 +375,11 @@ abstract class Model {
 			 * @param array $fields Model fields.
 			 * @param object $object Model object.
 			 */
-			$this->_set_fields(
-				apply_filters(
-					'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/fields',
-					array_map(
-						function( $field ) {
-							return array_merge(
-								$field->get_args(),
-								[
-									'default' => $field->get_value(),
-								]
-							);
-						},
-						$this->fields
-					),
-					$this
-				)
-			);
+			$fields = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/fields', $fields, $this );
 		}
+
+		// Set fields.
+		$this->_set_fields( $fields );
 
 		return $this;
 	}

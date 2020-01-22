@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Categories_View_Page
  */
-class Listing_Categories_View_Page extends Page {
+class Listing_Categories_View_Page extends Page_Wide {
 
 	/**
 	 * Class constructor.
@@ -32,10 +32,10 @@ class Listing_Categories_View_Page extends Page {
 				'blocks' => [
 					'page_container' => [
 						'blocks' => [
-							'page_header'  => [
+							'page_header' => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'_order'     => 10,
+								'_order'     => 5,
 
 								'attributes' => [
 									'class' => [ 'hp-page__header' ],
@@ -48,23 +48,15 @@ class Listing_Categories_View_Page extends Page {
 									],
 								],
 							],
+						],
+					],
 
-							'page_content' => [
-								'type'       => 'container',
-								'tag'        => 'main',
-								'_order'     => 20,
-
-								'attributes' => [
-									'class' => [ 'hp-page__content' ],
-								],
-
-								'blocks'     => [
-									'listing_categories' => [
-										'type'    => 'listing_categories',
-										'columns' => 3,
-										'_order'  => 10,
-									],
-								],
+					'page_content'   => [
+						'blocks' => [
+							'listing_categories' => [
+								'type'    => 'listing_categories',
+								'columns' => 3,
+								'_order'  => 10,
 							],
 						],
 					],

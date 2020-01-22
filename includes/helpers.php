@@ -144,9 +144,9 @@ function merge_arrays() {
 function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = null ) {
 	if ( is_null( $tree_key ) ) {
 		if ( $parent_tree ) {
-			$tree_key = array_keys( $parent_tree )[0];
+			$tree_key = reset( ( array_keys( $parent_tree ) ) );
 		} elseif ( $child_tree ) {
-			$tree_key = array_keys( $child_tree )[0];
+			$tree_key = reset( ( array_keys( $child_tree ) ) );
 		}
 	}
 
@@ -178,21 +178,15 @@ function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = n
  * @return array
  */
 function sort_array( $array ) {
-	$sorted = [];
-
 	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
 			if ( ! isset( $value['_order'] ) ) {
-				$value['_order'] = 0;
+				$array[ $key ]['_order'] = 0;
 			}
-
-			$sorted[ $key ] = $value;
 		}
 	}
 
-	$sorted = wp_list_sort( $sorted, '_order', 'ASC', true );
-
-	return $sorted;
+	return wp_list_sort( $array, '_order', 'ASC', true );
 }
 
 /**
@@ -299,7 +293,7 @@ function html_attributes( $attributes ) {
 		}
 	}
 
-	return trim( $output );
+	return rtrim( $output );
 }
 
 /**
@@ -321,6 +315,8 @@ function sanitize_html( $html, $tags = [] ) {
 				'class' => [],
 			],
 		];
+	} elseif ( true === $tags ) {
+		$tags = 'post';
 	}
 
 	return wp_kses( $html, $tags );

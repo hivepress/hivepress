@@ -124,6 +124,7 @@ class Textarea extends Text {
 			);
 
 			$output .= ob_get_contents();
+
 			ob_end_clean();
 		} else {
 

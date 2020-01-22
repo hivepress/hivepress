@@ -29,6 +29,9 @@ final class Upgrade extends Component {
 		// Upgrade database.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_database' ] );
 
+		// Upgrade comments.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_comments' ] );
+
 		// Upgrade events.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_events' ] );
 
@@ -58,6 +61,31 @@ final class Upgrade extends Component {
 
 			// Upgrade options.
 			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_password_request' ], [ 'option_name' => 'hp_email_user_request_password' ] );
+		}
+	}
+
+	/**
+	 * Upgrades comments.
+	 *
+	 * @param string $version Old version.
+	 */
+	public function upgrade_comments( $version ) {
+		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+
+			// Get comments.
+			$comments = get_comments(
+				[
+					'type' => 'hp_listing_package',
+				]
+			);
+
+			// Upgrade comments.
+			foreach ( $comments as $comment ) {
+				if ( $comment->comment_post_ID ) {
+					update_comment_meta( $comment->comment_ID, 'hp_expire_period', get_post_meta( $comment->comment_post_ID, 'hp_expire_period', true ) );
+					update_comment_meta( $comment->comment_ID, 'hp_featured', get_post_meta( $comment->comment_post_ID, 'hp_featured', true ) );
+				}
+			}
 		}
 	}
 

@@ -27,7 +27,7 @@ class URL extends Text {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'URL', 'hivepress' ),
+				'label'      => esc_html_x( 'URL', 'field', 'hivepress' ),
 				'filterable' => false,
 				'sortable'   => false,
 

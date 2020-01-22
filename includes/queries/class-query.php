@@ -214,17 +214,24 @@ abstract class Query extends \ArrayObject {
 
 							// Normalize meta value.
 							if ( is_bool( $value ) ) {
-								$value = $value ? '1' : '';
+								$value = $value ? '1' : null;
 							}
 
-							// Set meta type and value.
-							$clause = array_merge(
-								$clause,
-								[
-									'type'  => $field::get_meta( 'type' ),
-									'value' => $value,
-								]
-							);
+							if ( is_null( $value ) ) {
+
+								// Set operator.
+								$clause['compare'] = 'NOT EXISTS';
+							} else {
+
+								// Set meta type and value.
+								$clause = array_merge(
+									$clause,
+									[
+										'type'  => $field::get_meta( 'type' ),
+										'value' => $value,
+									]
+								);
+							}
 						}
 
 						// Normalize operator alias.
@@ -234,7 +241,7 @@ abstract class Query extends \ArrayObject {
 
 						// Set meta filter.
 						$this->args['meta_query'][ $name . '__' . $operator_alias ] = $clause;
-					} elseif ( $field->get_arg( '_alias' ) ) {
+					} elseif ( $field->get_arg( '_alias' ) && ! $field->get_arg( '_relation' ) ) {
 
 						// Normalize operator alias.
 						if ( ! in_array( $operator_alias, [ 'in', 'not_in', 'like' ], true ) ) {
@@ -288,7 +295,7 @@ abstract class Query extends \ArrayObject {
 
 								// Set meta order.
 								$args[ $name . '__order' ] = $order;
-							} elseif ( $field->get_arg( '_alias' ) ) {
+							} elseif ( $field->get_arg( '_alias' ) && ! $field->get_arg( '_relation' ) ) {
 
 								// Set alias order.
 								$args[ $field->get_arg( '_alias' ) ] = $order;

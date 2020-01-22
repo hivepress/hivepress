@@ -23,15 +23,15 @@ class Captcha extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
-		$attributes = [];
 
-		// Set class.
-		$attributes['class'] = [ 'g-recaptcha' ];
-
-		// Set site key.
-		$attributes['data-sitekey'] = get_option( 'hp_recaptcha_site_key' );
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class'        => [ 'g-recaptcha' ],
+				'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
+			]
+		);
 
 		parent::boot();
 	}

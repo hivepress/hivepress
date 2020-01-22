@@ -134,7 +134,7 @@ class Checkbox extends Field {
 		// Render field.
 		$output = '<label for="' . esc_attr( $id ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
-		$output .= '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
+		$output .= '<input type="checkbox" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

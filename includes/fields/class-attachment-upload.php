@@ -135,7 +135,11 @@ class Attachment_Upload extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$attachment_ids = Models\Attachment::query()->filter( [ 'id__in' => (array) $this->value ] )->get_ids();
+			$attachment_ids = Models\Attachment::query()->filter(
+				[
+					'id__in' => (array) $this->value,
+				]
+			)->get_ids();
 
 			if ( count( $attachment_ids ) !== count( (array) $this->value ) ) {
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );

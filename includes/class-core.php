@@ -73,7 +73,7 @@ final class Core {
 		register_deactivation_hook( HP_FILE, [ __CLASS__, 'deactivate' ] );
 
 		// Install HivePress.
-		add_action( 'init', [ $this, 'install' ] );
+		add_action( 'init', [ $this, 'install' ], 10000 );
 
 		// Setup HivePress.
 		add_action( 'plugins_loaded', [ $this, 'setup' ] );

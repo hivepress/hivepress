@@ -194,7 +194,8 @@ abstract class Menu {
 		$output = '';
 
 		if ( $this->items ) {
-			$output = '<nav ' . hp\html_attributes( $this->attributes ) . '><ul>';
+			$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
+			$output .= '<ul>';
 
 			foreach ( $this->items as $name => $args ) {
 				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $args, 'current' ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
@@ -202,7 +203,8 @@ abstract class Menu {
 				$output .= '</li>';
 			}
 
-			$output .= '</ul></nav>';
+			$output .= '</ul>';
+			$output .= '</nav>';
 		}
 
 		return $output;

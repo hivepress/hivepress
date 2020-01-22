@@ -78,6 +78,15 @@ abstract class Model_Form extends Form {
 	}
 
 	/**
+	 * Gets model object.
+	 *
+	 * @return object
+	 */
+	final public function get_model() {
+		return $this->model;
+	}
+
+	/**
 	 * Sets form fields.
 	 *
 	 * @param array $fields Form fields.
@@ -98,11 +107,20 @@ abstract class Model_Form extends Form {
 	}
 
 	/**
-	 * Gets model object.
+	 * Sets field values.
 	 *
+	 * @param array $values Field values.
 	 * @return object
 	 */
-	final public function get_model() {
-		return $this->model;
+	final public function set_values( $values ) {
+		foreach ( $this->fields as $field_name => $field ) {
+			if ( $field->get_arg( '_separate' ) ) {
+				unset( $values[ $field_name ] );
+			}
+		}
+
+		parent::set_values( $values );
+
+		return $this;
 	}
 }

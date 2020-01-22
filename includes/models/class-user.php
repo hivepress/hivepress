@@ -183,7 +183,7 @@ class User extends Model {
 
 				// Get meta value.
 				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Get user value.
 				$values[ $field_name ] = hp\get_array_value( $user, $field->get_arg( '_alias' ) );
@@ -214,7 +214,7 @@ class User extends Model {
 
 				// Set meta value.
 				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Set user value.
 				$user[ $field->get_arg( '_alias' ) ] = $field->get_value();

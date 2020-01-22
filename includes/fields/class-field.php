@@ -337,9 +337,7 @@ abstract class Field {
 			if ( ! is_null( $this->value ) ) {
 				$this->sanitize();
 
-				if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
-					$this->add_filter();
-				}
+				$this->update_filter();
 			}
 		}
 
@@ -389,19 +387,21 @@ abstract class Field {
 	}
 
 	/**
-	 * Updates field filter.
-	 */
-	public function update_filter() {
-		$this->add_filter();
-	}
-
-	/**
 	 * Gets field filter.
 	 *
 	 * @return mixed
 	 */
 	final public function get_filter() {
 		return $this->filter;
+	}
+
+	/**
+	 * Updates field filter.
+	 */
+	final public function update_filter() {
+		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
+			$this->add_filter();
+		}
 	}
 
 	/**
@@ -463,7 +463,7 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	public function display() {
+	final public function display() {
 		return hp\replace_tokens(
 			[
 				'label' => $this->label,

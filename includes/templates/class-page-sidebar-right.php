@@ -1,9 +1,7 @@
 <?php
 /**
- * User password reset page template.
+ * Abstract right sidebar page template.
  *
- * @template user_password_reset_page
- * @description User password reset page.
  * @package HivePress\Templates
  */
 
@@ -15,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User password reset page template class.
+ * Right sidebar page template class.
  *
- * @class User_Password_Reset_Page
+ * @class Page_Sidebar_Right
  */
-class User_Password_Reset_Page extends Page_Narrow {
+abstract class Page_Sidebar_Right extends Page_Sidebar_Left {
 
 	/**
 	 * Class constructor.
@@ -31,12 +29,11 @@ class User_Password_Reset_Page extends Page_Narrow {
 			[
 				'blocks' => [
 					'page_content' => [
-						'blocks' => [
-							'user_password_reset_form' => [
-								'type'   => 'user_password_reset_form',
-								'_order' => 10,
-							],
-						],
+						'_order' => 10,
+					],
+
+					'page_sidebar' => [
+						'_order' => 20,
 					],
 				],
 			],

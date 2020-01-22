@@ -110,6 +110,7 @@ class Listing extends Post {
 					'vendor'        => [
 						'type'      => 'number',
 						'min_value' => 1,
+						'required'  => true,
 						'_alias'    => 'post_parent',
 						'_model'    => 'vendor',
 					],
@@ -210,7 +211,7 @@ class Listing extends Post {
 					$urls = wp_get_attachment_image_src( $image_id, $size );
 
 					if ( $urls ) {
-						$image_urls[ $image_id ] = reset( $urls );
+						$image_urls[] = reset( $urls );
 					}
 				}
 			}

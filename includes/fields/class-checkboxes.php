@@ -101,12 +101,10 @@ class Checkboxes extends Select {
 		if ( $options ) {
 			$output .= '<ul>';
 
-			foreach ( $options as $value => $option ) {
+			foreach ( $options as $value => $label ) {
 				$output .= '<li>';
 
 				// Get label.
-				$label = $option;
-
 				if ( is_array( $label ) ) {
 					$label = hp\get_array_value( $label, 'label' );
 				}
@@ -121,10 +119,10 @@ class Checkboxes extends Select {
 				// Render option.
 				$output .= ( new Checkbox(
 					[
-						'name'          => $this->name . '[]',
-						'caption'       => $label,
-						'check_value'   => $value,
-						'default'       => $default,
+						'name'        => $this->name . '[]',
+						'caption'     => $label,
+						'check_value' => $value,
+						'default'     => $default,
 					]
 				) )->render();
 

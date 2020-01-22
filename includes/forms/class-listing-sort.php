@@ -82,7 +82,7 @@ class Listing_Sort extends Form {
 	 */
 	protected function boot() {
 
-		// Set submission.
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

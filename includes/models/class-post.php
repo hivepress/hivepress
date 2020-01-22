@@ -93,7 +93,7 @@ abstract class Post extends Model {
 
 				// Get meta value.
 				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Get post value.
 				$values[ $field_name ] = hp\get_array_value( $post, $field->get_arg( '_alias' ) );
@@ -129,7 +129,7 @@ abstract class Post extends Model {
 
 				// Set meta value.
 				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
-			} else {
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
 
 				// Set post value.
 				$post[ $field->get_arg( '_alias' ) ] = $field->get_value();
