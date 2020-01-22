@@ -28,14 +28,8 @@ final class Admin extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'admin_resources'            => [
-						'path' => '/admin',
-						'rest' => true,
-					],
-
 					'admin_notices_resource'     => [
-						'base' => 'admin_resources',
-						'path' => '/notices',
+						'path' => '/admin-notices',
 						'rest' => true,
 					],
 

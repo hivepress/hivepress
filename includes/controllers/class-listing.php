@@ -182,6 +182,8 @@ final class Listing extends Controller {
 		}
 
 		// Validate form.
+		$form = null;
+
 		if ( $listing->get_status() === 'auto-draft' ) {
 			$form = new Forms\Listing_Submit( [ 'model' => $listing ] );
 		} else {

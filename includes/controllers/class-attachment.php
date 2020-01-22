@@ -124,7 +124,7 @@ final class Attachment extends Controller {
 		}
 
 		// Get parent object.
-		$parent_model = $parent_model->query()->get_by_id( $request->get_param( 'parent' ) );
+		$parent_model = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
 
 		if ( empty( $parent_model ) ) {
 			return hp\rest_error( 400 );
@@ -133,12 +133,12 @@ final class Attachment extends Controller {
 		// Get user ID.
 		$user_id = $parent_model->get_user__id();
 
-		if ( $parent_model::_get_meta( 'name' ) === 'user' ) {
+		if ( $parent_model::_get_meta( 'type' ) === 'user' ) {
 			$user_id = $parent_model->get_id();
 		}
 
 		// Check permissions.
-		if ( get_current_user_id() !== $user_id || ( post_type_exists( $parent_model::_get_meta( 'alias' ) ) && ! in_array( $parent_model->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( get_current_user_id() !== $user_id || ( $parent_model::_get_meta( 'type' ) === 'post' && ! in_array( $parent_model->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -179,7 +179,7 @@ final class Attachment extends Controller {
 		// Get parent ID.
 		$parent_id = 0;
 
-		if ( post_type_exists( $parent_model::_get_meta( 'alias' ) ) ) {
+		if ( $parent_model::_get_meta( 'type' ) === 'post' ) {
 			$parent_id = $parent_model->get_id();
 		}
 

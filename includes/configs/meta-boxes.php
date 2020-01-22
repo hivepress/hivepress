@@ -95,7 +95,7 @@ return [
 	],
 
 	'listing_attribute_display' => [
-		'title'  => esc_html__( 'Display', 'hivepress' ),
+		'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
 		'screen' => 'listing_attribute',
 		'model'  => 'listing',
 
@@ -146,7 +146,7 @@ return [
 			],
 
 			'display_subcategories' => [
-				'label'   => esc_html__( 'Display', 'hivepress' ),
+				'label'   => esc_html_x( 'Display', 'noun', 'hivepress' ),
 				'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 30,

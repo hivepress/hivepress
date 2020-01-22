@@ -218,7 +218,14 @@ final class User extends Controller {
 		}
 
 		// Register user.
-		$user = ( new Models\User() )->fill( array_merge( $form->get_values(), [ 'username' => $username ] ) );
+		$user = ( new Models\User() )->fill(
+			array_merge(
+				$form->get_values(),
+				[
+					'username' => $username,
+				]
+			)
+		);
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400, $user->_get_errors() );
@@ -571,7 +578,7 @@ final class User extends Controller {
 			return hp\get_array_value( reset( $menu_items ), 'url' );
 		}
 
-		return home_url( '/' );
+		return true;
 	}
 
 	/**
@@ -597,7 +604,11 @@ final class User extends Controller {
 	 * @return string
 	 */
 	public function render_user_login_page() {
-		return ( new Blocks\Template( [ 'template' => 'user_login_page' ] ) )->render();
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_login_page',
+			]
+		) )->render();
 	}
 
 	/**
@@ -623,7 +634,11 @@ final class User extends Controller {
 	 * @return string
 	 */
 	public function render_user_password_reset_page() {
-		return ( new Blocks\Template( [ 'template' => 'user_password_reset_page' ] ) )->render();
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_password_reset_page',
+			]
+		) )->render();
 	}
 
 	/**

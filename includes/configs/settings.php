@@ -17,7 +17,7 @@ return [
 
 		'sections' => [
 			'display'    => [
-				'title'  => esc_html__( 'Display', 'hivepress' ),
+				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
 				'_order' => 10,
 
 				'fields' => [
@@ -148,7 +148,7 @@ return [
 
 	'users'        => [
 		'title'    => esc_html__( 'Users', 'hivepress' ),
-		'_order'   => 50,
+		'_order'   => 100,
 
 		'sections' => [
 			'registration' => [
