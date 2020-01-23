@@ -121,6 +121,11 @@ final class Listing extends Controller {
 						'redirect' => [ $this, 'redirect_listing_submit_page' ],
 					],
 
+					// @deprecated since version 1.3.0.
+					'listing/submit_listing'       => [
+						'base' => 'listing_submit_page',
+					],
+
 					'listing_submit_category_page' => [
 						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
 						'base'     => 'listing_submit_page',

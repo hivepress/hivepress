@@ -138,4 +138,43 @@ class Listing_Category extends Term {
 
 		return $this->values[ $name ];
 	}
+
+	/**
+	 * Gets image URL.
+	 *
+	 * @param string $size Image size.
+	 * @return string
+	 * @deprecated Since version 1.3.0
+	 */
+	final public function get_image_url( $size ) {
+		return $this->get_image__url( $size );
+	}
+
+	/**
+	 * Gets image ID.
+	 *
+	 * @return mixed
+	 * @deprecated Since version 1.3.0
+	 */
+	final public function get_image_id() {
+		return $this->get_image__id();
+	}
+
+	/**
+	 * Gets URL.
+	 *
+	 * @return mixed
+	 * @deprecated Since version 1.3.0
+	 */
+	final public function get_url() {
+		$url = null;
+
+		if ( hivepress()->request->get_param( 'route' ) === 'listing_submit_category_page' ) {
+			$url = hivepress()->router->get_url( 'listing_submit_category_page', [ 'listing_category_id' => $this->get_id() ] );
+		} else {
+			$url = hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $this->get_id() ] );
+		}
+
+		return $url;
+	}
 }

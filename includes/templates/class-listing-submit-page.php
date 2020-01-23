@@ -17,4 +17,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Submit_Page
  */
-abstract class Listing_Submit_Page extends Page_Wide {}
+abstract class Listing_Submit_Page extends Page_Wide {
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Template arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_trees(
+			[
+				'blocks' => [
+					'page_content' => [],
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+}

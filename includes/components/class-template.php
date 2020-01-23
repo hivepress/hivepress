@@ -32,8 +32,10 @@ final class Template extends Component {
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
 
 			// Render site header.
-			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_site_header' ] );
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
+
+			// @deprecated since version 1.3.0.
+			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_site_header' ] );
 
 			// Render site footer.
 			add_action( 'wp_footer', [ $this, 'render_site_footer' ] );
