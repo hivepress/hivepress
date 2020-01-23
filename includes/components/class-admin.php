@@ -644,14 +644,18 @@ final class Admin extends Component {
 	 * Registers post states.
 	 */
 	public function register_post_states() {
-		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
-			foreach ( $tab['sections'] as $section ) {
-				foreach ( $section['fields'] as $field_name => $field ) {
-					if ( strpos( $field_name, 'page_' ) === 0 ) {
-						$post_id = absint( get_option( hp\prefix( $field_name ) ) );
+		global $pagenow;
 
-						if ( $post_id ) {
-							$this->post_states[ $post_id ] = $field['label'];
+		if ( 'edit.php' === $pagenow ) {
+			foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
+				foreach ( $tab['sections'] as $section ) {
+					foreach ( $section['fields'] as $field_name => $field ) {
+						if ( strpos( $field_name, 'page_' ) === 0 ) {
+							$post_id = absint( get_option( hp\prefix( $field_name ) ) );
+
+							if ( $post_id ) {
+								$this->post_states[ $post_id ] = $field['label'];
+							}
 						}
 					}
 				}

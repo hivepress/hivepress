@@ -128,7 +128,6 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'blocks'     => [
 									'listing_report_modal' => [
 										'type'   => 'modal',
-										'model'  => 'listing',
 										'title'  => hivepress()->translator->get_string( 'report_listing' ),
 
 										'blocks' => [

@@ -258,17 +258,22 @@ final class Form extends Component {
 		if ( $form::get_meta( 'captcha' ) ) {
 
 			// Get ReCAPTCHA response.
-			$response = wp_remote_get(
-				'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
-					[
-						'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-						'response' => sanitize_text_field( hp\get_array_value( $_POST, 'g-recaptcha-response' ) ),
-					]
-				)
+			$response = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get(
+						'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
+							[
+								'secret'   => get_option( 'hp_recaptcha_secret_key' ),
+								'response' => sanitize_text_field( hp\get_array_value( $_POST, 'g-recaptcha-response' ) ),
+							]
+						)
+					)
+				),
+				true
 			);
 
 			// Add form error.
-			if ( ! hp\get_array_value( json_decode( wp_remote_retrieve_body( $response ), true ), 'success', false ) ) {
+			if ( ! hp\get_array_value( $response, 'success', false ) ) {
 				$errors[] = esc_html__( 'Captcha is invalid.', 'hivepress' );
 			}
 		}
