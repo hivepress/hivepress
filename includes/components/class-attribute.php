@@ -760,12 +760,9 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
-		// Get attributes.
-		$attributes = $this->get_attributes( $model );
-
 		// Filter fields.
 		foreach ( $form_args['fields'] as $field_name => $field_args ) {
-			if ( isset( $attributes[ $field_name ] ) && 'number_range' === $field_args['type'] ) {
+			if ( 'number_range' === $field_args['type'] ) {
 
 				// Set query arguments.
 				$query_args = [

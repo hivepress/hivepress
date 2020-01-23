@@ -35,7 +35,7 @@ class Site_Header_Block extends Template {
 						'_order'     => 10,
 
 						'attributes' => [
-							'class' => [ 'hp-menu', 'hp-menu--site-header' ],
+							'class' => [ 'hp-menu', 'hp-menu--site-header', 'hp-menu--main' ],
 						],
 
 						'blocks'     => [

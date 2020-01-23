@@ -614,11 +614,11 @@ final class Admin extends Component {
 
 			if ( is_array( $response ) && isset( $response['data'] ) ) {
 				$themes = (array) $response['data'];
+			}
 
-				// Cache themes.
-				if ( count( $themes ) <= 100 ) {
-					hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
-				}
+			// Cache themes.
+			if ( count( $themes ) <= 100 ) {
+				hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
 			}
 		}
 
