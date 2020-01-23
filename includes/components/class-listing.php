@@ -46,8 +46,8 @@ final class Listing extends Component {
 
 		if ( is_admin() ) {
 
-			// Add admin states.
-			add_filter( 'display_post_states', [ $this, 'add_admin_states' ], 10, 2 );
+			// Add post states.
+			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 
 		} else {
 
@@ -118,13 +118,8 @@ final class Listing extends Component {
 				}
 			}
 
-			// Update listing.
-			wp_update_post(
-				[
-					'ID'          => $listing->get_id(),
-					'post_parent' => $vendor->get_id(),
-				]
-			);
+			// Set vendor.
+			$listing->set_vendor( $vendor->get_id() )->save();
 		}
 	}
 
@@ -138,12 +133,15 @@ final class Listing extends Component {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Update image.
-		$image_ids = $listing->get_images__id();
+		// Get image ID.
+		$image_id = reset( ( $listing->get_images__id() ) );
 
-		if ( $image_ids ) {
-			set_post_thumbnail( $listing->get_id(), reset( $image_ids ) );
+		if ( empty( $image_id ) ) {
+			$image_id = null;
 		}
+
+		// Set image.
+		$listing->set_image( $image_id )->save();
 	}
 
 	/**
@@ -261,7 +259,7 @@ final class Listing extends Component {
 		foreach ( $featured_listings as $listing ) {
 			$listing->fill(
 				[
-					'featured'      => null,
+					'featured'      => false,
 					'featured_time' => null,
 				]
 			)->save();
@@ -305,13 +303,13 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Adds admin states.
+	 * Adds post states.
 	 *
 	 * @param array   $states Post states.
 	 * @param WP_Post $post Post object.
 	 * @return array
 	 */
-	public function add_admin_states( $states, $post ) {
+	public function add_post_states( $states, $post ) {
 		if ( 'hp_listing' === $post->post_type ) {
 
 			// Get listing.

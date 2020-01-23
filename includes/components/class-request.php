@@ -96,7 +96,7 @@ final class Request extends Component {
 	public function set_page() {
 
 		// Set page title.
-		$this->set_context( 'page_title', hp\get_array_value( hivepress()->router->get_current_route(), 'title', get_the_title() ) );
+		$this->set_context( 'page_title', hp\get_array_value( hivepress()->router->get_current_route(), 'title' ) );
 
 		// Set page number.
 		$page_number = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;

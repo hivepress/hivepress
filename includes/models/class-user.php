@@ -236,7 +236,7 @@ class User extends Model {
 
 		// Update user meta.
 		foreach ( $meta as $meta_key => $meta_value ) {
-			if ( is_null( $meta_value ) ) {
+			if ( in_array( $meta_value, [ null, false ], true ) ) {
 				delete_user_meta( $this->id, $meta_key );
 			} else {
 				update_user_meta( $this->id, $meta_key, $meta_value );

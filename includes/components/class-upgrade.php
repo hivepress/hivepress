@@ -46,7 +46,7 @@ final class Upgrade extends Component {
 	public function upgrade_database( $version ) {
 		global $wpdb;
 
-		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+		if ( version_compare( $version, '1.3.0', '<' ) ) {
 
 			// Upgrade user meta.
 			$wpdb->update( $wpdb->usermeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
@@ -70,7 +70,7 @@ final class Upgrade extends Component {
 	 * @param string $version Old version.
 	 */
 	public function upgrade_comments( $version ) {
-		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+		if ( version_compare( $version, '1.3.0', '<' ) ) {
 
 			// Get comments.
 			$comments = get_comments(
@@ -95,7 +95,7 @@ final class Upgrade extends Component {
 	 * @param string $version Old version.
 	 */
 	public function upgrade_events( $version ) {
-		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+		if ( version_compare( $version, '1.3.0', '<' ) ) {
 
 			// Unchedule events.
 			$periods = [ 'hourly', 'twicedaily', 'daily' ];

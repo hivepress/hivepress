@@ -76,7 +76,7 @@ final class Router extends Component {
 
 			// Merge routes.
 			foreach ( hivepress()->get_controllers() as $controller ) {
-				$this->routes = hp\merge_arrays( $this->routes, $controller->get_routes() );
+				$this->routes = array_merge( $this->routes, $controller->get_routes() );
 			}
 
 			/**
@@ -405,7 +405,7 @@ final class Router extends Component {
 					// Create menu.
 					$menu = hp\create_class_instance( $menu_class );
 
-					if ( in_array( $route['name'], wp_list_pluck( $menu->get_items(), 'route' ), true ) ) {
+					if ( in_array( $route['name'], array_column( $menu->get_items(), 'route' ), true ) ) {
 
 						// Get menu items.
 						$menu_items      = $menu->get_items();
