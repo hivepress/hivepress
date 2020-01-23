@@ -177,7 +177,7 @@
 			var container = $(this).parent();
 
 			$.ajax({
-				url: container.data('url'),
+				url: $(this).data('url'),
 				method: 'DELETE',
 				beforeSend: function(xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);

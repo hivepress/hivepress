@@ -217,13 +217,13 @@ class Attachment_Upload extends Field {
 		$image = wp_get_attachment_image( $attachment_id, 'thumbnail' );
 
 		if ( $image ) {
-			$output .= '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment_id ] ) ) . '">';
+			$output .= '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_update_action', [ 'attachment_id' => $attachment_id ] ) ) . '">';
 
 			// Render attachment image.
 			$output .= $image;
 
 			// Render remove button.
-			$output .= '<a href="#" data-component="file-delete"><i class="hp-icon fas fa-times"></i></a>';
+			$output .= '<a href="#" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment_id ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 			$output .= '</div>';
 		}

@@ -27,6 +27,9 @@ final class Attachment extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Alter model fields.
+		add_filter( 'hivepress/v1/models/attachment/fields', [ $this, 'alter_model_fields' ], 10, 2 );
+
 		// Delete attachment.
 		add_action( 'hivepress/v1/models/attachment/delete', [ $this, 'delete_attachment' ] );
 
@@ -37,6 +40,35 @@ final class Attachment extends Component {
 		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'delete_attachments' ], 10, 2 );
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Alters model fields.
+	 *
+	 * @param array  $fields Model fields.
+	 * @param object $attachment Attachment object.
+	 * @return array
+	 */
+	public function alter_model_fields( $fields, $attachment ) {
+
+		// Get parent model.
+		$parent_model = sanitize_key( get_post_meta( $attachment->get_id(), 'hp_parent_model', true ) );
+
+		if ( $parent_model ) {
+
+			// Get parent type.
+			$parent_type = hp\call_class_method( '\HivePress\Models\\' . $parent_model, '_get_meta', [ 'type' ] );
+
+			if ( 'post' === $parent_type ) {
+
+				// Set parent alias.
+				unset( $fields['parent']['_external'] );
+
+				$fields['parent']['_alias'] = 'post_parent';
+			}
+		}
+
+		return $fields;
 	}
 
 	/**
