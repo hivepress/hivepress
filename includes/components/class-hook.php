@@ -41,7 +41,8 @@ final class Hook extends Component {
 
 		// Update posts.
 		add_action( 'save_post', [ $this, 'update_post' ], 10, 3 );
-		add_action( 'delete_post', [ $this, 'update_post' ] );
+		add_action( 'before_delete_post', [ $this, 'update_post' ] );
+		add_action( 'delete_attachment', [ $this, 'update_post' ] );
 
 		// Update post status.
 		add_action( 'transition_post_status', [ $this, 'update_post_status' ], 10, 3 );
@@ -57,7 +58,7 @@ final class Hook extends Component {
 		// Update terms.
 		add_action( 'create_term', [ $this, 'update_term' ], 10, 3 );
 		add_action( 'edit_term', [ $this, 'update_term' ], 10, 3 );
-		add_action( 'delete_term', [ $this, 'update_term' ], 10, 3 );
+		add_action( 'pre_delete_term', [ $this, 'update_term' ], 10, 2 );
 
 		// Update term meta.
 		add_action( 'added_term_meta', [ $this, 'update_term_meta' ], 10, 4 );
@@ -183,6 +184,8 @@ final class Hook extends Component {
 				} else {
 					$action = 'create';
 				}
+			} else {
+				$action = 'delete';
 			}
 
 			// Fire actions.
@@ -320,11 +323,16 @@ final class Hook extends Component {
 	 * @param int    $term_taxonomy_id Term taxonomy ID.
 	 * @param string $taxonomy Taxonomy name.
 	 */
-	public function update_term( $term_id, $term_taxonomy_id, $taxonomy ) {
+	public function update_term( $term_id, $term_taxonomy_id, $taxonomy = null ) {
 
 		// Check import status.
 		if ( $this->is_import_started() ) {
 			return;
+		}
+
+		// Get taxonomy.
+		if ( empty( $taxonomy ) ) {
+			$taxonomy = $term_taxonomy_id;
 		}
 
 		// Get model name.
@@ -337,6 +345,8 @@ final class Hook extends Component {
 
 			if ( 'edit' === $action ) {
 				$action = 'update';
+			} elseif ( 'create' !== $action ) {
+				$action = 'delete';
 			}
 
 			// Fire actions.

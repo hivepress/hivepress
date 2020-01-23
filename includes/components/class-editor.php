@@ -95,13 +95,15 @@ final class Editor extends Component {
 			}
 
 			if ( $blocks ) {
-				wp_localize_script( reset( $blocks )['script'], 'hivepressBlocks', $blocks );
+				wp_localize_script( hp\get_array_value( reset( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
 			}
 		}
 
 		// Add shortcodes.
-		foreach ( array_keys( $blocks ) as $block_type ) {
-			add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
+		if ( function_exists( 'add_shortcode' ) ) {
+			foreach ( array_keys( $blocks ) as $block_type ) {
+				add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
+			}
 		}
 	}
 
@@ -117,8 +119,11 @@ final class Editor extends Component {
 		if ( strpos( $name, 'render_' ) === 0 ) {
 			$output = ' ';
 
+			// Get block type.
+			$block_type = substr( $name, strlen( 'render_' ) );
+
 			// Create block.
-			$block = hp\create_class_instance( '\HivePress\Blocks\\' . substr( $name, strlen( 'render_' ) ), [ (array) reset( $args ) ] );
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ (array) reset( $args ) ] );
 
 			if ( $block ) {
 

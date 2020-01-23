@@ -92,6 +92,7 @@ class Listings extends Block {
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
+						'required'  => true,
 						'_order'    => 20,
 					],
 
@@ -191,7 +192,7 @@ class Listings extends Block {
 				}
 			}
 
-			// Query listings.
+			// Query regular listings.
 			$regular_query = new \WP_Query( $query->get_args() );
 
 			// Cache IDs.

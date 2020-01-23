@@ -44,7 +44,7 @@ class Section extends Container {
 			);
 		}
 
-		// Set class.
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[

@@ -28,11 +28,13 @@ abstract class Page_Sidebar_Right extends Page_Sidebar_Left {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_content' => [
+					'page_container' => [],
+
+					'page_content'   => [
 						'_order' => 10,
 					],
 
-					'page_sidebar' => [
+					'page_sidebar'   => [
 						'_order' => 20,
 					],
 				],

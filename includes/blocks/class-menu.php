@@ -42,7 +42,15 @@ class Menu extends Block {
 		$output = '';
 
 		// Create menu.
-		$menu = hp\create_class_instance( '\HivePress\Menus\\' . $this->menu, [ [ 'attributes' => $this->attributes ] ] );
+		$menu = hp\create_class_instance(
+			'\HivePress\Menus\\' . $this->menu,
+			[
+				[
+					'context'    => $this->context,
+					'attributes' => $this->attributes,
+				],
+			]
+		);
 
 		if ( $menu ) {
 

@@ -85,6 +85,7 @@ class Listing_Categories extends Block {
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
+						'required'  => true,
 						'_order'    => 20,
 					],
 
@@ -193,6 +194,8 @@ class Listing_Categories extends Block {
 			foreach ( $categories as $category ) {
 
 				// Get category URL.
+				$category_url = null;
+
 				if ( 'submit' === $this->mode ) {
 					$category_url = hivepress()->router->get_url( 'listing_submit_category_page', [ 'listing_category_id' => $category->get_id() ] );
 				} else {

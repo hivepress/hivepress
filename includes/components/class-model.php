@@ -73,7 +73,7 @@ final class Model extends Component {
 			// Get fields aliases.
 			$aliases = array_map(
 				function( $field ) use ( $type ) {
-					if ( ( 'term' === $type && $field->get_arg( '_relation' ) === 'many_to_many' ) || ( 'meta' === $type && $field->get_arg( '_external' ) ) ) {
+					if ( ( 'meta' === $type && $field->get_arg( '_external' ) ) || ( 'term' === $type && $field->get_arg( '_relation' ) === 'many_to_many' ) ) {
 						return $field->get_arg( '_alias' );
 					}
 				},

@@ -72,7 +72,7 @@ final class User extends Component {
 
 				'tokens'    => [
 					'user_name'     => $user->get_display_name(),
-					'user_password' => $values['password'],
+					'user_password' => hp\get_array_value( $values, 'password' ),
 				],
 			]
 		) )->send();

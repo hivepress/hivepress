@@ -124,26 +124,26 @@ final class Attachment extends Controller {
 		}
 
 		// Get parent object.
-		$parent_model = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
+		$parent = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
 
-		if ( empty( $parent_model ) ) {
+		if ( empty( $parent ) ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get user ID.
-		$user_id = $parent_model->get_user__id();
+		$user_id = $parent->get_user__id();
 
-		if ( $parent_model::_get_meta( 'type' ) === 'user' ) {
-			$user_id = $parent_model->get_id();
+		if ( $parent::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $parent->get_id();
 		}
 
 		// Check permissions.
-		if ( get_current_user_id() !== $user_id || ( $parent_model::_get_meta( 'type' ) === 'post' && ! in_array( $parent_model->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
 		// Get parent field.
-		$parent_field = hp\get_array_value( $parent_model->_get_fields(), sanitize_key( $request->get_param( 'parent_field' ) ) );
+		$parent_field = hp\get_array_value( $parent->_get_fields(), sanitize_key( $request->get_param( 'parent_field' ) ) );
 
 		if ( empty( $parent_field ) || $parent_field::get_meta( 'name' ) !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );
@@ -152,9 +152,9 @@ final class Attachment extends Controller {
 		// Get attachments.
 		$attachments = Models\Attachment::query()->filter(
 			[
-				'parent_model' => $parent_model::_get_meta( 'name' ),
+				'parent_model' => $parent::_get_meta( 'name' ),
 				'parent_field' => $parent_field->get_name(),
-				'parent'       => $parent_model->get_id(),
+				'parent'       => $parent->get_id(),
 			]
 		)->get();
 
@@ -179,8 +179,8 @@ final class Attachment extends Controller {
 		// Get parent ID.
 		$parent_id = 0;
 
-		if ( $parent_model::_get_meta( 'type' ) === 'post' ) {
-			$parent_id = $parent_model->get_id();
+		if ( $parent::_get_meta( 'type' ) === 'post' ) {
+			$parent_id = $parent->get_id();
 		}
 
 		// Upload attachment.
@@ -197,9 +197,9 @@ final class Attachment extends Controller {
 		$attachment->fill(
 			[
 				'sort_order'   => $attachments->count(),
-				'parent_model' => $parent_model::_get_meta( 'name' ),
+				'parent_model' => $parent::_get_meta( 'name' ),
 				'parent_field' => $parent_field->get_name(),
-				'parent'       => $parent_model->get_id(),
+				'parent'       => $parent->get_id(),
 			]
 		);
 
@@ -209,8 +209,8 @@ final class Attachment extends Controller {
 
 		if ( ! $parent_field->is_multiple() ) {
 
-			// Update parent model.
-			$parent_model->fill(
+			// Update parent object.
+			$parent->fill(
 				[
 					$parent_field->get_name() => $attachment->get_id(),
 				]

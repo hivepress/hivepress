@@ -51,7 +51,20 @@ class Container extends Block {
 		foreach ( hp\sort_array( $blocks ) as $name => $args ) {
 
 			// Create block.
-			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $args['type'], [ hp\merge_arrays( [ 'context' => $this->context ], $args, [ 'name' => $name ] ) ] );
+			$block = hp\create_class_instance(
+				'\HivePress\Blocks\\' . $args['type'],
+				[
+					hp\merge_arrays(
+						[
+							'context' => $this->context,
+						],
+						$args,
+						[
+							'name' => $name,
+						]
+					),
+				]
+			);
 
 			if ( $block ) {
 				$this->blocks[ $name ] = $block;

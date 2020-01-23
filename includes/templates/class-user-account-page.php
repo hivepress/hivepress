@@ -51,6 +51,8 @@ class User_Account_Page extends Page_Sidebar_Left {
 							],
 						],
 					],
+
+					'page_content' => [],
 				],
 			],
 			$args
