@@ -180,7 +180,11 @@ function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = n
 function sort_array( $array ) {
 	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
-			if ( ! isset( $value['_order'] ) ) {
+
+			// @deprecated since version 1.3.0.
+			if ( isset( $value['order'] ) && is_int( $value['order'] ) ) {
+				$array[ $key ]['_order'] = $value['order'];
+			} elseif ( ! isset( $value['_order'] ) ) {
 				$array[ $key ]['_order'] = 0;
 			}
 		}

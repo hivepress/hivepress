@@ -374,7 +374,7 @@ final class Listing extends Controller {
 						]
 					)->order( [ 'created_date' => 'desc' ] )
 					->limit( get_option( 'hp_listings_per_page' ) )
-					->paginate( hivepress()->request->get_context( 'page_number' ) )
+					->paginate( hivepress()->request->get_page_number() )
 					->get_args()
 				);
 			}

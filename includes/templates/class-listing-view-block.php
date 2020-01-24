@@ -106,7 +106,7 @@ class Listing_View_Block extends Template {
 										],
 
 										'blocks'     => [
-											'listing_categories' => [
+											'listing_category' => [
 												'type'   => 'part',
 												'path'   => 'listing/view/listing-categories',
 												'_order' => 10,

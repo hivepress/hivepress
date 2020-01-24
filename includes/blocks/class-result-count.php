@@ -35,8 +35,8 @@ class Result_Count extends Block {
 			// Get first result.
 			$first_result = 1;
 
-			if ( hivepress()->request->get_context( 'page_number' ) > 1 ) {
-				$first_result = $wp_query->query_vars['posts_per_page'] * ( hivepress()->request->get_context( 'page_number' ) - 1 ) + 1;
+			if ( hivepress()->request->get_page_number() > 1 ) {
+				$first_result = $wp_query->query_vars['posts_per_page'] * ( hivepress()->request->get_page_number() - 1 ) + 1;
 			}
 
 			// Get last result.

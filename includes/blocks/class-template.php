@@ -46,8 +46,8 @@ class Template extends Block {
 			'\HivePress\Templates\\' . $this->template,
 			[
 				[
-					'blocks'  => $this->blocks,
 					'context' => $this->context,
+					'blocks'  => $this->blocks,
 				],
 			]
 		);
@@ -57,8 +57,8 @@ class Template extends Block {
 			// Render template.
 			$output .= ( new Container(
 				[
-					'context' => $this->context,
 					'tag'     => false,
+					'context' => $template->get_context(),
 					'blocks'  => $template->get_blocks(),
 				]
 			) )->render();

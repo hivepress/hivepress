@@ -94,7 +94,7 @@ class Listing_Category_View_Block extends Template {
 										],
 
 										'blocks'     => [
-											'listing_category_item_count' => [
+											'listing_category_count' => [
 												'type'   => 'part',
 												'path'   => 'listing-category/view/listing-category-item-count',
 												'_order' => 10,

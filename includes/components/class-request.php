@@ -37,9 +37,6 @@ final class Request extends Component {
 		// Set the current user.
 		add_action( 'init', [ $this, 'set_user' ] );
 
-		// Set page context.
-		add_action( 'template_redirect', [ $this, 'set_page' ] );
-
 		parent::__construct( $args );
 	}
 
@@ -91,17 +88,16 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Sets page context.
+	 * Gets the current page number.
 	 */
-	public function set_page() {
+	public function get_page_number() {
+		if ( ! $this->get_context( 'page_number' ) ) {
+			$page_number = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+			$page_number = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page_number;
 
-		// Set page title.
-		$this->set_context( 'page_title', hp\get_array_value( hivepress()->router->get_current_route(), 'title' ) );
+			$this->set_context( 'page_number', absint( $page_number ) );
+		}
 
-		// Set page number.
-		$page_number = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-		$page_number = get_query_var( 'page' ) ? get_query_var( 'page' ) : $page_number;
-
-		$this->set_context( 'page_number', absint( $page_number ) );
+		return $this->get_context( 'page_number' );
 	}
 }

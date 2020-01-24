@@ -71,7 +71,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								],
 
 								'blocks'     => [
-									'listing_categories'   => [
+									'listing_category'     => [
 										'type'   => 'part',
 										'path'   => 'listing/view/listing-categories',
 										'_order' => 10,

@@ -56,6 +56,9 @@ final class Router extends Component {
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
 
+			// Set page context.
+			add_filter( 'hivepress/v1/templates/page', [ $this, 'set_page_context' ] );
+
 			// Set page template.
 			add_filter( 'template_include', [ $this, 'set_page_template' ], 10000 );
 
@@ -357,7 +360,7 @@ final class Router extends Component {
 	 * Sets page title.
 	 *
 	 * @param array $parts Title parts.
-	 * @return string
+	 * @return array
 	 */
 	public function set_page_title( $parts ) {
 
@@ -374,6 +377,23 @@ final class Router extends Component {
 		}
 
 		return $parts;
+	}
+
+	/**
+	 * Sets page context.
+	 *
+	 * @param array $args Template arguments.
+	 * @return array
+	 */
+	public function set_page_context( $args ) {
+		return hp\merge_arrays(
+			$args,
+			[
+				'context' => [
+					'page_title' => hp\get_array_value( hivepress()->router->get_current_route(), 'title' ),
+				],
+			]
+		);
 	}
 
 	/**
