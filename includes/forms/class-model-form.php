@@ -54,7 +54,15 @@ abstract class Model_Form extends Form {
 			$attributes['data-id'] = $this->model->get_id();
 
 			// Set field values.
-			$this->set_values( $this->model->serialize() );
+			$values = $this->model->serialize();
+
+			foreach ( $this->fields as $field_name => $field ) {
+				if ( $field->get_arg( '_separate' ) ) {
+					unset( $values[ $field_name ] );
+				}
+			}
+
+			$this->set_values( $values );
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -104,23 +112,5 @@ abstract class Model_Form extends Form {
 		}
 
 		parent::set_fields( $fields );
-	}
-
-	/**
-	 * Sets field values.
-	 *
-	 * @param array $values Field values.
-	 * @return object
-	 */
-	final public function set_values( $values ) {
-		foreach ( $this->fields as $field_name => $field ) {
-			if ( $field->get_arg( '_separate' ) ) {
-				unset( $values[ $field_name ] );
-			}
-		}
-
-		parent::set_values( $values );
-
-		return $this;
 	}
 }

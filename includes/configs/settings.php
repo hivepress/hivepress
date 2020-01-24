@@ -223,10 +223,11 @@ return [
 					],
 
 					'recaptcha_forms'      => [
-						'label'   => esc_html__( 'Protected Forms', 'hivepress' ),
-						'type'    => 'checkboxes',
-						'options' => 'forms',
-						'_order'  => 30,
+						'label'       => esc_html__( 'Protected Forms', 'hivepress' ),
+						'type'        => 'checkboxes',
+						'options'     => 'forms',
+						'option_args' => [ 'captcha' => false ],
+						'_order'      => 30,
 					],
 				],
 			],
