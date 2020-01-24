@@ -85,6 +85,9 @@ final class User extends Component {
 	 */
 	public function update_user( $user_id ) {
 
+		// Remove action.
+		remove_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user' ] );
+
 		// Get user.
 		$user = Models\User::query()->get_by_id( $user_id );
 
