@@ -740,9 +740,16 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
+		// Get category ID.
+		$category_id = $this->get_category_id( $model );
+
+		if ( empty( $category_id ) ) {
+			$category_id = 0;
+		}
+
 		// Set value.
 		if ( isset( $form_args['fields']['_category'] ) ) {
-			$form_args['fields']['_category']['default'] = $this->get_category_id( $model );
+			$form_args['fields']['_category']['default'] = $category_id;
 		}
 
 		return $form_args;
