@@ -65,7 +65,7 @@ class Attachment extends Post {
 					'parent'       => [
 						'type'      => 'number',
 						'min_value' => 1,
-						'_external' => true,
+						'_alias'    => 'comment_count',
 					],
 
 					'user'         => [

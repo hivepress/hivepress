@@ -133,15 +133,11 @@ final class Listing extends Component {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Get image ID.
-		$image_id = reset( ( $listing->get_images__id() ) );
-
-		if ( empty( $image_id ) ) {
-			$image_id = null;
-		}
+		// Get image IDs.
+		$image_ids = $listing->get_images__id();
 
 		// Set image.
-		$listing->set_image( $image_id )->save();
+		$listing->set_image( reset( $image_ids ) )->save();
 	}
 
 	/**

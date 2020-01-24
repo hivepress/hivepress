@@ -27,8 +27,8 @@ final class Attachment extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Alter model fields.
-		add_filter( 'hivepress/v1/models/attachment/fields', [ $this, 'alter_model_fields' ], 10, 2 );
+		// Set parent ID.
+		add_filter( 'wp_insert_attachment_data', [ $this, 'set_parent_id' ], 10, 2 );
 
 		// Delete attachment.
 		add_action( 'hivepress/v1/models/attachment/delete', [ $this, 'delete_attachment' ] );
@@ -43,32 +43,18 @@ final class Attachment extends Component {
 	}
 
 	/**
-	 * Alters model fields.
+	 * Sets parent ID.
 	 *
-	 * @param array  $fields Model fields.
-	 * @param object $attachment Attachment object.
+	 * @param array $attachment Attachment arguments.
+	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	public function alter_model_fields( $fields, $attachment ) {
-
-		// Get parent model.
-		$parent_model = sanitize_key( get_post_meta( $attachment->get_id(), 'hp_parent_model', true ) );
-
-		if ( $parent_model ) {
-
-			// Get parent type.
-			$parent_type = hp\call_class_method( '\HivePress\Models\\' . $parent_model, '_get_meta', [ 'type' ] );
-
-			if ( 'post' === $parent_type ) {
-
-				// Set parent alias.
-				unset( $fields['parent']['_external'] );
-
-				$fields['parent']['_alias'] = 'post_parent';
-			}
+	public function set_parent_id( $attachment, $args ) {
+		if ( isset( $args['comment_count'] ) ) {
+			$attachment['comment_count'] = absint( $args['comment_count'] );
 		}
 
-		return $fields;
+		return $attachment;
 	}
 
 	/**
