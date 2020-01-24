@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-21 21:58+0000\n"
+"POT-Creation-Date: 2020-01-24 15:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -27,43 +27,42 @@ msgctxt "quantity"
 msgid "Number"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:92
+#: includes/blocks/class-listing-categories.php:93
 #: includes/configs/taxonomies.php:27
 msgid "Parent Category"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:100
-#: includes/blocks/class-listings.php:107
+#: includes/blocks/class-listing-categories.php:101
+#: includes/blocks/class-listings.php:108
 msgctxt "sort"
 msgid "Order"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:107
+#: includes/blocks/class-listing-categories.php:108
 msgctxt "sort by"
 msgid "Name"
 msgstr ""
 
-#: includes/blocks/class-listing-categories.php:108
+#: includes/blocks/class-listing-categories.php:109
 msgctxt "sort by"
 msgid "Item Count"
 msgstr ""
 
-#: includes/blocks/class-listings.php:99 includes/configs/taxonomies.php:22
+#: includes/blocks/class-listings.php:100 includes/configs/taxonomies.php:22
 msgid "Category"
-msgstr ""
-
-#: includes/blocks/class-listings.php:113
-#: includes/components/class-attribute.php:572
-msgctxt "sort by"
-msgid "Date"
 msgstr ""
 
 #: includes/blocks/class-listings.php:114
 msgctxt "sort by"
-msgid "Title"
+msgid "Date"
 msgstr ""
 
 #: includes/blocks/class-listings.php:115
+msgctxt "sort by"
+msgid "Title"
+msgstr ""
+
+#: includes/blocks/class-listings.php:116
 msgctxt "sort by"
 msgid "Random"
 msgstr ""
@@ -95,80 +94,75 @@ msgctxt "plural"
 msgid "Installed"
 msgstr ""
 
-#: includes/components/class-admin.php:1103
+#: includes/components/class-admin.php:1107
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
 "or styling issues please consider using the official %s theme."
 msgstr ""
 
-#: includes/components/class-admin.php:1116
+#: includes/components/class-admin.php:1120
 #, php-format
 msgid ""
 "A new version of %s theme is available, please update for new features and "
 "improvements."
 msgstr ""
 
-#: includes/components/class-attribute.php:249
+#: includes/components/class-attribute.php:297
 msgid "Add Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:250
+#: includes/components/class-attribute.php:298
 msgid "Edit Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:251
+#: includes/components/class-attribute.php:299
 msgid "Update Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:252
+#: includes/components/class-attribute.php:300
 msgid "Parent Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:253
+#: includes/components/class-attribute.php:301
 msgid "Search Options"
 msgstr ""
 
-#: includes/components/class-attribute.php:254
+#: includes/components/class-attribute.php:302
 msgid "No options found."
 msgstr ""
 
-#: includes/components/class-attribute.php:346
+#: includes/components/class-attribute.php:394
 msgid "Edit Options"
 msgstr ""
 
-#: includes/components/class-attribute.php:491
+#: includes/components/class-attribute.php:539
 msgctxt "field"
 msgid "requires review"
 msgstr ""
 
-#: includes/components/class-attribute.php:570
-msgctxt "sort by"
-msgid "Relevance"
-msgstr ""
-
-#: includes/components/class-attribute.php:658
+#: includes/components/class-attribute.php:708
 msgid "All Categories"
 msgstr ""
 
-#: includes/components/class-form.php:272
+#: includes/components/class-form.php:277
 msgid "Captcha is invalid."
 msgstr ""
 
-#: includes/components/class-listing.php:296
+#: includes/components/class-listing.php:294
 #: includes/components/class-user.php:124
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-listing.php:322 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:320 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr ""
 
-#: includes/components/class-listing.php:326 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:324 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
@@ -243,6 +237,7 @@ msgstr ""
 
 #: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:149
 #: includes/configs/settings.php:20
+msgctxt "noun"
 msgid "Display"
 msgstr ""
 
@@ -726,12 +721,12 @@ msgstr ""
 msgid "Only %s files are allowed."
 msgstr ""
 
-#: includes/controllers/class-listing.php:125
+#: includes/controllers/class-listing.php:130
 msgctxt "imperative"
 msgid "Select Category"
 msgstr ""
 
-#: includes/controllers/class-listing.php:133
+#: includes/controllers/class-listing.php:138
 msgctxt "imperative"
 msgid "Add Details"
 msgstr ""
@@ -748,32 +743,32 @@ msgstr ""
 msgid "This email is already registered."
 msgstr ""
 
-#: includes/controllers/class-user.php:291
 #: includes/controllers/class-user.php:298
+#: includes/controllers/class-user.php:305
 msgid "Username or password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:356
+#: includes/controllers/class-user.php:363
 msgid "User with this email doesn't exist."
 msgstr ""
 
-#: includes/controllers/class-user.php:358
+#: includes/controllers/class-user.php:365
 msgid "User with this username doesn't exist."
 msgstr ""
 
-#: includes/controllers/class-user.php:419
+#: includes/controllers/class-user.php:426
 msgid "Password reset key is expired or invalid."
 msgstr ""
 
-#: includes/controllers/class-user.php:481
+#: includes/controllers/class-user.php:488
 msgid "Current password is required."
 msgstr ""
 
-#: includes/controllers/class-user.php:485
+#: includes/controllers/class-user.php:492
 msgid "Current password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:538
+#: includes/controllers/class-user.php:545
 msgid "Password is incorrect."
 msgstr ""
 
@@ -804,10 +799,10 @@ msgstr ""
 msgid "Select File"
 msgstr ""
 
-#: includes/fields/class-attachment-select.php:67
-#: includes/fields/class-attachment-upload.php:141
+#: includes/fields/class-attachment-select.php:71
+#: includes/fields/class-attachment-upload.php:145
 #: includes/fields/class-date.php:201 includes/fields/class-email.php:75
-#: includes/fields/class-select.php:198
+#: includes/fields/class-select.php:199
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr ""
@@ -1097,11 +1092,11 @@ msgctxt "listing"
 msgid "Pending"
 msgstr ""
 
-#: includes/models/class-listing.php:135
+#: includes/models/class-listing.php:136
 msgid "Images"
 msgstr ""
 
-#: includes/models/class-listing.php:136
+#: includes/models/class-listing.php:137
 msgid "Select Images"
 msgstr ""
 

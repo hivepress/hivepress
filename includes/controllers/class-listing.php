@@ -335,7 +335,7 @@ final class Listing extends Controller {
 			$category = Models\Listing_Category::query()->get_by_id( $category_id );
 		}
 
-		if ( ( is_page() && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
+		if ( ( ( is_page() || ( empty( $category ) && is_post_type_archive() ) ) && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
 
 			// Render categories.
 			return ( new Blocks\Template(

@@ -449,7 +449,7 @@ final class Router extends Component {
 								$menu_route = $this->get_route( $menu_item['route'] );
 
 								if ( $menu_route ) {
-									if ( isset( $menu_route['redirect'] ) && call_user_func( $menu_route['redirect'] ) === false ) {
+									if ( isset( $menu_route['redirect'] ) && ! in_array( call_user_func( $menu_route['redirect'] ), [ null, true ], true ) ) {
 										wp_safe_redirect( $menu_item['url'] );
 
 										exit;

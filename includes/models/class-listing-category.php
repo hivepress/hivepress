@@ -52,7 +52,7 @@ class Listing_Category extends Term {
 					'sort_order'  => [
 						'type'      => 'number',
 						'min_value' => 0,
-						'_external' => 'true',
+						'_external' => true,
 					],
 
 					'parent'      => [

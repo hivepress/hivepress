@@ -33,3 +33,9 @@ function hivepress() {
 
 // Initialize HivePress.
 hivepress();
+add_filter('wp_insert_attachment_data', function($data, $data2) {
+	error_log(print_r($data, true));
+	error_log(print_r($data2, true));
+
+	return $data;
+}, 10, 2);

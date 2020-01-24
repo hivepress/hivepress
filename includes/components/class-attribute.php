@@ -903,6 +903,16 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
+		// Set category ID.
+		if ( $category_id ) {
+			$tax_query[] = [
+				[
+					'taxonomy' => hp\prefix( $model . '_category' ),
+					'terms'    => $category_id,
+				],
+			];
+		}
+
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_id );
 
@@ -955,16 +965,6 @@ final class Attribute extends Component {
 
 		// Filter results.
 		if ( $query->is_search ) {
-
-			// Set category ID.
-			if ( $category_id ) {
-				$tax_query[] = [
-					[
-						'taxonomy' => hp\prefix( $model . '_category' ),
-						'terms'    => $category_id,
-					],
-				];
-			}
 
 			// Get attribute fields.
 			$attribute_fields = [];
