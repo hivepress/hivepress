@@ -119,7 +119,12 @@ final class Listing extends Component {
 			}
 
 			// Set vendor.
-			$listing->set_vendor( $vendor->get_id() )->save();
+			wp_update_post(
+				[
+					'ID'          => $listing->get_id(),
+					'post_parent' => $vendor->get_id(),
+				]
+			);
 		}
 	}
 
@@ -189,7 +194,7 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( 'publish' === $new_status ) {
+		if ( 'publish' === $new_status && ! $listing->is_drafted() ) {
 
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );

@@ -277,39 +277,42 @@ final class Hook extends Component {
 			return;
 		}
 
-		// Get term model name.
-		$term_model = hivepress()->model->get_model_name( 'term', $taxonomy );
+		if ( array_diff( $term_taxonomy_ids, $old_term_taxonomy_ids ) || array_diff( $old_term_taxonomy_ids, $term_taxonomy_ids ) ) {
 
-		if ( $term_model || strpos( $taxonomy, 'hp_' ) === 0 ) {
+			// Get term model name.
+			$term_model = hivepress()->model->get_model_name( 'term', $taxonomy );
 
-			// Get post type.
-			$post_type = get_post_type( $post_id );
+			if ( $term_model || strpos( $taxonomy, 'hp_' ) === 0 ) {
 
-			// Get post model name.
-			$post_model = hivepress()->model->get_model_name( 'post', $post_type );
+				// Get post type.
+				$post_type = get_post_type( $post_id );
 
-			if ( $post_model || strpos( $post_type, 'hp_' ) === 0 ) {
+				// Get post model name.
+				$post_model = hivepress()->model->get_model_name( 'post', $post_type );
 
-				// Get term IDs.
-				$term_ids = get_terms(
-					[
-						'taxonomy'         => $taxonomy,
-						'term_taxonomy_id' => array_merge( [ 0 ], $term_taxonomy_ids ),
-						'fields'           => 'ids',
-						'hide_empty'       => false,
-					]
-				);
+				if ( $post_model || strpos( $post_type, 'hp_' ) === 0 ) {
 
-				// Fire actions.
-				do_action( 'hivepress/v1/models/post/update_terms', $post_id, $post_type, $taxonomy );
+					// Get term IDs.
+					$term_ids = get_terms(
+						[
+							'taxonomy'         => $taxonomy,
+							'term_taxonomy_id' => array_merge( [ 0 ], $term_taxonomy_ids ),
+							'fields'           => 'ids',
+							'hide_empty'       => false,
+						]
+					);
 
-				if ( $post_model ) {
+					// Fire actions.
+					do_action( 'hivepress/v1/models/post/update_terms', $post_id, $post_type, $taxonomy );
 
-					// Get post field name.
-					$post_field = hivepress()->model->get_field_name( $post_model, 'term', $taxonomy );
+					if ( $post_model ) {
 
-					if ( $post_field ) {
-						do_action( 'hivepress/v1/models/' . $post_model . '/update_' . $post_field, $post_id, $term_ids );
+						// Get post field name.
+						$post_field = hivepress()->model->get_field_name( $post_model, 'term', $taxonomy );
+
+						if ( $post_field ) {
+							do_action( 'hivepress/v1/models/' . $post_model . '/update_' . $post_field, $post_id, $term_ids );
+						}
 					}
 				}
 			}
