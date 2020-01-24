@@ -86,6 +86,25 @@ final class Upgrade extends Component {
 					update_comment_meta( $comment->comment_ID, 'hp_featured', get_post_meta( $comment->comment_post_ID, 'hp_featured', true ) );
 				}
 			}
+
+			// Get comments.
+			$comments = get_comments(
+				[
+					'type' => 'hp_review',
+				]
+			);
+
+			// Upgrade comments.
+			foreach ( $comments as $comment ) {
+				wp_update_comment(
+					[
+						'comment_ID'    => $comment->comment_ID,
+						'comment_karma' => absint( get_comment_meta( $comment->comment_ID, 'hp_rating', true ) ),
+					]
+				);
+
+				delete_comment_meta( $comment->comment_ID, 'hp_rating' );
+			}
 		}
 	}
 
