@@ -571,7 +571,7 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, $category_id );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && 'sort' === $form_context ) || ( $attribute['searchable'] && 'search' === $form_context ) || ( $attribute['filterable'] && 'filter' === $form_context ) ) ) {
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_context, [ 'sort', 'filter' ], true ) ) || ( $attribute['searchable'] && 'search' === $form_context ) ) ) {
 
 				// Get field arguments.
 				$field_args = hp\merge_arrays(
@@ -893,12 +893,15 @@ final class Attribute extends Component {
 			return;
 		}
 
-		// Get meta and taxonomy queries.
-		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
-		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
+		// Set status.
+		$query->set( 'post_status', 'publish' );
 
 		// Paginate results.
 		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
+
+		// Get meta and taxonomy queries.
+		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
+		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );

@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 15:49+0000\n"
-"PO-Revision-Date: 2020-01-24 15:50+0000\n"
-"Last-Translator: admin <admin@admin.com>\n"
+"POT-Creation-Date: 2020-01-25 21:38+0000\n"
+"PO-Revision-Date: 2020-01-25 21:38+0000\n"
+"Last-Translator: Tiesto <admin@admin.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -39,12 +39,12 @@ msgid "Order"
 msgstr "Порядок"
 
 #: includes/blocks/class-listing-categories.php:108
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Name"
 msgstr "По названию"
 
 #: includes/blocks/class-listing-categories.php:109
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Item Count"
 msgstr "По количеству позиций"
 
@@ -53,17 +53,17 @@ msgid "Category"
 msgstr "Категория"
 
 #: includes/blocks/class-listings.php:114
-msgctxt "sort by"
-msgid "Date"
-msgstr "По дате"
+msgctxt "sort order"
+msgid "Date Added"
+msgstr "По дате добавления"
 
 #: includes/blocks/class-listings.php:115
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Title"
 msgstr "По заголовку"
 
 #: includes/blocks/class-listings.php:116
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Random"
 msgstr "Случайный"
 
@@ -94,7 +94,7 @@ msgctxt "plural"
 msgid "Installed"
 msgstr "Установленные"
 
-#: includes/components/class-admin.php:1107
+#: includes/components/class-admin.php:1111
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
@@ -103,7 +103,7 @@ msgstr ""
 "Текущая тема не поддерживает HivePress, если вы заметите проблемы с версткой "
 "или стилями, пожалуйста, используйте официальную тему %s."
 
-#: includes/components/class-admin.php:1120
+#: includes/components/class-admin.php:1124
 #, php-format
 msgid ""
 "A new version of %s theme is available, please update for new features and "
@@ -153,27 +153,27 @@ msgstr "Все категории"
 msgid "Captcha is invalid."
 msgstr "Неверный код подтверждения."
 
-#: includes/components/class-listing.php:294
-#: includes/components/class-user.php:124
+#: includes/components/class-listing.php:295
+#: includes/components/class-user.php:127
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 "Я соглашаюсь с <a href=\"%s\" target=\"_blank\">правилами и условиями</a>"
 
-#: includes/components/class-listing.php:320 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:321 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr "Рекламируется"
 
-#: includes/components/class-listing.php:324 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:325 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr "Проверено"
 
-#: includes/components/class-user.php:186
+#: includes/components/class-user.php:189
 #: includes/controllers/class-user.php:134
 #: includes/forms/class-user-login.php:69
 #: templates/user/login/user-login-link.php:9
@@ -181,13 +181,13 @@ msgstr "Проверено"
 msgid "Sign In"
 msgstr "Войти"
 
-#: includes/components/class-user.php:198
+#: includes/components/class-user.php:201
 #: includes/forms/class-user-register.php:63
 #: templates/user/login/user-register-link.php:5
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: includes/components/class-user.php:234
+#: includes/components/class-user.php:237
 #: includes/controllers/class-user.php:142
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:69
@@ -240,7 +240,7 @@ msgstr "Сортировка"
 msgid "Display as a sorting option"
 msgstr "Отображать как опцию сортировки"
 
-#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:149
+#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:151
 #: includes/configs/settings.php:20
 msgctxt "noun"
 msgid "Display"
@@ -293,7 +293,7 @@ msgctxt "sort priority"
 msgid "Order"
 msgstr "Порядок"
 
-#: includes/configs/meta-boxes.php:150
+#: includes/configs/meta-boxes.php:152
 msgid "Display subcategories"
 msgstr "Отображать подкатегории"
 
@@ -794,7 +794,7 @@ msgstr "Текущий пароль является обязательным."
 msgid "Current password is incorrect."
 msgstr "Неверный текущий пароль."
 
-#: includes/controllers/class-user.php:545
+#: includes/controllers/class-user.php:549
 msgid "Password is incorrect."
 msgstr "Неверный пароль."
 
@@ -833,7 +833,7 @@ msgstr "Выбрать файл"
 
 #: includes/fields/class-attachment-select.php:71
 #: includes/fields/class-attachment-upload.php:145
-#: includes/fields/class-date.php:201 includes/fields/class-email.php:75
+#: includes/fields/class-date.php:200 includes/fields/class-email.php:75
 #: includes/fields/class-select.php:199
 #, php-format
 msgid "\"%s\" field contains an invalid value."
@@ -884,12 +884,12 @@ msgstr "Минимальная дата"
 msgid "Maximum Date"
 msgstr "Максимальная дата"
 
-#: includes/fields/class-date.php:207
+#: includes/fields/class-date.php:206
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr "\"%1$s\" не может быть раньше %2$s."
 
-#: includes/fields/class-date.php:215
+#: includes/fields/class-date.php:214
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr "\"%1$s\" не может быть позже %2$s."
@@ -912,7 +912,7 @@ msgctxt "field"
 msgid "optional"
 msgstr "опционально"
 
-#: includes/fields/class-field.php:448
+#: includes/fields/class-field.php:456
 #, php-format
 msgid "\"%s\" field is required."
 msgstr "Поле \"%s\" является обязательным."
@@ -938,20 +938,20 @@ msgctxt "quantity"
 msgid "Decimals"
 msgstr "Знаки после запятой"
 
-#: includes/fields/class-number.php:81
+#: includes/fields/class-number.php:82
 msgid "Minimum Value"
 msgstr "Минимальное значение"
 
-#: includes/fields/class-number.php:87
+#: includes/fields/class-number.php:89
 msgid "Maximum Value"
 msgstr "Максимальное значение"
 
-#: includes/fields/class-number.php:174
+#: includes/fields/class-number.php:177
 #, php-format
 msgid "\"%1$s\" can't be lower than %2$s."
 msgstr "\"%1$s\" не может быть меньше %2$s."
 
-#: includes/fields/class-number.php:178
+#: includes/fields/class-number.php:181
 #, php-format
 msgid "\"%1$s\" can't be greater than %2$s."
 msgstr "\"%1$s\" не может быть больше %2$s."

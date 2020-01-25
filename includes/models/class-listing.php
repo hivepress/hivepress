@@ -177,10 +177,12 @@ class Listing extends Post {
 			$image_ids = wp_list_pluck( get_attached_media( 'image', $this->id ), 'ID' );
 
 			if ( has_post_thumbnail( $this->id ) ) {
-				array_unshift( $image_ids, get_post_thumbnail_id( $this->id ) );
-			}
+				$image_id = absint( get_post_thumbnail_id( $this->id ) );
 
-			$image_ids = array_unique( $image_ids );
+				if ( ! in_array( $image_id, $image_ids, true ) ) {
+					array_unshift( $image_ids, $image_id );
+				}
+			}
 
 			// Set field value.
 			$this->set_images( $image_ids );

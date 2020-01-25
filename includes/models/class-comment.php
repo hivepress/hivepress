@@ -115,11 +115,15 @@ abstract class Comment extends Model {
 		}
 
 		// Create comment.
+		$created = false;
+
 		if ( empty( $this->id ) ) {
 			$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => static::_get_meta( 'alias' ) ] ) );
 
 			if ( $id ) {
 				$this->set_id( $id );
+
+				$created = true;
 			} else {
 				return false;
 			}
@@ -135,7 +139,7 @@ abstract class Comment extends Model {
 		}
 
 		// Update comment.
-		if ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
+		if ( ! $created && ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
 			return false;
 		}
 

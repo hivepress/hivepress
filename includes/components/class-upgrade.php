@@ -88,6 +88,17 @@ final class Upgrade extends Component {
 					update_comment_meta( $comment->comment_ID, 'hp_expire_period', get_post_meta( $comment->comment_post_ID, 'hp_expiration_period', true ) );
 					update_comment_meta( $comment->comment_ID, 'hp_featured', get_post_meta( $comment->comment_post_ID, 'hp_featured', true ) );
 				}
+
+				if ( $comment->comment_approved ) {
+					update_comment_meta( $comment->comment_ID, 'hp_default', '1' );
+				} else {
+					wp_update_comment(
+						[
+							'comment_ID'       => $comment->comment_ID,
+							'comment_approved' => 1,
+						]
+					);
+				}
 			}
 
 			// Get comments.

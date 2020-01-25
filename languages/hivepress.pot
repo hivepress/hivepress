@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 15:49+0000\n"
+"POT-Creation-Date: 2020-01-25 21:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -39,12 +39,12 @@ msgid "Order"
 msgstr ""
 
 #: includes/blocks/class-listing-categories.php:108
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Name"
 msgstr ""
 
 #: includes/blocks/class-listing-categories.php:109
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Item Count"
 msgstr ""
 
@@ -53,17 +53,17 @@ msgid "Category"
 msgstr ""
 
 #: includes/blocks/class-listings.php:114
-msgctxt "sort by"
-msgid "Date"
+msgctxt "sort order"
+msgid "Date Added"
 msgstr ""
 
 #: includes/blocks/class-listings.php:115
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Title"
 msgstr ""
 
 #: includes/blocks/class-listings.php:116
-msgctxt "sort by"
+msgctxt "sort order"
 msgid "Random"
 msgstr ""
 
@@ -94,14 +94,14 @@ msgctxt "plural"
 msgid "Installed"
 msgstr ""
 
-#: includes/components/class-admin.php:1107
+#: includes/components/class-admin.php:1111
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
 "or styling issues please consider using the official %s theme."
 msgstr ""
 
-#: includes/components/class-admin.php:1120
+#: includes/components/class-admin.php:1124
 #, php-format
 msgid ""
 "A new version of %s theme is available, please update for new features and "
@@ -149,26 +149,26 @@ msgstr ""
 msgid "Captcha is invalid."
 msgstr ""
 
-#: includes/components/class-listing.php:294
-#: includes/components/class-user.php:124
+#: includes/components/class-listing.php:295
+#: includes/components/class-user.php:127
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-listing.php:320 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:321 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr ""
 
-#: includes/components/class-listing.php:324 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:325 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr ""
 
-#: includes/components/class-user.php:186
+#: includes/components/class-user.php:189
 #: includes/controllers/class-user.php:134
 #: includes/forms/class-user-login.php:69
 #: templates/user/login/user-login-link.php:9
@@ -176,13 +176,13 @@ msgstr ""
 msgid "Sign In"
 msgstr ""
 
-#: includes/components/class-user.php:198
+#: includes/components/class-user.php:201
 #: includes/forms/class-user-register.php:63
 #: templates/user/login/user-register-link.php:5
 msgid "Register"
 msgstr ""
 
-#: includes/components/class-user.php:234
+#: includes/components/class-user.php:237
 #: includes/controllers/class-user.php:142
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:69
@@ -235,7 +235,7 @@ msgstr ""
 msgid "Display as a sorting option"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:149
+#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:151
 #: includes/configs/settings.php:20
 msgctxt "noun"
 msgid "Display"
@@ -288,7 +288,7 @@ msgctxt "sort priority"
 msgid "Order"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:150
+#: includes/configs/meta-boxes.php:152
 msgid "Display subcategories"
 msgstr ""
 
@@ -768,7 +768,7 @@ msgstr ""
 msgid "Current password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:545
+#: includes/controllers/class-user.php:549
 msgid "Password is incorrect."
 msgstr ""
 
@@ -801,7 +801,7 @@ msgstr ""
 
 #: includes/fields/class-attachment-select.php:71
 #: includes/fields/class-attachment-upload.php:145
-#: includes/fields/class-date.php:201 includes/fields/class-email.php:75
+#: includes/fields/class-date.php:200 includes/fields/class-email.php:75
 #: includes/fields/class-select.php:199
 #, php-format
 msgid "\"%s\" field contains an invalid value."
@@ -852,12 +852,12 @@ msgstr ""
 msgid "Maximum Date"
 msgstr ""
 
-#: includes/fields/class-date.php:207
+#: includes/fields/class-date.php:206
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr ""
 
-#: includes/fields/class-date.php:215
+#: includes/fields/class-date.php:214
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr ""
@@ -880,7 +880,7 @@ msgctxt "field"
 msgid "optional"
 msgstr ""
 
-#: includes/fields/class-field.php:448
+#: includes/fields/class-field.php:456
 #, php-format
 msgid "\"%s\" field is required."
 msgstr ""
@@ -906,20 +906,20 @@ msgctxt "quantity"
 msgid "Decimals"
 msgstr ""
 
-#: includes/fields/class-number.php:81
+#: includes/fields/class-number.php:82
 msgid "Minimum Value"
 msgstr ""
 
-#: includes/fields/class-number.php:87
+#: includes/fields/class-number.php:89
 msgid "Maximum Value"
 msgstr ""
 
-#: includes/fields/class-number.php:174
+#: includes/fields/class-number.php:177
 #, php-format
 msgid "\"%1$s\" can't be lower than %2$s."
 msgstr ""
 
-#: includes/fields/class-number.php:178
+#: includes/fields/class-number.php:181
 #, php-format
 msgid "\"%1$s\" can't be greater than %2$s."
 msgstr ""

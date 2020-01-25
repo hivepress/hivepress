@@ -121,7 +121,7 @@ final class Hook extends Component {
 		}
 
 		// Fire action.
-		do_action( 'hivepress/v1/models/user/' . $action, $user_id );
+		do_action( 'hivepress/v1/models/user/' . $action, $user_id, 'user' );
 	}
 
 	/**

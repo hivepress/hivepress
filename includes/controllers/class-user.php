@@ -494,7 +494,11 @@ final class User extends Controller {
 		}
 
 		// Update user.
-		$user->fill( $form->get_values() );
+		$values = $form->get_values();
+
+		unset( $values['image'] );
+
+		$user->fill( $values );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400, $user->_get_errors() );
@@ -544,6 +548,9 @@ final class User extends Controller {
 			if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
 				return hp\rest_error( 401, esc_html__( 'Password is incorrect.', 'hivepress' ) );
 			}
+
+			// Clear authentication.
+			wp_clear_auth_cookie();
 		}
 
 		// Delete user.

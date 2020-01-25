@@ -136,12 +136,20 @@ abstract class Post extends Model {
 			}
 		}
 
+		if ( array_key_exists( 'post_content', $post ) && is_null( $post['post_content'] ) ) {
+			$post['post_content'] = '';
+		}
+
 		// Create post.
+		$created = false;
+
 		if ( empty( $this->id ) ) {
 			$id = wp_insert_post( array_merge( $post, [ 'post_type' => static::_get_meta( 'alias' ) ] ) );
 
 			if ( $id ) {
 				$this->set_id( $id );
+
+				$created = true;
 			} else {
 				return false;
 			}
@@ -162,7 +170,7 @@ abstract class Post extends Model {
 		}
 
 		// Update post.
-		if ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
+		if ( ! $created && ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
 			return false;
 		}
 

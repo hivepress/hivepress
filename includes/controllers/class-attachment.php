@@ -217,11 +217,16 @@ final class Attachment extends Controller {
 			)->save();
 
 			// Delete attachments.
-			$attachments->delete();
-		}
+			$attachments->filter(
+				[
+					'id__not_in' => [ $attachment->get_id() ],
+				]
+			)->delete();
+		} else {
 
-		// Fire update action.
-		do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+			// Fire update action.
+			do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+		}
 
 		// Render attachment.
 		$data = [

@@ -222,11 +222,15 @@ class User extends Model {
 		}
 
 		// Create user.
+		$created = false;
+
 		if ( empty( $this->id ) ) {
 			$id = wp_insert_user( $user );
 
 			if ( ! is_wp_error( $id ) ) {
 				$this->set_id( $id );
+
+				$created = true;
 			} else {
 				return false;
 			}
@@ -242,7 +246,7 @@ class User extends Model {
 		}
 
 		// Update user.
-		if ( is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
+		if ( ! $created && is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
 			return false;
 		}
 
