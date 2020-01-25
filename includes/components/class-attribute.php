@@ -894,8 +894,8 @@ final class Attribute extends Component {
 		}
 
 		// Get meta and taxonomy queries.
-		$meta_query = (array) $query->get( 'meta_query' );
-		$tax_query  = (array) $query->get( 'tax_query' );
+		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
+		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
 
 		// Paginate results.
 		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
@@ -1018,7 +1018,7 @@ final class Attribute extends Component {
 				$field_filter = $field->get_filter();
 
 				if ( $field_filter ) {
-					if ( isset( $field_args['options'] ) ) {
+					if ( ! is_null( $field->get_arg( 'options' ) ) ) {
 
 						// Set taxonomy filter.
 						$field_filter = array_combine(

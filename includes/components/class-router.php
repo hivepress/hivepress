@@ -368,9 +368,6 @@ final class Router extends Component {
 		$route = $this->get_current_route();
 
 		if ( $route && isset( $route['title'] ) ) {
-			if ( count( $parts ) > 1 ) {
-				array_shift( $parts );
-			}
 
 			// Add route title.
 			array_unshift( $parts, $route['title'] );

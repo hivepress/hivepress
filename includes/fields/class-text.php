@@ -135,7 +135,7 @@ class Text extends Field {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
+			$this->value = trim( wp_unslash( $this->value ) );
 		}
 	}
 

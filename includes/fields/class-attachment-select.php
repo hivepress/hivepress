@@ -108,7 +108,6 @@ class Attachment_Select extends Field {
 				'label'      => $this->caption,
 
 				'attributes' => [
-					'class'          => [ 'button' ],
 					'data-component' => 'file-select',
 				],
 			]

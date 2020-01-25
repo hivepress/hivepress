@@ -102,7 +102,6 @@ class Date extends Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'display_type'   => 'text',
 				'display_format' => get_option( 'date_format' ),
 			],
 			$args
@@ -177,7 +176,7 @@ class Date extends Field {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
+			$this->value = trim( wp_unslash( $this->value ) );
 		}
 	}
 
@@ -227,6 +226,10 @@ class Date extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Get display type.
+		$display_type = 'hidden' === $this->display_type ? 'hidden' : 'text';
+
+		return '<input type="' . esc_attr( $display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

@@ -20,6 +20,40 @@ defined( 'ABSPATH' ) || exit;
 class Button extends Field {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'statuses' => [
+					'optional' => null,
+				],
+			]
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps field properties.
+	 */
+	protected function boot() {
+
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'button' ],
+			]
+		);
+
+		parent::boot();
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}

@@ -100,13 +100,24 @@ class Checkbox extends Field {
 	}
 
 	/**
+	 * Adds field filter.
+	 */
+	protected function add_filter() {
+		parent::add_filter();
+
+		unset( $this->filter['value'] );
+
+		$this->filter['operator'] = 'EXISTS';
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
+			$this->value = trim( wp_unslash( $this->value ) );
 		}
 	}
 

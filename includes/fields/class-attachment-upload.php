@@ -175,11 +175,7 @@ class Attachment_Upload extends Field {
 		// Render upload button.
 		$output .= ( new Button(
 			[
-				'label'      => $this->caption,
-
-				'attributes' => [
-					'class' => [ 'button' ],
-				],
+				'label' => $this->caption,
 			]
 		) )->render();
 

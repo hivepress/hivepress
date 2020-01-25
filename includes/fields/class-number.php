@@ -74,19 +74,22 @@ class Number extends Field {
 						'default'   => 0,
 						'min_value' => 0,
 						'max_value' => 6,
+						'required'  => true,
 						'_order'    => 20,
 					],
 
 					'min_value'   => [
-						'label'  => esc_html__( 'Minimum Value', 'hivepress' ),
-						'type'   => 'number',
-						'_order' => 30,
+						'label'    => esc_html__( 'Minimum Value', 'hivepress' ),
+						'type'     => 'number',
+						'decimals' => 6,
+						'_order'   => 30,
 					],
 
 					'max_value'   => [
-						'label'  => esc_html__( 'Maximum Value', 'hivepress' ),
-						'type'   => 'number',
-						'_order' => 40,
+						'label'    => esc_html__( 'Maximum Value', 'hivepress' ),
+						'type'     => 'number',
+						'decimals' => 6,
+						'_order'   => 40,
 					],
 				],
 			],
@@ -137,7 +140,7 @@ class Number extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return number_format_i18n( $this->value, strlen( substr( strrchr( (string) $this->value, '.' ), 1 ) ) );
+			return hp\format_number( $this->value );
 		}
 	}
 
@@ -171,11 +174,11 @@ class Number extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
-				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be lower than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->min_value ) ) );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be lower than %2$s.', 'hivepress' ), $this->label, hp\format_number( $this->min_value ) ) );
 			}
 
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
-				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->label, number_format_i18n( $this->max_value ) ) );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->label, hp\format_number( $this->max_value ) ) );
 			}
 		}
 

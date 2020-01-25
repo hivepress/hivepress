@@ -362,6 +362,16 @@ function sanitize_key( $text ) {
 }
 
 /**
+ * Formats number.
+ *
+ * @param float $number Number.
+ * @return string
+ */
+function format_number( $number ) {
+	return number_format_i18n( $number, strlen( substr( strrchr( (string) $number, '.' ), 1 ) ) );
+}
+
+/**
  * Checks plugin status.
  *
  * @param string $name Plugin name.

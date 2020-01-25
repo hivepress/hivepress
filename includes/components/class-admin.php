@@ -819,7 +819,7 @@ final class Admin extends Component {
 				if ( $field ) {
 
 					// Get field value.
-					$value = null;
+					$value = '';
 
 					if ( $field->get_arg( '_external' ) ) {
 						$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
@@ -828,7 +828,9 @@ final class Admin extends Component {
 					}
 
 					// Set field value.
-					$field->set_value( $value );
+					if ( '' !== $value ) {
+						$field->set_value( $value );
+					}
 
 					if ( 'hidden' === $field->get_display_type() ) {
 
@@ -1013,7 +1015,7 @@ final class Admin extends Component {
 						$output .= '</label></th>';
 
 						// Get field value.
-						$value = null;
+						$value = '';
 
 						if ( $field->get_arg( '_external' ) ) {
 							$value = get_term_meta( $term->term_id, $field->get_arg( '_alias' ), true );
@@ -1022,7 +1024,9 @@ final class Admin extends Component {
 						}
 
 						// Set field value.
-						$field->set_value( $value );
+						if ( '' !== $value ) {
+							$field->set_value( $value );
+						}
 
 						// Render field.
 						$output .= '<td>';

@@ -168,7 +168,7 @@ abstract class Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'display_type'     => static::get_meta( 'name' ),
+				'display_type'     => hp\get_class_name( static::class ),
 				'display_template' => '%value%',
 			],
 			$args
@@ -226,7 +226,7 @@ abstract class Field {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $this->get_display_type() ) ],
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $this->display_type ) ],
 			]
 		);
 	}
