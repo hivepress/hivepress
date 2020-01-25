@@ -105,8 +105,8 @@ class Listing_Categories extends Block {
 
 						'options'  => [
 							'sort_order' => '&mdash;',
-							'name'       => esc_html_x( 'Name', 'sort by', 'hivepress' ),
-							'item_count' => esc_html_x( 'Item Count', 'sort by', 'hivepress' ),
+							'name'       => esc_html_x( 'Name', 'sort order', 'hivepress' ),
+							'item_count' => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
 						],
 					],
 				],
@@ -154,9 +154,7 @@ class Listing_Categories extends Block {
 		$query = Models\Listing_Category::query()->limit( $this->number );
 
 		// Set parent.
-		if ( $this->parent ) {
-			$query->filter( [ 'parent' => $this->parent ] );
-		}
+		$query->filter( [ 'parent' => $this->parent ] );
 
 		// Set order.
 		if ( 'name' === $this->order ) {

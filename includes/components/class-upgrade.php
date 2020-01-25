@@ -26,16 +26,45 @@ final class Upgrade extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Upgrade terms.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_terms' ], 10 );
+
 		// Upgrade comments.
-		add_action( 'hivepress/v1/update', [ $this, 'upgrade_comments' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_comments' ], 20 );
 
 		// Upgrade events.
-		add_action( 'hivepress/v1/update', [ $this, 'upgrade_events' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_events' ], 30 );
 
 		// Upgrade database.
-		add_action( 'hivepress/v1/update', [ $this, 'upgrade_database' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_database' ], 40 );
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Upgrades terms.
+	 *
+	 * @param string $version Old version.
+	 */
+	public function upgrade_terms( $version ) {
+		if ( version_compare( $version, '1.3.0', '<' ) ) {
+
+			// Get term IDs.
+			$term_ids = get_terms(
+				[
+					'taxonomy'   => 'hp_listing_category',
+					'hide_empty' => false,
+					'fields'     => 'ids',
+				]
+			);
+
+			// Upgrade terms.
+			foreach ( $term_ids as $term_id ) {
+				if ( get_term_meta( $term_id, 'hp_order', true ) === '' ) {
+					update_term_meta( $term_id, 'hp_order', '0' );
+				}
+			}
+		}
 	}
 
 	/**

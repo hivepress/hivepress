@@ -213,8 +213,10 @@ abstract class Field {
 
 		// Set optional status.
 		if ( ! $this->required ) {
-			$this->statuses = array_filter( array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses ) );
+			$this->statuses = array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
 		}
+
+		$this->statuses = array_filter( $this->statuses );
 
 		// Set attributes.
 		if ( 'hidden' === $this->display_type ) {

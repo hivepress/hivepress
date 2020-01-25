@@ -111,9 +111,9 @@ class Listings extends Block {
 						'_order'   => 40,
 
 						'options'  => [
-							'created_date' => esc_html_x( 'Date', 'sort by', 'hivepress' ),
-							'title'        => esc_html_x( 'Title', 'sort by', 'hivepress' ),
-							'random'       => esc_html_x( 'Random', 'sort by', 'hivepress' ),
+							'created_date' => esc_html_x( 'Date', 'sort order', 'hivepress' ),
+							'title'        => esc_html_x( 'Title', 'sort order', 'hivepress' ),
+							'random'       => esc_html_x( 'Random', 'sort order', 'hivepress' ),
 						],
 					],
 

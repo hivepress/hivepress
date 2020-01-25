@@ -142,6 +142,8 @@ return [
 				'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
 				'type'      => 'number',
 				'min_value' => 0,
+				'default'   => 0,
+				'required'  => true,
 				'_order'    => 20,
 			],
 

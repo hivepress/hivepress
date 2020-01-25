@@ -360,31 +360,37 @@ final class Listing extends Component {
 	 */
 	public function alter_listing_view_blocks( $blocks, $template ) {
 
-		// Get classes.
-		$classes = [];
+		// Get listing.
+		$listing = $template->get_context( 'listing' );
 
-		if ( $template->get_context( 'listing' )->is_featured() ) {
-			$classes[] = 'hp-listing--featured';
-		}
+		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
-		if ( $template->get_context( 'listing' )->is_verified() ) {
-			$classes[] = 'hp-listing--verified';
-		}
+			// Get classes.
+			$classes = [];
 
-		// Add classes.
-		if ( $classes ) {
-			$blocks = hp\merge_trees(
-				[ 'blocks' => $blocks ],
-				[
-					'blocks' => [
-						'listing_container' => [
-							'attributes' => [
-								'class' => $classes,
+			if ( $listing->is_featured() ) {
+				$classes[] = 'hp-listing--featured';
+			}
+
+			if ( $listing->is_verified() ) {
+				$classes[] = 'hp-listing--verified';
+			}
+
+			// Add classes.
+			if ( $classes ) {
+				$blocks = hp\merge_trees(
+					[ 'blocks' => $blocks ],
+					[
+						'blocks' => [
+							'listing_container' => [
+								'attributes' => [
+									'class' => $classes,
+								],
 							],
 						],
-					],
-				]
-			)['blocks'];
+					]
+				)['blocks'];
+			}
 		}
 
 		return $blocks;

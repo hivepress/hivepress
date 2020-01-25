@@ -772,7 +772,7 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
-							if ( is_null( $field->get_value() ) ) {
+							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
 								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
 							} else {
 								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
@@ -934,7 +934,7 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
-							if ( is_null( $field->get_value() ) ) {
+							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
 								delete_term_meta( $term->term_id, $field->get_arg( '_alias' ) );
 							} else {
 								update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );

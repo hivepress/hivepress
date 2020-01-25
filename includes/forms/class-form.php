@@ -282,11 +282,20 @@ abstract class Form {
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
+	 * @param bool  $provided Provided flag.
 	 * @return object
 	 */
-	public function set_values( $values ) {
-		foreach ( $values as $name => $value ) {
-			$this->set_value( $name, $value );
+	public function set_values( $values, $provided = false ) {
+		$names = [];
+
+		if ( $provided ) {
+			$names = array_keys( $values );
+		} else {
+			$names = array_keys( $this->fields );
+		}
+
+		foreach ( $names as $name ) {
+			$this->set_value( $name, hp\get_array_value( $values, $name ) );
 		}
 
 		return $this;

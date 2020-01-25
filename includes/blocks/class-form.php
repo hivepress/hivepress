@@ -103,12 +103,12 @@ class Form extends Block {
 		if ( $form ) {
 
 			// Set values.
-			$form->set_values( $this->values );
+			$form->set_values( $this->values, true );
 
 			if ( $form->get_method() === 'POST' ) {
-				$form->set_values( $_POST );
+				$form->set_values( $_POST, true );
 			} elseif ( $form->get_method() === 'GET' ) {
-				$form->set_values( $_GET );
+				$form->set_values( $_GET, true );
 			}
 
 			// Render form.
