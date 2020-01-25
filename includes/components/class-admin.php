@@ -746,7 +746,7 @@ final class Admin extends Component {
 	public function update_meta_box( $post_id ) {
 		global $pagenow;
 
-		if ( 'post.php' !== $pagenow ) {
+		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {
 			return;
 		}
 

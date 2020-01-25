@@ -114,7 +114,7 @@ abstract class Term extends Model {
 			}
 		}
 
-		// Create or update term.
+		// Create term.
 		if ( empty( $this->id ) ) {
 			$ids = wp_insert_term( uniqid(), static::_get_meta( 'alias' ), $term );
 
@@ -123,8 +123,6 @@ abstract class Term extends Model {
 			} else {
 				return false;
 			}
-		} elseif ( is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) ) ) {
-			return false;
 		}
 
 		// Update term meta.
@@ -134,6 +132,11 @@ abstract class Term extends Model {
 			} else {
 				update_term_meta( $this->id, $meta_key, $meta_value );
 			}
+		}
+
+		// Update term.
+		if ( is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) ) ) {
+			return false;
 		}
 
 		return true;

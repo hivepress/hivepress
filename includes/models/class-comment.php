@@ -114,7 +114,7 @@ abstract class Comment extends Model {
 			}
 		}
 
-		// Create or update comment.
+		// Create comment.
 		if ( empty( $this->id ) ) {
 			$id = wp_insert_comment( array_merge( $comment, [ 'comment_type' => static::_get_meta( 'alias' ) ] ) );
 
@@ -123,8 +123,6 @@ abstract class Comment extends Model {
 			} else {
 				return false;
 			}
-		} elseif ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
-			return false;
 		}
 
 		// Update comment meta.
@@ -134,6 +132,11 @@ abstract class Comment extends Model {
 			} else {
 				update_comment_meta( $this->id, $meta_key, $meta_value );
 			}
+		}
+
+		// Update comment.
+		if ( ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
+			return false;
 		}
 
 		return true;

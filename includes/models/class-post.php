@@ -136,7 +136,7 @@ abstract class Post extends Model {
 			}
 		}
 
-		// Create or update post.
+		// Create post.
 		if ( empty( $this->id ) ) {
 			$id = wp_insert_post( array_merge( $post, [ 'post_type' => static::_get_meta( 'alias' ) ] ) );
 
@@ -145,8 +145,6 @@ abstract class Post extends Model {
 			} else {
 				return false;
 			}
-		} elseif ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
-			return false;
 		}
 
 		// Update post terms.
@@ -161,6 +159,11 @@ abstract class Post extends Model {
 			} else {
 				update_post_meta( $this->id, $meta_key, $meta_value );
 			}
+		}
+
+		// Update post.
+		if ( ! wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) ) ) {
+			return false;
 		}
 
 		return true;

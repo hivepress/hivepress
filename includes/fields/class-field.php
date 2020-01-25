@@ -220,7 +220,13 @@ abstract class Field {
 
 		// Set attributes.
 		if ( 'hidden' === $this->display_type ) {
-			$this->attributes = [];
+			$this->attributes = array_filter(
+				$this->attributes,
+				function( $name ) {
+					return strpos( $name, 'data-' ) === 0;
+				},
+				ARRAY_FILTER_USE_KEY
+			);
 		}
 
 		$this->attributes = hp\merge_arrays(

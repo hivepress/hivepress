@@ -30,7 +30,7 @@ final class Cache extends Component {
 		add_action( 'import_end', [ $this, 'clear_transient_cache' ] );
 
 		// Clear meta cache.
-		add_action( 'hivepress/v1/events/daily', [ $this, 'clear_meta_cache' ] );
+		add_action( 'hivepress/v1/events/hourly', [ $this, 'clear_meta_cache' ] );
 
 		// Clear user cache.
 		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ] );
