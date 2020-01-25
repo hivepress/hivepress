@@ -1144,7 +1144,7 @@ final class Admin extends Component {
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {
-			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action' ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
+			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $notice_name ] ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
 		}
 
 		// Render settings errors.
