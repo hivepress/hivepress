@@ -20,46 +20,27 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Sort extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
@@ -67,20 +48,20 @@ class Listing_Sort extends Form {
 				'button' => null,
 
 				'fields' => [
-					'sort'      => [
+					'_sort'     => [
 						'label'       => esc_html__( 'Sort by', 'hivepress' ),
 						'type'        => 'select',
 						'placeholder' => null,
 						'options'     => [],
 						'required'    => true,
-						'order'       => 10,
+						'_order'      => 10,
 					],
 
-					's'         => [
+					'_category' => [
 						'type' => 'hidden',
 					],
 
-					'category'  => [
+					's'         => [
 						'type' => 'hidden',
 					],
 
@@ -93,22 +74,22 @@ class Listing_Sort extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
 	 * Bootstraps form properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'data-submit' => 'true',
+				'data-autosubmit' => 'true',
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 }

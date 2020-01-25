@@ -20,33 +20,19 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search_Form extends Form {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Listing Search Form', 'hivepress' ),
+				'label' => hivepress()->translator->get_string( 'listing_search_form' ),
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -57,27 +43,15 @@ class Listing_Search_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form' => 'listing_search',
+				'form'       => 'listing_search',
+
+				'attributes' => [
+					'class' => [ 'hp-form--wide', 'hp-block' ],
+				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Bootstraps block properties.
-	 */
-	protected function bootstrap() {
-
-		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--wide', 'hp-block' ],
-			]
-		);
-
-		parent::bootstrap();
 	}
 }

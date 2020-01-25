@@ -2,7 +2,7 @@
 /**
  * Plugin Name: HivePress
  * Description: Multipurpose directory, listing & classifieds plugin.
- * Version: 1.2.2
+ * Version: 1.3.0
  * Author: HivePress
  * Author URI: https://hivepress.io/
  * Text Domain: hivepress
@@ -14,16 +14,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Define the core HivePress file.
-if ( ! defined( 'HP_CORE_FILE' ) ) {
-	define( 'HP_CORE_FILE', __FILE__ );
+// Define the core file.
+if ( ! defined( 'HP_FILE' ) ) {
+	define( 'HP_FILE', __FILE__ );
 }
 
-// Include the core HivePress class.
+// Include the core class.
 require_once __DIR__ . '/includes/class-core.php';
 
 /**
- * Returns the core HivePress instance.
+ * Returns the core instance.
  *
  * @return HivePress\Core
  */

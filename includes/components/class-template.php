@@ -18,27 +18,33 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Template
  */
-final class Template {
+final class Template extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 		if ( ! is_admin() ) {
 
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
 
+			// Render site header.
+			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
+
+			// @deprecated since version 1.3.0.
+			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_site_header' ] );
+
+			// Render site footer.
+			add_action( 'wp_footer', [ $this, 'render_site_footer' ] );
+
 			// Remove theme header.
 			add_filter( 'twentynineteen_can_show_post_thumbnail', [ $this, 'remove_theme_header' ] );
-
-			// Render header.
-			add_action( 'hivetheme/v1/render/site_header', [ $this, 'render_header' ] );
-			add_action( 'storefront_header', [ $this, 'render_header' ], 31 );
-
-			// Render footer.
-			add_action( 'wp_footer', [ $this, 'render_footer' ] );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -48,13 +54,27 @@ final class Template {
 	 * @return array
 	 */
 	public function add_theme_class( $classes ) {
-		return array_merge( $classes, [ 'hp-theme--' . sanitize_key( get_template() ) ] );
+		return array_merge( $classes, [ 'hp-theme', 'hp-theme--' . hp\sanitize_slug( get_template() ) ] );
+	}
+
+	/**
+	 * Renders site header.
+	 */
+	public function render_site_header() {
+		echo ( new Blocks\Template( [ 'template' => 'site_header_block' ] ) )->render();
+	}
+
+	/**
+	 * Renders site footer.
+	 */
+	public function render_site_footer() {
+		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render();
 	}
 
 	/**
 	 * Removes theme header.
 	 *
-	 * @param bool $display Display property.
+	 * @param bool $display Display flag.
 	 * @return bool
 	 */
 	public function remove_theme_header( $display ) {
@@ -63,19 +83,5 @@ final class Template {
 		}
 
 		return $display;
-	}
-
-	/**
-	 * Renders header.
-	 */
-	public function render_header() {
-		echo ( new Blocks\Template( [ 'template' => 'header_block' ] ) )->render();
-	}
-
-	/**
-	 * Renders footer.
-	 */
-	public function render_footer() {
-		echo ( new Blocks\Template( [ 'template' => 'footer_block' ] ) )->render();
 	}
 }

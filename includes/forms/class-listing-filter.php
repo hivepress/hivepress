@@ -20,63 +20,44 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Filter extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
 				'method' => 'GET',
 
 				'fields' => [
-					'category'  => [
+					'_category' => [
 						'type'    => 'radio',
 						'options' => [],
-						'order'   => 10,
+						'_order'  => 10,
 					],
 
-					's'         => [
+					'_sort'     => [
 						'type' => 'hidden',
 					],
 
-					'sort'      => [
+					's'         => [
 						'type' => 'hidden',
 					],
 
@@ -93,6 +74,6 @@ class Listing_Filter extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

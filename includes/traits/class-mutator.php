@@ -24,26 +24,15 @@ trait Mutator {
 	 *
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.
+	 * @param string $prefix Method prefix.
 	 */
-	final protected function set_property( $name, $value ) {
-		if ( method_exists( $this, 'set_' . $name ) ) {
-			call_user_func_array( [ $this, 'set_' . $name ], [ $value ] );
+	final protected function set_property( $name, $value, $prefix = '' ) {
+		$method = $prefix . 'set_' . $name;
+
+		if ( method_exists( $this, $method ) ) {
+			call_user_func( [ $this, $method ], $value );
 		} elseif ( property_exists( $this, $name ) ) {
 			$this->$name = $value;
-		}
-	}
-
-	/**
-	 * Sets static property.
-	 *
-	 * @param string $name Property name.
-	 * @param mixed  $value Property value.
-	 */
-	final protected static function set_static_property( $name, $value ) {
-		if ( method_exists( static::class, 'set_' . $name ) ) {
-			call_user_func_array( [ static::class, 'set_' . $name ], [ $value ] );
-		} elseif ( property_exists( static::class, $name ) ) {
-			static::$$name = $value;
 		}
 	}
 }

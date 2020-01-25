@@ -8,6 +8,7 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -17,28 +18,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Attachment
  */
-class Attachment extends Controller {
+final class Attachment extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -49,61 +36,68 @@ class Attachment extends Controller {
 					 * @resource Attachments
 					 * @description The attachments API allows you to upload, update and delete attachments.
 					 */
-					[
-						'path'      => '/attachments',
-						'rest'      => true,
+					'attachments_resource'     => [
+						'path' => '/attachments',
+						'rest' => true,
+					],
 
-						'endpoints' => [
+					'attachment_resource'      => [
+						'base' => 'attachments_resource',
+						'path' => '/(?P<attachment_id>\d+)',
+						'rest' => true,
+					],
 
-							/**
-							 * Uploads attachment.
-							 *
-							 * @endpoint Upload attachment
-							 * @route /attachments
-							 * @method POST
-							 * @param string $parent_model Parent model.
-							 * @param string $parent_field Parent field.
-							 * @param int $parent_id Parent ID.
-							 */
-							[
-								'methods' => 'POST',
-								'action'  => 'upload_attachment',
-							],
+					/**
+					 * Uploads attachment.
+					 *
+					 * @endpoint Upload attachment
+					 * @route /attachments
+					 * @method POST
+					 * @param string $parent_model Parent model.
+					 * @param string $parent_field Parent field.
+					 * @param int $parent Parent ID.
+					 */
+					'attachment_upload_action' => [
+						'base'   => 'attachments_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'upload_attachment' ],
+						'rest'   => true,
+					],
 
-							/**
-							 * Updates attachment.
-							 *
-							 * @endpoint Update attachment
-							 * @route /attachments/<id>
-							 * @method POST
-							 * @param int $order Order.
-							 */
-							[
-								'path'    => '/(?P<attachment_id>\d+)',
-								'methods' => 'POST',
-								'action'  => 'update_attachment',
-							],
+					/**
+					 * Updates attachment.
+					 *
+					 * @endpoint Update attachment
+					 * @route /attachments/<id>
+					 * @method POST
+					 * @param int $sort_order Sorting order.
+					 */
+					'attachment_update_action' => [
+						'base'   => 'attachment_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_attachment' ],
+						'rest'   => true,
+					],
 
-							/**
-							 * Deletes atachment.
-							 *
-							 * @endpoint Delete attachment
-							 * @route /attachments/<id>
-							 * @method DELETE
-							 */
-							[
-								'path'    => '/(?P<attachment_id>\d+)',
-								'methods' => 'DELETE',
-								'action'  => 'delete_attachment',
-							],
-						],
+					/**
+					 * Deletes atachment.
+					 *
+					 * @endpoint Delete attachment
+					 * @route /attachments/<id>
+					 * @method DELETE
+					 */
+					'attachment_delete_action' => [
+						'base'   => 'attachment_resource',
+						'method' => 'DELETE',
+						'action' => [ $this, 'delete_attachment' ],
+						'rest'   => true,
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
@@ -122,69 +116,71 @@ class Attachment extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get model class.
-		$model_class = '\HivePress\Models\\' . $request->get_param( 'parent_model' );
+		// Get parent model.
+		$parent_model = hp\create_class_instance( '\HivePress\Models\\' . sanitize_key( $request->get_param( 'parent_model' ) ) );
 
-		if ( ! class_exists( $model_class ) ) {
+		if ( empty( $parent_model ) ) {
 			return hp\rest_error( 400 );
 		}
 
-		// Get field.
-		$field = hp\get_array_value( $model_class::get_fields(), $request->get_param( 'parent_field' ) );
+		// Get parent object.
+		$parent = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
 
-		if ( is_null( $field ) || $field::get_type() !== 'attachment_upload' ) {
+		if ( empty( $parent ) ) {
 			return hp\rest_error( 400 );
+		}
+
+		// Get user ID.
+		$user_id = $parent->get_user__id();
+
+		if ( $parent::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $parent->get_id();
+		}
+
+		// Check permissions.
+		if ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get parent field.
+		$parent_field = hp\get_array_value( $parent->_get_fields(), sanitize_key( $request->get_param( 'parent_field' ) ) );
+
+		if ( empty( $parent_field ) || $parent_field::get_meta( 'name' ) !== 'attachment_upload' ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get attachments.
+		$attachments = Models\Attachment::query()->filter(
+			[
+				'parent_model' => $parent::_get_meta( 'name' ),
+				'parent_field' => $parent_field->get_name(),
+				'parent'       => $parent->get_id(),
+			]
+		)->get();
+
+		// Check attachment limit.
+		if ( $parent_field->is_multiple() && $attachments->count() >= $parent_field->get_max_files() ) {
+			return hp\rest_error( 403, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $parent_field->get_max_files() ) ) );
+		}
+
+		// Check file.
+		if ( ! isset( $_FILES['file'] ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Check file format.
+		$file_type    = wp_check_filetype_and_ext( $_FILES['file']['tmp_name'], $_FILES['file']['name'] );
+		$file_formats = array_map( 'strtoupper', $parent_field->get_formats() );
+
+		if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
 		}
 
 		// Get parent ID.
 		$parent_id = 0;
 
-		if ( $request->get_param( 'parent_model' ) !== 'user' ) {
-			$parent_id = hp\get_post_id(
-				[
-					'post_type'   => hp\prefix( $request->get_param( 'parent_model' ) ),
-					'post_status' => [ 'auto-draft', 'draft', 'publish' ],
-					'post__in'    => [ absint( $request->get_param( 'parent_id' ) ) ],
-					'author'      => get_current_user_id(),
-				]
-			);
-
-			if ( 0 === $parent_id ) {
-				return hp\rest_error( 400 );
-			}
-		}
-
-		// Get attachment IDs.
-		$attachment_ids = get_posts(
-			[
-				'post_type'      => 'attachment',
-				'post_parent'    => $parent_id,
-				'author'         => get_current_user_id(),
-				'meta_key'       => 'hp_parent_field',
-				'meta_value'     => $field->get_name(),
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			]
-		);
-
-		// Check attachment quantity.
-		if ( $field->is_multiple() && count( $attachment_ids ) >= $field->get_max_files() ) {
-			return hp\rest_error( 403, sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $field->get_max_files() ) ) );
-		}
-
-		// Check file format.
-		$file_type    = wp_check_filetype( wp_unslash( $_FILES['file']['name'] ) );
-		$file_formats = array_map( 'strtoupper', $field->get_file_formats() );
-
-		if ( ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
-			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_extensions ) ) );
-		}
-
-		// Delete attachments.
-		if ( ! $field->is_multiple() ) {
-			foreach ( $attachment_ids as $attachment_id ) {
-				wp_delete_attachment( $attachment_id, true );
-			}
+		if ( $parent::_get_meta( 'type' ) === 'post' ) {
+			$parent_id = $parent->get_id();
 		}
 
 		// Upload attachment.
@@ -194,34 +190,54 @@ class Attachment extends Controller {
 			return hp\rest_error( 400, $attachment_id->get_error_messages() );
 		}
 
-		// Set order.
-		if ( $field->is_multiple() ) {
-			wp_update_post(
-				[
-					'ID'         => $attachment_id,
-					'menu_order' => count( $attachment_ids ),
-				]
-			);
+		// Get attachment.
+		$attachment = Models\Attachment::query()->get_by_id( $attachment_id );
+
+		// Update attachment.
+		$attachment->fill(
+			[
+				'sort_order'   => $attachments->count(),
+				'parent_model' => $parent::_get_meta( 'name' ),
+				'parent_field' => $parent_field->get_name(),
+				'parent'       => $parent->get_id(),
+			]
+		);
+
+		if ( ! $attachment->save() ) {
+			return hp\rest_error( 400, $attachment->_get_errors() );
 		}
 
-		// Set field.
-		update_post_meta( $attachment_id, 'hp_parent_field', $field->get_name() );
+		if ( ! $parent_field->is_multiple() ) {
+
+			// Update parent object.
+			$parent->fill(
+				[
+					$parent_field->get_name() => $attachment->get_id(),
+				]
+			)->save();
+
+			// Delete attachments.
+			$attachments->filter(
+				[
+					'id__not_in' => [ $attachment->get_id() ],
+				]
+			)->delete();
+		} else {
+
+			// Fire update action.
+			do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+		}
 
 		// Render attachment.
 		$data = [
-			'id' => $attachment_id,
+			'id' => $attachment->get_id(),
 		];
 
 		if ( $request->get_param( 'render' ) ) {
-			$data['html'] = $field->render_attachment( $attachment_id );
+			$data['html'] = $parent_field->render_attachment( $attachment->get_id() );
 		}
 
-		return new \WP_Rest_Response(
-			[
-				'data' => $data,
-			],
-			201
-		);
+		return hp\rest_response( 201, $data );
 	}
 
 	/**
@@ -237,36 +253,33 @@ class Attachment extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get attachment ID.
-		$attachment_id = hp\get_post_id(
-			[
-				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
-				'author'    => get_current_user_id(),
-			]
-		);
+		// Get attachment.
+		$attachment = Models\Attachment::query()->get_by_id( $request->get_param( 'attachment_id' ) );
 
-		if ( 0 === $attachment_id ) {
+		if ( empty( $attachment ) ) {
 			return hp\rest_error( 404 );
 		}
 
-		// Update attachment.
-		if ( wp_update_post(
-			[
-				'ID'         => $attachment_id,
-				'menu_order' => absint( $request->get_param( 'order' ) ),
-			]
-		) === 0 ) {
-			return hp\rest_error( 400 );
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+			return hp\rest_error( 403 );
 		}
 
-		return new \WP_Rest_Response(
+		// Update attachment.
+		$attachment->set_sort_order( $request->get_param( 'sort_order' ) );
+
+		if ( ! $attachment->save() ) {
+			return hp\rest_error( 400, $attachment->_get_errors() );
+		}
+
+		// Fire update action.
+		do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $attachment_id,
-				],
-			],
-			200
+				'id' => $attachment->get_id(),
+			]
 		);
 	}
 
@@ -283,24 +296,26 @@ class Attachment extends Controller {
 			return hp\rest_error( 401 );
 		}
 
-		// Get attachment ID.
-		$attachment_id = hp\get_post_id(
-			[
-				'post_type' => 'attachment',
-				'post__in'  => [ absint( $request->get_param( 'attachment_id' ) ) ],
-				'author'    => get_current_user_id(),
-			]
-		);
+		// Get attachment.
+		$attachment = Models\Attachment::query()->get_by_id( $request->get_param( 'attachment_id' ) );
 
-		if ( 0 === $attachment_id ) {
+		if ( empty( $attachment ) ) {
 			return hp\rest_error( 404 );
 		}
 
+		// Check permissions.
+		if ( ! current_user_can( 'delete_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Delete attachment.
-		if ( wp_delete_attachment( $attachment_id, true ) === false ) {
+		if ( ! $attachment->delete() ) {
 			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response( (object) [], 204 );
+		// Fire update action.
+		do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+
+		return hp\rest_response( 204 );
 	}
 }

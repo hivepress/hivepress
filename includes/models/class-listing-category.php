@@ -20,133 +20,161 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Category extends Term {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
+				'fields' => [
 					'name'        => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 128,
+						'max_length' => 256,
 						'required'   => true,
+						'_alias'     => 'name',
 					],
 
 					'description' => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
+						'_alias'     => 'description',
 					],
 
-					'image_id'    => [
+					'item_count'  => [
 						'type'      => 'number',
 						'min_value' => 0,
+						'_alias'    => 'count',
 					],
-				],
 
-				'aliases' => [
-					'name'        => 'name',
-					'description' => 'description',
+					'sort_order'  => [
+						'type'      => 'number',
+						'min_value' => 0,
+						'_external' => true,
+					],
+
+					'parent'      => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'_alias'    => 'parent',
+						'_model'    => 'listing_category',
+					],
+
+					'children'    => [
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'multiple'    => true,
+						'_model'      => 'listing_category',
+						'_relation'   => 'one_to_many',
+					],
+
+					'image'       => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'_model'    => 'attachment',
+						'_external' => true,
+					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Gets URL.
+	 * Gets children IDs.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	final public function get_url() {
-		return get_term_link( $this->id );
+	final public function get_children__id() {
+		if ( ! isset( $this->values['children__id'] ) ) {
+
+			// Get children IDs.
+			$children_ids = [];
+
+			if ( $this->id ) {
+				$children_ids = static::query()->filter(
+					[
+						'parent' => $this->id,
+					]
+				)->get_ids();
+			}
+
+			// Set field value.
+			$this->set_children( $children_ids );
+			$this->values['children__id'] = $children_ids;
+		}
+
+		return $this->fields['children']->get_value();
 	}
 
 	/**
 	 * Gets image URL.
 	 *
 	 * @param string $size Image size.
-	 * @return mixed
+	 * @return string
 	 */
-	final public function get_image_url( $size = 'thumbnail' ) {
-		if ( $this->get_image_id() ) {
-			$urls = wp_get_attachment_image_src( $this->get_image_id(), $size );
+	final public function get_image__url( $size = 'thumbnail' ) {
 
-			if ( false !== $urls ) {
-				return reset( $urls );
+		// Get field name.
+		$name = 'image__url__' . $size;
+
+		if ( ! isset( $this->values[ $name ] ) ) {
+			$this->values[ $name ] = '';
+
+			// Get image URL.
+			if ( $this->get_image__id() ) {
+				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
+
+				if ( $urls ) {
+					$this->values[ $name ] = reset( $urls );
+				}
 			}
 		}
 
-		return null;
+		return $this->values[ $name ];
 	}
 
 	/**
-	 * Gets count.
+	 * Gets image URL.
 	 *
-	 * @return int
+	 * @param string $size Image size.
+	 * @return string
+	 * @deprecated Since version 1.3.0
 	 */
-	final public function get_count() {
+	final public function get_image_url( $size ) {
+		return $this->get_image__url( $size );
+	}
 
-		// Set query arguments.
-		$query_args = [
-			'post_status' => 'publish',
-		];
+	/**
+	 * Gets image ID.
+	 *
+	 * @return mixed
+	 * @deprecated Since version 1.3.0
+	 */
+	final public function get_image_id() {
+		return $this->get_image__id();
+	}
 
-		// Get cached count.
-		$count = hivepress()->cache->get_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing' );
+	/**
+	 * Gets URL.
+	 *
+	 * @return mixed
+	 * @deprecated Since version 1.3.0
+	 */
+	final public function get_url() {
+		$url = null;
 
-		if ( is_null( $count ) ) {
-
-			// Get count.
-			$count = count(
-				get_posts(
-					array_merge(
-						$query_args,
-						[
-							'post_type'      => 'hp_listing',
-							'posts_per_page' => -1,
-							'fields'         => 'ids',
-							'tax_query'      => [
-								[
-									'taxonomy' => hp\prefix( static::$name ),
-									'terms'    => [ absint( $this->id ) ],
-								],
-							],
-						]
-					)
-				)
-			);
-
-			// Cache count.
-			hivepress()->cache->set_term_cache( $this->id, array_merge( $query_args, [ 'function' => 'count' ] ), 'post/listing', $count );
+		if ( hivepress()->request->get_param( 'route' ) === 'listing_submit_category_page' ) {
+			$url = hivepress()->router->get_url( 'listing_submit_category_page', [ 'listing_category_id' => $this->get_id() ] );
+		} else {
+			$url = hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $this->get_id() ] );
 		}
 
-		return absint( $count );
+		return $url;
 	}
 }

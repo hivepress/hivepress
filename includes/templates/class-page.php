@@ -1,9 +1,7 @@
 <?php
 /**
- * Page template.
+ * Abstract page template.
  *
- * @template page
- * @description Basic page template.
  * @package HivePress\Templates
  */
 
@@ -19,43 +17,27 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Page
  */
-class Page extends Template {
+abstract class Page extends Template {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'page_container' => [
 						'type'   => 'page',
-						'order'  => 10,
-
 						'blocks' => [],
+						'_order' => 10,
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

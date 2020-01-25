@@ -19,28 +19,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor_View_Page
  */
-class Vendor_View_Page extends Page {
+class Vendor_View_Page extends Page_Sidebar_Left {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -48,132 +34,110 @@ class Vendor_View_Page extends Page {
 						'attributes' => [
 							'class' => [ 'hp-vendor', 'hp-vendor--view-page' ],
 						],
+					],
+
+					'page_sidebar'   => [
+						'attributes' => [
+							'data-component' => 'sticky',
+						],
 
 						'blocks'     => [
-							'page_columns' => [
+							'vendor_summary'         => [
 								'type'       => 'container',
-								'order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'hp-row' ],
+									'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
 								],
 
 								'blocks'     => [
-									'page_sidebar' => [
+									'vendor_image'       => [
+										'type'   => 'part',
+										'path'   => 'vendor/view/page/vendor-image',
+										'_order' => 10,
+									],
+
+									'vendor_name'        => [
 										'type'       => 'container',
-										'tag'        => 'aside',
-										'order'      => 10,
+										'tag'        => 'h3',
+										'_order'     => 20,
 
 										'attributes' => [
-											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-											'data-component' => 'sticky',
+											'class' => [ 'hp-vendor__name' ],
 										],
 
 										'blocks'     => [
-											'vendor_summary' => [
-												'type'   => 'container',
-												'order'  => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-vendor__summary', 'hp-widget', 'widget' ],
-												],
-
-												'blocks' => [
-													'vendor_image' => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-image',
-														'order'    => 10,
-													],
-
-													'vendor_name'  => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-name',
-														'order'    => 20,
-													],
-
-													'vendor_details_primary' => [
-														'type'       => 'container',
-														'order'      => 30,
-
-														'attributes' => [
-															'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
-														],
-
-														'blocks'     => [
-															'vendor_date' => [
-																'type' => 'element',
-																'filepath' => 'vendor/view/vendor-date',
-																'order' => 10,
-															],
-														],
-													],
-
-													'vendor_description' => [
-														'type'     => 'element',
-														'filepath' => 'vendor/view/page/vendor-description',
-														'order'    => 40,
-													],
-												],
-											],
-
-											'vendor_actions_primary' => [
-												'type'   => 'container',
-												'order'  => 20,
-
-												'attributes' => [
-													'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
-												],
-
-												'blocks' => [],
-											],
-
-											'sidebar_widgets' => [
-												'type'  => 'widgets',
-												'area'  => 'vendor_sidebar',
-												'order' => 30,
+											'vendor_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/page/vendor-name',
+												'_order' => 10,
 											],
 										],
 									],
 
-									'page_content' => [
+									'vendor_details_primary' => [
 										'type'       => 'container',
-										'tag'        => 'main',
-										'order'      => 20,
+										'_order'     => 30,
 
 										'attributes' => [
-											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
+											'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
 										],
 
 										'blocks'     => [
-											'page_title' => [
-												'type'     => 'element',
-												'filepath' => 'page/page-title',
-												'order'    => 5,
-											],
-
-											'listings'   => [
-												'type'    => 'listings',
-												'columns' => 2,
-												'order'   => 10,
-											],
-
-											'listing_pagination' => [
-												'type'     => 'element',
-												'filepath' => 'page/pagination',
-												'order'    => 20,
+											'vendor_registered_date' => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-registered-date',
+												'_order' => 10,
 											],
 										],
+									],
+
+									'vendor_description' => [
+										'type'   => 'part',
+										'path'   => 'vendor/view/page/vendor-description',
+										'_order' => 40,
 									],
 								],
+							],
+
+							'vendor_actions_primary' => [
+								'type'       => 'container',
+								'blocks'     => [],
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
+								],
+							],
+
+							'page_sidebar_widgets'   => [
+								'type'   => 'widgets',
+								'area'   => 'hp_vendor_view_sidebar',
+								'_order' => 30,
+							],
+						],
+					],
+
+					'page_content'   => [
+						'blocks' => [
+							'listings'           => [
+								'type'    => 'listings',
+								'columns' => 2,
+								'_order'  => 10,
+							],
+
+							'listing_pagination' => [
+								'type'   => 'part',
+								'path'   => 'page/pagination',
+								'_order' => 20,
 							],
 						],
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

@@ -22,32 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Category_View_Block extends Template {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'listing_category_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing-category', 'hp-listing-category--view-block' ],
@@ -57,7 +43,7 @@ class Listing_Category_View_Block extends Template {
 							'listing_category_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__header' ],
@@ -65,31 +51,43 @@ class Listing_Category_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_category_image' => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/block/listing-category-image',
-										'order'    => 10,
+										'type'   => 'part',
+										'path'   => 'listing-category/view/block/listing-category-image',
+										'_order' => 10,
 									],
 								],
 							],
 
 							'listing_category_content' => [
 								'type'       => 'container',
-								'order'      => 20,
+								'_order'     => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-listing-category__content' ],
 								],
 
 								'blocks'     => [
-									'listing_category_name'            => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/block/listing-category-name',
-										'order'    => 10,
+									'listing_category_name' => [
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-listing_category__name' ],
+										],
+
+										'blocks'     => [
+											'listing_category_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'listing-category/view/block/listing-category-name',
+												'_order' => 10,
+											],
+										],
 									],
 
 									'listing_category_details_primary' => [
 										'type'       => 'container',
-										'order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-listing-category__details', 'hp-listing-category__details--primary' ],
@@ -97,17 +95,17 @@ class Listing_Category_View_Block extends Template {
 
 										'blocks'     => [
 											'listing_category_count' => [
-												'type'     => 'element',
-												'filepath' => 'listing-category/view/listing-category-count',
-												'order'    => 10,
+												'type'   => 'part',
+												'path'   => 'listing-category/view/listing-category-item-count',
+												'_order' => 10,
 											],
 										],
 									],
 
 									'listing_category_description'     => [
-										'type'     => 'element',
-										'filepath' => 'listing-category/view/listing-category-description',
-										'order'    => 30,
+										'type'   => 'part',
+										'path'   => 'listing-category/view/listing-category-description',
+										'_order' => 30,
 									],
 								],
 							],
@@ -115,10 +113,9 @@ class Listing_Category_View_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

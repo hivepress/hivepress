@@ -22,44 +22,29 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit_Category_Page extends Listing_Submit_Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'page_content' => [
 						'blocks' => [
 							'listing_categories' => [
-								'type'     => 'listing_categories',
-								'template' => 'submit',
-								'columns'  => 3,
-								'order'    => 10,
+								'type'    => 'listing_categories',
+								'mode'    => 'submit',
+								'columns' => 3,
+								'_order'  => 10,
 							],
 						],
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

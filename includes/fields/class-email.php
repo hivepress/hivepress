@@ -20,45 +20,26 @@ defined( 'ABSPATH' ) || exit;
 class Email extends Text {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Email', 'hivepress' ),
+				'label'      => esc_html__( 'Email', 'hivepress' ),
+				'filterable' => false,
+				'sortable'   => false,
 
-				'settings' => [
+				'settings'   => [
 					'min_length' => null,
 					'max_length' => null,
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -68,9 +49,6 @@ class Email extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
 			$args,
 			[
 				'max_length' => 254,
@@ -94,7 +72,7 @@ class Email extends Text {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->label ) ] );
+			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 
 		return empty( $this->errors );

@@ -20,79 +20,32 @@ defined( 'ABSPATH' ) || exit;
 class User_Login extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label'   => esc_html__( 'Login User', 'hivepress' ),
+				'model'   => 'user',
+				'captcha' => false,
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Login User', 'hivepress' ),
-				'model'    => 'user',
-				'action'   => hp\get_rest_url( '/users/login' ),
+				'action'   => hivepress()->router->get_url( 'user_login_action' ),
 				'redirect' => true,
 
 				'fields'   => [
@@ -101,13 +54,14 @@ class User_Login extends Model_Form {
 						'type'       => 'text',
 						'max_length' => 254,
 						'required'   => true,
-						'order'      => 10,
+						'_separate'  => true,
+						'_order'     => 10,
 					],
 
 					'password'          => [
 						'min_length' => null,
 						'required'   => true,
-						'order'      => 20,
+						'_order'     => 20,
 					],
 				],
 
@@ -118,6 +72,6 @@ class User_Login extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

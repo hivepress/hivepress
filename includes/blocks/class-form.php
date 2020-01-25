@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Form extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Form name.
 	 *
 	 * @var string
@@ -69,49 +62,53 @@ class Form extends Block {
 	public function render() {
 		$output = '';
 
-		// Get form class.
-		$form_class = '\HivePress\Forms\\' . $this->form;
+		// Get arguments.
+		$form_args = [];
 
-		if ( class_exists( $form_class ) ) {
-			$form_args = [];
+		// Set model.
+		$model = hp\call_class_method( '\HivePress\Forms\\' . $this->form, 'get_meta', [ 'model' ] );
 
-			// Set instance ID.
-			if ( method_exists( $form_class, 'get_model' ) ) {
-				$form_args['id'] = hp\get_array_value( $this->context, $form_class::get_model() . '_id' );
-			}
+		if ( $model ) {
+			$form_args['model'] = $this->get_context( $model );
+		}
 
-			// Set attributes.
-			$form_args['attributes'] = $this->attributes;
+		// Set attributes.
+		$form_args['attributes'] = $this->attributes;
 
-			// Render header.
-			if ( ! empty( $this->header ) ) {
-				$form_args['header'] = ( new Container(
-					[
-						'context' => $this->context,
-						'tag'     => false,
-						'blocks'  => $this->header,
-					]
-				) )->render();
-			}
+		// Set header.
+		if ( $this->header ) {
+			$form_args['header'] = ( new Container(
+				[
+					'context' => $this->context,
+					'tag'     => false,
+					'blocks'  => $this->header,
+				]
+			) )->render();
+		}
 
-			// Render footer.
-			if ( ! empty( $this->footer ) ) {
-				$form_args['footer'] = ( new Container(
-					[
-						'context' => $this->context,
-						'tag'     => false,
-						'blocks'  => $this->footer,
-					]
-				) )->render();
-			}
+		// Set footer.
+		if ( $this->footer ) {
+			$form_args['footer'] = ( new Container(
+				[
+					'context' => $this->context,
+					'tag'     => false,
+					'blocks'  => $this->footer,
+				]
+			) )->render();
+		}
 
-			// Create form.
-			$form = new $form_class( $form_args );
+		// Create form.
+		$form = hp\create_class_instance( '\HivePress\Forms\\' . $this->form, [ $form_args ] );
 
-			if ( $form::get_method() === 'POST' ) {
-				$form->set_values( array_merge( $this->values, $_POST ) );
-			} elseif ( $form::get_method() === 'GET' ) {
-				$form->set_values( array_merge( $this->values, $_GET ) );
+		if ( $form ) {
+
+			// Set values.
+			$form->set_values( $this->values, true );
+
+			if ( $form->get_method() === 'POST' ) {
+				$form->set_values( $_POST, true );
+			} elseif ( $form->get_method() === 'GET' ) {
+				$form->set_values( $_GET, true );
 			}
 
 			// Render form.

@@ -17,12 +17,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Editor
  */
-final class Editor {
+final class Editor extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Register blocks.
 		add_action( 'init', [ $this, 'register_blocks' ] );
@@ -32,6 +34,8 @@ final class Editor {
 			// Enqueue styles.
 			add_action( 'admin_init', [ $this, 'enqueue_styles' ] );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
@@ -42,33 +46,31 @@ final class Editor {
 		// Get blocks.
 		$blocks = [];
 
-		foreach ( hivepress()->get_blocks() as $block_type => $block ) {
-			if ( $block::get_title() ) {
+		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block ) {
+			if ( $block::get_meta( 'label' ) ) {
+
+				// Get slug.
 				$block_slug = hp\sanitize_slug( $block_type );
 
+				// Add block.
 				$blocks[ $block_type ] = [
-					'title'      => HP_CORE_NAME . ' ' . $block::get_title(),
+					'title'      => hivepress()->get_name() . ' ' . $block::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
-					'script'     => 'hp-block-' . $block_slug,
+					'script'     => 'hivepress-block-' . $block_slug,
 					'attributes' => [],
 					'settings'   => [],
 				];
 
-				foreach ( $block::get_settings() as $field_name => $field ) {
-					$field_args = $field->get_args();
-
-					if ( isset( $field_args['options'] ) && ! isset( $field_args['options'][''] ) && ! hp\get_array_value( $field_args, 'required', false ) ) {
-						$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
-					}
+				foreach ( $block::get_meta( 'settings' ) as $field_name => $field ) {
 
 					// Add attribute.
 					$blocks[ $block_type ]['attributes'][ $field_name ] = [
 						'type'    => 'string',
-						'default' => hp\get_array_value( $field_args, 'default' ),
+						'default' => hp\get_array_value( $field->get_args(), 'default', '' ),
 					];
 
 					// Add setting.
-					$blocks[ $block_type ]['settings'][ $field_name ] = $field_args;
+					$blocks[ $block_type ]['settings'][ $field_name ] = $field->get_args();
 				}
 			}
 		}
@@ -78,8 +80,8 @@ final class Editor {
 			foreach ( $blocks as $block_type => $block ) {
 
 				// Register block script.
-				wp_register_script( $block['script'], HP_CORE_URL . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], HP_CORE_VERSION, true );
-				wp_localize_script( $block['script'], 'hpBlock', $block );
+				wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
+				wp_localize_script( $block['script'], 'hivepressBlock', $block );
 
 				// Register block type.
 				register_block_type(
@@ -92,14 +94,16 @@ final class Editor {
 				);
 			}
 
-			if ( ! empty( $blocks ) ) {
-				wp_localize_script( reset( $blocks )['script'], 'hpBlocks', $blocks );
+			if ( $blocks ) {
+				wp_localize_script( hp\get_array_value( reset( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
 			}
 		}
 
 		// Add shortcodes.
-		foreach ( array_keys( $blocks ) as $block_type ) {
-			add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
+		if ( function_exists( 'add_shortcode' ) ) {
+			foreach ( array_keys( $blocks ) as $block_type ) {
+				add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
+			}
 		}
 	}
 
@@ -108,24 +112,29 @@ final class Editor {
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
-	 * @return mixed
+	 * @throws \BadMethodCallException Invalid method.
+	 * @return string
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'render_' ) === 0 ) {
-
-			// Render block HTML.
 			$output = ' ';
 
-			$block_type  = substr( $name, strlen( 'render' ) + 1 );
-			$block_class = '\HivePress\Blocks\\' . $block_type;
-			$block_args  = reset( $args );
+			// Get block type.
+			$block_type = substr( $name, strlen( 'render_' ) );
 
-			if ( class_exists( $block_class ) ) {
-				$output .= ( new $block_class( (array) $block_args ) )->render();
+			// Create block.
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ (array) reset( $args ) ] );
+
+			if ( $block ) {
+
+				// Render block.
+				$output .= $block->render();
 			}
 
 			return $output;
 		}
+
+		throw new \BadMethodCallException();
 	}
 
 	/**

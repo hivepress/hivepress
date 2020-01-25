@@ -20,104 +20,40 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit extends Listing_Update {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label'   => hivepress()->translator->get_string( 'submit_listing' ),
+				'captcha' => false,
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
-
-		// Set fields.
-		$fields = [];
-
-		// Add terms checkbox.
-		$page_id = hp\get_post_id(
-			[
-				'post_type'   => 'page',
-				'post_status' => 'publish',
-				'post__in'    => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
-			]
-		);
-
-		if ( 0 !== $page_id ) {
-			$fields['terms'] = [
-				'caption'  => sprintf( hp\sanitize_html( __( 'I agree to %s', 'hivepress' ) ), '<a href="' . esc_url( get_permalink( $page_id ) ) . '" target="_blank">' . get_the_title( $page_id ) . '</a>' ),
-				'type'     => 'checkbox',
-				'required' => true,
-				'order'    => 1000,
-			];
-		}
-
-		// Set arguments.
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Submit Listing', 'hivepress' ),
 				'message'  => null,
 				'redirect' => true,
-				'fields'   => $fields,
 
 				'button'   => [
-					'label' => esc_html__( 'Submit Listing', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'submit_listing' ),
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

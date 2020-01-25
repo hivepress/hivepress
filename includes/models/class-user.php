@@ -20,220 +20,252 @@ defined( 'ABSPATH' ) || exit;
 class User extends Model {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Model meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'type' => 'user',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
-					'username'    => [
+				'fields' => [
+					'username'     => [
 						'label'      => esc_html__( 'Username', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 60,
 						'required'   => true,
+						'_alias'     => 'user_login',
 					],
 
-					'email'       => [
+					'email'        => [
 						'label'    => esc_html__( 'Email', 'hivepress' ),
 						'type'     => 'email',
 						'required' => true,
+						'_alias'   => 'user_email',
 					],
 
-					'password'    => [
+					'password'     => [
 						'label'      => esc_html__( 'Password', 'hivepress' ),
 						'type'       => 'password',
 						'min_length' => 8,
+						'_alias'     => 'user_pass',
 					],
 
-					'first_name'  => [
+					'first_name'   => [
 						'label'      => esc_html__( 'First Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
+						'_alias'     => 'first_name',
+						'_external'  => true,
 					],
 
-					'last_name'   => [
+					'last_name'    => [
 						'label'      => esc_html__( 'Last Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
+						'_alias'     => 'last_name',
+						'_external'  => true,
 					],
 
-					'description' => [
+					'display_name' => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'display_name',
+					],
+
+					'description'  => [
 						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
+						'_alias'     => 'description',
+						'_external'  => true,
 					],
 
-					'image_id'    => [
-						'label'        => esc_html__( 'Profile Image', 'hivepress' ),
-						'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-						'type'         => 'attachment_upload',
-						'file_formats' => [ 'jpg', 'jpeg', 'png' ],
+					'image'        => [
+						'label'     => esc_html__( 'Profile Image', 'hivepress' ),
+						'caption'   => esc_html__( 'Select Image', 'hivepress' ),
+						'type'      => 'attachment_upload',
+						'formats'   => [ 'jpg', 'jpeg', 'png' ],
+						'_model'    => 'attachment',
+						'_external' => true,
 					],
-				],
-
-				'aliases' => [
-					'user_login' => 'username',
-					'user_email' => 'email',
-					'user_pass'  => 'password',
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Gets instance by ID.
+	 * Gets image URL.
 	 *
-	 * @param int $id Instance ID.
-	 * @return mixed
+	 * @param string $size Image size.
+	 * @return string
 	 */
-	final public static function get( $id ) {
+	final public function get_image__url( $size = 'thumbnail' ) {
 
-		// Get instance data.
-		$data = get_userdata( absint( $id ) );
+		// Get field name.
+		$name = 'image__url__' . $size;
 
-		if ( false !== $data ) {
-			$attributes = [];
+		if ( ! isset( $this->values[ $name ] ) ) {
+			$this->values[ $name ] = '';
 
-			// Convert instance data.
-			$data = (array) $data->data;
+			// Get image URL.
+			if ( $this->get_image__id() ) {
+				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
 
-			// Get instance meta.
-			$meta = array_map(
-				function( $meta_values ) {
-					return reset( $meta_values );
-				},
-				get_user_meta( $data['ID'] )
-			);
-
-			// Get instance attributes.
-			foreach ( array_keys( static::$fields ) as $field_name ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $data, array_search( $field_name, static::$aliases, true ) );
-				} elseif ( in_array( $field_name, [ 'first_name', 'last_name', 'description' ], true ) ) {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, $field_name );
-				} else {
-					$attributes[ $field_name ] = hp\get_array_value( $meta, hp\prefix( $field_name ) );
+				if ( $urls ) {
+					$this->values[ $name ] = reset( $urls );
 				}
 			}
-
-			// Create and fill instance.
-			$instance = new static();
-
-			$instance->set_id( $data['ID'] );
-			$instance->fill( $attributes );
-
-			return $instance;
 		}
 
-		return null;
+		return $this->values[ $name ];
 	}
 
 	/**
-	 * Saves instance to the database.
+	 * Gets object.
+	 *
+	 * @param int $id Object ID.
+	 * @return mixed
+	 */
+	final public function get( $id ) {
+
+		// Get user.
+		$user = null;
+
+		if ( is_object( $id ) ) {
+			$user = get_object_vars( $id->data );
+		} else {
+			$data = get_userdata( absint( $id ) );
+
+			if ( $data ) {
+				$user = get_object_vars( $data->data );
+			}
+		}
+
+		if ( empty( $user ) ) {
+			return;
+		}
+
+		// Get user meta.
+		$meta = array_map(
+			function( $values ) {
+				return reset( $values );
+			},
+			get_user_meta( $user['ID'] )
+		);
+
+		// Create object.
+		$object = ( new static() )->set_id( $user['ID'] );
+
+		// Get field values.
+		$values = [];
+
+		foreach ( $object->_get_fields() as $field_name => $field ) {
+			if ( $field->get_arg( '_external' ) ) {
+
+				// Get meta value.
+				$values[ $field_name ] = hp\get_array_value( $meta, $field->get_arg( '_alias' ) );
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
+
+				// Get user value.
+				$values[ $field_name ] = hp\get_array_value( $user, $field->get_arg( '_alias' ) );
+			}
+		}
+
+		return $object->fill( $values );
+	}
+
+	/**
+	 * Saves object.
 	 *
 	 * @return bool
 	 */
 	final public function save() {
 
-		// Alias instance attributes.
-		$data = [];
+		// Validate fields.
+		if ( ! $this->validate() ) {
+			return false;
+		}
+
+		// Get user data.
+		$user = [];
 		$meta = [];
 
-		foreach ( static::$fields as $field_name => $field ) {
-			$field->set_value( hp\get_array_value( $this->attributes, $field_name ) );
+		foreach ( $this->fields as $field ) {
+			if ( $field->get_arg( '_external' ) ) {
 
-			if ( $field->validate() ) {
-				if ( in_array( $field_name, static::$aliases, true ) ) {
-					$data[ array_search( $field_name, static::$aliases, true ) ] = $field->get_value();
-				} else {
-					$meta[ $field_name ] = $field->get_value();
-				}
-			} else {
-				$this->add_errors( $field->get_errors() );
+				// Set meta value.
+				$meta[ $field->get_arg( '_alias' ) ] = $field->get_value();
+			} elseif ( ! $field->get_arg( '_relation' ) ) {
+
+				// Set user value.
+				$user[ $field->get_arg( '_alias' ) ] = $field->get_value();
 			}
 		}
 
-		// Create or update instance.
-		if ( empty( $this->errors ) ) {
-			if ( is_null( $this->id ) ) {
-				$id = wp_insert_user( $data );
+		// Create user.
+		$created = false;
 
-				if ( ! is_wp_error( $id ) ) {
-					$this->set_id( $id );
-				} else {
-					return false;
-				}
-			} elseif ( is_wp_error( wp_update_user( array_merge( $data, [ 'ID' => $this->id ] ) ) ) ) {
+		if ( empty( $this->id ) ) {
+			$id = wp_insert_user( $user );
+
+			if ( ! is_wp_error( $id ) ) {
+				$this->set_id( $id );
+
+				$created = true;
+			} else {
 				return false;
 			}
-
-			foreach ( $meta as $meta_key => $meta_value ) {
-				if ( in_array( $meta_key, [ 'first_name', 'last_name', 'description' ], true ) ) {
-					update_user_meta( $this->id, $meta_key, $meta_value );
-				} else {
-					update_user_meta( $this->id, hp\prefix( $meta_key ), $meta_value );
-				}
-			}
-
-			return true;
 		}
 
-		return false;
+		// Update user meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( in_array( $meta_value, [ null, false ], true ) ) {
+				delete_user_meta( $this->id, $meta_key );
+			} else {
+				update_user_meta( $this->id, $meta_key, $meta_value );
+			}
+		}
+
+		// Update user.
+		if ( ! $created && is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
-	 * Deletes instance from the database.
+	 * Deletes object.
 	 *
+	 * @param int $id Object ID.
 	 * @return bool
 	 */
-	final public function delete() {
+	final public function delete( $id = null ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 
-		return $this->id && wp_delete_user( $this->id );
-	}
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
 
-	/**
-	 * Gets image ID.
-	 *
-	 * @return mixed
-	 */
-	final public function get_image_id() {
-		$image_id = hp\get_post_id(
-			[
-				'post_type'   => 'attachment',
-				'post_parent' => 0,
-				'author'      => $this->id,
-				'meta_key'    => 'hp_parent_field',
-				'meta_value'  => 'image_id',
-			]
-		);
-
-		return 0 !== $image_id ? $image_id : null;
+		return $id && wp_delete_user( absint( $id ) );
 	}
 }

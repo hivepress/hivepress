@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Results extends Container {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -37,7 +30,7 @@ class Results extends Container {
 		if ( have_posts() ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Element( [ 'filepath' => 'page/no-results' ] ) )->render();
+			$output .= ( new Part( [ 'path' => 'page/no-results-message' ] ) )->render();
 		}
 
 		return $output;

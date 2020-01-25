@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Widgets extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Widget area.
 	 *
 	 * @var string
@@ -42,8 +35,10 @@ class Widgets extends Block {
 		$output = '';
 
 		ob_start();
-		dynamic_sidebar( hp\prefix( $this->area ) );
+
+		dynamic_sidebar( $this->area );
 		$output .= ob_get_contents();
+
 		ob_end_clean();
 
 		return $output;

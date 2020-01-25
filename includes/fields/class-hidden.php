@@ -17,39 +17,46 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Hidden
  */
-class Hidden extends Field {
+class Hidden extends Text {
 
 	/**
-	 * Field type.
+	 * Class initializer.
 	 *
-	 * @var string
+	 * @param array $meta Field meta.
 	 */
-	protected static $type;
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label'      => null,
+				'filterable' => false,
+				'sortable'   => false,
+			],
+			$meta
+		);
 
-	/**
-	 * Normalizes field value.
-	 */
-	protected function normalize() {
-		parent::normalize();
-
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
-		}
+		parent::init( $meta );
 	}
 
 	/**
-	 * Sanitizes field value.
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
 	 */
-	protected function sanitize() {
-		$this->value = sanitize_text_field( $this->value );
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'display_type' => 'hidden',
+			]
+		);
+
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
+	 * Bootstraps field properties.
 	 */
-	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+	protected function boot() {
+		Field::boot();
 	}
 }

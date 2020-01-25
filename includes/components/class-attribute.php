@@ -17,29 +17,47 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Attribute
  */
-final class Attribute {
+final class Attribute extends Component {
 
 	/**
 	 * Array of models.
 	 *
 	 * @var array
 	 */
-	private $models = [ 'listing' ];
+	protected $models = [];
 
 	/**
 	 * Array of attributes.
 	 *
 	 * @var array
 	 */
-	private $attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'models' => [
+					'listing',
+				],
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps component properties.
+	 */
+	protected function boot() {
 
 		// Register attributes.
-		add_action( 'wp_loaded', [ $this, 'register_attributes' ] );
+		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
@@ -47,34 +65,35 @@ final class Attribute {
 		foreach ( $this->models as $model ) {
 
 			// Add field settings.
-			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ] );
-			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ] );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
+
+			// Add admin fields.
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
 			// Add model fields.
-			add_filter( 'hivepress/v1/models/' . $model, [ $this, 'add_model_fields' ] );
+			add_filter( 'hivepress/v1/models/' . $model . '/fields', [ $this, 'add_model_fields' ], 100, 2 );
 
 			// Add edit fields.
-			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_edit_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
 
 			// Add search fields.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 100, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 100, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 100, 2 );
 
 			// Add sort options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
 
 			// Add category options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
 
 			// Set category value.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ] );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ], 100, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ], 100, 2 );
 
 			// Set range values.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ] );
+			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 		}
 
 		if ( is_admin() ) {
@@ -92,6 +111,55 @@ final class Attribute {
 	}
 
 	/**
+	 * Gets attribute name.
+	 *
+	 * @param string $slug Attribute slug.
+	 * @param string $prefix Attribute prefix.
+	 * @return string
+	 */
+	protected function get_attribute_name( $slug, $prefix = '' ) {
+		if ( $prefix ) {
+			$prefix .= '_';
+		}
+
+		return substr( hp\sanitize_key( urldecode( $slug ) ), 0, 32 - strlen( hp\prefix( $prefix ) ) );
+	}
+
+	/**
+	 * Gets attributes.
+	 *
+	 * @param string $model Model name.
+	 * @param array  $category_ids Category IDs.
+	 * @return array
+	 */
+	protected function get_attributes( $model, $category_ids ) {
+		return array_filter(
+			$this->attributes[ $model ],
+			function( $attribute ) use ( $category_ids ) {
+				return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
+			}
+		);
+	}
+
+	/**
+	 * Gets current category ID.
+	 *
+	 * @param string $model Model name.
+	 * @return mixed
+	 */
+	protected function get_category_id( $model ) {
+		$category_id = null;
+
+		if ( isset( $_GET['_category'] ) ) {
+			$category_id = absint( $_GET['_category'] );
+		} elseif ( is_tax( hp\prefix( $model . '_category' ) ) ) {
+			$category_id = get_queried_object_id();
+		}
+
+		return $category_id;
+	}
+
+	/**
 	 * Registers attributes.
 	 */
 	public function register_attributes() {
@@ -106,32 +174,37 @@ final class Attribute {
 				'order'          => 'ASC',
 			];
 
+			// Get cache group.
+			$cache_group = hivepress()->model->get_cache_group( 'post', hp\prefix( $model . '_attribute' ) );
+
 			// Get cached attributes.
-			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), 'post/' . $model . '_attribute' );
+			$attributes = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $cache_group );
 
 			if ( is_null( $attributes ) ) {
 				$attributes = [];
 
-				// Get attribute posts.
-				$attribute_posts = get_posts( $query_args );
+				// Get attribute objects.
+				$attribute_objects = get_posts( $query_args );
 
-				foreach ( $attribute_posts as $attribute_post ) {
+				foreach ( $attribute_objects as $attribute_object ) {
 
 					// Set defaults.
 					$attribute_args = [
-						'label'          => $attribute_post->post_title,
-						'display_areas'  => (array) $attribute_post->hp_display_areas,
-						'display_format' => $attribute_post->hp_display_format,
-						'editable'       => (bool) $attribute_post->hp_editable,
-						'moderated'      => (bool) $attribute_post->hp_moderated,
-						'searchable'     => (bool) $attribute_post->hp_searchable,
-						'filterable'     => (bool) $attribute_post->hp_filterable,
-						'sortable'       => (bool) $attribute_post->hp_sortable,
+						'label'          => $attribute_object->post_title,
+						'display_areas'  => (array) $attribute_object->hp_display_areas,
+						'display_format' => (string) $attribute_object->hp_display_format,
+						'editable'       => (bool) $attribute_object->hp_editable,
+						'moderated'      => (bool) $attribute_object->hp_moderated,
+						'searchable'     => (bool) $attribute_object->hp_searchable,
+						'filterable'     => (bool) $attribute_object->hp_filterable,
+						'sortable'       => (bool) $attribute_object->hp_sortable,
 						'categories'     => [],
+						'edit_field'     => [],
+						'search_field'   => [],
 					];
 
 					// Get categories.
-					$category_ids = wp_get_post_terms( $attribute_post->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+					$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 					foreach ( $category_ids as $category_id ) {
 						$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $model . '_category' ) ) );
@@ -146,26 +219,34 @@ final class Attribute {
 
 						// Set defaults.
 						$field_args = [
-							'label' => $attribute_args['label'],
-							'type'  => 'text',
-							'order' => 100 + absint( $attribute_post->menu_order ),
+							'label'  => $attribute_args['label'],
+							'type'   => 'text',
+							'_order' => 100 + absint( $attribute_object->menu_order ),
 						];
 
 						// Get field type.
-						$field_type = sanitize_key( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_type' ), true ) );
+						$field_type = sanitize_key( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_type' ), true ) );
 
-						if ( ! empty( $field_type ) ) {
-
-							// Get field class.
-							$field_class = '\HivePress\Fields\\' . $field_type;
+						if ( $field_type ) {
 
 							// Get field settings.
-							if ( class_exists( $field_class ) ) {
+							$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'settings' ] );
+
+							if ( $field_settings ) {
+
+								// Set field type.
 								$field_args['type'] = $field_type;
 
-								foreach ( $field_class::get_settings() as $field_name => $field ) {
-									$field->set_value( get_post_meta( $attribute_post->ID, hp\prefix( $field_context . '_field_' . $field_name ), true ) );
-									$field_args[ $field_name ] = $field->get_value();
+								// Set field settings.
+								foreach ( $field_settings as $settings_field_name => $settings_field ) {
+
+									// Set field value.
+									$settings_field->set_value( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
+
+									// Get field value.
+									if ( $settings_field->validate() ) {
+										$field_args[ $settings_field_name ] = $settings_field->get_value();
+									}
 								}
 							}
 						}
@@ -175,15 +256,15 @@ final class Attribute {
 					}
 
 					// Get attribute name.
-					$attribute_name = $this->get_attribute_name( $attribute_post->post_name );
+					$attribute_name = $this->get_attribute_name( $attribute_object->post_name );
 
 					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
-						$attribute_name = $this->get_attribute_name( $attribute_post->post_name, $model );
+						$attribute_name = $this->get_attribute_name( $attribute_object->post_name, $model );
 
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
-							$attribute_args[ $field_context . '_field' ]['options']  = 'terms';
-							$attribute_args[ $field_context . '_field' ]['taxonomy'] = hp\prefix( $model . '_' . $attribute_name );
+							$attribute_args[ $field_context . '_field' ]['options']     = 'terms';
+							$attribute_args[ $field_context . '_field' ]['option_args'] = [ 'taxonomy' => hp\prefix( $model . '_' . $attribute_name ) ];
 						}
 					}
 
@@ -193,23 +274,33 @@ final class Attribute {
 
 				// Cache attributes.
 				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), 'post/' . $model . '_attribute', $attributes );
+					hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'attributes' ] ), $cache_group, $attributes );
 				}
 			}
 
 			// Register taxonomies.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
-				if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+				if ( isset( $attribute_args['edit_field']['options'] ) ) {
 					register_taxonomy(
 						hp\prefix( $model . '_' . $attribute_name ),
 						hp\prefix( $model ),
 						[
-							'label'        => $attribute_args['label'],
 							'hierarchical' => true,
 							'public'       => false,
 							'show_ui'      => true,
 							'show_in_menu' => false,
 							'rewrite'      => false,
+
+							'labels'       => [
+								'name'          => $attribute_args['label'],
+								'singular_name' => $attribute_args['label'],
+								'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
+								'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
+								'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
+								'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
+								'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
+								'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
+							],
 						]
 					);
 				}
@@ -221,26 +312,29 @@ final class Attribute {
 			 * @filter /models/{$name}/attributes
 			 * @description Filters model attributes.
 			 * @param string $name Model name.
-			 * @param array $atts Model attributes.
+			 * @param array $attributes Model attributes.
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
-				function( $attribute_args ) {
-					return hp\merge_arrays(
+				function( $args ) {
+					return array_merge(
 						[
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '',
+							'protected'      => false,
 							'editable'       => false,
 							'moderated'      => false,
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
 							'categories'     => [],
+							'edit_field'     => [],
+							'search_field'   => [],
 						],
-						$attribute_args
+						$args
 					);
 				},
 				$attributes
@@ -251,7 +345,7 @@ final class Attribute {
 	/**
 	 * Imports attribute.
 	 *
-	 * @param array $term Term object.
+	 * @param array $term Term arguments.
 	 * @return array
 	 */
 	public function import_attribute( $term ) {
@@ -271,50 +365,54 @@ final class Attribute {
 	public function add_field_settings( $meta_box ) {
 
 		// Get model.
-		$model = hp\unprefix( preg_replace( '/_attribute$/', '', get_post_type() ) );
+		$model = $meta_box['model'];
 
 		// Get field context.
-		$field_context = explode( '_', $meta_box['name'] );
-		$field_context = end( $field_context );
+		$field_context = end( ( explode( '_', $meta_box['name'] ) ) );
 
 		// Get field type.
 		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
 
-		if ( '' !== $field_type ) {
+		if ( $field_type ) {
 
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_type;
+			// Get field settings.
+			$field_settings = hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'settings' ] );
 
 			// Add field settings.
-			if ( class_exists( $field_class ) ) {
-				foreach ( $field_class::get_settings() as $field_name => $field ) {
+			if ( $field_settings ) {
+				foreach ( $field_settings as $field_name => $field ) {
 					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();
 
+						// Set field arguments.
 						if ( 'options' === $field_name ) {
 							$field_args = array_merge(
 								$field_args,
 								[
-									'type'          => 'block',
-									'block_type'    => 'content',
-									'block_content' => '<a href="' . esc_url(
-										admin_url(
-											'edit-tags.php?' . http_build_query(
-												[
-													'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name', get_the_ID() ), $model ) ),
-													'post_type' => hp\prefix( $model ),
-												]
+									'label'      => esc_html__( 'Edit Options', 'hivepress' ),
+									'type'       => 'button',
+
+									'attributes' => [
+										'data-component' => 'link',
+										'data-url'       => esc_url(
+											admin_url(
+												'edit-tags.php?' . http_build_query(
+													[
+														'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
+														'post_type' => hp\prefix( $model ),
+													]
+												)
 											)
-										)
-									) . '" class="button">' . esc_html__( 'Edit Options', 'hivepress' ) . '</a>',
+										),
+									],
 								]
 							);
 						}
 
 						if ( 'required' !== $field_name ) {
-							$field_args['order'] = hp\get_array_value( $field_args, 'order', 10 ) + 100;
+							$field_args['_order'] = hp\get_array_value( $field_args, '_order', 10 ) + 100;
 						}
 
 						// Add field.
@@ -328,308 +426,359 @@ final class Attribute {
 	}
 
 	/**
-	 * Adds model fields.
+	 * Adds admin fields.
 	 *
-	 * @param array $model Model arguments.
+	 * @param array $meta_box Meta box arguments.
 	 * @return array
 	 */
-	public function add_model_fields( $model ) {
+	public function add_admin_fields( $meta_box ) {
+
+		// Get model.
+		$model = $meta_box['model'];
+
+		// Get category IDs.
+		$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
 		// Add fields.
-		foreach ( $this->attributes[ $model['name'] ] as $attribute_name => $attribute ) {
-			if ( ! isset( $model['fields'][ $attribute_name ] ) ) {
-				$model['fields'][ $attribute_name ] = array_merge(
-					$attribute['edit_field'],
-					[
-						'required'                 => false,
-						'attribute_display_areas'  => $attribute['display_areas'],
-						'attribute_display_format' => $attribute['display_format'],
-					]
-				);
-
-				if ( array_key_exists( 'options', $attribute['edit_field'] ) ) {
-					$model['relations'][ $model['name'] . '_' . $attribute_name ] = $attribute_name;
-				}
+		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
+			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
 
-		return $model;
+		return $meta_box;
+	}
+
+	/**
+	 * Adds model fields.
+	 *
+	 * @param array  $fields Model fields.
+	 * @param object $object Model object.
+	 * @return array
+	 */
+	public function add_model_fields( $fields, $object ) {
+
+		// Get model.
+		$model = $object::_get_meta( 'name' );
+
+		// Get category IDs.
+		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $model . '_category' );
+
+		if ( is_null( $category_ids ) ) {
+			$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+
+			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
+				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $model . '_category', $category_ids );
+			}
+		}
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_ids );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
+
+				// Get field arguments.
+				$field_args = array_merge(
+					$attribute['edit_field'],
+					[
+						'display_template' => $attribute['display_format'],
+						'_display_areas'   => $attribute['display_areas'],
+					]
+				);
+
+				if ( isset( $field_args['options'] ) ) {
+					$field_args = array_merge(
+						$field_args,
+						[
+							'_model'    => $model . '_category',
+							'_alias'    => hp\prefix( $model . '_' . $attribute_name ),
+							'_relation' => 'many_to_many',
+						]
+					);
+				} else {
+					$field_args['_external'] = true;
+				}
+
+				// Add field.
+				$fields[ $attribute_name ] = $field_args;
+			}
+		}
+
+		return $fields;
 	}
 
 	/**
 	 * Adds edit fields.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_edit_fields( $form ) {
+	public function add_edit_fields( $form_args, $form ) {
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		// Get model.
+		$model = $form::get_meta( 'model' );
 
-		// Get instance ID.
-		$instance_id = get_query_var( hp\prefix( $model . '_id' ) ) ? absint( get_query_var( hp\prefix( $model . '_id' ) ) ) : get_the_ID();
+		// Get category IDs.
+		$category_ids = $form->get_model()->get_categories__id();
 
-		// Filter attributes.
-		$category_ids = wp_get_post_terms( $instance_id, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_ids );
 
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_ids ) {
-				return empty( $attribute['categories'] ) || count( array_intersect( $category_ids, $attribute['categories'] ) ) > 0;
-			}
-		);
-
-		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
 
-			// Get field arguments.
-			$field_args = $attribute['edit_field'];
+				// Get field arguments.
+				$field_args = $attribute['edit_field'];
 
-			if ( $attribute['moderated'] && $model . '_update' === $form['name'] ) {
-				$field_args = hp\merge_arrays(
-					$field_args,
-					[
-						'statuses' => [ 'moderated' => esc_html__( 'moderated', 'hivepress' ) ],
-					]
-				);
-			}
+				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
+					$field_args = hp\merge_arrays(
+						$field_args,
+						[
+							'statuses' => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
+						]
+					);
+				}
 
-			// Add field.
-			if ( ! isset( $form['fields'][ $attribute_name ] ) && ( ( ! array_key_exists( 'options', $field_args ) && $model . '_attributes' === $form['name'] ) || ( $attribute['editable'] && in_array( $form['name'], [ $model . '_submit', $model . '_update' ], true ) ) ) ) {
-				$form['fields'][ $attribute_name ] = $field_args;
+				// Add field.
+				$form_args['fields'][ $attribute_name ] = $field_args;
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Adds search fields.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_search_fields( $form ) {
+	public function add_search_fields( $form_args, $form ) {
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		// Get form context.
+		$form_context = end( ( explode( '_', $form::get_meta( 'name' ) ) ) );
 
-		// Filter attributes.
+		// Get model.
+		$model = $form::get_meta( 'model' );
+
+		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_id );
 
-		// Add fields.
 		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_context, [ 'sort', 'filter' ], true ) ) || ( $attribute['searchable'] && 'search' === $form_context ) ) ) {
 
-			// Get field arguments.
-			$field_args = hp\merge_arrays(
-				$attribute['search_field'],
-				[
-					'statuses' => [ 'optional' => null ],
-				]
-			);
+				// Get field arguments.
+				$field_args = hp\merge_arrays(
+					$attribute['search_field'],
+					[
+						'statuses' => [ 'optional' => null ],
+					]
+				);
 
-			if ( ! isset( $form['fields'][ $attribute_name ] ) ) {
-				if ( ( $attribute['searchable'] && $model . '_search' === $form['name'] ) || ( $attribute['filterable'] && $model . '_filter' === $form['name'] ) ) {
-
-					// Add field.
-					$form['fields'][ $attribute_name ] = $field_args;
-				} elseif ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form['name'], [ $model . '_filter', $model . '_sort' ], true ) ) {
-
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-					if ( class_exists( $field_class ) ) {
-
-						// Create field.
-						$field = new $field_class( $field_args );
-
-						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
-
-						if ( $field->validate() ) {
-							$field_args  = array_merge( $field_args, [ 'type' => 'hidden' ] );
-							$field_value = $field->get_value();
-
-							// Add field.
-							if ( is_array( $field_value ) ) {
-								foreach ( $field_value as $option_name => $option_value ) {
-									$form['fields'][ $attribute_name . '[' . $option_name . ']' ] = array_merge( $field_args, [ 'default' => $option_value ] );
-								}
-							} else {
-								$form['fields'][ $attribute_name ] = $field_args;
-							}
-						}
-					}
+				if ( 'sort' === $form_context || ( ! $attribute['filterable'] && 'filter' === $form_context ) ) {
+					$field_args['display_type'] = 'hidden';
 				}
+
+				// Add field.
+				$form_args['fields'][ $attribute_name ] = $field_args;
 			}
 		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Adds sort options.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_sort_options( $form ) {
+	public function add_sort_options( $form_args, $form ) {
 
-		// Add defaults.
-		if ( is_search() ) {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$form['fields']['sort']['options'][''] = esc_html__( 'Date', 'hivepress' );
-		}
+		// Get model.
+		$model = $form::get_meta( 'model' );
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
-
-		// Filter attributes.
+		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_id ) {
-				return empty( $attribute['categories'] ) || in_array( $category_id, $attribute['categories'], true );
-			}
-		);
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_id );
 
-		// Add options.
+		// Add default option.
+		$options = [];
+
+		if ( is_search() ) {
+			$options[''] = esc_html_x( 'Relevance', 'hivepress' );
+		} else {
+			$options[''] = esc_html_x( 'Date', 'hivepress' );
+		}
+
+		// Add attribute options.
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $form['fields']['sort']['options'][ $attribute_name ] ) && $attribute['sortable'] ) {
-				$form['fields']['sort']['options'][ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $attribute['search_field']['label'] );
-				$form['fields']['sort']['options'][ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $attribute['search_field']['label'] );
+			if ( $attribute['sortable'] ) {
+
+				// Get sort order.
+				$order = hp\call_class_method( '\HivePress\Fields\\' . $attribute['edit_field']['type'], 'get_meta', [ 'sortable' ] );
+
+				if ( $order ) {
+
+					// Get option label.
+					$label = $attribute['edit_field']['label'];
+
+					// Add option.
+					if ( is_bool( $order ) ) {
+						$options[ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $label );
+						$options[ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $label );
+					} else {
+						$options[ $attribute_name . '__' . strtolower( $order ) ] = $label;
+					}
+				}
 			}
 		}
 
-		return $form;
+		// Set options.
+		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
+
+		return $form_args;
 	}
 
 	/**
 	 * Adds category options.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function add_category_options( $form ) {
+	public function add_category_options( $form_args, $form ) {
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		// Get model.
+		$model = $form::get_meta( 'model' );
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
 		// Set query arguments.
 		$query_args = [
-			'parent' => $category_id,
-			'fields' => 'ids',
+			'taxonomy'   => hp\prefix( $model . '_category' ),
+			'parent'     => $category_id,
+			'fields'     => 'ids',
+			'hide_empty' => false,
 		];
 
 		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'term/' . $model . '_category' );
+		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category' );
 
 		if ( is_null( $category_ids ) ) {
-			$category_ids = [];
+			$category_ids = get_terms( $query_args );
 
-			// Get category IDs.
-			if ( 0 === $category_id ) {
-
-				// Get top-level categories.
-				$category_ids = get_terms( hp\prefix( $model . '_category' ), $query_args );
-			} else {
-
-				// Get parent categories.
-				$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
-
-				// Get child categories.
-				$category_ids = array_merge( $category_ids, get_terms( hp\prefix( $model . '_category' ), $query_args ) );
+			if ( $category_id ) {
+				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
 			}
 
 			// Cache IDs.
 			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'include_tree' => true ] ), 'term/' . $model . '_category', $category_ids );
+				hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category', $category_ids );
 			}
 		}
 
-		// Get categories.
-		$categories = get_terms(
-			[
-				'taxonomy'   => hp\prefix( $model . '_category' ),
-				'include'    => array_merge( [ 0 ], $category_ids ),
-				'hide_empty' => false,
-				'meta_key'   => 'hp_order',
-				'orderby'    => 'meta_value_num',
-				'order'      => 'ASC',
-			]
-		);
+		if ( $category_ids ) {
 
-		// Add options.
-		$options = [
-			0 => [
-				'label'  => esc_html__( 'All Categories', 'hivepress' ),
-				'parent' => null,
-			],
-		];
+			// Get categories.
+			$categories = get_terms(
+				[
+					'taxonomy'   => hp\prefix( $model . '_category' ),
+					'include'    => $category_ids,
+					'hide_empty' => false,
+					'meta_key'   => 'hp_sort_order',
+					'orderby'    => 'meta_value_num',
+					'order'      => 'ASC',
+				]
+			);
 
-		foreach ( $categories as $category ) {
-			$options[ $category->term_id ] = [
-				'label'  => $category->name,
-				'parent' => $category->parent,
+			// Add options.
+			$options = [
+				0 => [
+					'label'  => esc_html__( 'All Categories', 'hivepress' ),
+					'parent' => null,
+				],
 			];
+
+			foreach ( $categories as $category ) {
+				$options[ $category->term_id ] = [
+					'label'  => $category->name,
+					'parent' => $category->parent,
+				];
+			}
+
+			// Set options.
+			$form_args['fields']['_category']['options'] = $options;
+		} else {
+
+			// Remove field.
+			unset( $form_args['fields']['_category'] );
 		}
 
-		// Set options.
-		$form['fields']['category']['options'] = $options;
-
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Sets category value.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function set_category_value( $form ) {
+	public function set_category_value( $form_args, $form ) {
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		// Get model.
+		$model = $form::get_meta( 'model' );
+
+		// Get category ID.
+		$category_id = $this->get_category_id( $model );
+
+		if ( empty( $category_id ) ) {
+			$category_id = 0;
+		}
 
 		// Set value.
-		$form['fields']['category']['value'] = $this->get_category_id( $model );
+		if ( isset( $form_args['fields']['_category'] ) ) {
+			$form_args['fields']['_category']['default'] = $category_id;
+		}
 
-		return $form;
+		return $form_args;
 	}
 
 	/**
 	 * Sets range values.
 	 *
-	 * @param array $form Form arguments.
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
 	 * @return array
 	 */
-	public function set_range_values( $form ) {
+	public function set_range_values( $form_args, $form ) {
 
-		// Get model name.
-		$model = $this->get_model_name( $form['name'] );
+		// Get model.
+		$model = $form::get_meta( 'model' );
 
 		// Filter fields.
-		foreach ( $form['fields'] as $field_name => $field_args ) {
+		foreach ( $form_args['fields'] as $field_name => $field_args ) {
 			if ( 'number_range' === $field_args['type'] ) {
 
 				// Set query arguments.
 				$query_args = [
-					'post_type'   => hp\prefix( $model ),
-					'post_status' => 'publish',
-					'meta_key'    => hp\prefix( $field_name ),
-					'orderby'     => 'meta_value_num',
+					'post_type'      => hp\prefix( $model ),
+					'post_status'    => 'publish',
+					'meta_key'       => hp\prefix( $field_name ),
+					'orderby'        => 'meta_value_num',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
 				];
 
 				// Get cached range.
@@ -637,19 +786,19 @@ final class Attribute {
 					array_merge(
 						$query_args,
 						[
-							'fields'   => 'meta_values',
-							'function' => 'minmax',
+							'fields' => 'meta_values',
+							'format' => 'range',
 						]
 					),
-					'post/' . $model
+					'models/' . $model
 				);
 
 				if ( is_null( $range ) ) {
 
 					// Get range.
 					$range = [
-						floatval( get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'ASC' ] ) ), hp\prefix( $field_name ), true ) ),
-						floatval( get_post_meta( hp\get_post_id( array_merge( $query_args, [ 'order' => 'DESC' ] ) ), hp\prefix( $field_name ), true ) ),
+						floatval( get_post_meta( reset( ( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ) ), hp\prefix( $field_name ), true ) ),
+						floatval( get_post_meta( reset( ( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ) ), hp\prefix( $field_name ), true ) ),
 					];
 
 					// Cache range.
@@ -657,67 +806,24 @@ final class Attribute {
 						array_merge(
 							$query_args,
 							[
-								'fields'   => 'meta_values',
-								'function' => 'minmax',
+								'fields' => 'meta_values',
+								'format' => 'range',
 							]
 						),
-						'post/' . $model,
+						'models/' . $model,
 						$range
 					);
 				}
 
 				// Set range values.
-				if ( count( array_filter( $range ) ) > 0 && reset( $range ) !== end( $range ) ) {
-					$form['fields'][ $field_name ]['min_value'] = reset( $range );
-					$form['fields'][ $field_name ]['max_value'] = end( $range );
+				if ( reset( $range ) !== end( $range ) ) {
+					$form_args['fields'][ $field_name ]['min_value'] = reset( $range );
+					$form_args['fields'][ $field_name ]['max_value'] = end( $range );
 				}
 			}
 		}
 
-		return $form;
-	}
-
-	/**
-	 * Gets model name.
-	 *
-	 * @param string $name Name.
-	 * @return string
-	 */
-	private function get_model_name( $name ) {
-		$parts = explode( '_', $name );
-
-		return reset( $parts );
-	}
-
-	/**
-	 * Gets attribute name.
-	 *
-	 * @param string $slug Attribute slug.
-	 * @param string $prefix Attribute prefix.
-	 * @return string
-	 */
-	private function get_attribute_name( $slug, $prefix = '' ) {
-		if ( '' !== $prefix ) {
-			$prefix .= '_';
-		}
-
-		return substr( hp\sanitize_key( urldecode( $slug ) ), 0, 32 - strlen( hp\prefix( $prefix ) ) );
-	}
-
-	/**
-	 * Gets current category ID.
-	 *
-	 * @param string $model Model name.
-	 * @return int
-	 */
-	private function get_category_id( $model ) {
-		$category_id = hp\get_array_value( $_GET, 'category' );
-
-		if ( is_tax( hp\prefix( $model . '_category' ) ) ) {
-			$category_id = get_queried_object_id();
-		}
-
-		return absint( $category_id );
+		return $form_args;
 	}
 
 	/**
@@ -739,26 +845,23 @@ final class Attribute {
 	 * Removes term boxes.
 	 */
 	public function remove_term_boxes() {
-		global $pagenow, $post;
+		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) && in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
+		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) && in_array( get_post_type(), hp\prefix( $this->models ), true ) ) {
 
 			// Get model.
-			$model = hp\unprefix( $post->post_type );
+			$model = hp\unprefix( get_post_type() );
 
-			// Filter attributes.
-			$category_ids = wp_get_post_terms( $post->ID, $post->post_type . '_category', [ 'fields' => 'ids' ] );
+			// Get category IDs.
+			$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
-			$attributes = array_filter(
-				$this->attributes[ $model ],
-				function( $attribute ) use ( $category_ids ) {
-					return ! empty( $attribute['categories'] ) && count( array_intersect( $category_ids, $attribute['categories'] ) ) === 0;
+			// Get attributes.
+			$attributes = $this->get_attributes( $model, $category_ids );
+
+			foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+				if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
+					remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 				}
-			);
-
-			// Remove meta boxes.
-			foreach ( array_keys( $attributes ) as $attribute_name ) {
-				remove_meta_box( $post->post_type . '_' . $attribute_name . 'div', $post->post_type, 'side' );
 			}
 		}
 	}
@@ -775,78 +878,36 @@ final class Attribute {
 			return;
 		}
 
-		// Check model.
+		// Get model.
 		$model = null;
 
-		foreach ( $this->models as $current_model ) {
-			$page_id = absint( get_option( 'hp_page_' . $current_model . 's' ) );
-
-			if ( ( 0 !== $page_id && get_queried_object_id() !== 0 && is_page( $page_id ) ) || is_post_type_archive( hp\prefix( $current_model ) ) || is_tax( hp\prefix( $current_model . '_category' ) ) ) {
-				$model = $current_model;
+		foreach ( $this->models as $model_name ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) ) {
+				$model = $model_name;
 
 				break;
 			}
 		}
 
-		if ( is_null( $model ) ) {
+		if ( empty( $model ) ) {
 			return;
 		}
 
-		// Filter attributes.
-		$attributes = array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) {
-				return $attribute['searchable'] || $attribute['filterable'] || $attribute['sortable'];
-			}
-		);
+		// Set status.
+		$query->set( 'post_status', 'publish' );
 
 		// Paginate results.
 		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
 
-		// Sort results.
-		$form_class = '\HivePress\Forms\\' . $model . '_sort';
-
-		if ( class_exists( $form_class ) ) {
-
-			// Create form.
-			$form = new $form_class();
-
-			$form->set_values( $_GET );
-
-			if ( $form->validate() ) {
-
-				// Get sort order.
-				$sort_param = $form->get_value( 'sort' );
-				$sort_order = null;
-
-				if ( strpos( $sort_param, '__' ) !== false ) {
-					list($sort_param, $sort_order) = explode( '__', $sort_param );
-				}
-
-				// Set sort order.
-				if ( isset( $attributes[ $sort_param ] ) ) {
-					$query->set( 'meta_key', hp\prefix( $sort_param ) );
-
-					if ( ! is_null( $sort_order ) ) {
-						$query->set( 'orderby', 'meta_value_num' );
-						$query->set( 'order', strtoupper( $sort_order ) );
-					} else {
-						$query->set( 'orderby', 'meta_value' );
-					}
-				} else {
-					$query->set( 'orderby', $sort_param );
-				}
-			}
-		}
-
 		// Get meta and taxonomy queries.
-		$meta_query = (array) $query->get( 'meta_query' );
-		$tax_query  = (array) $query->get( 'tax_query' );
+		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
+		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
 
-		// Set category.
+		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		if ( 0 !== $category_id ) {
+		// Set category ID.
+		if ( $category_id ) {
 			$tax_query[] = [
 				[
 					'taxonomy' => hp\prefix( $model . '_category' ),
@@ -855,8 +916,62 @@ final class Attribute {
 			];
 		}
 
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_id );
+
+		// Sort results.
+		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
+
+		if ( $sort_form ) {
+
+			// Set form values.
+			$sort_form->set_values( $_GET );
+
+			if ( $sort_form->validate() ) {
+
+				// Get sort parameter.
+				$sort_param = $sort_form->get_value( '_sort' );
+
+				// Get sort order.
+				$sort_order = 'ASC';
+
+				if ( strpos( $sort_param, '__' ) ) {
+					list($sort_param, $sort_order) = explode( '__', $sort_param );
+				}
+
+				// Get sort attribute.
+				$sort_attribute = hp\get_array_value( $attributes, $sort_param );
+
+				if ( $sort_attribute && $sort_attribute['sortable'] ) {
+
+					// Get sort type.
+					$sort_type = hp\call_class_method( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], 'get_meta', [ 'type' ] );
+
+					if ( $sort_type ) {
+
+						// Add meta clause.
+						$meta_query[ $sort_param . '__order' ] = [
+							'key'     => hp\prefix( $sort_param ),
+							'compare' => 'EXISTS',
+							'type'    => $sort_type,
+						];
+
+						// Set sort parameter.
+						$query->set( 'orderby', $sort_param . '__order' );
+
+						// Set sort order.
+						$query->set( 'order', strtoupper( $sort_order ) );
+					}
+				}
+			}
+		}
+
 		// Filter results.
 		if ( $query->is_search ) {
+
+			// Get attribute fields.
+			$attribute_fields = [];
+
 			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['searchable'] || $attribute['filterable'] ) {
 
@@ -869,107 +984,129 @@ final class Attribute {
 						$field_args['name'] = hp\prefix( $attribute_name );
 					}
 
-					// Get field class.
-					$field_class = '\HivePress\Fields\\' . $field_args['type'];
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-					if ( class_exists( $field_class ) ) {
+					if ( $field && $field::get_meta( 'filterable' ) ) {
 
-						// Create field.
-						$field = new $field_class( $field_args );
-
+						// Set field value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-						// Get filters.
-						$field_filters = $field->get_filters();
-
-						if ( ! empty( $field_filters ) ) {
-							if ( isset( $field_args['options'] ) ) {
-
-								// Replace filter keys.
-								$field_filters = array_combine(
-									array_map(
-										function( $key ) {
-											if ( 'name' === $key ) {
-												$key = 'taxonomy';
-											} elseif ( 'value' === $key ) {
-												$key = 'terms';
-											}
-
-											return $key;
-										},
-										array_keys( $field_filters )
-									),
-									$field_filters
-								);
-
-								unset( $field_filters['type'] );
-
-								$field_filters['include_children'] = false;
-
-								// Add taxonomy filters.
-								$tax_query[] = $field_filters;
-							} else {
-
-								// Replace filter keys.
-								$field_filters = array_combine(
-									array_map(
-										function( $key ) {
-											if ( 'name' === $key ) {
-												$key = 'key';
-											} elseif ( 'operator' === $key ) {
-												$key = 'compare';
-											}
-
-											return $key;
-										},
-										array_keys( $field_filters )
-									),
-									$field_filters
-								);
-
-								// Add meta filters.
-								$meta_query[] = $field_filters;
-							}
+						// Add field.
+						if ( $field->validate() ) {
+							$attribute_fields[ $attribute_name ] = $field;
 						}
 					}
 				}
+			}
+
+			// Set attribute filters.
+			foreach ( $attribute_fields as $field ) {
+				if ( $field->get_arg( '_parent' ) ) {
+
+					// Get parent field.
+					$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
+
+					if ( $parent_field ) {
+
+						// Set parent value.
+						$field->set_parent_value( $parent_field->get_value() );
+
+						// Update field filter.
+						$field->update_filter();
+					}
+				}
+
+				// Get field filter.
+				$field_filter = $field->get_filter();
+
+				if ( $field_filter ) {
+					if ( ! is_null( $field->get_arg( 'options' ) ) ) {
+
+						// Set taxonomy filter.
+						$field_filter = array_combine(
+							array_map(
+								function( $param ) {
+									return hp\get_array_value(
+										[
+											'name'  => 'taxonomy',
+											'value' => 'terms',
+										],
+										$param,
+										$param
+									);
+								},
+								array_keys( $field_filter )
+							),
+							$field_filter
+						);
+
+						unset( $field_filter['type'] );
+
+						$field_filter['include_children'] = false;
+
+						// Add taxonomy clause.
+						$tax_query[] = $field_filter;
+					} else {
+
+						// Set meta filter.
+						$field_filter = array_combine(
+							array_map(
+								function( $param ) {
+									return hp\get_array_value(
+										[
+											'name'     => 'key',
+											'operator' => 'compare',
+										],
+										$param,
+										$param
+									);
+								},
+								array_keys( $field_filter )
+							),
+							$field_filter
+						);
+
+						// Add meta clause.
+						$meta_query[] = $field_filter;
+					}
+				}
+			}
+		}
+
+		// Get featured results.
+		$featured_count = absint( get_option( hp\prefix( $model . 's_featured_per_page' ) ) );
+
+		if ( $featured_count ) {
+
+			// Get featured IDs.
+			$featured_ids = get_posts(
+				[
+					'post_type'      => hp\prefix( $model ),
+					'post_status'    => 'publish',
+					's'              => $query->get( 's' ),
+					'tax_query'      => $tax_query,
+					'meta_query'     => $meta_query,
+					'meta_key'       => 'hp_featured',
+					'meta_value'     => '1',
+					'posts_per_page' => $featured_count,
+					'orderby'        => 'rand',
+					'fields'         => 'ids',
+				]
+			);
+
+			if ( $featured_ids ) {
+
+				// Exclude featured IDs.
+				$query->set( 'post__not_in', $featured_ids );
+
+				// Set request context.
+				hivepress()->request->set_context( 'featured_ids', $featured_ids );
 			}
 		}
 
 		// Set meta and taxonomy queries.
 		$query->set( 'meta_query', $meta_query );
 		$query->set( 'tax_query', $tax_query );
-
-		// Get featured IDs.
-		$featured_count = absint( get_option( 'hp_' . $model . 's_featured_per_page' ) );
-
-		if ( $featured_count > 0 ) {
-
-			// Set query arguments.
-			$query_args = [
-				'post_type'      => hp\prefix( $model ),
-				'post_status'    => 'publish',
-				'meta_key'       => 'hp_featured',
-				'meta_value'     => '1',
-				'posts_per_page' => $featured_count,
-				'orderby'        => 'rand',
-				'fields'         => 'ids',
-			];
-
-			if ( ! is_page() ) {
-				$query_args = array_merge( $query->query_vars, $query_args );
-			}
-
-			$featured_ids = get_posts( $query_args );
-
-			if ( ! empty( $featured_ids ) ) {
-
-				// Exclude featured IDs.
-				$query->set( 'post__not_in', $featured_ids );
-
-				// Set featured IDs.
-				$query->set( 'hp_featured_ids', $featured_ids );
-			}
-		}
 	}
 }

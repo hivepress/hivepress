@@ -17,56 +17,294 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Router
  */
-final class Router {
+final class Router extends Component {
+
+	/**
+	 * All routes.
+	 *
+	 * @var array
+	 */
+	protected $routes = [];
 
 	/**
 	 * The current route.
 	 *
-	 * @var array
+	 * @var mixed
 	 */
-	private $route = [];
+	protected $route;
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
-		// Register API routes.
-		add_action( 'rest_api_init', [ $this, 'register_api_routes' ] );
+		// Register REST routes.
+		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
 
-		// Manage rewrite rules.
+		// Add rewrite rules.
 		add_action( 'init', [ $this, 'add_rewrite_rules' ] );
+
+		// Flush rewrite rules.
 		add_action( 'hivepress/v1/activate', [ $this, 'flush_rewrite_rules' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'flush_rewrite_rules' ] );
+		add_action( 'hivepress/v1/deactivate', [ $this, 'flush_rewrite_rules' ] );
 
 		if ( ! is_admin() ) {
 
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
 
+			// Set page context.
+			add_filter( 'hivepress/v1/templates/page', [ $this, 'set_page_context' ] );
+
 			// Set page template.
-			add_filter( 'template_include', [ $this, 'set_page_template' ], 99 );
+			add_filter( 'template_include', [ $this, 'set_page_template' ], 10000 );
+
+			// Disable page redirect.
+			add_filter( 'redirect_canonical', [ $this, 'disable_page_redirect' ] );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Registers API routes.
+	 * Gets routes.
+	 *
+	 * @return array
 	 */
-	public function register_api_routes() {
-		foreach ( hivepress()->get_controllers() as $controller ) {
-			foreach ( $controller::get_routes() as $route ) {
-				if ( hp\get_array_value( $route, 'rest', false ) ) {
-					foreach ( $route['endpoints'] as $endpoint ) {
-						register_rest_route(
-							'hivepress/v1',
-							$route['path'] . hp\get_array_value( $endpoint, 'path' ),
-							[
-								'methods'  => $endpoint['methods'],
-								'callback' => [ $controller, $endpoint['action'] ],
-							]
-						);
+	protected function get_routes() {
+		if ( empty( $this->routes ) ) {
+
+			// Merge routes.
+			foreach ( hivepress()->get_controllers() as $controller ) {
+				$this->routes = array_merge( $this->routes, $controller->get_routes() );
+			}
+
+			/**
+			 * Filters URL routes.
+			 *
+			 * @filter /routes
+			 * @description Filters URL routes.
+			 * @param array $routes URL route arguments.
+			 */
+			$this->routes = apply_filters( 'hivepress/v1/routes', $this->routes );
+		}
+
+		return $this->routes;
+	}
+
+	/**
+	 * Gets route.
+	 *
+	 * @param string $name Route name.
+	 * @return mixed
+	 */
+	public function get_route( $name ) {
+		return hp\get_array_value( $this->get_routes(), $name );
+	}
+
+	/**
+	 * Gets the current route.
+	 *
+	 * @return mixed
+	 */
+	public function get_current_route() {
+		if ( ! isset( $this->route ) ) {
+			$this->route = false;
+
+			if ( hivepress()->request->get_param( 'route' ) ) {
+
+				// Get route name.
+				$name = hivepress()->request->get_param( 'route' );
+
+				// Get route.
+				$route = $this->get_route( $name );
+
+				if ( $route && ! hp\get_array_value( $route, 'rest' ) ) {
+					$this->route = array_merge( $route, [ 'name' => $name ] );
+				}
+			} else {
+
+				// Match routes.
+				foreach ( $this->get_routes() as $name => $route ) {
+					if ( isset( $route['match'] ) && call_user_func( $route['match'] ) ) {
+						$this->route = array_merge( $route, [ 'name' => $name ] );
+
+						break;
 					}
 				}
+			}
+
+			// Set title.
+			if ( $this->route ) {
+				$title = hp\get_array_value( $this->route, 'title' );
+
+				if ( is_callable( $title ) ) {
+					$title = call_user_func( $title );
+				}
+
+				$this->route['title'] = $title;
+			}
+		}
+
+		return $this->route;
+	}
+
+	/**
+	 * Gets URL path.
+	 *
+	 * @param string $name Route name.
+	 * @return string
+	 */
+	protected function get_url_path( $name ) {
+		$path = '';
+
+		// Get route.
+		$route = $this->get_route( $name );
+
+		// Merge paths.
+		while ( $route ) {
+			if ( isset( $route['path'] ) ) {
+				$path = $route['path'] . $path;
+			}
+
+			if ( isset( $route['base'] ) ) {
+				$route = $this->get_route( $route['base'] );
+			} else {
+				break;
+			}
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Gets URL parameters.
+	 *
+	 * @param string $name Route name.
+	 * @return array
+	 */
+	protected function get_url_params( $name ) {
+		preg_match_all( '/<([a-z_]+)>/', $this->get_url_path( $name ), $params );
+
+		array_shift( $params );
+
+		return reset( $params );
+	}
+
+	/**
+	 * Gets route URL.
+	 *
+	 * @param string $name Route name.
+	 * @param array  $query URL query.
+	 * @return string
+	 */
+	public function get_url( $name, $query = [] ) {
+		global $wp_rewrite;
+
+		$url = '';
+
+		// Get route.
+		$route = $this->get_route( $name );
+
+		if ( $route ) {
+			if ( isset( $route['url'] ) ) {
+
+				// Set URL.
+				$url = call_user_func( $route['url'], $query );
+			} else {
+
+				// Get URL path.
+				$path = $this->get_url_path( $name );
+
+				if ( $path ) {
+
+					// Get URL params.
+					$params = $this->get_url_params( $name );
+
+					// Get query variables.
+					$vars = array_diff_key( $query, array_flip( $params ) );
+
+					// Set URL query.
+					$query = array_merge(
+						array_fill_keys( $params, null ),
+						array_diff_key( $query, $vars ),
+						[
+							'route' => $name,
+						]
+					);
+
+					// Set URL path.
+					if ( $wp_rewrite->get_page_permastruct() || hp\get_array_value( $route, 'rest' ) ) {
+						foreach ( $params as $param ) {
+							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
+						}
+
+						$path = rtrim( str_replace( '/?', '/', $path ), '/' ) . '/';
+					} else {
+						$path = '/?' . http_build_query( array_combine( hp\prefix( array_keys( $query ) ), $query ) );
+					}
+
+					// Set URL.
+					if ( hp\get_array_value( $route, 'rest' ) ) {
+						$url = get_rest_url( null, 'hivepress/v1' . $path );
+					} else {
+						$url = home_url( $path );
+					}
+
+					// Add query variables.
+					if ( $vars ) {
+						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
+					}
+				}
+			}
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Gets the current URL.
+	 *
+	 * @return string
+	 */
+	public function get_current_url() {
+		global $wp;
+
+		$path = rtrim( $wp->request, '/' ) . '/';
+
+		if ( $_GET ) {
+			$path .= '?' . http_build_query( $_GET );
+		}
+
+		return home_url( $path );
+	}
+
+	/**
+	 * Gets redirect URL.
+	 *
+	 * @return string
+	 */
+	public function get_redirect_url() {
+		return wp_validate_redirect( hp\get_array_value( $_GET, 'redirect' ) );
+	}
+
+	/**
+	 * Registers REST routes.
+	 */
+	public function register_rest_routes() {
+		foreach ( $this->get_routes() as $name => $route ) {
+			if ( hp\get_array_value( $route, 'rest' ) && isset( $route['action'] ) ) {
+				register_rest_route(
+					'hivepress/v1',
+					$this->get_url_path( $name ),
+					[
+						'methods'  => hp\get_array_value( $route, 'method', 'GET' ),
+						'callback' => $route['action'],
+					]
+				);
 			}
 		}
 	}
@@ -75,39 +313,33 @@ final class Router {
 	 * Adds rewrite rules.
 	 */
 	public function add_rewrite_rules() {
-		foreach ( hivepress()->get_controllers() as $controller ) {
-			foreach ( $controller::get_routes() as $route_name => $route ) {
-				if ( ! hp\get_array_value( $route, 'rest', false ) && isset( $route['path'] ) ) {
+		foreach ( $this->get_routes() as $name => $route ) {
+			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) ) {
 
-					// Get URL query.
-					$query = $controller::get_url_query( $route_name );
+				// Get URL params.
+				$params = $this->get_url_params( $name );
 
-					// Get query string.
-					$query_string = implode(
+				// Get query string.
+				$query = ltrim(
+					implode(
 						'&',
 						array_map(
-							function( $param, $value ) use ( $query ) {
-								if ( 'route' !== $param ) {
-									$index = array_search( $param, array_keys( $query ), true );
-									$value = '$matches[' . $index . ']';
-								} else {
-									$value = rawurlencode( $value );
-								}
-
-								return hp\prefix( $param ) . '=' . $value;
+							function( $index, $param ) {
+								return hp\prefix( $param ) . '=$matches[' . ( $index + 1 ) . ']';
 							},
-							array_keys( $query ),
-							$query
+							array_keys( $params ),
+							$params
 						)
-					);
+					) . '&hp_route=' . rawurlencode( $name ),
+					'&'
+				);
 
-					// Add rewrite rule.
-					add_rewrite_rule( '^' . ltrim( $route['path'], '/' ) . '/?$', 'index.php?' . $query_string, 'top' );
+				// Add rewrite rule.
+				add_rewrite_rule( '^' . ltrim( $this->get_url_path( $name ), '/' ) . '/?$', 'index.php?' . $query, 'top' );
 
-					// Add rewrite tags.
-					foreach ( $controller::get_url_params( $route_name ) as $rewrite_tag ) {
-						add_rewrite_tag( '%' . hp\prefix( $rewrite_tag ) . '%', '([^&]+)' );
-					}
+				// Add rewrite tags.
+				foreach ( $params as $param ) {
+					add_rewrite_tag( '%' . hp\prefix( $param ) . '%', '([^&]+)' );
 				}
 			}
 		}
@@ -128,18 +360,37 @@ final class Router {
 	 * Sets page title.
 	 *
 	 * @param array $parts Title parts.
-	 * @return string
+	 * @return array
 	 */
 	public function set_page_title( $parts ) {
-		if ( isset( $this->route['title'] ) ) {
-			if ( count( $parts ) > 1 ) {
-				array_shift( $parts );
-			}
 
-			array_unshift( $parts, $this->route['title'] );
+		// Get the current route.
+		$route = $this->get_current_route();
+
+		if ( $route && isset( $route['title'] ) ) {
+
+			// Add route title.
+			array_unshift( $parts, $route['title'] );
 		}
 
 		return $parts;
+	}
+
+	/**
+	 * Sets page context.
+	 *
+	 * @param array $args Template arguments.
+	 * @return array
+	 */
+	public function set_page_context( $args ) {
+		return hp\merge_arrays(
+			$args,
+			[
+				'context' => [
+					'page_title' => hp\get_array_value( hivepress()->router->get_current_route(), 'title' ),
+				],
+			]
+		);
 	}
 
 	/**
@@ -151,110 +402,84 @@ final class Router {
 	public function set_page_template( $template ) {
 		global $wp_query;
 
-		foreach ( hivepress()->get_controllers() as $controller_name => $controller ) {
-			foreach ( $controller::get_routes() as $route_name => $route ) {
-				if ( ! hp\get_array_value( $route, 'rest', false ) && ( ( isset( $route['path'] ) && get_query_var( 'hp_route' ) === $controller_name . '/' . $route_name ) || ( isset( $route['match'] ) && call_user_func( [ $controller, $route['match'] ] ) ) ) ) {
+		// Get the current route.
+		$route = $this->get_current_route();
 
-					/**
-					 * Filters controller route arguments.
-					 *
-					 * @filter /controllers/{$controller_name}/routes/{$route_name}
-					 * @description Filters controller route arguments.
-					 * @param string $controller_name Controller name.
-					 * @param string $route_name Route name.
-					 * @param array $args Controller route arguments.
-					 */
-					$this->route = apply_filters( 'hivepress/v1/controllers/' . $controller_name . '/routes/' . $route_name, $route );
+		if ( $route ) {
 
-					// Set query variables.
-					if ( isset( $route['path'] ) ) {
-						$wp_query->is_home = false;
-						$wp_query->is_404  = false;
-					}
+			// Set query variables.
+			if ( isset( $route['path'] ) ) {
+				$wp_query->is_home = false;
+				$wp_query->is_404  = false;
+			}
 
-					// Redirect menu.
-					$menu_redirect = null;
+			// Get menu redirect.
+			$menu_redirect = home_url( '/' );
 
-					foreach ( hivepress()->get_menus() as $menu ) {
-						if ( $menu::is_chained() && in_array( $controller_name . '/' . $route_name, wp_list_pluck( $menu::get_items(), 'route' ), true ) ) {
-							$menu_items      = $menu::get_items();
-							$menu_item_names = array_keys( $menu_items );
+			foreach ( hivepress()->get_classes( 'menus' ) as $menu_class ) {
+				if ( $menu_class::get_meta( 'chained' ) ) {
 
-							foreach ( $menu_items as $menu_item_name => $menu_item ) {
+					// Create menu.
+					$menu = hp\create_class_instance( $menu_class );
 
-								// Check current item.
-								$menu_item_current = ( $menu_item['route'] === $controller_name . '/' . $route_name );
+					if ( in_array( $route['name'], array_column( $menu->get_items(), 'route' ), true ) ) {
 
-								if ( $menu_item_current ) {
+						// Get menu items.
+						$menu_items      = $menu->get_items();
+						$menu_item_names = array_keys( $menu_items );
 
-									// Get next item.
-									$menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
-								}
+						foreach ( $menu_items as $menu_item_name => $menu_item ) {
+							if ( isset( $menu_item['route'] ) ) {
 
-								if ( ! empty( $menu_item ) ) {
-									list($menu_controller_name, $menu_route_name) = explode( '/', $menu_item['route'] );
+								// Get redirect URL.
+								if ( $menu_item['route'] === $route['name'] ) {
+									$next_menu_item = hp\get_array_value( $menu_items, hp\get_array_value( $menu_item_names, array_search( $menu_item_name, $menu_item_names, true ) + 1 ) );
 
-									// Get controller.
-									$menu_controller = hp\get_array_value( hivepress()->get_controllers(), $menu_controller_name );
-
-									if ( ! is_null( $menu_controller ) ) {
-
-										// Get route.
-										$menu_route = hp\get_array_value( $menu_controller::get_routes(), $menu_route_name );
-
-										if ( ! is_null( $menu_route ) ) {
-											if ( $menu_item_current ) {
-
-												// Get menu redirect.
-												$menu_redirect = $menu_controller::get_url( $menu_route_name );
-											} elseif ( isset( $menu_route['redirect'] ) && call_user_func( [ $menu_controller, $menu_route['redirect'] ] ) === false ) {
-
-												// Redirect menu item.
-												wp_safe_redirect( $menu_controller::get_url( $menu_route_name ) );
-
-												exit();
-											}
-										}
+									if ( $next_menu_item ) {
+										$menu_redirect = $next_menu_item['url'];
 									}
-								}
 
-								if ( $menu_item_current ) {
 									break;
 								}
-							}
 
-							break;
-						}
-					}
+								// Get menu route.
+								$menu_route = $this->get_route( $menu_item['route'] );
 
-					// Redirect page.
-					if ( isset( $route['redirect'] ) ) {
-						$redirect = call_user_func( [ $controller, $route['redirect'] ] );
+								if ( $menu_route ) {
+									if ( isset( $menu_route['redirect'] ) && ! in_array( call_user_func( $menu_route['redirect'] ), [ null, true ], true ) ) {
+										wp_safe_redirect( $menu_item['url'] );
 
-						if ( ! empty( $redirect ) ) {
-							if ( is_bool( $redirect ) ) {
-								$redirect = home_url( '/' );
-
-								if ( ! is_null( $menu_redirect ) ) {
-									$redirect = $menu_redirect;
+										exit;
+									}
 								}
 							}
-
-							wp_safe_redirect( $redirect );
-
-							exit();
 						}
+
+						break;
 					}
-
-					// Render page.
-					if ( isset( $route['action'] ) ) {
-						echo call_user_func( [ $controller, $route['action'] ] );
-
-						exit();
-					}
-
-					break 2;
 				}
+			}
+
+			// Redirect page.
+			if ( isset( $route['redirect'] ) ) {
+				$redirect = call_user_func( $route['redirect'] );
+
+				if ( $redirect ) {
+					if ( is_bool( $redirect ) ) {
+						$redirect = $menu_redirect;
+					}
+
+					wp_safe_redirect( $redirect );
+
+					exit;
+				}
+			}
+
+			// Render page.
+			if ( isset( $route['action'] ) ) {
+				echo call_user_func( $route['action'] );
+
+				exit;
 			}
 		}
 
@@ -262,31 +487,20 @@ final class Router {
 	}
 
 	/**
-	 * Gets page URL.
+	 * Disables page redirect.
 	 *
-	 * @param string $route_path Route path.
-	 * @param array  $query URL query.
-	 * @return mixed
+	 * @param string $url Redirect URL.
+	 * @return string
 	 */
-	public function get_url( $route_path, $query = [] ) {
-		list($controller_name, $route_name) = explode( '/', $route_path );
+	public function disable_page_redirect( $url ) {
+		foreach ( hivepress()->get_config( 'post_types' ) as $type => $args ) {
+			if ( ! hp\get_array_value( $args, 'redirect_canonical', true ) && is_singular( hp\prefix( $type ) ) ) {
+				$url = false;
 
-		// Get controller.
-		$controller = hp\get_array_value( hivepress()->get_controllers(), $controller_name );
-
-		if ( ! is_null( $controller ) ) {
-			return $controller::get_url( $route_name, $query );
+				break;
+			}
 		}
 
-		return null;
-	}
-
-	/**
-	 * Gets page title.
-	 *
-	 * @return mixed
-	 */
-	public function get_title() {
-		return hp\get_array_value( $this->route, 'title', get_the_title() );
+		return $url;
 	}
 }

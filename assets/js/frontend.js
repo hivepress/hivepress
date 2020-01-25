@@ -17,27 +17,16 @@
 			});
 		});
 
-		// Link
-		hivepress.getComponent('link').on('click', function(e) {
-			var url = $(this).data('url');
-
-			if (!url.startsWith('#')) {
-				window.location.href = url;
-			}
-
-			e.preventDefault();
-		});
-
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
-				messageContainer = form.find('[data-element=messages]'),
+				messageContainer = form.find(hivepress.getSelector('messages')).eq(0),
 				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
 
-			if (form.data('submit') === true) {
+			if (form.data('autosubmit') === true) {
 				form.on('change', function() {
 					form.submit();
 				});
@@ -54,7 +43,7 @@
 						method: form.data('method') ? form.data('method') : form.attr('method'),
 						data: form.serializeJSON(),
 						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 						},
 						complete: function(xhr) {
 							var response = xhr.responseJSON;
@@ -133,7 +122,7 @@
 					url: button.data('url'),
 					method: 'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 					},
 				});
 
@@ -146,7 +135,6 @@
 			var field = $(this),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
-				messageContainer = $('<div />').insertBefore(selectLabel),
 				responseContainer = selectLabel.parent().children('div').first();
 
 			field.fileupload({
@@ -156,9 +144,9 @@
 				formData: {
 					'parent_model': field.closest('form').data('model'),
 					'parent_field': field.attr('name'),
-					'parent_id': field.closest('form').data('id'),
+					'parent': field.closest('form').data('id'),
 					'render': true,
-					'_wpnonce': hpCoreFrontendData.apiNonce,
+					'_wpnonce': hivepressCoreData.apiNonce,
 				},
 				start: function() {
 					field.prop('disabled', true);
@@ -189,10 +177,10 @@
 			var container = $(this).parent();
 
 			$.ajax({
-				url: container.data('url'),
+				url: $(this).data('url'),
 				method: 'DELETE',
 				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 				},
 			});
 
@@ -203,8 +191,7 @@
 
 		// Sortable
 		hivepress.getComponent('sortable').each(function() {
-			var container = $(this),
-				form = container.closest('form');
+			var container = $(this);
 
 			container.sortable({
 				stop: function() {
@@ -214,10 +201,10 @@
 								url: $(this).data('url'),
 								method: 'POST',
 								data: {
-									'order': index,
+									'sort_order': index,
 								},
 								beforeSend: function(xhr) {
-									xhr.setRequestHeader('X-WP-Nonce', hpCoreFrontendData.apiNonce);
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 								},
 							});
 						});
@@ -231,7 +218,7 @@
 			var container = $(this),
 				fields = $(this).find('input[type=number]'),
 				minField = fields.eq(0),
-				maxField = fields.eq(-1),
+				maxField = fields.eq(1),
 				slider = null;
 
 			if (!minField.val()) {
@@ -285,8 +272,8 @@
 			}
 		});
 
-		// Slider
-		hivepress.getComponent('slider').each(function() {
+		// Carousel slider
+		hivepress.getComponent('carousel-slider').each(function() {
 			if ($(this).find('img').length > 1) {
 				var container = $(this),
 					containerClass = container.attr('class').split(' ')[0],

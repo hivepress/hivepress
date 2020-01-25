@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Result_Count extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -36,14 +29,14 @@ class Result_Count extends Block {
 
 		$output = '';
 
-		if ( $wp_query->found_posts > 0 ) {
+		if ( $wp_query->found_posts ) {
 			$output = '<div class="hp-result-count">';
 
 			// Get first result.
 			$first_result = 1;
 
-			if ( hp\get_current_page() > 1 ) {
-				$first_result = $wp_query->query_vars['posts_per_page'] * ( hp\get_current_page() - 1 ) + 1;
+			if ( hivepress()->request->get_page_number() > 1 ) {
+				$first_result = $wp_query->query_vars['posts_per_page'] * ( hivepress()->request->get_page_number() - 1 ) + 1;
 			}
 
 			// Get last result.
@@ -53,8 +46,8 @@ class Result_Count extends Block {
 			$total_results = $wp_query->found_posts;
 
 			// Add featured results.
-			if ( get_query_var( 'hp_featured_ids' ) ) {
-				$featured_results = count( (array) get_query_var( 'hp_featured_ids' ) );
+			if ( hivepress()->request->get_context( 'featured_ids' ) ) {
+				$featured_results = count( hivepress()->request->get_context( 'featured_ids' ) );
 
 				$last_result   += $featured_results;
 				$total_results += $featured_results;

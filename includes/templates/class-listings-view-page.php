@@ -19,37 +19,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listings_View_Page
  */
-class Listings_View_Page extends Page {
+class Listings_View_Page extends Page_Sidebar_Left {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'page_container' => [
 						'blocks' => [
-							'page_header'  => [
+							'page_header' => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'     => 5,
 
 								'attributes' => [
 									'class' => [ 'hp-page__header' ],
@@ -57,105 +43,81 @@ class Listings_View_Page extends Page {
 
 								'blocks'     => [
 									'listing_search_form' => [
-										'type'  => 'listing_search_form',
-										'order' => 10,
+										'type'   => 'listing_search_form',
+										'_order' => 10,
 									],
 								],
 							],
+						],
+					],
 
-							'page_columns' => [
-								'type'       => 'container',
-								'order'      => 20,
+					'page_sidebar'   => [
+						'attributes' => [
+							'data-component' => 'sticky',
+						],
+
+						'blocks'     => [
+							'listing_filter_form'  => [
+								'type'       => 'form',
+								'form'       => 'listing_filter',
+								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'hp-row' ],
+									'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
 								],
+							],
 
-								'blocks'     => [
-									'page_sidebar' => [
+							'page_sidebar_widgets' => [
+								'type'   => 'widgets',
+								'area'   => 'hp_listings_view_sidebar',
+								'_order' => 20,
+							],
+						],
+					],
+
+					'page_content'   => [
+						'blocks' => [
+							'listings_container' => [
+								'type'   => 'results',
+								'_order' => 10,
+
+								'blocks' => [
+									'page_topbar'        => [
 										'type'       => 'container',
-										'tag'        => 'aside',
-										'order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
-											'class' => [ 'hp-page__sidebar', 'hp-col-sm-4', 'hp-col-xs-12' ],
-											'data-component' => 'sticky',
+											'class' => [ 'hp-page__topbar' ],
 										],
 
 										'blocks'     => [
-											'listing_filter_form' => [
-												'type'  => 'form',
-												'form'  => 'listing_filter',
-												'order' => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
-												],
+											'listing_count' => [
+												'type'   => 'result_count',
+												'_order' => 10,
 											],
 
-											'sidebar_widgets'         => [
-												'type'  => 'widgets',
-												'area'  => 'listings_sidebar',
-												'order' => 20,
+											'listing_sort_form'    => [
+												'type'   => 'form',
+												'form'   => 'listing_sort',
+												'_order' => 20,
+
+												'attributes' => [
+													'class' => [ 'hp-form--pivot' ],
+												],
 											],
 										],
 									],
 
-									'page_content' => [
-										'type'       => 'container',
-										'tag'        => 'main',
-										'order'      => 20,
+									'listings'           => [
+										'type'    => 'listings',
+										'columns' => 2,
+										'_order'  => 20,
+									],
 
-										'attributes' => [
-											'class' => [ 'hp-page__content', 'hp-col-sm-8', 'hp-col-xs-12' ],
-										],
-
-										'blocks'     => [
-											'listings_container' => [
-												'type'   => 'results',
-												'order'  => 10,
-
-												'blocks' => [
-													'page_topbar' => [
-														'type'       => 'container',
-														'order'      => 10,
-
-														'attributes' => [
-															'class' => [ 'hp-page__topbar' ],
-														],
-
-														'blocks'     => [
-															'listing_count' => [
-																'type' => 'result_count',
-																'order' => 10,
-															],
-
-															'listing_sort_form'    => [
-																'type' => 'form',
-																'form' => 'listing_sort',
-																'order' => 20,
-
-																'attributes' => [
-																	'class' => [ 'hp-form--pivot' ],
-																],
-															],
-														],
-													],
-
-													'listings'    => [
-														'type'    => 'listings',
-														'columns' => 2,
-														'order'   => 20,
-													],
-
-													'listing_pagination' => [
-														'type'     => 'element',
-														'filepath' => 'page/pagination',
-														'order'    => 30,
-													],
-												],
-											],
-										],
+									'listing_pagination' => [
+										'type'   => 'part',
+										'path'   => 'page/pagination',
+										'_order' => 30,
 									],
 								],
 							],
@@ -163,10 +125,9 @@ class Listings_View_Page extends Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

@@ -20,56 +20,84 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Field type.
+	 * Editor flag.
 	 *
-	 * @var string
+	 * @var mixed
 	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
+	protected $editor = false;
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Textarea', 'hivepress' ),
+				'label'      => esc_html__( 'Textarea', 'hivepress' ),
+				'filterable' => false,
+				'sortable'   => false,
+
+				'settings'   => [
+					'editor' => [
+						'label'   => esc_html__( 'Formatting', 'hivepress' ),
+						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 40,
+					],
+				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
+	 * Bootstraps field properties.
 	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
-			$args
-		);
+	protected function boot() {
+		if ( $this->editor ) {
 
-		parent::__construct( $args );
+			// Set HTML flag.
+			if ( empty( $this->html ) ) {
+				$this->html = true;
+			}
+
+			// Set editor settings.
+			if ( ! is_array( $this->editor ) ) {
+				$this->editor = [
+					'toolbar1'    => implode(
+						',',
+						[
+							'bold',
+							'italic',
+							'underline',
+							'strikethrough',
+							'bullist',
+							'numlist',
+						]
+					),
+					'toolbar2'    => '',
+					'toolbar3'    => '',
+					'toolbar4'    => '',
+					'elementpath' => false,
+				];
+			}
+		}
+
+		parent::boot();
 	}
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$this->value = sanitize_textarea_field( $this->value );
+		if ( empty( $this->html ) ) {
+			$this->value = sanitize_textarea_field( $this->value );
+		} else {
+			parent::sanitize();
+		}
 	}
 
 	/**
@@ -78,6 +106,32 @@ class Textarea extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( $this->value ) . '</textarea>';
+		$output = '';
+
+		if ( $this->editor ) {
+			ob_start();
+
+			// Render editor.
+			wp_editor(
+				$this->value,
+				$this->name,
+				[
+					'textarea_rows' => 5,
+					'media_buttons' => false,
+					'quicktags'     => false,
+					'tinymce'       => $this->editor,
+				]
+			);
+
+			$output .= ob_get_contents();
+
+			ob_end_clean();
+		} else {
+
+			// Render textarea.
+			$output .= '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( $this->value ) . '</textarea>';
+		}
+
+		return $output;
 	}
 }

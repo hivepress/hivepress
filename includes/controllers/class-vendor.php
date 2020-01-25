@@ -9,9 +9,7 @@ namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
 use HivePress\Models;
-use HivePress\Forms;
 use HivePress\Blocks;
-use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -21,45 +19,33 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor
  */
-class Vendor extends Controller {
+final class Vendor extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'view_vendor' => [
-						'match'  => 'is_vendor_view_page',
-						'action' => 'render_vendor_view_page',
+					'vendor_view_page' => [
+						'match'  => [ $this, 'is_vendor_view_page' ],
+						'url'    => [ $this, 'get_vendor_view_url' ],
+						'title'  => [ $this, 'get_vendor_view_title' ],
+						'action' => [ $this, 'render_vendor_view_page' ],
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Matches vendor view page.
+	 * Matches vendor view URL.
 	 *
 	 * @return bool
 	 */
@@ -68,30 +54,80 @@ class Vendor extends Controller {
 	}
 
 	/**
+	 * Gets vendor view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_vendor_view_url( $params ) {
+		return get_permalink( hp\get_array_value( $params, 'vendor_id' ) );
+	}
+
+	/**
+	 * Gets vendor view title.
+	 *
+	 * @return string
+	 */
+	public function get_vendor_view_title() {
+		the_post();
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( get_post() );
+
+		// Set request context.
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		return sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), $vendor->get_name() );
+	}
+
+	/**
 	 * Renders vendor view page.
 	 *
 	 * @return string
 	 */
 	public function render_vendor_view_page() {
-		the_post();
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		// Get featured IDs.
+		if ( get_option( 'hp_listings_featured_per_page' ) ) {
+			hivepress()->request->set_context(
+				'featured_ids',
+				Models\Listing::query()->filter(
+					[
+						'status'   => 'publish',
+						'vendor'   => $vendor->get_id(),
+						'featured' => true,
+					]
+				)->order( 'random' )
+				->limit( get_option( 'hp_listings_featured_per_page' ) )
+				->get_ids()
+			);
+		}
 
 		// Query listings.
 		query_posts(
-			[
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'post_parent'    => get_the_ID(),
-				'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-				'paged'          => hp\get_current_page(),
-			]
+			Models\Listing::query()->filter(
+				[
+					'status'     => 'publish',
+					'vendor'     => $vendor->get_id(),
+					'id__not_in' => hivepress()->request->get_context( 'featured_ids', [] ),
+				]
+			)->order( [ 'created_date' => 'desc' ] )
+			->limit( get_option( 'hp_listings_per_page' ) )
+			->paginate( hivepress()->request->get_page_number() )
+			->get_args()
 		);
 
+		// Render template.
 		return ( new Blocks\Template(
 			[
 				'template' => 'vendor_view_page',
 
 				'context'  => [
-					'vendor' => Models\Vendor::get( get_the_ID() ),
+					'vendor'   => $vendor,
+					'listings' => [],
 				],
 			]
 		) )->render();

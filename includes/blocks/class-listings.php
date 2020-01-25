@@ -21,32 +21,11 @@ defined( 'ABSPATH' ) || exit;
 class Listings extends Block {
 
 	/**
-	 * Block type.
+	 * Template mode.
 	 *
 	 * @var string
 	 */
-	protected static $type;
-
-	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Block settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
-	 * Template type.
-	 *
-	 * @var string
-	 */
-	protected $template = 'view';
+	protected $mode = 'view';
 
 	/**
 	 * Columns number.
@@ -77,7 +56,7 @@ class Listings extends Block {
 	protected $order;
 
 	/**
-	 * Featured status.
+	 * Featured flag.
 	 *
 	 * @var bool
 	 */
@@ -86,20 +65,21 @@ class Listings extends Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Listings', 'hivepress' ),
+				'label'    => hivepress()->translator->get_string( 'listings' ),
 
 				'settings' => [
 					'columns'  => [
-						'label'    => esc_html__( 'Columns', 'hivepress' ),
+						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
-						'order'    => 10,
+						'_order'   => 10,
+
 						'options'  => [
 							2 => '2',
 							3 => '3',
@@ -108,44 +88,46 @@ class Listings extends Block {
 					],
 
 					'number'   => [
-						'label'     => esc_html__( 'Number', 'hivepress' ),
+						'label'     => esc_html_x( 'Number', 'quantity', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
-						'order'     => 20,
+						'required'  => true,
+						'_order'    => 20,
 					],
 
 					'category' => [
-						'label'    => esc_html__( 'Category', 'hivepress' ),
-						'type'     => 'select',
-						'options'  => 'terms',
-						'taxonomy' => 'hp_listing_category',
-						'default'  => '',
-						'order'    => 30,
+						'label'       => esc_html__( 'Category', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+						'_order'      => 30,
 					],
 
 					'order'    => [
-						'label'   => esc_html__( 'Order', 'hivepress' ),
-						'type'    => 'select',
-						'order'   => 40,
-						'options' => [
-							''       => esc_html__( 'Date', 'hivepress' ),
-							'title'  => esc_html__( 'Title', 'hivepress' ),
-							'random' => esc_html__( 'Random', 'hivepress' ),
+						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
+						'type'     => 'select',
+						'required' => true,
+						'_order'   => 40,
+
+						'options'  => [
+							'created_date' => esc_html_x( 'Date Added', 'sort order', 'hivepress' ),
+							'title'        => esc_html_x( 'Title', 'sort order', 'hivepress' ),
+							'random'       => esc_html_x( 'Random', 'sort order', 'hivepress' ),
 						],
 					],
 
 					'featured' => [
-						'label' => esc_html__( 'Display only featured listings', 'hivepress' ),
-						'type'  => 'checkbox',
-						'order' => 50,
+						'label'  => hivepress()->translator->get_string( 'display_only_featured_listings' ),
+						'type'   => 'checkbox',
+						'_order' => 50,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -166,86 +148,74 @@ class Listings extends Block {
 			$column_width = round( $column_width / $columns );
 		}
 
-		// Get listing query.
-		$query          = $wp_query;
+		// Get listing queries.
+		$regular_query  = $wp_query;
 		$featured_query = null;
 
-		if ( is_single() || ( hp\get_array_value( $query->query_vars, 'post_type' ) !== 'hp_listing' && ! is_tax( 'hp_listing_category' ) ) ) {
+		if ( ! isset( $this->context['listings'] ) ) {
 
-			// Set query arguments.
-			$query_args = [
-				'post_type'      => 'hp_listing',
-				'post_status'    => 'publish',
-				'posts_per_page' => absint( $this->number ),
-				'no_found_rows'  => true,
-			];
+			// Set query.
+			$query = Models\Listing::query()->filter( [ 'status' => 'publish' ] )->limit( $this->number );
 
-			// Get category.
+			// Set category.
 			if ( $this->category ) {
-				$query_args['tax_query'] = [
-					[
-						'taxonomy' => 'hp_listing_category',
-						'terms'    => [ absint( $this->category ) ],
-					],
-				];
+				$query->filter( [ 'categories__in' => $this->category ] );
 			}
 
-			// Get order.
+			// Set order.
 			if ( 'title' === $this->order ) {
-				$query_args['orderby'] = 'title';
-				$query_args['order']   = 'ASC';
+				$query->order( [ 'title' => 'asc' ] );
 			} elseif ( 'random' === $this->order ) {
-				$query_args['orderby'] = 'rand';
+				$query->order( 'random' );
+			} else {
+				$query->order( [ 'created_date' => 'desc' ] );
 			}
 
-			// Get featured.
+			// Set featured flag.
 			if ( $this->featured ) {
-				$query_args['meta_key']   = 'hp_featured';
-				$query_args['meta_value'] = '1';
+				$query->filter( [ 'featured' => true ] );
 			}
 
 			// Get cached IDs.
 			$listing_ids = null;
 
 			if ( 'random' !== $this->order ) {
-				$listing_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
+				$listing_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/listing' );
 
 				if ( is_array( $listing_ids ) ) {
-					$query_args = [
-						'post_type'      => 'hp_listing',
-						'post_status'    => 'publish',
-						'post__in'       => array_merge( [ 0 ], $listing_ids ),
-						'posts_per_page' => count( $listing_ids ),
-						'orderby'        => 'post__in',
-						'no_found_rows'  => true,
-					];
+					$query = Models\Listing::query()->filter(
+						[
+							'status' => 'publish',
+							'id__in' => $listing_ids,
+						]
+					)->order( 'id__in' )->limit( count( $listing_ids ) );
 				}
 			}
 
-			// Query listings.
-			$query = new \WP_Query( $query_args );
+			// Query regular listings.
+			$regular_query = new \WP_Query( $query->get_args() );
 
 			// Cache IDs.
-			if ( 'random' !== $this->order && is_null( $listing_ids ) && $query->post_count <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $query->posts, 'ID' ) );
+			if ( 'random' !== $this->order && is_null( $listing_ids ) && $regular_query->post_count <= 1000 ) {
+				hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/listing', wp_list_pluck( $regular_query->posts, 'ID' ) );
 			}
-		} elseif ( 'edit' !== $this->template && get_query_var( 'hp_featured_ids' ) ) {
+		} elseif ( 'edit' !== $this->mode && hivepress()->request->get_context( 'featured_ids' ) ) {
 
 			// Query featured listings.
 			$featured_query = new \WP_Query(
-				[
-					'post_type'      => 'any',
-					'post_status'    => 'any',
-					'post__in'       => array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) ),
-					'posts_per_page' => absint( get_option( 'hp_listings_featured_per_page' ) ),
-					'orderby'        => 'rand',
-					'no_found_rows'  => true,
-				]
+				Models\Listing::query()->filter(
+					[
+						'status' => 'publish',
+						'id__in' => hivepress()->request->get_context( 'featured_ids', [] ),
+					]
+				)->order( 'random' )
+				->limit( get_option( 'hp_listings_featured_per_page' ) )
+				->get_args()
 			);
 		}
 
-		if ( $query->have_posts() ) {
-			if ( 'edit' === $this->template ) {
+		if ( $regular_query->have_posts() ) {
+			if ( 'edit' === $this->mode ) {
 				$output .= '<table class="hp-table">';
 			} else {
 				$output .= '<div class="hp-grid hp-block">';
@@ -253,20 +223,20 @@ class Listings extends Block {
 			}
 
 			// Render featured listings.
-			if ( ! is_null( $featured_query ) ) {
+			if ( $featured_query ) {
 				while ( $featured_query->have_posts() ) {
 					$featured_query->the_post();
 
 					// Get listing.
-					$listing = Models\Listing::get( get_the_ID() );
+					$listing = Models\Listing::query()->get_by_id( get_post() );
 
-					if ( ! is_null( $listing ) ) {
+					if ( $listing ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 
 						// Render listing.
-						$output .= ( new Listing(
+						$output .= ( new Template(
 							[
-								'template' => 'listing_' . $this->template . '_block',
+								'template' => 'listing_' . $this->mode . '_block',
 
 								'context'  => [
 									'listing' => $listing,
@@ -279,22 +249,22 @@ class Listings extends Block {
 				}
 			}
 
-			// Render listings.
-			while ( $query->have_posts() ) {
-				$query->the_post();
+			// Render regular listings.
+			while ( $regular_query->have_posts() ) {
+				$regular_query->the_post();
 
 				// Get listing.
-				$listing = Models\Listing::get( get_the_ID() );
+				$listing = Models\Listing::query()->get_by_id( get_post() );
 
-				if ( ! is_null( $listing ) ) {
-					if ( 'edit' !== $this->template ) {
+				if ( $listing ) {
+					if ( 'edit' !== $this->mode ) {
 						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 					}
 
 					// Render listing.
-					$output .= ( new Listing(
+					$output .= ( new Template(
 						[
-							'template' => 'listing_' . $this->template . '_block',
+							'template' => 'listing_' . $this->mode . '_block',
 
 							'context'  => [
 								'listing' => $listing,
@@ -302,13 +272,13 @@ class Listings extends Block {
 						]
 					) )->render();
 
-					if ( 'edit' !== $this->template ) {
+					if ( 'edit' !== $this->mode ) {
 						$output .= '</div>';
 					}
 				}
 			}
 
-			if ( 'edit' === $this->template ) {
+			if ( 'edit' === $this->mode ) {
 				$output .= '</table>';
 			} else {
 				$output .= '</div>';

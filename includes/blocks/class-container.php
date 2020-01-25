@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Container extends Block {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Container tag.
 	 *
 	 * @var string
@@ -55,14 +48,26 @@ class Container extends Block {
 	final protected function set_blocks( $blocks ) {
 		$this->blocks = [];
 
-		foreach ( hp\sort_array( $blocks ) as $block_name => $block_args ) {
-
-			// Get block class.
-			$block_class = '\HivePress\Blocks\\' . $block_args['type'];
+		foreach ( hp\sort_array( $blocks ) as $name => $args ) {
 
 			// Create block.
-			if ( class_exists( $block_class ) ) {
-				$this->blocks[ $block_name ] = new $block_class( hp\merge_arrays( [ 'context' => $this->context ], $block_args, [ 'name' => $block_name ] ) );
+			$block = hp\create_class_instance(
+				'\HivePress\Blocks\\' . $args['type'],
+				[
+					hp\merge_arrays(
+						[
+							'context' => $this->context,
+						],
+						$args,
+						[
+							'name' => $name,
+						]
+					),
+				]
+			);
+
+			if ( $block ) {
+				$this->blocks[ $name ] = $block;
 			}
 		}
 	}

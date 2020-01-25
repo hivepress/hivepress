@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -17,130 +18,47 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Vendor
  */
-final class Vendor {
+final class Vendor extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
 		// Update vendor.
-		add_action( 'added_user_meta', [ $this, 'update_vendor' ], 10, 4 );
-		add_action( 'updated_user_meta', [ $this, 'update_vendor' ], 10, 4 );
+		add_action( 'hivepress/v1/models/user/update_image', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
 
-		// Update image.
-		add_action( 'added_post_meta', [ $this, 'update_image' ], 10, 4 );
-
-		// Import vendors.
-		add_action( 'import_start', [ $this, 'import_vendors' ] );
-
-		if ( ! is_admin() ) {
-
-			// Disable redirect.
-			add_action( 'template_redirect', [ $this, 'disable_page_redirect' ], 1 );
-
-			// Set page title.
-			add_filter( 'hivepress/v1/controllers/vendor/routes/view_vendor', [ $this, 'set_page_title' ] );
-		}
+		parent::__construct( $args );
 	}
 
 	/**
 	 * Updates vendor.
 	 *
-	 * @param int    $meta_id Meta ID.
-	 * @param int    $user_id User ID.
-	 * @param string $meta_key Meta key.
-	 * @param string $meta_value Meta value.
+	 * @param int $user_id User ID.
 	 */
-	public function update_vendor( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( in_array( $meta_key, [ 'first_name', 'description' ], true ) ) {
+	public function update_vendor( $user_id ) {
 
-			// Get vendor ID.
-			$vendor_id = hp\get_post_id(
-				[
-					'post_type'   => 'hp_vendor',
-					'post_status' => 'publish',
-					'author'      => $user_id,
-				]
-			);
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter( [ 'user' => $user_id ] )->get_first();
 
-			if ( 0 !== $vendor_id ) {
-
-				// Get user.
-				$user = get_userdata( $user_id );
-
-				if ( false !== $user ) {
-
-					// Update vendor.
-					wp_update_post(
-						[
-							'ID'           => $vendor_id,
-							'post_title'   => $user->display_name,
-							'post_content' => get_user_meta( $user_id, 'description', true ),
-						]
-					);
-				}
-			}
+		if ( empty( $vendor ) ) {
+			return;
 		}
-	}
 
-	/**
-	 * Updates image.
-	 *
-	 * @param int    $meta_id Meta ID.
-	 * @param int    $attachment_id Attachment ID.
-	 * @param string $meta_key Meta key.
-	 * @param string $meta_value Meta value.
-	 */
-	public function update_image( $meta_id, $attachment_id, $meta_key, $meta_value ) {
-		if ( 'hp_parent_field' === $meta_key && 'image_id' === $meta_value ) {
+		// Get user.
+		$user = Models\User::query()->get_by_id( $user_id );
 
-			// Get attachment.
-			$attachment = get_post( $attachment_id );
-
-			if ( 'attachment' === $attachment->post_type && 0 === $attachment->post_parent ) {
-
-				// Get vendor ID.
-				$vendor_id = hp\get_post_id(
-					[
-						'post_type'   => 'hp_vendor',
-						'post_status' => 'publish',
-						'author'      => $attachment->post_author,
-					]
-				);
-
-				if ( 0 !== $vendor_id ) {
-
-					// Update image.
-					set_post_thumbnail( $vendor_id, $attachment_id );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Imports vendors.
-	 */
-	public function import_vendors() {
-		remove_action( 'added_post_meta', [ $this, 'update_image' ] );
-	}
-
-	/**
-	 * Disables page redirect.
-	 */
-	public function disable_page_redirect() {
-		if ( is_singular( 'hp_vendor' ) ) {
-			remove_action( 'template_redirect', 'redirect_canonical' );
-		}
-	}
-
-	/**
-	 * Sets page title.
-	 *
-	 * @param array $route Route arguments.
-	 * @return array
-	 */
-	public function set_page_title( $route ) {
-		return array_merge( $route, [ 'title' => sprintf( esc_html__( 'Listings by %s', 'hivepress' ), get_the_title() ) ] );
+		// Update vendor.
+		$vendor->fill(
+			[
+				'image'       => $user->get_image__id(),
+				'name'        => $user->get_display_name(),
+				'description' => $user->get_description(),
+			]
+		)->save();
 	}
 }

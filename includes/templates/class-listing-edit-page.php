@@ -19,43 +19,29 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Edit_Page
  */
-class Listing_Edit_Page extends Account_Page {
+class Listing_Edit_Page extends User_Account_Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'page_content' => [
 						'blocks' => [
 							'listing_delete_modal' => [
-								'type'    => 'modal',
-								'caption' => esc_html__( 'Delete Listing', 'hivepress' ),
-								'order'   => 5,
+								'type'   => 'modal',
+								'title'  => hivepress()->translator->get_string( 'delete_listing' ),
+								'_order' => 5,
 
-								'blocks'  => [
+								'blocks' => [
 									'listing_delete_form' => [
 										'type'       => 'form',
 										'form'       => 'listing_delete',
-										'order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form--narrow' ],
@@ -67,12 +53,12 @@ class Listing_Edit_Page extends Account_Page {
 							'listing_update_form'  => [
 								'type'   => 'form',
 								'form'   => 'listing_update',
-								'order'  => 10,
+								'_order' => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -80,9 +66,9 @@ class Listing_Edit_Page extends Account_Page {
 
 										'blocks'     => [
 											'listing_delete_link' => [
-												'type'     => 'element',
-												'filepath' => 'listing/edit/page/listing-delete-link',
-												'order'    => 10,
+												'type'   => 'part',
+												'path'   => 'listing/edit/page/listing-delete-link',
+												'_order' => 10,
 											],
 										],
 									],
@@ -92,10 +78,9 @@ class Listing_Edit_Page extends Account_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

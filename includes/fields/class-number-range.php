@@ -20,27 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Number_Range extends Number {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Minimum field.
 	 *
 	 * @var object
@@ -57,27 +36,29 @@ class Number_Range extends Number {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Number Range', 'hivepress' ),
+				'label'    => esc_html__( 'Number Range', 'hivepress' ),
+				'editable' => false,
+				'sortable' => false,
 
 				'settings' => [
 					'placeholder' => null,
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Create fields.
@@ -85,9 +66,11 @@ class Number_Range extends Number {
 			array_merge(
 				$this->args,
 				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Min', 'hivepress' ),
-					'required'    => false,
+					'display_type' => 'number',
+					'name'         => $this->name . '[]',
+					'placeholder'  => esc_html__( 'Min', 'hivepress' ),
+					'required'     => false,
+					'attributes'   => [],
 				]
 			)
 		);
@@ -96,21 +79,23 @@ class Number_Range extends Number {
 			array_merge(
 				$this->args,
 				[
-					'name'        => $this->name . '[]',
-					'placeholder' => esc_html__( 'Max', 'hivepress' ),
-					'required'    => false,
+					'display_type' => 'number',
+					'name'         => $this->name . '[]',
+					'placeholder'  => esc_html__( 'Max', 'hivepress' ),
+					'required'     => false,
+					'attributes'   => [],
 				]
 			)
 		);
 
-		// Set range slider.
+		// Set component.
 		if ( ! is_null( $this->min_value ) && ! is_null( $this->max_value ) ) {
 			$attributes['data-component'] = 'range-slider';
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		Field::bootstrap();
+		Field::boot();
 	}
 
 	/**
@@ -122,17 +107,15 @@ class Number_Range extends Number {
 		if ( ! is_null( $this->value ) ) {
 			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
 		}
-
-		return $this->value;
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['operator'] = 'BETWEEN';
+		$this->filter['operator'] = 'BETWEEN';
 	}
 
 	/**
@@ -178,8 +161,7 @@ class Number_Range extends Number {
 			$this->max_field->validate();
 
 			// Add errors.
-			$this->add_errors( $this->min_field->get_errors() );
-			$this->add_errors( $this->max_field->get_errors() );
+			$this->add_errors( array_unique( array_merge( $this->min_field->get_errors(), $this->max_field->get_errors() ) ) );
 		}
 
 		return empty( $this->errors );

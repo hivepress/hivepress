@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Login_Form extends Form {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Block arguments.
@@ -34,12 +27,16 @@ class User_Login_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form'   => 'user_login',
+				'form'       => 'user_login',
 
-				'footer' => [
+				'attributes' => [
+					'class' => [ 'hp-form--narrow' ],
+				],
+
+				'footer'     => [
 					'form_actions' => [
 						'type'       => 'container',
-						'order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-form__actions' ],
@@ -47,15 +44,15 @@ class User_Login_Form extends Form {
 
 						'blocks'     => [
 							'user_register_link'         => [
-								'type'     => 'element',
-								'filepath' => 'user/login/user-register-link',
-								'order'    => 10,
+								'type'   => 'part',
+								'path'   => 'user/login/user-register-link',
+								'_order' => 10,
 							],
 
 							'user_password_request_link' => [
-								'type'     => 'element',
-								'filepath' => 'user/login/user-password-request-link',
-								'order'    => 20,
+								'type'   => 'part',
+								'path'   => 'user/login/user-password-request-link',
+								'_order' => 20,
 							],
 						],
 					],
@@ -65,21 +62,5 @@ class User_Login_Form extends Form {
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Bootstraps block properties.
-	 */
-	protected function bootstrap() {
-
-		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--narrow' ],
-			]
-		);
-
-		parent::bootstrap();
 	}
 }

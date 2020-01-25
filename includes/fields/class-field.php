@@ -21,26 +21,9 @@ defined( 'ABSPATH' ) || exit;
 abstract class Field {
 	use Traits\Mutator;
 
-	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
+	use Traits \Meta {
+		set_meta as _set_meta;
+	}
 
 	/**
 	 * Field arguments.
@@ -48,6 +31,20 @@ abstract class Field {
 	 * @var array
 	 */
 	protected $args = [];
+
+	/**
+	 * Field display type.
+	 *
+	 * @var string
+	 */
+	protected $display_type;
+
+	/**
+	 * Field display template.
+	 *
+	 * @var string
+	 */
+	protected $display_template;
 
 	/**
 	 * Field name.
@@ -64,25 +61,11 @@ abstract class Field {
 	protected $label;
 
 	/**
-	 * Field value.
+	 * Field description.
 	 *
-	 * @var mixed
+	 * @var string
 	 */
-	protected $value;
-
-	/**
-	 * Field errors.
-	 *
-	 * @var array
-	 */
-	protected $errors = [];
-
-	/**
-	 * Field filters.
-	 *
-	 * @var mixed
-	 */
-	protected $filters = false;
+	protected $description;
 
 	/**
 	 * Field statuses.
@@ -92,6 +75,41 @@ abstract class Field {
 	protected $statuses = [];
 
 	/**
+	 * Field value.
+	 *
+	 * @var mixed
+	 */
+	protected $value;
+
+	/**
+	 * Parent field value.
+	 *
+	 * @var mixed
+	 */
+	protected $parent_value;
+
+	/**
+	 * Field filter.
+	 *
+	 * @var mixed
+	 */
+	protected $filter;
+
+	/**
+	 * Required flag.
+	 *
+	 * @var bool
+	 */
+	protected $required = false;
+
+	/**
+	 * Field errors.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * Field attributes.
 	 *
 	 * @var array
@@ -99,39 +117,47 @@ abstract class Field {
 	protected $attributes = [];
 
 	/**
-	 * Required property.
-	 *
-	 * @var bool
-	 */
-	protected $required = false;
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'settings' => [
+				'name'       => hp\get_class_name( static::class ),
+				'type'       => 'CHAR',
+				'editable'   => true,
+				'filterable' => false,
+				'sortable'   => false,
+
+				'settings'   => [
 					'required' => [
-						'label'   => esc_html__( 'Required', 'hivepress' ),
+						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
 						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
 						'type'    => 'checkbox',
-						'order'   => 5,
+						'_order'  => 5,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		// Set type.
-		$args = array_merge( [ 'type' => strtolower( ( new \ReflectionClass( static::class ) )->getShortName() ) ], $args );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+			/**
+			 * Filters field meta.
+			 *
+			 * @filter /fields/{$type}/meta
+			 * @description Filters field meta.
+			 * @param string $type Field type.
+			 * @param array $meta Field meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -140,20 +166,31 @@ abstract class Field {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'display_type'     => hp\get_class_name( static::class ),
+				'display_template' => '%value%',
+			],
+			$args
+		);
 
-		/**
-		 * Filters field arguments.
-		 *
-		 * @filter /fields/field/args
-		 * @description Filters field arguments.
-		 * @param array $args Field arguments.
-		 */
-		$args = apply_filters( 'hivepress/v1/fields/field/args', array_merge( $args, [ 'type' => static::$type ] ) );
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters field arguments.
+			 *
+			 * @filter /fields/{$type}
+			 * @description Filters field arguments.
+			 * @param string $type Field type.
+			 * @param array $args Field arguments.
+			 * @param object $object Field object.
+			 */
+			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, $this );
+		}
 
 		// Set arguments.
 		$this->args = $args;
-
-		unset( $args['type'] );
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -161,86 +198,71 @@ abstract class Field {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
-		// Set class.
+		// Set default value.
+		if ( isset( $this->args['default'] ) ) {
+			$this->set_value( $this->args['default'] );
+		}
+
+		// Set optional status.
+		if ( ! $this->required ) {
+			$this->statuses = array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
+		}
+
+		$this->statuses = array_filter( $this->statuses );
+
+		// Set attributes.
+		if ( 'hidden' === $this->display_type ) {
+			$this->attributes = array_filter(
+				$this->attributes,
+				function( $name ) {
+					return strpos( $name, 'data-' ) === 0;
+				},
+				ARRAY_FILTER_USE_KEY
+			);
+		}
+
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( static::$type ) ],
+				'class' => [ 'hp-field', 'hp-field--' . hp\sanitize_slug( $this->display_type ) ],
 			]
 		);
-
-		// Set optional status.
-		if ( ! $this->required && ! isset( $this->statuses['optional'] ) ) {
-			$this->statuses = hp\merge_arrays( [ 'optional' => esc_html__( 'optional', 'hivepress' ) ], $this->statuses );
-		}
-
-		// Set filters.
-		if ( false !== $this->filters ) {
-			$this->filters = [];
-		}
-
-		// Set default value.
-		$default = hp\get_array_value( $this->args, 'default' );
-
-		if ( ! is_null( $default ) ) {
-			$this->set_value( $default );
-		}
 	}
 
 	/**
-	 * Gets field type.
+	 * Sets meta values.
 	 *
-	 * @return string
+	 * @param array $meta Meta values.
 	 */
-	final public static function get_type() {
-		return static::$type;
-	}
+	final protected static function set_meta( $meta ) {
 
-	/**
-	 * Gets field title.
-	 *
-	 * @return string
-	 */
-	final public static function get_title() {
-		return static::$title;
-	}
+		// Get settings.
+		$settings = array_filter( hp\get_array_value( $meta, 'settings', [] ) );
 
-	/**
-	 * Sets field settings.
-	 *
-	 * @param array $settings Field settings.
-	 */
-	final protected static function set_settings( $settings ) {
-		static::$settings = [];
+		if ( $settings ) {
+			$meta['settings'] = [];
 
-		foreach ( $settings as $field_name => $field_args ) {
-
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-			if ( class_exists( $field_class ) ) {
+			foreach ( $settings as $name => $args ) {
 
 				// Create field.
-				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+				// Add field.
+				if ( $field ) {
+					$meta['settings'][ $name ] = $field;
+				}
 			}
 		}
-	}
 
-	/**
-	 * Gets field settings.
-	 *
-	 * @return array
-	 */
-	final public static function get_settings() {
-		return static::$settings;
+		static::_set_meta( $meta );
 	}
 
 	/**
@@ -250,6 +272,25 @@ abstract class Field {
 	 */
 	final public function get_args() {
 		return $this->args;
+	}
+
+	/**
+	 * Gets field argument.
+	 *
+	 * @param string $name Argument name.
+	 * @return mixed
+	 */
+	final public function get_arg( $name ) {
+		return hp\get_array_value( $this->args, $name );
+	}
+
+	/**
+	 * Gets display type.
+	 *
+	 * @return string
+	 */
+	final public function get_display_type() {
+		return $this->display_type;
 	}
 
 	/**
@@ -271,12 +312,32 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field description.
+	 *
+	 * @return string
+	 */
+	final public function get_description() {
+		return $this->description;
+	}
+
+	/**
+	 * Gets field statuses.
+	 *
+	 * @return array
+	 */
+	final public function get_statuses() {
+		return $this->statuses;
+	}
+
+	/**
 	 * Sets field value.
 	 *
 	 * @param mixed $value Field value.
+	 * @return object
 	 */
 	final public function set_value( $value ) {
-		$this->value = $value;
+		$this->value  = $value;
+		$this->filter = null;
 
 		if ( ! is_null( $this->value ) ) {
 			$this->normalize();
@@ -284,11 +345,11 @@ abstract class Field {
 			if ( ! is_null( $this->value ) ) {
 				$this->sanitize();
 
-				if ( ! is_null( $this->value ) && false !== $this->filters ) {
-					$this->add_filters();
-				}
+				$this->update_filter();
 			}
 		}
+
+		return $this;
 	}
 
 	/**
@@ -310,32 +371,54 @@ abstract class Field {
 	}
 
 	/**
-	 * Adds field filters.
+	 * Sets parent field value.
+	 *
+	 * @param mixed $value Field value.
+	 * @return object
 	 */
-	protected function add_filters() {
-		$this->filters = [
+	public function set_parent_value( $value ) {
+		$this->parent_value = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Adds field filter.
+	 */
+	protected function add_filter() {
+		$this->filter = [
 			'name'     => $this->name,
+			'type'     => static::get_meta( 'type' ),
 			'value'    => $this->value,
 			'operator' => '=',
 		];
 	}
 
 	/**
-	 * Gets field filters.
+	 * Gets field filter.
 	 *
 	 * @return mixed
 	 */
-	final public function get_filters() {
-		return $this->filters;
+	final public function get_filter() {
+		return $this->filter;
+	}
+
+	/**
+	 * Updates field filter.
+	 */
+	final public function update_filter() {
+		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
+			$this->add_filter();
+		}
 	}
 
 	/**
 	 * Adds field errors.
 	 *
-	 * @param array $errors Field errors.
+	 * @param mixed $errors Field errors.
 	 */
 	final protected function add_errors( $errors ) {
-		$this->errors = array_unique( array_merge( $this->errors, $errors ) );
+		$this->errors = array_merge( $this->errors, (array) $errors );
 	}
 
 	/**
@@ -345,15 +428,6 @@ abstract class Field {
 	 */
 	final public function get_errors() {
 		return $this->errors;
-	}
-
-	/**
-	 * Gets field statuses.
-	 *
-	 * @return array
-	 */
-	final public function get_statuses() {
-		return array_filter( $this->statuses );
 	}
 
 	/**
@@ -379,7 +453,7 @@ abstract class Field {
 		$this->errors = [];
 
 		if ( $this->required && is_null( $this->value ) ) {
-			$this->add_errors( [ sprintf( esc_html__( '%s is required.', 'hivepress' ), $this->label ) ] );
+			$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->label ) );
 		}
 
 		return empty( $this->errors );
@@ -391,4 +465,19 @@ abstract class Field {
 	 * @return string
 	 */
 	abstract public function render();
+
+	/**
+	 * Displays field HTML.
+	 *
+	 * @return string
+	 */
+	final public function display() {
+		return hp\replace_tokens(
+			[
+				'label' => $this->label,
+				'value' => $this->get_display_value(),
+			],
+			$this->display_template
+		);
+	}
 }

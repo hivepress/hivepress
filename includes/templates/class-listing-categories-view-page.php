@@ -19,37 +19,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Categories_View_Page
  */
-class Listing_Categories_View_Page extends Page {
+class Listing_Categories_View_Page extends Page_Wide {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'page_container' => [
 						'blocks' => [
-							'page_header'  => [
+							'page_header' => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'     => 5,
 
 								'attributes' => [
 									'class' => [ 'hp-page__header' ],
@@ -57,37 +43,28 @@ class Listing_Categories_View_Page extends Page {
 
 								'blocks'     => [
 									'listing_search_form' => [
-										'type'  => 'listing_search_form',
-										'order' => 10,
-									],
-								],
-							],
-
-							'page_content' => [
-								'type'       => 'container',
-								'tag'        => 'main',
-								'order'      => 20,
-
-								'attributes' => [
-									'class' => [ 'hp-page__content' ],
-								],
-
-								'blocks'     => [
-									'listing_categories' => [
-										'type'    => 'listing_categories',
-										'columns' => 3,
-										'order'   => 10,
+										'type'   => 'listing_search_form',
+										'_order' => 10,
 									],
 								],
 							],
 						],
 					],
+
+					'page_content'   => [
+						'blocks' => [
+							'listing_categories' => [
+								'type'    => 'listing_categories',
+								'columns' => 3,
+								'_order'  => 10,
+							],
+						],
+					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

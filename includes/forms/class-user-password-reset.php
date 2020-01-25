@@ -20,88 +20,48 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'user',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'description' => esc_html__( 'Please enter a new password below.', 'hivepress' ),
-				'model'       => 'user',
-				'action'      => hp\get_rest_url( '/users/reset-password' ),
+				'action'      => hivepress()->router->get_url( 'user_password_reset_action' ),
 				'redirect'    => true,
 
 				'fields'      => [
 					'password'           => [
 						'label'    => esc_html__( 'New Password', 'hivepress' ),
 						'required' => true,
-						'order'    => 10,
+						'_order'   => 10,
 					],
 
 					'username'           => [
-						'type' => 'hidden',
+						'display_type' => 'hidden',
 					],
 
 					'password_reset_key' => [
-						'type'     => 'hidden',
-						'required' => true,
+						'type'      => 'hidden',
+						'required'  => true,
+						'_separate' => true,
 					],
 				],
 
@@ -112,6 +72,6 @@ class User_Password_Reset extends Model_Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

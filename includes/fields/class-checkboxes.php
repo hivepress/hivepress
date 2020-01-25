@@ -20,44 +20,23 @@ defined( 'ABSPATH' ) || exit;
 class Checkboxes extends Select {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Checkboxes', 'hivepress' ),
+				'label'    => esc_html__( 'Checkboxes', 'hivepress' ),
 
 				'settings' => [
 					'multiple' => null,
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -66,9 +45,12 @@ class Checkboxes extends Select {
 	 * @param array $args Field arguments.
 	 */
 	public function __construct( $args = [] ) {
-
-		// Set multiple property.
-		$args['multiple'] = true;
+		$args = hp\merge_arrays(
+			$args,
+			[
+				'multiple' => true,
+			]
+		);
 
 		parent::__construct( $args );
 	}
@@ -76,8 +58,8 @@ class Checkboxes extends Select {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
-		Field::bootstrap();
+	protected function boot() {
+		Field::boot();
 	}
 
 	/**
@@ -107,7 +89,7 @@ class Checkboxes extends Select {
 
 		// Filter options.
 		$options = array_filter(
-			(array) $this->options,
+			$this->options,
 			function( $option ) use ( $current ) {
 				$parent = hp\get_array_value( $option, 'parent' );
 
@@ -116,33 +98,31 @@ class Checkboxes extends Select {
 		);
 
 		// Render options.
-		if ( ! empty( $options ) ) {
+		if ( $options ) {
 			$output .= '<ul>';
 
-			foreach ( $options as $value => $option ) {
+			foreach ( $options as $value => $label ) {
 				$output .= '<li>';
 
 				// Get label.
-				$label = $option;
-
-				if ( is_array( $option ) ) {
-					$label = $option['label'];
+				if ( is_array( $label ) ) {
+					$label = hp\get_array_value( $label, 'label' );
 				}
 
 				// Get default value.
 				$default = null;
 
-				if ( in_array( (string) $value, array_map( 'strval', (array) $this->value ), true ) ) {
+				if ( in_array( $value, (array) $this->value, true ) ) {
 					$default = $value;
 				}
 
 				// Render option.
 				$output .= ( new Checkbox(
 					[
-						'name'    => $this->name . '[]',
-						'caption' => $label,
-						'sample'  => $value,
-						'default' => $default,
+						'name'        => $this->name . '[]',
+						'caption'     => $label,
+						'check_value' => $value,
+						'default'     => $default,
 					]
 				) )->render();
 

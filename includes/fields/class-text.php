@@ -20,27 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Text extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Field placeholder.
 	 *
 	 * @var string
@@ -62,7 +41,7 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
-	 * HTML property.
+	 * HTML flag.
 	 *
 	 * @var mixed
 	 */
@@ -71,61 +50,48 @@ class Text extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Text', 'hivepress' ),
+				'label'      => esc_html__( 'Text', 'hivepress' ),
+				'filterable' => true,
+				'sortable'   => true,
 
-				'settings' => [
+				'settings'   => [
 					'placeholder' => [
-						'label' => esc_html__( 'Placeholder', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 10,
 					],
 
 					'min_length'  => [
 						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
-						'order'     => 20,
+						'_order'    => 20,
 					],
 
 					'max_length'  => [
 						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
-						'order'     => 30,
+						'_order'    => 30,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'filters' => true,
-			],
-			$args
-		);
-
-		parent::__construct( $args );
+		parent::init( $meta );
 	}
 
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
 		// Set placeholder.
@@ -143,24 +109,23 @@ class Text extends Field {
 			$attributes['maxlength'] = $this->max_length;
 		}
 
-		// Set required property.
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['type']     = 'CHAR';
-		$this->filters['operator'] = 'LIKE';
+		$this->filter['operator'] = 'LIKE';
 	}
 
 	/**
@@ -170,7 +135,7 @@ class Text extends Field {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_unslash( $this->value );
+			$this->value = trim( wp_unslash( $this->value ) );
 		}
 	}
 
@@ -195,11 +160,11 @@ class Text extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
-				$this->add_errors( [ sprintf( esc_html__( '%1$s should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
-				$this->add_errors( [ sprintf( esc_html__( "%1\$s can't be longer than %2\$s characters.", 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) ] );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
 			}
 		}
 
@@ -212,6 +177,6 @@ class Text extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

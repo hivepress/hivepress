@@ -21,26 +21,9 @@ defined( 'ABSPATH' ) || exit;
 abstract class Block {
 	use Traits\Mutator;
 
-	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Block title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Block settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
+	use Traits \Meta {
+		set_meta as _set_meta;
+	}
 
 	/**
 	 * Block name.
@@ -59,17 +42,33 @@ abstract class Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $meta Block meta.
 	 */
-	public static function init( $args = [] ) {
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'name'     => hp\get_class_name( static::class ),
+				'settings' => [],
+			],
+			$meta
+		);
 
-		// Set type.
-		$args['type'] = strtolower( ( new \ReflectionClass( static::class ) )->getShortName() );
+		// Filter meta.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
-		// Set properties.
-		foreach ( $args as $name => $value ) {
-			static::set_static_property( $name, $value );
+			/**
+			 * Filters block meta.
+			 *
+			 * @filter /blocks/{$type}/meta
+			 * @description Filters block meta.
+			 * @param string $type Block type.
+			 * @param array $meta Block meta.
+			 */
+			$meta = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
+
+		// Set meta.
+		static::set_meta( $meta );
 	}
 
 	/**
@@ -78,7 +77,21 @@ abstract class Block {
 	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
-		unset( $args['type'] );
+
+		// Filter properties.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters block arguments.
+			 *
+			 * @filter /blocks/{$type}
+			 * @description Filters block arguments.
+			 * @param string $type Block type.
+			 * @param array $args Block arguments.
+			 * @param object $object Block object.
+			 */
+			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
+		}
 
 		// Set properties.
 		foreach ( $args as $name => $value ) {
@@ -86,52 +99,51 @@ abstract class Block {
 		}
 
 		// Bootstrap properties.
-		$this->bootstrap();
-	}
-
-	/**
-	 * Gets block title.
-	 *
-	 * @return string
-	 */
-	final public static function get_title() {
-		return static::$title;
-	}
-
-	/**
-	 * Sets block settings.
-	 *
-	 * @param array $settings Block settings.
-	 */
-	final protected static function set_settings( $settings ) {
-		static::$settings = [];
-
-		foreach ( $settings as $field_name => $field_args ) {
-
-			// Get field class.
-			$field_class = '\HivePress\Fields\\' . $field_args['type'];
-
-			if ( class_exists( $field_class ) ) {
-
-				// Create field.
-				static::$settings[ $field_name ] = new $field_class( array_merge( $field_args, [ 'name' => $field_name ] ) );
-			}
-		}
-	}
-
-	/**
-	 * Gets block settings.
-	 *
-	 * @return array
-	 */
-	final public static function get_settings() {
-		return static::$settings;
+		$this->boot();
 	}
 
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {}
+	protected function boot() {}
+
+	/**
+	 * Sets meta values.
+	 *
+	 * @param array $meta Meta values.
+	 */
+	final protected static function set_meta( $meta ) {
+
+		// Set settings.
+		$settings = array_filter( hp\get_array_value( $meta, 'settings', [] ) );
+
+		if ( $settings ) {
+			$meta['settings'] = [];
+
+			foreach ( $settings as $name => $args ) {
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+				// Add field.
+				if ( $field ) {
+					$meta['settings'][ $name ] = $field;
+				}
+			}
+		}
+
+		static::_set_meta( $meta );
+	}
+
+	/**
+	 * Gets context values.
+	 *
+	 * @param string $name Context name.
+	 * @return mixed
+	 */
+	final public function get_context( $name = null ) {
+		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
+	}
 
 	/**
 	 * Renders block HTML.

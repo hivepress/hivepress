@@ -20,80 +20,33 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Request extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form captcha.
-	 *
-	 * @var bool
-	 */
-	protected static $captcha = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label'   => esc_html__( 'Reset Password', 'hivepress' ),
+				'captcha' => false,
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'title'       => esc_html__( 'Reset Password', 'hivepress' ),
 				'description' => esc_html__( 'Please enter your username or email address, you will receive a link to create a new password via email.', 'hivepress' ),
 				'message'     => esc_html__( 'Password reset email has been sent.', 'hivepress' ),
-				'action'      => hp\get_rest_url( '/users/request-password' ),
+				'action'      => hivepress()->router->get_url( 'user_password_request_action' ),
 
 				'fields'      => [
 					'username_or_email' => [
@@ -101,7 +54,7 @@ class User_Password_Request extends Form {
 						'type'       => 'text',
 						'max_length' => 254,
 						'required'   => true,
-						'order'      => 10,
+						'_order'     => 10,
 					],
 				],
 
@@ -112,6 +65,6 @@ class User_Password_Request extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

@@ -20,21 +20,14 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * File formats.
 	 *
 	 * @var array
 	 */
-	protected $file_formats = [];
+	protected $formats = [];
 
 	/**
-	 * Multiple property.
+	 * Multiple flag.
 	 *
 	 * @var bool
 	 */
@@ -43,27 +36,27 @@ class File extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
-		// Set required property.
-		if ( $this->required ) {
-			$attributes['required'] = true;
+		// Set file formats.
+		if ( $this->formats ) {
+			$attributes['accept'] = '.' . implode( ',.', $this->formats );
 		}
 
-		// Set multiple property.
+		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
 		}
 
-		// Set file formats.
-		if ( ! empty( $this->file_formats ) ) {
-			$attributes['accept'] = '.' . implode( ',.', $this->file_formats );
+		// Set required flag.
+		if ( $this->required ) {
+			$attributes['required'] = true;
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
@@ -77,6 +70,6 @@ class File extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

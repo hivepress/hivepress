@@ -20,64 +20,61 @@ defined( 'ABSPATH' ) || exit;
 class Vendor extends Post {
 
 	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Model fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Model aliases.
-	 *
-	 * @var array
-	 */
-	protected static $aliases = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Model arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'fields'  => [
-					'name'        => [
+				'fields' => [
+					'name'            => [
 						'label'      => esc_html__( 'Name', 'hivepress' ),
 						'type'       => 'text',
-						'max_length' => 128,
+						'max_length' => 256,
 						'required'   => true,
+						'_alias'     => 'post_title',
 					],
 
-					'description' => [
+					'description'     => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
+						'_alias'     => 'post_content',
 					],
 
-					'user_id'     => [
+					'status'          => [
+						'type'       => 'text',
+						'max_length' => 128,
+						'_alias'     => 'post_status',
+					],
+
+					'registered_date' => [
+						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
+						'_alias' => 'post_date',
+					],
+
+					'user'            => [
 						'type'      => 'number',
-						'min_value' => 0,
+						'min_value' => 1,
 						'required'  => true,
+						'_alias'    => 'post_author',
+						'_model'    => 'user',
 					],
-				],
 
-				'aliases' => [
-					'post_title'   => 'name',
-					'post_content' => 'description',
-					'post_author'  => 'user_id',
+					'image'           => [
+						'type'      => 'number',
+						'min_value' => 1,
+						'_alias'    => '_thumbnail_id',
+						'_model'    => 'attachment',
+						'_external' => true,
+					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

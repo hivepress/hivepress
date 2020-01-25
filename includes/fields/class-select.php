@@ -20,42 +20,21 @@ defined( 'ABSPATH' ) || exit;
 class Select extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Field placeholder.
 	 *
 	 * @var string
 	 */
-	protected $placeholder = '&mdash;';
+	protected $placeholder;
 
 	/**
-	 * Select options.
+	 * Field options.
 	 *
 	 * @var array
 	 */
 	protected $options = [];
 
 	/**
-	 * Multiple property.
+	 * Multiple flag.
 	 *
 	 * @var bool
 	 */
@@ -64,33 +43,35 @@ class Select extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Select', 'hivepress' ),
+				'label'      => esc_html_x( 'Select', 'field', 'hivepress' ),
+				'filterable' => true,
 
-				'settings' => [
+				'settings'   => [
 					'multiple' => [
-						'label'   => esc_html__( 'Multiple', 'hivepress' ),
+						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
-						'order'   => 10,
+						'_order'  => 10,
 					],
 
 					'options'  => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
+						'options'  => [],
 						'multiple' => true,
-						'order'    => 20,
+						'_order'   => 20,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -101,7 +82,7 @@ class Select extends Field {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'filters' => true,
+				'placeholder' => '&mdash;',
 			],
 			$args
 		);
@@ -112,27 +93,27 @@ class Select extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 		$attributes = [];
 
-		// Set required property.
+		// Set placeholder.
+		if ( ! is_null( $this->placeholder ) && ! $this->multiple ) {
+			$this->options = [ '' => $this->placeholder ] + $this->options;
+		}
+
+		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
 		}
 
-		// Set multiple property.
+		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
 		}
 
-		// Add default option.
-		if ( isset( $this->placeholder ) && ! $this->multiple ) {
-			$this->options = [ '' => $this->placeholder ] + $this->options;
-		}
-
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
@@ -142,36 +123,32 @@ class Select extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			$options = $this->options;
-
-			return implode(
-				', ',
-				array_filter(
-					array_map(
-						function( $value ) use ( $options ) {
-							return hp\get_array_value( $options, $value );
-						},
-						(array) $this->value
-					)
-				)
+			$labels = array_filter(
+				array_map(
+					function( $value ) {
+						return hp\get_array_value( $this->options, $value );
+					},
+					(array) $this->value
+				),
+				'strlen'
 			);
-		}
 
-		return $this->value;
+			if ( $labels ) {
+				return implode( ', ', $labels );
+			}
+		}
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
-
-		$this->filters['type'] = 'CHAR';
+	protected function add_filter() {
+		parent::add_filter();
 
 		if ( $this->multiple ) {
-			$this->filters['operator'] = 'AND';
+			$this->filter['operator'] = 'AND';
 		} else {
-			$this->filters['operator'] = 'IN';
+			$this->filter['operator'] = 'IN';
 		}
 	}
 
@@ -181,8 +158,14 @@ class Select extends Field {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( is_array( $this->value ) && ! $this->multiple ) {
-			if ( ! empty( $this->value ) ) {
+		if ( $this->multiple && ! is_null( $this->value ) ) {
+			if ( [] !== $this->value ) {
+				$this->value = (array) $this->value;
+			} else {
+				$this->value = null;
+			}
+		} elseif ( ! $this->multiple && is_array( $this->value ) ) {
+			if ( $this->value ) {
 				$this->value = reset( $this->value );
 			} else {
 				$this->value = null;
@@ -195,9 +178,14 @@ class Select extends Field {
 	 */
 	protected function sanitize() {
 		if ( $this->multiple ) {
-			$this->value = array_map( 'sanitize_text_field', (array) $this->value );
+			$this->value = array_map(
+				function( $value ) {
+					return is_numeric( $value ) ? absint( $value ) : sanitize_text_field( $value );
+				},
+				$this->value
+			);
 		} else {
-			$this->value = sanitize_text_field( $this->value );
+			$this->value = is_numeric( $this->value ) ? absint( $this->value ) : sanitize_text_field( $this->value );
 		}
 	}
 
@@ -207,12 +195,8 @@ class Select extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( array_map( 'strval', (array) $this->value ), array_map( 'strval', array_keys( $this->options ) ) ) ) === 0 ) {
-			if ( $this->multiple ) {
-				$this->add_errors( [ sprintf( esc_html__( '%s are invalid.', 'hivepress' ), $this->label ) ] );
-			} else {
-				$this->add_errors( [ sprintf( esc_html__( '%s is invalid.', 'hivepress' ), $this->label ) ] );
-			}
+		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
+			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 
 		return empty( $this->errors );
@@ -224,25 +208,10 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-
-		// Get field name.
-		$name = $this->name;
-
-		if ( $this->multiple ) {
-			$name .= '[]';
-		}
-
-		// Render field.
-		$output = '<select name="' . esc_attr( $name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]' : '' ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
 		foreach ( $this->options as $value => $label ) {
-			$selected = '';
-
-			if ( ( ! $this->multiple && $this->value === (string) $value ) || ( $this->multiple && in_array( (string) $value, $this->value, true ) ) ) {
-				$selected = 'selected';
-			}
-
-			$output .= '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
+			$output .= '<option value="' . esc_attr( $value ) . '" ' . ( in_array( $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
 		}
 
 		$output .= '</select>';

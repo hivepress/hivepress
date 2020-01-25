@@ -20,27 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Checkbox extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Checkbox caption.
 	 *
 	 * @var string
@@ -48,34 +27,36 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Sample value.
+	 * Check value.
 	 *
 	 * @var mixed
 	 */
-	protected $sample = true;
+	protected $check_value = true;
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'Checkbox', 'hivepress' ),
+				'label'      => esc_html__( 'Checkbox', 'hivepress' ),
+				'filterable' => true,
 
-				'settings' => [
+				'settings'   => [
 					'caption' => [
-						'label' => esc_html__( 'Caption', 'hivepress' ),
-						'type'  => 'text',
-						'order' => 10,
+						'label'      => esc_html__( 'Caption', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 10,
 					],
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -85,10 +66,12 @@ class Checkbox extends Field {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
+			$args,
 			[
-				'filters' => true,
-			],
-			$args
+				'statuses' => [
+					'optional' => null,
+				],
+			]
 		);
 
 		parent::__construct( $args );
@@ -97,30 +80,14 @@ class Checkbox extends Field {
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
-		$attributes = [];
+	protected function boot() {
 
 		// Set caption.
 		if ( is_null( $this->caption ) ) {
 			$this->caption = $this->label;
 		}
 
-		// Set status.
-		$this->statuses['optional'] = null;
-
-		// Set ID.
-		$id = explode( '[', $this->name );
-
-		$attributes['id'] = reset( $id ) . '_' . uniqid();
-
-		// Set required property.
-		if ( $this->required ) {
-			$attributes['required'] = true;
-		}
-
-		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
-
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
@@ -133,19 +100,32 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['type'] = 'CHAR';
+		unset( $this->filter['value'] );
+
+		$this->filter['operator'] = 'EXISTS';
+	}
+
+	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( ! is_null( $this->value ) ) {
+			$this->value = trim( wp_unslash( $this->value ) );
+		}
 	}
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( is_bool( $this->sample ) ) {
+		if ( is_bool( $this->check_value ) ) {
 			$this->value = boolval( $this->value );
 		} else {
 			$this->value = sanitize_text_field( $this->value );
@@ -158,11 +138,14 @@ class Checkbox extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<label for="' . esc_attr( hp\get_array_value( $this->attributes, 'id' ) ) . '" class="' . esc_attr( implode( ' ', (array) hp\get_array_value( $this->attributes, 'class' ) ) ) . '">';
 
-		unset( $this->attributes['class'] );
+		// Get ID.
+		$id = sanitize_key( $this->name ) . '_' . uniqid();
 
-		$output .= '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->sample ) . '" ' . checked( $this->value, $this->sample, false ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+		// Render field.
+		$output = '<label for="' . esc_attr( $id ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+
+		$output .= '<input type="checkbox" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

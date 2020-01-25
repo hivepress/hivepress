@@ -3,6 +3,12 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		&__field {
+			&--hidden {
+				display: none;
+			}
+		}
+
 		th {
 			@media screen and (max-width: 782px) {
 				padding-bottom: 10px;
@@ -33,9 +39,17 @@
 	}
 
 	&-field {
+		&--hidden {
+			display: none;
+		}
+
 		&--textarea {
 			width: 500px;
 			min-height: 7em;
+
+			td:only-child & {
+				width: 100%;
+			}
 		}
 
 		&--checkboxes,
@@ -90,10 +104,6 @@
 
 		&--date[readonly] {
 			background-color: #fff;
-		}
-
-		&--wide {
-			width: 100%;
 		}
 
 		&__label {
@@ -172,6 +182,16 @@ Menu
 /*--------------------------------------------------------------
 Pages
 --------------------------------------------------------------*/
+
+.hp {
+	&-page {
+		&__title {
+			span {
+				color: #666;
+			}
+		}
+	}
+}
 
 .toplevel_page_hp_settings {
 	.nav-tab-wrapper {

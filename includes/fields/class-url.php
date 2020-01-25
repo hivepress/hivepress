@@ -20,45 +20,26 @@ defined( 'ABSPATH' ) || exit;
 class URL extends Text {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
-	 * Field settings.
-	 *
-	 * @var array
-	 */
-	protected static $settings = [];
-
-	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title'    => esc_html__( 'URL', 'hivepress' ),
+				'label'      => esc_html__( 'URL', 'hivepress' ),
+				'filterable' => false,
+				'sortable'   => false,
 
-				'settings' => [
+				'settings'   => [
 					'min_length' => null,
 					'max_length' => null,
 				],
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
@@ -68,9 +49,6 @@ class URL extends Text {
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
-			[
-				'filters' => false,
-			],
 			$args,
 			[
 				'max_length' => 2048,
@@ -85,14 +63,5 @@ class URL extends Text {
 	 */
 	protected function sanitize() {
 		$this->value = esc_url_raw( $this->value );
-	}
-
-	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
-	 */
-	public function render() {
-		return '<input type="' . esc_attr( static::$type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_url( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

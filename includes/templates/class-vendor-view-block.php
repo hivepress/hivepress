@@ -22,32 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_View_Block extends Template {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'vendor_container' => [
 						'type'       => 'container',
 						'tag'        => 'article',
-						'order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-vendor', 'hp-vendor--view-block' ],
@@ -57,7 +43,7 @@ class Vendor_View_Block extends Template {
 							'vendor_header'  => [
 								'type'       => 'container',
 								'tag'        => 'header',
-								'order'      => 10,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__header' ],
@@ -65,16 +51,16 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_image' => [
-										'type'     => 'element',
-										'filepath' => 'vendor/view/block/vendor-image',
-										'order'    => 10,
+										'type'   => 'part',
+										'path'   => 'vendor/view/block/vendor-image',
+										'_order' => 10,
 									],
 								],
 							],
 
 							'vendor_content' => [
 								'type'       => 'container',
-								'order'      => 20,
+								'_order'     => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__content' ],
@@ -82,24 +68,36 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_name' => [
-										'type'     => 'element',
-										'filepath' => 'vendor/view/block/vendor-name',
-										'order'    => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__name' ],
+										],
+
+										'blocks'     => [
+											'vendor_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/block/vendor-name',
+												'_order' => 10,
+											],
+										],
 									],
 
 									'vendor_details_primary' => [
 										'type'       => 'container',
-										'order'      => 20,
+										'_order'     => 20,
 
 										'attributes' => [
 											'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
 										],
 
 										'blocks'     => [
-											'vendor_date' => [
-												'type'     => 'element',
-												'filepath' => 'vendor/view/vendor-date',
-												'order'    => 10,
+											'vendor_registered_date' => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-registered-date',
+												'_order' => 10,
 											],
 										],
 									],
@@ -109,7 +107,7 @@ class Vendor_View_Block extends Template {
 							'vendor_footer'  => [
 								'type'       => 'container',
 								'tag'        => 'footer',
-								'order'      => 30,
+								'_order'     => 30,
 
 								'attributes' => [
 									'class' => [ 'hp-vendor__footer' ],
@@ -118,13 +116,12 @@ class Vendor_View_Block extends Template {
 								'blocks'     => [
 									'vendor_actions_primary'    => [
 										'type'       => 'container',
-										'order'      => 10,
+										'blocks'     => [],
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
 										],
-
-										'blocks'     => [],
 									],
 								],
 							],
@@ -132,10 +129,9 @@ class Vendor_View_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

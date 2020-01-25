@@ -20,9 +20,20 @@ var hivepress = {
 
 	$(document).ready(function() {
 
+		// Link
+		hivepress.getComponent('link').on('click', function(e) {
+			var url = $(this).data('url');
+
+			if (url.indexOf('#') !== 0) {
+				window.location.href = url;
+			}
+
+			e.preventDefault();
+		});
+
 		// Date
-		if (flatpickr.l10ns.hasOwnProperty(hpCoreCommonData.language)) {
-			flatpickr.localize(flatpickr.l10ns[hpCoreCommonData.language]);
+		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
+			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
 		}
 
 		hivepress.getComponent('date').each(function() {

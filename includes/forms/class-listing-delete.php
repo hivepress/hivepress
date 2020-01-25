@@ -20,83 +20,58 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Delete extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form description.
-	 *
-	 * @var string
-	 */
-	protected static $description;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form redirect.
-	 *
-	 * @var mixed
-	 */
-	protected static $redirect = false;
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'description' => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
-				'model'       => 'listing',
-				'action'      => hp\get_rest_url( '/listings/%id%' ),
+				'description' => hivepress()->translator->get_string( 'confirm_listing_deletion' ),
 				'method'      => 'DELETE',
 				'redirect'    => true,
-				'fields'      => [],
 
 				'button'      => [
-					'label' => esc_html__( 'Delete Listing', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'delete_listing' ),
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function boot() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'listing_delete_action',
+				[
+					'listing_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::boot();
 	}
 }

@@ -64,7 +64,6 @@ Mixins
 			}
 		}
 
-		&__captcha,
 		&__fields,
 		&__footer {
 			&:not(:last-child) {
@@ -88,7 +87,6 @@ Mixins
 			justify-content: space-between;
 		}
 
-		&--wide &__captcha,
 		&--wide &__fields,
 		&--wide &__footer {
 			&:not(:last-child) {
@@ -247,13 +245,17 @@ Mixins
 	}
 
 	&-field {
+		&--hidden {
+			display: none;
+		}
+
+		&--date,
 		&--email,
 		&--number,
 		&--password,
 		&--search,
 		&--select,
 		&--text,
-		&--date,
 		&--textarea,
 		&--url {
 			width: 100%;
@@ -387,12 +389,12 @@ Mixins
 	Menus
 	--------------------------------------------------------------*/
 	&-menu {
-		&--main {
+		&--site-header {
 			display: flex;
 			align-items: center;
 		}
 
-		&--main &__item {
+		&--site-header &__item {
 			&:not(:last-child) {
 				margin-right: 2rem;
 			}
@@ -598,13 +600,13 @@ Mixins
 			}
 		}
 
-		&__verified {
+		&__verified-badge {
 			color: #15cd72;
 			display: inline-block;
 			vertical-align: middle;
 		}
 
-		&--view-block &__featured {
+		&--view-block &__featured-badge {
 			.center-container;
 			position: absolute;
 			z-index: 1;
@@ -617,8 +619,8 @@ Mixins
 			color: #fff;
 		}
 
-		&--view-block &__date,
-		&--view-page &__date {
+		&--view-block &__created-date,
+		&--view-page &__created-date {
 			font-size: 80%;
 			display: block;
 		}
@@ -680,8 +682,6 @@ Mixins
 			}
 		}
 
-		&--submit-block &__content,
-		&--submit-block &__header,
 		&--view-block &__content,
 		&--view-block &__header {
 			&:not(:last-child) {
@@ -689,7 +689,6 @@ Mixins
 			}
 		}
 
-		&--submit-block &__name,
 		&--view-block &__description,
 		&--view-block &__details--primary,
 		&--view-block &__image,
@@ -712,12 +711,11 @@ Mixins
 			}
 		}
 
-		&__count {
+		&__item-count {
 			font-size: 80%;
 		}
 
-		&--submit-block &__name,
-		&--view-block &__count,
+		&--view-block &__item-count,
 		&--view-block &__description,
 		&--view-block &__name {
 			text-align: center;
@@ -826,15 +824,15 @@ Mixins
 			}
 		}
 
-		&__date {
+		&__registered-date {
 			font-size: 80%;
 			display: block;
 		}
 
-		&--view-block &__date,
 		&--view-block &__name,
-		&--view-page &__date,
-		&--view-page &__name {
+		&--view-block &__registered-date,
+		&--view-page &__name,
+		&--view-page &__registered-date {
 			text-align: center;
 		}
 
@@ -887,7 +885,7 @@ Mixins
 		margin: 0 0 3rem;
 	}
 
-	&-theme--storefront &-menu--main {
+	&-theme--storefront &-menu--site-header {
 		float: right;
 		margin-left: 1.5rem;
 		@media only screen and (max-width:47.99em) {

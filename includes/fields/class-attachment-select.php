@@ -8,6 +8,7 @@
 namespace HivePress\Fields;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -20,13 +21,6 @@ defined( 'ABSPATH' ) || exit;
 class Attachment_Select extends Field {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Button caption.
 	 *
 	 * @var string
@@ -34,34 +28,51 @@ class Attachment_Select extends Field {
 	protected $caption;
 
 	/**
-	 * Bootstraps field properties.
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
 	 */
-	protected function bootstrap() {
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'caption' => esc_html__( 'Select File', 'hivepress' ),
+			],
+			$args
+		);
 
-		// Set caption.
-		if ( is_null( $this->caption ) ) {
-			$this->caption = esc_html__( 'Select File', 'hivepress' );
-		}
-
-		parent::bootstrap();
+		parent::__construct( $args );
 	}
 
 	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$attachment_id = hp\get_post_id(
-			[
-				'post_type' => 'attachment',
-				'post__in'  => [ absint( $this->value ) ],
-			]
-		);
+		$this->value = absint( $this->value );
 
-		if ( 0 !== $attachment_id ) {
-			$this->value = $attachment_id;
-		} else {
+		if ( empty( $this->value ) ) {
 			$this->value = null;
 		}
+	}
+
+	/**
+	 * Validates field value.
+	 *
+	 * @return bool
+	 */
+	public function validate() {
+		if ( parent::validate() && ! is_null( $this->value ) ) {
+			$attachment_id = Models\Attachment::query()->filter(
+				[
+					'id__in' => (array) $this->value,
+				]
+			)->get_first_id();
+
+			if ( empty( $attachment_id ) ) {
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+			}
+		}
+
+		return empty( $this->errors );
 	}
 
 	/**
@@ -73,10 +84,15 @@ class Attachment_Select extends Field {
 		$output  = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 		$output .= '<div>';
 
+		// Render attachment image.
 		if ( ! is_null( $this->value ) ) {
 			$output .= wp_get_attachment_image( $this->value, 'thumbnail' );
 		}
 
+		// Render remove button.
+		$output .= '<a href="#" data-component="file-remove"><i class="hp-icon fas fa-times"></i></a>';
+
+		// Render ID field.
 		$output .= ( new Hidden(
 			[
 				'name'    => $this->name,
@@ -84,10 +100,19 @@ class Attachment_Select extends Field {
 			]
 		) )->render();
 
-		$output .= '<a href="#" data-component="file-remove"><span class="dashicons dashicons-no-alt"></span></a>';
 		$output .= '</div>';
 
-		$output .= '<button type="button" class="button" data-component="file-select">' . esc_html( $this->caption ) . '</button>';
+		// Render select button.
+		$output .= ( new Button(
+			[
+				'label'      => $this->caption,
+
+				'attributes' => [
+					'data-component' => 'file-select',
+				],
+			]
+		) )->render();
+
 		$output .= '</div>';
 
 		return $output;

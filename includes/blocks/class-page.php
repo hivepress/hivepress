@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Page extends Container {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
-		// Set attributes.
+		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
@@ -39,7 +32,7 @@ class Page extends Container {
 			]
 		);
 
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
@@ -50,7 +43,7 @@ class Page extends Container {
 	public function render() {
 		$output = parent::render();
 
-		// Add container.
+		// Add wrapper.
 		switch ( get_template() ) {
 			case 'twentyseventeen':
 				$output = '<div class="wrap"><div class="content-area">' . $output . '</div></div>';
@@ -70,14 +63,18 @@ class Page extends Container {
 
 		// Add header.
 		ob_start();
+
 		get_header();
 		$output = ob_get_contents() . $output;
+
 		ob_end_clean();
 
 		// Add footer.
 		ob_start();
+
 		get_footer();
 		$output .= ob_get_contents();
+
 		ob_end_clean();
 
 		return $output;

@@ -20,87 +20,70 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Update extends Model_Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form message.
-	 *
-	 * @var string
-	 */
-	protected static $message;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected static $model;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Listing has been updated.', 'hivepress' ),
-				'model'   => 'listing',
-				'action'  => hp\get_rest_url( '/listings/%id%' ),
+				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
 
 				'fields'  => [
-					'image_ids'   => [
-						'order' => 10,
+					'images'      => [
+						'_order' => 10,
 					],
 
 					'title'       => [
-						'order' => 20,
+						'_order' => 20,
 					],
 
 					'description' => [
-						'order' => 30,
+						'_order' => 30,
 					],
 				],
 
 				'button'  => [
-					'label' => esc_html__( 'Update Listing', 'hivepress' ),
+					'label' => esc_html__( 'Save Changes', 'hivepress' ),
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps form properties.
+	 */
+	protected function boot() {
+
+		// Set action.
+		if ( $this->model->get_id() ) {
+			$this->action = hivepress()->router->get_url(
+				'listing_update_action',
+				[
+					'listing_id' => $this->model->get_id(),
+				]
+			);
+		}
+
+		parent::boot();
 	}
 }

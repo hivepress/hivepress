@@ -14,20 +14,21 @@ return [
 	'listing_settings'          => [
 		'title'  => esc_html__( 'Settings', 'hivepress' ),
 		'screen' => 'listing',
+		'model'  => 'listing',
 
 		'fields' => [
 			'featured' => [
-				'label'   => esc_html__( 'Featured', 'hivepress' ),
-				'caption' => esc_html__( 'Make this listing featured', 'hivepress' ),
+				'label'   => esc_html_x( 'Featured', 'listing', 'hivepress' ),
+				'caption' => hivepress()->translator->get_string( 'make_listing_featured' ),
 				'type'    => 'checkbox',
-				'order'   => 10,
+				'_order'  => 10,
 			],
 
 			'verified' => [
-				'label'   => esc_html__( 'Verified', 'hivepress' ),
-				'caption' => esc_html__( 'Mark this listing as verified', 'hivepress' ),
+				'label'   => esc_html_x( 'Verified', 'listing', 'hivepress' ),
+				'caption' => hivepress()->translator->get_string( 'mark_listing_as_verified' ),
 				'type'    => 'checkbox',
-				'order'   => 20,
+				'_order'  => 20,
 			],
 		],
 	],
@@ -35,85 +36,92 @@ return [
 	'listing_attributes'        => [
 		'title'  => esc_html__( 'Attributes', 'hivepress' ),
 		'screen' => 'listing',
+		'model'  => 'listing',
 		'fields' => [],
 	],
 
 	'listing_attribute_edit'    => [
 		'title'  => esc_html__( 'Editing', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'editable'        => [
-				'label'   => esc_html__( 'Editable', 'hivepress' ),
+				'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 1,
+				'_order'  => 1,
 			],
 
 			'edit_field_type' => [
-				'label'    => esc_html__( 'Field Type', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'fields',
-				'required' => true,
-				'order'    => 100,
+				'label'       => esc_html__( 'Field Type', 'hivepress' ),
+				'type'        => 'select',
+				'options'     => 'fields',
+				'option_args' => [ 'editable' => true ],
+				'required'    => true,
+				'_order'      => 100,
 			],
 		],
 	],
 
 	'listing_attribute_search'  => [
-		'title'  => esc_html__( 'Search', 'hivepress' ),
+		'title'  => esc_html_x( 'Search', 'noun', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'filterable'        => [
-				'label'   => esc_html__( 'Searchable', 'hivepress' ),
+				'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 10,
+				'_order'  => 10,
 			],
 
 			'sortable'          => [
-				'label'   => esc_html__( 'Sortable', 'hivepress' ),
-				'caption' => esc_html__( 'Display in the sort form', 'hivepress' ),
+				'label'   => esc_html_x( 'Sortable', 'attribute', 'hivepress' ),
+				'caption' => esc_html__( 'Display as a sorting option', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 20,
+				'_order'  => 20,
 			],
 
 			'search_field_type' => [
-				'label'         => esc_html__( 'Field Type', 'hivepress' ),
-				'type'          => 'select',
-				'options'       => 'fields',
-				'field_filters' => true,
-				'order'         => 100,
+				'label'       => esc_html__( 'Field Type', 'hivepress' ),
+				'type'        => 'select',
+				'options'     => 'fields',
+				'option_args' => [ 'filterable' => true ],
+				'_order'      => 100,
 			],
 		],
 	],
 
 	'listing_attribute_display' => [
-		'title'  => esc_html__( 'Display', 'hivepress' ),
+		'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
 		'screen' => 'listing_attribute',
+		'model'  => 'listing',
 
 		'fields' => [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
 				'type'        => 'checkboxes',
-				'order'       => 10,
+				'_order'      => 10,
+
 				'options'     => [
-					'view_block_primary'   => esc_html__( 'Block (primary)', 'hivepress' ),
-					'view_block_secondary' => esc_html__( 'Block (secondary)', 'hivepress' ),
-					'view_page_primary'    => esc_html__( 'Page (primary)', 'hivepress' ),
-					'view_page_secondary'  => esc_html__( 'Page (secondary)', 'hivepress' ),
+					'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+					'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+					'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
 				],
 			],
 
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format, the following tokens are available: %value%.', 'hivepress' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %value%' ),
 				'type'        => 'text',
+				'max_length'  => 2048,
 				'default'     => '%value%',
-				'html'        => 'post',
-				'order'       => 20,
+				'html'        => true,
+				'_order'      => 20,
 			],
 		],
 	],
@@ -122,26 +130,28 @@ return [
 		'screen' => 'listing_category',
 
 		'fields' => [
-			'image_id'              => [
-				'label'        => esc_html__( 'Image', 'hivepress' ),
-				'caption'      => esc_html__( 'Select Image', 'hivepress' ),
-				'type'         => 'attachment_select',
-				'file_formats' => [ 'jpg', 'jpeg', 'png' ],
-				'order'        => 10,
+			'image'                 => [
+				'label'   => esc_html__( 'Image', 'hivepress' ),
+				'caption' => esc_html__( 'Select Image', 'hivepress' ),
+				'type'    => 'attachment_select',
+				'formats' => [ 'jpg', 'jpeg', 'png' ],
+				'_order'  => 10,
 			],
 
-			'order'                 => [
-				'label'     => esc_html__( 'Order', 'hivepress' ),
+			'sort_order'            => [
+				'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
 				'type'      => 'number',
 				'min_value' => 0,
-				'order'     => 20,
+				'default'   => 0,
+				'required'  => true,
+				'_order'    => 20,
 			],
 
 			'display_subcategories' => [
-				'label'   => esc_html__( 'Display', 'hivepress' ),
+				'label'   => esc_html_x( 'Display', 'noun', 'hivepress' ),
 				'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
 				'type'    => 'checkbox',
-				'order'   => 30,
+				'_order'  => 30,
 			],
 		],
 	],

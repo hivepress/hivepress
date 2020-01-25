@@ -11,80 +11,72 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'jquery_ui_touch_punch' => [
-		'handle' => 'jquery-ui-touch-punch',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.ui.touch-punch.min.js',
-		'deps'   => [ 'jquery-ui-mouse' ],
-	],
-
 	'serializejson'         => [
 		'handle' => 'serializejson',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.serializejson.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.serializejson.min.js',
+	],
+
+	'jquery_ui_touch_punch' => [
+		'handle' => 'jquery-ui-touch-punch',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.ui.touch-punch.min.js',
+		'deps'   => [ 'jquery-ui-mouse' ],
 	],
 
 	'iframe_transport'      => [
 		'handle' => 'iframe-transport',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.iframe-transport.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.iframe-transport.min.js',
 	],
 
 	'fileupload'            => [
 		'handle' => 'fileupload',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.fileupload.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.fileupload.min.js',
 		'deps'   => [ 'jquery-ui-widget', 'iframe-transport' ],
 	],
 
 	'fancybox'              => [
 		'handle' => 'fancybox',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.fancybox.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.fancybox.min.js',
 	],
 
 	'slick'                 => [
 		'handle' => 'slick',
-		'src'    => HP_CORE_URL . '/assets/js/slick.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/slick.min.js',
 	],
 
 	'sticky_sidebar'        => [
 		'handle' => 'sticky-sidebar',
-		'src'    => HP_CORE_URL . '/assets/js/jquery.sticky-sidebar.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.sticky-sidebar.min.js',
 	],
 
 	'flatpickr'             => [
 		'handle' => 'flatpickr',
-		'src'    => HP_CORE_URL . '/assets/js/flatpickr.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/flatpickr.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
-	'core_common'           => [
-		'handle' => 'hp-core-common',
-		'src'    => HP_CORE_URL . '/assets/js/common.min.js',
+	'core'                  => [
+		'handle' => 'hivepress-core',
+		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
 		'deps'   => [ 'jquery', 'flatpickr' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
+			'apiURL'   => get_rest_url( null, 'hivepress/v1' ),
+			'apiNonce' => wp_create_nonce( 'wp_rest' ),
 			'language' => hivepress()->translator->get_language(),
 		],
 	],
 
 	'core_frontend'         => [
-		'handle' => 'hp-core-frontend',
-		'src'    => HP_CORE_URL . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hp-core-common', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
-
-		'data'   => [
-			'apiURL'   => hp\get_rest_url(),
-			'apiNonce' => wp_create_nonce( 'wp_rest' ),
-		],
+		'handle' => 'hivepress-core-frontend',
+		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
+		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [
-		'handle' => 'hp-core-backend',
-		'src'    => HP_CORE_URL . '/assets/js/backend.min.js',
-		'deps'   => [ 'hp-core-common' ],
+		'handle' => 'hivepress-core-backend',
+		'src'    => hivepress()->get_url() . '/assets/js/backend.min.js',
+		'deps'   => [ 'hivepress-core' ],
 		'scope'  => 'backend',
-
-		'data'   => [
-			'apiURL'   => hp\get_rest_url(),
-			'apiNonce' => wp_create_nonce( 'wp_rest' ),
-		],
 	],
 ];

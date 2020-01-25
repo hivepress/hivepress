@@ -22,25 +22,11 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit_Details_Page extends Listing_Submit_Page {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
@@ -49,12 +35,12 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 							'listing_submit_form' => [
 								'type'   => 'form',
 								'form'   => 'listing_submit',
-								'order'  => 10,
+								'_order' => 10,
 
 								'footer' => [
 									'form_actions' => [
 										'type'       => 'container',
-										'order'      => 10,
+										'_order'     => 10,
 
 										'attributes' => [
 											'class' => [ 'hp-form__actions' ],
@@ -62,9 +48,9 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 
 										'blocks'     => [
 											'listing_category_change_link' => [
-												'type'     => 'element',
-												'filepath' => 'listing/submit/listing-category-change-link',
-												'order'    => 10,
+												'type'   => 'part',
+												'path'   => 'listing/submit/listing-category-change-link',
+												'_order' => 10,
 											],
 										],
 									],
@@ -74,10 +60,9 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

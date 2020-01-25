@@ -21,28 +21,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing
  */
-class Listing extends Controller {
+final class Listing extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
@@ -53,103 +39,126 @@ class Listing extends Controller {
 					 * @resource Listings
 					 * @description The listings API allows you to update and delete listings.
 					 */
-					[
-						'path'      => '/listings',
-						'rest'      => true,
-
-						'endpoints' => [
-
-							/**
-							 * Updates listing.
-							 *
-							 * @endpoint Update listing
-							 * @route /listings/<id>
-							 * @method POST
-							 * @param string $title Title.
-							 * @param string $description Description.
-							 */
-							[
-								'path'    => '/(?P<listing_id>\d+)',
-								'methods' => 'POST',
-								'action'  => 'update_listing',
-							],
-
-							[
-								'path'    => '/(?P<listing_id>\d+)/report',
-								'methods' => 'POST',
-								'action'  => 'report_listing',
-							],
-
-							/**
-							 * Deletes listing.
-							 *
-							 * @endpoint Delete listing
-							 * @route /listings/<id>
-							 * @method DELETE
-							 */
-							[
-								'path'    => '/(?P<listing_id>\d+)',
-								'methods' => 'DELETE',
-								'action'  => 'delete_listing',
-							],
-						],
+					'listings_resource'            => [
+						'path' => '/listings',
+						'rest' => true,
 					],
 
-					'view_listings'   => [
-						'match'  => 'is_listings_view_page',
-						'action' => 'render_listings_view_page',
+					'listing_resource'             => [
+						'base' => 'listings_resource',
+						'path' => '/(?P<listing_id>\d+)',
+						'rest' => true,
 					],
 
-					'view_listing'    => [
-						'match'  => 'is_listing_view_page',
-						'action' => 'render_listing_view_page',
+					/**
+					 * Updates listing.
+					 *
+					 * @endpoint Update listing
+					 * @route /listings/<id>
+					 * @method POST
+					 * @param string $title Title.
+					 * @param string $description Description.
+					 */
+					'listing_update_action'        => [
+						'base'   => 'listing_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_listing' ],
+						'rest'   => true,
 					],
 
-					'edit_listings'   => [
-						'title'    => esc_html__( 'Listings', 'hivepress' ),
-						'path'     => '/account/listings',
-						'redirect' => 'redirect_listings_edit_page',
-						'action'   => 'render_listings_edit_page',
+					'listing_report_action'        => [
+						'base'   => 'listing_resource',
+						'path'   => '/report',
+						'method' => 'POST',
+						'action' => [ $this, 'report_listing' ],
+						'rest'   => true,
 					],
 
-					'edit_listing'    => [
-						'title'    => esc_html__( 'Edit Listing', 'hivepress' ),
-						'path'     => '/account/listings/(?P<listing_id>\d+)',
-						'redirect' => 'redirect_listing_edit_page',
-						'action'   => 'render_listing_edit_page',
+					/**
+					 * Deletes listing.
+					 *
+					 * @endpoint Delete listing
+					 * @route /listings/<id>
+					 * @method DELETE
+					 */
+					'listing_delete_action'        => [
+						'base'   => 'listing_resource',
+						'method' => 'DELETE',
+						'action' => [ $this, 'delete_listing' ],
+						'rest'   => true,
 					],
 
-					'submit_listing'  => [
+					'listings_view_page'           => [
+						'url'    => [ $this, 'get_listings_view_url' ],
+						'match'  => [ $this, 'is_listings_view_page' ],
+						'action' => [ $this, 'render_listings_view_page' ],
+					],
+
+					'listing_view_page'            => [
+						'url'    => [ $this, 'get_listing_view_url' ],
+						'match'  => [ $this, 'is_listing_view_page' ],
+						'action' => [ $this, 'render_listing_view_page' ],
+					],
+
+					'listings_edit_page'           => [
+						'title'    => hivepress()->translator->get_string( 'listings' ),
+						'base'     => 'user_account_page',
+						'path'     => '/listings',
+						'redirect' => [ $this, 'redirect_listings_edit_page' ],
+						'action'   => [ $this, 'render_listings_edit_page' ],
+					],
+
+					'listing_edit_page'            => [
+						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
+						'base'     => 'listings_edit_page',
+						'path'     => '/(?P<listing_id>\d+)',
+						'redirect' => [ $this, 'redirect_listing_edit_page' ],
+						'action'   => [ $this, 'render_listing_edit_page' ],
+					],
+
+					'listing_submit_page'          => [
 						'path'     => '/submit-listing',
-						'redirect' => 'redirect_listing_submit_page',
+						'redirect' => [ $this, 'redirect_listing_submit_page' ],
 					],
 
-					'submit_category' => [
-						'title'    => esc_html__( 'Select Category', 'hivepress' ),
-						'path'     => '/submit-listing/category/?(?P<listing_category_id>\d+)?',
-						'redirect' => 'redirect_listing_submit_category_page',
-						'action'   => 'render_listing_submit_category_page',
+					// @deprecated since version 1.3.0.
+					'listing/submit_listing'       => [
+						'base' => 'listing_submit_page',
 					],
 
-					'submit_details'  => [
-						'title'    => esc_html__( 'Add Details', 'hivepress' ),
-						'path'     => '/submit-listing/details',
-						'redirect' => 'redirect_listing_submit_details_page',
-						'action'   => 'render_listing_submit_details_page',
+					'listing_submit_category_page' => [
+						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
+						'base'     => 'listing_submit_page',
+						'path'     => '/category/?(?P<listing_category_id>\d+)?',
+						'redirect' => [ $this, 'redirect_listing_submit_category_page' ],
+						'action'   => [ $this, 'render_listing_submit_category_page' ],
 					],
 
-					'submit_complete' => [
-						'title'    => esc_html__( 'Listing Submitted', 'hivepress' ),
-						'path'     => '/submit-listing/complete',
-						'redirect' => 'redirect_listing_submit_complete_page',
-						'action'   => 'render_listing_submit_complete_page',
+					'listing_submit_details_page'  => [
+						'title'    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
+						'base'     => 'listing_submit_page',
+						'path'     => '/details',
+						'redirect' => [ $this, 'redirect_listing_submit_details_page' ],
+						'action'   => [ $this, 'render_listing_submit_details_page' ],
+					],
+
+					'listing_submit_complete_page' => [
+						'title'    => hivepress()->translator->get_string( 'listing_submitted' ),
+						'base'     => 'listing_submit_page',
+						'path'     => '/complete',
+						'redirect' => [ $this, 'redirect_listing_submit_complete_page' ],
+						'action'   => [ $this, 'render_listing_submit_complete_page' ],
+					],
+
+					'listing_category_view_page'   => [
+						'url' => [ $this, 'get_listing_category_view_url' ],
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
@@ -166,24 +175,24 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
-		if ( is_null( $listing ) ) {
+		if ( empty( $listing ) ) {
 			return hp\rest_error( 404 );
 		}
 
-		set_query_var( 'hp_listing_id', $listing->get_id() );
-
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
 		// Validate form.
-		$form = new Forms\Listing_Update();
+		$form = null;
 
 		if ( $listing->get_status() === 'auto-draft' ) {
-			$form = new Forms\Listing_Submit();
+			$form = new Forms\Listing_Submit( [ 'model' => $listing ] );
+		} else {
+			$form = new Forms\Listing_Update( [ 'model' => $listing ] );
 		}
 
 		$form->set_values( $request->get_params() );
@@ -196,16 +205,14 @@ class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( ! $listing->save() ) {
-			return hp\rest_error( 400, esc_html__( 'Error updating listing.', 'hivepress' ) );
+			return hp\rest_error( 400, $listing->_get_errors() );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $listing->get_id(),
-				],
-			],
-			200
+				'id' => $listing->get_id(),
+			]
 		);
 	}
 
@@ -223,16 +230,14 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
-		if ( is_null( $listing ) || $listing->get_status() !== 'publish' ) {
+		if ( empty( $listing ) || $listing->get_status() !== 'publish' ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Validate form.
-		$form = new Forms\Listing_Report();
-
-		$form->set_values( $request->get_params() );
+		$form = ( new Forms\Listing_Report() )->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );
@@ -242,21 +247,20 @@ class Listing extends Controller {
 		( new Emails\Listing_Report(
 			[
 				'recipient' => get_option( 'admin_email' ),
+
 				'tokens'    => [
 					'listing_title'  => $listing->get_title(),
 					'listing_url'    => get_permalink( $listing->get_id() ),
-					'report_details' => $form->get_value( 'report_details' ),
+					'report_details' => $form->get_value( 'details' ),
 				],
 			]
 		) )->send();
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'id' => $listing->get_id(),
-				],
-			],
-			200
+				'id' => $listing->get_id(),
+			]
 		);
 	}
 
@@ -274,27 +278,37 @@ class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( $request->get_param( 'listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
 
-		if ( is_null( $listing ) ) {
+		if ( empty( $listing ) ) {
 			return hp\rest_error( 404 );
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
 		// Delete listing.
 		if ( ! $listing->delete() ) {
-			return hp\rest_error( 400, esc_html__( 'Error deleting listing.', 'hivepress' ) );
+			return hp\rest_error( 400 );
 		}
 
-		return new \WP_Rest_Response( (object) [], 204 );
+		return hp\rest_response( 204 );
 	}
 
 	/**
-	 * Matches listings view page.
+	 * Gets listings view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_listings_view_url( $params ) {
+		return get_post_type_archive_link( 'hp_listing' );
+	}
+
+	/**
+	 * Matches listings view URL.
 	 *
 	 * @return bool
 	 */
@@ -303,24 +317,25 @@ class Listing extends Controller {
 		// Get page ID.
 		$page_id = absint( get_option( 'hp_page_listings' ) );
 
-		return ( 0 !== $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( 'hp_listing_category' );
+		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( 'hp_listing_category' );
 	}
 
 	/**
-	 * Matches listings view page.
+	 * Renders listings view page.
 	 *
 	 * @return string
 	 */
 	public function render_listings_view_page() {
 
-		// Get category ID.
-		$category_id = absint( hp\get_array_value( $_GET, 'category' ) );
+		// Get category.
+		$category    = null;
+		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, '_category' ) );
 
-		if ( is_tax() ) {
-			$category_id = get_queried_object_id();
+		if ( $category_id ) {
+			$category = Models\Listing_Category::query()->get_by_id( $category_id );
 		}
 
-		if ( ( is_page() && get_option( 'hp_page_listings_display_categories' ) ) || ( 0 !== $category_id && get_term_meta( $category_id, 'hp_display_subcategories', true ) ) ) {
+		if ( ( ( is_page() || ( empty( $category ) && is_post_type_archive() ) ) && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
 
 			// Render categories.
 			return ( new Blocks\Template(
@@ -328,52 +343,68 @@ class Listing extends Controller {
 					'template' => 'listing_categories_view_page',
 
 					'context'  => [
-						'listing_category_id' => $category_id,
+						'listing_category' => $category,
 					],
 				]
 			) )->render();
 		} else {
 			if ( is_page() ) {
 
-				// Set query arguments.
-				$query_args = [
-					'post_type'      => 'hp_listing',
-					'post_status'    => 'publish',
-					'posts_per_page' => absint( get_option( 'hp_listings_per_page' ) ),
-					'paged'          => hp\get_current_page(),
-				];
-
 				// Get featured IDs.
-				$featured_ids = [];
-
-				if ( get_query_var( 'hp_featured_ids' ) ) {
-					$featured_ids = array_map( 'absint', (array) get_query_var( 'hp_featured_ids' ) );
-				}
-
-				// Exclude listings.
-				if ( ! empty( $featured_ids ) ) {
-					$query_args['post__not_in'] = $featured_ids;
+				if ( get_option( 'hp_listings_featured_per_page' ) ) {
+					hivepress()->request->set_context(
+						'featured_ids',
+						Models\Listing::query()->filter(
+							[
+								'status'   => 'publish',
+								'featured' => true,
+							]
+						)->order( 'random' )
+						->limit( get_option( 'hp_listings_featured_per_page' ) )
+						->get_ids()
+					);
 				}
 
 				// Query listings.
-				query_posts( $query_args );
-
-				if ( ! empty( $featured_ids ) ) {
-					set_query_var( 'hp_featured_ids', $featured_ids );
-				}
+				query_posts(
+					Models\Listing::query()->filter(
+						[
+							'status'     => 'publish',
+							'id__not_in' => hivepress()->request->get_context( 'featured_ids', [] ),
+						]
+					)->order( [ 'created_date' => 'desc' ] )
+					->limit( get_option( 'hp_listings_per_page' ) )
+					->paginate( hivepress()->request->get_page_number() )
+					->get_args()
+				);
 			}
 
 			// Render listings.
 			return ( new Blocks\Template(
 				[
 					'template' => 'listings_view_page',
+
+					'context'  => [
+						'listing_category' => $category,
+						'listings'         => [],
+					],
 				]
 			) )->render();
 		}
 	}
 
 	/**
-	 * Checks listing view page.
+	 * Gets listing view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_listing_view_url( $params ) {
+		return get_permalink( hp\get_array_value( $params, 'listing_id' ) );
+	}
+
+	/**
+	 * Matches listing view URL.
 	 *
 	 * @return bool
 	 */
@@ -389,13 +420,16 @@ class Listing extends Controller {
 	public function render_listing_view_page() {
 		the_post();
 
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( get_post() );
+
+		// Render template.
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_view_page',
 
 				'context'  => [
-					'listing_id' => get_the_ID(),
-					'listing'    => Models\Listing::get( get_the_ID() ),
+					'listing' => $listing,
 				],
 			]
 		) )->render();
@@ -410,19 +444,25 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Check listings.
-		if ( hp\get_post_id(
+		if ( ! Models\Listing::query()->filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => [ 'draft', 'pending', 'publish' ],
-				'author'      => get_current_user_id(),
+				'status__in' => [ 'draft', 'pending', 'publish' ],
+				'user'       => get_current_user_id(),
 			]
-		) === 0 ) {
-			return true;
+		)->get_first_id() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
 		}
+
+		return false;
 	}
 
 	/**
@@ -431,42 +471,28 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listings_edit_page() {
-		global $wp_query;
-
-		// Set query arguments.
-		$query_args = [
-			'post_type'      => 'hp_listing',
-			'post_status'    => [ 'draft', 'pending', 'publish' ],
-			'author'         => get_current_user_id(),
-			'posts_per_page' => -1,
-			'no_found_rows'  => true,
-		];
-
-		// Get cached IDs.
-		$listing_ids = hivepress()->cache->get_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing' );
-
-		if ( is_array( $listing_ids ) ) {
-			$query_args = [
-				'post_type'      => 'hp_listing',
-				'post_status'    => [ 'draft', 'pending', 'publish' ],
-				'post__in'       => array_merge( [ 0 ], $listing_ids ),
-				'posts_per_page' => count( $listing_ids ),
-				'orderby'        => 'post__in',
-				'no_found_rows'  => true,
-			];
-		}
 
 		// Query listings.
-		query_posts( $query_args );
+		query_posts(
+			Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'draft', 'pending', 'publish' ],
+					'user'       => get_current_user_id(),
+				]
+			)->order( [ 'created_date' => 'desc' ] )
+			->get_args()
+		);
 
-		set_query_var( 'post_type', 'hp_listing' );
+		// Render template.
+		return ( new Blocks\Template(
+			[
+				'template' => 'listings_edit_page',
 
-		// Cache IDs.
-		if ( is_null( $listing_ids ) && $wp_query->post_count <= 1000 ) {
-			hivepress()->cache->set_user_cache( get_current_user_id(), array_merge( $query_args, [ 'fields' => 'ids' ] ), 'post/listing', wp_list_pluck( $wp_query->posts, 'ID' ) );
-		}
-
-		return ( new Blocks\Template( [ 'template' => 'listings_edit_page' ] ) )->render();
+				'context'  => [
+					'listings' => [],
+				],
+			]
+		) )->render();
 	}
 
 	/**
@@ -478,15 +504,23 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Get listing.
-		$listing = Models\Listing::get( get_query_var( 'hp_listing_id' ) );
+		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
-		if ( is_null( $listing ) || get_current_user_id() !== $listing->get_user_id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
-			return self::get_url( 'edit_listings' );
+		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
+			return hivepress()->router->get_url( 'listings_edit_page' );
 		}
+
+		// Set listing.
+		hivepress()->request->set_context( 'listing', $listing );
 
 		return false;
 	}
@@ -502,7 +536,7 @@ class Listing extends Controller {
 				'template' => 'listing_edit_page',
 
 				'context'  => [
-					'listing_id' => absint( get_query_var( 'hp_listing_id' ) ),
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();
@@ -517,27 +551,29 @@ class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
 		}
 
 		// Check permissions.
 		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
-			wp_safe_redirect( home_url( '/' ) );
-
-			exit();
+			return home_url( '/' );
 		}
 
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
+		// Get listing.
+		$listing = Models\Listing::query()->filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
+				'status'  => 'auto-draft',
+				'drafted' => true,
+				'user'    => get_current_user_id(),
 			]
-		);
+		)->get_first();
 
-		if ( 0 === $listing_id ) {
+		if ( empty( $listing ) ) {
 
 			// Add listing.
 			$listing_id = wp_insert_post(
@@ -547,14 +583,22 @@ class Listing extends Controller {
 					'post_author' => get_current_user_id(),
 				]
 			);
+
+			if ( ! $listing_id ) {
+				return home_url( '/' );
+			}
+
+			// Set draft flag.
+			update_post_meta( $listing_id, 'hp_drafted', '1' );
+
+			// Get listing.
+			$listing = Models\Listing::query()->get_by_id( $listing_id );
 		}
 
-		// Check listing.
-		if ( 0 !== $listing_id ) {
-			return true;
-		}
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -564,46 +608,38 @@ class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_category_page() {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
-		}
-
 		// Check categories.
-		if ( absint( wp_count_terms( 'hp_listing_category' ) ) === 0 ) {
+		if ( ! Models\Listing_Category::query()->get_first_id() ) {
 			return true;
 		}
 
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
+		// Get listing.
+		$listing = hivepress()->request->get_context( 'listing' );
 
-		// Get category.
-		$category = get_term( absint( get_query_var( 'hp_listing_category_id' ) ), 'hp_listing_category' );
+		if ( hivepress()->request->get_param( 'listing_category_id' ) ) {
 
-		if ( ! is_null( $category ) && ! is_wp_error( $category ) ) {
+			// Get category.
+			$category = Models\Listing_Category::query()->get_by_id( hivepress()->request->get_param( 'listing_category_id' ) );
 
-			// Get category IDs.
-			$category_ids = get_term_children( $category->term_id, 'hp_listing_category' );
+			if ( empty( $category ) ) {
+				return hivepress()->router->get_url( 'listing_submit_category_page' );
+			}
 
-			if ( empty( $category_ids ) ) {
+			if ( ! $category->get_children__id() ) {
 
-				// Set category.
-				wp_set_post_terms( $listing_id, [ $category->term_id ], 'hp_listing_category' );
+				// Set listing category.
+				wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
 
 				return true;
 			}
+
+			// Set request context.
+			hivepress()->request->set_context( 'listing_category', $category );
 		}
 
 		// Check category.
-		if ( has_term( '', 'hp_listing_category', $listing_id ) ) {
-			return null;
+		if ( $listing->get_categories__id() ) {
+			return;
 		}
 
 		return false;
@@ -620,7 +656,7 @@ class Listing extends Controller {
 				'template' => 'listing_submit_category_page',
 
 				'context'  => [
-					'listing_category_id' => absint( get_query_var( 'hp_listing_category_id' ) ),
+					'listing_category' => hivepress()->request->get_context( 'listing_category' ),
 				],
 			]
 		) )->render();
@@ -633,23 +669,11 @@ class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_details_page() {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
-		}
-
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
+		// Get listing.
+		$listing = hivepress()->request->get_context( 'listing' );
 
 		// Check listing.
-		if ( '' !== get_the_title( $listing_id ) ) {
+		if ( $listing->get_title() ) {
 			return true;
 		}
 
@@ -662,26 +686,12 @@ class Listing extends Controller {
 	 * @return string
 	 */
 	public function render_listing_submit_details_page() {
-
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
-
-		// Set listing ID.
-		set_query_var( 'hp_listing_id', $listing_id );
-
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_submit_details_page',
 
 				'context'  => [
-					'listing_id' => $listing_id,
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();
@@ -694,46 +704,34 @@ class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_complete_page() {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return add_query_arg( 'redirect', rawurlencode( hp\get_current_url() ), User::get_url( 'login_user' ) );
-		}
+		// Get listing.
+		$listing = hivepress()->request->get_context( 'listing' );
 
-		// Get listing ID.
-		$listing_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_listing',
-				'post_status' => 'auto-draft',
-				'post_parent' => null,
-				'author'      => get_current_user_id(),
-			]
-		);
-
-		// Update listing.
+		// Get status.
 		$status = get_option( 'hp_listing_enable_moderation' ) ? 'pending' : 'publish';
 
-		wp_update_post(
+		// Update listing.
+		$listing->fill(
 			[
-				'ID'          => $listing_id,
-				'post_status' => $status,
+				'status'  => $status,
+				'drafted' => null,
 			]
-		);
+		)->save();
 
 		// Send email.
 		( new Emails\Listing_Submit(
 			[
 				'recipient' => get_option( 'admin_email' ),
+
 				'tokens'    => [
-					'listing_title' => get_the_title( $listing_id ),
-					'listing_url'   => 'publish' === $status ? get_permalink( $listing_id ) : get_preview_post_link( $listing_id ),
+					'listing_title' => $listing->get_title(),
+					'listing_url'   => 'publish' === $status ? get_permalink( $listing->get_id() ) : get_preview_post_link( $listing->get_id() ),
 				],
 			]
 		) )->send();
 
 		if ( 'publish' === $status ) {
-			return get_permalink( $listing_id );
-		} else {
-			return null;
+			return get_permalink( $listing->get_id() );
 		}
 
 		return false;
@@ -750,18 +748,19 @@ class Listing extends Controller {
 				'template' => 'listing_submit_complete_page',
 
 				'context'  => [
-					'listing' => Models\Listing::get(
-						hp\get_post_id(
-							[
-								'post_type'   => 'hp_listing',
-								'post_status' => 'pending',
-								'post_parent' => null,
-								'author'      => get_current_user_id(),
-							]
-						)
-					),
+					'listing' => hivepress()->request->get_context( 'listing' ),
 				],
 			]
 		) )->render();
+	}
+
+	/**
+	 * Gets listing category view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_listing_category_view_url( $params ) {
+		return get_term_link( hp\get_array_value( $params, 'listing_category_id' ) );
 	}
 }

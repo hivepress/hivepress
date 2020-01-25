@@ -17,58 +17,49 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Admin
  */
-class Admin extends Controller {
+final class Admin extends Controller {
 
 	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Controller routes.
-	 *
-	 * @var array
-	 */
-	protected static $routes = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Controller arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					[
-						'path'      => '/admin/notices',
-						'rest'      => true,
+					'admin_notices_resource'     => [
+						'path' => '/admin-notices',
+						'rest' => true,
+					],
 
-						'endpoints' => [
-							[
-								'path'    => '/(?P<notice_name>[a-z0-9_]+)',
-								'methods' => 'POST',
-								'action'  => 'update_notice',
-							],
-						],
+					'admin_notice_resource'      => [
+						'base' => 'admin_notices_resource',
+						'path' => '/(?P<notice_name>[a-z0-9_]+)',
+						'rest' => true,
+					],
+
+					'admin_notice_update_action' => [
+						'base'   => 'admin_notice_resource',
+						'method' => 'POST',
+						'action' => [ $this, 'update_admin_notice' ],
+						'rest'   => true,
 					],
 				],
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Updates notice.
+	 * Updates admin notice.
 	 *
 	 * @param WP_REST_Request $request API request.
 	 * @return WP_Rest_Response
 	 */
-	public function update_notice( $request ) {
+	public function update_admin_notice( $request ) {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -83,7 +74,7 @@ class Admin extends Controller {
 		// Get notice name.
 		$notice_name = substr( sanitize_key( $request->get_param( 'notice_name' ) ), 0, 32 );
 
-		if ( ! empty( $notice_name ) && $request->get_param( 'dismissed' ) ) {
+		if ( $notice_name && $request->get_param( 'dismissed' ) ) {
 
 			// Get notices.
 			$dismissed_notices = array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) );
@@ -94,13 +85,11 @@ class Admin extends Controller {
 			update_option( 'hp_admin_dismissed_notices', array_unique( $dismissed_notices ) );
 		}
 
-		return new \WP_Rest_Response(
+		return hp\rest_response(
+			200,
 			[
-				'data' => [
-					'name' => $notice_name,
-				],
-			],
-			200
+				'name' => $notice_name,
+			]
 		);
 	}
 }

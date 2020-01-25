@@ -20,40 +20,19 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Report extends Email {
 
 	/**
-	 * Email name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Email subject.
-	 *
-	 * @var string
-	 */
-	protected static $subject;
-
-	/**
-	 * Email body.
-	 *
-	 * @var string
-	 */
-	protected static $body;
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Email arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'subject' => esc_html__( 'Listing Reported', 'hivepress' ),
+				'subject' => hivepress()->translator->get_string( 'listing_reported' ),
 				'body'    => hp\sanitize_html( __( 'Listing "%listing_title%" %listing_url% has been reported with the following details: %report_details%', 'hivepress' ) ),
 			],
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

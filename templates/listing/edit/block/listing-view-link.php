@@ -4,6 +4,6 @@ defined( 'ABSPATH' ) || exit;
 
 if ( $listing->get_status() === 'publish' ) :
 	?>
-	<a href="<?php the_permalink(); ?>" target="_blank" class="hp-link"><i class="hp-icon fas fa-external-link-alt"></i><span><?php esc_html_e( 'View', 'hivepress' ); ?></span></a>
+	<a href="<?php echo esc_url( hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ) ); ?>" target="_blank" title="<?php esc_attr_e( 'View', 'hivepress' ); ?>" class="hp-listing__action hp-listing__action--view hp-link"><i class="hp-icon fas fa-external-link-alt"></i></a>
 	<?php
 endif;

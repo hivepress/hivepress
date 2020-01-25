@@ -20,18 +20,11 @@ defined( 'ABSPATH' ) || exit;
 class Modal extends Container {
 
 	/**
-	 * Block type.
+	 * Modal title.
 	 *
 	 * @var string
 	 */
-	protected static $type;
-
-	/**
-	 * Modal caption.
-	 *
-	 * @var string
-	 */
-	protected $caption;
+	protected $title;
 
 	/**
 	 * Model name.
@@ -43,13 +36,30 @@ class Modal extends Container {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
+
+		// Add title.
+		if ( $this->title ) {
+			array_unshift(
+				$this->blocks,
+				new Part(
+					[
+						'path'    => 'page/modal-title',
+						'context' => [ 'modal_title' => $this->title ],
+					]
+				)
+			);
+		}
 
 		// Get ID.
 		$id = $this->name;
 
-		if ( isset( $this->model ) ) {
-			$id .= '_' . get_the_ID();
+		if ( $this->model ) {
+			$object = $this->get_context( $this->model );
+
+			if ( hp\is_class_instance( $object, '\HivePress\Models\\' . $this->model ) ) {
+				$id .= '_' . $object->get_id();
+			}
 		}
 
 		// Set attributes.
@@ -62,18 +72,6 @@ class Modal extends Container {
 			]
 		);
 
-		// Add title.
-		array_unshift(
-			$this->blocks,
-			new Element(
-				[
-					'type'     => 'element',
-					'filepath' => 'page/modal-title',
-					'context'  => array_merge( $this->context, [ 'title' => $this->caption ] ),
-				]
-			)
-		);
-
-		parent::bootstrap();
+		parent::boot();
 	}
 }

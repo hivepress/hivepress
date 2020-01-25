@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset_Form extends Form {
 
 	/**
-	 * Block type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Block arguments.
@@ -34,7 +27,11 @@ class User_Password_Reset_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form' => 'user_password_reset',
+				'form'       => 'user_password_reset',
+
+				'attributes' => [
+					'class' => [ 'hp-form--narrow' ],
+				],
 			],
 			$args
 		);
@@ -45,7 +42,7 @@ class User_Password_Reset_Form extends Form {
 	/**
 	 * Bootstraps block properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Set values.
 		$this->values = array_merge(
@@ -56,15 +53,7 @@ class User_Password_Reset_Form extends Form {
 			]
 		);
 
-		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'class' => [ 'hp-form--narrow' ],
-			]
-		);
-
-		parent::bootstrap();
+		parent::boot();
 	}
 
 	/**
@@ -78,7 +67,7 @@ class User_Password_Reset_Form extends Form {
 		if ( ! is_wp_error( check_password_reset_key( $this->values['password_reset_key'], $this->values['username'] ) ) ) {
 			$output .= parent::render();
 		} else {
-			$output .= ( new Element( [ 'filepath' => 'user/password/user-password-reset-message' ] ) )->render();
+			$output .= ( new Part( [ 'path' => 'user/password-reset/user-password-reset-message' ] ) )->render();
 		}
 
 		return $output;

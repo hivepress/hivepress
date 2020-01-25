@@ -20,46 +20,27 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Search extends Form {
 
 	/**
-	 * Form name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Form action.
-	 *
-	 * @var string
-	 */
-	protected static $action;
-
-	/**
-	 * Form method.
-	 *
-	 * @var string
-	 */
-	protected static $method = 'POST';
-
-	/**
-	 * Form fields.
-	 *
-	 * @var array
-	 */
-	protected static $fields = [];
-
-	/**
-	 * Form button.
-	 *
-	 * @var object
-	 */
-	protected static $button;
-
-	/**
 	 * Class initializer.
+	 *
+	 * @param array $meta Form meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'model' => 'listing',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
+	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
 				'action' => home_url( '/' ),
@@ -67,10 +48,11 @@ class Listing_Search extends Form {
 
 				'fields' => [
 					's'         => [
-						'placeholder' => esc_html__( 'Keywords', 'hivepress' ),
-						'type'        => 'search',
-						'max_length'  => 256,
-						'order'       => 10,
+						'placeholder'  => esc_html__( 'Keywords', 'hivepress' ),
+						'type'         => 'text',
+						'display_type' => 'search',
+						'max_length'   => 256,
+						'_order'       => 10,
 					],
 
 					'post_type' => [
@@ -86,6 +68,6 @@ class Listing_Search extends Form {
 			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

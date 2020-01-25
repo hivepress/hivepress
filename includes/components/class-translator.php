@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Translator
  */
-final class Translator {
+final class Translator extends Component {
 
 	/**
 	 * Gets language code.
@@ -25,9 +25,7 @@ final class Translator {
 	 * @return string
 	 */
 	public function get_language() {
-		$parts = explode( '_', get_locale() );
-
-		return reset( $parts );
+		return reset( ( explode( '_', get_locale() ) ) );
 	}
 
 	/**
@@ -38,20 +36,18 @@ final class Translator {
 	public function get_region() {
 		$parts = explode( '_', get_locale() );
 
-		if ( count( $parts ) === 2 ) {
+		if ( count( $parts ) > 1 ) {
 			return end( $parts );
 		}
-
-		return '';
 	}
 
 	/**
 	 * Gets translation string.
 	 *
 	 * @param string $key String key.
-	 * @return string
+	 * @return mixed
 	 */
 	public function get_string( $key ) {
-		return hp\get_array_value( hivepress()->get_config( 'strings' ), $key, '' );
+		return hp\get_array_value( hivepress()->get_config( 'strings' ), $key );
 	}
 }

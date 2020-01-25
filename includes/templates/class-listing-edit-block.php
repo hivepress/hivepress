@@ -22,32 +22,18 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Edit_Block extends Template {
 
 	/**
-	 * Template name.
-	 *
-	 * @var string
-	 */
-	protected static $name;
-
-	/**
-	 * Template blocks.
-	 *
-	 * @var array
-	 */
-	protected static $blocks = [];
-
-	/**
-	 * Class initializer.
+	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
 	 */
-	public static function init( $args = [] ) {
+	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
 					'listing_container' => [
 						'type'       => 'container',
 						'tag'        => 'tr',
-						'order'      => 10,
+						'_order'     => 10,
 
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--edit-block' ],
@@ -55,27 +41,27 @@ class Listing_Edit_Block extends Template {
 
 						'blocks'     => [
 							'listing_title'           => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-title',
-								'order'    => 10,
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-title',
+								'_order' => 10,
 							],
 
 							'listing_status'          => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-status',
-								'order'    => 20,
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-status',
+								'_order' => 20,
 							],
 
-							'listing_date'            => [
-								'type'     => 'element',
-								'filepath' => 'listing/edit/block/listing-date',
-								'order'    => 30,
+							'listing_created_date'    => [
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-created-date',
+								'_order' => 30,
 							],
 
 							'listing_actions_primary' => [
 								'type'       => 'container',
 								'tag'        => 'td',
-								'order'      => 40,
+								'_order'     => 40,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],
@@ -83,9 +69,9 @@ class Listing_Edit_Block extends Template {
 
 								'blocks'     => [
 									'listing_view_link' => [
-										'type'     => 'element',
-										'filepath' => 'listing/edit/block/listing-view-link',
-										'order'    => 10,
+										'type'   => 'part',
+										'path'   => 'listing/edit/block/listing-view-link',
+										'_order' => 10,
 									],
 								],
 							],
@@ -93,10 +79,9 @@ class Listing_Edit_Block extends Template {
 					],
 				],
 			],
-			$args,
-			'blocks'
+			$args
 		);
 
-		parent::init( $args );
+		parent::__construct( $args );
 	}
 }

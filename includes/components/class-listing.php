@@ -19,185 +19,161 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing
  */
-final class Listing {
+final class Listing extends Component {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 
-		// Set vendor.
-		add_action( 'save_post_hp_listing', [ $this, 'set_vendor' ], 10, 2 );
+		// Update vendor.
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
 
-		// Set image.
-		add_action( 'add_attachment', [ $this, 'set_image' ] );
-		add_action( 'edit_attachment', [ $this, 'set_image' ] );
+		// Update image.
+		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
 
 		// Update status.
-		add_action( 'transition_post_status', [ $this, 'update_status' ], 10, 3 );
+		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
 
 		// Expire listings.
-		add_action( 'hivepress/v1/cron/hourly', [ $this, 'expire_listings' ] );
+		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
-		// Import listings.
-		add_action( 'import_start', [ $this, 'import_listings' ] );
+		// Add submission fields.
+		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
 
 		if ( is_admin() ) {
 
-			// Add states.
-			add_filter( 'display_post_states', [ $this, 'add_states' ], 10, 2 );
+			// Add post states.
+			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
+
 		} else {
 
-			// Add menu items.
-			add_filter( 'hivepress/v1/menus/account', [ $this, 'add_menu_items' ] );
+			// Alter account menu.
+			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
+
+			// Alter templates.
+			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
-	 * Sets vendor.
+	 * Updates listing vendor.
 	 *
-	 * @param int     $listing_id Listing ID.
-	 * @param WP_Post $listing Listing object.
+	 * @param int $listing_id Listing ID.
 	 */
-	public function set_vendor( $listing_id, $listing ) {
+	public function update_vendor( $listing_id ) {
 
 		// Remove action.
-		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
+		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
 
-		// Get user ID.
-		$user_id = absint( $listing->post_author );
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Get vendor ID.
-		$vendor_id = hp\get_post_id(
-			[
-				'post_type'   => 'hp_vendor',
-				'post_status' => 'any',
-				'author'      => $user_id,
-			]
-		);
+		if ( ! $listing->get_user__id() ) {
+			return;
+		}
 
-		if ( 0 === $vendor_id ) {
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
+
+		if ( empty( $vendor ) ) {
+
+			// Get user.
+			$user = $listing->get_user();
 
 			// Add vendor.
-			$vendor_id = wp_insert_post(
+			$vendor = ( new Models\Vendor() )->fill(
 				[
-					'post_title'   => get_userdata( $user_id )->display_name,
-					'post_content' => get_user_meta( $user_id, 'description', true ),
-					'post_type'    => 'hp_vendor',
-					'post_status'  => 'publish',
-					'post_author'  => $user_id,
+					'name'        => $user->get_display_name(),
+					'description' => $user->get_description(),
+					'status'      => 'publish',
+					'image'       => $user->get_image__id(),
+					'user'        => $user->get_id(),
 				]
 			);
 
-			if ( 0 !== $vendor_id ) {
-
-				// Get image ID.
-				$image_id = hp\get_post_id(
-					[
-						'post_type'   => 'attachment',
-						'post_parent' => 0,
-						'author'      => $user_id,
-						'meta_key'    => 'hp_parent_field',
-						'meta_value'  => 'image_id',
-					]
-				);
-
-				if ( 0 !== $image_id ) {
-
-					// Update image.
-					set_post_thumbnail( $vendor_id, $image_id );
-				}
+			if ( ! $vendor->save() ) {
+				return;
 			}
 		}
 
-		if ( 0 !== $vendor_id && ( 0 === $listing->post_parent || $listing->post_parent !== $vendor_id ) ) {
+		if ( $listing->get_vendor__id() !== $vendor->get_id() ) {
 
-			// Set vendor ID.
+			// Update attachments.
+			if ( $listing->get_vendor__id() ) {
+				$attachments = Models\Attachment::query()->filter(
+					[
+						'parent_model' => 'listing',
+						'parent'       => $listing->get_id(),
+					]
+				)->get();
+
+				foreach ( $attachments as $attachment ) {
+					$attachment->set_user( $listing->get_user__id() )->save();
+				}
+			}
+
+			// Set vendor.
 			wp_update_post(
 				[
-					'ID'          => $listing_id,
-					'post_parent' => $vendor_id,
+					'ID'          => $listing->get_id(),
+					'post_parent' => $vendor->get_id(),
 				]
 			);
-
-			if ( 0 !== $listing->post_parent ) {
-
-				// Get attachment IDs.
-				$attachment_ids = get_posts(
-					[
-						'post_type'      => 'attachment',
-						'post_status'    => 'any',
-						'post_parent'    => $listing_id,
-						'posts_per_page' => -1,
-						'fields'         => 'ids',
-					]
-				);
-
-				// Set vendor ID.
-				foreach ( $attachment_ids as $attachment_id ) {
-					wp_update_post(
-						[
-							'ID'          => $attachment_id,
-							'post_author' => $user_id,
-						]
-					);
-				}
-			}
 		}
 	}
 
 	/**
-	 * Sets image.
+	 * Updates listing image.
 	 *
-	 * @param int $attachment_id Attachment ID.
+	 * @param int $listing_id Listing ID.
 	 */
-	public function set_image( $attachment_id ) {
+	public function update_image( $listing_id ) {
 
-		// Get listing ID.
-		$listing_id = wp_get_post_parent_id( $attachment_id );
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		if ( get_post_type( $listing_id ) === 'hp_listing' ) {
+		// Get image IDs.
+		$image_ids = $listing->get_images__id();
 
-			// Get mime type.
-			$mime_type = get_post_mime_type( $attachment_id );
-
-			if ( in_array( $mime_type, [ 'image/jpeg', 'image/png' ], true ) ) {
-
-				// Get image IDs.
-				$image_ids = wp_list_pluck( get_attached_media( 'image', $listing_id ), 'ID' );
-
-				// Set image.
-				if ( ! empty( $image_ids ) ) {
-					set_post_thumbnail( $listing_id, reset( $image_ids ) );
-				}
-			}
-		}
+		// Set image.
+		$listing->set_image( reset( $image_ids ) )->save();
 	}
 
 	/**
-	 * Updates status.
+	 * Updates listing status.
 	 *
-	 * @param string  $new_status New status.
-	 * @param string  $old_status Old status.
-	 * @param WP_Post $listing Listing object.
+	 * @param int    $listing_id Listing ID.
+	 * @param string $new_status New status.
+	 * @param string $old_status Old status.
 	 */
-	public function update_status( $new_status, $old_status, $listing ) {
-		if ( 'hp_listing' === $listing->post_type && $new_status !== $old_status ) {
-			if ( 'pending' === $old_status ) {
+	public function update_status( $listing_id, $new_status, $old_status ) {
 
-				// Get user.
-				$user = get_userdata( $listing->post_author );
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
+		if ( 'pending' === $old_status ) {
+
+			// Get user.
+			$user = $listing->get_user();
+
+			if ( $user ) {
 				if ( 'publish' === $new_status ) {
 
 					// Send approval email.
 					( new Emails\Listing_Approve(
 						[
-							'recipient' => $user->user_email,
+							'recipient' => $user->get_email(),
+
 							'tokens'    => [
-								'user_name'     => $user->display_name,
-								'listing_title' => $listing->post_title,
-								'listing_url'   => get_permalink( $listing->ID ),
+								'user_name'     => $user->get_display_name(),
+								'listing_title' => $listing->get_title(),
+								'listing_url'   => get_permalink( $listing->get_id() ),
 							],
 						]
 					) )->send();
@@ -206,26 +182,27 @@ final class Listing {
 					// Send rejection email.
 					( new Emails\Listing_Reject(
 						[
-							'recipient' => $user->user_email,
+							'recipient' => $user->get_email(),
+
 							'tokens'    => [
-								'user_name'     => $user->display_name,
-								'listing_title' => $listing->post_title,
+								'user_name'     => $user->get_display_name(),
+								'listing_title' => $listing->get_title(),
 							],
 						]
 					) )->send();
 				}
 			}
+		}
 
-			if ( 'publish' === $new_status ) {
+		if ( 'publish' === $new_status ) {
 
-				// Get expiration period.
-				$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
+			// Get expiration period.
+			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
 
-				if ( $expiration_period > 0 && ! metadata_exists( 'post', $listing->ID, 'hp_expiration_time' ) ) {
+			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
-					// Set expiration time.
-					update_post_meta( $listing->ID, 'hp_expiration_time', time() + $expiration_period * DAY_IN_SECONDS );
-				}
+				// Set expiration time.
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save();
 			}
 		}
 	}
@@ -235,116 +212,117 @@ final class Listing {
 	 */
 	public function expire_listings() {
 
-		// Set query arguments.
-		$query_args = [
-			'post_type'      => 'hp_listing',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
+		// Get expired listings.
+		$expired_listings = Models\Listing::query()->filter(
+			[
+				'status'            => 'publish',
+				'expired_time__lte' => time(),
+			]
+		)->get();
 
-			'meta_query'     => [
-				'time_clause' => [
-					'value'   => time(),
-					'compare' => '<=',
-					'type'    => 'NUMERIC',
-				],
-			],
-		];
+		// Update expired listings.
+		foreach ( $expired_listings as $listing ) {
 
-		// Get expirable listings.
-		$expirable_listings = get_posts(
-			hp\merge_arrays(
-				$query_args,
+			// Update listing.
+			$listing->fill(
 				[
-					'meta_query' => [
-						'time_clause' => [
-							'key' => 'hp_expiration_time',
-						],
-					],
+					'status'       => 'trash',
+					'expired_time' => null,
 				]
-			)
-		);
-
-		// Update expirable listings.
-		foreach ( $expirable_listings as $listing ) {
-
-			// Update status.
-			wp_update_post(
-				[
-					'ID'          => $listing->ID,
-					'post_status' => 'trash',
-				]
-			);
-
-			// Delete timestamp.
-			delete_post_meta( $listing->ID, 'hp_expiration_time' );
+			)->save();
 
 			// Send email.
-			$user = get_userdata( $listing->post_author );
+			$user = $listing->get_user();
 
-			if ( false !== $user ) {
+			if ( $user ) {
 				( new Emails\Listing_Expire(
 					[
-						'recipient' => $user->user_email,
+						'recipient' => $user->get_email(),
+
 						'tokens'    => [
-							'user_name'     => $user->display_name,
-							'listing_title' => $listing->post_title,
+							'user_name'     => $user->get_display_name(),
+							'listing_title' => $listing->get_title(),
 						],
 					]
 				) )->send();
 			}
 		}
 
-		// Get featured listing IDs.
-		$featured_listing_ids = get_posts(
-			hp\merge_arrays(
-				$query_args,
-				[
-					'fields'     => 'ids',
-
-					'meta_query' => [
-						'time_clause' => [
-							'key' => 'hp_featuring_time',
-						],
-					],
-				]
-			)
-		);
+		// Get featured listings.
+		$featured_listings = Models\Listing::query()->filter(
+			[
+				'status'             => 'publish',
+				'featured_time__lte' => time(),
+			]
+		)->get();
 
 		// Update featured listings.
-		foreach ( $featured_listing_ids as $listing_id ) {
-
-			// Delete status.
-			delete_post_meta( $listing_id, 'hp_featured' );
-
-			// Delete timestamp.
-			delete_post_meta( $listing_id, 'hp_featuring_time' );
+		foreach ( $featured_listings as $listing ) {
+			$listing->fill(
+				[
+					'featured'      => false,
+					'featured_time' => null,
+				]
+			)->save();
 		}
 	}
 
 	/**
-	 * Imports listings.
+	 * Adds submission fields.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
 	 */
-	public function import_listings() {
-		remove_action( 'save_post_hp_listing', [ $this, 'set_vendor' ] );
-		remove_action( 'add_attachment', [ $this, 'set_image' ] );
-		remove_action( 'edit_attachment', [ $this, 'set_image' ] );
+	public function add_submission_fields( $form ) {
+
+		// Get terms page ID.
+		$page_id = reset(
+			( get_posts(
+				[
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			) )
+		);
+
+		if ( $page_id ) {
+
+			// Add terms field.
+			$form['fields']['_terms'] = [
+				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
+				'type'      => 'checkbox',
+				'required'  => true,
+				'_separate' => true,
+				'_order'    => 1000,
+			];
+		}
+
+		return $form;
 	}
 
 	/**
-	 * Adds states.
+	 * Adds post states.
 	 *
-	 * @param array   $states Listing states.
-	 * @param WP_Post $listing Listing object.
+	 * @param array   $states Post states.
+	 * @param WP_Post $post Post object.
 	 * @return array
 	 */
-	public function add_states( $states, $listing ) {
-		if ( 'hp_listing' === $listing->post_type ) {
-			if ( get_post_meta( $listing->ID, 'hp_featured', true ) ) {
-				$states[] = esc_html__( 'Featured', 'hivepress' );
+	public function add_post_states( $states, $post ) {
+		if ( 'hp_listing' === $post->post_type ) {
+
+			// Get listing.
+			$listing = Models\Listing::query()->get_by_id( $post );
+
+			// Add states.
+			if ( $listing->is_featured() ) {
+				$states[] = esc_html_x( 'Featured', 'listing', 'hivepress' );
 			}
 
-			if ( get_post_meta( $listing->ID, 'hp_verified', true ) ) {
-				$states[] = esc_html__( 'Verified', 'hivepress' );
+			if ( $listing->is_verified() ) {
+				$states[] = esc_html_x( 'Verified', 'listing', 'hivepress' );
 			}
 		}
 
@@ -352,25 +330,69 @@ final class Listing {
 	}
 
 	/**
-	 * Adds menu items.
+	 * Alters account menu.
 	 *
 	 * @param array $menu Menu arguments.
 	 * @return array
 	 */
-	public function add_menu_items( $menu ) {
-		if ( hp\get_post_id(
+	public function alter_account_menu( $menu ) {
+		if ( Models\Listing::query()->filter(
 			[
-				'post_type'   => 'hp_listing',
-				'post_status' => [ 'draft', 'pending', 'publish' ],
-				'author'      => get_current_user_id(),
+				'user'       => get_current_user_id(),
+				'status__in' => [ 'draft', 'pending', 'publish' ],
 			]
-		) !== 0 ) {
-			$menu['items']['edit_listings'] = [
-				'route' => 'listing/edit_listings',
-				'order' => 10,
+		)->get_first_id() ) {
+			$menu['items']['listings_edit'] = [
+				'route'  => 'listings_edit_page',
+				'_order' => 10,
 			];
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Alters listing view blocks.
+	 *
+	 * @param array  $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_listing_view_blocks( $blocks, $template ) {
+
+		// Get listing.
+		$listing = $template->get_context( 'listing' );
+
+		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+
+			// Get classes.
+			$classes = [];
+
+			if ( $listing->is_featured() ) {
+				$classes[] = 'hp-listing--featured';
+			}
+
+			if ( $listing->is_verified() ) {
+				$classes[] = 'hp-listing--verified';
+			}
+
+			// Add classes.
+			if ( $classes ) {
+				$blocks = hp\merge_trees(
+					[ 'blocks' => $blocks ],
+					[
+						'blocks' => [
+							'listing_container' => [
+								'attributes' => [
+									'class' => $classes,
+								],
+							],
+						],
+					]
+				)['blocks'];
+			}
+		}
+
+		return $blocks;
 	}
 }

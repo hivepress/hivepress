@@ -20,20 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Date_Range extends Date {
 
 	/**
-	 * Field type.
-	 *
-	 * @var string
-	 */
-	protected static $type;
-
-	/**
-	 * Field title.
-	 *
-	 * @var string
-	 */
-	protected static $title;
-
-	/**
 	 * Minimum field.
 	 *
 	 * @var object
@@ -50,29 +36,31 @@ class Date_Range extends Date {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $args Field arguments.
+	 * @param array $meta Field meta.
 	 */
-	public static function init( $args = [] ) {
-		$args = hp\merge_arrays(
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
 			[
-				'title' => esc_html__( 'Date Range', 'hivepress' ),
+				'label'    => esc_html__( 'Date Range', 'hivepress' ),
+				'editable' => false,
+				'sortable' => false,
 			],
-			$args
+			$meta
 		);
 
-		parent::init( $args );
+		parent::init( $meta );
 	}
 
 	/**
 	 * Bootstraps field properties.
 	 */
-	protected function bootstrap() {
+	protected function boot() {
 
 		// Create fields.
 		$this->min_field = new Date( array_merge( $this->args, [ 'required' => false ] ) );
 		$this->max_field = new Date( array_merge( $this->args, [ 'required' => false ] ) );
 
-		Field::bootstrap();
+		Field::boot();
 	}
 
 	/**
@@ -84,17 +72,15 @@ class Date_Range extends Date {
 		if ( ! is_null( $this->value ) ) {
 			return $this->min_field->get_display_value() . ' - ' . $this->max_field->get_display_value();
 		}
-
-		return $this->value;
 	}
 
 	/**
-	 * Adds field filters.
+	 * Adds field filter.
 	 */
-	protected function add_filters() {
-		parent::add_filters();
+	protected function add_filter() {
+		parent::add_filter();
 
-		$this->filters['operator'] = 'BETWEEN';
+		$this->filter['operator'] = 'BETWEEN';
 	}
 
 	/**
@@ -140,8 +126,7 @@ class Date_Range extends Date {
 			$this->max_field->validate();
 
 			// Add errors.
-			$this->add_errors( $this->min_field->get_errors() );
-			$this->add_errors( $this->max_field->get_errors() );
+			$this->add_errors( array_unique( array_merge( $this->min_field->get_errors(), $this->max_field->get_errors() ) ) );
 		}
 
 		return empty( $this->errors );
@@ -157,12 +142,16 @@ class Date_Range extends Date {
 
 		// Render date field.
 		$output .= ( new Date(
-			hp\merge_arrays(
+			array_merge(
 				$this->args,
 				[
-					'name'       => null,
-					'default'    => null,
-					'attributes' => [ 'data-mode' => 'range' ],
+					'display_type' => 'text',
+					'name'         => null,
+					'default'      => null,
+
+					'attributes'   => [
+						'data-mode' => 'range',
+					],
 				]
 			)
 		) )->render();
@@ -172,9 +161,11 @@ class Date_Range extends Date {
 			array_merge(
 				$this->args,
 				[
-					'name'     => $this->name . '[]',
-					'required' => false,
-					'default'  => $this->min_field->get_value(),
+					'display_type' => 'hidden',
+					'name'         => $this->name . '[]',
+					'required'     => false,
+					'default'      => $this->min_field->get_value(),
+					'attributes'   => [],
 				]
 			)
 		) )->render();
@@ -183,9 +174,11 @@ class Date_Range extends Date {
 			array_merge(
 				$this->args,
 				[
-					'name'     => $this->name . '[]',
-					'required' => false,
-					'default'  => $this->max_field->get_value(),
+					'display_type' => 'hidden',
+					'name'         => $this->name . '[]',
+					'required'     => false,
+					'default'      => $this->max_field->get_value(),
+					'attributes'   => [],
 				]
 			)
 		) )->render();
