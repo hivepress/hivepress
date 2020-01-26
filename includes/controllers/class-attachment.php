@@ -209,19 +209,19 @@ final class Attachment extends Controller {
 
 		if ( ! $parent_field->is_multiple() ) {
 
-			// Update parent object.
-			$parent->fill(
-				[
-					$parent_field->get_name() => $attachment->get_id(),
-				]
-			)->save();
-
 			// Delete attachments.
 			$attachments->filter(
 				[
 					'id__not_in' => [ $attachment->get_id() ],
 				]
 			)->delete();
+
+			// Update parent object.
+			$parent->fill(
+				[
+					$parent_field->get_name() => $attachment->get_id(),
+				]
+			)->save();
 		} else {
 
 			// Fire update action.
