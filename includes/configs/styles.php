@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'fontawesome'       => [
 		'handle' => 'fontawesome',
-		'src'    => hivepress()->get_url() . '/assets/css/fontawesome.min.css',
+		'src'    => hivepress()->get_url() . '/assets/css/fontawesome/fontawesome.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fontawesome_solid' => [
 		'handle' => 'fontawesome-solid',
-		'src'    => hivepress()->get_url() . '/assets/css/fontawesome-solid.min.css',
+		'src'    => hivepress()->get_url() . '/assets/css/fontawesome/solid.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 

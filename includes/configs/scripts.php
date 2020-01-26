@@ -24,12 +24,12 @@ return [
 
 	'iframe_transport'      => [
 		'handle' => 'iframe-transport',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.iframe-transport.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.iframe-transport.min.js',
 	],
 
 	'fileupload'            => [
 		'handle' => 'fileupload',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.fileupload.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.fileupload.min.js',
 		'deps'   => [ 'jquery-ui-widget', 'iframe-transport' ],
 	],
 
@@ -50,7 +50,7 @@ return [
 
 	'flatpickr'             => [
 		'handle' => 'flatpickr',
-		'src'    => hivepress()->get_url() . '/assets/js/flatpickr.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/flatpickr/flatpickr.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
