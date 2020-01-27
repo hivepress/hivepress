@@ -57,6 +57,9 @@ final class Listing extends Component {
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
 
+			// Alter manage menu.
+			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_manage_menu' ], 10, 2 );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
@@ -395,6 +398,40 @@ final class Listing extends Component {
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Alters manage menu.
+	 *
+	 * @param array  $items Menu items.
+	 * @param object $menu Menu object.
+	 * @return array
+	 */
+	public function alter_manage_menu( $items, $menu ) {
+
+		// Get listing.
+		$listing = $menu->get_context( 'listing' );
+
+		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+			$items = hp\merge_arrays(
+				$items,
+				[
+					'listing_view' => [
+						'label'  => esc_html__( 'View', 'hivepress' ),
+						'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
+						'_order' => 10,
+					],
+
+					'listing_edit' => [
+						'label'  => esc_html__( 'Edit', 'hivepress' ),
+						'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
+						'_order' => 20,
+					],
+				]
+			);
+		}
+
+		return $items;
 	}
 
 	/**
