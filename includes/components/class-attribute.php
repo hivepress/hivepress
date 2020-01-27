@@ -893,6 +893,9 @@ final class Attribute extends Component {
 			return;
 		}
 
+		// Set post type.
+		$query->set( 'post_type', hp\prefix( $model ) );
+
 		// Set status.
 		$query->set( 'post_status', 'publish' );
 

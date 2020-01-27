@@ -44,6 +44,9 @@ final class Listing extends Component {
 		// Add submission fields.
 		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
 
+		// Set category count callback.
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
+
 		if ( is_admin() ) {
 
 			// Add post states.
@@ -301,6 +304,49 @@ final class Listing extends Component {
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Sets category count callback.
+	 *
+	 * @param array $taxonomies Taxonomy arguments.
+	 * @return array
+	 */
+	public function set_category_count_callback( $taxonomies ) {
+		return hp\merge_arrays(
+			$taxonomies,
+			[
+				'listing_category' => [
+					'update_count_callback' => [ $this, 'update_category_count' ],
+				],
+			]
+		);
+	}
+
+	/**
+	 * Updates category count.
+	 *
+	 * @param array $term_taxonomy_ids Term taxonomy IDs.
+	 */
+	public function update_category_count( $term_taxonomy_ids ) {
+		global $wpdb;
+
+		foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
+
+			// Get count.
+			$count = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->term_relationships}
+					INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
+					WHERE post_status = 'publish' AND post_type = %s AND term_taxonomy_id = %d",
+					'hp_listing',
+					$term_taxonomy_id
+				)
+			);
+
+			// Update count.
+			$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_taxonomy_id' => $term_taxonomy_id ] );
+		}
 	}
 
 	/**
