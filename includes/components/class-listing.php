@@ -148,7 +148,11 @@ final class Listing extends Component {
 		$image_ids = $listing->get_images__id();
 
 		// Set image.
-		$listing->set_image( reset( $image_ids ) )->save();
+		if ( $image_ids ) {
+			set_post_thumbnail( $listing->get_id(), reset( $image_ids ) );
+		} else {
+			delete_post_thumbnail( $listing->get_id() );
+		}
 	}
 
 	/**
