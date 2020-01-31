@@ -15,7 +15,7 @@ use HivePress\Helpers as hp;
 						<?php echo esc_html( $tab_args['name'] ); ?>
 						<span class="count">(<?php echo esc_html( $tab_args['count'] ); ?>)</span>
 					</a>
-					<?php if ( end( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
+					<?php if ( hp\get_last_array_value( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -27,7 +27,7 @@ use HivePress\Helpers as hp;
 					<div class="name column-name">
 						<h3>
 							<?php echo esc_html( $extension['name'] ); ?>
-							<img src="<?php echo esc_url( end( $extension['icons'] ) ); ?>" class="plugin-icon" alt="<?php echo esc_attr( $extension['name'] ); ?>">
+							<img src="<?php echo esc_url( hp\get_last_array_value( $extension['icons'] ) ); ?>" class="plugin-icon" alt="<?php echo esc_attr( $extension['name'] ); ?>">
 						</h3>
 					</div>
 					<div class="action-links">

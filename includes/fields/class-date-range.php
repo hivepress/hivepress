@@ -102,8 +102,8 @@ class Date_Range extends Date {
 	protected function sanitize() {
 
 		// Set field values.
-		$this->min_field->set_value( reset( $this->value ) );
-		$this->max_field->set_value( end( $this->value ) );
+		$this->min_field->set_value( hp\get_first_array_value( $this->value ) );
+		$this->max_field->set_value( hp\get_last_array_value( $this->value ) );
 
 		// Set range value.
 		$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );

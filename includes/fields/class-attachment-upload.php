@@ -106,7 +106,7 @@ class Attachment_Upload extends Field {
 			}
 		} elseif ( ! $this->multiple && is_array( $this->value ) ) {
 			if ( $this->value ) {
-				$this->value = reset( $this->value );
+				$this->value = hp\get_first_array_value( $this->value );
 			} else {
 				$this->value = null;
 			}

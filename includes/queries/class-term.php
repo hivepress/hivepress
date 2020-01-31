@@ -114,8 +114,8 @@ class Term extends Query {
 		$args = hp\get_array_value( $this->args, $this->get_alias( 'order' ) );
 
 		if ( is_array( $args ) && $args ) {
-			$this->args[ $this->get_alias( 'order' ) ] = reset( ( array_keys( $args ) ) );
-			$this->args['order']                       = reset( $args );
+			$this->args[ $this->get_alias( 'order' ) ] = hp\get_first_array_value( array_keys( $args ) );
+			$this->args['order']                       = hp\get_first_array_value( $args );
 		}
 
 		return $this;

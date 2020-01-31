@@ -108,8 +108,8 @@ final class User extends Component {
 	public function add_registration_fields( $form ) {
 
 		// Get terms page ID.
-		$page_id = reset(
-			( get_posts(
+		$page_id = hp\get_first_array_value(
+			get_posts(
 				[
 					'post_type'      => 'page',
 					'post_status'    => 'publish',
@@ -117,7 +117,7 @@ final class User extends Component {
 					'posts_per_page' => 1,
 					'fields'         => 'ids',
 				]
-			) )
+			)
 		);
 
 		if ( $page_id ) {

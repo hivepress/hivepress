@@ -131,7 +131,7 @@ class Listing_Category extends Term {
 				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
 
 				if ( $urls ) {
-					$this->values[ $name ] = reset( $urls );
+					$this->values[ $name ] = hp\get_first_array_value( $urls );
 				}
 			}
 		}

@@ -213,7 +213,7 @@ class Listing extends Post {
 					$urls = wp_get_attachment_image_src( $image_id, $size );
 
 					if ( $urls ) {
-						$image_urls[] = reset( $urls );
+						$image_urls[] = hp\get_first_array_value( $urls );
 					}
 				}
 			}

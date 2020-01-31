@@ -112,7 +112,7 @@ final class Hook extends Component {
 		}
 
 		// Get action.
-		$action = end( ( explode( '_', current_action() ) ) );
+		$action = hp\get_last_array_value( explode( '_', current_action() ) );
 
 		if ( 'register' === $action ) {
 			$action = 'create';
@@ -176,7 +176,7 @@ final class Hook extends Component {
 		if ( $model || strpos( $post_type, 'hp_' ) === 0 ) {
 
 			// Get action.
-			$action = reset( ( explode( '_', current_action() ) ) );
+			$action = hp\get_first_array_value( explode( '_', current_action() ) );
 
 			if ( 'save' === $action ) {
 				if ( $update ) {
@@ -344,7 +344,7 @@ final class Hook extends Component {
 		if ( $model || strpos( $taxonomy, 'hp_' ) === 0 ) {
 
 			// Get action.
-			$action = reset( ( explode( '_', current_action() ) ) );
+			$action = hp\get_first_array_value( explode( '_', current_action() ) );
 
 			if ( 'edit' === $action ) {
 				$action = 'update';
@@ -418,7 +418,7 @@ final class Hook extends Component {
 		if ( $model || strpos( $comment_type, 'hp_' ) === 0 ) {
 
 			// Get action.
-			$action = reset( ( explode( '_', preg_replace( '/^wp_/', '', current_action() ) ) ) );
+			$action = hp\get_first_array_value( explode( '_', preg_replace( '/^wp_/', '', current_action() ) ) );
 
 			if ( 'insert' === $action ) {
 				$action = 'create';

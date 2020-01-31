@@ -60,7 +60,7 @@ abstract class Comment extends Model {
 		// Get comment meta.
 		$meta = array_map(
 			function( $values ) {
-				return reset( $values );
+				return hp\get_first_array_value( $values );
 			},
 			get_comment_meta( $comment['comment_ID'] )
 		);

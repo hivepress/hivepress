@@ -60,7 +60,7 @@ abstract class Term extends Model {
 		// Get term meta.
 		$meta = array_map(
 			function( $values ) {
-				return reset( $values );
+				return hp\get_first_array_value( $values );
 			},
 			get_term_meta( $term['term_id'] )
 		);
@@ -121,7 +121,7 @@ abstract class Term extends Model {
 			$ids = wp_insert_term( uniqid(), static::_get_meta( 'alias' ), $term );
 
 			if ( ! is_wp_error( $ids ) ) {
-				$this->set_id( reset( $ids ) );
+				$this->set_id( hp\get_first_array_value( $ids ) );
 
 				$created = true;
 			} else {

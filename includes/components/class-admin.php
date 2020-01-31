@@ -188,7 +188,7 @@ final class Admin extends Component {
 		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
 
 			// Validate settings field.
-			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), reset( $args ) );
+			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), hp\get_first_array_value( $args ) );
 		}
 
 		throw new \BadMethodCallException();
@@ -407,7 +407,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
@@ -585,7 +585,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( $this->get_extensions_tabs() );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.

@@ -75,6 +75,40 @@ function get_array_value( $array, $key, $default = null ) {
 }
 
 /**
+ * Gets first array item value.
+ *
+ * @param array $array Source array.
+ * @param mixed $default Default value.
+ * @return mixed
+ */
+function get_first_array_value( $array, $default = null ) {
+	$value = $default;
+
+	if ( is_array( $array ) && $array ) {
+		$value = reset( $array );
+	}
+
+	return $value;
+}
+
+/**
+ * Gets last array item value.
+ *
+ * @param array $array Source array.
+ * @param mixed $default Default value.
+ * @return mixed
+ */
+function get_last_array_value( $array, $default = null ) {
+	$value = $default;
+
+	if ( is_array( $array ) && $array ) {
+		$value = end( $array );
+	}
+
+	return $value;
+}
+
+/**
  * Searches array item value by keys.
  *
  * @param array $array Source array.
@@ -86,7 +120,7 @@ function search_array_value( $array, $keys ) {
 
 	foreach ( $keys as $key ) {
 		if ( isset( $array[ $key ] ) ) {
-			if ( end( $keys ) === $key ) {
+			if ( get_last_array_value( $keys ) === $key ) {
 				return $array[ $key ];
 			} elseif ( is_array( $array[ $key ] ) ) {
 				$array = $array[ $key ];
@@ -144,9 +178,9 @@ function merge_arrays() {
 function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = null ) {
 	if ( is_null( $tree_key ) ) {
 		if ( $parent_tree ) {
-			$tree_key = reset( ( array_keys( $parent_tree ) ) );
+			$tree_key = get_first_array_value( array_keys( $parent_tree ) );
 		} elseif ( $child_tree ) {
-			$tree_key = reset( ( array_keys( $child_tree ) ) );
+			$tree_key = get_first_array_value( array_keys( $child_tree ) );
 		}
 	}
 

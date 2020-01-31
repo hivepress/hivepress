@@ -149,7 +149,7 @@ final class Listing extends Component {
 
 		// Set image.
 		if ( $image_ids ) {
-			set_post_thumbnail( $listing->get_id(), reset( $image_ids ) );
+			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
 		} else {
 			delete_post_thumbnail( $listing->get_id() );
 		}
@@ -286,8 +286,8 @@ final class Listing extends Component {
 	public function add_submission_fields( $form ) {
 
 		// Get terms page ID.
-		$page_id = reset(
-			( get_posts(
+		$page_id = hp\get_first_array_value(
+			get_posts(
 				[
 					'post_type'      => 'page',
 					'post_status'    => 'publish',
@@ -295,7 +295,7 @@ final class Listing extends Component {
 					'posts_per_page' => 1,
 					'fields'         => 'ids',
 				]
-			) )
+			)
 		);
 
 		if ( $page_id ) {

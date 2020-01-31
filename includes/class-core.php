@@ -295,7 +295,7 @@ final class Core {
 				$extension = 'core';
 
 				if ( $args ) {
-					$extension = reset( $args );
+					$extension = hp\get_first_array_value( $args );
 				}
 
 				// Get property value.
