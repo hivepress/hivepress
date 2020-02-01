@@ -58,6 +58,7 @@ final class Vendor extends Component {
 				'image'       => $user->get_image__id(),
 				'name'        => $user->get_display_name(),
 				'description' => $user->get_description(),
+				'slug'        => $user->get_username(),
 			]
 		)->save();
 	}
