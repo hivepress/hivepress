@@ -20,7 +20,7 @@
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
-				messageContainer = form.find(hivepress.getSelector('messages')).eq(0),
+				messageContainer = form.find(hivepress.getSelector('messages')).first(),
 				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
@@ -135,6 +135,7 @@
 			var field = $(this),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
+				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
 				responseContainer = selectLabel.parent().children('div').first();
 
 			field.fileupload({
@@ -153,6 +154,8 @@
 
 					selectButton.prop('disabled', true);
 					selectButton.attr('data-state', 'loading');
+
+					messageContainer.hide().html('');
 				},
 				stop: function() {
 					field.prop('disabled', false);
@@ -160,15 +163,29 @@
 					selectButton.prop('disabled', false);
 					selectButton.attr('data-state', '');
 				},
-				done: function(e, data) {
-					if (data.result.hasOwnProperty('data')) {
+				always: function(e, data) {
+					var response = data.jqXHR.responseJSON;
+
+					if (response.hasOwnProperty('data')) {
 						if (field.prop('multiple')) {
-							responseContainer.append(data.result.data.html);
+							responseContainer.append(response.data.html);
 						} else {
-							responseContainer.html(data.result.data.html);
+							responseContainer.html(response.data.html);
+						}
+					} else if (response.hasOwnProperty('error')) {
+						if (response.error.hasOwnProperty('errors')) {
+							$.each(response.error.errors, function(index, error) {
+								messageContainer.append('<div>' + error.message + '</div>');
+							});
+						} else if (response.error.hasOwnProperty('message')) {
+							messageContainer.html('<div>' + response.error.message + '</div>');
+						}
+
+						if (!messageContainer.is(':empty')) {
+							messageContainer.show();
 						}
 					}
-				}
+				},
 			});
 		});
 
@@ -217,8 +234,8 @@
 		hivepress.getComponent('range-slider').each(function() {
 			var container = $(this),
 				fields = $(this).find('input[type=number]'),
-				minField = fields.eq(0),
-				maxField = fields.eq(1),
+				minField = fields.first(),
+				maxField = fields.last(),
 				slider = null;
 
 			if (!minField.val()) {
