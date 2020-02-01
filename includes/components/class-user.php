@@ -32,7 +32,7 @@ final class User extends Component {
 		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ], 10, 2 );
 
 		// Update user.
-		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user' ] );
+		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_user' ] );
 
 		// Add registration fields.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ] );
@@ -86,7 +86,7 @@ final class User extends Component {
 	public function update_user( $user_id ) {
 
 		// Remove action.
-		remove_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user' ] );
+		remove_action( 'hivepress/v1/models/user/update', [ $this, 'update_user' ] );
 
 		// Get user.
 		$user = Models\User::query()->get_by_id( $user_id );

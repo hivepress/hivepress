@@ -28,9 +28,7 @@ final class Vendor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update vendor.
-		add_action( 'hivepress/v1/models/user/update_image', [ $this, 'update_vendor' ] );
-		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_vendor' ] );
-		add_action( 'hivepress/v1/models/user/update_description', [ $this, 'update_vendor' ] );
+		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_vendor' ], 100 );
 
 		parent::__construct( $args );
 	}
