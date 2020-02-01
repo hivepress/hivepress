@@ -37,6 +37,10 @@
 				submitButton.prop('disabled', true);
 				submitButton.attr('data-state', 'loading');
 
+				if (typeof tinyMCE !== 'undefined') {
+					tinyMCE.triggerSave();
+				}
+
 				if (form.data('action')) {
 					$.ajax({
 						url: form.data('action'),
