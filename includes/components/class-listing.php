@@ -97,6 +97,7 @@ final class Listing extends Component {
 				[
 					'name'        => $user->get_display_name(),
 					'description' => $user->get_description(),
+					'slug'        => $user->get_username(),
 					'status'      => 'publish',
 					'image'       => $user->get_image__id(),
 					'user'        => $user->get_id(),
