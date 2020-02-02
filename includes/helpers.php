@@ -77,6 +77,7 @@ function get_array_value( $array, $key, $default = null ) {
 /**
  * Gets first array item value.
  *
+ * @since 1.3.1
  * @param array $array Source array.
  * @param mixed $default Default value.
  * @return mixed
@@ -94,6 +95,7 @@ function get_first_array_value( $array, $default = null ) {
 /**
  * Gets last array item value.
  *
+ * @since 1.3.1
  * @param array $array Source array.
  * @param mixed $default Default value.
  * @return mixed
