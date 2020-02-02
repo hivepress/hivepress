@@ -188,7 +188,7 @@ final class Admin extends Component {
 		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
 
 			// Validate settings field.
-			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), reset( $args ) );
+			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), hp\get_first_array_value( $args ) );
 		}
 
 		throw new \BadMethodCallException();
@@ -407,7 +407,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
@@ -585,7 +585,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( $this->get_extensions_tabs() );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
@@ -1140,11 +1140,11 @@ final class Admin extends Component {
 		$notices = apply_filters( 'hivepress/v1/admin_notices', $notices );
 
 		// Remove dismissed notices.
-		$notices = array_diff_key( $notices, array_flip( (array) get_option( 'hp_admin_dismissed_notices' ) ) );
+		$notices = array_diff_key( $notices, array_flip( array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) ) ) );
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {
-			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action' ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
+			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $notice_name ] ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
 		}
 
 		// Render settings errors.

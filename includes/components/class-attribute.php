@@ -368,7 +368,7 @@ final class Attribute extends Component {
 		$model = $meta_box['model'];
 
 		// Get field context.
-		$field_context = end( ( explode( '_', $meta_box['name'] ) ) );
+		$field_context = hp\get_last_array_value( explode( '_', $meta_box['name'] ) );
 
 		// Get field type.
 		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
@@ -559,7 +559,7 @@ final class Attribute extends Component {
 	public function add_search_fields( $form_args, $form ) {
 
 		// Get form context.
-		$form_context = end( ( explode( '_', $form::get_meta( 'name' ) ) ) );
+		$form_context = hp\get_last_array_value( explode( '_', $form::get_meta( 'name' ) ) );
 
 		// Get model.
 		$model = $form::get_meta( 'model' );
@@ -797,8 +797,20 @@ final class Attribute extends Component {
 
 					// Get range.
 					$range = [
-						floatval( get_post_meta( reset( ( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ) ), hp\prefix( $field_name ), true ) ),
-						floatval( get_post_meta( reset( ( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ) ), hp\prefix( $field_name ), true ) ),
+						floatval(
+							get_post_meta(
+								hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
+								hp\prefix( $field_name ),
+								true
+							)
+						),
+						floatval(
+							get_post_meta(
+								hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
+								hp\prefix( $field_name ),
+								true
+							)
+						),
 					];
 
 					// Cache range.
@@ -816,9 +828,9 @@ final class Attribute extends Component {
 				}
 
 				// Set range values.
-				if ( reset( $range ) !== end( $range ) ) {
-					$form_args['fields'][ $field_name ]['min_value'] = reset( $range );
-					$form_args['fields'][ $field_name ]['max_value'] = end( $range );
+				if ( hp\get_first_array_value( $range ) !== hp\get_last_array_value( $range ) ) {
+					$form_args['fields'][ $field_name ]['min_value'] = hp\get_first_array_value( $range );
+					$form_args['fields'][ $field_name ]['max_value'] = hp\get_last_array_value( $range );
 				}
 			}
 		}
@@ -892,6 +904,9 @@ final class Attribute extends Component {
 		if ( empty( $model ) ) {
 			return;
 		}
+
+		// Set post type.
+		$query->set( 'post_type', hp\prefix( $model ) );
 
 		// Set status.
 		$query->set( 'post_status', 'publish' );

@@ -53,7 +53,7 @@ class Listing_Edit_Page extends User_Account_Page {
 							'listing_update_form'  => [
 								'type'   => 'form',
 								'form'   => 'listing_update',
-								'_order' => 10,
+								'_order' => 20,
 
 								'footer' => [
 									'form_actions' => [

@@ -79,17 +79,17 @@ class Toggle extends Block {
 			$attributes['data-url']       = esc_url( $this->url );
 
 			if ( $this->active ) {
-				$attributes['data-caption'] = reset( $this->captions );
+				$attributes['data-caption'] = hp\get_first_array_value( $this->captions );
 				$attributes['data-state']   = 'active';
 
 				if ( 'icon' === $this->view ) {
-					$attributes['title'] = end( $this->captions );
+					$attributes['title'] = hp\get_last_array_value( $this->captions );
 				}
 			} else {
-				$attributes['data-caption'] = end( $this->captions );
+				$attributes['data-caption'] = hp\get_last_array_value( $this->captions );
 
 				if ( 'icon' === $this->view ) {
-					$attributes['title'] = reset( $this->captions );
+					$attributes['title'] = hp\get_first_array_value( $this->captions );
 				}
 			}
 		} else {
@@ -119,9 +119,9 @@ class Toggle extends Block {
 			$output .= '<span>';
 
 			if ( $this->active ) {
-				$output .= esc_html( end( $this->captions ) );
+				$output .= esc_html( hp\get_last_array_value( $this->captions ) );
 			} else {
-				$output .= esc_html( reset( $this->captions ) );
+				$output .= esc_html( hp\get_first_array_value( $this->captions ) );
 			}
 
 			$output .= '</span>';

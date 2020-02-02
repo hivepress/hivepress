@@ -399,7 +399,7 @@ abstract class Query extends \ArrayObject {
 
 		$objects = $query->limit( 1 )->get()->serialize();
 
-		return empty( $objects ) ? null : reset( $objects );
+		return empty( $objects ) ? null : hp\get_first_array_value( $objects );
 	}
 
 	/**
@@ -412,7 +412,7 @@ abstract class Query extends \ArrayObject {
 
 		$ids = $query->limit( 1 )->get_ids();
 
-		return empty( $ids ) ? null : reset( $ids );
+		return empty( $ids ) ? null : hp\get_first_array_value( $ids );
 	}
 
 	/**

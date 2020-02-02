@@ -101,7 +101,7 @@ final class Attachment extends Component {
 	public function delete_attachments( $parent_id, $parent_alias ) {
 
 		// Get parent type.
-		$parent_type = reset( ( array_slice( explode( '/', current_action() ), -2, 1 ) ) );
+		$parent_type = hp\get_first_array_value( array_slice( explode( '/', current_action() ), -2, 1 ) );
 
 		// Get parent model.
 		$parent_model = hivepress()->model->get_model_name( $parent_type, $parent_alias );

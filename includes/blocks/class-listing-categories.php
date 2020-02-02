@@ -154,7 +154,7 @@ class Listing_Categories extends Block {
 		$query = Models\Listing_Category::query()->limit( $this->number );
 
 		// Set parent.
-		$query->filter( [ 'parent' => $this->parent ] );
+		$query->filter( [ 'parent' => absint( $this->parent ) ] );
 
 		// Set order.
 		if ( 'name' === $this->order ) {

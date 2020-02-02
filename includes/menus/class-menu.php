@@ -111,6 +111,21 @@ abstract class Menu {
 	 */
 	protected function boot() {
 
+		// Filter items.
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters menu items.
+			 *
+			 * @filter /menus/{$name}/items
+			 * @description Filters menu items.
+			 * @param string $name Menu name.
+			 * @param array $items Menu items.
+			 * @param object $object Menu object.
+			 */
+			$this->items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $this->items, $this );
+		}
+
 		// Set class.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,

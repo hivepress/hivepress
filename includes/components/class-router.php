@@ -191,7 +191,7 @@ final class Router extends Component {
 
 		array_shift( $params );
 
-		return reset( $params );
+		return hp\get_first_array_value( $params );
 	}
 
 	/**
@@ -314,7 +314,7 @@ final class Router extends Component {
 	 */
 	public function add_rewrite_rules() {
 		foreach ( $this->get_routes() as $name => $route ) {
-			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) ) {
+			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) && ( isset( $route['redirect'] ) || isset( $route['action'] ) ) ) {
 
 				// Get URL params.
 				$params = $this->get_url_params( $name );

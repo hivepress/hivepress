@@ -81,8 +81,8 @@ final class Cache extends Component {
 		if ( is_array( $matches ) && count( $matches ) === 3 ) {
 			array_shift( $matches );
 
-			$method = reset( $matches ) . '_meta_cache';
-			$type   = end( $matches );
+			$method = hp\get_first_array_value( $matches ) . '_meta_cache';
+			$type   = hp\get_last_array_value( $matches );
 
 			if ( method_exists( $this, $method ) ) {
 				return call_user_func_array( [ $this, $method ], array_merge( [ $type ], $args ) );

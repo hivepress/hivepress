@@ -201,7 +201,7 @@ final class User extends Controller {
 		}
 
 		// Get username.
-		$username = reset( ( explode( '@', $form->get_value( 'email' ) ) ) );
+		$username = hp\get_first_array_value( explode( '@', $form->get_value( 'email' ) ) );
 
 		if ( $form->get_value( 'username' ) ) {
 			$username = $form->get_value( 'username' );
@@ -582,7 +582,7 @@ final class User extends Controller {
 		$menu_items = ( new Menus\User_Account() )->get_items();
 
 		if ( $menu_items ) {
-			return hp\get_array_value( reset( $menu_items ), 'url' );
+			return hp\get_array_value( hp\get_first_array_value( $menu_items ), 'url' );
 		}
 
 		return true;

@@ -43,6 +43,12 @@ class Vendor extends Post {
 						'_alias'     => 'post_content',
 					],
 
+					'slug'            => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'post_name',
+					],
+
 					'status'          => [
 						'type'       => 'text',
 						'max_length' => 128,

@@ -25,7 +25,7 @@ final class Translator extends Component {
 	 * @return string
 	 */
 	public function get_language() {
-		return reset( ( explode( '_', get_locale() ) ) );
+		return hp\get_first_array_value( explode( '_', get_locale() ) );
 	}
 
 	/**
@@ -37,7 +37,7 @@ final class Translator extends Component {
 		$parts = explode( '_', get_locale() );
 
 		if ( count( $parts ) > 1 ) {
-			return end( $parts );
+			return hp\get_last_array_value( $parts );
 		}
 	}
 

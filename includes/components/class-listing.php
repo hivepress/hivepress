@@ -44,6 +44,9 @@ final class Listing extends Component {
 		// Add submission fields.
 		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
 
+		// Set category count callback.
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
+
 		if ( is_admin() ) {
 
 			// Add post states.
@@ -53,6 +56,9 @@ final class Listing extends Component {
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
+
+			// Alter manage menu.
+			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_manage_menu' ], 10, 2 );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
@@ -91,6 +97,7 @@ final class Listing extends Component {
 				[
 					'name'        => $user->get_display_name(),
 					'description' => $user->get_description(),
+					'slug'        => $user->get_username(),
 					'status'      => 'publish',
 					'image'       => $user->get_image__id(),
 					'user'        => $user->get_id(),
@@ -142,7 +149,11 @@ final class Listing extends Component {
 		$image_ids = $listing->get_images__id();
 
 		// Set image.
-		$listing->set_image( reset( $image_ids ) )->save();
+		if ( $image_ids ) {
+			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
+		} else {
+			delete_post_thumbnail( $listing->get_id() );
+		}
 	}
 
 	/**
@@ -276,8 +287,8 @@ final class Listing extends Component {
 	public function add_submission_fields( $form ) {
 
 		// Get terms page ID.
-		$page_id = reset(
-			( get_posts(
+		$page_id = hp\get_first_array_value(
+			get_posts(
 				[
 					'post_type'      => 'page',
 					'post_status'    => 'publish',
@@ -285,7 +296,7 @@ final class Listing extends Component {
 					'posts_per_page' => 1,
 					'fields'         => 'ids',
 				]
-			) )
+			)
 		);
 
 		if ( $page_id ) {
@@ -301,6 +312,49 @@ final class Listing extends Component {
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Sets category count callback.
+	 *
+	 * @param array $taxonomies Taxonomy arguments.
+	 * @return array
+	 */
+	public function set_category_count_callback( $taxonomies ) {
+		return hp\merge_arrays(
+			$taxonomies,
+			[
+				'listing_category' => [
+					'update_count_callback' => [ $this, 'update_category_count' ],
+				],
+			]
+		);
+	}
+
+	/**
+	 * Updates category count.
+	 *
+	 * @param array $term_taxonomy_ids Term taxonomy IDs.
+	 */
+	public function update_category_count( $term_taxonomy_ids ) {
+		global $wpdb;
+
+		foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
+
+			// Get count.
+			$count = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->term_relationships}
+					INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
+					WHERE post_status = 'publish' AND post_type = %s AND term_taxonomy_id = %d",
+					'hp_listing',
+					$term_taxonomy_id
+				)
+			);
+
+			// Update count.
+			$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_taxonomy_id' => $term_taxonomy_id ] );
+		}
 	}
 
 	/**
@@ -349,6 +403,40 @@ final class Listing extends Component {
 		}
 
 		return $menu;
+	}
+
+	/**
+	 * Alters manage menu.
+	 *
+	 * @param array  $items Menu items.
+	 * @param object $menu Menu object.
+	 * @return array
+	 */
+	public function alter_manage_menu( $items, $menu ) {
+
+		// Get listing.
+		$listing = $menu->get_context( 'listing' );
+
+		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+			$items = hp\merge_arrays(
+				$items,
+				[
+					'listing_view' => [
+						'label'  => esc_html__( 'View', 'hivepress' ),
+						'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
+						'_order' => 10,
+					],
+
+					'listing_edit' => [
+						'label'  => esc_html__( 'Edit', 'hivepress' ),
+						'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
+						'_order' => 20,
+					],
+				]
+			);
+		}
+
+		return $items;
 	}
 
 	/**
