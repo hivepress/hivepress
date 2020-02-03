@@ -1118,7 +1118,7 @@ final class Admin extends Component {
 					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
 
 					// Add notice.
-					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) ) {
+					if ( version_compare( wp_get_theme( get_template() )->get( 'Version' ), $theme['version'], '<' ) ) {
 						$notices[ $notice_name ] = [
 							'type' => 'warning',
 							'text' => sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ),
