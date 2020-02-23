@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-02 18:24+0000\n"
-"PO-Revision-Date: 2020-02-20 19:02+0000\n"
+"POT-Creation-Date: 2020-02-20 19:09+0000\n"
+"PO-Revision-Date: 2020-02-20 19:09+0000\n"
 "Last-Translator: admin <admin@hivepress.local>\n"
 "Language-Team: Polski\n"
 "Language: pl_PL\n"
@@ -144,6 +144,15 @@ msgstr "Edytuj opcje"
 msgctxt "field"
 msgid "requires review"
 msgstr "wymaga sprawdzenia"
+
+#: includes/components/class-attribute.php:618
+msgid "Relevance"
+msgstr "Trafność"
+
+#: includes/components/class-attribute.php:620
+#: includes/fields/class-date.php:65
+msgid "Date"
+msgstr "Data"
 
 #: includes/components/class-attribute.php:708
 msgid "All Categories"
@@ -871,10 +880,6 @@ msgstr "Przyciski wyboru"
 #: includes/fields/class-date-range.php:44
 msgid "Date Range"
 msgstr "Zakres dat"
-
-#: includes/fields/class-date.php:65
-msgid "Date"
-msgstr "Data"
 
 #: includes/fields/class-date.php:72 includes/fields/class-number.php:65
 #: includes/fields/class-text.php:64

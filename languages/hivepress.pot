@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-02 18:24+0000\n"
+"POT-Creation-Date: 2020-02-20 19:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -139,6 +139,15 @@ msgstr ""
 #: includes/components/class-attribute.php:539
 msgctxt "field"
 msgid "requires review"
+msgstr ""
+
+#: includes/components/class-attribute.php:618
+msgid "Relevance"
+msgstr ""
+
+#: includes/components/class-attribute.php:620
+#: includes/fields/class-date.php:65
+msgid "Date"
 msgstr ""
 
 #: includes/components/class-attribute.php:708
@@ -842,10 +851,6 @@ msgstr ""
 
 #: includes/fields/class-date-range.php:44
 msgid "Date Range"
-msgstr ""
-
-#: includes/fields/class-date.php:65
-msgid "Date"
 msgstr ""
 
 #: includes/fields/class-date.php:72 includes/fields/class-number.php:65
