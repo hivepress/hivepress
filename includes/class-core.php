@@ -171,7 +171,7 @@ final class Core {
 			}
 		}
 
-		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), hivepress()->get_version(), '<' ) ) {
+		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), $this->get_version(), '<' ) ) {
 
 			if ( get_option( 'hp_core_version' ) ) {
 
@@ -186,7 +186,7 @@ final class Core {
 			}
 
 			// Update HivePress version.
-			update_option( 'hp_core_version', hivepress()->get_version() );
+			update_option( 'hp_core_version', $this->get_version() );
 		}
 	}
 
@@ -199,7 +199,7 @@ final class Core {
 		$this->setup_extensions();
 
 		// Include helpers.
-		require_once hivepress()->get_path() . '/includes/helpers.php';
+		require_once $this->get_path() . '/includes/helpers.php';
 
 		// Load textdomains.
 		$this->load_textdomains();
