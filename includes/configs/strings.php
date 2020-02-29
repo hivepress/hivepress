@@ -31,6 +31,7 @@ return [
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),
 	'listings'                                  => esc_html__( 'Listings', 'hivepress' ),
+	'all_listings'                              => esc_html__( 'All Listings', 'hivepress' ),
 	'listings_by_vendor'                        => esc_html__( 'Listings by %s', 'hivepress' ),
 	'featuring_of_listings'                     => esc_html__( 'Featuring of Listings', 'hivepress' ),
 	'featured_listings'                         => esc_html__( 'Featured Listings', 'hivepress' ),

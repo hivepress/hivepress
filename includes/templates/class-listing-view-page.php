@@ -41,7 +41,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_title'                => [
 								'type'       => 'container',
 								'tag'        => 'h1',
-								'_order'     => 10,
+								'_order'     => 5,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__title' ],
@@ -60,6 +60,12 @@ class Listing_View_Page extends Page_Sidebar_Right {
 										'_order' => 20,
 									],
 								],
+							],
+
+							'listing_manage_menu'          => [
+								'type'   => 'menu',
+								'menu'   => 'listing_manage',
+								'_order' => 10,
 							],
 
 							'listing_details_primary'      => [

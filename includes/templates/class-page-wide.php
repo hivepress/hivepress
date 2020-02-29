@@ -40,10 +40,16 @@ abstract class Page_Wide extends Page {
 								],
 
 								'blocks'     => [
-									'page_title' => [
+									'breadcrumb_menu' => [
+										'type'   => 'menu',
+										'menu'   => 'breadcrumb',
+										'_order' => 10,
+									],
+
+									'page_title'      => [
 										'type'   => 'part',
 										'path'   => 'page/page-title',
-										'_order' => 5,
+										'_order' => 20,
 									],
 								],
 							],
