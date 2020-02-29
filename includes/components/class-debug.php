@@ -50,9 +50,6 @@ final class Debug extends Component {
 		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );
 		add_filter( 'hivetheme/v1/scripts', [ $this, 'alter_scripts' ] );
 
-		// Log emails.
-		add_filter( 'wp_mail', [ $this, 'log_email' ] );
-
 		parent::__construct( $args );
 	}
 
@@ -87,7 +84,7 @@ final class Debug extends Component {
 		foreach ( $styles as $name => $style ) {
 			$parts = explode( '/', hp\get_array_value( $style, 'src' ) );
 
-			if ( in_array( end( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css' ], true ) ) {
+			if ( in_array( hp\get_last_array_value( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css' ], true ) ) {
 				$this->styles[] = $style;
 
 				unset( $styles[ $name ] );
@@ -126,23 +123,11 @@ final class Debug extends Component {
 		foreach ( $scripts as $name => $script ) {
 			$parts = explode( '/', hp\get_array_value( $script, 'src' ) );
 
-			if ( in_array( end( $parts ), [ 'frontend.min.js', 'backend.min.js', 'common.min.js' ], true ) ) {
+			if ( in_array( hp\get_last_array_value( $parts ), [ 'frontend.min.js', 'backend.min.js', 'common.min.js' ], true ) ) {
 				$scripts[ $name ]['src'] = preg_replace( '/\.min\.js$/', '.js', $scripts[ $name ]['src'] );
 			}
 		}
 
 		return $scripts;
-	}
-
-	/**
-	 * Logs email.
-	 *
-	 * @param array $args Email arguments.
-	 * @return array
-	 */
-	public function log_email( $args ) {
-		error_log( hp\get_array_value( $args, 'message' ) );
-
-		return $args;
 	}
 }

@@ -188,7 +188,7 @@ final class Admin extends Component {
 		} elseif ( strpos( $name, 'validate_' ) === 0 ) {
 
 			// Validate settings field.
-			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), reset( $args ) );
+			return $this->validate_settings_field( substr( $name, strlen( 'validate_' ) ), hp\get_first_array_value( $args ) );
 		}
 
 		throw new \BadMethodCallException();
@@ -407,7 +407,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
@@ -585,7 +585,7 @@ final class Admin extends Component {
 		// Get all tabs.
 		$tabs = array_keys( $this->get_extensions_tabs() );
 
-		$first_tab   = reset( $tabs );
+		$first_tab   = hp\get_first_array_value( $tabs );
 		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
 
 		// Set the default tab.
@@ -1118,7 +1118,7 @@ final class Admin extends Component {
 					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
 
 					// Add notice.
-					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) ) {
+					if ( version_compare( wp_get_theme( get_template() )->get( 'Version' ), $theme['version'], '<' ) ) {
 						$notices[ $notice_name ] = [
 							'type' => 'warning',
 							'text' => sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ),
@@ -1140,7 +1140,7 @@ final class Admin extends Component {
 		$notices = apply_filters( 'hivepress/v1/admin_notices', $notices );
 
 		// Remove dismissed notices.
-		$notices = array_diff_key( $notices, array_flip( (array) get_option( 'hp_admin_dismissed_notices' ) ) );
+		$notices = array_diff_key( $notices, array_flip( array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) ) ) );
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {

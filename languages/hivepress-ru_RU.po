@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-25 21:38+0000\n"
-"PO-Revision-Date: 2020-01-25 21:38+0000\n"
-"Last-Translator: Tiesto <admin@admin.com>\n"
+"POT-Creation-Date: 2020-02-20 19:09+0000\n"
+"PO-Revision-Date: 2020-02-20 19:10+0000\n"
+"Last-Translator: admin <admin@hivepress.local>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -145,6 +145,15 @@ msgctxt "field"
 msgid "requires review"
 msgstr "требует проверки"
 
+#: includes/components/class-attribute.php:618
+msgid "Relevance"
+msgstr "Релевантность"
+
+#: includes/components/class-attribute.php:620
+#: includes/fields/class-date.php:65
+msgid "Date"
+msgstr "Дата"
+
 #: includes/components/class-attribute.php:708
 msgid "All Categories"
 msgstr "Все категории"
@@ -153,7 +162,7 @@ msgstr "Все категории"
 msgid "Captcha is invalid."
 msgstr "Неверный код подтверждения."
 
-#: includes/components/class-listing.php:295
+#: includes/components/class-listing.php:306
 #: includes/components/class-user.php:127
 #, php-format
 msgid ""
@@ -161,17 +170,26 @@ msgid ""
 msgstr ""
 "Я соглашаюсь с <a href=\"%s\" target=\"_blank\">правилами и условиями</a>"
 
-#: includes/components/class-listing.php:321 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:375 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr "Рекламируется"
 
-#: includes/components/class-listing.php:325 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:379 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr "Проверено"
+
+#: includes/components/class-listing.php:425
+#: templates/listing/edit/block/listing-view-link.php:7
+msgid "View"
+msgstr "Просмотреть"
+
+#: includes/components/class-listing.php:431
+msgid "Edit"
+msgstr "Редактировать"
 
 #: includes/components/class-user.php:189
 #: includes/controllers/class-user.php:134
@@ -867,10 +885,6 @@ msgstr "Флажки"
 msgid "Date Range"
 msgstr "Диапазон дат"
 
-#: includes/fields/class-date.php:65
-msgid "Date"
-msgstr "Дата"
-
 #: includes/fields/class-date.php:72 includes/fields/class-number.php:65
 #: includes/fields/class-text.php:64
 msgid "Placeholder"
@@ -1211,10 +1225,6 @@ msgstr "Уже есть аккаунт?"
 #, php-format
 msgid "Member since %s"
 msgstr "Участник с %s"
-
-#: templates/listing/edit/block/listing-view-link.php:7
-msgid "View"
-msgstr "Просмотреть"
 
 #. Name of the plugin
 #. Author of the plugin

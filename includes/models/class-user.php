@@ -131,7 +131,7 @@ class User extends Model {
 				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
 
 				if ( $urls ) {
-					$this->values[ $name ] = reset( $urls );
+					$this->values[ $name ] = hp\get_first_array_value( $urls );
 				}
 			}
 		}
@@ -167,7 +167,7 @@ class User extends Model {
 		// Get user meta.
 		$meta = array_map(
 			function( $values ) {
-				return reset( $values );
+				return hp\get_first_array_value( $values );
 			},
 			get_user_meta( $user['ID'] )
 		);

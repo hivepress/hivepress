@@ -106,7 +106,7 @@ class Attachment_Upload extends Field {
 			}
 		} elseif ( ! $this->multiple && is_array( $this->value ) ) {
 			if ( $this->value ) {
-				$this->value = reset( $this->value );
+				$this->value = hp\get_first_array_value( $this->value );
 			} else {
 				$this->value = null;
 			}
@@ -170,9 +170,13 @@ class Attachment_Upload extends Field {
 		}
 
 		$output .= '</div>';
-		$output .= '<label for="' . esc_attr( $id ) . '">';
+
+		// Render error messages.
+		$output .= '<div class="hp-form__messages hp-form__messages--error" data-component="messages"></div>';
 
 		// Render upload button.
+		$output .= '<label for="' . esc_attr( $id ) . '">';
+
 		$output .= ( new Button(
 			[
 				'label' => $this->caption,

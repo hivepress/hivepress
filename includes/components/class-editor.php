@@ -95,7 +95,7 @@ final class Editor extends Component {
 			}
 
 			if ( $blocks ) {
-				wp_localize_script( hp\get_array_value( reset( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
+				wp_localize_script( hp\get_array_value( hp\get_first_array_value( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
 			}
 		}
 
@@ -123,7 +123,7 @@ final class Editor extends Component {
 			$block_type = substr( $name, strlen( 'render_' ) );
 
 			// Create block.
-			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ (array) reset( $args ) ] );
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ (array) hp\get_first_array_value( $args ) ] );
 
 			if ( $block ) {
 

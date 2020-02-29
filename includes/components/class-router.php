@@ -191,7 +191,7 @@ final class Router extends Component {
 
 		array_shift( $params );
 
-		return reset( $params );
+		return hp\get_first_array_value( $params );
 	}
 
 	/**
