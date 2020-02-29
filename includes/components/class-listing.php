@@ -60,6 +60,9 @@ final class Listing extends Component {
 			// Alter manage menu.
 			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_manage_menu' ], 10, 2 );
 
+			// Alter breadcrumb menu.
+			add_filter( 'hivepress/v1/menus/breadcrumb/items', [ $this, 'alter_breadcrumb_menu' ], 10, 2 );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
@@ -413,6 +416,8 @@ final class Listing extends Component {
 		$listing = $menu->get_context( 'listing' );
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+
+			// Add menu items.
 			$items = hp\merge_arrays(
 				$items,
 				[
@@ -426,6 +431,36 @@ final class Listing extends Component {
 						'label'  => esc_html__( 'Edit', 'hivepress' ),
 						'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
 						'_order' => 20,
+					],
+				]
+			);
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Alters breadcrumb menu.
+	 *
+	 * @param array  $items Menu items.
+	 * @param object $menu Menu object.
+	 * @return array
+	 */
+	public function alter_breadcrumb_menu( $items, $menu ) {
+
+		// Get listing.
+		$listing = $menu->get_context( 'listing' );
+
+		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+
+			// Add menu items.
+			$items = hp\merge_arrays(
+				$items,
+				[
+					'listings_view' => [
+						'label'  => hivepress()->translator->get_string( 'all_listings' ),
+						'url'    => hivepress()->router->get_url( 'listings_view_page' ),
+						'_order' => 10,
 					],
 				]
 			);
