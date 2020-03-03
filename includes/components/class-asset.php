@@ -27,7 +27,7 @@ final class Asset extends Component {
 	public function __construct( $args = [] ) {
 
 		// Add image sizes.
-		add_action( 'init', [ $this, 'add_image_sizes' ] );
+		add_action( 'after_setup_theme', [ $this, 'add_image_sizes' ] );
 
 		// Enqueue styles.
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
