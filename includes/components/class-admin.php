@@ -1108,26 +1108,8 @@ final class Admin extends Component {
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type' => 'warning',
-				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ),
+				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="https://wordpress.org/themes/listinghive/" target="_blank">ListingHive</a>' ),
 			];
-		} else {
-			foreach ( $this->get_themes() as $theme ) {
-				if ( get_template() === $theme['slug'] ) {
-
-					// Get notice name.
-					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
-
-					// Add notice.
-					if ( version_compare( wp_get_theme( get_template() )->get( 'Version' ), $theme['version'], '<' ) ) {
-						$notices[ $notice_name ] = [
-							'type' => 'warning',
-							'text' => sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ),
-						];
-					}
-
-					break;
-				}
-			}
 		}
 
 		/**
