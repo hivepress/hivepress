@@ -414,7 +414,7 @@ function format_number( $number ) {
  * @return bool
  */
 function is_plugin_active( $name ) {
-	return class_exists( $name );
+	return class_exists( $name ) || function_exists( $name );
 }
 
 /**
