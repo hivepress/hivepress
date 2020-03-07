@@ -167,7 +167,7 @@ class User extends Model {
 		// Get user meta.
 		$meta = array_map(
 			function( $values ) {
-				return hp\get_first_array_value( $values );
+				return maybe_unserialize( hp\get_first_array_value( $values ) );
 			},
 			get_user_meta( $user['ID'] )
 		);

@@ -60,7 +60,7 @@ abstract class Post extends Model {
 		// Get post meta.
 		$meta = array_map(
 			function( $values ) {
-				return hp\get_first_array_value( $values );
+				return maybe_unserialize( hp\get_first_array_value( $values ) );
 			},
 			get_post_meta( $post['ID'] )
 		);

@@ -60,7 +60,7 @@ abstract class Term extends Model {
 		// Get term meta.
 		$meta = array_map(
 			function( $values ) {
-				return hp\get_first_array_value( $values );
+				return maybe_unserialize( hp\get_first_array_value( $values ) );
 			},
 			get_term_meta( $term['term_id'] )
 		);
