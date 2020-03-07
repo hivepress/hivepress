@@ -156,6 +156,13 @@ return [
 		],
 	],
 
+	'vendor_settings'           => [
+		'title'  => esc_html__( 'Settings', 'hivepress' ),
+		'screen' => 'vendor',
+		'model'  => 'vendor',
+		'fields' => [],
+	],
+
 	'vendor_attributes'         => [
 		'title'  => esc_html__( 'Attributes', 'hivepress' ),
 		'screen' => 'vendor',
