@@ -144,7 +144,7 @@ class Text extends Field {
 	 * @param string $pattern Regex pattern.
 	 */
 	protected function set_pattern( $pattern ) {
-		return trim( addcslashes( $pattern, '/' ), '^$' );
+		$this->pattern = trim( addcslashes( $pattern, '/' ), '^$' );
 	}
 
 	/**
