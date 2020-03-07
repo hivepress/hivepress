@@ -60,6 +60,19 @@ class URL extends Text {
 	}
 
 	/**
+	 * Sets display template.
+	 *
+	 * @param string $display_template Display template.
+	 */
+	protected function set_display_template( $display_template ) {
+		if ( strpos( $display_template, '<a ' ) === false ) {
+			$display_template = str_replace( '%value%', '<a href="%value%">%value%</a>', $display_template );
+		}
+
+		$this->display_template = $display_template;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
