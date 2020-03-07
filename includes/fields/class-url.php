@@ -34,6 +34,7 @@ class URL extends Text {
 				'settings'   => [
 					'min_length' => null,
 					'max_length' => null,
+					'pattern'    => null,
 				],
 			],
 			$meta

@@ -41,6 +41,13 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * Regex pattern.
+	 *
+	 * @var string
+	 */
+	protected $pattern;
+
+	/**
 	 * HTML flag.
 	 *
 	 * @var mixed
@@ -80,6 +87,13 @@ class Text extends Field {
 						'min_value' => 1,
 						'_order'    => 30,
 					],
+
+					'pattern'     => [
+						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 40,
+					],
 				],
 			],
 			$meta
@@ -109,6 +123,11 @@ class Text extends Field {
 			$attributes['maxlength'] = $this->max_length;
 		}
 
+		// Set regex pattern.
+		if ( ! is_null( $this->pattern ) ) {
+			$attributes['pattern'] = $this->pattern;
+		}
+
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
@@ -117,6 +136,15 @@ class Text extends Field {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();
+	}
+
+	/**
+	 * Sets regex pattern.
+	 *
+	 * @param string $pattern Regex pattern.
+	 */
+	protected function set_pattern( $pattern ) {
+		return trim( addcslashes( $pattern, '/' ), '^$' );
 	}
 
 	/**
@@ -165,6 +193,10 @@ class Text extends Field {
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
+			}
+
+			if ( ! is_null( $this->pattern ) && ! preg_match( '/^' . $this->pattern . '$/', $this->value ) ) {
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			}
 		}
 
