@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 Mixins
 --------------------------------------------------------------*/
-
 .image-wrapper {
 	img {
 		display: block;
@@ -512,6 +511,14 @@ Mixins
 			align-items: center;
 		}
 
+		&--view-block &__attributes--primary {
+			min-width: 0;
+
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
+		}
+
 		&--view-page &__actions--primary {
 			display: flex;
 			flex-direction: column;
@@ -626,8 +633,14 @@ Mixins
 			display: block;
 		}
 
+		&__attributes--primary &__attribute,
+		&__attributes--secondary &__attribute {
+			word-wrap: break-word;
+		}
+
 		&--view-block &__attributes--primary &__attribute {
 			font-size: 120%;
+			min-width: 0;
 
 			&:not(:last-child) {
 				margin-right: 1rem;
@@ -673,7 +686,6 @@ Mixins
 			}
 		}
 	}
-
 	// todo
 	&-menu {
 		&:not(:last-child) {
