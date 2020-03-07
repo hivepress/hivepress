@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Button extends Field {
 
 	/**
+	 * Button caption.
+	 *
+	 * @var string
+	 */
+	protected $caption;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.
@@ -41,6 +48,11 @@ class Button extends Field {
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
+
+		// Set caption.
+		if ( is_null( $this->caption ) ) {
+			$this->caption = $this->label;
+		}
 
 		// Set attributes.
 		$this->attributes = hp\merge_arrays(
@@ -64,6 +76,6 @@ class Button extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<button type="' . esc_attr( $this->display_type ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->label ) . '</button>';
+		return '<button type="' . esc_attr( $this->display_type ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->caption ) . '</button>';
 	}
 }
