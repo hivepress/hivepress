@@ -137,8 +137,10 @@ final class Admin extends Component {
 				'hp_settings',
 			];
 
-			foreach ( array_keys( hivepress()->get_config( 'post_types' ) ) as $post_type ) {
-				$pages[] = 'edit.php?post_type=' . hp\prefix( $post_type );
+			foreach ( hivepress()->get_config( 'post_types' ) as $post_type => $post_type_args ) {
+				if ( ! isset( $post_type_args['show_in_menu'] ) ) {
+					$pages[] = 'edit.php?post_type=' . hp\prefix( $post_type );
+				}
 			}
 
 			// Filter menu items.
@@ -150,7 +152,7 @@ final class Admin extends Component {
 			);
 
 			// Insert menu items.
-			array_splice( $menu, array_search( 'separator2', $menu, true ) - 1, 0, $pages );
+			array_splice( $menu, array_search( 'separator2', $menu, true ) - ( count( $pages ) - 2 ), 0, $pages );
 		}
 
 		return $menu;
