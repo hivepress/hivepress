@@ -380,6 +380,12 @@ final class Listing extends Component {
 				$form_args,
 				[
 					'message' => hivepress()->translator->get_string( 'listing_has_been_renewed' ),
+					'action'  => hivepress()->router->get_url(
+						'listing_renew_action',
+						[
+							'listing_id' => $listing->get_id(),
+						]
+					),
 
 					'button'  => [
 						'label' => hivepress()->translator->get_string( 'renew_listing' ),

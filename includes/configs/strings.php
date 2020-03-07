@@ -58,6 +58,7 @@ return [
 	'listing_has_been_submitted'                => esc_html__( 'Thank you! Your listing "%s" has been submitted and will be reviewed as soon as possible.', 'hivepress' ),
 	'listing_has_been_reported'                 => esc_html__( 'Listing has been reported.', 'hivepress' ),
 	'listing_has_been_renewed'                  => esc_html__( 'Listing has been renewed.', 'hivepress' ),
+	'listing_has_been_already_renewed'          => esc_html__( 'Listing has been already renewed.', 'hivepress' ),
 	'listings_page'                             => esc_html__( 'Listings Page', 'hivepress' ),
 	'listings_page_display'                     => esc_html__( 'Listings Page Display', 'hivepress' ),
 	'regular_listings_per_page'                 => esc_html__( 'Regular Listings per Page', 'hivepress' ),

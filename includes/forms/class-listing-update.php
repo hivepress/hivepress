@@ -75,7 +75,7 @@ class Listing_Update extends Model_Form {
 	protected function boot() {
 
 		// Set action.
-		if ( $this->model->get_id() ) {
+		if ( is_null( $this->action ) && $this->model->get_id() ) {
 			$this->action = hivepress()->router->get_url(
 				'listing_update_action',
 				[
