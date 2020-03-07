@@ -392,7 +392,7 @@ final class Attribute extends Component {
 							$field_args = array_merge(
 								$field_args,
 								[
-									'label'      => esc_html__( 'Edit Options', 'hivepress' ),
+									'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
 									'type'       => 'button',
 
 									'attributes' => [
