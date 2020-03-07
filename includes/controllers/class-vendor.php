@@ -70,7 +70,7 @@ final class Vendor extends Controller {
 		// Get page ID.
 		$page_id = absint( get_option( 'hp_page_vendors' ) );
 
-		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_vendor' );
+		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_vendor' ) || is_tax( 'hp_vendor_category' );
 	}
 
 	/**
