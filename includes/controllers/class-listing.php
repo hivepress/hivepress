@@ -204,6 +204,16 @@ final class Listing extends Controller {
 		// Update listing.
 		$listing->fill( $form->get_values() );
 
+		if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
+			$listing->fill(
+				[
+					'status'       => 'publish',
+					'created_date' => date( 'Y-m-d H:i:s' ),
+					'expired_time' => null,
+				]
+			);
+		}
+
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
 		}

@@ -41,11 +41,12 @@ final class Listing extends Component {
 		// Expire listings.
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
-		// Add submission fields.
-		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
-
 		// Set category count callback.
 		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
+
+		// Alter forms.
+		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'alter_submit_form' ] );
+		add_filter( 'hivepress/v1/forms/listing_update', [ $this, 'alter_update_form' ], 10, 2 );
 
 		if ( is_admin() ) {
 
@@ -241,8 +242,7 @@ final class Listing extends Component {
 			// Update listing.
 			$listing->fill(
 				[
-					'status'       => 'trash',
-					'expired_time' => null,
+					'status' => 'draft',
 				]
 			)->save();
 
@@ -280,42 +280,6 @@ final class Listing extends Component {
 				]
 			)->save();
 		}
-	}
-
-	/**
-	 * Adds submission fields.
-	 *
-	 * @param array $form Form arguments.
-	 * @return array
-	 */
-	public function add_submission_fields( $form ) {
-
-		// Get terms page ID.
-		$page_id = hp\get_first_array_value(
-			get_posts(
-				[
-					'post_type'      => 'page',
-					'post_status'    => 'publish',
-					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				]
-			)
-		);
-
-		if ( $page_id ) {
-
-			// Add terms field.
-			$form['fields']['_terms'] = [
-				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'      => 'checkbox',
-				'required'  => true,
-				'_separate' => true,
-				'_order'    => 1000,
-			];
-		}
-
-		return $form;
 	}
 
 	/**
@@ -359,6 +323,72 @@ final class Listing extends Component {
 			// Update count.
 			$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_taxonomy_id' => $term_taxonomy_id ] );
 		}
+	}
+
+	/**
+	 * Alters submit form.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function alter_submit_form( $form ) {
+
+		// Get terms page ID.
+		$page_id = hp\get_first_array_value(
+			get_posts(
+				[
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				]
+			)
+		);
+
+		if ( $page_id ) {
+
+			// Add terms field.
+			$form['fields']['_terms'] = [
+				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
+				'type'      => 'checkbox',
+				'required'  => true,
+				'_separate' => true,
+				'_order'    => 1000,
+			];
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Alters update form.
+	 *
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function alter_update_form( $form_args, $form ) {
+
+		// Get listing.
+		$listing = $form->get_model();
+
+		if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
+
+			// Set form arguments.
+			$form_args = hp\merge_arrays(
+				$form_args,
+				[
+					'message' => hivepress()->translator->get_string( 'listing_has_been_renewed' ),
+
+					'button'  => [
+						'label' => hivepress()->translator->get_string( 'renew_listing' ),
+					],
+				]
+			);
+		}
+
+		return $form_args;
 	}
 
 	/**
