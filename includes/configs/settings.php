@@ -146,6 +146,38 @@ return [
 		],
 	],
 
+	'vendors'      => [
+		'title'    => hivepress()->translator->get_string( 'vendors' ),
+		'_order'   => 50,
+
+		'sections' => [
+			'display' => [
+				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'_order' => 10,
+
+				'fields' => [
+					'page_vendors'     => [
+						'label'       => hivepress()->translator->get_string( 'vendors_page' ),
+						'description' => hivepress()->translator->get_string( 'choose_page_that_displays_all_vendors' ),
+						'type'        => 'select',
+						'options'     => 'posts',
+						'option_args' => [ 'post_type' => 'page' ],
+						'_order'      => 10,
+					],
+
+					'vendors_per_page' => [
+						'label'     => hivepress()->translator->get_string( 'regular_vendors_per_page' ),
+						'type'      => 'number',
+						'default'   => 10,
+						'min_value' => 1,
+						'required'  => true,
+						'_order'    => 20,
+					],
+				],
+			],
+		],
+	],
+
 	'users'        => [
 		'title'    => esc_html__( 'Users', 'hivepress' ),
 		'_order'   => 100,
@@ -176,7 +208,7 @@ return [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
 						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,

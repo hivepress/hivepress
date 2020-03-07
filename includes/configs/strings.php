@@ -79,4 +79,7 @@ return [
 	'vendors'                                   => esc_html__( 'Vendors', 'hivepress' ),
 	'search_vendors'                            => esc_html__( 'Search Vendors', 'hivepress' ),
 	'no_vendors_found'                          => esc_html__( 'No vendors found.', 'hivepress' ),
+	'vendors_page'                              => esc_html__( 'Vendors Page', 'hivepress' ),
+	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
+	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),
 ];
