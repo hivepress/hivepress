@@ -43,6 +43,7 @@ final class Attribute extends Component {
 			[
 				'models' => [
 					'listing',
+					'vendor',
 				],
 			],
 			$args
