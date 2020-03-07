@@ -155,25 +155,33 @@ class Listings extends Block {
 		if ( ! isset( $this->context['listings'] ) ) {
 
 			// Set query.
-			$query = Models\Listing::query()->filter( [ 'status' => 'publish' ] )->limit( $this->number );
+			$query = $this->get_context( 'listing_query' );
 
-			// Set category.
-			if ( $this->category ) {
-				$query->filter( [ 'categories__in' => $this->category ] );
-			}
+			if ( empty( $query ) ) {
+				$query = Models\Listing::query()->filter(
+					[
+						'status' => 'publish',
+					]
+				)->limit( $this->number );
 
-			// Set order.
-			if ( 'title' === $this->order ) {
-				$query->order( [ 'title' => 'asc' ] );
-			} elseif ( 'random' === $this->order ) {
-				$query->order( 'random' );
-			} else {
-				$query->order( [ 'created_date' => 'desc' ] );
-			}
+				// Set category.
+				if ( $this->category ) {
+					$query->filter( [ 'categories__in' => $this->category ] );
+				}
 
-			// Set featured flag.
-			if ( $this->featured ) {
-				$query->filter( [ 'featured' => true ] );
+				// Set order.
+				if ( 'title' === $this->order ) {
+					$query->order( [ 'title' => 'asc' ] );
+				} elseif ( 'random' === $this->order ) {
+					$query->order( 'random' );
+				} else {
+					$query->order( [ 'created_date' => 'desc' ] );
+				}
+
+				// Set featured flag.
+				if ( $this->featured ) {
+					$query->filter( [ 'featured' => true ] );
+				}
 			}
 
 			// Get cached IDs.

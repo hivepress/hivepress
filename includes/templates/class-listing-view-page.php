@@ -108,6 +108,19 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'path'   => 'listing/view/page/listing-description',
 								'_order' => 50,
 							],
+
+							'related_listings_container'   => [
+								'type'   => 'section',
+								'title'  => hivepress()->translator->get_string( 'related_listings' ),
+								'_order' => 60,
+
+								'blocks' => [
+									'related_listings' => [
+										'type'   => 'related_listings',
+										'_order' => 10,
+									],
+								],
+							],
 						],
 					],
 
