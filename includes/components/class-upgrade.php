@@ -45,6 +45,7 @@ final class Upgrade extends Component {
 	 * Upgrades terms.
 	 *
 	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.0
 	 */
 	public function upgrade_terms( $version ) {
 		if ( version_compare( $version, '1.3.0', '<' ) ) {
@@ -71,6 +72,7 @@ final class Upgrade extends Component {
 	 * Upgrades comments.
 	 *
 	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.0
 	 */
 	public function upgrade_comments( $version ) {
 		if ( version_compare( $version, '1.3.0', '<' ) ) {
@@ -126,6 +128,7 @@ final class Upgrade extends Component {
 	 * Upgrades events.
 	 *
 	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.0
 	 */
 	public function upgrade_events( $version ) {
 		if ( version_compare( $version, '1.3.0', '<' ) ) {
@@ -147,6 +150,7 @@ final class Upgrade extends Component {
 	 * Upgrades database.
 	 *
 	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.0
 	 */
 	public function upgrade_database( $version ) {
 		global $wpdb;
