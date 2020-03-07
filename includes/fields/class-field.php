@@ -471,7 +471,7 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	final public function display() {
+	public function display() {
 		return hp\replace_tokens(
 			[
 				'label' => $this->label,
