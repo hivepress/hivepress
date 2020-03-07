@@ -65,6 +65,7 @@ final class Listing extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/listing_edit_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
 
 		parent::__construct( $args );
