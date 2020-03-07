@@ -250,6 +250,15 @@ abstract class Form {
 	}
 
 	/**
+	 * Gets form fields.
+	 *
+	 * @return array
+	 */
+	final public function get_fields() {
+		return $this->fields;
+	}
+
+	/**
 	 * Sets form button.
 	 *
 	 * @param array $button Button arguments.
