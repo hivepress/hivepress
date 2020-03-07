@@ -27,7 +27,7 @@ class Results extends Container {
 	public function render() {
 		$output = '';
 
-		if ( have_posts() ) {
+		if ( have_posts() || hivepress()->request->get_context( 'featured_ids' ) ) {
 			$output .= parent::render();
 		} else {
 			$output .= ( new Part( [ 'path' => 'page/no-results-message' ] ) )->render();

@@ -214,7 +214,7 @@ class Listings extends Block {
 			);
 		}
 
-		if ( $regular_query->have_posts() ) {
+		if ( $regular_query->have_posts() || $featured_query ) {
 			if ( 'edit' === $this->mode ) {
 				$output .= '<table class="hp-table">';
 			} else {
