@@ -134,6 +134,32 @@ final class Form extends Component {
 			$args
 		);
 
+		// Set custom order.
+		if ( strpos( $args['taxonomy'], 'hp_' ) === 0 ) {
+			$args = array_merge(
+				$args,
+				[
+					'orderby'    => 'meta_value_num',
+
+					'meta_query' => [
+						'relation' => 'OR',
+
+						[
+							'key'     => 'hp_sort_order',
+							'type'    => 'NUMERIC',
+							'compare' => 'EXISTS',
+						],
+
+						[
+							'key'     => 'hp_sort_order',
+							'type'    => 'NUMERIC',
+							'compare' => 'NOT EXISTS',
+						],
+					],
+				]
+			);
+		}
+
 		// Get options.
 		$options = [];
 

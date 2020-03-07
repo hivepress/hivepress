@@ -156,6 +156,21 @@ return [
 		],
 	],
 
+	'listing_option_settings'   => [
+		'screen' => [],
+
+		'fields' => [
+			'sort_order' => [
+				'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
+				'type'      => 'number',
+				'min_value' => 0,
+				'default'   => 0,
+				'required'  => true,
+				'_order'    => 10,
+			],
+		],
+	],
+
 	'vendor_settings'           => [
 		'title'  => esc_html__( 'Settings', 'hivepress' ),
 		'screen' => 'vendor',
@@ -252,6 +267,21 @@ return [
 				'default'     => '%value%',
 				'html'        => true,
 				'_order'      => 20,
+			],
+		],
+	],
+
+	'vendor_option_settings'   => [
+		'screen' => [],
+
+		'fields' => [
+			'sort_order' => [
+				'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
+				'type'      => 'number',
+				'min_value' => 0,
+				'default'   => 0,
+				'required'  => true,
+				'_order'    => 10,
 			],
 		],
 	],

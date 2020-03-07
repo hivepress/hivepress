@@ -99,6 +99,9 @@ final class Attribute extends Component {
 
 		if ( is_admin() ) {
 
+			// Add option settings.
+			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_option_settings' ], 100 );
+
 			// Disable quick edit.
 			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
 
@@ -837,6 +840,37 @@ final class Attribute extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Adds option settings.
+	 *
+	 * @param array $meta_boxes Meta box arguments.
+	 * @return array
+	 */
+	public function add_option_settings( $meta_boxes ) {
+		foreach ( $this->models as $model ) {
+
+			// Get meta box name.
+			$meta_box_name = $model . '_option_settings';
+
+			if ( isset( $meta_boxes[ $meta_box_name ] ) ) {
+				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+					if ( isset( $attribute['edit_field']['options'] ) ) {
+
+						// Get screen name.
+						$screen = $model . '_' . $attribute_name;
+
+						// Add screen.
+						if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
+							$meta_boxes[ $meta_box_name ]['screen'][] = $screen;
+						}
+					}
+				}
+			}
+		}
+
+		return $meta_boxes;
 	}
 
 	/**
