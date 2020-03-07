@@ -56,10 +56,11 @@ return [
 
 	'vendor'            => [
 		'public'             => true,
-		'show_in_menu'       => false,
-		'redirect_canonical' => false,
+		'has_archive'        => true,
 		'supports'           => [ 'title', 'editor', 'thumbnail', 'author' ],
+		'menu_icon'          => 'dashicons-store',
 		'rewrite'            => [ 'slug' => 'vendor' ],
+		'redirect_canonical' => false,
 
 		'labels'             => [
 			'name'               => hivepress()->translator->get_string( 'vendors' ),
