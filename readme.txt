@@ -4,7 +4,7 @@ Tags: directory, business directory, classifieds, classified ads, listing, listi
 Requires at least: 4.9
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -34,3 +34,7 @@ There's a bunch of [free extensions](https://hivepress.io/extensions/) that can 
 
 = Free Support =
 We provide free support that includes fixing reported bugs and answering questions about HivePress. Join our [community forum](https://hivepress.io/support/) to share your suggestions and help us keep HivePress awesome!
+
+== Changelog ==
+
+[View changelog on GitHub.](https://github.com/hivepress/hivepress/releases)
