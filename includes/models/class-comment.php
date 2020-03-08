@@ -50,7 +50,9 @@ abstract class Comment extends Model {
 		if ( is_object( $id ) ) {
 			$comment = get_object_vars( $id );
 		} else {
-			$comment = get_comment( ( absint( $id ) ), ARRAY_A );
+			$id = absint( $id );
+
+			$comment = get_comment( $id, ARRAY_A );
 		}
 
 		if ( empty( $comment ) || static::_get_meta( 'alias' ) !== $comment['comment_type'] ) {
