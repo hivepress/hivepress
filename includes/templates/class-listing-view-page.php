@@ -62,10 +62,31 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								],
 							],
 
-							'listing_manage_menu'          => [
-								'type'   => 'menu',
-								'menu'   => 'listing_manage',
-								'_order' => 10,
+							'page_topbar'                  => [
+								'type'       => 'container',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-page__topbar' ],
+								],
+
+								'blocks'     => [
+									'listing_manage_menu' => [
+										'type'   => 'menu',
+										'menu'   => 'listing_manage',
+										'_order' => 10,
+									],
+
+									'listing_actions_secondary' => [
+										'type'       => 'container',
+										'blocks'     => [],
+										'_order'     => 20,
+
+										'attributes' => [
+											'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+										],
+									],
+								],
 							],
 
 							'listing_details_primary'      => [
@@ -112,7 +133,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'related_listings_container'   => [
 								'type'   => 'section',
 								'title'  => hivepress()->translator->get_string( 'related_listings' ),
-								'_order' => 60,
+								'_order' => 1000,
 
 								'blocks' => [
 									'related_listings' => [

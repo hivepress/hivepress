@@ -30,10 +30,31 @@ abstract class Listing_Manage_Page extends Page_Wide {
 				'blocks' => [
 					'page_content' => [
 						'blocks' => [
-							'listing_manage_menu' => [
-								'type'   => 'menu',
-								'menu'   => 'listing_manage',
-								'_order' => 10,
+							'page_topbar' => [
+								'type'       => 'container',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-page__topbar' ],
+								],
+
+								'blocks'     => [
+									'listing_manage_menu' => [
+										'type'   => 'menu',
+										'menu'   => 'listing_manage',
+										'_order' => 10,
+									],
+
+									'listing_actions_secondary' => [
+										'type'       => 'container',
+										'blocks'     => [],
+										'_order'     => 20,
+
+										'attributes' => [
+											'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+										],
+									],
+								],
 							],
 						],
 					],
