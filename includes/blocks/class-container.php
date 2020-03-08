@@ -27,6 +27,13 @@ class Container extends Block {
 	protected $tag = 'div';
 
 	/**
+	 * Optional flag.
+	 *
+	 * @var bool
+	 */
+	protected $optional = false;
+
+	/**
 	 * Container attributes.
 	 *
 	 * @var array
@@ -39,6 +46,20 @@ class Container extends Block {
 	 * @var array
 	 */
 	protected $blocks = [];
+
+	/**
+	 * Container header.
+	 *
+	 * @var array
+	 */
+	protected $header = [];
+
+	/**
+	 * Container footer.
+	 *
+	 * @var array
+	 */
+	protected $footer = [];
 
 	/**
 	 * Sets inner blocks.
@@ -80,17 +101,39 @@ class Container extends Block {
 	public function render() {
 		$output = '';
 
-		if ( $this->tag ) {
-			$output .= '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
-		}
-
-		// Render inner blocks.
+		// Render blocks.
 		foreach ( $this->blocks as $block ) {
 			$output .= $block->render();
 		}
 
-		if ( $this->tag ) {
-			$output .= '</' . esc_attr( $this->tag ) . '>';
+		if ( ! $this->optional || '' !== $output ) {
+
+			// Render header.
+			if ( $this->header ) {
+				$output = ( new Container(
+					[
+						'context' => $this->context,
+						'tag'     => false,
+						'blocks'  => $this->header,
+					]
+				) )->render() . $output;
+			}
+
+			// Render footer.
+			if ( $this->footer ) {
+				$output = $output . ( new Container(
+					[
+						'context' => $this->context,
+						'tag'     => false,
+						'blocks'  => $this->footer,
+					]
+				) )->render();
+			}
+
+			// Add wrapper.
+			if ( $this->tag ) {
+				$output = '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>' . $output . '</' . esc_attr( $this->tag ) . '>';
+			}
 		}
 
 		return $output;
