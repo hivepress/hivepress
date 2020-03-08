@@ -202,32 +202,8 @@ final class User extends Component {
 
 									'blocks' => [
 										'user_register_form' => [
-											'type'       => 'form',
-											'form'       => 'user_register',
-											'_order'     => 10,
-
-											'attributes' => [
-												'class' => [ 'hp-form--narrow' ],
-											],
-
-											'footer'     => [
-												'form_actions' => [
-													'type' => 'container',
-													'_order' => 10,
-
-													'attributes' => [
-														'class' => [ 'hp-form__actions' ],
-													],
-
-													'blocks' => [
-														'user_login_link' => [
-															'type' => 'part',
-															'path' => 'user/register/user-login-link',
-															'_order' => 10,
-														],
-													],
-												],
-											],
+											'type'   => 'user_register_form',
+											'_order' => 10,
 										],
 									],
 								],
