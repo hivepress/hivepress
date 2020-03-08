@@ -173,11 +173,6 @@ abstract class Menu {
 							$args['url'] = hivepress()->router->get_url( $args['route'] );
 						}
 					}
-
-					// Set current flag.
-					if ( hivepress()->router->get_current_url() === $args['url'] ) {
-						$args['current'] = true;
-					}
 				}
 			}
 
@@ -217,7 +212,16 @@ abstract class Menu {
 			$output .= '<ul>';
 
 			foreach ( $this->items as $name => $args ) {
-				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $args, 'current' ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
+
+				// Get current class.
+				$class = '';
+
+				if ( hivepress()->router->get_current_url() === $args['url'] ) {
+					$class = 'hp-menu__item--current current-menu-item';
+				}
+
+				// Render menu item.
+				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
 				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
 				$output .= '</li>';
 			}
