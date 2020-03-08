@@ -808,12 +808,16 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = hivepress()->request->get_context( 'listing' );
 
+		// Get date.
+		$date = date( 'Y-m-d H:i:s' );
+
 		// Update listing.
 		$listing->fill(
 			[
-				'status'       => 'publish',
-				'created_date' => date( 'Y-m-d H:i:s' ),
-				'expired_time' => null,
+				'status'           => 'publish',
+				'created_date'     => $date,
+				'created_date_gmt' => get_gmt_from_date( $date ),
+				'expired_time'     => null,
 			]
 		)->save();
 
