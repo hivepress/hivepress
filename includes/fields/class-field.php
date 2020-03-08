@@ -294,6 +294,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Sets display template.
+	 *
+	 * @param string $display_template Display template.
+	 */
+	protected function set_display_template( $display_template ) {
+		$this->display_template = $display_template;
+	}
+
+	/**
 	 * Gets field name.
 	 *
 	 * @return string
