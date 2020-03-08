@@ -257,6 +257,7 @@ final class Listing extends Component {
 						'tokens'    => [
 							'user_name'     => $user->get_display_name(),
 							'listing_title' => $listing->get_title(),
+							'listing_url'   => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
 						],
 					]
 				) )->send();
@@ -379,15 +380,10 @@ final class Listing extends Component {
 			$form_args = hp\merge_arrays(
 				$form_args,
 				[
-					'message' => hivepress()->translator->get_string( 'listing_has_been_renewed' ),
-					'action'  => hivepress()->router->get_url(
-						'listing_renew_action',
-						[
-							'listing_id' => $listing->get_id(),
-						]
-					),
+					'message'  => null,
+					'redirect' => hivepress()->router->get_url( 'listing_renew_page', [ 'listing_id' => $listing->get_id() ] ),
 
-					'button'  => [
+					'button'   => [
 						'label' => hivepress()->translator->get_string( 'renew_listing' ),
 					],
 				]

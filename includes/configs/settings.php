@@ -144,7 +144,7 @@ return [
 						'label'       => hivepress()->translator->get_string( 'listing_expired' ),
 						'description' => esc_html__( 'This email is sent to users when listing is expired.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired.', 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired, click on the following link to renew it: %listing_url%.', 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,

@@ -66,14 +66,6 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
-					'listing_renew_action'         => [
-						'base'   => 'listing_resource',
-						'path'   => '/renew',
-						'method' => 'POST',
-						'action' => [ $this, 'renew_listing' ],
-						'rest'   => true,
-					],
-
 					'listing_report_action'        => [
 						'base'   => 'listing_resource',
 						'path'   => '/report',
@@ -158,6 +150,20 @@ final class Listing extends Controller {
 						'action'   => [ $this, 'render_listing_submit_complete_page' ],
 					],
 
+					'listing_renew_page'           => [
+						'base'     => 'listing_edit_page',
+						'path'     => '/renew',
+						'redirect' => [ $this, 'redirect_listing_renew_page' ],
+					],
+
+					'listing_renew_complete_page'  => [
+						'title'    => hivepress()->translator->get_string( 'listing_renewed' ),
+						'base'     => 'listing_renew_page',
+						'path'     => '/complete',
+						'redirect' => [ $this, 'redirect_listing_renew_complete_page' ],
+						'action'   => [ $this, 'render_listing_renew_complete_page' ],
+					],
+
 					'listing_category_view_page'   => [
 						'url' => [ $this, 'get_listing_category_view_url' ],
 					],
@@ -211,57 +217,6 @@ final class Listing extends Controller {
 
 		// Update listing.
 		$listing->fill( $form->get_values() );
-
-		if ( ! $listing->save() ) {
-			return hp\rest_error( 400, $listing->_get_errors() );
-		}
-
-		return hp\rest_response(
-			200,
-			[
-				'id' => $listing->get_id(),
-			]
-		);
-	}
-
-	/**
-	 * Renews listing.
-	 *
-	 * @param WP_REST_Request $request API request.
-	 * @return WP_Rest_Response
-	 */
-	public function renew_listing( $request ) {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return hp\rest_error( 401 );
-		}
-
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
-
-		if ( empty( $listing ) ) {
-			return hp\rest_error( 404 );
-		}
-
-		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && get_current_user_id() !== $listing->get_user__id() ) {
-			return hp\rest_error( 403 );
-		}
-
-		// Check expiration.
-		if ( $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
-			return hp\rest_error( 400, hivepress()->translator->get_string( 'listing_has_been_already_renewed' ) );
-		}
-
-		// Renew listing.
-		$listing->fill(
-			[
-				'status'       => 'publish',
-				'created_date' => date( 'Y-m-d H:i:s' ),
-				'expired_time' => null,
-			]
-		);
 
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
@@ -805,6 +760,75 @@ final class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_submit_complete_page',
+
+				'context'  => [
+					'listing' => hivepress()->request->get_context( 'listing' ),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects listing renew page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_renew_page() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
+		}
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
+
+		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
+			return home_url( '/' );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
+
+		return true;
+	}
+
+	/**
+	 * Redirects listing renew complete page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_renew_complete_page() {
+
+		// Get listing.
+		$listing = hivepress()->request->get_context( 'listing' );
+
+		// Update listing.
+		$listing->fill(
+			[
+				'status'       => 'publish',
+				'created_date' => date( 'Y-m-d H:i:s' ),
+				'expired_time' => null,
+			]
+		)->save();
+
+		return false;
+	}
+
+	/**
+	 * Renders listing renew complete page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_renew_complete_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'listing_renew_complete_page',
 
 				'context'  => [
 					'listing' => hivepress()->request->get_context( 'listing' ),
