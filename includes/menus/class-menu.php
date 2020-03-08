@@ -167,7 +167,11 @@ abstract class Menu {
 
 					// Set URL.
 					if ( ! isset( $args['url'] ) ) {
-						$args['url'] = hivepress()->router->get_url( $args['route'] );
+						if ( static::get_meta( 'chained' ) ) {
+							$args['url'] = hivepress()->router->get_url( $args['route'], hivepress()->request->get_params() );
+						} else {
+							$args['url'] = hivepress()->router->get_url( $args['route'] );
+						}
 					}
 
 					// Set current flag.

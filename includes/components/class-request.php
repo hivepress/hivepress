@@ -41,6 +41,31 @@ final class Request extends Component {
 	}
 
 	/**
+	 * Gets parameter values.
+	 *
+	 * @return array
+	 */
+	public function get_params() {
+		global $wp_query;
+
+		// Filter parameters.
+		$params = array_filter(
+			$wp_query->query_vars,
+			function( $param ) {
+				return strpos( $param, 'hp_' ) === 0;
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+
+		// Set parameters.
+		$params = array_combine( hp\unprefix( array_keys( $params ) ), $params );
+
+		unset( $params['route'] );
+
+		return $params;
+	}
+
+	/**
 	 * Gets parameter value.
 	 *
 	 * @param string $name Parameter name.
