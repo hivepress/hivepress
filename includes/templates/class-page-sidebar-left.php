@@ -63,13 +63,13 @@ abstract class Page_Sidebar_Left extends Page {
 											'breadcrumb_menu' => [
 												'type'   => 'menu',
 												'menu'   => 'breadcrumb',
-												'_order' => 10,
+												'_order' => 1,
 											],
 
 											'page_title' => [
 												'type'   => 'part',
 												'path'   => 'page/page-title',
-												'_order' => 20,
+												'_order' => 5,
 											],
 										],
 									],

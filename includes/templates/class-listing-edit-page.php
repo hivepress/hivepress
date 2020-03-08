@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Listing_Edit_Page
  */
-class Listing_Edit_Page extends User_Account_Page {
+class Listing_Edit_Page extends Listing_Manage_Page {
 
 	/**
 	 * Class constructor.
