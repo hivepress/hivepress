@@ -178,11 +178,9 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								],
 							],
 
-							'vendor'                     => [
-								'type'    => 'vendors',
-								'columns' => 1,
-								'number'  => 1,
-								'_order'  => 30,
+							'listing_vendor'             => [
+								'type'   => 'related_vendors',
+								'_order' => 30,
 							],
 
 							'page_sidebar_widgets'       => [

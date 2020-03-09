@@ -1,6 +1,6 @@
 <?php
 /**
- * Related listings.
+ * Related vendors.
  *
  * @package HivePress\Blocks
  */
@@ -14,11 +14,11 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Related listings block class.
+ * Related vendors block class.
  *
- * @class Related_Listings
+ * @class Related_Vendors
  */
-class Related_Listings extends Listings {
+class Related_Vendors extends Vendors {
 
 	/**
 	 * Class initializer.
@@ -44,7 +44,7 @@ class Related_Listings extends Listings {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'number' => get_option( 'hp_listings_related_per_page' ),
+				'number' => get_option( 'hp_vendors_related_per_page' ),
 				'order'  => 'random',
 			],
 			$args
@@ -59,7 +59,7 @@ class Related_Listings extends Listings {
 	protected function boot() {
 
 		// Set query.
-		$listing_query = Models\Listing::query()->filter(
+		$vendor_query = Models\Vendor::query()->filter(
 			[
 				'status' => 'publish',
 			]
@@ -71,17 +71,31 @@ class Related_Listings extends Listings {
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
-			// Exclude listing.
-			$listing_query->filter( [ 'id__not_in' => [ $listing->get_id() ] ] );
+			// Set vendor ID.
+			$vendor_query->filter(
+				[
+					'id__in' => [ $listing->get_vendor__id() ],
+				]
+			)->limit( 1 );
+		} else {
 
-			// Set categories.
-			if ( $listing->get_categories__id() ) {
-				$listing_query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
+			// Get vendor.
+			$vendor = $this->get_context( 'vendor' );
+
+			if ( hp\is_class_instance( $vendor, '\HivePress\Models\Vendor' ) ) {
+
+				// Exclude vendor.
+				$vendor_query->filter( [ 'id__not_in' => [ $vendor->get_id() ] ] );
+
+				// Set categories.
+				if ( $vendor->get_categories__id() ) {
+					$vendor_query->filter( [ 'categories__in' => $vendor->get_categories__id() ] );
+				}
 			}
 		}
 
 		// Set context.
-		$this->context['listing_query'] = $listing_query;
+		$this->context['vendor_query'] = $vendor_query;
 
 		parent::boot();
 	}

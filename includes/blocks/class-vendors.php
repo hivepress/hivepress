@@ -119,15 +119,23 @@ class Vendors extends Block {
 		if ( ! isset( $this->context['vendors'] ) ) {
 
 			// Set query.
-			$query = Models\Vendor::query()->filter( [ 'status' => 'publish' ] )->limit( $this->number );
+			$query = $this->get_context( 'vendor_query' );
 
-			// Set order.
-			if ( 'name' === $this->order ) {
-				$query->order( [ 'name' => 'asc' ] );
-			} elseif ( 'random' === $this->order ) {
-				$query->order( 'random' );
-			} else {
-				$query->order( [ 'registered_date' => 'desc' ] );
+			if ( empty( $query ) ) {
+				$query = Models\Vendor::query()->filter(
+					[
+						'status' => 'publish',
+					]
+				)->limit( $this->number );
+
+				// Set order.
+				if ( 'name' === $this->order ) {
+					$query->order( [ 'name' => 'asc' ] );
+				} elseif ( 'random' === $this->order ) {
+					$query->order( 'random' );
+				} else {
+					$query->order( [ 'registered_date' => 'desc' ] );
+				}
 			}
 
 			// Get cached IDs.

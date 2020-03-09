@@ -46,7 +46,7 @@ class User_Register_Form extends Form {
 				'form'       => 'user_register',
 
 				'attributes' => [
-					'class' => [ 'hp-form--narrow' ],
+					'class' => [ 'hp-form--narrow', 'hp-block' ],
 				],
 
 				'footer'     => [
@@ -82,7 +82,7 @@ class User_Register_Form extends Form {
 	public function render() {
 		$output = '';
 
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 			$output .= parent::render();
 		}
 
