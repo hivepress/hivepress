@@ -460,7 +460,7 @@ final class Listing extends Component {
 				$items,
 				[
 					'listing_view' => [
-						'label'  => esc_html__( 'View', 'hivepress' ),
+						'label'  => esc_html__( 'Details', 'hivepress' ),
 						'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
 						'_order' => 10,
 					],
@@ -485,23 +485,31 @@ final class Listing extends Component {
 	 * @return array
 	 */
 	public function alter_breadcrumb_menu( $items, $menu ) {
+		if ( is_singular( 'hp_listing' ) ) {
 
-		// Get listing.
-		$listing = $menu->get_context( 'listing' );
+			// Get listing.
+			$listing = $menu->get_context( 'listing' );
 
-		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+			if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
-			// Add menu items.
-			$items = hp\merge_arrays(
-				$items,
-				[
-					'listings_view' => [
-						'label'  => hivepress()->translator->get_string( 'all_listings' ),
-						'url'    => hivepress()->router->get_url( 'listings_view_page' ),
-						'_order' => 10,
-					],
-				]
-			);
+				// Add menu items.
+				$items['listings_view'] = [
+					'label'  => hivepress()->translator->get_string( 'all_listings' ),
+					'url'    => hivepress()->router->get_url( 'listings_view_page' ),
+					'_order' => 10,
+				];
+
+				// todo.
+				$index = 1;
+
+				foreach ( $listing->get_categories() as $category ) {
+					$items[ 'listing_category_view_' . $index ] = [
+						'label'  => $category->get_name(),
+						'url'    => hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] ),
+						'_order' => $index * 10,
+					];
+				}
+			}
 		}
 
 		return $items;
