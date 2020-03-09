@@ -30,13 +30,13 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [
+					'page_columns' => [
 						'attributes' => [
 							'class' => [ 'hp-vendor', 'hp-vendor--view-page' ],
 						],
 					],
 
-					'page_sidebar'   => [
+					'page_sidebar' => [
 						'attributes' => [
 							'data-component' => 'sticky',
 						],
@@ -118,7 +118,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 						],
 					],
 
-					'page_content'   => [
+					'page_content' => [
 						'blocks' => [
 							'listings'           => [
 								'type'    => 'listings',

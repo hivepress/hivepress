@@ -30,28 +30,16 @@ class Listings_View_Page extends Page_Sidebar_Left {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [
+					'page_header'  => [
 						'blocks' => [
-							'page_header' => [
-								'type'       => 'container',
-								'tag'        => 'header',
-								'_order'     => 5,
-
-								'attributes' => [
-									'class' => [ 'hp-page__header' ],
-								],
-
-								'blocks'     => [
-									'listing_search_form' => [
-										'type'   => 'listing_search_form',
-										'_order' => 10,
-									],
-								],
+							'listing_search_form' => [
+								'type'   => 'listing_search_form',
+								'_order' => 10,
 							],
 						],
 					],
 
-					'page_sidebar'   => [
+					'page_sidebar' => [
 						'attributes' => [
 							'data-component' => 'sticky',
 						],
@@ -75,7 +63,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						],
 					],
 
-					'page_content'   => [
+					'page_content' => [
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',

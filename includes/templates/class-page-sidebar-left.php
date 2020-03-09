@@ -28,6 +28,9 @@ abstract class Page_Sidebar_Left extends Page {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
+					'page_header'    => [],
+					'page_footer'    => [],
+
 					'page_container' => [
 						'blocks' => [
 							'page_columns' => [
