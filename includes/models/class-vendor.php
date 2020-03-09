@@ -69,6 +69,15 @@ class Vendor extends Post {
 						'_model'    => 'user',
 					],
 
+					'categories'      => [
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
+						'multiple'    => true,
+						'_model'      => 'vendor_category',
+						'_relation'   => 'many_to_many',
+					],
+
 					'image'           => [
 						'type'      => 'number',
 						'min_value' => 1,
