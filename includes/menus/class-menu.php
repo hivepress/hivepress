@@ -111,6 +111,9 @@ abstract class Menu {
 	 */
 	protected function boot() {
 
+		// Get items.
+		$items = $this->items;
+
 		// Filter items.
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
@@ -123,10 +126,13 @@ abstract class Menu {
 			 * @param array $items Menu items.
 			 * @param object $object Menu object.
 			 */
-			$this->items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $this->items, $this );
+			$items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $items, $this );
 		}
 
-		// Set class.
+		// Set items.
+		$this->set_items( $items );
+
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
@@ -147,7 +153,7 @@ abstract class Menu {
 		$this->items = [];
 
 		foreach ( hp\sort_array( $items ) as $name => $args ) {
-			if ( isset( $args['route'] ) ) {
+			if ( isset( $args['route'] ) && ( ! isset( $args['label'] ) || ! isset( $args['url'] ) ) ) {
 
 				// Get route.
 				$route = hivepress()->router->get_route( $args['route'] );

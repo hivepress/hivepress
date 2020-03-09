@@ -214,7 +214,7 @@ abstract class Form {
 		// Set component.
 		$attributes['data-component'] = 'form';
 
-		// Set class.
+		// Set attributes.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_meta( 'name' ) ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
