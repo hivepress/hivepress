@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Models;
+use HivePress\Forms;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -30,7 +31,43 @@ final class Vendor extends Component {
 		// Update vendor.
 		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_vendor' ], 100 );
 
+		// todo.
+		add_filter( 'hivepress/v1/forms/user_update', [ $this, 'todo' ], 100, 2 );
+
 		parent::__construct( $args );
+	}
+
+	// todo.
+	public function todo( $form_args, $form ) {
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter( [ 'user' => $form->get_model()->get_id() ] )->get_first();
+
+		if ( $vendor ) {
+			$vendor_form = ( new Forms\Vendor_Update(
+				[
+					'model' => $vendor,
+				]
+			) );
+
+			$form_args['fields'] = array_merge(
+				array_map(
+					function( $field ) {
+						return array_merge(
+							$field->get_args(),
+							[
+								// todo doesn't work.
+								'default' => $field->get_value(),
+							]
+						);
+					},
+					$vendor_form->get_fields()
+				),
+				$form_args['fields']
+			);
+		}
+
+		return $form_args;
 	}
 
 	/**
