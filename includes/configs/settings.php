@@ -58,7 +58,7 @@ return [
 					'listings_related_per_page'        => [
 						'label'     => hivepress()->translator->get_string( 'related_listings_per_page' ),
 						'type'      => 'number',
-						'default'   => 2,
+						'default'   => 3,
 						'min_value' => 0,
 						'required'  => true,
 						'_order'    => 50,

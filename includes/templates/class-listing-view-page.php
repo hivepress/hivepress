@@ -30,13 +30,13 @@ class Listing_View_Page extends Page_Sidebar_Right {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [
+					'page_columns' => [
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--view-page' ],
 						],
 					],
 
-					'page_content'   => [
+					'page_content' => [
 						'blocks' => [
 							'listing_title'                => [
 								'type'       => 'container',
@@ -129,23 +129,10 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'path'   => 'listing/view/page/listing-description',
 								'_order' => 50,
 							],
-
-							'related_listings_container'   => [
-								'type'   => 'section',
-								'title'  => hivepress()->translator->get_string( 'related_listings' ),
-								'_order' => 1000,
-
-								'blocks' => [
-									'related_listings' => [
-										'type'   => 'related_listings',
-										'_order' => 10,
-									],
-								],
-							],
 						],
 					],
 
-					'page_sidebar'   => [
+					'page_sidebar' => [
 						'attributes' => [
 							'data-component' => 'sticky',
 						],
@@ -202,6 +189,24 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'type'   => 'widgets',
 								'area'   => 'hp_listing_view_sidebar',
 								'_order' => 40,
+							],
+						],
+					],
+
+					'page_footer'  => [
+						'blocks' => [
+							'related_listings_container' => [
+								'type'   => 'section',
+								'title'  => hivepress()->translator->get_string( 'related_listings' ),
+								'_order' => 10,
+
+								'blocks' => [
+									'related_listings' => [
+										'type'    => 'related_listings',
+										'columns' => 3,
+										'_order'  => 10,
+									],
+								],
 							],
 						],
 					],

@@ -28,9 +28,8 @@ class Related_Listings extends Listings {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'columns' => 2,
-				'number'  => get_option( 'hp_listings_related_per_page' ),
-				'order'   => 'random',
+				'number' => get_option( 'hp_listings_related_per_page' ),
+				'order'  => 'random',
 			],
 			$args
 		);
