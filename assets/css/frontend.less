@@ -159,10 +159,25 @@ Mixins
 				margin-bottom: 1rem;
 			}
 		}
+		@media only screen and (max-width:47.99em) {
+			&__button {
+				width: 100%;
+
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
 
 		&--narrow &__actions,
 		&--narrow &__footer {
 			flex-direction: column;
+		}
+		@media only screen and (max-width:47.99em) {
+			&__actions,
+			&__footer {
+				flex-direction: column;
+			}
 		}
 
 		&__description,
@@ -249,10 +264,24 @@ Mixins
 				margin: 0 0 0.5rem;
 			}
 		}
+		@media only screen and (max-width:47.99em) {
+			&__action {
+				&:not(:last-child) {
+					margin: 0 0 0.5rem;
+				}
+			}
+		}
 
 		&--narrow button&__action {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
+			}
+		}
+		@media only screen and (max-width:47.99em) {
+			& button&__action {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
 			}
 		}
 	}
