@@ -456,22 +456,19 @@ final class Listing extends Component {
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
 			// Add menu items.
-			$items = hp\merge_arrays(
-				$items,
-				[
-					'listing_view' => [
-						'label'  => esc_html__( 'Details', 'hivepress' ),
-						'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
-						'_order' => 10,
-					],
+			$items['listing_view'] = [
+				'label'  => esc_html__( 'Details', 'hivepress' ),
+				'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
+				'_order' => 5,
+			];
 
-					'listing_edit' => [
-						'label'  => esc_html__( 'Edit', 'hivepress' ),
-						'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
-						'_order' => 20,
-					],
-				]
-			);
+			if ( get_current_user_id() === $listing->get_user__id() ) {
+				$items['listing_edit'] = [
+					'label'  => esc_html__( 'Edit', 'hivepress' ),
+					'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
+					'_order' => 100,
+				];
+			}
 		}
 
 		return $items;
@@ -502,12 +499,14 @@ final class Listing extends Component {
 				// todo.
 				$index = 1;
 
-				foreach ( $listing->get_categories() as $category ) {
-					$items[ 'listing_category_view_' . $index ] = [
-						'label'  => $category->get_name(),
-						'url'    => hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] ),
-						'_order' => $index * 10,
-					];
+				if ( $listing->get_categories__id() ) {
+					foreach ( $listing->get_categories() as $category ) {
+						$items[ 'listing_category_view_' . $index ] = [
+							'label'  => $category->get_name(),
+							'url'    => hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] ),
+							'_order' => $index * 10,
+						];
+					}
 				}
 			}
 		}
