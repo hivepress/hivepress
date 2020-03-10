@@ -31,12 +31,12 @@ return [
 	],
 
 	'vendor_category'  => [
-		'post_type'         => [ 'vendor', 'vendor_attribute' ],
-		'hierarchical'      => true,
-		'show_admin_column' => true,
-		'rewrite'           => [ 'slug' => 'vendor-category' ],
+		'public'       => false,
+		'post_type'    => [ 'vendor', 'vendor_attribute' ],
+		'hierarchical' => true,
+		'rewrite'      => [ 'slug' => 'vendor-category' ],
 
-		'labels'            => [
+		'labels'       => [
 			'name'          => esc_html__( 'Categories', 'hivepress' ),
 			'singular_name' => esc_html__( 'Category', 'hivepress' ),
 			'add_new_item'  => esc_html__( 'Add Category', 'hivepress' ),
