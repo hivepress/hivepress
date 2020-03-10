@@ -136,7 +136,24 @@
 
 		// Select
 		hivepress.getComponent('select').each(function() {
-			$(this).select2();
+			var field = $(this),
+				settings = {
+					width: '100%',
+					dropdownAutoWidth: false,
+					theme: 'default',
+					minimumResultsForSearch: 25,
+				};
+
+			if (field.data('theme') === 'inline') {
+				$.extend(settings, {
+					width: 'resolve',
+					dropdownAutoWidth: true,
+					theme: 'inline',
+					minimumResultsForSearch: -1,
+				});
+			}
+
+			field.select2(settings);
 		});
 
 		// File upload
