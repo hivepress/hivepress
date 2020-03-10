@@ -480,7 +480,7 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
+			if ( ! isset( $fields[ $attribute_name ] ) ) {
 
 				// Get field arguments.
 				$field_args = array_merge(
