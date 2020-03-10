@@ -121,6 +121,11 @@ class Date extends Field {
 			$attributes['placeholder'] = $this->placeholder;
 		}
 
+		// Set disabled flag.
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
+		}
+
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;

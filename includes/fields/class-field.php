@@ -96,6 +96,13 @@ abstract class Field {
 	protected $filter;
 
 	/**
+	 * Disabled flag.
+	 *
+	 * @var bool
+	 */
+	protected $disabled = false;
+
+	/**
 	 * Required flag.
 	 *
 	 * @var bool

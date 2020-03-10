@@ -128,6 +128,11 @@ class Text extends Field {
 			$attributes['pattern'] = $this->pattern;
 		}
 
+		// Set disabled flag.
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
+		}
+
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
