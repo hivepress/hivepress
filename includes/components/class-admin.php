@@ -1154,7 +1154,10 @@ final class Admin extends Component {
 		$output = '';
 
 		if ( $text ) {
-			$output .= '<div class="hp-tooltip"><span class="hp-tooltip__icon dashicons dashicons-editor-help"></span><div class="hp-tooltip__text">' . esc_html( $text ) . '</div></div>';
+			$output .= '<div class="hp-tooltip">';
+			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
+			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '</div>';
 		}
 
 		return $output;

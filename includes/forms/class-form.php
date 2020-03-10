@@ -434,7 +434,7 @@ abstract class Form {
 
 					// Render description.
 					if ( $field->get_description() ) {
-						$output .= '<div class="hp-field__description">' . $field->get_description() . '</div>';
+						$output .= '<div class="hp-field__description">' . wp_kses_post( $field->get_description() ) . '</div>';
 					}
 				}
 
