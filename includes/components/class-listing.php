@@ -55,14 +55,9 @@ final class Listing extends Component {
 
 		} else {
 
-			// Alter account menu.
-			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
-
-			// Alter manage menu.
-			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_manage_menu' ], 10, 2 );
-
-			// Alter breadcrumb menu.
-			add_filter( 'hivepress/v1/menus/breadcrumb/items', [ $this, 'alter_breadcrumb_menu' ], 10, 2 );
+			// Alter menus.
+			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
+			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_listing_manage_menu' ], 10, 2 );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
@@ -420,12 +415,12 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Alters account menu.
+	 * Alters user account menu.
 	 *
 	 * @param array $menu Menu arguments.
 	 * @return array
 	 */
-	public function alter_account_menu( $menu ) {
+	public function alter_user_account_menu( $menu ) {
 		if ( Models\Listing::query()->filter(
 			[
 				'user'       => get_current_user_id(),
@@ -442,13 +437,13 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Alters manage menu.
+	 * Alters listing manage menu.
 	 *
 	 * @param array  $items Menu items.
 	 * @param object $menu Menu object.
 	 * @return array
 	 */
-	public function alter_manage_menu( $items, $menu ) {
+	public function alter_listing_manage_menu( $items, $menu ) {
 
 		// Get listing.
 		$listing = $menu->get_context( 'listing' );
@@ -468,46 +463,6 @@ final class Listing extends Component {
 					'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
 					'_order' => 100,
 				];
-			}
-		}
-
-		return $items;
-	}
-
-	/**
-	 * Alters breadcrumb menu.
-	 *
-	 * @param array  $items Menu items.
-	 * @param object $menu Menu object.
-	 * @return array
-	 */
-	public function alter_breadcrumb_menu( $items, $menu ) {
-		if ( is_singular( 'hp_listing' ) ) {
-
-			// Get listing.
-			$listing = $menu->get_context( 'listing' );
-
-			if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
-
-				// Add menu items.
-				$items['listings_view'] = [
-					'label'  => hivepress()->translator->get_string( 'all_listings' ),
-					'url'    => hivepress()->router->get_url( 'listings_view_page' ),
-					'_order' => 10,
-				];
-
-				// todo.
-				$index = 1;
-
-				if ( $listing->get_categories__id() ) {
-					foreach ( $listing->get_categories() as $category ) {
-						$items[ 'listing_category_view_' . $index ] = [
-							'label'  => $category->get_name(),
-							'url'    => hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] ),
-							'_order' => $index * 10,
-						];
-					}
-				}
 			}
 		}
 

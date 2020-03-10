@@ -437,14 +437,46 @@ Mixins
 	Menus
 	--------------------------------------------------------------*/
 	&-menu {
+		&:not(:last-child) {
+			margin-bottom: 2rem;
+		}
+
 		&--site-header {
 			display: flex;
 			align-items: center;
+			margin: 0;
 		}
 
 		&--site-header &__item {
 			&:not(:last-child) {
 				margin-right: 2rem;
+			}
+		}
+
+		&--breadcrumb {
+			ul {
+				.unstyled-list;
+				display: flex;
+				flex-wrap: wrap;
+			}
+		}
+
+		&--breadcrumb &__item {
+			margin: 0;
+			font-size: 80%;
+			display: flex;
+			align-items: center;
+
+			&:not(:last-child) {
+				margin-right: 0.5rem;
+
+				&::after {
+					.icon;
+					content: '\f105';
+					font-size: 14px;
+					margin-left: 0.5rem;
+					opacity: 0.5;
+				}
 			}
 		}
 	}
@@ -578,6 +610,14 @@ Mixins
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+		}
+
+		&__actions--secondary {
+			display: flex;
+			align-items: center;
+			@media only screen and (max-width:47.99em) {
+				flex-direction: column;
+			}
 		}
 
 		&--view-page &__actions--primary,
@@ -740,40 +780,18 @@ Mixins
 				margin-bottom: 1rem;
 			}
 		}
-	}
-	// todo
-	&-menu {
-		&:not(:last-child) {
-			margin-bottom: 2rem;
-		}
 
-		&--breadcrumb {
-			ul {
-				.unstyled-list;
-				display: flex;
-				flex-wrap: wrap;
-			}
-		}
-
-		&--breadcrumb &__item {
-			margin: 0;
-			font-size: 80%;
-			display: flex;
-			align-items: center;
-
+		&__actions--secondary &__action {
 			&:not(:last-child) {
-				margin-right: 0.5rem;
-
-				&::after {
-					.icon;
-					content: '\f105';
-					font-size: 14px;
-					margin-left: 0.5rem;
-					color: rgba(0,0,0,0.25);
+				margin-right: 1.5rem;
+				@media only screen and (max-width:47.99em) {
+					margin: 0 0 0.5rem;
 				}
 			}
 		}
-
+	}
+	// todo
+	&-menu {
 		&--tabbed {
 			border-bottom: 1px solid rgba(0,0,0,.1);
 
