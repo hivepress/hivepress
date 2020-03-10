@@ -92,4 +92,19 @@ class Vendor extends Post {
 
 		parent::__construct( $args );
 	}
+
+	/**
+	 * Gets model fields.
+	 *
+	 * @param string $area Display area.
+	 * @return array
+	 */
+	final public function _get_fields( $area = null ) {
+		return array_filter(
+			$this->fields,
+			function( $field ) use ( $area ) {
+				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_display_areas' ), true );
+			}
+		);
+	}
 }
