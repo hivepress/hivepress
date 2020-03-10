@@ -41,7 +41,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_title'                => [
 								'type'       => 'container',
 								'tag'        => 'h1',
-								'_order'     => 5,
+								'_order'     => 10,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__title' ],
@@ -58,33 +58,6 @@ class Listing_View_Page extends Page_Sidebar_Right {
 										'type'   => 'part',
 										'path'   => 'listing/view/listing-verified-badge',
 										'_order' => 20,
-									],
-								],
-							],
-
-							'page_topbar'                  => [
-								'type'       => 'container',
-								'_order'     => 10,
-
-								'attributes' => [
-									'class' => [ 'hp-page__topbar' ],
-								],
-
-								'blocks'     => [
-									'listing_manage_menu' => [
-										'type'   => 'menu',
-										'menu'   => 'listing_manage',
-										'_order' => 10,
-									],
-
-									'listing_actions_secondary' => [
-										'type'       => 'container',
-										'blocks'     => [],
-										'_order'     => 20,
-
-										'attributes' => [
-											'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
-										],
 									],
 								],
 							],
@@ -112,22 +85,49 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								],
 							],
 
+							'page_topbar'                  => [
+								'type'       => 'container',
+								'_order'     => 30,
+
+								'attributes' => [
+									'class' => [ 'hp-page__topbar' ],
+								],
+
+								'blocks'     => [
+									'listing_manage_menu' => [
+										'type'   => 'menu',
+										'menu'   => 'listing_manage',
+										'_order' => 10,
+									],
+
+									'listing_actions_secondary' => [
+										'type'       => 'container',
+										'blocks'     => [],
+										'_order'     => 20,
+
+										'attributes' => [
+											'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+										],
+									],
+								],
+							],
+
 							'listing_images'               => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-images',
-								'_order' => 30,
+								'_order' => 40,
 							],
 
 							'listing_attributes_secondary' => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-attributes-secondary',
-								'_order' => 40,
+								'_order' => 50,
 							],
 
 							'listing_description'          => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-description',
-								'_order' => 50,
+								'_order' => 60,
 							],
 						],
 					],
