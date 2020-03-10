@@ -72,19 +72,19 @@ class Date extends Field {
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_order'     => 100,
 					],
 
 					'min_date'    => [
 						'label'  => esc_html__( 'Minimum Date', 'hivepress' ),
 						'type'   => 'date',
-						'_order' => 20,
+						'_order' => 110,
 					],
 
 					'max_date'    => [
 						'label'  => esc_html__( 'Maximum Date', 'hivepress' ),
 						'type'   => 'date',
-						'_order' => 30,
+						'_order' => 120,
 					],
 				],
 			],

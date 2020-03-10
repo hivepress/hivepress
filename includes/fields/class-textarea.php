@@ -40,11 +40,12 @@ class Textarea extends Text {
 
 				'settings'   => [
 					'pattern' => null,
+
 					'editor'  => [
 						'label'   => esc_html__( 'Formatting', 'hivepress' ),
 						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 40,
+						'_order'  => 140,
 					],
 				],
 			],

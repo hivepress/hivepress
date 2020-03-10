@@ -71,28 +71,28 @@ class Text extends Field {
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_order'     => 100,
 					],
 
 					'min_length'  => [
 						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
-						'_order'    => 20,
+						'_order'    => 110,
 					],
 
 					'max_length'  => [
 						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
-						'_order'    => 30,
+						'_order'    => 120,
 					],
 
 					'pattern'     => [
 						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 40,
+						'_order'     => 130,
 					],
 				],
 			],

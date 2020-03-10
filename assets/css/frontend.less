@@ -238,21 +238,6 @@ Mixins
 			align-items: center;
 		}
 
-		&__label {
-			display: block;
-			margin-bottom: 0.5rem;
-
-			small {
-				font-size: 1em;
-				font-weight: normal;
-			}
-		}
-
-		&--pivot &__label {
-			margin: 0 0.5rem 0 0;
-			white-space: nowrap;
-		}
-
 		&__action {
 			&:not(:last-child) {
 				margin-right: 1.5rem;
@@ -415,6 +400,27 @@ Mixins
 				}
 			}
 		}
+
+		&__label {
+			display: block;
+			margin-bottom: 0.5rem;
+
+			small {
+				font-size: 1em;
+				font-weight: normal;
+			}
+		}
+
+		&__description {
+			font-size: 80%;
+			margin-bottom: 0.75rem;
+			opacity: 0.75;
+		}
+	}
+
+	&-form--pivot &-field__label {
+		margin: 0 0.5rem 0 0;
+		white-space: nowrap;
 	}
 	/*--------------------------------------------------------------
 	Modals

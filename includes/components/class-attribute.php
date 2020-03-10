@@ -385,7 +385,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			if ( $field_settings ) {
 				foreach ( $field_settings as $field_name => $field ) {
-					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
+					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'description', 'options' ], true ) ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();

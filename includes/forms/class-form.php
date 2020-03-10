@@ -421,13 +421,20 @@ abstract class Form {
 
 					// Render label.
 					if ( $field->get_label() ) {
-						$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+						// @deprecated "hp-form__label" class since version 1.3.2.
+						$output .= '<label class="hp-field__label hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
 						if ( $field->get_statuses() ) {
 							$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
 						}
 
 						$output .= '</label>';
+					}
+
+					// Render description.
+					if ( $field->get_description() ) {
+						$output .= '<div class="hp-field__description">' . $field->get_description() . '</div>';
 					}
 				}
 

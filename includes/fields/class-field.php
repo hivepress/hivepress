@@ -131,11 +131,19 @@ abstract class Field {
 				'sortable'   => false,
 
 				'settings'   => [
-					'required' => [
+					'required'    => [
 						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
 						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 5,
+						'_order'  => 10,
+					],
+
+					'description' => [
+						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'type'       => 'textarea',
+						'max_length' => 2048,
+						'html'       => true,
+						'_order'     => 20,
 					],
 				],
 			],

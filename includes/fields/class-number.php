@@ -65,7 +65,7 @@ class Number extends Field {
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_order'     => 100,
 					],
 
 					'decimals'    => [
@@ -75,21 +75,21 @@ class Number extends Field {
 						'min_value' => 0,
 						'max_value' => 6,
 						'required'  => true,
-						'_order'    => 20,
+						'_order'    => 110,
 					],
 
 					'min_value'   => [
 						'label'    => esc_html__( 'Minimum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
-						'_order'   => 30,
+						'_order'   => 120,
 					],
 
 					'max_value'   => [
 						'label'    => esc_html__( 'Maximum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
-						'_order'   => 40,
+						'_order'   => 130,
 					],
 				],
 			],
