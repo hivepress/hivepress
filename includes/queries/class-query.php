@@ -43,6 +43,13 @@ abstract class Query extends \ArrayObject {
 	protected $model;
 
 	/**
+	 * Executed flag.
+	 *
+	 * @var bool
+	 */
+	protected $executed = false;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Query arguments.
@@ -368,14 +375,18 @@ abstract class Query extends \ArrayObject {
 	 * @return object
 	 */
 	final public function get() {
-		$this->exchangeArray(
-			array_map(
-				function( $result ) {
-					return $this->model->get( $result );
-				},
-				$this->get_results( $this->args )
-			)
-		);
+		if ( ! $this->executed ) {
+			$this->exchangeArray(
+				array_map(
+					function( $result ) {
+						return $this->model->get( $result );
+					},
+					$this->get_results( $this->args )
+				)
+			);
+
+			$this->executed = true;
+		}
 
 		return $this;
 	}
@@ -386,7 +397,30 @@ abstract class Query extends \ArrayObject {
 	 * @return array
 	 */
 	public function get_ids() {
-		return array_map( 'absint', $this->get_results( array_merge( $this->args, [ $this->get_alias( 'select' ) => $this->get_alias( 'select/id' ) ] ) ) );
+		$ids = [];
+
+		if ( $this->executed ) {
+			$ids = array_map(
+				function( $object ) {
+					return $object->get_id();
+				},
+				$this->serialize()
+			);
+		} else {
+			$ids = array_map(
+				'absint',
+				$this->get_results(
+					array_merge(
+						$this->args,
+						[
+							$this->get_alias( 'select' ) => $this->get_alias( 'select/id' ),
+						]
+					)
+				)
+			);
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -395,11 +429,17 @@ abstract class Query extends \ArrayObject {
 	 * @return mixed
 	 */
 	final public function get_first() {
-		$query = clone $this;
+		$object = null;
 
-		$objects = $query->limit( 1 )->get()->serialize();
+		if ( $this->executed ) {
+			$object = hp\get_first_array_value( $this->serialize() );
+		} else {
+			$query = clone $this;
 
-		return empty( $objects ) ? null : hp\get_first_array_value( $objects );
+			$object = hp\get_first_array_value( $query->limit( 1 )->get()->serialize() );
+		}
+
+		return $object;
 	}
 
 	/**
@@ -408,11 +448,17 @@ abstract class Query extends \ArrayObject {
 	 * @return mixed
 	 */
 	final public function get_first_id() {
-		$query = clone $this;
+		$id = null;
 
-		$ids = $query->limit( 1 )->get_ids();
+		if ( $this->executed ) {
+			$id = hp\get_first_array_value( $this->get_ids() );
+		} else {
+			$query = clone $this;
 
-		return empty( $ids ) ? null : hp\get_first_array_value( $ids );
+			$id = hp\get_first_array_value( $query->limit( 1 )->get_ids() );
+		}
+
+		return $id;
 	}
 
 	/**
@@ -430,7 +476,22 @@ abstract class Query extends \ArrayObject {
 	 * @return int
 	 */
 	public function get_count() {
-		return $this->get_results( array_merge( $this->args, [ $this->get_alias( 'aggregate/count' ) => true ] ) );
+		$count = 0;
+
+		if ( $this->executed ) {
+			$count = count( $this->get_ids() );
+		} else {
+			$count = $this->get_results(
+				array_merge(
+					$this->args,
+					[
+						$this->get_alias( 'aggregate/count' ) => true,
+					]
+				)
+			);
+		}
+
+		return $count;
 	}
 
 	/**
