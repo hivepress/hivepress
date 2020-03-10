@@ -134,6 +134,11 @@
 			});
 		});
 
+		// Select
+		hivepress.getComponent('select').each(function() {
+			$(this).select2();
+		});
+
 		// File upload
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),

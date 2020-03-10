@@ -328,18 +328,34 @@ final class Form extends Component {
 			);
 		}
 
-		// Enqueue ReCAPTCHA.
-		if ( ! is_admin() && $this->is_captcha_enabled() ) {
-			wp_enqueue_script(
-				'recaptcha',
-				'https://www.google.com/recaptcha/api.js',
-				[],
-				null,
-				false
-			);
+		if ( ! is_admin() ) {
 
-			wp_script_add_data( 'recaptcha', 'async', true );
-			wp_script_add_data( 'recaptcha', 'defer', true );
+			// Enqueue Select2.
+			$filepath = '/assets/js/select2/i18n/' . $language . '.js';
+
+			if ( file_exists( hivepress()->get_path() . $filepath ) ) {
+				wp_enqueue_script(
+					'select2-' . $language,
+					hivepress()->get_url() . $filepath,
+					[ 'select2' ],
+					hivepress()->get_version(),
+					true
+				);
+			}
+
+			// Enqueue ReCAPTCHA.
+			if ( $this->is_captcha_enabled() ) {
+				wp_enqueue_script(
+					'recaptcha',
+					'https://www.google.com/recaptcha/api.js',
+					[],
+					null,
+					false
+				);
+
+				wp_script_add_data( 'recaptcha', 'async', true );
+				wp_script_add_data( 'recaptcha', 'defer', true );
+			}
 		}
 	}
 }

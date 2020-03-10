@@ -101,6 +101,11 @@ class Select extends Field {
 			$this->options = [ '' => $this->placeholder ] + $this->options;
 		}
 
+		// Set disabled flag.
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
+		}
+
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
@@ -110,6 +115,9 @@ class Select extends Field {
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
 		}
+
+		// Set component.
+		$attributes['data-component'] = 'select';
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
