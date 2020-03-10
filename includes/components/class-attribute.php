@@ -676,50 +676,73 @@ final class Attribute extends Component {
 			'hide_empty' => false,
 		];
 
-		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category' );
+		// Get cached options.
+		$options = hivepress()->cache->get_cache(
+			array_merge(
+				$query_args,
+				[
+					'fields' => 'names',
+					'format' => 'tree',
+				]
+			),
+			'models/' . $model . '_category'
+		);
 
-		if ( is_null( $category_ids ) ) {
+		if ( is_null( $options ) ) {
+			$options = [];
+
+			// Get category IDs.
 			$category_ids = get_terms( $query_args );
 
 			if ( $category_id ) {
 				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
 			}
 
-			// Cache IDs.
-			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category', $category_ids );
+			if ( $category_ids ) {
+
+				// Get categories.
+				$categories = get_terms(
+					[
+						'taxonomy'   => hp\prefix( $model . '_category' ),
+						'include'    => $category_ids,
+						'hide_empty' => false,
+						'meta_key'   => 'hp_sort_order',
+						'orderby'    => 'meta_value_num',
+						'order'      => 'ASC',
+					]
+				);
+
+				// Add options.
+				$options[0] = [
+					'label'  => esc_html__( 'All Categories', 'hivepress' ),
+					'parent' => null,
+				];
+
+				foreach ( $categories as $category ) {
+					$options[ $category->term_id ] = [
+						'label'  => $category->name,
+						'parent' => $category->parent,
+					];
+				}
+			}
+
+			// Cache options.
+			if ( count( $options ) <= 1000 ) {
+				hivepress()->cache->set_cache(
+					array_merge(
+						$query_args,
+						[
+							'fields' => 'names',
+							'format' => 'tree',
+						]
+					),
+					'models/' . $model . '_category',
+					$options
+				);
 			}
 		}
 
-		if ( $category_ids ) {
-
-			// Get categories.
-			$categories = get_terms(
-				[
-					'taxonomy'   => hp\prefix( $model . '_category' ),
-					'include'    => $category_ids,
-					'hide_empty' => false,
-					'meta_key'   => 'hp_sort_order',
-					'orderby'    => 'meta_value_num',
-					'order'      => 'ASC',
-				]
-			);
-
-			// Add options.
-			$options = [
-				0 => [
-					'label'  => esc_html__( 'All Categories', 'hivepress' ),
-					'parent' => null,
-				],
-			];
-
-			foreach ( $categories as $category ) {
-				$options[ $category->term_id ] = [
-					'label'  => $category->name,
-					'parent' => $category->parent,
-				];
-			}
+		if ( $options ) {
 
 			// Set options.
 			$form_args['fields']['_category']['options'] = $options;
