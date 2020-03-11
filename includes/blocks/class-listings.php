@@ -74,7 +74,7 @@ class Listings extends Block {
 
 				'settings' => [
 					'columns'  => [
-						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'columns_number' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
@@ -88,7 +88,7 @@ class Listings extends Block {
 					],
 
 					'number'   => [
-						'label'     => esc_html_x( 'Number', 'quantity', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'items_number' ),
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
@@ -97,7 +97,7 @@ class Listings extends Block {
 					],
 
 					'category' => [
-						'label'       => esc_html__( 'Category', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'category' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
@@ -105,15 +105,15 @@ class Listings extends Block {
 					],
 
 					'order'    => [
-						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
 						'_order'   => 40,
 
 						'options'  => [
-							'created_date' => esc_html_x( 'Date Added', 'sort order', 'hivepress' ),
-							'title'        => esc_html_x( 'Title', 'sort order', 'hivepress' ),
-							'random'       => esc_html_x( 'Random', 'sort order', 'hivepress' ),
+							'created_date' => hivepress()->translator->get_string( 'by_date_added' ),
+							'title'        => hivepress()->translator->get_string( 'by_title' ),
+							'random'       => hivepress()->translator->get_string( 'by_random' ),
 						],
 					],
 

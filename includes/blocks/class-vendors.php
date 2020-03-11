@@ -53,7 +53,7 @@ class Vendors extends Block {
 
 				'settings' => [
 					'columns' => [
-						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'columns_number' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
@@ -67,7 +67,7 @@ class Vendors extends Block {
 					],
 
 					'number'  => [
-						'label'     => esc_html_x( 'Number', 'quantity', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'items_number' ),
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
@@ -76,15 +76,15 @@ class Vendors extends Block {
 					],
 
 					'order'   => [
-						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
 						'_order'   => 30,
 
 						'options'  => [
-							'registered_date' => esc_html_x( 'Date Registered', 'sort order', 'hivepress' ),
-							'name'            => esc_html_x( 'Name', 'sort order', 'hivepress' ),
-							'random'          => esc_html_x( 'Random', 'sort order', 'hivepress' ),
+							'registered_date' => hivepress()->translator->get_string( 'by_date_registered' ),
+							'name'            => hivepress()->translator->get_string( 'by_name' ),
+							'random'          => hivepress()->translator->get_string( 'by_random' ),
 						],
 					],
 				],

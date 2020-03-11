@@ -67,7 +67,7 @@ class Listing_Categories extends Block {
 
 				'settings' => [
 					'columns' => [
-						'label'    => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'columns_number' ),
 						'type'     => 'select',
 						'default'  => 3,
 						'required' => true,
@@ -81,7 +81,7 @@ class Listing_Categories extends Block {
 					],
 
 					'number'  => [
-						'label'     => esc_html_x( 'Number', 'quantity', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'items_number' ),
 						'type'      => 'number',
 						'min_value' => 1,
 						'default'   => 3,
@@ -90,7 +90,7 @@ class Listing_Categories extends Block {
 					],
 
 					'parent'  => [
-						'label'       => esc_html__( 'Parent Category', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'parent_category' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
@@ -98,15 +98,15 @@ class Listing_Categories extends Block {
 					],
 
 					'order'   => [
-						'label'    => esc_html_x( 'Order', 'sort', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
 						'_order'   => 40,
 
 						'options'  => [
 							'sort_order' => '&mdash;',
-							'name'       => esc_html_x( 'Name', 'sort order', 'hivepress' ),
-							'item_count' => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
+							'name'       => hivepress()->translator->get_string( 'by_name' ),
+							'item_count' => hivepress()->translator->get_string( 'by_items_number' ),
 						],
 					],
 				],

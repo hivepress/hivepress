@@ -24,6 +24,15 @@ return [
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
 	'app_id'                                    => esc_html__( 'App ID', 'hivepress' ),
 	'return_to_my_account'                      => esc_html__( 'Return to My Account', 'hivepress' ),
+	'columns_number'                            => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
+	'items_number'                              => esc_html_x( 'Number', 'quantity', 'hivepress' ),
+	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
+	'by_name'                                   => esc_html_x( 'Name', 'sort order', 'hivepress' ),
+	'by_date_added'                             => esc_html_x( 'Date Added', 'sort order', 'hivepress' ),
+	'by_date_registered'                        => esc_html_x( 'Date Registered', 'sort order', 'hivepress' ),
+	'by_title'                                  => esc_html_x( 'Title', 'sort order', 'hivepress' ),
+	'by_random'                                 => esc_html_x( 'Random', 'sort order', 'hivepress' ),
+	'sort_order'                                => esc_html_x( 'Order', 'sort', 'hivepress' ),
 	'ecommerce_product'                         => sprintf( esc_html__( '%s Product', 'hivepress' ), 'WooCommerce' ),
 	'these_tokens_are_available'                => esc_html__( 'The following tokens are available: %s.', 'hivepress' ),
 	'extension_is_incompatible_with_core'       => esc_html__( '%s extension is incompatible with the current HivePress version, please update HivePress or deactivate it.', 'hivepress' ),
@@ -91,4 +100,8 @@ return [
 	'vendors_page'                              => esc_html__( 'Vendors Page', 'hivepress' ),
 	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
 	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),
+
+	// Categories.
+	'category'                                  => esc_html__( 'Category', 'hivepress' ),
+	'parent_category'                           => esc_html__( 'Parent Category', 'hivepress' ),
 ];
