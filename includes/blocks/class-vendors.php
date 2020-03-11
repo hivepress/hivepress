@@ -164,7 +164,7 @@ class Vendors extends Block {
 		}
 
 		if ( $regular_query->have_posts() ) {
-			$output .= '<div class="hp-grid hp-block">';
+			$output .= '<div class="hp-vendors hp-grid hp-block">';
 			$output .= '<div class="hp-row">';
 
 			// Render vendors.

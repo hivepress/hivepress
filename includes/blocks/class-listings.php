@@ -224,9 +224,9 @@ class Listings extends Block {
 
 		if ( $regular_query->have_posts() || $featured_query ) {
 			if ( 'edit' === $this->mode ) {
-				$output .= '<table class="hp-table">';
+				$output .= '<table class="hp-listings hp-table">';
 			} else {
-				$output .= '<div class="hp-grid hp-block">';
+				$output .= '<div class="hp-listings hp-grid hp-block">';
 				$output .= '<div class="hp-row">';
 			}
 

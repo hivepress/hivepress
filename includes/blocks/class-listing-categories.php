@@ -186,7 +186,7 @@ class Listing_Categories extends Block {
 
 		// Render categories.
 		if ( $categories->count() ) {
-			$output  = '<div class="hp-grid hp-block">';
+			$output  = '<div class="hp-listing-categories hp-grid hp-block">';
 			$output .= '<div class="hp-row">';
 
 			foreach ( $categories as $category ) {
