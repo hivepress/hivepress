@@ -34,8 +34,8 @@ final class WooCommerce extends Component {
 		// Set order item meta.
 		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'set_order_item_meta' ], 10, 3 );
 
-		// Hide order item meta.
-		add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_order_item_meta' ] );
+		// Format order item meta.
+		add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'format_order_item_meta' ] );
 
 		if ( ! is_admin() ) {
 
@@ -106,31 +106,58 @@ final class WooCommerce extends Component {
 	}
 
 	/**
-	 * Hides order item meta.
+	 * Formats order item meta.
 	 *
 	 * @param array $meta Meta values.
 	 * @return array
 	 */
-	public function hide_order_item_meta( $meta ) {
+	public function format_order_item_meta( $meta ) {
 
-		// Get meta keys.
-		$keys = hp\prefix(
-			array_keys(
-				array_filter(
-					$this->get_config( 'item_meta' ),
-					function( $args ) {
-						return ! isset( $args['label'] );
-					}
-				)
-			)
-		);
+		// Get fields.
+		$fields = [];
 
-		// Filter meta values.
-		$meta = array_filter(
-			$meta,
-			function( $args ) use ( $keys ) {
-				return ! in_array( $args->key, $keys, true );
+		foreach ( hp\sort_array( $this->get_config( 'item_meta' ) ) as $name => $args ) {
+
+			// Set name.
+			$name = hp\prefix( $name );
+
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+			// Add field.
+			if ( $field ) {
+				$fields[ $name ] = $field;
 			}
+		}
+
+		// Filter meta.
+		$meta = array_filter(
+			array_map(
+				function( $args ) use ( $fields ) {
+
+					// Get field.
+					$field = hp\get_array_value( $fields, $args->key );
+
+					if ( $field ) {
+						if ( $field->get_label() ) {
+
+							// Set value.
+							$field->set_value( $args->value );
+
+							// Set display.
+							$args->display_key   = $field->get_label();
+							$args->display_value = '<p>' . $field->display() . '</p>';
+						} else {
+
+							// Remove meta.
+							$args = null;
+						}
+					}
+
+					return $args;
+				},
+				$meta
+			)
 		);
 
 		return $meta;
