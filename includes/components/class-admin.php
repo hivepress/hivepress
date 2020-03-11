@@ -73,9 +73,6 @@ final class Admin extends Component {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
-			// Hide comments.
-			add_filter( 'comments_clauses', [ $this, 'hide_comments' ] );
-
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -1048,41 +1045,6 @@ final class Admin extends Component {
 		}
 
 		echo $output;
-	}
-
-	/**
-	 * Hides comments.
-	 *
-	 * @param array $query Query arguments.
-	 * @return array
-	 */
-	public function hide_comments( $query ) {
-		global $pagenow;
-
-		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php', 'post.php' ], true ) ) {
-
-			// Get comment types.
-			$comment_types = hivepress()->get_config( 'comment_types' );
-
-			// Filter comment types.
-			$comment_types = array_filter(
-				$comment_types,
-				function( $args ) {
-					return ! hp\get_array_value( $args, 'public', true );
-				}
-			);
-
-			if ( $comment_types ) {
-
-				// Get comment clause.
-				$clause = '"' . implode( '", "', hp\prefix( array_keys( $comment_types ) ) ) . '"';
-
-				// Set comment clause.
-				$query['where'] .= ' AND comment_type NOT IN (' . $clause . ')';
-			}
-		}
-
-		return $query;
 	}
 
 	/**
