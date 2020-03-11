@@ -32,15 +32,12 @@ final class Comment extends Component {
 		// Filter comment feed.
 		add_filter( 'comment_feed_where', [ $this, 'filter_comment_feed' ] );
 
-		if ( is_admin() ) {
+		// Update comment count.
+		add_filter( 'wp_count_comments', [ $this, 'update_comment_count' ], 1000, 2 );
 
-			// Update comment count.
-			add_filter( 'wp_count_comments', [ $this, 'update_comment_count' ], 1000, 2 );
-
-			// Clear comment count.
-			add_action( 'wp_insert_comment', [ $this, 'clear_comment_count' ] );
-			add_action( 'wp_set_comment_status', [ $this, 'clear_comment_count' ] );
-		}
+		// Clear comment count.
+		add_action( 'wp_insert_comment', [ $this, 'clear_comment_count' ] );
+		add_action( 'wp_set_comment_status', [ $this, 'clear_comment_count' ] );
 
 		parent::__construct( $args );
 	}
