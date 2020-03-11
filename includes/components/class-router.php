@@ -369,6 +369,11 @@ final class Router extends Component {
 
 		if ( $route && isset( $route['title'] ) ) {
 
+			// Remove query title.
+			if ( count( $parts ) > 1 ) {
+				array_shift( $parts );
+			}
+
 			// Add route title.
 			array_unshift( $parts, $route['title'] );
 		}
