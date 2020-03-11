@@ -202,8 +202,6 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_url( $name, $query = [] ) {
-		global $wp_rewrite;
-
 		$url = '';
 
 		// Get route.
@@ -237,7 +235,7 @@ final class Router extends Component {
 					);
 
 					// Set URL path.
-					if ( $wp_rewrite->get_page_permastruct() || hp\get_array_value( $route, 'rest' ) ) {
+					if ( get_option( 'permalink_structure' ) || hp\get_array_value( $route, 'rest' ) ) {
 						foreach ( $params as $param ) {
 							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
 						}
