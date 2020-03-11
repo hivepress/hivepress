@@ -31,6 +31,12 @@ final class WooCommerce extends Component {
 			return;
 		}
 
+		// Set order item meta.
+		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'set_order_item_meta' ], 10, 3 );
+
+		// Hide order item meta.
+		add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_order_item_meta' ] );
+
 		if ( ! is_admin() ) {
 
 			// Set account template.
@@ -47,6 +53,16 @@ final class WooCommerce extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets WooCommerce configuration.
+	 *
+	 * @param string $type Configuration type.
+	 * @return array
+	 */
+	public function get_config( $type ) {
+		return hp\get_array_value( hivepress()->get_config( 'woocommerce' ), $type, [] );
 	}
 
 	/**
@@ -72,6 +88,52 @@ final class WooCommerce extends Component {
 	 */
 	public function get_product_price_text( $product ) {
 		return wp_strip_all_tags( wc_price( $product->get_price() ) );
+	}
+
+	/**
+	 * Sets order item meta.
+	 *
+	 * @param WC_Order_Item_Product $item Order item.
+	 * @param string                $cart_item_key Cart item key.
+	 * @param array                 $meta Meta values.
+	 */
+	public function set_order_item_meta( $item, $cart_item_key, $meta ) {
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( strpos( $meta_key, 'hp_' ) === 0 ) {
+				$item->update_meta_data( $meta_key, $meta_value );
+			}
+		}
+	}
+
+	/**
+	 * Hides order item meta.
+	 *
+	 * @param array $meta Meta values.
+	 * @return array
+	 */
+	public function hide_order_item_meta( $meta ) {
+
+		// Get meta keys.
+		$keys = hp\prefix(
+			array_keys(
+				array_filter(
+					$this->get_config( 'item_meta' ),
+					function( $args ) {
+						return ! isset( $args['label'] );
+					}
+				)
+			)
+		);
+
+		// Filter meta values.
+		$meta = array_filter(
+			$meta,
+			function( $args ) use ( $keys ) {
+				return ! in_array( $args->key, $keys, true );
+			}
+		);
+
+		return $meta;
 	}
 
 	/**
