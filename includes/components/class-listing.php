@@ -451,11 +451,13 @@ final class Listing extends Component {
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
 			// Add menu items.
-			$items['listing_view'] = [
-				'label'  => esc_html__( 'Details', 'hivepress' ),
-				'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
-				'_order' => 5,
-			];
+			if ( $listing->get_status() === 'publish' ) {
+				$items['listing_view'] = [
+					'label'  => esc_html__( 'Details', 'hivepress' ),
+					'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
+					'_order' => 5,
+				];
+			}
 
 			if ( get_current_user_id() === $listing->get_user__id() ) {
 				$items['listing_edit'] = [
