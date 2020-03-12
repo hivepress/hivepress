@@ -36,6 +36,36 @@ class Listing_View_Page extends Page_Sidebar_Right {
 						],
 					],
 
+					'page_topbar'  => [
+						'_order'     => 30,
+
+						'attributes' => [
+							'class' => [ 'hp-page__topbar--separate' ],
+						],
+
+						'blocks'     => [
+							'listing_manage_menu'       => [
+								'type'       => 'menu',
+								'menu'       => 'listing_manage',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-menu--tabbed' ],
+								],
+							],
+
+							'listing_actions_secondary' => [
+								'type'       => 'container',
+								'blocks'     => [],
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+								],
+							],
+						],
+					],
+
 					'page_content' => [
 						'blocks' => [
 							'listing_title'                => [
@@ -81,33 +111,6 @@ class Listing_View_Page extends Page_Sidebar_Right {
 										'type'   => 'part',
 										'path'   => 'listing/view/listing-created-date',
 										'_order' => 20,
-									],
-								],
-							],
-
-							'page_topbar'                  => [
-								'type'       => 'container',
-								'_order'     => 30,
-
-								'attributes' => [
-									'class' => [ 'hp-page__topbar' ],
-								],
-
-								'blocks'     => [
-									'listing_manage_menu' => [
-										'type'   => 'menu',
-										'menu'   => 'listing_manage',
-										'_order' => 10,
-									],
-
-									'listing_actions_secondary' => [
-										'type'       => 'container',
-										'blocks'     => [],
-										'_order'     => 20,
-
-										'attributes' => [
-											'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
-										],
 									],
 								],
 							],

@@ -58,10 +58,21 @@ abstract class Page_Narrow extends Page {
 												'_order' => 1,
 											],
 
-											'page_title' => [
+											'page_title'  => [
 												'type'   => 'part',
 												'path'   => 'page/page-title',
 												'_order' => 5,
+											],
+
+											'page_topbar' => [
+												'type'     => 'container',
+												'blocks'   => [],
+												'optional' => true,
+												'_order'   => 10,
+
+												'attributes' => [
+													'class' => [ 'hp-page__topbar' ],
+												],
 											],
 										],
 									],

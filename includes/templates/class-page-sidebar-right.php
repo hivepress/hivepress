@@ -32,6 +32,7 @@ abstract class Page_Sidebar_Right extends Page_Sidebar_Left {
 					'page_columns'   => [],
 					'page_header'    => [],
 					'page_footer'    => [],
+					'page_topbar'    => [],
 
 					'page_content'   => [
 						'_order' => 10,

@@ -63,49 +63,42 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						],
 					],
 
+					'page_topbar'  => [
+						'blocks' => [
+							'listing_count'     => [
+								'type'   => 'result_count',
+								'_order' => 10,
+							],
+
+							'listing_sort_form' => [
+								'type'       => 'form',
+								'form'       => 'listing_sort',
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-form--pivot' ],
+								],
+							],
+						],
+					],
+
 					'page_content' => [
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
-								'_order' => 10,
+								'_order' => 20,
 
 								'blocks' => [
-									'page_topbar'        => [
-										'type'       => 'container',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-page__topbar' ],
-										],
-
-										'blocks'     => [
-											'listing_count' => [
-												'type'   => 'result_count',
-												'_order' => 10,
-											],
-
-											'listing_sort_form'    => [
-												'type'   => 'form',
-												'form'   => 'listing_sort',
-												'_order' => 20,
-
-												'attributes' => [
-													'class' => [ 'hp-form--pivot' ],
-												],
-											],
-										],
-									],
-
 									'listings'           => [
 										'type'    => 'listings',
 										'columns' => 2,
-										'_order'  => 20,
+										'_order'  => 10,
 									],
 
 									'listing_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
-										'_order' => 30,
+										'_order' => 20,
 									],
 								],
 							],
