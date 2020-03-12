@@ -27,11 +27,7 @@ class Listing_Manage extends Menu {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'items'      => [],
-
-				'attributes' => [
-					'class' => [ 'hp-menu--tabbed' ],
-				],
+				'items' => [],
 			],
 			$args
 		);
