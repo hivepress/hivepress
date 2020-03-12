@@ -58,7 +58,7 @@ return [
 		'public'             => true,
 		'has_archive'        => true,
 		'supports'           => [ 'title', 'editor', 'thumbnail', 'author' ],
-		'menu_icon'          => 'dashicons-store',
+		'menu_icon'          => 'dashicons-businessman',
 		'rewrite'            => [ 'slug' => 'vendor' ],
 		'redirect_canonical' => false,
 
