@@ -482,6 +482,65 @@ Mixins
 				}
 			}
 		}
+
+		&--tabbed {
+			border-color: rgba(0,0,0,.1);
+			border-style: solid;
+			border-width: 0;
+
+			&:not(:last-child) {
+				border-bottom-width: 1px;
+			}
+
+			ul {
+				.unstyled-list;
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+
+				ul {
+					display: none;
+				}
+			}
+		}
+
+		&--tabbed &__item {
+			padding: 1rem;
+			margin: 0;
+			position: relative;
+
+			&--current {
+				&::before {
+					display: block;
+					content: '';
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: -1px;
+					height: 3px;
+					background-color: rgba(0,0,0,.5);
+				}
+
+				a {
+					color: inherit;
+					font-weight: bold;
+				}
+			}
+		}
+	}
+
+	&-page__topbar--separate &-menu--tabbed {
+		margin: -1rem 0;
+		border-bottom-width: 0;
+		@media only screen and (max-width:47.99em) {
+			margin-bottom: 0;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+				border-bottom-width: 1px;
+				width: 100%;
+			}
+		}
 	}
 	/*--------------------------------------------------------------
 	Grid
@@ -548,6 +607,18 @@ Mixins
 
 			&:not(:last-child) {
 				margin-bottom: 2rem;
+			}
+
+			&--separate {
+				border-style: solid;
+				border-color: rgba(0, 0, 0, 0.1);
+				border-width: 0;
+				padding: 1rem 0;
+				margin-top: -1rem;
+
+				&:not(:last-child) {
+					border-bottom-width: 1px;
+				}
 			}
 		}
 	}
@@ -618,9 +689,7 @@ Mixins
 		&__actions--secondary {
 			display: flex;
 			align-items: center;
-			@media only screen and (max-width:47.99em) {
-				flex-direction: column;
-			}
+			flex-wrap: wrap;
 		}
 
 		&--view-page &__actions--primary,
@@ -787,61 +856,6 @@ Mixins
 		&__actions--secondary &__action {
 			&:not(:last-child) {
 				margin-right: 1.5rem;
-				@media only screen and (max-width:47.99em) {
-					margin: 0 0 0.5rem;
-				}
-			}
-		}
-	}
-	// todo
-	&-listing--view-page &-page__topbar {
-		border-bottom: 1px solid rgba(0,0,0,.1);
-
-		&:not(:first-child) {
-			margin-top: -1rem;
-		}
-	}
-
-	&-listing--view-page &-page__topbar &-menu {
-		margin: 0;
-		border-bottom: none;
-	}
-
-	&-menu {
-		&--tabbed {
-			border-bottom: 1px solid rgba(0,0,0,.1);
-
-			ul {
-				.unstyled-list;
-				display: flex;
-
-				ul {
-					display: none;
-				}
-			}
-		}
-
-		&--tabbed &__item {
-			padding: 1rem;
-			margin: 0;
-			position: relative;
-
-			&--current {
-				&::before {
-					display: block;
-					content: '';
-					position: absolute;
-					left: 0;
-					right: 0;
-					bottom: -1px;
-					height: 3px;
-					background-color: rgba(0,0,0,.5);
-				}
-
-				> a {
-					color: inherit;
-					font-weight: bold;
-				}
 			}
 		}
 	}
@@ -961,7 +975,6 @@ Mixins
 		}
 
 		&--view-block &__attributes--secondary,
-		&--view-block &__details--primary,
 		&--view-block &__image,
 		&--view-block &__name {
 			&:not(:last-child) {
@@ -969,6 +982,7 @@ Mixins
 			}
 		}
 
+		&--view-block &__details--primary,
 		&--view-page &__attributes--secondary,
 		&--view-page &__details--primary,
 		&--view-page &__image,
