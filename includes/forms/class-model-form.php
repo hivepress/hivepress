@@ -62,7 +62,7 @@ abstract class Model_Form extends Form {
 				}
 			}
 
-			$this->set_values( $values );
+			$this->set_values( $values, true );
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
