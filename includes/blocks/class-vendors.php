@@ -96,6 +96,22 @@ class Vendors extends Block {
 	}
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Block arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'number' => get_option( 'hp_vendors_per_page' ),
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -105,99 +121,102 @@ class Vendors extends Block {
 
 		$output = '';
 
-		// Get column width.
-		$columns      = absint( $this->columns );
-		$column_width = 12;
+		if ( $this->number ) {
 
-		if ( $columns > 0 && $columns <= 12 ) {
-			$column_width = round( $column_width / $columns );
-		}
+			// Get column width.
+			$columns      = absint( $this->columns );
+			$column_width = 12;
 
-		// Get vendor query.
-		$regular_query = $wp_query;
-
-		if ( ! isset( $this->context['vendors'] ) ) {
-
-			// Set query.
-			$query = $this->get_context( 'vendor_query' );
-
-			if ( empty( $query ) ) {
-				$query = Models\Vendor::query()->filter(
-					[
-						'status' => 'publish',
-					]
-				)->limit( $this->number );
-
-				// Set order.
-				if ( 'name' === $this->order ) {
-					$query->order( [ 'name' => 'asc' ] );
-				} elseif ( 'random' === $this->order ) {
-					$query->order( 'random' );
-				} else {
-					$query->order( [ 'registered_date' => 'desc' ] );
-				}
+			if ( $columns > 0 && $columns <= 12 ) {
+				$column_width = round( $column_width / $columns );
 			}
 
-			// Get cached IDs.
-			$vendor_ids = null;
+			// Get vendor query.
+			$regular_query = $wp_query;
 
-			if ( 'random' !== $this->order ) {
-				$vendor_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/vendor' );
+			if ( ! isset( $this->context['vendors'] ) ) {
 
-				if ( is_array( $vendor_ids ) ) {
+				// Set query.
+				$query = $this->get_context( 'vendor_query' );
+
+				if ( empty( $query ) ) {
 					$query = Models\Vendor::query()->filter(
 						[
 							'status' => 'publish',
-							'id__in' => $vendor_ids,
 						]
-					)->order( 'id__in' )->limit( count( $vendor_ids ) );
+					)->limit( $this->number );
+
+					// Set order.
+					if ( 'name' === $this->order ) {
+						$query->order( [ 'name' => 'asc' ] );
+					} elseif ( 'random' === $this->order ) {
+						$query->order( 'random' );
+					} else {
+						$query->order( [ 'registered_date' => 'desc' ] );
+					}
+				}
+
+				// Get cached IDs.
+				$vendor_ids = null;
+
+				if ( 'random' !== $this->order ) {
+					$vendor_ids = hivepress()->cache->get_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/vendor' );
+
+					if ( is_array( $vendor_ids ) ) {
+						$query = Models\Vendor::query()->filter(
+							[
+								'status' => 'publish',
+								'id__in' => $vendor_ids,
+							]
+						)->order( 'id__in' )->limit( count( $vendor_ids ) );
+					}
+				}
+
+				// Query vendors.
+				$regular_query = new \WP_Query( $query->get_args() );
+
+				// Cache IDs.
+				if ( 'random' !== $this->order && is_null( $vendor_ids ) && $regular_query->post_count <= 1000 ) {
+					hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/vendor', wp_list_pluck( $regular_query->posts, 'ID' ) );
 				}
 			}
 
-			// Query vendors.
-			$regular_query = new \WP_Query( $query->get_args() );
+			if ( $regular_query->have_posts() ) {
+				$output .= '<div class="hp-vendors hp-grid hp-block">';
+				$output .= '<div class="hp-row">';
 
-			// Cache IDs.
-			if ( 'random' !== $this->order && is_null( $vendor_ids ) && $regular_query->post_count <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/vendor', wp_list_pluck( $regular_query->posts, 'ID' ) );
-			}
-		}
+				// Render vendors.
+				while ( $regular_query->have_posts() ) {
+					$regular_query->the_post();
 
-		if ( $regular_query->have_posts() ) {
-			$output .= '<div class="hp-vendors hp-grid hp-block">';
-			$output .= '<div class="hp-row">';
+					// Get vendor.
+					$vendor = Models\Vendor::query()->get_by_id( get_post() );
 
-			// Render vendors.
-			while ( $regular_query->have_posts() ) {
-				$regular_query->the_post();
+					if ( $vendor ) {
+						$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
 
-				// Get vendor.
-				$vendor = Models\Vendor::query()->get_by_id( get_post() );
+						// Render vendor.
+						$output .= ( new Template(
+							[
+								'template' => 'vendor_view_block',
 
-				if ( $vendor ) {
-					$output .= '<div class="hp-grid__item hp-col-sm-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+								'context'  => [
+									'vendor' => $vendor,
+								],
+							]
+						) )->render();
 
-					// Render vendor.
-					$output .= ( new Template(
-						[
-							'template' => 'vendor_view_block',
-
-							'context'  => [
-								'vendor' => $vendor,
-							],
-						]
-					) )->render();
-
-					$output .= '</div>';
+						$output .= '</div>';
+					}
 				}
+
+				$output .= '</div>';
+				$output .= '</div>';
 			}
 
-			$output .= '</div>';
-			$output .= '</div>';
+			// Reset query.
+			wp_reset_postdata();
 		}
-
-		// Reset query.
-		wp_reset_postdata();
 
 		return $output;
 	}
