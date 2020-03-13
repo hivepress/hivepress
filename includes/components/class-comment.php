@@ -97,11 +97,14 @@ final class Comment extends Component {
 		// Get comment types.
 		$types = $this->get_comment_types();
 
-		// Set placeholder.
-		$placeholder = implode( ', ', array_fill( 0, count( $types ), '%s' ) );
+		if ( $types ) {
 
-		// Add clause.
-		$where .= $wpdb->prepare( " AND comment_type NOT IN ( {$placeholder} )", $types );
+			// Set placeholder.
+			$placeholder = implode( ', ', array_fill( 0, count( $types ), '%s' ) );
+
+			// Add clause.
+			$where .= $wpdb->prepare( " AND comment_type NOT IN ( {$placeholder} )", $types );
+		}
 
 		return $where;
 	}
@@ -149,22 +152,34 @@ final class Comment extends Component {
 					$types = array_merge( $types, [ 'action_log', 'order_note', 'webhook_delivery' ] );
 				}
 
-				// Set placeholder.
-				$placeholder = implode( ', ', array_fill( 0, count( $types ), '%s' ) );
+				if ( $types ) {
 
-				// Get counts.
-				$counts = $wpdb->get_results(
-					$wpdb->prepare(
+					// Set placeholder.
+					$placeholder = implode( ', ', array_fill( 0, count( $types ), '%s' ) );
+
+					// Get counts.
+					$counts = $wpdb->get_results(
+						$wpdb->prepare(
+							"
+							SELECT comment_approved, COUNT(*) AS num_comments
+							FROM {$wpdb->comments}
+							WHERE comment_type NOT IN ( {$placeholder} )
+							GROUP BY comment_approved;
+							",
+							$types
+						),
+						ARRAY_A
+					);
+				} else {
+					$counts = $wpdb->get_results(
 						"
 						SELECT comment_approved, COUNT(*) AS num_comments
 						FROM {$wpdb->comments}
-						WHERE comment_type NOT IN ( {$placeholder} )
 						GROUP BY comment_approved;
 						",
-						$types
-					),
-					ARRAY_A
-				);
+						ARRAY_A
+					);
+				}
 
 				// Add stats.
 				if ( $counts ) {
