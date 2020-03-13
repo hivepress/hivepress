@@ -217,12 +217,15 @@ abstract class Menu {
 			$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
 			$output .= '<ul>';
 
+			// Get current route.
+			$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name', false );
+
 			foreach ( $this->items as $name => $args ) {
 
 				// Get current class.
 				$class = '';
 
-				if ( hivepress()->router->get_current_url() === $args['url'] ) {
+				if ( hivepress()->router->get_current_url() === $args['url'] || hp\get_array_value( $args, 'route' ) === $route ) {
 					$class = 'hp-menu__item--current current-menu-item';
 				}
 
