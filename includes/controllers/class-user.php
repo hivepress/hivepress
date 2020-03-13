@@ -243,6 +243,8 @@ final class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
+			do_action( 'hivepress/v1/models/user/login' );
+
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
@@ -307,6 +309,15 @@ final class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
+
+			/**
+			 * Fires on user authentication.
+			 *
+			 * @action /models/user/login
+			 * @description Fires on user authentication.
+			 */
+			do_action( 'hivepress/v1/models/user/login' );
+
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
@@ -433,6 +444,8 @@ final class User extends Controller {
 
 		// Authenticate user.
 		if ( ! is_user_logged_in() ) {
+			do_action( 'hivepress/v1/models/user/login' );
+
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
