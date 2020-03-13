@@ -314,6 +314,9 @@ final class Router extends Component {
 		foreach ( $this->get_routes() as $name => $route ) {
 			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) && ( isset( $route['redirect'] ) || isset( $route['action'] ) ) ) {
 
+				// Get URL path.
+				$path = ltrim( $this->get_url_path( $name ), '/' );
+
 				// Get URL params.
 				$params = $this->get_url_params( $name );
 
@@ -332,8 +335,12 @@ final class Router extends Component {
 					'&'
 				);
 
-				// Add rewrite rule.
-				add_rewrite_rule( '^' . ltrim( $this->get_url_path( $name ), '/' ) . '/?$', 'index.php?' . $query, 'top' );
+				// Add rewrite rules.
+				add_rewrite_rule( '^' . $path . '/?$', 'index.php?' . $query, 'top' );
+
+				if ( hp\get_array_value( $route, 'paginated' ) ) {
+					add_rewrite_rule( '^' . $path . '/page/(\d+)/?$', 'index.php?paged=$matches[' . ( count( $params ) + 1 ) . ']&' . $query, 'top' );
+				}
 
 				// Add rewrite tags.
 				foreach ( $params as $param ) {
