@@ -101,11 +101,12 @@ final class Listing extends Controller {
 					],
 
 					'listings_edit_page'           => [
-						'title'    => hivepress()->translator->get_string( 'listings' ),
-						'base'     => 'user_account_page',
-						'path'     => '/listings',
-						'redirect' => [ $this, 'redirect_listings_edit_page' ],
-						'action'   => [ $this, 'render_listings_edit_page' ],
+						'title'     => hivepress()->translator->get_string( 'listings' ),
+						'base'      => 'user_account_page',
+						'path'      => '/listings',
+						'redirect'  => [ $this, 'redirect_listings_edit_page' ],
+						'action'    => [ $this, 'render_listings_edit_page' ],
+						'paginated' => true,
 					],
 
 					'listing_edit_page'            => [
@@ -494,6 +495,8 @@ final class Listing extends Controller {
 					'user'       => get_current_user_id(),
 				]
 			)->order( [ 'created_date' => 'desc' ] )
+			->limit( 20 )
+			->paginate( hivepress()->request->get_page_number() )
 			->get_args()
 		);
 
