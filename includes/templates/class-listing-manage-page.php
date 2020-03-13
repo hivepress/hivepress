@@ -48,6 +48,7 @@ abstract class Listing_Manage_Page extends Page_Wide {
 
 							'listing_actions_secondary' => [
 								'type'       => 'container',
+								'optional'   => true,
 								'blocks'     => [],
 								'_order'     => 20,
 

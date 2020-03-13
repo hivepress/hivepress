@@ -58,6 +58,7 @@ final class Listing extends Component {
 			// Alter menus.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
 			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_listing_manage_menu' ], 10, 2 );
+			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'hide_listing_manage_menu' ], 1000 );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
@@ -466,6 +467,20 @@ final class Listing extends Component {
 					'_order' => 100,
 				];
 			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Hides listing manage menu.
+	 *
+	 * @param array $items Menu items.
+	 * @return array
+	 */
+	public function hide_listing_manage_menu( $items ) {
+		if ( count( $items ) === 1 && isset( $items['listing_view'] ) ) {
+			$items = [];
 		}
 
 		return $items;

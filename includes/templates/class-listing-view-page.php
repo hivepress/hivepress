@@ -56,6 +56,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 
 							'listing_actions_secondary' => [
 								'type'       => 'container',
+								'optional'   => true,
 								'blocks'     => [],
 								'_order'     => 20,
 
