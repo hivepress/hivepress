@@ -217,7 +217,11 @@ final class Listing extends Controller {
 		}
 
 		// Update listing.
-		$listing->fill( $form->get_values() );
+		$values = $form->get_values();
+
+		unset( $values['images'] );
+
+		$listing->fill( $values );
 
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
