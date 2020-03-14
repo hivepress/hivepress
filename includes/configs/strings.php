@@ -21,6 +21,8 @@ return [
 	'expiration'                                => esc_html__( 'Expiration', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
 	'overview'                                  => esc_html__( 'Overview', 'hivepress' ),
+	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
+	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
 	'app_id'                                    => esc_html__( 'App ID', 'hivepress' ),
