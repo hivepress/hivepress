@@ -305,19 +305,34 @@ final class Listing extends Component {
 
 		foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
 
-			// Get count.
-			$count = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->term_relationships}
-					INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
-					WHERE post_status = 'publish' AND post_type = %s AND term_taxonomy_id = %d",
-					'hp_listing',
-					$term_taxonomy_id
-				)
-			);
+			// Get term ID.
+			$term_id = get_term_by( 'term_taxonomy_id', $term_taxonomy_id )->term_id;
 
-			// Update count.
-			$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_taxonomy_id' => $term_taxonomy_id ] );
+			// Get parent term IDs.
+			$parent_term_ids = array_merge( [ $term_id ], get_ancestors( $term_id, 'hp_listing_category', 'taxonomy' ) );
+
+			foreach ( $parent_term_ids as $parent_term_id ) {
+
+				// Get child term IDs.
+				$child_term_ids = array_merge( [ $parent_term_id ], get_term_children( $parent_term_id, 'hp_listing_category' ) );
+
+				// Set placeholder.
+				$placeholder = implode( ', ', array_fill( 0, count( $child_term_ids ), '%d' ) );
+
+				// Get count.
+				$count = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(*) FROM {$wpdb->term_relationships}
+						INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
+						INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_taxonomy}.term_taxonomy_id = {$wpdb->term_relationships}.term_taxonomy_id
+						WHERE post_status = 'publish' AND post_type = %s AND term_id IN ( {$placeholder} )",
+						array_merge( [ 'hp_listing' ], $child_term_ids )
+					)
+				);
+
+				// Update count.
+				$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_id' => $parent_term_id ] );
+			}
 		}
 	}
 
