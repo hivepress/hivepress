@@ -330,28 +330,24 @@ final class Listing extends Component {
 	public function alter_submit_form( $form ) {
 
 		// Get terms page ID.
-		$page_id = hp\get_first_array_value(
-			get_posts(
-				[
-					'post_type'      => 'page',
-					'post_status'    => 'publish',
-					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				]
-			)
-		);
+		$page_id = absint( get_option( 'hp_page_listing_submission_terms' ) );
 
 		if ( $page_id ) {
 
-			// Add terms field.
-			$form['fields']['_terms'] = [
-				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'      => 'checkbox',
-				'required'  => true,
-				'_separate' => true,
-				'_order'    => 1000,
-			];
+			// Get terms page URL.
+			$page_url = get_permalink( $page_id );
+
+			if ( $page_url ) {
+
+				// Add terms field.
+				$form['fields']['_terms'] = [
+					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'type'      => 'checkbox',
+					'required'  => true,
+					'_separate' => true,
+					'_order'    => 1000,
+				];
+			}
 		}
 
 		return $form;
