@@ -56,7 +56,7 @@ return [
 
 	'select2'               => [
 		'handle' => 'select2',
-		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.min.js',
+		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.full.min.js',
 	],
 
 	'core'                  => [

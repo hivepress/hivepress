@@ -140,20 +140,22 @@
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
-					theme: 'default',
 					minimumResultsForSearch: 25,
 				};
 
-			if (field.data('theme') === 'inline') {
-				$.extend(settings, {
-					width: 'resolve',
-					dropdownAutoWidth: true,
-					theme: 'inline',
-					minimumResultsForSearch: -1,
-				});
-			}
+			if (field.is(':visible')) {
+				if (field.data('style') === 'inline') {
+					$.extend(settings, {
+						containerCssClass: 'select2-selection--inline',
+						dropdownCssClass: 'select2-dropdown--inline',
+						width: 'resolve',
+						dropdownAutoWidth: true,
+						minimumResultsForSearch: -1,
+					});
+				}
 
-			field.select2(settings);
+				field.select2(settings);
+			}
 		});
 
 		// File upload

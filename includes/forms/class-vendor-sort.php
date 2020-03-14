@@ -57,7 +57,7 @@ class Vendor_Sort extends Form {
 						'_order'      => 10,
 
 						'attributes'  => [
-							'data-theme' => 'inline',
+							'data-style' => 'inline',
 						],
 					],
 
