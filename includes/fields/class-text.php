@@ -90,7 +90,7 @@ class Text extends Field {
 
 					'pattern'     => [
 						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
-						'type'       => 'text',
+						'type'       => 'regex',
 						'max_length' => 256,
 						'_order'     => 130,
 					],
@@ -141,17 +141,6 @@ class Text extends Field {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();
-	}
-
-	/**
-	 * Sets regex pattern.
-	 *
-	 * @param string $pattern Regex pattern.
-	 */
-	protected function set_pattern( $pattern ) {
-		if ( ! is_null( $pattern ) ) {
-			$this->pattern = trim( addcslashes( $pattern, '/' ), '^$' );
-		}
 	}
 
 	/**
