@@ -54,7 +54,7 @@ final class Editor extends Component {
 
 				// Add block.
 				$blocks[ $block_type ] = [
-					'title'      => hivepress()->get_name() . ' ' . $block::get_meta( 'label' ),
+					'title'      => $block::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hivepress-block-' . $block_slug,
 					'attributes' => [],
