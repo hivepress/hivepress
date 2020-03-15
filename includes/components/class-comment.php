@@ -67,6 +67,13 @@ final class Comment extends Component {
 	 */
 	public function filter_comment_query( $query ) {
 
+		// Get comment types.
+		$types = $this->get_comment_types();
+
+		if ( empty( $types ) ) {
+			return;
+		}
+
 		// Check included types.
 		$included_type  = hp\get_array_value( $query->query_vars, 'type' );
 		$included_types = hp\get_array_value( $query->query_vars, 'type__in' );
@@ -79,7 +86,7 @@ final class Comment extends Component {
 		$excluded_types = array_filter( (array) hp\get_array_value( $query->query_vars, 'type__not_in' ) );
 
 		// Add comment types.
-		$excluded_types = array_merge( $excluded_types, $this->get_comment_types() );
+		$excluded_types = array_merge( $excluded_types, $types );
 
 		// Set excluded types.
 		$query->query_vars['type__not_in'] = $excluded_types;
