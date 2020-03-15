@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-20 19:09+0000\n"
-"PO-Revision-Date: 2020-02-20 19:09+0000\n"
-"Last-Translator: admin <admin@hivepress.local>\n"
+"POT-Creation-Date: 2020-03-14 17:52+0000\n"
+"PO-Revision-Date: 2020-03-15 11:22+0000\n"
+"Last-Translator: admin <admin@admin.com>\n"
 "Language-Team: Polski\n"
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10 >= 2 && n%10<=4 "
@@ -15,86 +15,38 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.1; wp-5.3.2"
 
-#: includes/blocks/class-listing-categories.php:70
-#: includes/blocks/class-listings.php:77
-msgctxt "quantity"
-msgid "Columns"
-msgstr "Kolumny"
-
-#: includes/blocks/class-listing-categories.php:84
-#: includes/blocks/class-listings.php:91
-msgctxt "quantity"
-msgid "Number"
-msgstr "Ilość"
-
-#: includes/blocks/class-listing-categories.php:93
-#: includes/configs/taxonomies.php:27
-msgid "Parent Category"
-msgstr "Kategoria nadrzędna"
-
-#: includes/blocks/class-listing-categories.php:101
-#: includes/blocks/class-listings.php:108
-msgctxt "sort"
-msgid "Order"
-msgstr "Porządek"
-
-#: includes/blocks/class-listing-categories.php:108
-msgctxt "sort order"
-msgid "Name"
-msgstr "Według nazwy"
-
-#: includes/blocks/class-listing-categories.php:109
-msgctxt "sort order"
-msgid "Item Count"
-msgstr "Według ilości sztuk"
-
-#: includes/blocks/class-listings.php:100 includes/configs/taxonomies.php:22
-msgid "Category"
-msgstr "Kategoria"
-
-#: includes/blocks/class-listings.php:114
-msgctxt "sort order"
-msgid "Date Added"
-msgstr "Według daty dodania"
-
-#: includes/blocks/class-listings.php:115
-msgctxt "sort order"
-msgid "Title"
-msgstr "Według nagłówka"
-
-#: includes/blocks/class-listings.php:116
-msgctxt "sort order"
-msgid "Random"
-msgstr "Losowy"
-
 #: includes/blocks/class-result-count.php:56
 #, php-format
 msgid "Showing %1$s-%2$s of %3$s results"
 msgstr "Wyświetla się %1$s-%2$s z %3$s wyników"
 
-#: includes/components/class-admin.php:120
-#: includes/components/class-admin.php:121
-#: includes/components/class-admin.php:121 includes/configs/meta-boxes.php:15
-#: includes/configs/strings.php:16 includes/controllers/class-user.php:150
-#: templates/admin/settings.php:6
+#: includes/blocks/class-user-register-form.php:30
+msgid "User Registration Form"
+msgstr "Formularz rejestracji użytkowników"
+
+#: includes/components/class-admin.php:117
+#: includes/components/class-admin.php:118
+#: includes/components/class-admin.php:118 includes/configs/meta-boxes.php:15
+#: includes/configs/meta-boxes.php:191 includes/configs/strings.php:16
+#: includes/controllers/class-user.php:150 templates/admin/settings.php:6
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: includes/components/class-admin.php:122 templates/admin/extensions.php:8
+#: includes/components/class-admin.php:119 templates/admin/extensions.php:8
 msgid "Extensions"
 msgstr "Rozszerzenia"
 
-#: includes/components/class-admin.php:541
+#: includes/components/class-admin.php:540
 msgctxt "plural"
 msgid "All"
 msgstr "Wszystkie"
 
-#: includes/components/class-admin.php:546
+#: includes/components/class-admin.php:545
 msgctxt "plural"
 msgid "Installed"
 msgstr "Zainstalowane"
 
-#: includes/components/class-admin.php:1111
+#: includes/components/class-admin.php:1075
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
@@ -103,94 +55,85 @@ msgstr ""
 "Bieżący motyw nie deklaruje wsparcia HivePress, jeżeli powstaną problemy z "
 "szablonami lub stylowaniem, proszę rozważyć wybór oficjalnego motywu %s."
 
-#: includes/components/class-admin.php:1124
-#, php-format
-msgid ""
-"A new version of %s theme is available, please update for new features and "
-"improvements."
-msgstr ""
-"Dostępna jest nowa wersja motywu %s, zaktualizuj go teraz, aby dostać nowe "
-"funkcje i ulepszenia."
-
-#: includes/components/class-attribute.php:297
+#: includes/components/class-attribute.php:301
 msgid "Add Option"
 msgstr "Dodaj opcję"
 
-#: includes/components/class-attribute.php:298
+#: includes/components/class-attribute.php:302
 msgid "Edit Option"
 msgstr "Edytuj opcję"
 
-#: includes/components/class-attribute.php:299
+#: includes/components/class-attribute.php:303
 msgid "Update Option"
 msgstr "Zaktualizuj opcję"
 
-#: includes/components/class-attribute.php:300
+#: includes/components/class-attribute.php:304
 msgid "Parent Option"
 msgstr "Opcja nadrzędna"
 
-#: includes/components/class-attribute.php:301
+#: includes/components/class-attribute.php:305
 msgid "Search Options"
 msgstr "Szukaj opcji"
 
-#: includes/components/class-attribute.php:302
+#: includes/components/class-attribute.php:306
 msgid "No options found."
 msgstr "Nie znaleziono żadnych opcji."
 
-#: includes/components/class-attribute.php:394
+#: includes/components/class-attribute.php:398
 msgid "Edit Options"
 msgstr "Edytuj opcje"
 
-#: includes/components/class-attribute.php:539
+#: includes/components/class-attribute.php:543
 msgctxt "field"
 msgid "requires review"
 msgstr "wymaga sprawdzenia"
 
-#: includes/components/class-attribute.php:618
+#: includes/components/class-attribute.php:622
 msgid "Relevance"
 msgstr "Trafność"
 
-#: includes/components/class-attribute.php:620
+#: includes/components/class-attribute.php:624
 #: includes/fields/class-date.php:65
 msgid "Date"
 msgstr "Data"
 
-#: includes/components/class-attribute.php:708
+#: includes/components/class-attribute.php:717
 msgid "All Categories"
 msgstr "Wszystkie kategorie"
 
-#: includes/components/class-form.php:277
+#: includes/components/class-form.php:303
 msgid "Captcha is invalid."
 msgstr "Niepoprawna captcha."
 
-#: includes/components/class-listing.php:306
-#: includes/components/class-user.php:127
+#: includes/components/class-listing.php:359
+#: includes/components/class-user.php:122
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr "Akceptuję <a href=\"%s\" target=\"_blank\">warunki regulaminu</a>"
 
-#: includes/components/class-listing.php:375 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:417 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr "Promowane"
 
-#: includes/components/class-listing.php:379 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:421 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr "Sprawdzone"
 
-#: includes/components/class-listing.php:425
-#: templates/listing/edit/block/listing-view-link.php:7
-msgid "View"
-msgstr "Zobacz"
+#: includes/components/class-listing.php:467 includes/configs/strings.php:17
+#: includes/forms/class-listing-report.php:53
+msgid "Details"
+msgstr "Szczegóły"
 
-#: includes/components/class-listing.php:431
+#: includes/components/class-listing.php:475
 msgid "Edit"
 msgstr "Edytuj"
 
-#: includes/components/class-user.php:189
+#: includes/components/class-user.php:185
 #: includes/controllers/class-user.php:134
 #: includes/forms/class-user-login.php:69
 #: templates/user/login/user-login-link.php:9
@@ -198,13 +141,13 @@ msgstr "Edytuj"
 msgid "Sign In"
 msgstr "Zaloguj się"
 
-#: includes/components/class-user.php:201
+#: includes/components/class-user.php:197
 #: includes/forms/class-user-register.php:63
 #: templates/user/login/user-register-link.php:5
 msgid "Register"
 msgstr "Zarejestruj się"
 
-#: includes/components/class-user.php:237
+#: includes/components/class-user.php:209
 #: includes/controllers/class-user.php:142
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:69
@@ -212,105 +155,121 @@ msgstr "Zarejestruj się"
 msgid "Reset Password"
 msgstr "Resetuj hasło"
 
-#: includes/configs/meta-boxes.php:37 includes/configs/post-types.php:44
-#: includes/configs/post-types.php:50
+#: includes/configs/meta-boxes.php:35
+msgid "Featuring Date"
+msgstr "Data promowania"
+
+#: includes/configs/meta-boxes.php:43
+msgid "Expiration Date"
+msgstr "Data wygaśnięcia"
+
+#: includes/configs/meta-boxes.php:53 includes/configs/meta-boxes.php:198
+#: includes/configs/post-types.php:44 includes/configs/post-types.php:50
+#: includes/configs/post-types.php:87 includes/configs/post-types.php:93
 msgid "Attributes"
 msgstr "Atrybuty"
 
-#: includes/configs/meta-boxes.php:44
+#: includes/configs/meta-boxes.php:60 includes/configs/meta-boxes.php:205
 msgid "Editing"
 msgstr "Edytowanie"
 
-#: includes/configs/meta-boxes.php:50
+#: includes/configs/meta-boxes.php:66 includes/configs/meta-boxes.php:211
 msgctxt "attribute"
 msgid "Editable"
 msgstr "Edytowanie"
 
-#: includes/configs/meta-boxes.php:51
+#: includes/configs/meta-boxes.php:67 includes/configs/meta-boxes.php:212
 msgid "Allow front-end editing"
 msgstr "Pozwól na edycję przez użytkowników"
 
-#: includes/configs/meta-boxes.php:57 includes/configs/meta-boxes.php:88
+#: includes/configs/meta-boxes.php:73 includes/configs/meta-boxes.php:104
+#: includes/configs/meta-boxes.php:218 includes/configs/meta-boxes.php:249
 msgid "Field Type"
 msgstr "Typ pola"
 
-#: includes/configs/meta-boxes.php:68
+#: includes/configs/meta-boxes.php:84 includes/configs/meta-boxes.php:229
 msgctxt "noun"
 msgid "Search"
 msgstr "Wyszukiwanie"
 
-#: includes/configs/meta-boxes.php:74
+#: includes/configs/meta-boxes.php:90 includes/configs/meta-boxes.php:235
 msgctxt "attribute"
 msgid "Searchable"
 msgstr "Wyszukiwanie"
 
-#: includes/configs/meta-boxes.php:75
+#: includes/configs/meta-boxes.php:91 includes/configs/meta-boxes.php:236
 msgid "Display in the search form"
 msgstr "Wyświetlaj w formularzu wyszukiwania"
 
-#: includes/configs/meta-boxes.php:81
+#: includes/configs/meta-boxes.php:97 includes/configs/meta-boxes.php:242
 msgctxt "attribute"
 msgid "Sortable"
 msgstr "Sortowanie"
 
-#: includes/configs/meta-boxes.php:82
+#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:243
 msgid "Display as a sorting option"
 msgstr "Wyświetlaj jako opcję sortowania"
 
-#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:151
-#: includes/configs/settings.php:20
+#: includes/configs/meta-boxes.php:114 includes/configs/meta-boxes.php:167
+#: includes/configs/meta-boxes.php:259 includes/configs/settings.php:20
+#: includes/configs/settings.php:164
 msgctxt "noun"
 msgid "Display"
 msgstr "Wyświetlanie"
 
-#: includes/configs/meta-boxes.php:104
+#: includes/configs/meta-boxes.php:120 includes/configs/meta-boxes.php:265
 msgid "Areas"
 msgstr "Obszary"
 
-#: includes/configs/meta-boxes.php:105
+#: includes/configs/meta-boxes.php:121 includes/configs/meta-boxes.php:266
 msgid "Choose the template areas where you want to display this attribute."
 msgstr "Wybierz obszary szablonu, w których chcesz wyświetlać ten atrybut."
 
-#: includes/configs/meta-boxes.php:110 includes/configs/meta-boxes.php:111
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:127
+#: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:272
 msgid "Block"
 msgstr "Blok"
 
-#: includes/configs/meta-boxes.php:110 includes/configs/meta-boxes.php:112
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:128
+#: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:273
 msgctxt "area"
 msgid "primary"
 msgstr "główny"
 
-#: includes/configs/meta-boxes.php:111 includes/configs/meta-boxes.php:113
+#: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:129
+#: includes/configs/meta-boxes.php:272 includes/configs/meta-boxes.php:274
 msgctxt "area"
 msgid "secondary"
 msgstr "drugorzędny"
 
-#: includes/configs/meta-boxes.php:112 includes/configs/meta-boxes.php:113
+#: includes/configs/meta-boxes.php:128 includes/configs/meta-boxes.php:129
+#: includes/configs/meta-boxes.php:273 includes/configs/meta-boxes.php:274
 msgid "Page"
 msgstr "Strona"
 
-#: includes/configs/meta-boxes.php:118
+#: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:279
 msgid "Format"
 msgstr "Format"
 
-#: includes/configs/meta-boxes.php:119
+#: includes/configs/meta-boxes.php:135 includes/configs/meta-boxes.php:280
 msgid "Set the attribute display format."
 msgstr "Podaj format wyświetlania atrybutu."
 
-#: includes/configs/meta-boxes.php:134
+#: includes/configs/meta-boxes.php:150
 msgid "Image"
 msgstr "Zdjęcie"
 
-#: includes/configs/meta-boxes.php:135 includes/models/class-user.php:101
+#: includes/configs/meta-boxes.php:151 includes/models/class-user.php:101
 msgid "Select Image"
 msgstr "Wybierz zdjęcie"
 
-#: includes/configs/meta-boxes.php:142
+#: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:180
+#: includes/configs/meta-boxes.php:295
 msgctxt "sort priority"
 msgid "Order"
 msgstr "Kolejność"
 
-#: includes/configs/meta-boxes.php:152
+#: includes/configs/meta-boxes.php:168
 msgid "Display subcategories"
 msgstr "Wyświetlaj podkategorie"
 
@@ -319,32 +278,34 @@ msgctxt "listing"
 msgid "Add New"
 msgstr "Dodaj nowe"
 
-#: includes/configs/post-types.php:45
+#: includes/configs/post-types.php:45 includes/configs/post-types.php:88
 msgid "Attribute"
 msgstr "Atrybut"
 
-#: includes/configs/post-types.php:46
+#: includes/configs/post-types.php:46 includes/configs/post-types.php:89
 msgctxt "attribute"
 msgid "Add New"
 msgstr "Dodaj nowy"
 
 #: includes/configs/post-types.php:47 includes/configs/post-types.php:49
+#: includes/configs/post-types.php:90 includes/configs/post-types.php:92
 msgid "Add Attribute"
 msgstr "Dodaj atrybut"
 
-#: includes/configs/post-types.php:48
+#: includes/configs/post-types.php:48 includes/configs/post-types.php:91
 msgid "Edit Attribute"
 msgstr "Edytuj atrybut"
 
-#: includes/configs/post-types.php:51
+#: includes/configs/post-types.php:51 includes/configs/post-types.php:94
 msgid "Search Attributes"
 msgstr "Szukaj atrybutów"
 
 #: includes/configs/post-types.php:52 includes/configs/post-types.php:53
+#: includes/configs/post-types.php:95 includes/configs/post-types.php:96
 msgid "No attributes found."
 msgstr "Nie znaleziono żadnych atrybutów."
 
-#: includes/configs/post-types.php:67
+#: includes/configs/post-types.php:68
 msgctxt "vendor"
 msgid "Add New"
 msgstr "Dodaj nowego"
@@ -353,33 +314,33 @@ msgstr "Dodaj nowego"
 msgid "Display categories"
 msgstr "Wyświetlaj kategorie"
 
-#: includes/configs/settings.php:61 includes/configs/settings.php:75
+#: includes/configs/settings.php:70 includes/configs/settings.php:84
 #: includes/configs/strings.php:19
 msgid "Submission"
 msgstr "Dodawanie"
 
-#: includes/configs/settings.php:66
+#: includes/configs/settings.php:75
 msgid "Submission Terms Page"
 msgstr "Strona regulaminu dodawania"
 
-#: includes/configs/settings.php:93 includes/configs/strings.php:21
+#: includes/configs/settings.php:102 includes/configs/strings.php:21
 msgid "Expiration"
 msgstr "Wygaśnięcie"
 
-#: includes/configs/settings.php:98
+#: includes/configs/settings.php:107
 msgid "Expiration Period"
 msgstr "Okres ważności"
 
-#: includes/configs/settings.php:108 includes/configs/settings.php:171
+#: includes/configs/settings.php:117 includes/configs/settings.php:212
 #: includes/configs/strings.php:18
 msgid "Emails"
 msgstr "E-maile"
 
-#: includes/configs/settings.php:114
+#: includes/configs/settings.php:123
 msgid "This email is sent to users when listing is approved."
 msgstr "Ten e-mail jest wysyłany użytkownikom po zatwierdzeniu ogłoszenia."
 
-#: includes/configs/settings.php:116
+#: includes/configs/settings.php:125
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
@@ -387,11 +348,11 @@ msgstr ""
 "Cześć %user_name%! Twoje ogłoszenie \"%listing_title%\" zostało zatwierdzone,"
 " aby go zobaczyć kliknij w podany link: %listing_url%"
 
-#: includes/configs/settings.php:125
+#: includes/configs/settings.php:134
 msgid "This email is sent to users when listing is rejected."
 msgstr "Ten e-mail jest wysyłany użytkownikom po odrzuceniu ogłoszenia."
 
-#: includes/configs/settings.php:127
+#: includes/configs/settings.php:136
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
@@ -399,41 +360,45 @@ msgstr ""
 "Cześć %user_name%! Przykro nam, ale twoje ogłoszenie \"%listing_title%\" "
 "zostało odrzucone."
 
-#: includes/configs/settings.php:136
+#: includes/configs/settings.php:145
 msgid "This email is sent to users when listing is expired."
 msgstr "Ten e-mail jest wysyłany użytkownikom po wygaśnięciu ogłoszenia."
 
-#: includes/configs/settings.php:138
-msgid "Hi, %user_name%! Your listing \"%listing_title%\" has expired."
-msgstr "Cześć %user_name%! Twoje ogłoszenie \"%listing_title%\" wygasło."
+#: includes/configs/settings.php:147
+msgid ""
+"Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
+"following link to renew it: %listing_url%"
+msgstr ""
+"Cześć %user_name%! Twoje ogłoszenie \"%listing_title%\" wygasło, aby go "
+"odświeżyć kliknij w podany link: %listing_url%"
 
-#: includes/configs/settings.php:150
+#: includes/configs/settings.php:191
 msgid "Users"
 msgstr "Użytkownicy"
 
-#: includes/configs/settings.php:155
+#: includes/configs/settings.php:196
 msgid "Registration"
 msgstr "Rejestracja"
 
-#: includes/configs/settings.php:160
+#: includes/configs/settings.php:201
 msgid "Registration Terms Page"
 msgstr "Strona regulaminu rejestracji"
 
-#: includes/configs/settings.php:161
+#: includes/configs/settings.php:202
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 "Wybierz stronę regulaminu, który użytkownik musi zaakceptować przed "
 "rejestracją."
 
-#: includes/configs/settings.php:176
+#: includes/configs/settings.php:217
 msgid "User Registered"
 msgstr "Użytkownik zarejestrowany"
 
-#: includes/configs/settings.php:177
+#: includes/configs/settings.php:218
 msgid "This email is sent to users after registration."
 msgstr "Ten e-mail jest wysyłany użytkownikom po rejestracji."
 
-#: includes/configs/settings.php:179
+#: includes/configs/settings.php:220
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
@@ -441,16 +406,16 @@ msgstr ""
 "Cześć %user_name%! Dziękuję za rejestrację, to jest twoje hasło: "
 "%user_password%"
 
-#: includes/configs/settings.php:187
+#: includes/configs/settings.php:228
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr "Resetowanie hasła"
 
-#: includes/configs/settings.php:188
+#: includes/configs/settings.php:229
 msgid "This email is sent to users when a password reset is requested."
 msgstr "Ten e-mail jest wysyłany użytkownikom na prośbę o resetowanie hasła."
 
-#: includes/configs/settings.php:190
+#: includes/configs/settings.php:231
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
@@ -458,25 +423,21 @@ msgstr ""
 "Cześć %user_name%! Proszę kliknąć w podany link, aby ustawić nowe hasło: "
 "%password_reset_url%"
 
-#: includes/configs/settings.php:202
+#: includes/configs/settings.php:243
 msgid "Integrations"
 msgstr "Integracje"
 
-#: includes/configs/settings.php:212
+#: includes/configs/settings.php:253
 msgid "Site Key"
 msgstr "Klucz strony"
 
-#: includes/configs/settings.php:219
+#: includes/configs/settings.php:260
 msgid "Secret Key"
 msgstr "Sekretny klucz"
 
-#: includes/configs/settings.php:226
+#: includes/configs/settings.php:267
 msgid "Protected Forms"
 msgstr "Zabezpieczone formularze"
-
-#: includes/configs/strings.php:17 includes/forms/class-listing-report.php:53
-msgid "Details"
-msgstr "Szczegóły"
 
 #: includes/configs/strings.php:20
 msgid "Moderation"
@@ -487,32 +448,89 @@ msgid "Free"
 msgstr "Bezpłatnie"
 
 #: includes/configs/strings.php:23
+msgid "Overview"
+msgstr "Przegląd"
+
+#: includes/configs/strings.php:24
+msgid "Storage"
+msgstr "Przechowywanie"
+
+#: includes/configs/strings.php:25
+msgid "Storage Period"
+msgstr "Okres przechowywania"
+
+#: includes/configs/strings.php:26
 msgid "API Key"
 msgstr "Klucz API"
 
-#: includes/configs/strings.php:24
+#: includes/configs/strings.php:27
 msgid "Client ID"
 msgstr "ID klienta"
 
-#: includes/configs/strings.php:25
+#: includes/configs/strings.php:28
 msgid "App ID"
 msgstr "ID Aplikacji"
 
-#: includes/configs/strings.php:26
+#: includes/configs/strings.php:29
 msgid "Return to My Account"
 msgstr "Wróć do mojego konta"
 
-#: includes/configs/strings.php:27
+#: includes/configs/strings.php:30
+msgctxt "quantity"
+msgid "Columns"
+msgstr "Kolumny"
+
+#: includes/configs/strings.php:31
+msgctxt "quantity"
+msgid "Number"
+msgstr "Ilość"
+
+#: includes/configs/strings.php:32
+msgctxt "sort order"
+msgid "Item Count"
+msgstr "Według ilości sztuk"
+
+#: includes/configs/strings.php:33
+msgctxt "sort order"
+msgid "Name"
+msgstr "Według nazwy"
+
+#: includes/configs/strings.php:34
+msgctxt "sort order"
+msgid "Date Added"
+msgstr "Według daty dodania"
+
+#: includes/configs/strings.php:35
+msgctxt "sort order"
+msgid "Date Registered"
+msgstr "Według daty rejestracji"
+
+#: includes/configs/strings.php:36
+msgctxt "sort order"
+msgid "Title"
+msgstr "Według nagłówka"
+
+#: includes/configs/strings.php:37
+msgctxt "sort order"
+msgid "Random"
+msgstr "Losowy"
+
+#: includes/configs/strings.php:38
+msgctxt "sort"
+msgid "Order"
+msgstr "Porządek"
+
+#: includes/configs/strings.php:39
 #, php-format
 msgid "%s Product"
 msgstr "Produkt %s"
 
-#: includes/configs/strings.php:28
+#: includes/configs/strings.php:40
 #, php-format
 msgid "The following tokens are available: %s."
 msgstr "Podane tokeny są dostępne: %s."
 
-#: includes/configs/strings.php:29
+#: includes/configs/strings.php:41
 #, php-format
 msgid ""
 "%s extension is incompatible with the current HivePress version, please "
@@ -521,100 +539,124 @@ msgstr ""
 "Rozszerzenie %s nie jest kompatybilne z bieżącą wersją HivePress, "
 "zaktualizuj HivePress lub wyłącz je."
 
-#: includes/configs/strings.php:32
+#: includes/configs/strings.php:44
 msgid "Listing"
 msgstr "Ogłoszenie"
 
-#: includes/configs/strings.php:33
+#: includes/configs/strings.php:45
 msgid "Listings"
 msgstr "Ogłoszenia"
 
-#: includes/configs/strings.php:34
+#: includes/configs/strings.php:46
+msgid "All Listings"
+msgstr "Wszystkie ogłoszenia"
+
+#: includes/configs/strings.php:47
+msgid "Related Listings"
+msgstr "Podobne ogłoszenia"
+
+#: includes/configs/strings.php:48
+#, php-format
+msgid "%s Listing"
+msgid_plural "%s Listings"
+msgstr[0] "%s ogłoszenie"
+msgstr[1] "%s ogłoszeń"
+msgstr[2] "%s ogłoszeń"
+
+#: includes/configs/strings.php:49
 #, php-format
 msgid "Listings by %s"
 msgstr "Ogłoszenia od %s"
 
-#: includes/configs/strings.php:35
+#: includes/configs/strings.php:50
 msgid "Featuring of Listings"
 msgstr "Promowanie ogłoszeń"
 
-#: includes/configs/strings.php:36
+#: includes/configs/strings.php:51
 msgid "Featured Listings"
 msgstr "Promowane ogłoszenia"
 
-#: includes/configs/strings.php:37
+#: includes/configs/strings.php:52
 msgid "View Listings"
 msgstr "Zobacz ogłoszenia"
 
-#: includes/configs/strings.php:38
+#: includes/configs/strings.php:53
 msgid "Search Listings"
 msgstr "Szukaj ogłoszeń"
 
-#: includes/configs/strings.php:39
+#: includes/configs/strings.php:54
 msgid "No listings found."
 msgstr "Nie znaleziono żadnych ogłoszeń."
 
-#: includes/configs/strings.php:40
+#: includes/configs/strings.php:55
 msgid "Listing Categories"
 msgstr "Kategorie ogłoszeń"
 
-#: includes/configs/strings.php:41
+#: includes/configs/strings.php:56
 msgid "Listing Search Form"
 msgstr "Formularz wyszukiwania ogłoszeń"
 
-#: includes/configs/strings.php:42
+#: includes/configs/strings.php:57
 msgid "Listing Expiration"
 msgstr "Wygaśnięcie ogłoszeń"
 
-#: includes/configs/strings.php:43
+#: includes/configs/strings.php:58
 msgid "Submit Listing"
 msgstr "Dodaj ogłoszenie"
 
-#: includes/configs/strings.php:44
+#: includes/configs/strings.php:59
+msgid "Renew Listing"
+msgstr "Odśwież ogłoszenie"
+
+#: includes/configs/strings.php:60
 msgid "Add Listing"
 msgstr "Dodaj ogłoszenie"
 
-#: includes/configs/strings.php:45
+#: includes/configs/strings.php:61
 msgid "View Listing"
 msgstr "Zobacz ogłoszenie"
 
-#: includes/configs/strings.php:46
+#: includes/configs/strings.php:62
 msgid "Edit Listing"
 msgstr "Edytuj ogłoszenie"
 
-#: includes/configs/strings.php:47
+#: includes/configs/strings.php:63
 msgid "Delete Listing"
 msgstr "Usuń ogłoszenie"
 
-#: includes/configs/strings.php:48
+#: includes/configs/strings.php:64
 msgid "Report Listing"
 msgstr "Zgłoś ogłoszenie"
 
-#: includes/configs/strings.php:49
+#: includes/configs/strings.php:65
 msgid "Listing Submitted"
 msgstr "Ogłoszenie dodane"
 
-#: includes/configs/strings.php:50
+#: includes/configs/strings.php:66
 msgid "Listing Approved"
 msgstr "Ogłoszenie zatwierdzone"
 
-#: includes/configs/strings.php:51
+#: includes/configs/strings.php:67
 msgid "Listing Rejected"
 msgstr "Ogłoszenie odrzucone"
 
-#: includes/configs/strings.php:52
+#: includes/configs/strings.php:68
 msgid "Listing Expired"
 msgstr "Ogłoszenie wygasło"
 
-#: includes/configs/strings.php:53
+#: includes/configs/strings.php:69
+msgid "Listing Renewed"
+msgstr "Ogłoszenie odświeżone"
+
+#: includes/configs/strings.php:70
 msgid "Listing Updated"
 msgstr "Ogłoszenie zaktualizowane"
 
-#: includes/configs/strings.php:54
+#: includes/configs/strings.php:71
 msgid "Listing Reported"
 msgstr "Ogłoszenie zgłoszone"
 
-#: includes/configs/strings.php:55
+#: includes/configs/strings.php:72
 #, php-format
 msgid ""
 "Thank you! Your listing \"%s\" has been submitted and will be reviewed as "
@@ -623,63 +665,84 @@ msgstr ""
 "Dziękuję! Twoje ogłoszenie \"%s\" zostało wysłane i będzie sprawdzone jak "
 "najszybciej."
 
-#: includes/configs/strings.php:56
+#: includes/configs/strings.php:73
+#, php-format
+msgid ""
+"Thank you! Your listing \"%s\" has been renewed and will appear at the top "
+"of the page."
+msgstr ""
+"Dziękuję! Twoje ogłoszenie \"%s\" zostało odświeżone i pojawi się na górze "
+"strony."
+
+#: includes/configs/strings.php:74
 msgid "Listing has been reported."
 msgstr "Ogłoszenie zostało zgłoszone."
 
-#: includes/configs/strings.php:57
+#: includes/configs/strings.php:75
 msgid "Listings Page"
 msgstr "Strona ogłoszeń"
 
-#: includes/configs/strings.php:58
+#: includes/configs/strings.php:76
 msgid "Listings Page Display"
 msgstr "Widok strony ogłoszeń"
 
-#: includes/configs/strings.php:59
+#: includes/configs/strings.php:77
 msgid "Regular Listings per Page"
 msgstr "Ilość zwykłych ogłoszeń na stronę"
 
-#: includes/configs/strings.php:60
+#: includes/configs/strings.php:78
 msgid "Featured Listings per Page"
 msgstr "Ilość promowanych ogłoszeń na stronę"
 
-#: includes/configs/strings.php:61
+#: includes/configs/strings.php:79
+msgid "Related Listings per Page"
+msgstr "Ilość podobnych ogłoszeń na stronę"
+
+#: includes/configs/strings.php:80
 msgid "Mark this listing as verified"
 msgstr "Oznacz to ogłoszenie jako sprawdzone"
 
-#: includes/configs/strings.php:62
+#: includes/configs/strings.php:81
 msgid "Make this listing featured"
 msgstr "Promuj to ogłoszenie"
 
-#: includes/configs/strings.php:63
+#: includes/configs/strings.php:82
 msgid "Make listings featured"
 msgstr "Promuj ogłoszenia"
 
-#: includes/configs/strings.php:64
+#: includes/configs/strings.php:83
 msgid "Display only featured listings"
 msgstr "Wyświetlaj tylko promowane ogłoszenia"
 
-#: includes/configs/strings.php:65
+#: includes/configs/strings.php:84
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr "Jesteś pewien, ze chcesz na zawsze usunąć to ogłoszenie?"
 
-#: includes/configs/strings.php:66
+#: includes/configs/strings.php:85
 msgid "Manually approve new listings"
 msgstr "Ręcznie zatwierdzaj nowe ogłoszenia"
 
-#: includes/configs/strings.php:67
+#: includes/configs/strings.php:86
 msgid "Allow submitting new listings"
 msgstr "Pozwól na dodanie nowych ogłoszeń"
 
-#: includes/configs/strings.php:68
+#: includes/configs/strings.php:87
 msgid "Set the number of days after which a listing expires."
 msgstr "Podaj liczbę dni, po których ogłoszenie wygaśnie."
 
-#: includes/configs/strings.php:69
+#: includes/configs/strings.php:88
+msgid "Set a date on which the listing will expire."
+msgstr "Wybierz datę wygaśnięcia ogłoszenia."
+
+#: includes/configs/strings.php:89
+msgid "Set a date on which the listing will lose featured status."
+msgstr "Wybierz datę zakończenia promowania ogłoszenia."
+
+#: includes/configs/strings.php:90
 msgid "Choose a page that displays all listings."
 msgstr "Wybierz stronę, która wyświetla wszystkie ogłoszenia."
 
-#: includes/configs/strings.php:70
+#: includes/configs/strings.php:91
 msgid ""
 "Choose a page with terms that user has to accept before submitting a new "
 "listing."
@@ -687,7 +750,7 @@ msgstr ""
 "Wybierz stronę regulaminu, który użytkownik musi zaakceptować przed dodaniem "
 "nowego ogłoszenia."
 
-#: includes/configs/strings.php:71
+#: includes/configs/strings.php:92
 msgid ""
 "Please provide details that will help us verify that this listing violates "
 "the terms of service."
@@ -695,59 +758,85 @@ msgstr ""
 "Proszę podać szczegóły, które pozwolą nam sprawdzić, czy to ogłoszenie "
 "narusza regulamin."
 
-#: includes/configs/strings.php:74
+#: includes/configs/strings.php:95
 msgid "Vendor"
 msgstr "Sprzedawca"
 
-#: includes/configs/strings.php:75
+#: includes/configs/strings.php:96
 msgid "View Vendor"
 msgstr "Zobacz sprzedawcę"
 
-#: includes/configs/strings.php:76
+#: includes/configs/strings.php:97
 msgid "Add Vendor"
 msgstr "Dodaj sprzedawcę"
 
-#: includes/configs/strings.php:77
+#: includes/configs/strings.php:98
 msgid "Edit Vendor"
 msgstr "Edytuj sprzedawcę"
 
-#: includes/configs/strings.php:78
+#: includes/configs/strings.php:99
 msgid "Vendors"
 msgstr "Sprzedawcy"
 
-#: includes/configs/strings.php:79
+#: includes/configs/strings.php:100
 msgid "Search Vendors"
 msgstr "Szukaj sprzedawców"
 
-#: includes/configs/strings.php:80
+#: includes/configs/strings.php:101
 msgid "No vendors found."
 msgstr "Nie znaleziono żadnych sprzedawców."
 
-#: includes/configs/taxonomies.php:21
+#: includes/configs/strings.php:102
+msgid "Vendor Search Form"
+msgstr "Formularz wyszukiwania sprzedawców"
+
+#: includes/configs/strings.php:103
+msgid "Vendors Page"
+msgstr "Strona sprzedawców"
+
+#: includes/configs/strings.php:104
+msgid "Vendors per Page"
+msgstr "Ilość sprzedawców na stronę"
+
+#: includes/configs/strings.php:105
+msgid "Choose a page that displays all vendors."
+msgstr "Wybierz stronę, która wyświetla wszystkich sprzedawców."
+
+#: includes/configs/strings.php:108 includes/configs/taxonomies.php:22
+#: includes/configs/taxonomies.php:41
+msgid "Category"
+msgstr "Kategoria"
+
+#: includes/configs/strings.php:109 includes/configs/taxonomies.php:27
+#: includes/configs/taxonomies.php:46
+msgid "Parent Category"
+msgstr "Kategoria nadrzędna"
+
+#: includes/configs/taxonomies.php:21 includes/configs/taxonomies.php:40
 msgid "Categories"
 msgstr "Kategorie"
 
-#: includes/configs/taxonomies.php:23
+#: includes/configs/taxonomies.php:23 includes/configs/taxonomies.php:42
 msgid "Add Category"
 msgstr "Dodaj kategorię"
 
-#: includes/configs/taxonomies.php:24
+#: includes/configs/taxonomies.php:24 includes/configs/taxonomies.php:43
 msgid "Edit Category"
 msgstr "Edytuj kategorię"
 
-#: includes/configs/taxonomies.php:25
+#: includes/configs/taxonomies.php:25 includes/configs/taxonomies.php:44
 msgid "Update Category"
 msgstr "Zaktualizuj kategorię"
 
-#: includes/configs/taxonomies.php:26
+#: includes/configs/taxonomies.php:26 includes/configs/taxonomies.php:45
 msgid "View Category"
 msgstr "Zobacz kategorię"
 
-#: includes/configs/taxonomies.php:28
+#: includes/configs/taxonomies.php:28 includes/configs/taxonomies.php:47
 msgid "Search Categories"
 msgstr "Szukaj kategorii"
 
-#: includes/configs/taxonomies.php:29
+#: includes/configs/taxonomies.php:29 includes/configs/taxonomies.php:48
 msgid "No categories found."
 msgstr "Nie znaleziono żadnych kategorii."
 
@@ -761,12 +850,12 @@ msgstr "Można wgrać maksymalnie %s plików."
 msgid "Only %s files are allowed."
 msgstr "Tylko %s pliki są akceptowane."
 
-#: includes/controllers/class-listing.php:130
+#: includes/controllers/class-listing.php:131
 msgctxt "imperative"
 msgid "Select Category"
 msgstr "Wybierz kategorię"
 
-#: includes/controllers/class-listing.php:138
+#: includes/controllers/class-listing.php:139
 msgctxt "imperative"
 msgid "Add Details"
 msgstr "Podaj szczegóły"
@@ -783,32 +872,32 @@ msgstr "Ta nazwa użytkownika jest już zajęta."
 msgid "This email is already registered."
 msgstr "Ten adres e-mail już jest wykorzystywany."
 
-#: includes/controllers/class-user.php:298
-#: includes/controllers/class-user.php:305
+#: includes/controllers/class-user.php:300
+#: includes/controllers/class-user.php:307
 msgid "Username or password is incorrect."
 msgstr "Nazwa użytkownika lub hasło są nieprawidłowe."
 
-#: includes/controllers/class-user.php:363
+#: includes/controllers/class-user.php:374
 msgid "User with this email doesn't exist."
 msgstr "Użytkownik z takim adresem e-mail nie istnieje."
 
-#: includes/controllers/class-user.php:365
+#: includes/controllers/class-user.php:376
 msgid "User with this username doesn't exist."
 msgstr "Użytkownik z taką nazwą nie istnieje."
 
-#: includes/controllers/class-user.php:426
+#: includes/controllers/class-user.php:437
 msgid "Password reset key is expired or invalid."
 msgstr "Klucz do resetowania hasła jest nieważny lub nieprawidłowy."
 
-#: includes/controllers/class-user.php:488
+#: includes/controllers/class-user.php:501
 msgid "Current password is required."
 msgstr "Bieżące hasło jest wymagane."
 
-#: includes/controllers/class-user.php:492
+#: includes/controllers/class-user.php:505
 msgid "Current password is incorrect."
 msgstr "Nieprawidłowe bieżące hasło."
 
-#: includes/controllers/class-user.php:549
+#: includes/controllers/class-user.php:562
 msgid "Password is incorrect."
 msgstr "Nieprawidłowe hasło."
 
@@ -847,8 +936,8 @@ msgstr "Wybierz plik"
 
 #: includes/fields/class-attachment-select.php:71
 #: includes/fields/class-attachment-upload.php:145
-#: includes/fields/class-date.php:200 includes/fields/class-email.php:75
-#: includes/fields/class-select.php:199
+#: includes/fields/class-date.php:205 includes/fields/class-email.php:76
+#: includes/fields/class-select.php:207 includes/fields/class-text.php:206
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr "Pole \"%s\" zawiera nieprawidłową wartość."
@@ -882,7 +971,7 @@ msgid "Date Range"
 msgstr "Zakres dat"
 
 #: includes/fields/class-date.php:72 includes/fields/class-number.php:65
-#: includes/fields/class-text.php:64
+#: includes/fields/class-text.php:71
 msgid "Placeholder"
 msgstr "Tekst zastępczy"
 
@@ -894,12 +983,12 @@ msgstr "Minimalna data"
 msgid "Maximum Date"
 msgstr "Maksymalna data"
 
-#: includes/fields/class-date.php:206
+#: includes/fields/class-date.php:211
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr "\"%1$s\" nie może być wcześniejsze niż %2$s."
 
-#: includes/fields/class-date.php:214
+#: includes/fields/class-date.php:219
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr "\"%1$s\" nie może być późniejsze niż %2$s."
@@ -908,21 +997,34 @@ msgstr "\"%1$s\" nie może być późniejsze niż %2$s."
 msgid "Email"
 msgstr "E-mail"
 
-#: includes/fields/class-field.php:135
+#: includes/fields/class-embed.php:30
+msgctxt "field"
+msgid "Embed"
+msgstr "Widget"
+
+#: includes/fields/class-field.php:142
 msgctxt "field"
 msgid "Required"
 msgstr "Wymaganie"
 
-#: includes/fields/class-field.php:136
+#: includes/fields/class-field.php:143
 msgid "Make this field required"
 msgstr "Zrób to pole wymaganym"
 
-#: includes/fields/class-field.php:216
+#: includes/fields/class-field.php:149
+#: includes/models/class-listing-category.php:40
+#: includes/models/class-listing.php:40
+#: includes/models/class-vendor-category.php:40
+#: includes/models/class-vendor.php:40
+msgid "Description"
+msgstr "Opis"
+
+#: includes/fields/class-field.php:231
 msgctxt "field"
 msgid "optional"
 msgstr "opcjonalnie"
 
-#: includes/fields/class-field.php:456
+#: includes/fields/class-field.php:480
 #, php-format
 msgid "\"%s\" field is required."
 msgstr "Pole \"%s\" jest wymagane."
@@ -956,12 +1058,12 @@ msgstr "Minimalna wartość"
 msgid "Maximum Value"
 msgstr "Maksymalna wartość"
 
-#: includes/fields/class-number.php:177
+#: includes/fields/class-number.php:182
 #, php-format
 msgid "\"%1$s\" can't be lower than %2$s."
 msgstr "\"%1$s\" nie może być mniejsze niż %2$s."
 
-#: includes/fields/class-number.php:181
+#: includes/fields/class-number.php:186
 #, php-format
 msgid "\"%1$s\" can't be greater than %2$s."
 msgstr "\"%1$s\" nie może być większe niż %2$s."
@@ -988,24 +1090,28 @@ msgstr "Pozwól na wielokrotny wybór"
 msgid "Options"
 msgstr "Opcje"
 
-#: includes/fields/class-text.php:58
+#: includes/fields/class-text.php:65
 msgid "Text"
 msgstr "Tekst"
 
-#: includes/fields/class-text.php:71
+#: includes/fields/class-text.php:78
 msgid "Minimum Length"
 msgstr "Minimalna długość"
 
-#: includes/fields/class-text.php:78
+#: includes/fields/class-text.php:85
 msgid "Maximum Length"
 msgstr "Maksymalna długość"
 
-#: includes/fields/class-text.php:163
+#: includes/fields/class-text.php:92
+msgid "Regex Pattern"
+msgstr "Wyrażenie regularne"
+
+#: includes/fields/class-text.php:198
 #, php-format
 msgid "\"%1$s\" should be at least %2$s characters long."
 msgstr "\"%1$s\" musi mieć przynajmniej %2$s znaków."
 
-#: includes/fields/class-text.php:167
+#: includes/fields/class-text.php:202
 #, php-format
 msgid "\"%1$s\" can't be longer than %2$s characters."
 msgstr "\"%1$s\" nie może być dłuższe niż %2$s znaków."
@@ -1014,11 +1120,11 @@ msgstr "\"%1$s\" nie może być dłuższe niż %2$s znaków."
 msgid "Textarea"
 msgstr "Tekst wieloliniowy"
 
-#: includes/fields/class-textarea.php:43
+#: includes/fields/class-textarea.php:45
 msgid "Formatting"
 msgstr "Formatowanie"
 
-#: includes/fields/class-textarea.php:44
+#: includes/fields/class-textarea.php:46
 msgid "Allow HTML formatting"
 msgstr "Pozwól na HTML formatowanie"
 
@@ -1031,18 +1137,22 @@ msgid "Submit"
 msgstr "Wyślij"
 
 #: includes/forms/class-listing-filter.php:71
+#: includes/forms/class-vendor-filter.php:71
 msgid "Filter"
 msgstr "Filtruj"
 
 #: includes/forms/class-listing-search.php:51
+#: includes/forms/class-vendor-search.php:51
 msgid "Keywords"
 msgstr "Słowa kluczowe"
 
 #: includes/forms/class-listing-search.php:65
+#: includes/forms/class-vendor-search.php:65
 msgid "Search"
 msgstr "Szukaj"
 
 #: includes/forms/class-listing-sort.php:52
+#: includes/forms/class-vendor-sort.php:52
 msgid "Sort by"
 msgstr "Sortuj według"
 
@@ -1113,14 +1223,10 @@ msgid "Sign Out"
 msgstr "Wyloguj się"
 
 #: includes/models/class-listing-category.php:32
+#: includes/models/class-vendor-category.php:32
 #: includes/models/class-vendor.php:32
 msgid "Name"
 msgstr "Nazwa"
-
-#: includes/models/class-listing-category.php:40
-#: includes/models/class-listing.php:40 includes/models/class-vendor.php:40
-msgid "Description"
-msgstr "Opis"
 
 #: includes/models/class-listing.php:32
 msgid "Title"
@@ -1136,11 +1242,11 @@ msgctxt "listing"
 msgid "Pending"
 msgstr "Oczekujące"
 
-#: includes/models/class-listing.php:136
+#: includes/models/class-listing.php:142
 msgid "Images"
 msgstr "Zdjęcia"
 
-#: includes/models/class-listing.php:137
+#: includes/models/class-listing.php:143
 msgid "Select Images"
 msgstr "Wybierz zdjęcia"
 
@@ -1189,14 +1295,6 @@ msgstr "Zmień kategorię"
 msgid "Added on %s"
 msgstr "Dodane %s"
 
-#: templates/listing-category/view/listing-category-item-count.php:5
-#, php-format
-msgid "%s Listing"
-msgid_plural "%s Listings"
-msgstr[0] "%s ogłoszenie"
-msgstr[1] "%s ogłoszeń"
-msgstr[2] "%s ogłoszeń"
-
 #: templates/user/login/user-login-link.php:7
 msgid "My Account"
 msgstr "Moje konto"
@@ -1221,6 +1319,14 @@ msgstr "Masz już konto?"
 #, php-format
 msgid "Member since %s"
 msgstr "Uczestnik od %s"
+
+#: templates/listing/edit/block/listing-view-link.php:7
+msgid "View"
+msgstr "Zobacz"
+
+#: templates/listing/edit/page/listing-delete-link.php:5
+msgid "Delete"
+msgstr "Usuń"
 
 #. Name of the plugin
 #. Author of the plugin
