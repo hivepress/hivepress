@@ -64,6 +64,9 @@ class Listings_View_Page extends Page_Sidebar_Left {
 					],
 
 					'page_topbar'  => [
+						'type'     => 'results',
+						'optional' => true,
+
 						'blocks' => [
 							'listing_count'     => [
 								'type'   => 'result_count',

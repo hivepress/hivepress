@@ -64,7 +64,10 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 					],
 
 					'page_topbar'  => [
-						'blocks' => [
+						'type'     => 'results',
+						'optional' => true,
+
+						'blocks'   => [
 							'vendor_count'     => [
 								'type'   => 'result_count',
 								'_order' => 10,
