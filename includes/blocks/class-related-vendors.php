@@ -71,12 +71,15 @@ class Related_Vendors extends Vendors {
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
+			// Set number.
+			$this->number = 1;
+
 			// Set vendor ID.
 			$vendor_query->filter(
 				[
 					'id__in' => [ $listing->get_vendor__id() ],
 				]
-			)->limit( 1 );
+			)->limit( $this->number );
 		} else {
 
 			// Get vendor.
