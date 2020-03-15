@@ -117,7 +117,9 @@ class Select extends Field {
 		}
 
 		// Set component.
-		$attributes['data-component'] = 'select';
+		if ( 'hidden' !== $this->display_type ) {
+			$attributes['data-component'] = 'select';
+		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
