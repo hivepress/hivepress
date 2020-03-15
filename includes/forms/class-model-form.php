@@ -62,7 +62,7 @@ abstract class Model_Form extends Form {
 				}
 			}
 
-			$this->set_values( $values );
+			$this->set_values( $values, true );
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -112,35 +112,5 @@ abstract class Model_Form extends Form {
 		}
 
 		parent::set_fields( $fields );
-	}
-
-	/**
-	 * Sets field values.
-	 *
-	 * @param array $values Field values.
-	 * @param bool  $provided Provided flag.
-	 * @return object
-	 */
-	public function set_values( $values, $provided = false ) {
-		$names = [];
-
-		if ( $provided ) {
-			$names = array_keys( $values );
-		} else {
-			$names = array_keys(
-				array_filter(
-					$this->fields,
-					function( $field ) {
-						return ! hp\get_array_value( $field->get_args(), '_separate' );
-					}
-				)
-			);
-		}
-
-		foreach ( $names as $name ) {
-			$this->set_value( $name, hp\get_array_value( $values, $name ) );
-		}
-
-		return $this;
 	}
 }
