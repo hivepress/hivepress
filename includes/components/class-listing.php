@@ -104,7 +104,16 @@ final class Listing extends Component {
 				]
 			);
 
-			if ( ! $vendor->save() ) {
+			if ( ! $vendor->save(
+				[
+					'name',
+					'description',
+					'slug',
+					'status',
+					'image',
+					'user',
+				]
+			) ) {
 				return;
 			}
 		}
@@ -121,7 +130,7 @@ final class Listing extends Component {
 				)->get();
 
 				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save();
+					$attachment->set_user( $listing->get_user__id() )->save( [ 'user' ] );
 				}
 			}
 
@@ -213,7 +222,7 @@ final class Listing extends Component {
 			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
 				// Set expiration time.
-				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save();
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save( [ 'expired_time' ] );
 			}
 		}
 	}
@@ -239,7 +248,7 @@ final class Listing extends Component {
 				[
 					'status' => 'draft',
 				]
-			)->save();
+			)->save( [ 'status' ] );
 
 			// Send email.
 			$user = $listing->get_user();
@@ -274,7 +283,7 @@ final class Listing extends Component {
 					'featured'      => false,
 					'featured_time' => null,
 				]
-			)->save();
+			)->save( [ 'featured', 'featured_time' ] );
 		}
 	}
 

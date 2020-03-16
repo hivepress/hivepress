@@ -221,7 +221,7 @@ final class Attachment extends Controller {
 				[
 					$parent_field->get_name() => $attachment->get_id(),
 				]
-			)->save();
+			)->save( [ $parent_field->get_name() ] );
 		} else {
 
 			// Fire update action.

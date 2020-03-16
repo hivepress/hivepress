@@ -737,7 +737,7 @@ final class Listing extends Controller {
 				'status'  => $status,
 				'drafted' => null,
 			]
-		)->save();
+		)->save( [ 'status', 'drafted' ] );
 
 		// Send email.
 		( new Emails\Listing_Submit(
@@ -826,7 +826,14 @@ final class Listing extends Controller {
 				'created_date_gmt' => get_gmt_from_date( $date ),
 				'expired_time'     => null,
 			]
-		)->save();
+		)->save(
+			[
+				'status',
+				'created_date',
+				'created_date_gmt',
+				'expired_time',
+			]
+		);
 
 		return false;
 	}
