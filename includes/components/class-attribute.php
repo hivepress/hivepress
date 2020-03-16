@@ -491,6 +491,10 @@ final class Attribute extends Component {
 					]
 				);
 
+				if ( ! $attribute['editable'] ) {
+					$field_args['required'] = false;
+				}
+
 				if ( isset( $field_args['options'] ) ) {
 					$field_args = array_merge(
 						$field_args,
