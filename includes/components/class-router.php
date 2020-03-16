@@ -199,9 +199,10 @@ final class Router extends Component {
 	 *
 	 * @param string $name Route name.
 	 * @param array  $query URL query.
+	 * @param bool   $filter Filter flag.
 	 * @return string
 	 */
-	public function get_url( $name, $query = [] ) {
+	public function get_url( $name, $query = [], $filter = false ) {
 		$url = '';
 
 		// Get route.
@@ -253,7 +254,7 @@ final class Router extends Component {
 					}
 
 					// Add query variables.
-					if ( $vars ) {
+					if ( $vars && ! $filter ) {
 						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
 					}
 				}
