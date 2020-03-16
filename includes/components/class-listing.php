@@ -214,7 +214,7 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( 'publish' === $new_status ) {
+		if ( in_array( $new_status, [ 'pending', 'publish' ], true ) ) {
 
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
