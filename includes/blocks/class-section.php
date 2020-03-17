@@ -27,21 +27,34 @@ class Section extends Container {
 	protected $title;
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Block arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'optional' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {
 
 		// Add title.
 		if ( $this->title ) {
-			array_unshift(
-				$this->blocks,
-				new Part(
-					[
-						'path'    => 'page/section-title',
-						'context' => [ 'section_title' => $this->title ],
-					]
-				)
-			);
+			$this->header['section_title'] = [
+				'type'    => 'part',
+				'path'    => 'page/section-title',
+				'context' => [ 'section_title' => $this->title ],
+				'_order'  => 5,
+			];
 		}
 
 		// Set attributes.

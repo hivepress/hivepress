@@ -28,6 +28,9 @@ abstract class Page_Narrow extends Page {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
+					'page_header'    => [],
+					'page_footer'    => [],
+
 					'page_container' => [
 						'blocks' => [
 							'page_columns' => [
@@ -49,10 +52,27 @@ abstract class Page_Narrow extends Page {
 										],
 
 										'blocks'     => [
-											'page_title' => [
+											'breadcrumb_menu' => [
+												'type'   => 'menu',
+												'menu'   => 'breadcrumb',
+												'_order' => 1,
+											],
+
+											'page_title'  => [
 												'type'   => 'part',
 												'path'   => 'page/page-title',
 												'_order' => 5,
+											],
+
+											'page_topbar' => [
+												'type'     => 'container',
+												'blocks'   => [],
+												'optional' => true,
+												'_order'   => 10,
+
+												'attributes' => [
+													'class' => [ 'hp-page__topbar' ],
+												],
 											],
 										],
 									],

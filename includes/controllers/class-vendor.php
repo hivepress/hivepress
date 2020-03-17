@@ -30,7 +30,13 @@ final class Vendor extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'vendor_view_page' => [
+					'vendors_view_page' => [
+						'url'    => [ $this, 'get_vendors_view_url' ],
+						'match'  => [ $this, 'is_vendors_view_page' ],
+						'action' => [ $this, 'render_vendors_view_page' ],
+					],
+
+					'vendor_view_page'  => [
 						'match'  => [ $this, 'is_vendor_view_page' ],
 						'url'    => [ $this, 'get_vendor_view_url' ],
 						'title'  => [ $this, 'get_vendor_view_title' ],
@@ -42,6 +48,62 @@ final class Vendor extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets vendors view URL.
+	 *
+	 * @param array $params URL parameters.
+	 * @return string
+	 */
+	public function get_vendors_view_url( $params ) {
+		return get_post_type_archive_link( 'hp_vendor' );
+	}
+
+	/**
+	 * Matches vendors view URL.
+	 *
+	 * @return bool
+	 */
+	public function is_vendors_view_page() {
+
+		// Get page ID.
+		$page_id = absint( get_option( 'hp_page_vendors' ) );
+
+		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_vendor' ) || is_tax( 'hp_vendor_category' );
+	}
+
+	/**
+	 * Renders vendors view page.
+	 *
+	 * @return string
+	 */
+	public function render_vendors_view_page() {
+		if ( is_page() ) {
+
+			// Query vendors.
+			query_posts(
+				Models\Vendor::query()->filter(
+					[
+						'status' => 'publish',
+					]
+				)->order( [ 'registered_date' => 'desc' ] )
+				->limit( get_option( 'hp_vendors_per_page' ) )
+				->paginate( hivepress()->request->get_page_number() )
+				->get_args()
+			);
+		}
+
+		// Render vendors.
+		return ( new Blocks\Template(
+			[
+				'template' => 'vendors_view_page',
+
+				'context'  => [
+					'vendors' => [],
+				],
+			]
+		) )->render();
 	}
 
 	/**

@@ -69,6 +69,15 @@ class Vendor extends Post {
 						'_model'    => 'user',
 					],
 
+					'categories'      => [
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
+						'multiple'    => true,
+						'_model'      => 'vendor_category',
+						'_relation'   => 'many_to_many',
+					],
+
 					'image'           => [
 						'type'      => 'number',
 						'min_value' => 1,
@@ -82,5 +91,20 @@ class Vendor extends Post {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets model fields.
+	 *
+	 * @param string $area Display area.
+	 * @return array
+	 */
+	final public function _get_fields( $area = null ) {
+		return array_filter(
+			$this->fields,
+			function( $field ) use ( $area ) {
+				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_display_areas' ), true );
+			}
+		);
 	}
 }

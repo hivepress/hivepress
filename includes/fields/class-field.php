@@ -96,6 +96,13 @@ abstract class Field {
 	protected $filter;
 
 	/**
+	 * Disabled flag.
+	 *
+	 * @var bool
+	 */
+	protected $disabled = false;
+
+	/**
 	 * Required flag.
 	 *
 	 * @var bool
@@ -131,11 +138,19 @@ abstract class Field {
 				'sortable'   => false,
 
 				'settings'   => [
-					'required' => [
+					'required'    => [
 						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
 						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 5,
+						'_order'  => 10,
+					],
+
+					'description' => [
+						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'type'       => 'textarea',
+						'max_length' => 2048,
+						'html'       => true,
+						'_order'     => 20,
 					],
 				],
 			],
@@ -291,6 +306,15 @@ abstract class Field {
 	 */
 	final public function get_display_type() {
 		return $this->display_type;
+	}
+
+	/**
+	 * Sets display template.
+	 *
+	 * @param string $display_template Display template.
+	 */
+	protected function set_display_template( $display_template ) {
+		$this->display_template = $display_template;
 	}
 
 	/**
@@ -471,7 +495,7 @@ abstract class Field {
 	 *
 	 * @return string
 	 */
-	final public function display() {
+	public function display() {
 		return hp\replace_tokens(
 			[
 				'label' => $this->label,

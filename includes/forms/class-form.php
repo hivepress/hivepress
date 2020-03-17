@@ -214,7 +214,7 @@ abstract class Form {
 		// Set component.
 		$attributes['data-component'] = 'form';
 
-		// Set class.
+		// Set attributes.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_meta( 'name' ) ) ];
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -247,6 +247,15 @@ abstract class Form {
 				$this->fields[ $name ] = $field;
 			}
 		}
+	}
+
+	/**
+	 * Gets form fields.
+	 *
+	 * @return array
+	 */
+	final public function get_fields() {
+		return $this->fields;
 	}
 
 	/**
@@ -412,13 +421,20 @@ abstract class Form {
 
 					// Render label.
 					if ( $field->get_label() ) {
-						$output .= '<label class="hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+						// @deprecated "hp-form__label" class since version 1.3.2.
+						$output .= '<label class="hp-field__label hp-form__label"><span>' . esc_html( $field->get_label() ) . '</span>';
 
 						if ( $field->get_statuses() ) {
 							$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
 						}
 
 						$output .= '</label>';
+					}
+
+					// Render description.
+					if ( $field->get_description() ) {
+						$output .= '<div class="hp-field__description">' . wp_kses_post( $field->get_description() ) . '</div>';
 					}
 				}
 

@@ -49,7 +49,7 @@ class Checkbox extends Field {
 						'label'      => esc_html__( 'Caption', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_order'     => 100,
 					],
 				],
 			],
@@ -142,10 +142,21 @@ class Checkbox extends Field {
 		// Get ID.
 		$id = sanitize_key( $this->name ) . '_' . uniqid();
 
+		// Get attributes.
+		$attributes = [];
+
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
+		}
+
+		if ( $this->required ) {
+			$attributes['required'] = true;
+		}
+
 		// Render field.
 		$output = '<label for="' . esc_attr( $id ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
-		$output .= '<input type="checkbox" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . ( $this->required ? 'required' : '' ) . '>';
+		$output .= '<input type="checkbox" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $this->check_value ) . '" ' . checked( $this->value, $this->check_value, false ) . ' ' . hp\html_attributes( $attributes ) . '>';
 		$output .= '<span>' . hp\sanitize_html( $this->caption ) . '</span>';
 
 		$output .= '</label>';

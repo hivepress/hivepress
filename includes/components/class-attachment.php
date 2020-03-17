@@ -88,7 +88,7 @@ final class Attachment extends Component {
 				[
 					$parent_field->get_name() => null,
 				]
-			)->save();
+			)->save( [ $parent_field->get_name() ] );
 		}
 	}
 

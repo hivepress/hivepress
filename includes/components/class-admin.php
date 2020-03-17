@@ -73,9 +73,6 @@ final class Admin extends Component {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
-			// Hide comments.
-			add_filter( 'comments_clauses', [ $this, 'hide_comments' ] );
-
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -137,8 +134,10 @@ final class Admin extends Component {
 				'hp_settings',
 			];
 
-			foreach ( array_keys( hivepress()->get_config( 'post_types' ) ) as $post_type ) {
-				$pages[] = 'edit.php?post_type=' . hp\prefix( $post_type );
+			foreach ( hivepress()->get_config( 'post_types' ) as $post_type => $post_type_args ) {
+				if ( ! isset( $post_type_args['show_in_menu'] ) ) {
+					$pages[] = 'edit.php?post_type=' . hp\prefix( $post_type );
+				}
 			}
 
 			// Filter menu items.
@@ -150,7 +149,7 @@ final class Admin extends Component {
 			);
 
 			// Insert menu items.
-			array_splice( $menu, array_search( 'separator2', $menu, true ) - 1, 0, $pages );
+			array_splice( $menu, array_search( 'separator2', $menu, true ) - ( count( $pages ) - 2 ), 0, $pages );
 		}
 
 		return $menu;
@@ -1049,41 +1048,6 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Hides comments.
-	 *
-	 * @param array $query Query arguments.
-	 * @return array
-	 */
-	public function hide_comments( $query ) {
-		global $pagenow;
-
-		if ( in_array( $pagenow, [ 'index.php', 'edit-comments.php', 'post.php' ], true ) ) {
-
-			// Get comment types.
-			$comment_types = hivepress()->get_config( 'comment_types' );
-
-			// Filter comment types.
-			$comment_types = array_filter(
-				$comment_types,
-				function( $args ) {
-					return ! hp\get_array_value( $args, 'public', true );
-				}
-			);
-
-			if ( $comment_types ) {
-
-				// Get comment clause.
-				$clause = '"' . implode( '", "', hp\prefix( array_keys( $comment_types ) ) ) . '"';
-
-				// Set comment clause.
-				$query['where'] .= ' AND comment_type NOT IN (' . $clause . ')';
-			}
-		}
-
-		return $query;
-	}
-
-	/**
 	 * Enqueues scripts.
 	 */
 	public function enqueue_scripts() {
@@ -1108,26 +1072,8 @@ final class Admin extends Component {
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type' => 'warning',
-				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">ListingHive</a>' ),
+				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="' . esc_url( admin_url( 'theme-install.php?search=listinghive' ) ) . '">ListingHive</a>' ),
 			];
-		} else {
-			foreach ( $this->get_themes() as $theme ) {
-				if ( get_template() === $theme['slug'] ) {
-
-					// Get notice name.
-					$notice_name = 'update_theme_' . $theme['slug'] . '_' . str_replace( '.', '_', $theme['version'] );
-
-					// Add notice.
-					if ( version_compare( wp_get_theme()->get( 'Version' ), $theme['version'], '<' ) ) {
-						$notices[ $notice_name ] = [
-							'type' => 'warning',
-							'text' => sprintf( esc_html__( 'A new version of %s theme is available, please update for new features and improvements.', 'hivepress' ), '<a href="https://hivepress.io/themes/" target="_blank">' . esc_html( $theme['name'] ) . '</a>' ),
-						];
-					}
-
-					break;
-				}
-			}
 		}
 
 		/**
@@ -1170,7 +1116,10 @@ final class Admin extends Component {
 		$output = '';
 
 		if ( $text ) {
-			$output .= '<div class="hp-tooltip"><span class="hp-tooltip__icon dashicons dashicons-editor-help"></span><div class="hp-tooltip__text">' . esc_html( $text ) . '</div></div>';
+			$output .= '<div class="hp-tooltip">';
+			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
+			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '</div>';
 		}
 
 		return $output;

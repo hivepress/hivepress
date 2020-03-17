@@ -63,19 +63,19 @@ class User_Update extends Model_Form {
 					],
 
 					'email'            => [
-						'_order' => 50,
+						'_order' => 200,
 					],
 
 					'password'         => [
 						'label'  => esc_html__( 'New Password', 'hivepress' ),
-						'_order' => 60,
+						'_order' => 210,
 					],
 
 					'current_password' => [
 						'label'     => esc_html__( 'Current Password', 'hivepress' ),
 						'type'      => 'password',
 						'_separate' => true,
-						'_order'    => 70,
+						'_order'    => 220,
 					],
 				],
 

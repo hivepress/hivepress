@@ -39,11 +39,13 @@ class Textarea extends Text {
 				'sortable'   => false,
 
 				'settings'   => [
-					'editor' => [
+					'pattern' => null,
+
+					'editor'  => [
 						'label'   => esc_html__( 'Formatting', 'hivepress' ),
 						'caption' => esc_html__( 'Allow HTML formatting', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 40,
+						'_order'  => 140,
 					],
 				],
 			],

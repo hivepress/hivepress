@@ -167,7 +167,7 @@ class User extends Model {
 		// Get user meta.
 		$meta = array_map(
 			function( $values ) {
-				return hp\get_first_array_value( $values );
+				return maybe_unserialize( hp\get_first_array_value( $values ) );
 			},
 			get_user_meta( $user['ID'] )
 		);
@@ -196,20 +196,33 @@ class User extends Model {
 	/**
 	 * Saves object.
 	 *
+	 * @param array $names Field names.
 	 * @return bool
 	 */
-	final public function save() {
+	final public function save( $names = [] ) {
 
 		// Validate fields.
-		if ( ! $this->validate() ) {
+		if ( ! $this->validate( $names ) ) {
 			return false;
+		}
+
+		// Filter fields.
+		$fields = $this->fields;
+
+		if ( $names ) {
+			$fields = array_filter(
+				$fields,
+				function( $field ) use ( $names ) {
+					return in_array( $field->get_name(), $names, true );
+				}
+			);
 		}
 
 		// Get user data.
 		$user = [];
 		$meta = [];
 
-		foreach ( $this->fields as $field ) {
+		foreach ( $fields as $field ) {
 			if ( $field->get_arg( '_external' ) ) {
 
 				// Set meta value.

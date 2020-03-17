@@ -28,12 +28,33 @@ abstract class Listing_Manage_Page extends Page_Wide {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_content' => [
-						'blocks' => [
-							'listing_manage_menu' => [
-								'type'   => 'menu',
-								'menu'   => 'listing_manage',
-								'_order' => 10,
+					'page_content' => [],
+
+					'page_topbar'  => [
+						'attributes' => [
+							'class' => [ 'hp-page__topbar--separate' ],
+						],
+
+						'blocks'     => [
+							'listing_manage_menu'       => [
+								'type'       => 'menu',
+								'menu'       => 'listing_manage',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-menu--tabbed' ],
+								],
+							],
+
+							'listing_actions_secondary' => [
+								'type'       => 'container',
+								'optional'   => true,
+								'blocks'     => [],
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+								],
 							],
 						],
 					],

@@ -34,21 +34,34 @@ class Modal extends Container {
 	protected $model;
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Block arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'optional' => true,
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {
 
 		// Add title.
 		if ( $this->title ) {
-			array_unshift(
-				$this->blocks,
-				new Part(
-					[
-						'path'    => 'page/modal-title',
-						'context' => [ 'modal_title' => $this->title ],
-					]
-				)
-			);
+			$this->header['modal_title'] = [
+				'type'    => 'part',
+				'path'    => 'page/modal-title',
+				'context' => [ 'modal_title' => $this->title ],
+				'_order'  => 5,
+			];
 		}
 
 		// Get ID.

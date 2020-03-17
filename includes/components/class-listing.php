@@ -41,11 +41,12 @@ final class Listing extends Component {
 		// Expire listings.
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
-		// Add submission fields.
-		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'add_submission_fields' ] );
-
 		// Set category count callback.
 		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
+
+		// Alter forms.
+		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'alter_submit_form' ] );
+		add_filter( 'hivepress/v1/forms/listing_update', [ $this, 'alter_update_form' ], 10, 2 );
 
 		if ( is_admin() ) {
 
@@ -54,14 +55,13 @@ final class Listing extends Component {
 
 		} else {
 
-			// Alter account menu.
-			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
-
-			// Alter manage menu.
-			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_manage_menu' ], 10, 2 );
+			// Alter menus.
+			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
+			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_listing_manage_menu' ], 10, 2 );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/listing_edit_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
 
 		parent::__construct( $args );
@@ -104,7 +104,16 @@ final class Listing extends Component {
 				]
 			);
 
-			if ( ! $vendor->save() ) {
+			if ( ! $vendor->save(
+				[
+					'name',
+					'description',
+					'slug',
+					'status',
+					'image',
+					'user',
+				]
+			) ) {
 				return;
 			}
 		}
@@ -121,7 +130,7 @@ final class Listing extends Component {
 				)->get();
 
 				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save();
+					$attachment->set_user( $listing->get_user__id() )->save( [ 'user' ] );
 				}
 			}
 
@@ -205,7 +214,7 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( 'publish' === $new_status ) {
+		if ( in_array( $new_status, [ 'pending', 'publish' ], true ) ) {
 
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
@@ -213,7 +222,7 @@ final class Listing extends Component {
 			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
 				// Set expiration time.
-				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save();
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save( [ 'expired_time' ] );
 			}
 		}
 	}
@@ -237,10 +246,9 @@ final class Listing extends Component {
 			// Update listing.
 			$listing->fill(
 				[
-					'status'       => 'trash',
-					'expired_time' => null,
+					'status' => 'draft',
 				]
-			)->save();
+			)->save( [ 'status' ] );
 
 			// Send email.
 			$user = $listing->get_user();
@@ -253,6 +261,7 @@ final class Listing extends Component {
 						'tokens'    => [
 							'user_name'     => $user->get_display_name(),
 							'listing_title' => $listing->get_title(),
+							'listing_url'   => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
 						],
 					]
 				) )->send();
@@ -274,44 +283,8 @@ final class Listing extends Component {
 					'featured'      => false,
 					'featured_time' => null,
 				]
-			)->save();
+			)->save( [ 'featured', 'featured_time' ] );
 		}
-	}
-
-	/**
-	 * Adds submission fields.
-	 *
-	 * @param array $form Form arguments.
-	 * @return array
-	 */
-	public function add_submission_fields( $form ) {
-
-		// Get terms page ID.
-		$page_id = hp\get_first_array_value(
-			get_posts(
-				[
-					'post_type'      => 'page',
-					'post_status'    => 'publish',
-					'post__in'       => [ absint( get_option( 'hp_page_listing_submission_terms' ) ) ],
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				]
-			)
-		);
-
-		if ( $page_id ) {
-
-			// Add terms field.
-			$form['fields']['_terms'] = [
-				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'      => 'checkbox',
-				'required'  => true,
-				'_separate' => true,
-				'_order'    => 1000,
-			];
-		}
-
-		return $form;
 	}
 
 	/**
@@ -341,20 +314,98 @@ final class Listing extends Component {
 
 		foreach ( $term_taxonomy_ids as $term_taxonomy_id ) {
 
-			// Get count.
-			$count = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->term_relationships}
-					INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
-					WHERE post_status = 'publish' AND post_type = %s AND term_taxonomy_id = %d",
-					'hp_listing',
-					$term_taxonomy_id
-				)
-			);
+			// Get term ID.
+			$term_id = get_term_by( 'term_taxonomy_id', $term_taxonomy_id )->term_id;
 
-			// Update count.
-			$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_taxonomy_id' => $term_taxonomy_id ] );
+			// Get parent term IDs.
+			$parent_term_ids = array_merge( [ $term_id ], get_ancestors( $term_id, 'hp_listing_category', 'taxonomy' ) );
+
+			foreach ( $parent_term_ids as $parent_term_id ) {
+
+				// Get child term IDs.
+				$child_term_ids = array_merge( [ $parent_term_id ], get_term_children( $parent_term_id, 'hp_listing_category' ) );
+
+				// Set placeholder.
+				$placeholder = implode( ', ', array_fill( 0, count( $child_term_ids ), '%d' ) );
+
+				// Get count.
+				$count = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(*) FROM {$wpdb->term_relationships}
+						INNER JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id
+						INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_taxonomy}.term_taxonomy_id = {$wpdb->term_relationships}.term_taxonomy_id
+						WHERE post_status = 'publish' AND post_type = %s AND term_id IN ( {$placeholder} )",
+						array_merge( [ 'hp_listing' ], $child_term_ids )
+					)
+				);
+
+				// Update count.
+				$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_id' => $parent_term_id ] );
+			}
 		}
+	}
+
+	/**
+	 * Alters submit form.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function alter_submit_form( $form ) {
+
+		// Get terms page ID.
+		$page_id = absint( get_option( 'hp_page_listing_submission_terms' ) );
+
+		if ( $page_id ) {
+
+			// Get terms page URL.
+			$page_url = get_permalink( $page_id );
+
+			if ( $page_url ) {
+
+				// Add terms field.
+				$form['fields']['_terms'] = [
+					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'type'      => 'checkbox',
+					'required'  => true,
+					'_separate' => true,
+					'_order'    => 1000,
+				];
+			}
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Alters update form.
+	 *
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function alter_update_form( $form_args, $form ) {
+
+		// Get listing.
+		$listing = $form->get_model();
+
+		if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
+
+			// Set form arguments.
+			$form_args = hp\merge_arrays(
+				$form_args,
+				[
+					'message'  => null,
+					'redirect' => hivepress()->router->get_url( 'listing_renew_page', [ 'listing_id' => $listing->get_id() ] ),
+
+					'button'   => [
+						'label' => hivepress()->translator->get_string( 'renew_listing' ),
+					],
+				]
+			);
+		}
+
+		return $form_args;
 	}
 
 	/**
@@ -384,12 +435,12 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Alters account menu.
+	 * Alters user account menu.
 	 *
 	 * @param array $menu Menu arguments.
 	 * @return array
 	 */
-	public function alter_account_menu( $menu ) {
+	public function alter_user_account_menu( $menu ) {
 		if ( Models\Listing::query()->filter(
 			[
 				'user'       => get_current_user_id(),
@@ -406,34 +457,35 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Alters manage menu.
+	 * Alters listing manage menu.
 	 *
 	 * @param array  $items Menu items.
 	 * @param object $menu Menu object.
 	 * @return array
 	 */
-	public function alter_manage_menu( $items, $menu ) {
+	public function alter_listing_manage_menu( $items, $menu ) {
 
 		// Get listing.
 		$listing = $menu->get_context( 'listing' );
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
-			$items = hp\merge_arrays(
-				$items,
-				[
-					'listing_view' => [
-						'label'  => esc_html__( 'View', 'hivepress' ),
-						'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
-						'_order' => 10,
-					],
 
-					'listing_edit' => [
-						'label'  => esc_html__( 'Edit', 'hivepress' ),
-						'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
-						'_order' => 20,
-					],
-				]
-			);
+			// Add menu items.
+			if ( $listing->get_status() === 'publish' ) {
+				$items['listing_view'] = [
+					'label'  => esc_html__( 'Details', 'hivepress' ),
+					'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
+					'_order' => 5,
+				];
+			}
+
+			if ( get_current_user_id() === $listing->get_user__id() ) {
+				$items['listing_edit'] = [
+					'label'  => esc_html__( 'Edit', 'hivepress' ),
+					'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
+					'_order' => 100,
+				];
+			}
 		}
 
 		return $items;

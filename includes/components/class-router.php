@@ -199,11 +199,10 @@ final class Router extends Component {
 	 *
 	 * @param string $name Route name.
 	 * @param array  $query URL query.
+	 * @param bool   $filter Filter flag.
 	 * @return string
 	 */
-	public function get_url( $name, $query = [] ) {
-		global $wp_rewrite;
-
+	public function get_url( $name, $query = [], $filter = false ) {
 		$url = '';
 
 		// Get route.
@@ -237,7 +236,7 @@ final class Router extends Component {
 					);
 
 					// Set URL path.
-					if ( $wp_rewrite->get_page_permastruct() || hp\get_array_value( $route, 'rest' ) ) {
+					if ( get_option( 'permalink_structure' ) || hp\get_array_value( $route, 'rest' ) ) {
 						foreach ( $params as $param ) {
 							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
 						}
@@ -255,7 +254,7 @@ final class Router extends Component {
 					}
 
 					// Add query variables.
-					if ( $vars ) {
+					if ( $vars && ! $filter ) {
 						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
 					}
 				}
@@ -316,6 +315,9 @@ final class Router extends Component {
 		foreach ( $this->get_routes() as $name => $route ) {
 			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) && ( isset( $route['redirect'] ) || isset( $route['action'] ) ) ) {
 
+				// Get URL path.
+				$path = ltrim( $this->get_url_path( $name ), '/' );
+
 				// Get URL params.
 				$params = $this->get_url_params( $name );
 
@@ -334,8 +336,12 @@ final class Router extends Component {
 					'&'
 				);
 
-				// Add rewrite rule.
-				add_rewrite_rule( '^' . ltrim( $this->get_url_path( $name ), '/' ) . '/?$', 'index.php?' . $query, 'top' );
+				// Add rewrite rules.
+				add_rewrite_rule( '^' . $path . '/?$', 'index.php?' . $query, 'top' );
+
+				if ( hp\get_array_value( $route, 'paginated' ) ) {
+					add_rewrite_rule( '^' . $path . '/page/(\d+)/?$', 'index.php?paged=$matches[' . ( count( $params ) + 1 ) . ']&' . $query, 'top' );
+				}
 
 				// Add rewrite tags.
 				foreach ( $params as $param ) {
@@ -368,6 +374,11 @@ final class Router extends Component {
 		$route = $this->get_current_route();
 
 		if ( $route && isset( $route['title'] ) ) {
+
+			// Remove query title.
+			if ( count( $parts ) > 1 ) {
+				array_shift( $parts );
+			}
 
 			// Add route title.
 			array_unshift( $parts, $route['title'] );

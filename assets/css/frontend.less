@@ -20,6 +20,18 @@ Mixins
 	padding: 0;
 }
 
+.icon {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	font-style: normal;
+	font-variant: normal;
+	line-height: 1;
+	display: inline-block;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: auto;
+}
+
 .hp {
 	/*--------------------------------------------------------------
 	Icons
@@ -146,10 +158,25 @@ Mixins
 				margin-bottom: 1rem;
 			}
 		}
+		@media only screen and (max-width:47.99em) {
+			&__button {
+				width: 100%;
+
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
 
 		&--narrow &__actions,
 		&--narrow &__footer {
 			flex-direction: column;
+		}
+		@media only screen and (max-width:47.99em) {
+			&__actions,
+			&__footer {
+				flex-direction: column;
+			}
 		}
 
 		&__description,
@@ -210,21 +237,6 @@ Mixins
 			align-items: center;
 		}
 
-		&__label {
-			display: block;
-			margin-bottom: 0.5rem;
-
-			small {
-				font-size: 1em;
-				font-weight: normal;
-			}
-		}
-
-		&--pivot &__label {
-			margin: 0 0.5rem 0 0;
-			white-space: nowrap;
-		}
-
 		&__action {
 			&:not(:last-child) {
 				margin-right: 1.5rem;
@@ -236,10 +248,24 @@ Mixins
 				margin: 0 0 0.5rem;
 			}
 		}
+		@media only screen and (max-width:47.99em) {
+			&__action {
+				&:not(:last-child) {
+					margin: 0 0 0.5rem;
+				}
+			}
+		}
 
 		&--narrow button&__action {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
+			}
+		}
+		@media only screen and (max-width:47.99em) {
+			& button&__action {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
 			}
 		}
 	}
@@ -373,6 +399,27 @@ Mixins
 				}
 			}
 		}
+
+		&__label {
+			display: block;
+			margin-bottom: 0.5rem;
+
+			small {
+				font-size: 1em;
+				font-weight: normal;
+			}
+		}
+
+		&__description {
+			font-size: 80%;
+			margin-bottom: 0.75rem;
+			opacity: 0.75;
+		}
+	}
+
+	&-form--pivot &-field__label {
+		margin: 0 0.5rem 0 0;
+		white-space: nowrap;
 	}
 	/*--------------------------------------------------------------
 	Modals
@@ -389,14 +436,109 @@ Mixins
 	Menus
 	--------------------------------------------------------------*/
 	&-menu {
+		&:not(:last-child) {
+			margin-bottom: 2rem;
+		}
+
 		&--site-header {
 			display: flex;
 			align-items: center;
+			margin: 0;
 		}
 
 		&--site-header &__item {
 			&:not(:last-child) {
 				margin-right: 2rem;
+			}
+		}
+
+		&--breadcrumb {
+			ul {
+				.unstyled-list;
+				display: flex;
+				flex-wrap: wrap;
+
+				ul {
+					display: none;
+				}
+			}
+		}
+
+		&--breadcrumb &__item {
+			margin: 0;
+			font-size: 80%;
+			display: flex;
+			align-items: center;
+
+			&:not(:last-child) {
+				margin-right: 0.5rem;
+
+				&::after {
+					.icon;
+					content: '\f105';
+					font-size: 14px;
+					margin-left: 0.5rem;
+					opacity: 0.5;
+				}
+			}
+		}
+
+		&--tabbed {
+			border-color: rgba(0,0,0,.1);
+			border-style: solid;
+			border-width: 0;
+
+			&:not(:last-child) {
+				border-bottom-width: 1px;
+			}
+
+			ul {
+				.unstyled-list;
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+
+				ul {
+					display: none;
+				}
+			}
+		}
+
+		&--tabbed &__item {
+			padding: 1rem;
+			margin: 0;
+			position: relative;
+
+			&--current {
+				&::before {
+					display: block;
+					content: '';
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: -1px;
+					height: 3px;
+					background-color: rgba(0,0,0,.5);
+				}
+
+				a {
+					color: inherit;
+					font-weight: bold;
+				}
+			}
+		}
+	}
+
+	&-page__topbar--separate &-menu--tabbed {
+		margin: -1rem 0;
+		border-bottom-width: 0;
+		@media only screen and (max-width:47.99em) {
+			margin-bottom: 0;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+				border-bottom-width: 1px;
+				width: 100%;
 			}
 		}
 	}
@@ -440,6 +582,12 @@ Mixins
 			}
 		}
 
+		&__footer {
+			&:not(:first-child) {
+				margin-top: 4rem;
+			}
+		}
+
 		&__sidebar {
 			@media only screen and (max-width:47.99em) {
 				&:first-child {
@@ -460,9 +608,22 @@ Mixins
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
+
+			&--separate {
+				border-style: solid;
+				border-color: rgba(0, 0, 0, 0.1);
+				border-width: 0;
+				padding: 1rem 0;
+				margin-top: -1rem;
+
+				&:not(:last-child) {
+					border-bottom-width: 1px;
+				}
+			}
 		}
 	}
 
+	&-section,
 	&-widget {
 		&:not(:last-child) {
 			margin-bottom: 2rem;
@@ -511,10 +672,24 @@ Mixins
 			align-items: center;
 		}
 
+		&--view-block &__attributes--primary {
+			min-width: 0;
+
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
+		}
+
 		&--view-page &__actions--primary {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+		}
+
+		&__actions--secondary {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
 		}
 
 		&--view-page &__actions--primary,
@@ -625,8 +800,14 @@ Mixins
 			display: block;
 		}
 
+		&__attributes--primary &__attribute,
+		&__attributes--secondary &__attribute {
+			word-wrap: break-word;
+		}
+
 		&--view-block &__attributes--primary &__attribute {
 			font-size: 120%;
+			min-width: 0;
 
 			&:not(:last-child) {
 				margin-right: 1rem;
@@ -669,6 +850,12 @@ Mixins
 
 			&:not(:last-child) {
 				margin-bottom: 1rem;
+			}
+		}
+
+		&__actions--secondary &__action {
+			&:not(:last-child) {
+				margin-right: 1.5rem;
 			}
 		}
 	}
@@ -715,8 +902,8 @@ Mixins
 			font-size: 80%;
 		}
 
-		&--view-block &__item-count,
 		&--view-block &__description,
+		&--view-block &__item-count,
 		&--view-block &__name {
 			text-align: center;
 		}
@@ -741,13 +928,36 @@ Mixins
 
 		&--view-block &__footer {
 			display: flex;
+			justify-content: space-between;
 			align-items: center;
-			justify-content: flex-end;
 		}
 
-		&--view-block &__actions--primary {
+		&--view-block &__actions--primary,
+		&--view-block &__attributes--primary {
 			display: flex;
 			align-items: center;
+		}
+
+		&--view-block &__attributes--primary {
+			min-width: 0;
+
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
+		}
+
+		&__attributes--primary &__attribute,
+		&__attributes--secondary &__attribute {
+			word-wrap: break-word;
+		}
+
+		&--view-block &__attributes--primary &__attribute {
+			font-size: 120%;
+			min-width: 0;
+
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
 		}
 
 		&--view-block &__actions--primary &__action {
@@ -764,7 +974,7 @@ Mixins
 			}
 		}
 
-		&--view-block &__details--primary,
+		&--view-block &__attributes--secondary,
 		&--view-block &__image,
 		&--view-block &__name {
 			&:not(:last-child) {
@@ -772,6 +982,8 @@ Mixins
 			}
 		}
 
+		&--view-block &__details--primary,
+		&--view-page &__attributes--secondary,
 		&--view-page &__details--primary,
 		&--view-page &__image,
 		&--view-page &__name {
@@ -781,6 +993,7 @@ Mixins
 		}
 
 		&--view-page &__actions--primary,
+		&--view-page &__attributes--primary,
 		&--view-page &__summary {
 			&:not(:last-child) {
 				margin-bottom: 2rem;
@@ -834,6 +1047,17 @@ Mixins
 		&--view-page &__name,
 		&--view-page &__registered-date {
 			text-align: center;
+		}
+
+		&--view-page &__attributes--primary &__attribute {
+			font-size: 120%;
+			text-align: center;
+			padding: 1rem 1.5rem;
+			background-color: rgba(0,0,0,.04);
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
 		}
 
 		&--view-page &__actions--primary &__action {

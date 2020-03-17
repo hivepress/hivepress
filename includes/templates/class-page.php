@@ -30,8 +30,33 @@ abstract class Page extends Template {
 				'blocks' => [
 					'page_container' => [
 						'type'   => 'page',
-						'blocks' => [],
 						'_order' => 10,
+
+						'blocks' => [
+							'page_header' => [
+								'type'       => 'container',
+								'tag'        => 'header',
+								'optional'   => true,
+								'blocks'     => [],
+								'_order'     => 5,
+
+								'attributes' => [
+									'class' => [ 'hp-page__header' ],
+								],
+							],
+
+							'page_footer' => [
+								'type'       => 'container',
+								'tag'        => 'footer',
+								'optional'   => true,
+								'blocks'     => [],
+								'_order'     => 1000,
+
+								'attributes' => [
+									'class' => [ 'hp-page__footer' ],
+								],
+							],
+						],
 					],
 				],
 			],

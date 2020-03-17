@@ -54,6 +54,11 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
+	'select2'               => [
+		'handle' => 'select2',
+		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.full.min.js',
+	],
+
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
@@ -70,7 +75,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar', 'select2' ],
 	],
 
 	'core_backend'          => [

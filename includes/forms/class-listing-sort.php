@@ -55,6 +55,10 @@ class Listing_Sort extends Form {
 						'options'     => [],
 						'required'    => true,
 						'_order'      => 10,
+
+						'attributes'  => [
+							'data-style' => 'inline',
+						],
 					],
 
 					'_category' => [

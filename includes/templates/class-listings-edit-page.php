@@ -32,10 +32,16 @@ class Listings_Edit_Page extends User_Account_Page {
 				'blocks' => [
 					'page_content' => [
 						'blocks' => [
-							'listings' => [
+							'listings'           => [
 								'type'   => 'listings',
 								'mode'   => 'edit',
 								'_order' => 10,
+							],
+
+							'listing_pagination' => [
+								'type'   => 'part',
+								'path'   => 'page/pagination',
+								'_order' => 20,
 							],
 						],
 					],

@@ -29,7 +29,7 @@ class Result_Count extends Block {
 
 		$output = '';
 
-		if ( $wp_query->found_posts ) {
+		if ( $wp_query->found_posts || hivepress()->request->get_context( 'featured_ids' ) ) {
 			$output = '<div class="hp-result-count">';
 
 			// Get first result.

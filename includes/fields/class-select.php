@@ -56,7 +56,7 @@ class Select extends Field {
 						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 10,
+						'_order'  => 100,
 					],
 
 					'options'  => [
@@ -64,7 +64,7 @@ class Select extends Field {
 						'type'     => 'select',
 						'options'  => [],
 						'multiple' => true,
-						'_order'   => 20,
+						'_order'   => 110,
 					],
 				],
 			],
@@ -101,6 +101,11 @@ class Select extends Field {
 			$this->options = [ '' => $this->placeholder ] + $this->options;
 		}
 
+		// Set disabled flag.
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
+		}
+
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
@@ -109,6 +114,11 @@ class Select extends Field {
 		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
+		}
+
+		// Set component.
+		if ( 'hidden' !== $this->display_type ) {
+			$attributes['data-component'] = 'select';
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );

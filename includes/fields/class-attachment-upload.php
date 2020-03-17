@@ -189,6 +189,7 @@ class Attachment_Upload extends Field {
 				'name'       => $this->name,
 				'multiple'   => $this->multiple,
 				'formats'    => $this->formats,
+				'disabled'   => true,
 
 				'attributes' => [
 					'id'             => $id,

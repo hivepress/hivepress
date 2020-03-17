@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 final class WooCommerce extends Component {
 
 	/**
+	 * Array of WooCommerce objects.
+	 *
+	 * @var array
+	 */
+	protected $objects = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -30,6 +37,15 @@ final class WooCommerce extends Component {
 		if ( ! hp\is_plugin_active( 'woocommerce' ) ) {
 			return;
 		}
+
+		// Set order item meta.
+		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'set_order_item_meta' ], 10, 3 );
+
+		// Format order item meta.
+		add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'format_order_item_meta' ] );
+
+		// Format cart item meta.
+		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
 		if ( ! is_admin() ) {
 
@@ -47,6 +63,40 @@ final class WooCommerce extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets WooCommerce configuration.
+	 *
+	 * @param string $type Configuration type.
+	 * @return array
+	 */
+	public function get_config( $type ) {
+		return hp\get_array_value( hivepress()->get_config( 'woocommerce' ), $type, [] );
+	}
+
+	/**
+	 * Gets item meta fields.
+	 *
+	 * @return array
+	 */
+	protected function get_item_meta_fields() {
+		if ( ! isset( $this->objects['item_meta'] ) ) {
+			$this->objects['item_meta'] = [];
+
+			foreach ( hp\sort_array( $this->get_config( 'item_meta' ) ) as $name => $args ) {
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+
+				// Add field.
+				if ( $field ) {
+					$this->objects['item_meta'][ $name ] = $field;
+				}
+			}
+		}
+
+		return $this->objects['item_meta'];
 	}
 
 	/**
@@ -72,6 +122,113 @@ final class WooCommerce extends Component {
 	 */
 	public function get_product_price_text( $product ) {
 		return wp_strip_all_tags( wc_price( $product->get_price() ) );
+	}
+
+	/**
+	 * Sets order item meta.
+	 *
+	 * @param WC_Order_Item_Product $item Order item.
+	 * @param string                $cart_item_key Cart item key.
+	 * @param array                 $meta Meta values.
+	 */
+	public function set_order_item_meta( $item, $cart_item_key, $meta ) {
+
+		// Get fields.
+		$fields = $this->get_item_meta_fields();
+
+		// Set meta.
+		foreach ( $meta as $meta_key => $meta_value ) {
+			if ( strpos( $meta_key, 'hp_' ) === 0 ) {
+
+				// Get field.
+				$field = hp\get_array_value( $fields, hp\unprefix( $meta_key ) );
+
+				if ( $field ) {
+
+					// Set value.
+					$field->set_value( $meta_value );
+
+					if ( $field->validate() ) {
+						$item->update_meta_data( $meta_key, $field->get_value() );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Formats order item meta.
+	 *
+	 * @param array $meta Meta values.
+	 * @return array
+	 */
+	public function format_order_item_meta( $meta ) {
+
+		// Get fields.
+		$fields = $this->get_item_meta_fields();
+
+		// Filter meta.
+		$meta = array_filter(
+			array_map(
+				function( $args ) use ( $fields ) {
+					if ( strpos( $args->key, 'hp_' ) === 0 ) {
+
+						// Get field.
+						$field = hp\get_array_value( $fields, hp\unprefix( $args->key ) );
+
+						if ( $field ) {
+							if ( $field->get_label() ) {
+
+								// Set value.
+								$field->set_value( $args->value );
+
+								// Set meta.
+								$args->display_key   = $field->get_label();
+								$args->display_value = '<p>' . $field->display() . '</p>';
+							} else {
+
+								// Remove meta.
+								$args = null;
+							}
+						}
+					}
+
+					return $args;
+				},
+				$meta
+			)
+		);
+
+		return $meta;
+	}
+
+	/**
+	 * Formats cart item meta.
+	 *
+	 * @param array $meta Meta values.
+	 * @param array $cart_item Cart item.
+	 * @return array
+	 */
+	public function format_cart_item_meta( $meta, $cart_item ) {
+
+		// Get fields.
+		$fields = $this->get_item_meta_fields();
+
+		foreach ( $fields as $name => $field ) {
+			if ( isset( $cart_item[ hp\prefix( $name ) ] ) && $field->get_label() ) {
+
+				// Set value.
+				$field->set_value( $cart_item[ hp\prefix( $name ) ] );
+
+				// Add meta.
+				$meta[] = [
+					'key'   => $field->get_label(),
+					'value' => $field->display(),
+				];
+			}
+		}
+
+		return $meta;
 	}
 
 	/**

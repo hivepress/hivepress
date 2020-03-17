@@ -28,7 +28,7 @@ class Listing extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
-					'title'         => [
+					'title'            => [
 						'label'      => esc_html__( 'Title', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
@@ -36,7 +36,7 @@ class Listing extends Post {
 						'_alias'     => 'post_title',
 					],
 
-					'description'   => [
+					'description'      => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
@@ -44,7 +44,7 @@ class Listing extends Post {
 						'_alias'     => 'post_content',
 					],
 
-					'status'        => [
+					'status'           => [
 						'type'    => 'select',
 						'_alias'  => 'post_status',
 
@@ -60,46 +60,52 @@ class Listing extends Post {
 						],
 					],
 
-					'drafted'       => [
+					'drafted'          => [
 						'type'      => 'checkbox',
 						'_external' => true,
 					],
 
-					'featured'      => [
+					'featured'         => [
 						'type'      => 'checkbox',
 						'_external' => true,
 					],
 
-					'verified'      => [
+					'verified'         => [
 						'type'      => 'checkbox',
 						'_external' => true,
 					],
 
-					'created_date'  => [
+					'created_date'     => [
 						'type'   => 'date',
 						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_date',
 					],
 
-					'modified_date' => [
+					'created_date_gmt' => [
+						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
+						'_alias' => 'post_date_gmt',
+					],
+
+					'modified_date'    => [
 						'type'   => 'date',
 						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_modified',
 					],
 
-					'expired_time'  => [
+					'expired_time'     => [
 						'type'      => 'number',
 						'min_value' => 0,
 						'_external' => true,
 					],
 
-					'featured_time' => [
+					'featured_time'    => [
 						'type'      => 'number',
 						'min_value' => 0,
 						'_external' => true,
 					],
 
-					'user'          => [
+					'user'             => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
@@ -107,7 +113,7 @@ class Listing extends Post {
 						'_model'    => 'user',
 					],
 
-					'vendor'        => [
+					'vendor'           => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'required'  => true,
@@ -115,7 +121,7 @@ class Listing extends Post {
 						'_model'    => 'vendor',
 					],
 
-					'categories'    => [
+					'categories'       => [
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
@@ -124,7 +130,7 @@ class Listing extends Post {
 						'_relation'   => 'many_to_many',
 					],
 
-					'image'         => [
+					'image'            => [
 						'type'      => 'number',
 						'min_value' => 1,
 						'_alias'    => '_thumbnail_id',
@@ -132,7 +138,7 @@ class Listing extends Post {
 						'_external' => true,
 					],
 
-					'images'        => [
+					'images'           => [
 						'label'     => esc_html__( 'Images', 'hivepress' ),
 						'caption'   => esc_html__( 'Select Images', 'hivepress' ),
 						'type'      => 'attachment_upload',

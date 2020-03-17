@@ -1,0 +1,1523 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: HivePress\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-03-14 17:52+0000\n"
+"PO-Revision-Date: 2020-03-15 12:16+0000\n"
+"Last-Translator: admin <admin@admin.com>\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
+"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.1; wp-5.3.2"
+
+#: includes/blocks/class-result-count.php:56
+#, php-format
+msgid "Showing %1$s-%2$s of %3$s results"
+msgstr ""
+"Відображаються %1$s-%2$s з %3$s результатів\n"
+
+#: includes/blocks/class-user-register-form.php:30
+msgid "User Registration Form"
+msgstr "Форма реєстрації користувачів"
+
+#: includes/components/class-admin.php:117
+#: includes/components/class-admin.php:118
+#: includes/components/class-admin.php:118 includes/configs/meta-boxes.php:15
+#: includes/configs/meta-boxes.php:191 includes/configs/strings.php:16
+#: includes/controllers/class-user.php:150 templates/admin/settings.php:6
+msgid "Settings"
+msgstr ""
+"Налаштування\n"
+
+#: includes/components/class-admin.php:119 templates/admin/extensions.php:8
+msgid "Extensions"
+msgstr ""
+"Розширення\n"
+
+#: includes/components/class-admin.php:540
+msgctxt "plural"
+msgid "All"
+msgstr ""
+"Всі\n"
+
+#: includes/components/class-admin.php:545
+msgctxt "plural"
+msgid "Installed"
+msgstr ""
+"Встановлені\n"
+
+#: includes/components/class-admin.php:1075
+#, php-format
+msgid ""
+"The current theme doesn't declare HivePress support, if you encounter layout "
+"or styling issues please consider using the official %s theme."
+msgstr ""
+"Поточна тема не підтримує HivePress, якщо ви помітите проблеми з версткою "
+"або стилями, будь ласка, використовуйте офіційну тему %s.\n"
+
+#: includes/components/class-attribute.php:301
+msgid "Add Option"
+msgstr "Додати опцію"
+
+#: includes/components/class-attribute.php:302
+msgid "Edit Option"
+msgstr ""
+"Редагувати опцію\n"
+
+#: includes/components/class-attribute.php:303
+msgid "Update Option"
+msgstr ""
+"Змінити опцію\n"
+
+#: includes/components/class-attribute.php:304
+msgid "Parent Option"
+msgstr ""
+"Батьківська опція\n"
+
+#: includes/components/class-attribute.php:305
+msgid "Search Options"
+msgstr ""
+"Шукати опції\n"
+
+#: includes/components/class-attribute.php:306
+msgid "No options found."
+msgstr ""
+"Опцій не знайдено.\n"
+
+#: includes/components/class-attribute.php:398
+msgid "Edit Options"
+msgstr ""
+"Редагувати опції\n"
+
+#: includes/components/class-attribute.php:543
+msgctxt "field"
+msgid "requires review"
+msgstr ""
+"вимагає перевірки\n"
+
+#: includes/components/class-attribute.php:622
+msgid "Relevance"
+msgstr ""
+"Релевантність\n"
+
+#: includes/components/class-attribute.php:624
+#: includes/fields/class-date.php:65
+msgid "Date"
+msgstr "Дата"
+
+#: includes/components/class-attribute.php:717
+msgid "All Categories"
+msgstr ""
+"Усі категорії\n"
+
+#: includes/components/class-form.php:303
+msgid "Captcha is invalid."
+msgstr ""
+"Невірний код підтвердження.\n"
+
+#: includes/components/class-listing.php:359
+#: includes/components/class-user.php:122
+#, php-format
+msgid ""
+"I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
+msgstr ""
+"Я погоджуюся з правилами і умовами\n"
+
+#: includes/components/class-listing.php:417 includes/configs/meta-boxes.php:21
+#: templates/listing/view/listing-featured-badge.php:7
+msgctxt "listing"
+msgid "Featured"
+msgstr ""
+"Рекламується\n"
+
+#: includes/components/class-listing.php:421 includes/configs/meta-boxes.php:28
+#: templates/listing/view/listing-verified-badge.php:7
+msgctxt "listing"
+msgid "Verified"
+msgstr "Перевіренe"
+
+#: includes/components/class-listing.php:467 includes/configs/strings.php:17
+#: includes/forms/class-listing-report.php:53
+msgid "Details"
+msgstr ""
+"Деталі\n"
+
+#: includes/components/class-listing.php:475
+msgid "Edit"
+msgstr "Редагувати"
+
+#: includes/components/class-user.php:185
+#: includes/controllers/class-user.php:134
+#: includes/forms/class-user-login.php:69
+#: templates/user/login/user-login-link.php:9
+#: templates/user/register/user-login-link.php:5
+msgid "Sign In"
+msgstr ""
+"Увійти\n"
+
+#: includes/components/class-user.php:197
+#: includes/forms/class-user-register.php:63
+#: templates/user/login/user-register-link.php:5
+msgid "Register"
+msgstr ""
+"Зареєструватися\n"
+
+#: includes/components/class-user.php:209
+#: includes/controllers/class-user.php:142
+#: includes/forms/class-user-password-request.php:30
+#: includes/forms/class-user-password-reset.php:69
+#: templates/user/password-reset/user-password-reset-message.php:6
+msgid "Reset Password"
+msgstr ""
+"Скинути пароль\n"
+
+#: includes/configs/meta-boxes.php:35
+msgid "Featuring Date"
+msgstr "Дата закінчення терміну рекламування"
+
+#: includes/configs/meta-boxes.php:43
+msgid "Expiration Date"
+msgstr "Дата закінчення терміну розміщення"
+
+#: includes/configs/meta-boxes.php:53 includes/configs/meta-boxes.php:198
+#: includes/configs/post-types.php:44 includes/configs/post-types.php:50
+#: includes/configs/post-types.php:87 includes/configs/post-types.php:93
+msgid "Attributes"
+msgstr ""
+"Атрибути\n"
+
+#: includes/configs/meta-boxes.php:60 includes/configs/meta-boxes.php:205
+msgid "Editing"
+msgstr ""
+"Редагування\n"
+
+#: includes/configs/meta-boxes.php:66 includes/configs/meta-boxes.php:211
+msgctxt "attribute"
+msgid "Editable"
+msgstr ""
+"Редагування\n"
+
+#: includes/configs/meta-boxes.php:67 includes/configs/meta-boxes.php:212
+msgid "Allow front-end editing"
+msgstr ""
+"Дозволити користувачам редагування\n"
+
+#: includes/configs/meta-boxes.php:73 includes/configs/meta-boxes.php:104
+#: includes/configs/meta-boxes.php:218 includes/configs/meta-boxes.php:249
+msgid "Field Type"
+msgstr ""
+"Тип поля\n"
+
+#: includes/configs/meta-boxes.php:84 includes/configs/meta-boxes.php:229
+msgctxt "noun"
+msgid "Search"
+msgstr ""
+"Пошук\n"
+
+#: includes/configs/meta-boxes.php:90 includes/configs/meta-boxes.php:235
+msgctxt "attribute"
+msgid "Searchable"
+msgstr ""
+"Пошук\n"
+
+#: includes/configs/meta-boxes.php:91 includes/configs/meta-boxes.php:236
+msgid "Display in the search form"
+msgstr ""
+"Відображати в пошуковій формі\n"
+
+#: includes/configs/meta-boxes.php:97 includes/configs/meta-boxes.php:242
+msgctxt "attribute"
+msgid "Sortable"
+msgstr ""
+"Сортування\n"
+
+#: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:243
+msgid "Display as a sorting option"
+msgstr ""
+"Відображати як опцію сортування\n"
+
+#: includes/configs/meta-boxes.php:114 includes/configs/meta-boxes.php:167
+#: includes/configs/meta-boxes.php:259 includes/configs/settings.php:20
+#: includes/configs/settings.php:164
+msgctxt "noun"
+msgid "Display"
+msgstr ""
+"Відображення\n"
+
+#: includes/configs/meta-boxes.php:120 includes/configs/meta-boxes.php:265
+msgid "Areas"
+msgstr ""
+"Зони\n"
+
+#: includes/configs/meta-boxes.php:121 includes/configs/meta-boxes.php:266
+msgid "Choose the template areas where you want to display this attribute."
+msgstr ""
+"Виберіть зони шаблону, в яких ви хочете відображати цей атрибут.\n"
+
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:127
+#: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:272
+msgid "Block"
+msgstr ""
+"Блок\n"
+
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:128
+#: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:273
+msgctxt "area"
+msgid "primary"
+msgstr ""
+"головна\n"
+
+#: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:129
+#: includes/configs/meta-boxes.php:272 includes/configs/meta-boxes.php:274
+msgctxt "area"
+msgid "secondary"
+msgstr ""
+"другорядна\n"
+
+#: includes/configs/meta-boxes.php:128 includes/configs/meta-boxes.php:129
+#: includes/configs/meta-boxes.php:273 includes/configs/meta-boxes.php:274
+msgid "Page"
+msgstr ""
+"Сторінка\n"
+
+#: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:279
+msgid "Format"
+msgstr ""
+"Формат\n"
+
+#: includes/configs/meta-boxes.php:135 includes/configs/meta-boxes.php:280
+msgid "Set the attribute display format."
+msgstr ""
+"Введіть формат відображення атрибута.\n"
+
+#: includes/configs/meta-boxes.php:150
+msgid "Image"
+msgstr ""
+"Зображення\n"
+
+#: includes/configs/meta-boxes.php:151 includes/models/class-user.php:101
+msgid "Select Image"
+msgstr ""
+"Вибрати зображення\n"
+
+#: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:180
+#: includes/configs/meta-boxes.php:295
+msgctxt "sort priority"
+msgid "Order"
+msgstr "Порядок"
+
+#: includes/configs/meta-boxes.php:168
+msgid "Display subcategories"
+msgstr ""
+"Відображати підкатегорії\n"
+
+#: includes/configs/post-types.php:24
+msgctxt "listing"
+msgid "Add New"
+msgstr ""
+"Додати нове\n"
+
+#: includes/configs/post-types.php:45 includes/configs/post-types.php:88
+msgid "Attribute"
+msgstr ""
+"Атрибут\n"
+
+#: includes/configs/post-types.php:46 includes/configs/post-types.php:89
+msgctxt "attribute"
+msgid "Add New"
+msgstr ""
+"Додати новий\n"
+
+#: includes/configs/post-types.php:47 includes/configs/post-types.php:49
+#: includes/configs/post-types.php:90 includes/configs/post-types.php:92
+msgid "Add Attribute"
+msgstr ""
+"Додати атрибут\n"
+
+#: includes/configs/post-types.php:48 includes/configs/post-types.php:91
+msgid "Edit Attribute"
+msgstr ""
+"Редагувати атрибут\n"
+
+#: includes/configs/post-types.php:51 includes/configs/post-types.php:94
+msgid "Search Attributes"
+msgstr ""
+"Шукати атрибути\n"
+
+#: includes/configs/post-types.php:52 includes/configs/post-types.php:53
+#: includes/configs/post-types.php:95 includes/configs/post-types.php:96
+msgid "No attributes found."
+msgstr ""
+"Атрибутів не знайдено.\n"
+
+#: includes/configs/post-types.php:68
+msgctxt "vendor"
+msgid "Add New"
+msgstr ""
+"Додати нового\n"
+"\n"
+
+#: includes/configs/settings.php:35
+msgid "Display categories"
+msgstr ""
+"Відображати категорії\n"
+
+#: includes/configs/settings.php:70 includes/configs/settings.php:84
+#: includes/configs/strings.php:19
+msgid "Submission"
+msgstr ""
+"Додавання\n"
+
+#: includes/configs/settings.php:75
+msgid "Submission Terms Page"
+msgstr ""
+"Сторінка умов додавання\n"
+
+#: includes/configs/settings.php:102 includes/configs/strings.php:21
+msgid "Expiration"
+msgstr ""
+"Терміни\n"
+
+#: includes/configs/settings.php:107
+msgid "Expiration Period"
+msgstr ""
+"Термін розміщення\n"
+
+#: includes/configs/settings.php:117 includes/configs/settings.php:212
+#: includes/configs/strings.php:18
+msgid "Emails"
+msgstr ""
+"Листи\n"
+
+#: includes/configs/settings.php:123
+msgid "This email is sent to users when listing is approved."
+msgstr ""
+"Цей лист відправляється користувачам у разі схвалення оголошення.\n"
+
+#: includes/configs/settings.php:125
+msgid ""
+"Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
+"on the following link to view it: %listing_url%"
+msgstr ""
+"Привіт, %username%! Ваше оголошення \"%listing_title%\" схвалено, клікніть "
+"на це посилання для перегляду: %listing_url%\n"
+
+#: includes/configs/settings.php:134
+msgid "This email is sent to users when listing is rejected."
+msgstr ""
+"Цей лист відправляється користувачам у разі відхилення оголошення.\n"
+
+#: includes/configs/settings.php:136
+msgid ""
+"Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
+"rejected."
+msgstr ""
+"Привіт, %username%! На жаль, ваше оголошення \"%listing_title%\" відхилено.\n"
+
+#: includes/configs/settings.php:145
+msgid "This email is sent to users when listing is expired."
+msgstr ""
+"Цей лист відправляється користувачам у разі закінчення терміну розміщення "
+"оголошення.\n"
+
+#: includes/configs/settings.php:147
+msgid ""
+"Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
+"following link to renew it: %listing_url%"
+msgstr ""
+"Привіт, %username%! Термін розміщення оголошення \"%listing_title%\" "
+"закінчився, клікніть на це посилання, щоб оновити його: %listing_url%"
+
+#: includes/configs/settings.php:191
+msgid "Users"
+msgstr ""
+"Користувачі\n"
+
+#: includes/configs/settings.php:196
+msgid "Registration"
+msgstr ""
+"Реєстрація\n"
+
+#: includes/configs/settings.php:201
+msgid "Registration Terms Page"
+msgstr ""
+"Сторінка умов реєстрації\n"
+
+#: includes/configs/settings.php:202
+msgid "Choose a page with terms that user has to accept before registering."
+msgstr ""
+"Виберіть сторінку умов, які користувач повинен прийняти перед реєстрацією.\n"
+
+#: includes/configs/settings.php:217
+msgid "User Registered"
+msgstr ""
+"Користувач зареєстрований\n"
+
+#: includes/configs/settings.php:218
+msgid "This email is sent to users after registration."
+msgstr ""
+"Цей лист відправляється користувачам після реєстрації.\n"
+
+#: includes/configs/settings.php:220
+msgid ""
+"Hi, %user_name%! Thank you for registering, here's your password: "
+"%user_password%"
+msgstr ""
+"Привіт, %username%! Дякуємо за реєстрацію, ось ваш пароль: %user_password%\n"
+
+#: includes/configs/settings.php:228
+#: includes/emails/class-user-password-request.php:30
+msgid "Password Reset"
+msgstr ""
+"Пароль скинуто\n"
+
+#: includes/configs/settings.php:229
+msgid "This email is sent to users when a password reset is requested."
+msgstr ""
+"Цей лист відправляється користувачам у разі запиту скидання пароля.\n"
+
+#: includes/configs/settings.php:231
+msgid ""
+"Hi, %user_name%! Please click on the following link to set a new password: "
+"%password_reset_url%"
+msgstr ""
+"Привіт, %username%! Будь ласка, клікніть на це посилання, щоб встановити "
+"новий пароль: %password_reset_url%\n"
+
+#: includes/configs/settings.php:243
+msgid "Integrations"
+msgstr ""
+"Інтеграції\n"
+
+#: includes/configs/settings.php:253
+msgid "Site Key"
+msgstr ""
+"Ключ сайту\n"
+
+#: includes/configs/settings.php:260
+msgid "Secret Key"
+msgstr ""
+"Секретний ключ\n"
+
+#: includes/configs/settings.php:267
+msgid "Protected Forms"
+msgstr ""
+"Захищені форми\n"
+
+#: includes/configs/strings.php:20
+msgid "Moderation"
+msgstr ""
+"Модерація\n"
+
+#: includes/configs/strings.php:22
+msgid "Free"
+msgstr ""
+"Безкоштовно\n"
+
+#: includes/configs/strings.php:23
+msgid "Overview"
+msgstr "Огляд"
+
+#: includes/configs/strings.php:24
+msgid "Storage"
+msgstr "Зберігання"
+
+#: includes/configs/strings.php:25
+msgid "Storage Period"
+msgstr "Термін зберігання"
+
+#: includes/configs/strings.php:26
+msgid "API Key"
+msgstr "Ключ API"
+
+#: includes/configs/strings.php:27
+msgid "Client ID"
+msgstr ""
+"ID клієнта\n"
+
+#: includes/configs/strings.php:28
+msgid "App ID"
+msgstr ""
+"ID додатку\n"
+
+#: includes/configs/strings.php:29
+msgid "Return to My Account"
+msgstr ""
+"Повернутися в мій акаунт\n"
+
+#: includes/configs/strings.php:30
+msgctxt "quantity"
+msgid "Columns"
+msgstr ""
+"Колонки\n"
+
+#: includes/configs/strings.php:31
+msgctxt "quantity"
+msgid "Number"
+msgstr ""
+"Кількість\n"
+
+#: includes/configs/strings.php:32
+msgctxt "sort order"
+msgid "Item Count"
+msgstr ""
+"За кількістю позицій\n"
+
+#: includes/configs/strings.php:33
+msgctxt "sort order"
+msgid "Name"
+msgstr ""
+"За назвою\n"
+
+#: includes/configs/strings.php:34
+msgctxt "sort order"
+msgid "Date Added"
+msgstr ""
+"За датою додавання\n"
+
+#: includes/configs/strings.php:35
+msgctxt "sort order"
+msgid "Date Registered"
+msgstr "За датою реєстрації"
+
+#: includes/configs/strings.php:36
+msgctxt "sort order"
+msgid "Title"
+msgstr ""
+"За заголовком\n"
+
+#: includes/configs/strings.php:37
+msgctxt "sort order"
+msgid "Random"
+msgstr ""
+"Випадковий\n"
+
+#: includes/configs/strings.php:38
+msgctxt "sort"
+msgid "Order"
+msgstr ""
+"Порядок\n"
+
+#: includes/configs/strings.php:39
+#, php-format
+msgid "%s Product"
+msgstr "Продукт %s"
+
+#: includes/configs/strings.php:40
+#, php-format
+msgid "The following tokens are available: %s."
+msgstr ""
+"Наступні токени доступні: %s.\n"
+
+#: includes/configs/strings.php:41
+#, php-format
+msgid ""
+"%s extension is incompatible with the current HivePress version, please "
+"update HivePress or deactivate it."
+msgstr ""
+"Розширення %s несумісне з поточною версією HivePress, будь ласка, оновіть "
+"HivePress або вимкніть його."
+
+#: includes/configs/strings.php:44
+msgid "Listing"
+msgstr ""
+"Оголошення\n"
+
+#: includes/configs/strings.php:45
+msgid "Listings"
+msgstr "Оголошення"
+
+#: includes/configs/strings.php:46
+msgid "All Listings"
+msgstr "Всі оголошення"
+
+#: includes/configs/strings.php:47
+msgid "Related Listings"
+msgstr "Схожі оголошення"
+
+#: includes/configs/strings.php:48
+#, php-format
+msgid "%s Listing"
+msgid_plural "%s Listings"
+msgstr[0] "%s оголошення"
+msgstr[1] "%s оголошень"
+msgstr[2] "%s оголошень"
+
+#: includes/configs/strings.php:49
+#, php-format
+msgid "Listings by %s"
+msgstr "Оголошення від %s"
+
+#: includes/configs/strings.php:50
+msgid "Featuring of Listings"
+msgstr "Реклама оголошень"
+
+#: includes/configs/strings.php:51
+msgid "Featured Listings"
+msgstr "Рекламовані оголошення"
+
+#: includes/configs/strings.php:52
+msgid "View Listings"
+msgstr "Переглянути оголошення"
+
+#: includes/configs/strings.php:53
+msgid "Search Listings"
+msgstr "Знайти оголошення"
+
+#: includes/configs/strings.php:54
+msgid "No listings found."
+msgstr "Не знайдено оголошень"
+
+#: includes/configs/strings.php:55
+msgid "Listing Categories"
+msgstr "Категорії оголошень"
+
+#: includes/configs/strings.php:56
+msgid "Listing Search Form"
+msgstr "Форма пошуку оголошень"
+
+#: includes/configs/strings.php:57
+msgid "Listing Expiration"
+msgstr "Термін розміщення оголошень"
+
+#: includes/configs/strings.php:58
+msgid "Submit Listing"
+msgstr "Відправити оголошення"
+
+#: includes/configs/strings.php:59
+msgid "Renew Listing"
+msgstr "Оновити оголошення"
+
+#: includes/configs/strings.php:60
+msgid "Add Listing"
+msgstr "Додати оголошення"
+
+#: includes/configs/strings.php:61
+msgid "View Listing"
+msgstr "Переглянути оголошення"
+
+#: includes/configs/strings.php:62
+msgid "Edit Listing"
+msgstr "Редагувати оголошення"
+
+#: includes/configs/strings.php:63
+msgid "Delete Listing"
+msgstr "Видалитити оголошення"
+
+#: includes/configs/strings.php:64
+msgid "Report Listing"
+msgstr "Поскаржитись на оголошення"
+
+#: includes/configs/strings.php:65
+msgid "Listing Submitted"
+msgstr "Оголошення відправлено"
+
+#: includes/configs/strings.php:66
+msgid "Listing Approved"
+msgstr "Оголошення схвалено"
+
+#: includes/configs/strings.php:67
+msgid "Listing Rejected"
+msgstr "Оголошення відхилено"
+
+#: includes/configs/strings.php:68
+msgid "Listing Expired"
+msgstr "Закінчився термін розміщення оголошення"
+
+#: includes/configs/strings.php:69
+msgid "Listing Renewed"
+msgstr "Оголошення оновлено"
+
+#: includes/configs/strings.php:70
+msgid "Listing Updated"
+msgstr "Оголошення змінено"
+
+#: includes/configs/strings.php:71
+msgid "Listing Reported"
+msgstr "Отримано скаргу на оголошення"
+
+#: includes/configs/strings.php:72
+#, php-format
+msgid ""
+"Thank you! Your listing \"%s\" has been submitted and will be reviewed as "
+"soon as possible."
+msgstr ""
+"Дякуємо! Ваше оголошення \"%s\" відправлено і буде розглянуто якнайшвидше."
+
+#: includes/configs/strings.php:73
+#, php-format
+msgid ""
+"Thank you! Your listing \"%s\" has been renewed and will appear at the top "
+"of the page."
+msgstr "Дякуємо! Ваше оголошення \"%s\" оновлено і з'явиться на горі сторінки."
+
+#: includes/configs/strings.php:74
+msgid "Listing has been reported."
+msgstr "Скарга на оголошення відправлена."
+
+#: includes/configs/strings.php:75
+msgid "Listings Page"
+msgstr "Сторінка оголошень"
+
+#: includes/configs/strings.php:76
+msgid "Listings Page Display"
+msgstr "Відображення сторінки оголошень"
+
+#: includes/configs/strings.php:77
+msgid "Regular Listings per Page"
+msgstr "Кількість звичайних оголошень на сторінку"
+
+#: includes/configs/strings.php:78
+msgid "Featured Listings per Page"
+msgstr "Кількість рекламованих оголошень на сторінку"
+
+#: includes/configs/strings.php:79
+msgid "Related Listings per Page"
+msgstr "Кількість схожих оголошень на сторінку"
+
+#: includes/configs/strings.php:80
+msgid "Mark this listing as verified"
+msgstr "Відзначити це оголошення як перевірене"
+
+#: includes/configs/strings.php:81
+msgid "Make this listing featured"
+msgstr "Рекламувати це оголошення"
+
+#: includes/configs/strings.php:82
+msgid "Make listings featured"
+msgstr "Рекламувати оголошення"
+
+#: includes/configs/strings.php:83
+msgid "Display only featured listings"
+msgstr "Відображати тільки рекламовані оголошення"
+
+#: includes/configs/strings.php:84
+msgid "Are you sure you want to permanently delete this listing?"
+msgstr "Ви впевнені, що хочете назавжди видалити це оголошення?"
+
+#: includes/configs/strings.php:85
+msgid "Manually approve new listings"
+msgstr "Вручну схвалювати нові оголошення"
+
+#: includes/configs/strings.php:86
+msgid "Allow submitting new listings"
+msgstr "Дозволити додавання нових оголошень"
+
+#: includes/configs/strings.php:87
+msgid "Set the number of days after which a listing expires."
+msgstr ""
+"Введіть кількість днів, після якого закінчується термін розміщення "
+"оголошення."
+
+#: includes/configs/strings.php:88
+msgid "Set a date on which the listing will expire."
+msgstr "Виберіть дату, в яку закінчиться термін розміщення оголошення."
+
+#: includes/configs/strings.php:89
+msgid "Set a date on which the listing will lose featured status."
+msgstr "Виберіть дату, в яку оголошення перестане рекламуватися."
+
+#: includes/configs/strings.php:90
+msgid "Choose a page that displays all listings."
+msgstr "Виберіть сторінку, яка відображає всі оголошення."
+
+#: includes/configs/strings.php:91
+msgid ""
+"Choose a page with terms that user has to accept before submitting a new "
+"listing."
+msgstr ""
+"Виберіть сторінку умов, які користувач повинен прийняти перед додаванням "
+"нового оголошення."
+
+#: includes/configs/strings.php:92
+msgid ""
+"Please provide details that will help us verify that this listing violates "
+"the terms of service."
+msgstr ""
+"Будь ласка, надайте деталі які допоможуть нам перевірити, що це оголошення "
+"порушує умови використання."
+
+#: includes/configs/strings.php:95
+msgid "Vendor"
+msgstr ""
+"Продавець\n"
+
+#: includes/configs/strings.php:96
+msgid "View Vendor"
+msgstr ""
+"Переглянути продавця\n"
+
+#: includes/configs/strings.php:97
+msgid "Add Vendor"
+msgstr "Додати продавця"
+
+#: includes/configs/strings.php:98
+msgid "Edit Vendor"
+msgstr ""
+"Редагувати продавця\n"
+
+#: includes/configs/strings.php:99
+msgid "Vendors"
+msgstr ""
+"Продавці\n"
+
+#: includes/configs/strings.php:100
+msgid "Search Vendors"
+msgstr ""
+"Шукати продавців\n"
+
+#: includes/configs/strings.php:101
+msgid "No vendors found."
+msgstr ""
+"Продавців не знайдено.\n"
+
+#: includes/configs/strings.php:102
+msgid "Vendor Search Form"
+msgstr "Форма пошуку продавців"
+
+#: includes/configs/strings.php:103
+msgid "Vendors Page"
+msgstr "Сторінка продавців"
+
+#: includes/configs/strings.php:104
+msgid "Vendors per Page"
+msgstr "Кількість продавців на сторінку"
+
+#: includes/configs/strings.php:105
+msgid "Choose a page that displays all vendors."
+msgstr "Виберіть сторінку, яка відображає всіх продавців."
+
+#: includes/configs/strings.php:108 includes/configs/taxonomies.php:22
+#: includes/configs/taxonomies.php:41
+msgid "Category"
+msgstr "Категорія"
+
+#: includes/configs/strings.php:109 includes/configs/taxonomies.php:27
+#: includes/configs/taxonomies.php:46
+msgid "Parent Category"
+msgstr ""
+"Батьківська категорія\n"
+
+#: includes/configs/taxonomies.php:21 includes/configs/taxonomies.php:40
+msgid "Categories"
+msgstr ""
+"Категорії\n"
+
+#: includes/configs/taxonomies.php:23 includes/configs/taxonomies.php:42
+msgid "Add Category"
+msgstr ""
+"Додати категорію\n"
+
+#: includes/configs/taxonomies.php:24 includes/configs/taxonomies.php:43
+msgid "Edit Category"
+msgstr ""
+"Редагувати категорію\n"
+
+#: includes/configs/taxonomies.php:25 includes/configs/taxonomies.php:44
+msgid "Update Category"
+msgstr ""
+"Змінити категорію\n"
+
+#: includes/configs/taxonomies.php:26 includes/configs/taxonomies.php:45
+msgid "View Category"
+msgstr ""
+"Переглянути категорію\n"
+
+#: includes/configs/taxonomies.php:28 includes/configs/taxonomies.php:47
+msgid "Search Categories"
+msgstr ""
+"Шукати категорії\n"
+
+#: includes/configs/taxonomies.php:29 includes/configs/taxonomies.php:48
+msgid "No categories found."
+msgstr ""
+"Категорій не знайдено.\n"
+
+#: includes/controllers/class-attachment.php:163
+#, php-format
+msgid "Only up to %s files can be uploaded."
+msgstr ""
+"Можна завантажити тільки до %s файлів.\n"
+
+#: includes/controllers/class-attachment.php:176
+#, php-format
+msgid "Only %s files are allowed."
+msgstr ""
+"Тільки %s файли дозволені.\n"
+
+#: includes/controllers/class-listing.php:131
+msgctxt "imperative"
+msgid "Select Category"
+msgstr ""
+"Оберіть категорію\n"
+
+#: includes/controllers/class-listing.php:139
+msgctxt "imperative"
+msgid "Add Details"
+msgstr ""
+"Заповніть деталі\n"
+
+#: includes/controllers/class-user.php:192
+msgid "Username contains invalid characters."
+msgstr ""
+"Ім'я користувача містить неприпустимі символи.\n"
+
+#: includes/controllers/class-user.php:194
+msgid "This username is already in use."
+msgstr ""
+"Це ім'я користувача вже зайнято.\n"
+
+#: includes/controllers/class-user.php:200
+msgid "This email is already registered."
+msgstr ""
+"Ця ел. адреса вже використовується.\n"
+
+#: includes/controllers/class-user.php:300
+#: includes/controllers/class-user.php:307
+msgid "Username or password is incorrect."
+msgstr ""
+"Неправильне ім'я користувача або пароль.\n"
+
+#: includes/controllers/class-user.php:374
+msgid "User with this email doesn't exist."
+msgstr ""
+"Користувача з такою ел. адресою не знайдено.\n"
+
+#: includes/controllers/class-user.php:376
+msgid "User with this username doesn't exist."
+msgstr ""
+"Користувача з таким ім'ям не знайдено.\n"
+
+#: includes/controllers/class-user.php:437
+msgid "Password reset key is expired or invalid."
+msgstr ""
+"Ключ для скидання пароля невірний або термін його дії закінчився.\n"
+
+#: includes/controllers/class-user.php:501
+msgid "Current password is required."
+msgstr ""
+"Поточний пароль є обов'язковим.\n"
+
+#: includes/controllers/class-user.php:505
+msgid "Current password is incorrect."
+msgstr ""
+"Невірний поточний пароль.\n"
+
+#: includes/controllers/class-user.php:562
+msgid "Password is incorrect."
+msgstr ""
+"Невірний пароль.\n"
+
+#: includes/emails/class-listing-report.php:31
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been reported with the "
+"following details: %report_details%"
+msgstr ""
+"Отримано скаргу на оголошення \"%listing_title%\" %listing_url% з наступними "
+"деталями: %report_details%"
+
+#: includes/emails/class-listing-submit.php:31
+msgid ""
+"A new listing \"%listing_title%\" has been submitted, click on the following "
+"link to view it: %listing_url%"
+msgstr ""
+"Додано нове оголошення \"%listing_title%\", клікніть на це посилання для "
+"перегляду: %listing_url%"
+
+#: includes/emails/class-listing-update.php:31
+msgid ""
+"Listing \"%listing_title%\" %listing_url% has been updated with the "
+"following details: %listing_attributes%."
+msgstr ""
+"Оголошення \"%listing_title%\" %listing_url% змінено з наступними деталями: "
+"%listing_attributes%."
+
+#: includes/emails/class-user-register.php:30
+msgid "Registration Complete"
+msgstr ""
+"Реєстрація завершена\n"
+
+#: includes/fields/class-attachment-select.php:38
+#: includes/fields/class-attachment-upload.php:61
+msgid "Select File"
+msgstr ""
+"Вибрати файл\n"
+
+#: includes/fields/class-attachment-select.php:71
+#: includes/fields/class-attachment-upload.php:145
+#: includes/fields/class-date.php:205 includes/fields/class-email.php:76
+#: includes/fields/class-select.php:207 includes/fields/class-text.php:206
+#, php-format
+msgid "\"%s\" field contains an invalid value."
+msgstr "Поле \"%s\" містить неприпустиме значення."
+
+#: includes/fields/class-attachment-upload.php:59
+msgid "Select Files"
+msgstr ""
+"Вибрати файли\n"
+
+#: includes/fields/class-checkbox.php:44
+msgid "Checkbox"
+msgstr ""
+"Прапорець\n"
+
+#: includes/fields/class-checkbox.php:49
+msgid "Caption"
+msgstr ""
+"Підпис\n"
+
+#: includes/fields/class-checkbox.php:99
+msgid "Yes"
+msgstr "Так"
+
+#: includes/fields/class-checkbox.php:99
+msgid "No"
+msgstr "Ні"
+
+#: includes/fields/class-checkboxes.php:30
+msgid "Checkboxes"
+msgstr ""
+"Прапорці\n"
+
+#: includes/fields/class-date-range.php:44
+msgid "Date Range"
+msgstr ""
+"Діапазон дат\n"
+
+#: includes/fields/class-date.php:72 includes/fields/class-number.php:65
+#: includes/fields/class-text.php:71
+msgid "Placeholder"
+msgstr ""
+"Заступаючий текст\n"
+
+#: includes/fields/class-date.php:79
+msgid "Minimum Date"
+msgstr ""
+"Мінімальна дата\n"
+
+#: includes/fields/class-date.php:85
+msgid "Maximum Date"
+msgstr ""
+"Максимальна дата\n"
+
+#: includes/fields/class-date.php:211
+#, php-format
+msgid "\"%1$s\" can't be earlier than %2$s."
+msgstr "\"%1$s\" не може бути раніше, ніж %2$s."
+
+#: includes/fields/class-date.php:219
+#, php-format
+msgid "\"%1$s\" can't be later than %2$s."
+msgstr "\"%1$s\" не може бути пізніше від %2$s."
+
+#: includes/fields/class-email.php:30 includes/models/class-user.php:56
+msgid "Email"
+msgstr ""
+"Ел. адреса\n"
+
+#: includes/fields/class-embed.php:30
+msgctxt "field"
+msgid "Embed"
+msgstr "Віджет"
+
+#: includes/fields/class-field.php:142
+msgctxt "field"
+msgid "Required"
+msgstr ""
+"Обов'язковість\n"
+
+#: includes/fields/class-field.php:143
+msgid "Make this field required"
+msgstr "Зробити це поле обов'язковим"
+
+#: includes/fields/class-field.php:149
+#: includes/models/class-listing-category.php:40
+#: includes/models/class-listing.php:40
+#: includes/models/class-vendor-category.php:40
+#: includes/models/class-vendor.php:40
+msgid "Description"
+msgstr ""
+"Опис\n"
+
+#: includes/fields/class-field.php:231
+msgctxt "field"
+msgid "optional"
+msgstr ""
+"опціонально\n"
+
+#: includes/fields/class-field.php:480
+#, php-format
+msgid "\"%s\" field is required."
+msgstr "Поле \"%s\" є обов'язковим."
+
+#: includes/fields/class-number-range.php:44
+msgid "Number Range"
+msgstr ""
+"Діапазон чисел\n"
+
+#: includes/fields/class-number-range.php:71
+msgid "Min"
+msgstr ""
+"Мін.\n"
+
+#: includes/fields/class-number-range.php:84
+msgid "Max"
+msgstr ""
+"Макс.\n"
+
+#: includes/fields/class-number.php:58
+msgid "Number"
+msgstr ""
+"Число\n"
+
+#: includes/fields/class-number.php:72
+msgctxt "quantity"
+msgid "Decimals"
+msgstr ""
+"Знаки після коми\n"
+
+#: includes/fields/class-number.php:82
+msgid "Minimum Value"
+msgstr ""
+"Мінімальне значення\n"
+
+#: includes/fields/class-number.php:89
+msgid "Maximum Value"
+msgstr ""
+"Максимальне значення\n"
+
+#: includes/fields/class-number.php:182
+#, php-format
+msgid "\"%1$s\" can't be lower than %2$s."
+msgstr "\"%1$s\" не може бути менше, ніж %2$s."
+
+#: includes/fields/class-number.php:186
+#, php-format
+msgid "\"%1$s\" can't be greater than %2$s."
+msgstr "\"%1$s\" не може бути більше за %2$s."
+
+#: includes/fields/class-radio.php:30
+msgid "Radio Buttons"
+msgstr ""
+"Радіокнопки\n"
+
+#: includes/fields/class-select.php:51
+msgctxt "field"
+msgid "Select"
+msgstr "Список"
+
+#: includes/fields/class-select.php:56
+msgctxt "selection"
+msgid "Multiple"
+msgstr "Множинність"
+
+#: includes/fields/class-select.php:57
+msgid "Allow multiple selection"
+msgstr ""
+"Дозволити множинний вибір\n"
+
+#: includes/fields/class-select.php:63
+msgid "Options"
+msgstr ""
+"Опції\n"
+
+#: includes/fields/class-text.php:65
+msgid "Text"
+msgstr ""
+"Текст\n"
+
+#: includes/fields/class-text.php:78
+msgid "Minimum Length"
+msgstr ""
+"Мінімальна довжина\n"
+
+#: includes/fields/class-text.php:85
+msgid "Maximum Length"
+msgstr ""
+"Максимальна довжина\n"
+
+#: includes/fields/class-text.php:92
+msgid "Regex Pattern"
+msgstr "Регулярний вираз"
+
+#: includes/fields/class-text.php:198
+#, php-format
+msgid "\"%1$s\" should be at least %2$s characters long."
+msgstr "\"%1$s\" не може бути коротше %2$s символів."
+
+#: includes/fields/class-text.php:202
+#, php-format
+msgid "\"%1$s\" can't be longer than %2$s characters."
+msgstr "\"%1$s\" не може бути довшим %2$s символів."
+
+#: includes/fields/class-textarea.php:37
+msgid "Textarea"
+msgstr ""
+"Багатостроковий текст\n"
+
+#: includes/fields/class-textarea.php:45
+msgid "Formatting"
+msgstr ""
+"Форматування\n"
+
+#: includes/fields/class-textarea.php:46
+msgid "Allow HTML formatting"
+msgstr ""
+"Дозволити HTML форматування\n"
+
+#: includes/fields/class-url.php:30
+msgid "URL"
+msgstr "URL"
+
+#: includes/forms/class-form.php:143
+msgid "Submit"
+msgstr ""
+"Відправити\n"
+
+#: includes/forms/class-listing-filter.php:71
+#: includes/forms/class-vendor-filter.php:71
+msgid "Filter"
+msgstr ""
+"Фільтрувати\n"
+
+#: includes/forms/class-listing-search.php:51
+#: includes/forms/class-vendor-search.php:51
+msgid "Keywords"
+msgstr ""
+"Ключові слова\n"
+
+#: includes/forms/class-listing-search.php:65
+#: includes/forms/class-vendor-search.php:65
+msgid "Search"
+msgstr "Шукати"
+
+#: includes/forms/class-listing-sort.php:52
+#: includes/forms/class-vendor-sort.php:52
+msgid "Sort by"
+msgstr ""
+"Сортувати за\n"
+
+#: includes/forms/class-listing-update.php:46
+#: includes/forms/class-user-update.php:46
+msgid "Changes have been saved."
+msgstr ""
+"Зміни збережені.\n"
+
+#: includes/forms/class-listing-update.php:63
+#: includes/forms/class-user-update.php:83
+msgid "Save Changes"
+msgstr ""
+"Зберегти зміни\n"
+
+#: includes/forms/class-user-delete.php:46
+msgid "Please enter your password below to permanently delete your account."
+msgstr ""
+"Будь ласка, введіть свій пароль щоб назавжди видалити свій аккаунт.\n"
+
+#: includes/forms/class-user-delete.php:59
+#: includes/templates/class-user-edit-settings-page.php:37
+#: templates/user/edit/page/user-delete-link.php:5
+msgid "Delete Account"
+msgstr ""
+"Видалити акаунт\n"
+
+#: includes/forms/class-user-login.php:30
+msgid "Login User"
+msgstr "Авторизувати користувача"
+
+#: includes/forms/class-user-login.php:53
+#: includes/forms/class-user-password-request.php:53
+msgid "Username or Email"
+msgstr ""
+"Ім'я користувача або ел. адреса\n"
+
+#: includes/forms/class-user-password-request.php:47
+msgid ""
+"Please enter your username or email address, you will receive a link to "
+"create a new password via email."
+msgstr ""
+"Будь ласка, введіть ваше ім'я користувача або ел. адресу, ви отримаєте лист "
+"з посиланням для скидання пароля.\n"
+
+#: includes/forms/class-user-password-request.php:48
+msgid "Password reset email has been sent."
+msgstr ""
+"Лист для скидання пароля надіслано.\n"
+
+#: includes/forms/class-user-password-request.php:62
+msgid "Send Email"
+msgstr ""
+"Відправити лист\n"
+
+#: includes/forms/class-user-password-reset.php:46
+msgid "Please enter a new password below."
+msgstr ""
+"Будь ласка, введіть новий пароль.\n"
+
+#: includes/forms/class-user-password-reset.php:52
+#: includes/forms/class-user-update.php:70
+msgid "New Password"
+msgstr ""
+"Новий пароль\n"
+
+#: includes/forms/class-user-register.php:30
+msgid "Register User"
+msgstr ""
+"Зареєструвати користувача\n"
+
+#: includes/forms/class-user-update.php:75
+msgid "Current Password"
+msgstr ""
+"Поточний пароль\n"
+
+#: includes/menus/class-user-account.php:37
+msgid "Sign Out"
+msgstr ""
+"Вийти\n"
+
+#: includes/models/class-listing-category.php:32
+#: includes/models/class-vendor-category.php:32
+#: includes/models/class-vendor.php:32
+msgid "Name"
+msgstr ""
+"Назва\n"
+
+#: includes/models/class-listing.php:32
+msgid "Title"
+msgstr ""
+"Заголовок\n"
+
+#: includes/models/class-listing.php:54
+msgctxt "listing"
+msgid "Hidden"
+msgstr ""
+"Прихованe\n"
+"\n"
+
+#: includes/models/class-listing.php:55
+msgctxt "listing"
+msgid "Pending"
+msgstr ""
+"На розгляді\n"
+
+#: includes/models/class-listing.php:142
+msgid "Images"
+msgstr ""
+"Зображення\n"
+
+#: includes/models/class-listing.php:143
+msgid "Select Images"
+msgstr ""
+"Вибрати зображення\n"
+
+#: includes/models/class-user.php:48
+msgid "Username"
+msgstr ""
+"Ім'я користувача\n"
+
+#: includes/models/class-user.php:63
+msgid "Password"
+msgstr ""
+"Пароль\n"
+
+#: includes/models/class-user.php:70
+msgid "First Name"
+msgstr "Ім'я"
+
+#: includes/models/class-user.php:78
+msgid "Last Name"
+msgstr "Прізвище"
+
+#: includes/models/class-user.php:92
+msgid "Profile Info"
+msgstr ""
+"Опис профілю\n"
+
+#: includes/models/class-user.php:100
+msgid "Profile Image"
+msgstr ""
+"Зображення профілю\n"
+
+#: templates/page/no-results-message.php:6
+msgid "Nothing found"
+msgstr ""
+"Нічого не знайдено\n"
+
+#: templates/page/no-results-message.php:7
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+"На жаль, нічого не підійшло під ваш запит. Будь ласка, спробуйте ще раз з "
+"іншими ключовими словами.\n"
+
+#: templates/listing/submit/listing-category-change-link.php:7
+msgid "Change Category"
+msgstr ""
+"Змінити категорію\n"
+
+#: templates/listing/view/listing-created-date.php:5
+#, php-format
+msgid "Added on %s"
+msgstr ""
+"Додано %s\n"
+
+#: templates/user/login/user-login-link.php:7
+msgid "My Account"
+msgstr ""
+"Мій аккаунт\n"
+
+#: templates/user/login/user-password-request-link.php:5
+msgid "Forgot password?"
+msgstr ""
+"Забули пароль?\n"
+
+#: templates/user/login/user-register-link.php:5
+msgid "Don't have an account yet?"
+msgstr "Ще немає облікового запису?"
+
+#: templates/user/password-reset/user-password-reset-message.php:5
+msgid "Password reset link is expired or invalid."
+msgstr ""
+"Посилання для скидання паролю невірне або термін його дії закінчився.\n"
+
+#: templates/user/register/user-login-link.php:5
+msgid "Already have an account?"
+msgstr ""
+"Вже є акаунт?\n"
+
+#: templates/vendor/view/vendor-registered-date.php:5
+#, php-format
+msgid "Member since %s"
+msgstr ""
+"Учасник з %s\n"
+
+#: templates/listing/edit/block/listing-view-link.php:7
+msgid "View"
+msgstr ""
+"Переглянути\n"
+
+#: templates/listing/edit/page/listing-delete-link.php:5
+msgid "Delete"
+msgstr "Видалити"
+
+#. Name of the plugin
+#. Author of the plugin
+msgid "HivePress"
+msgstr ""
+"HivePress\n"
+
+#. Description of the plugin
+msgid "Multipurpose directory, listing & classifieds plugin."
+msgstr ""
+"Універсальний плагін для каталогів, агрегаторів і класифайдів.\n"
+
+#. Author URI of the plugin
+msgid "https://hivepress.io/"
+msgstr ""
+"https://hivepress.io/\n"

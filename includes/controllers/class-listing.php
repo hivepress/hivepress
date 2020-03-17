@@ -101,11 +101,12 @@ final class Listing extends Controller {
 					],
 
 					'listings_edit_page'           => [
-						'title'    => hivepress()->translator->get_string( 'listings' ),
-						'base'     => 'user_account_page',
-						'path'     => '/listings',
-						'redirect' => [ $this, 'redirect_listings_edit_page' ],
-						'action'   => [ $this, 'render_listings_edit_page' ],
+						'title'     => hivepress()->translator->get_string( 'listings' ),
+						'base'      => 'user_account_page',
+						'path'      => '/listings',
+						'redirect'  => [ $this, 'redirect_listings_edit_page' ],
+						'action'    => [ $this, 'render_listings_edit_page' ],
+						'paginated' => true,
 					],
 
 					'listing_edit_page'            => [
@@ -148,6 +149,20 @@ final class Listing extends Controller {
 						'path'     => '/complete',
 						'redirect' => [ $this, 'redirect_listing_submit_complete_page' ],
 						'action'   => [ $this, 'render_listing_submit_complete_page' ],
+					],
+
+					'listing_renew_page'           => [
+						'base'     => 'listing_edit_page',
+						'path'     => '/renew',
+						'redirect' => [ $this, 'redirect_listing_renew_page' ],
+					],
+
+					'listing_renew_complete_page'  => [
+						'title'    => hivepress()->translator->get_string( 'listing_renewed' ),
+						'base'     => 'listing_renew_page',
+						'path'     => '/complete',
+						'redirect' => [ $this, 'redirect_listing_renew_complete_page' ],
+						'action'   => [ $this, 'render_listing_renew_complete_page' ],
 					],
 
 					'listing_category_view_page'   => [
@@ -202,7 +217,11 @@ final class Listing extends Controller {
 		}
 
 		// Update listing.
-		$listing->fill( $form->get_values() );
+		$values = $form->get_values();
+
+		unset( $values['images'] );
+
+		$listing->fill( $values );
 
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
@@ -480,6 +499,8 @@ final class Listing extends Controller {
 					'user'       => get_current_user_id(),
 				]
 			)->order( [ 'created_date' => 'desc' ] )
+			->limit( 20 )
+			->paginate( hivepress()->request->get_page_number() )
 			->get_args()
 		);
 
@@ -575,12 +596,17 @@ final class Listing extends Controller {
 
 		if ( empty( $listing ) ) {
 
+			// Get date.
+			$date = current_time( 'mysql' );
+
 			// Add listing.
 			$listing_id = wp_insert_post(
 				[
-					'post_type'   => 'hp_listing',
-					'post_status' => 'auto-draft',
-					'post_author' => get_current_user_id(),
+					'post_type'     => 'hp_listing',
+					'post_status'   => 'auto-draft',
+					'post_author'   => get_current_user_id(),
+					'post_date'     => $date,
+					'post_date_gmt' => get_gmt_from_date( $date ),
 				]
 			);
 
@@ -716,7 +742,7 @@ final class Listing extends Controller {
 				'status'  => $status,
 				'drafted' => null,
 			]
-		)->save();
+		)->save( [ 'status', 'drafted' ] );
 
 		// Send email.
 		( new Emails\Listing_Submit(
@@ -746,6 +772,86 @@ final class Listing extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_submit_complete_page',
+
+				'context'  => [
+					'listing' => hivepress()->request->get_context( 'listing' ),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects listing renew page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_renew_page() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
+		}
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
+
+		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
+			return home_url( '/' );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
+
+		return true;
+	}
+
+	/**
+	 * Redirects listing renew complete page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_renew_complete_page() {
+
+		// Get listing.
+		$listing = hivepress()->request->get_context( 'listing' );
+
+		// Get date.
+		$date = current_time( 'mysql' );
+
+		// Update listing.
+		$listing->fill(
+			[
+				'status'           => 'publish',
+				'created_date'     => $date,
+				'created_date_gmt' => get_gmt_from_date( $date ),
+				'expired_time'     => null,
+			]
+		)->save(
+			[
+				'status',
+				'created_date',
+				'created_date_gmt',
+				'expired_time',
+			]
+		);
+
+		return false;
+	}
+
+	/**
+	 * Renders listing renew complete page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_renew_complete_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'listing_renew_complete_page',
 
 				'context'  => [
 					'listing' => hivepress()->request->get_context( 'listing' ),

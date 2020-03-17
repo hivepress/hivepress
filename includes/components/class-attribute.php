@@ -43,6 +43,7 @@ final class Attribute extends Component {
 			[
 				'models' => [
 					'listing',
+					'vendor',
 				],
 			],
 			$args
@@ -97,6 +98,9 @@ final class Attribute extends Component {
 		}
 
 		if ( is_admin() ) {
+
+			// Add option settings.
+			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_option_settings' ], 100 );
 
 			// Disable quick edit.
 			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
@@ -381,7 +385,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			if ( $field_settings ) {
 				foreach ( $field_settings as $field_name => $field ) {
-					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'options' ], true ) ) {
+					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'description', 'options' ], true ) ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();
@@ -391,7 +395,7 @@ final class Attribute extends Component {
 							$field_args = array_merge(
 								$field_args,
 								[
-									'label'      => esc_html__( 'Edit Options', 'hivepress' ),
+									'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
 									'type'       => 'button',
 
 									'attributes' => [
@@ -476,7 +480,7 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( $attribute['editable'] && ! isset( $fields[ $attribute_name ] ) ) {
+			if ( ! isset( $fields[ $attribute_name ] ) ) {
 
 				// Get field arguments.
 				$field_args = array_merge(
@@ -486,6 +490,10 @@ final class Attribute extends Component {
 						'_display_areas'   => $attribute['display_areas'],
 					]
 				);
+
+				if ( ! $attribute['editable'] ) {
+					$field_args['required'] = false;
+				}
 
 				if ( isset( $field_args['options'] ) ) {
 					$field_args = array_merge(
@@ -615,9 +623,9 @@ final class Attribute extends Component {
 		$options = [];
 
 		if ( is_search() ) {
-			$options[''] = esc_html_x( 'Relevance', 'hivepress' );
+			$options[''] = esc_html__( 'Relevance', 'hivepress' );
 		} else {
-			$options[''] = esc_html_x( 'Date', 'hivepress' );
+			$options[''] = esc_html__( 'Date', 'hivepress' );
 		}
 
 		// Add attribute options.
@@ -672,50 +680,73 @@ final class Attribute extends Component {
 			'hide_empty' => false,
 		];
 
-		// Get cached IDs.
-		$category_ids = hivepress()->cache->get_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category' );
+		// Get cached options.
+		$options = hivepress()->cache->get_cache(
+			array_merge(
+				$query_args,
+				[
+					'fields' => 'names',
+					'format' => 'tree',
+				]
+			),
+			'models/' . $model . '_category'
+		);
 
-		if ( is_null( $category_ids ) ) {
+		if ( is_null( $options ) ) {
+			$options = [];
+
+			// Get category IDs.
 			$category_ids = get_terms( $query_args );
 
 			if ( $category_id ) {
 				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $model . '_category' ), 'taxonomy' ) );
 			}
 
-			// Cache IDs.
-			if ( count( $category_ids ) <= 1000 ) {
-				hivepress()->cache->set_cache( array_merge( $query_args, [ 'format' => 'tree' ] ), 'models/' . $model . '_category', $category_ids );
+			if ( $category_ids ) {
+
+				// Get categories.
+				$categories = get_terms(
+					[
+						'taxonomy'   => hp\prefix( $model . '_category' ),
+						'include'    => $category_ids,
+						'hide_empty' => false,
+						'meta_key'   => 'hp_sort_order',
+						'orderby'    => 'meta_value_num',
+						'order'      => 'ASC',
+					]
+				);
+
+				// Add options.
+				$options[0] = [
+					'label'  => esc_html__( 'All Categories', 'hivepress' ),
+					'parent' => null,
+				];
+
+				foreach ( $categories as $category ) {
+					$options[ $category->term_id ] = [
+						'label'  => $category->name,
+						'parent' => $category->parent,
+					];
+				}
+			}
+
+			// Cache options.
+			if ( count( $options ) <= 1000 ) {
+				hivepress()->cache->set_cache(
+					array_merge(
+						$query_args,
+						[
+							'fields' => 'names',
+							'format' => 'tree',
+						]
+					),
+					'models/' . $model . '_category',
+					$options
+				);
 			}
 		}
 
-		if ( $category_ids ) {
-
-			// Get categories.
-			$categories = get_terms(
-				[
-					'taxonomy'   => hp\prefix( $model . '_category' ),
-					'include'    => $category_ids,
-					'hide_empty' => false,
-					'meta_key'   => 'hp_sort_order',
-					'orderby'    => 'meta_value_num',
-					'order'      => 'ASC',
-				]
-			);
-
-			// Add options.
-			$options = [
-				0 => [
-					'label'  => esc_html__( 'All Categories', 'hivepress' ),
-					'parent' => null,
-				],
-			];
-
-			foreach ( $categories as $category ) {
-				$options[ $category->term_id ] = [
-					'label'  => $category->name,
-					'parent' => $category->parent,
-				];
-			}
+		if ( $options ) {
 
 			// Set options.
 			$form_args['fields']['_category']['options'] = $options;
@@ -836,6 +867,37 @@ final class Attribute extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Adds option settings.
+	 *
+	 * @param array $meta_boxes Meta box arguments.
+	 * @return array
+	 */
+	public function add_option_settings( $meta_boxes ) {
+		foreach ( $this->models as $model ) {
+
+			// Get meta box name.
+			$meta_box_name = $model . '_option_settings';
+
+			if ( isset( $meta_boxes[ $meta_box_name ] ) ) {
+				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+					if ( isset( $attribute['edit_field']['options'] ) ) {
+
+						// Get screen name.
+						$screen = $model . '_' . $attribute_name;
+
+						// Add screen.
+						if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
+							$meta_boxes[ $meta_box_name ]['screen'][] = $screen;
+						}
+					}
+				}
+			}
+		}
+
+		return $meta_boxes;
 	}
 
 	/**

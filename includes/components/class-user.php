@@ -96,7 +96,7 @@ final class User extends Component {
 			[
 				'display_name' => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
 			]
-		)->save();
+		)->save( [ 'display_name' ] );
 	}
 
 	/**
@@ -108,28 +108,24 @@ final class User extends Component {
 	public function add_registration_fields( $form ) {
 
 		// Get terms page ID.
-		$page_id = hp\get_first_array_value(
-			get_posts(
-				[
-					'post_type'      => 'page',
-					'post_status'    => 'publish',
-					'post__in'       => [ absint( get_option( 'hp_page_user_registration_terms' ) ) ],
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				]
-			)
-		);
+		$page_id = absint( get_option( 'hp_page_user_registration_terms' ) );
 
 		if ( $page_id ) {
 
-			// Add terms field.
-			$form['fields']['_terms'] = [
-				'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( get_permalink( $page_id ) ) ),
-				'type'      => 'checkbox',
-				'required'  => true,
-				'_separate' => true,
-				'_order'    => 1000,
-			];
+			// Get terms page URL.
+			$page_url = get_permalink( $page_id );
+
+			if ( $page_url ) {
+
+				// Add terms field.
+				$form['fields']['_terms'] = [
+					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'type'      => 'checkbox',
+					'required'  => true,
+					'_separate' => true,
+					'_order'    => 1000,
+				];
+			}
 		}
 
 		return $form;
@@ -202,32 +198,8 @@ final class User extends Component {
 
 									'blocks' => [
 										'user_register_form' => [
-											'type'       => 'form',
-											'form'       => 'user_register',
-											'_order'     => 10,
-
-											'attributes' => [
-												'class' => [ 'hp-form--narrow' ],
-											],
-
-											'footer'     => [
-												'form_actions' => [
-													'type' => 'container',
-													'_order' => 10,
-
-													'attributes' => [
-														'class' => [ 'hp-form__actions' ],
-													],
-
-													'blocks' => [
-														'user_login_link' => [
-															'type' => 'part',
-															'path' => 'user/register/user-login-link',
-															'_order' => 10,
-														],
-													],
-												],
-											],
+											'type'   => 'user_register_form',
+											'_order' => 10,
 										],
 									],
 								],

@@ -60,7 +60,7 @@ abstract class Post extends Model {
 		// Get post meta.
 		$meta = array_map(
 			function( $values ) {
-				return hp\get_first_array_value( $values );
+				return maybe_unserialize( hp\get_first_array_value( $values ) );
 			},
 			get_post_meta( $post['ID'] )
 		);
@@ -106,13 +106,26 @@ abstract class Post extends Model {
 	/**
 	 * Saves object.
 	 *
+	 * @param array $names Field names.
 	 * @return bool
 	 */
-	final public function save() {
+	final public function save( $names = [] ) {
 
 		// Validate fields.
-		if ( ! $this->validate() ) {
+		if ( ! $this->validate( $names ) ) {
 			return false;
+		}
+
+		// Filter fields.
+		$fields = $this->fields;
+
+		if ( $names ) {
+			$fields = array_filter(
+				$fields,
+				function( $field ) use ( $names ) {
+					return in_array( $field->get_name(), $names, true );
+				}
+			);
 		}
 
 		// Set post data.
@@ -120,7 +133,7 @@ abstract class Post extends Model {
 		$meta  = [];
 		$terms = [];
 
-		foreach ( $this->fields as $field ) {
+		foreach ( $fields as $field ) {
 			if ( $field->get_arg( '_relation' ) === 'many_to_many' ) {
 
 				// Set post terms.

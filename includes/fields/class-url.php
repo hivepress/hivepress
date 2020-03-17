@@ -34,6 +34,7 @@ class URL extends Text {
 				'settings'   => [
 					'min_length' => null,
 					'max_length' => null,
+					'pattern'    => null,
 				],
 			],
 			$meta
@@ -56,6 +57,19 @@ class URL extends Text {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Sets display template.
+	 *
+	 * @param string $display_template Display template.
+	 */
+	protected function set_display_template( $display_template ) {
+		if ( strpos( $display_template, '<a ' ) === false ) {
+			$display_template = str_replace( '%value%', '<a href="%value%">%value%</a>', $display_template );
+		}
+
+		$this->display_template = $display_template;
 	}
 
 	/**

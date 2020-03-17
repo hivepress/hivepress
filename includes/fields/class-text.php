@@ -41,6 +41,13 @@ class Text extends Field {
 	protected $max_length;
 
 	/**
+	 * Regex pattern.
+	 *
+	 * @var string
+	 */
+	protected $pattern;
+
+	/**
 	 * HTML flag.
 	 *
 	 * @var mixed
@@ -64,21 +71,28 @@ class Text extends Field {
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_order'     => 100,
 					],
 
 					'min_length'  => [
 						'label'     => esc_html__( 'Minimum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
-						'_order'    => 20,
+						'_order'    => 110,
 					],
 
 					'max_length'  => [
 						'label'     => esc_html__( 'Maximum Length', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 1,
-						'_order'    => 30,
+						'_order'    => 120,
+					],
+
+					'pattern'     => [
+						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
+						'type'       => 'regex',
+						'max_length' => 256,
+						'_order'     => 130,
 					],
 				],
 			],
@@ -107,6 +121,16 @@ class Text extends Field {
 		// Set maximum length.
 		if ( ! is_null( $this->max_length ) ) {
 			$attributes['maxlength'] = $this->max_length;
+		}
+
+		// Set regex pattern.
+		if ( ! is_null( $this->pattern ) ) {
+			$attributes['pattern'] = $this->pattern;
+		}
+
+		// Set disabled flag.
+		if ( $this->disabled ) {
+			$attributes['disabled'] = true;
 		}
 
 		// Set required flag.
@@ -165,6 +189,10 @@ class Text extends Field {
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
+			}
+
+			if ( ! is_null( $this->pattern ) && ! preg_match( '/^' . $this->pattern . '$/', $this->value ) ) {
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			}
 		}
 

@@ -111,6 +111,9 @@ abstract class Menu {
 	 */
 	protected function boot() {
 
+		// Get items.
+		$items = $this->items;
+
 		// Filter items.
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
@@ -123,10 +126,13 @@ abstract class Menu {
 			 * @param array $items Menu items.
 			 * @param object $object Menu object.
 			 */
-			$this->items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $this->items, $this );
+			$items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $items, $this );
 		}
 
-		// Set class.
+		// Set items.
+		$this->set_items( $items );
+
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
@@ -147,7 +153,7 @@ abstract class Menu {
 		$this->items = [];
 
 		foreach ( hp\sort_array( $items ) as $name => $args ) {
-			if ( isset( $args['route'] ) ) {
+			if ( isset( $args['route'] ) && ( ! isset( $args['label'] ) || ! isset( $args['url'] ) ) ) {
 
 				// Get route.
 				$route = hivepress()->router->get_route( $args['route'] );
@@ -167,12 +173,11 @@ abstract class Menu {
 
 					// Set URL.
 					if ( ! isset( $args['url'] ) ) {
-						$args['url'] = hivepress()->router->get_url( $args['route'] );
-					}
-
-					// Set current flag.
-					if ( hivepress()->router->get_current_url() === $args['url'] ) {
-						$args['current'] = true;
+						if ( static::get_meta( 'chained' ) ) {
+							$args['url'] = hivepress()->router->get_url( $args['route'], hivepress()->request->get_params(), true );
+						} else {
+							$args['url'] = hivepress()->router->get_url( $args['route'] );
+						}
 					}
 				}
 			}
@@ -212,8 +217,20 @@ abstract class Menu {
 			$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
 			$output .= '<ul>';
 
+			// Get current route.
+			$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name', false );
+
 			foreach ( $this->items as $name => $args ) {
-				$output .= '<li class="hp-menu__item ' . ( hp\get_array_value( $args, 'current' ) ? 'hp-menu__item--current current-menu-item' : '' ) . '">';
+
+				// Get current class.
+				$class = '';
+
+				if ( hivepress()->router->get_current_url() === $args['url'] || hp\get_array_value( $args, 'route' ) === $route ) {
+					$class = 'hp-menu__item--current current-menu-item';
+				}
+
+				// Render menu item.
+				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
 				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
 				$output .= '</li>';
 			}

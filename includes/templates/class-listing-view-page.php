@@ -30,13 +30,44 @@ class Listing_View_Page extends Page_Sidebar_Right {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [
+					'page_columns' => [
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--view-page' ],
 						],
 					],
 
-					'page_content'   => [
+					'page_topbar'  => [
+						'_order'     => 30,
+
+						'attributes' => [
+							'class' => [ 'hp-page__topbar--separate' ],
+						],
+
+						'blocks'     => [
+							'listing_manage_menu'       => [
+								'type'       => 'menu',
+								'menu'       => 'listing_manage',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-menu--tabbed' ],
+								],
+							],
+
+							'listing_actions_secondary' => [
+								'type'       => 'container',
+								'optional'   => true,
+								'blocks'     => [],
+								'_order'     => 20,
+
+								'attributes' => [
+									'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
+								],
+							],
+						],
+					],
+
+					'page_content' => [
 						'blocks' => [
 							'listing_title'                => [
 								'type'       => 'container',
@@ -88,24 +119,24 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_images'               => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-images',
-								'_order' => 30,
+								'_order' => 40,
 							],
 
 							'listing_attributes_secondary' => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-attributes-secondary',
-								'_order' => 40,
+								'_order' => 50,
 							],
 
 							'listing_description'          => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-description',
-								'_order' => 50,
+								'_order' => 60,
 							],
 						],
 					],
 
-					'page_sidebar'   => [
+					'page_sidebar' => [
 						'attributes' => [
 							'data-component' => 'sticky',
 						],
@@ -151,17 +182,33 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								],
 							],
 
-							'vendor'                     => [
-								'type'    => 'vendors',
-								'columns' => 1,
-								'number'  => 1,
-								'_order'  => 30,
+							'listing_vendor'             => [
+								'type'   => 'related_vendors',
+								'_order' => 30,
 							],
 
 							'page_sidebar_widgets'       => [
 								'type'   => 'widgets',
 								'area'   => 'hp_listing_view_sidebar',
 								'_order' => 40,
+							],
+						],
+					],
+
+					'page_footer'  => [
+						'blocks' => [
+							'related_listings_container' => [
+								'type'   => 'section',
+								'title'  => hivepress()->translator->get_string( 'related_listings' ),
+								'_order' => 10,
+
+								'blocks' => [
+									'related_listings' => [
+										'type'    => 'related_listings',
+										'columns' => 3,
+										'_order'  => 10,
+									],
+								],
 							],
 						],
 					],

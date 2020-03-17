@@ -454,13 +454,26 @@ abstract class Model {
 	/**
 	 * Validates field values.
 	 *
+	 * @param array $names Field names.
 	 * @return bool
 	 */
-	final public function validate() {
+	final public function validate( $names = [] ) {
 		$this->errors = [];
 
+		// Filter fields.
+		$fields = $this->fields;
+
+		if ( $names ) {
+			$fields = array_filter(
+				$fields,
+				function( $field ) use ( $names ) {
+					return in_array( $field->get_name(), $names, true );
+				}
+			);
+		}
+
 		// Validate fields.
-		foreach ( $this->fields as $field ) {
+		foreach ( $fields as $field ) {
 			if ( ! $field->validate() ) {
 				$this->_add_errors( $field->get_errors() );
 			}

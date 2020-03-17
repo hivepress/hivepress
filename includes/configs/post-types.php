@@ -56,10 +56,11 @@ return [
 
 	'vendor'            => [
 		'public'             => true,
-		'show_in_menu'       => false,
-		'redirect_canonical' => false,
+		'has_archive'        => true,
 		'supports'           => [ 'title', 'editor', 'thumbnail', 'author' ],
+		'menu_icon'          => 'dashicons-businessman',
 		'rewrite'            => [ 'slug' => 'vendor' ],
+		'redirect_canonical' => false,
 
 		'labels'             => [
 			'name'               => hivepress()->translator->get_string( 'vendors' ),
@@ -73,6 +74,26 @@ return [
 			'search_items'       => hivepress()->translator->get_string( 'search_vendors' ),
 			'not_found'          => hivepress()->translator->get_string( 'no_vendors_found' ),
 			'not_found_in_trash' => hivepress()->translator->get_string( 'no_vendors_found' ),
+		],
+	],
+
+	'vendor_attribute'  => [
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => 'edit.php?post_type=hp_vendor',
+		'supports'     => [ 'title', 'page-attributes' ],
+
+		'labels'       => [
+			'name'               => esc_html__( 'Attributes', 'hivepress' ),
+			'singular_name'      => esc_html__( 'Attribute', 'hivepress' ),
+			'add_new'            => esc_html_x( 'Add New', 'attribute', 'hivepress' ),
+			'add_new_item'       => esc_html__( 'Add Attribute', 'hivepress' ),
+			'edit_item'          => esc_html__( 'Edit Attribute', 'hivepress' ),
+			'new_item'           => esc_html__( 'Add Attribute', 'hivepress' ),
+			'all_items'          => esc_html__( 'Attributes', 'hivepress' ),
+			'search_items'       => esc_html__( 'Search Attributes', 'hivepress' ),
+			'not_found'          => esc_html__( 'No attributes found.', 'hivepress' ),
+			'not_found_in_trash' => esc_html__( 'No attributes found.', 'hivepress' ),
 		],
 	],
 ];

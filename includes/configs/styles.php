@@ -39,6 +39,11 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
+	'select2'           => [
+		'handle' => 'select2',
+		'src'    => hivepress()->get_url() . '/assets/css/select2.min.css',
+	],
+
 	'jquery_ui'         => [
 		'handle' => 'jquery-ui',
 		'src'    => hivepress()->get_url() . '/assets/css/jquery-ui.min.css',
