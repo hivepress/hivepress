@@ -130,7 +130,7 @@ final class Listing extends Component {
 				)->get();
 
 				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save( [ 'user' ] );
+					$attachment->set_user( $listing->get_user__id() )->save_user();
 				}
 			}
 
@@ -222,7 +222,7 @@ final class Listing extends Component {
 			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
 				// Set expiration time.
-				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save( [ 'expired_time' ] );
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save_expired_time();
 			}
 		}
 	}
@@ -248,7 +248,7 @@ final class Listing extends Component {
 				[
 					'status' => 'draft',
 				]
-			)->save( [ 'status' ] );
+			)->save_status();
 
 			// Send email.
 			$user = $listing->get_user();
