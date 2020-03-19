@@ -195,11 +195,19 @@ abstract class Model {
 		}
 
 		// Get or set field value.
-		foreach ( [ 'set', 'get', 'is', 'display' ] as $prefix ) {
+		$prefixes = [
+			'set',
+			'get',
+			'is',
+			'display',
+			'save',
+		];
+
+		foreach ( $prefixes as $prefix ) {
 			if ( strpos( $name, $prefix . '_' ) === 0 ) {
 
 				// Get field name.
-				$action = 'set' !== $prefix ? 'get' : $prefix;
+				$action = ! in_array( $prefix, [ 'set', 'save' ], true ) ? 'get' : $prefix;
 				$field  = substr( $name, strlen( $prefix . '_' ) );
 
 				if ( 'display' === $prefix ) {
@@ -412,6 +420,15 @@ abstract class Model {
 	}
 
 	/**
+	 * Saves field value.
+	 *
+	 * @param string $name Field name.
+	 */
+	final protected function _save_value( $name ) {
+		return $this->save( [ $name ] );
+	}
+
+	/**
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
@@ -508,9 +525,10 @@ abstract class Model {
 	/**
 	 * Saves object.
 	 *
+	 * @param array $names Field names.
 	 * @return bool
 	 */
-	abstract public function save();
+	abstract public function save( $names = [] );
 
 	/**
 	 * Deletes object.
