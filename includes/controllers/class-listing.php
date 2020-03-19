@@ -596,17 +596,12 @@ final class Listing extends Controller {
 
 		if ( empty( $listing ) ) {
 
-			// Get date.
-			$date = current_time( 'mysql' );
-
 			// Add listing.
 			$listing_id = wp_insert_post(
 				[
 					'post_type'     => 'hp_listing',
 					'post_status'   => 'auto-draft',
 					'post_author'   => get_current_user_id(),
-					'post_date'     => $date,
-					'post_date_gmt' => get_gmt_from_date( $date ),
 				]
 			);
 
