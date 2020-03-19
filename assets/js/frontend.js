@@ -140,7 +140,7 @@
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
-					minimumResultsForSearch: 25,
+					minimumResultsForSearch: 20,
 				};
 
 			if (field.data('style') === 'inline') {
