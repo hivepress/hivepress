@@ -197,7 +197,11 @@ class Listing_Categories extends Block {
 				if ( 'submit' === $this->mode ) {
 					$category_url = hivepress()->router->get_url( 'listing_submit_category_page', [ 'listing_category_id' => $category->get_id() ] );
 				} else {
-					$category_url = hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] );
+					if ( is_search() ) {
+						$category_url = add_query_arg( [ '_category' => $category->get_id() ], hivepress()->router->get_current_url() );
+					} else {
+						$category_url = hivepress()->router->get_url( 'listing_category_view_page', [ 'listing_category_id' => $category->get_id() ] );
+					}
 				}
 
 				// Render category.
