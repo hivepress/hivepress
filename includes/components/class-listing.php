@@ -52,9 +52,6 @@ final class Listing extends Component {
 
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
-
-			// Alter settings meta box.
-			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
 		} else {
 
 			// Alter menus.
@@ -216,7 +213,7 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( 'publish' === $new_status ) {
+		if ( in_array( $new_status, [ 'publish', 'pending' ], true ) ) {
 
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
@@ -434,22 +431,6 @@ final class Listing extends Component {
 		}
 
 		return $states;
-	}
-
-	/**
-	 * Alters settings meta box.
-	 *
-	 * @param array $meta_box Meta box arguments.
-	 * @return array
-	 */
-	public function alter_settings_meta_box( $meta_box ) {
-
-		// Remove expiration date.
-		if ( get_post_status() !== 'publish' && ! get_post_meta( get_the_ID(), 'hp_expired_time', true ) ) {
-			unset( $meta_box['fields']['expired_time'] );
-		}
-
-		return $meta_box;
 	}
 
 	/**
