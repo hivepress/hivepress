@@ -259,8 +259,14 @@ class User extends Model {
 		}
 
 		// Update user.
-		if ( ! $created && is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) ) ) {
-			return false;
+		if ( ! $created ) {
+			if ( empty( $user ) ) {
+
+				// Fire actions.
+				do_action( 'hivepress/v1/models/user/update', $this->id, 'user' );
+			} else {
+				return ! is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) );
+			}
 		}
 
 		return true;
