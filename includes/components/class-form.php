@@ -176,23 +176,8 @@ final class Form extends Component {
 						array_merge(
 							$args,
 							[
-								'orderby'    => 'meta_value_num',
-
-								'meta_query' => [
-									'relation' => 'OR',
-
-									[
-										'key'     => 'hp_sort_order',
-										'type'    => 'NUMERIC',
-										'compare' => 'EXISTS',
-									],
-
-									[
-										'key'     => 'hp_sort_order',
-										'type'    => 'NUMERIC',
-										'compare' => 'NOT EXISTS',
-									],
-								],
+								'meta_key' => 'hp_sort_order',
+								'orderby'  => 'meta_value_num',
 							]
 						)
 					);
