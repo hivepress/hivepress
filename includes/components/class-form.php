@@ -134,32 +134,6 @@ final class Form extends Component {
 			$args
 		);
 
-		// Set custom order.
-		if ( strpos( $args['taxonomy'], 'hp_' ) === 0 ) {
-			$args = array_merge(
-				$args,
-				[
-					'orderby'    => 'meta_value_num',
-
-					'meta_query' => [
-						'relation' => 'OR',
-
-						[
-							'key'     => 'hp_sort_order',
-							'type'    => 'NUMERIC',
-							'compare' => 'EXISTS',
-						],
-
-						[
-							'key'     => 'hp_sort_order',
-							'type'    => 'NUMERIC',
-							'compare' => 'NOT EXISTS',
-						],
-					],
-				]
-			);
-		}
-
 		// Get options.
 		$options = [];
 
@@ -176,8 +150,59 @@ final class Form extends Component {
 			}
 
 			if ( is_null( $options ) ) {
-				$options = get_terms( $args );
 
+				// Set custom order.
+				if ( strpos( $args['taxonomy'], 'hp_' ) === 0 && ! isset( $args['orderby'] ) && get_terms(
+					array_merge(
+						$args,
+						[
+							'number'     => 1,
+							'fields'     => 'ids',
+
+							'meta_query' => [
+								[
+									'key'     => 'hp_sort_order',
+									'value'   => 0,
+									'compare' => '>',
+									'type'    => 'NUMERIC',
+								],
+							],
+						]
+					)
+				) ) {
+
+					// Get options.
+					$options = get_terms(
+						array_merge(
+							$args,
+							[
+								'orderby'    => 'meta_value_num',
+
+								'meta_query' => [
+									'relation' => 'OR',
+
+									[
+										'key'     => 'hp_sort_order',
+										'type'    => 'NUMERIC',
+										'compare' => 'EXISTS',
+									],
+
+									[
+										'key'     => 'hp_sort_order',
+										'type'    => 'NUMERIC',
+										'compare' => 'NOT EXISTS',
+									],
+								],
+							]
+						)
+					);
+				} else {
+
+					// Get options.
+					$options = get_terms( $args );
+				}
+
+				// Cache options.
 				if ( strpos( $args['taxonomy'], 'hp_' ) === 0 && count( $options ) <= 1000 ) {
 					hivepress()->cache->set_cache( $args, $cache_group, $options );
 				}
