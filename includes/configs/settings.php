@@ -110,6 +110,14 @@ return [
 						'min_value'   => 1,
 						'_order'      => 10,
 					],
+
+					'listing_storage_period'    => [
+						'label'       => hivepress()->translator->get_string( 'storage_period' ),
+						'description' => hivepress()->translator->get_string( 'set_number_of_days_until_listing_deleted' ),
+						'type'        => 'number',
+						'min_value'   => 1,
+						'_order'      => 20,
+					],
 				],
 			],
 

@@ -704,17 +704,52 @@ final class Attribute extends Component {
 
 			if ( $category_ids ) {
 
-				// Get categories.
-				$categories = get_terms(
-					[
-						'taxonomy'   => hp\prefix( $model . '_category' ),
-						'include'    => $category_ids,
-						'hide_empty' => false,
-						'meta_key'   => 'hp_sort_order',
-						'orderby'    => 'meta_value_num',
-						'order'      => 'ASC',
-					]
-				);
+				// Set custom order.
+				if ( get_terms(
+					array_merge(
+						$query_args,
+						[
+							'number'     => 1,
+							'meta_query' => [
+								[
+									'key'     => 'hp_sort_order',
+									'value'   => 0,
+									'compare' => '>',
+									'type'    => 'NUMERIC',
+								],
+							],
+						]
+					)
+				) ) {
+
+					// Get categories.
+					$categories = get_terms(
+						array_merge(
+							$query_args,
+							[
+								'parent'   => '',
+								'fields'   => 'all',
+								'include'  => $category_ids,
+								'meta_key' => 'hp_sort_order',
+								'orderby'  => 'meta_value_num',
+							]
+						)
+					);
+				} else {
+
+					// Get categories.
+					$categories = get_terms(
+						array_merge(
+							$query_args,
+							[
+								'parent'  => '',
+								'fields'  => 'all',
+								'include' => $category_ids,
+								'orderby' => 'name',
+							]
+						)
+					);
+				}
 
 				// Add options.
 				$options[0] = [

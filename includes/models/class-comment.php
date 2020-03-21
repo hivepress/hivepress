@@ -154,8 +154,15 @@ abstract class Comment extends Model {
 		}
 
 		// Update comment.
-		if ( ! $created && ! wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) ) ) {
-			return false;
+		if ( ! $created ) {
+			if ( empty( $comment ) ) {
+
+				// Fire actions.
+				do_action( 'hivepress/v1/models/comment/update', $this->id, static::_get_meta( 'alias' ) );
+				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id );
+			} else {
+				return (bool) wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) );
+			}
 		}
 
 		return true;

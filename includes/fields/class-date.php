@@ -199,9 +199,9 @@ class Date extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$date = date_create_from_format( '!' . $this->format, $this->value );
+			$date = date_create_from_format( $this->format, $this->value );
 
-			if ( ! $date || $date->format( $this->format ) !== $this->value ) {
+			if ( false === $date ) {
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			} else {
 				if ( ! is_null( $this->min_date ) ) {

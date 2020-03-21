@@ -96,7 +96,7 @@ final class User extends Component {
 			[
 				'display_name' => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
 			]
-		)->save( [ 'display_name' ] );
+		)->save_display_name();
 	}
 
 	/**

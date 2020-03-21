@@ -312,6 +312,10 @@ final class Router extends Component {
 	 * Adds rewrite rules.
 	 */
 	public function add_rewrite_rules() {
+
+		// Set rewrite tags.
+		$tags = [ 'route' ];
+
 		foreach ( $this->get_routes() as $name => $route ) {
 			if ( ! hp\get_array_value( $route, 'rest' ) && isset( $route['path'] ) && ( isset( $route['redirect'] ) || isset( $route['action'] ) ) ) {
 
@@ -344,14 +348,14 @@ final class Router extends Component {
 				}
 
 				// Add rewrite tags.
-				foreach ( $params as $param ) {
-					add_rewrite_tag( '%' . hp\prefix( $param ) . '%', '([^&]+)' );
-				}
+				$tags = array_merge( $tags, $params );
 			}
 		}
 
-		// Add route tag.
-		add_rewrite_tag( '%hp_route%', '([^&]+)' );
+		// Add rewrite tags.
+		foreach ( array_unique( $tags ) as $tag ) {
+			add_rewrite_tag( '%' . hp\prefix( $tag ) . '%', '([^&]+)' );
+		}
 	}
 
 	/**

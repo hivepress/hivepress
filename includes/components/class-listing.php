@@ -52,7 +52,6 @@ final class Listing extends Component {
 
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
-
 		} else {
 
 			// Alter menus.
@@ -130,7 +129,7 @@ final class Listing extends Component {
 				)->get();
 
 				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save( [ 'user' ] );
+					$attachment->set_user( $listing->get_user__id() )->save_user();
 				}
 			}
 
@@ -214,7 +213,7 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( in_array( $new_status, [ 'pending', 'publish' ], true ) ) {
+		if ( in_array( $new_status, [ 'publish', 'pending' ], true ) ) {
 
 			// Get expiration period.
 			$expiration_period = absint( get_option( 'hp_listing_expiration_period' ) );
@@ -222,7 +221,7 @@ final class Listing extends Component {
 			if ( $expiration_period && ! $listing->get_expired_time() ) {
 
 				// Set expiration time.
-				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save( [ 'expired_time' ] );
+				$listing->set_expired_time( time() + $expiration_period * DAY_IN_SECONDS )->save_expired_time();
 			}
 		}
 	}
@@ -248,7 +247,7 @@ final class Listing extends Component {
 				[
 					'status' => 'draft',
 				]
-			)->save( [ 'status' ] );
+			)->save_status();
 
 			// Send email.
 			$user = $listing->get_user();
@@ -268,10 +267,24 @@ final class Listing extends Component {
 			}
 		}
 
+		// Get storage period.
+		$storage_period = absint( get_option( 'hp_listing_storage_period' ) );
+
+		if ( $storage_period ) {
+
+			// Delete stored listings.
+			Models\Listing::query()->filter(
+				[
+					'status'            => 'draft',
+					'expired_time__lte' => time() - DAY_IN_SECONDS * $storage_period,
+				]
+			)->delete();
+		}
+
 		// Get featured listings.
 		$featured_listings = Models\Listing::query()->filter(
 			[
-				'status'             => 'publish',
+				'status__in'         => [ 'draft', 'pending', 'publish' ],
 				'featured_time__lte' => time(),
 			]
 		)->get();

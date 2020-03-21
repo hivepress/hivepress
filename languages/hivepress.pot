@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-14 17:52+0000\n"
+"POT-Creation-Date: 2020-03-21 12:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -81,53 +81,53 @@ msgstr ""
 msgid "Edit Options"
 msgstr ""
 
-#: includes/components/class-attribute.php:543
+#: includes/components/class-attribute.php:547
 msgctxt "field"
 msgid "requires review"
 msgstr ""
 
-#: includes/components/class-attribute.php:622
+#: includes/components/class-attribute.php:626
 msgid "Relevance"
 msgstr ""
 
-#: includes/components/class-attribute.php:624
+#: includes/components/class-attribute.php:628
 #: includes/fields/class-date.php:65
 msgid "Date"
 msgstr ""
 
-#: includes/components/class-attribute.php:717
+#: includes/components/class-attribute.php:756
 msgid "All Categories"
 msgstr ""
 
-#: includes/components/class-form.php:303
+#: includes/components/class-form.php:328
 msgid "Captcha is invalid."
 msgstr ""
 
-#: includes/components/class-listing.php:359
+#: includes/components/class-listing.php:381
 #: includes/components/class-user.php:122
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-listing.php:417 includes/configs/meta-boxes.php:21
+#: includes/components/class-listing.php:439 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr ""
 
-#: includes/components/class-listing.php:421 includes/configs/meta-boxes.php:28
+#: includes/components/class-listing.php:443 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr ""
 
-#: includes/components/class-listing.php:467 includes/configs/strings.php:17
+#: includes/components/class-listing.php:489 includes/configs/strings.php:17
 #: includes/forms/class-listing-report.php:53
 msgid "Details"
 msgstr ""
 
-#: includes/components/class-listing.php:475
+#: includes/components/class-listing.php:497
 msgid "Edit"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 
 #: includes/configs/meta-boxes.php:114 includes/configs/meta-boxes.php:167
 #: includes/configs/meta-boxes.php:259 includes/configs/settings.php:20
-#: includes/configs/settings.php:164
+#: includes/configs/settings.php:172
 msgctxt "noun"
 msgid "Display"
 msgstr ""
@@ -329,99 +329,99 @@ msgstr ""
 msgid "Expiration Period"
 msgstr ""
 
-#: includes/configs/settings.php:117 includes/configs/settings.php:212
+#: includes/configs/settings.php:125 includes/configs/settings.php:220
 #: includes/configs/strings.php:18
 msgid "Emails"
 msgstr ""
 
-#: includes/configs/settings.php:123
+#: includes/configs/settings.php:131
 msgid "This email is sent to users when listing is approved."
 msgstr ""
 
-#: includes/configs/settings.php:125
+#: includes/configs/settings.php:133
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
 msgstr ""
 
-#: includes/configs/settings.php:134
+#: includes/configs/settings.php:142
 msgid "This email is sent to users when listing is rejected."
 msgstr ""
 
-#: includes/configs/settings.php:136
+#: includes/configs/settings.php:144
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
 msgstr ""
 
-#: includes/configs/settings.php:145
+#: includes/configs/settings.php:153
 msgid "This email is sent to users when listing is expired."
 msgstr ""
 
-#: includes/configs/settings.php:147
+#: includes/configs/settings.php:155
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
 msgstr ""
 
-#: includes/configs/settings.php:191
+#: includes/configs/settings.php:199
 msgid "Users"
 msgstr ""
 
-#: includes/configs/settings.php:196
+#: includes/configs/settings.php:204
 msgid "Registration"
 msgstr ""
 
-#: includes/configs/settings.php:201
+#: includes/configs/settings.php:209
 msgid "Registration Terms Page"
 msgstr ""
 
-#: includes/configs/settings.php:202
+#: includes/configs/settings.php:210
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 
-#: includes/configs/settings.php:217
+#: includes/configs/settings.php:225
 msgid "User Registered"
 msgstr ""
 
-#: includes/configs/settings.php:218
+#: includes/configs/settings.php:226
 msgid "This email is sent to users after registration."
 msgstr ""
 
-#: includes/configs/settings.php:220
+#: includes/configs/settings.php:228
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
 msgstr ""
 
-#: includes/configs/settings.php:228
+#: includes/configs/settings.php:236
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr ""
 
-#: includes/configs/settings.php:229
+#: includes/configs/settings.php:237
 msgid "This email is sent to users when a password reset is requested."
 msgstr ""
 
-#: includes/configs/settings.php:231
+#: includes/configs/settings.php:239
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
 msgstr ""
 
-#: includes/configs/settings.php:243
+#: includes/configs/settings.php:251
 msgid "Integrations"
 msgstr ""
 
-#: includes/configs/settings.php:253
+#: includes/configs/settings.php:261
 msgid "Site Key"
 msgstr ""
 
-#: includes/configs/settings.php:260
+#: includes/configs/settings.php:268
 msgid "Secret Key"
 msgstr ""
 
-#: includes/configs/settings.php:267
+#: includes/configs/settings.php:275
 msgid "Protected Forms"
 msgstr ""
 
@@ -710,79 +710,83 @@ msgid "Set the number of days after which a listing expires."
 msgstr ""
 
 #: includes/configs/strings.php:88
-msgid "Set a date on which the listing will expire."
+msgid "Set the number of days after which an expired listing is deleted."
 msgstr ""
 
 #: includes/configs/strings.php:89
-msgid "Set a date on which the listing will lose featured status."
+msgid "Set a date on which the listing will expire."
 msgstr ""
 
 #: includes/configs/strings.php:90
-msgid "Choose a page that displays all listings."
+msgid "Set a date on which the listing will lose featured status."
 msgstr ""
 
 #: includes/configs/strings.php:91
+msgid "Choose a page that displays all listings."
+msgstr ""
+
+#: includes/configs/strings.php:92
 msgid ""
 "Choose a page with terms that user has to accept before submitting a new "
 "listing."
 msgstr ""
 
-#: includes/configs/strings.php:92
+#: includes/configs/strings.php:93
 msgid ""
 "Please provide details that will help us verify that this listing violates "
 "the terms of service."
 msgstr ""
 
-#: includes/configs/strings.php:95
+#: includes/configs/strings.php:96
 msgid "Vendor"
 msgstr ""
 
-#: includes/configs/strings.php:96
+#: includes/configs/strings.php:97
 msgid "View Vendor"
 msgstr ""
 
-#: includes/configs/strings.php:97
+#: includes/configs/strings.php:98
 msgid "Add Vendor"
 msgstr ""
 
-#: includes/configs/strings.php:98
+#: includes/configs/strings.php:99
 msgid "Edit Vendor"
 msgstr ""
 
-#: includes/configs/strings.php:99
+#: includes/configs/strings.php:100
 msgid "Vendors"
 msgstr ""
 
-#: includes/configs/strings.php:100
+#: includes/configs/strings.php:101
 msgid "Search Vendors"
 msgstr ""
 
-#: includes/configs/strings.php:101
+#: includes/configs/strings.php:102
 msgid "No vendors found."
 msgstr ""
 
-#: includes/configs/strings.php:102
+#: includes/configs/strings.php:103
 msgid "Vendor Search Form"
 msgstr ""
 
-#: includes/configs/strings.php:103
+#: includes/configs/strings.php:104
 msgid "Vendors Page"
 msgstr ""
 
-#: includes/configs/strings.php:104
+#: includes/configs/strings.php:105
 msgid "Vendors per Page"
 msgstr ""
 
-#: includes/configs/strings.php:105
+#: includes/configs/strings.php:106
 msgid "Choose a page that displays all vendors."
 msgstr ""
 
-#: includes/configs/strings.php:108 includes/configs/taxonomies.php:22
+#: includes/configs/strings.php:109 includes/configs/taxonomies.php:22
 #: includes/configs/taxonomies.php:41
 msgid "Category"
 msgstr ""
 
-#: includes/configs/strings.php:109 includes/configs/taxonomies.php:27
+#: includes/configs/strings.php:110 includes/configs/taxonomies.php:27
 #: includes/configs/taxonomies.php:46
 msgid "Parent Category"
 msgstr ""
@@ -905,8 +909,9 @@ msgstr ""
 
 #: includes/fields/class-attachment-select.php:71
 #: includes/fields/class-attachment-upload.php:145
-#: includes/fields/class-date.php:205 includes/fields/class-email.php:76
-#: includes/fields/class-select.php:207 includes/fields/class-text.php:206
+#: includes/fields/class-date.php:205 includes/fields/class-email.php:89
+#: includes/fields/class-regex.php:74 includes/fields/class-select.php:209
+#: includes/fields/class-text.php:195
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr ""
@@ -1075,12 +1080,12 @@ msgstr ""
 msgid "Regex Pattern"
 msgstr ""
 
-#: includes/fields/class-text.php:198
+#: includes/fields/class-text.php:187
 #, php-format
 msgid "\"%1$s\" should be at least %2$s characters long."
 msgstr ""
 
-#: includes/fields/class-text.php:202
+#: includes/fields/class-text.php:191
 #, php-format
 msgid "\"%1$s\" can't be longer than %2$s characters."
 msgstr ""

@@ -110,10 +110,10 @@ final class Listing extends Controller {
 					],
 
 					'listing_edit_page'            => [
-						'title'    => hivepress()->translator->get_string( 'edit_listing' ),
 						'base'     => 'listings_edit_page',
 						'path'     => '/(?P<listing_id>\d+)',
 						'redirect' => [ $this, 'redirect_listing_edit_page' ],
+						'title'    => [ $this, 'get_listing_edit_title' ],
 						'action'   => [ $this, 'render_listing_edit_page' ],
 					],
 
@@ -517,6 +517,28 @@ final class Listing extends Controller {
 	}
 
 	/**
+	 * Gets listing edit title.
+	 *
+	 * @return string
+	 */
+	public function get_listing_edit_title() {
+		$title = null;
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
+
+		// Set title.
+		if ( $listing ) {
+			$title = $listing->get_title();
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
+
+		return $title;
+	}
+
+	/**
 	 * Redirects listing edit page.
 	 *
 	 * @return mixed
@@ -533,15 +555,12 @@ final class Listing extends Controller {
 			);
 		}
 
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
+		// Check listing.
+		$listing = hivepress()->request->get_context( 'listing' );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
 			return hivepress()->router->get_url( 'listings_edit_page' );
 		}
-
-		// Set listing.
-		hivepress()->request->set_context( 'listing', $listing );
 
 		return false;
 	}
@@ -596,17 +615,12 @@ final class Listing extends Controller {
 
 		if ( empty( $listing ) ) {
 
-			// Get date.
-			$date = current_time( 'mysql' );
-
 			// Add listing.
 			$listing_id = wp_insert_post(
 				[
-					'post_type'     => 'hp_listing',
-					'post_status'   => 'auto-draft',
-					'post_author'   => get_current_user_id(),
-					'post_date'     => $date,
-					'post_date_gmt' => get_gmt_from_date( $date ),
+					'post_type'   => 'hp_listing',
+					'post_status' => 'auto-draft',
+					'post_author' => get_current_user_id(),
 				]
 			);
 
