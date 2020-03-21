@@ -284,7 +284,7 @@ final class Listing extends Component {
 		// Get featured listings.
 		$featured_listings = Models\Listing::query()->filter(
 			[
-				'status'             => 'publish',
+				'status__in'         => [ 'draft', 'pending', 'publish' ],
 				'featured_time__lte' => time(),
 			]
 		)->get();
