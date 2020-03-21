@@ -727,7 +727,7 @@ final class Attribute extends Component {
 						array_merge(
 							$query_args,
 							[
-								'parent'   => null,
+								'parent'   => '',
 								'fields'   => 'all',
 								'include'  => $category_ids,
 								'meta_key' => 'hp_sort_order',
@@ -742,7 +742,7 @@ final class Attribute extends Component {
 						array_merge(
 							$query_args,
 							[
-								'parent'  => null,
+								'parent'  => '',
 								'fields'  => 'all',
 								'include' => $category_ids,
 								'orderby' => 'name',
