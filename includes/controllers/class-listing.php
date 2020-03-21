@@ -309,7 +309,7 @@ final class Listing extends Controller {
 		}
 
 		// Delete listing.
-		if ( ! $listing->trash() ) {
+		if ( ! $listing->delete() ) {
 			return hp\rest_error( 400 );
 		}
 
