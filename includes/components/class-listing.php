@@ -267,6 +267,20 @@ final class Listing extends Component {
 			}
 		}
 
+		// Get storage period.
+		$storage_period = absint( get_option( 'hp_listing_storage_period' ) );
+
+		if ( $storage_period ) {
+
+			// Delete stored listings.
+			Models\Listing::query()->filter(
+				[
+					'status'            => 'draft',
+					'expired_time__lte' => time() - DAY_IN_SECONDS * $storage_period,
+				]
+			)->trash();
+		}
+
 		// Get featured listings.
 		$featured_listings = Models\Listing::query()->filter(
 			[
