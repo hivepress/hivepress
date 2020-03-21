@@ -177,7 +177,15 @@ class Listing_Categories extends Block {
 		}
 
 		// Query categories.
-		$categories = $query->get();
+		if ( is_null( $listing_category_ids ) && ( ! $this->order || 'sort_order' === $this->order ) && ! Models\Listing_Category::query()->set_args( $query->get_args() )->filter(
+			[
+				'sort_order__gt' => 0,
+			]
+		)->get_first_id() ) {
+			$categories = Models\Listing_Category::query()->set_args( $query->get_args() )->order( [ 'name' => 'asc' ] )->get();
+		} else {
+			$categories = $query->get();
+		}
 
 		// Cache IDs.
 		if ( is_null( $listing_category_ids ) && $categories->count() <= 1000 ) {
