@@ -378,7 +378,7 @@ final class Listing extends Component {
 
 				// Add terms field.
 				$form['fields']['_terms'] = [
-					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'caption'   => sprintf( hivepress()->translator->get_string( 'i_agree_to_terms_and_conditions' ), esc_url( $page_url ) ),
 					'type'      => 'checkbox',
 					'required'  => true,
 					'_separate' => true,
@@ -496,7 +496,7 @@ final class Listing extends Component {
 				$items['listing_edit'] = [
 					'label'  => esc_html__( 'Edit', 'hivepress' ),
 					'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
-					'_order' => 100,
+					'_order' => 1000,
 				];
 			}
 		}

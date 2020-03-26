@@ -36,9 +36,11 @@ return [
 	'by_title'                                  => esc_html_x( 'Title', 'sort order', 'hivepress' ),
 	'by_random'                                 => esc_html_x( 'Random', 'sort order', 'hivepress' ),
 	'sort_order'                                => esc_html_x( 'Order', 'sort', 'hivepress' ),
+	'add_details_imperative'                    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
 	'ecommerce_product'                         => sprintf( esc_html__( '%s Product', 'hivepress' ), 'WooCommerce' ),
 	'these_tokens_are_available'                => esc_html__( 'The following tokens are available: %s.', 'hivepress' ),
 	'extension_is_incompatible_with_core'       => esc_html__( '%s extension is incompatible with the current HivePress version, please update HivePress or deactivate it.', 'hivepress' ),
+	'i_agree_to_terms_and_conditions'           => hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),
@@ -108,4 +110,13 @@ return [
 	// Categories.
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),
 	'parent_category'                           => esc_html__( 'Parent Category', 'hivepress' ),
+
+	// Attributes.
+	'attributes'                                => esc_html__( 'Attributes', 'hivepress' ),
+	'attribute'                                 => esc_html__( 'Attribute', 'hivepress' ),
+	'add_new_attribute'                         => esc_html_x( 'Add New', 'attribute', 'hivepress' ),
+	'add_attribute'                             => esc_html__( 'Add Attribute', 'hivepress' ),
+	'edit_attribute'                            => esc_html__( 'Edit Attribute', 'hivepress' ),
+	'search_attributes'                         => esc_html__( 'Search Attributes', 'hivepress' ),
+	'no_attributes_found'                       => esc_html__( 'No attributes found.', 'hivepress' ),
 ];

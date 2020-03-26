@@ -71,7 +71,7 @@ class Listing_Edit_Block extends Template {
 									'listing_view_link' => [
 										'type'   => 'part',
 										'path'   => 'listing/edit/block/listing-view-link',
-										'_order' => 10,
+										'_order' => 1000,
 									],
 								],
 							],

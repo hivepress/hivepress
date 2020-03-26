@@ -119,7 +119,7 @@ final class User extends Component {
 
 				// Add terms field.
 				$form['fields']['_terms'] = [
-					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'caption'   => sprintf( hivepress()->translator->get_string( 'i_agree_to_terms_and_conditions' ), esc_url( $page_url ) ),
 					'type'      => 'checkbox',
 					'required'  => true,
 					'_separate' => true,
