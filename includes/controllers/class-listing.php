@@ -136,7 +136,7 @@ final class Listing extends Controller {
 					],
 
 					'listing_submit_details_page'  => [
-						'title'    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'add_details_imperative' ),
 						'base'     => 'listing_submit_page',
 						'path'     => '/details',
 						'redirect' => [ $this, 'redirect_listing_submit_details_page' ],
@@ -616,23 +616,17 @@ final class Listing extends Controller {
 		if ( empty( $listing ) ) {
 
 			// Add listing.
-			$listing_id = wp_insert_post(
+			$listing = ( new Models\Listing() )->fill(
 				[
-					'post_type'   => 'hp_listing',
-					'post_status' => 'auto-draft',
-					'post_author' => get_current_user_id(),
+					'status'  => 'auto-draft',
+					'drafted' => true,
+					'user'    => get_current_user_id(),
 				]
 			);
 
-			if ( ! $listing_id ) {
+			if ( ! $listing->save( [ 'status', 'drafted', 'user' ] ) ) {
 				return home_url( '/' );
 			}
-
-			// Set draft flag.
-			update_post_meta( $listing_id, 'hp_drafted', '1' );
-
-			// Get listing.
-			$listing = Models\Listing::query()->get_by_id( $listing_id );
 		}
 
 		// Set request context.
