@@ -57,12 +57,13 @@ return [
 	'select2'               => [
 		'handle' => 'select2',
 		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.full.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
@@ -75,7 +76,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar', 'select2' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [

@@ -31,6 +31,28 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// Select
+		hivepress.getComponent('select').each(function() {
+			var field = $(this),
+				settings = {
+					width: '100%',
+					dropdownAutoWidth: false,
+					minimumResultsForSearch: 20,
+				};
+
+			if (field.data('style') === 'inline') {
+				$.extend(settings, {
+					containerCssClass: 'select2-selection--inline',
+					dropdownCssClass: 'select2-dropdown--inline',
+					width: 'resolve',
+					dropdownAutoWidth: true,
+					minimumResultsForSearch: -1,
+				});
+			}
+
+			field.select2(settings);
+		});
+
 		// Date
 		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
 			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
