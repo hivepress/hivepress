@@ -112,8 +112,8 @@ final class Listing extends Controller {
 					'listing_edit_page'            => [
 						'base'     => 'listings_edit_page',
 						'path'     => '/(?P<listing_id>\d+)',
-						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'title'    => [ $this, 'get_listing_edit_title' ],
+						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'action'   => [ $this, 'render_listing_edit_page' ],
 					],
 
@@ -589,6 +589,11 @@ final class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_page() {
 
+		// Check permissions.
+		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
+			return home_url( '/' );
+		}
+
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hivepress()->router->get_url(
@@ -597,11 +602,6 @@ final class Listing extends Controller {
 					'redirect' => hivepress()->router->get_current_url(),
 				]
 			);
-		}
-
-		// Check permissions.
-		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
-			return home_url( '/' );
 		}
 
 		// Get listing.
