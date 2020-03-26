@@ -208,13 +208,15 @@ final class Attribute extends Component {
 					];
 
 					// Get categories.
-					$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+					if ( taxonomy_exists( hp\prefix( $model . '_category' ) ) ) {
+						$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
 
-					foreach ( $category_ids as $category_id ) {
-						$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $model . '_category' ) ) );
+						foreach ( $category_ids as $category_id ) {
+							$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $model . '_category' ) ) );
+						}
+
+						$attribute_args['categories'] = array_unique( $category_ids );
 					}
-
-					$attribute_args['categories'] = array_unique( $category_ids );
 
 					// Get fields.
 					$field_contexts = [ 'edit', 'search' ];
