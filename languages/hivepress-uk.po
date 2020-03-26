@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-21 12:57+0000\n"
-"PO-Revision-Date: 2020-03-21 13:03+0000\n"
+"PO-Revision-Date: 2020-03-21 14:07+0000\n"
 "Last-Translator: admin <admin@admin.com>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -18,8 +18,7 @@ msgstr ""
 #: includes/blocks/class-result-count.php:56
 #, php-format
 msgid "Showing %1$s-%2$s of %3$s results"
-msgstr ""
-"Відображаються %1$s-%2$s з %3$s результатів"
+msgstr "Відображаються %1$s-%2$s з %3$s результатів"
 
 #: includes/blocks/class-user-register-form.php:30
 msgid "User Registration Form"
@@ -31,25 +30,21 @@ msgstr "Форма реєстрації користувачів"
 #: includes/configs/meta-boxes.php:191 includes/configs/strings.php:16
 #: includes/controllers/class-user.php:150 templates/admin/settings.php:6
 msgid "Settings"
-msgstr ""
-"Налаштування"
+msgstr "Налаштування"
 
 #: includes/components/class-admin.php:119 templates/admin/extensions.php:8
 msgid "Extensions"
-msgstr ""
-"Розширення"
+msgstr "Розширення"
 
 #: includes/components/class-admin.php:540
 msgctxt "plural"
 msgid "All"
-msgstr ""
-"Всі"
+msgstr "Всі"
 
 #: includes/components/class-admin.php:545
 msgctxt "plural"
 msgid "Installed"
-msgstr ""
-"Встановлені"
+msgstr "Встановлені"
 
 #: includes/components/class-admin.php:1075
 #, php-format
@@ -66,44 +61,36 @@ msgstr "Додати опцію"
 
 #: includes/components/class-attribute.php:302
 msgid "Edit Option"
-msgstr ""
-"Редагувати опцію"
+msgstr "Редагувати опцію"
 
 #: includes/components/class-attribute.php:303
 msgid "Update Option"
-msgstr ""
-"Змінити опцію"
+msgstr "Змінити опцію"
 
 #: includes/components/class-attribute.php:304
 msgid "Parent Option"
-msgstr ""
-"Батьківська опція"
+msgstr "Батьківська опція"
 
 #: includes/components/class-attribute.php:305
 msgid "Search Options"
-msgstr ""
-"Шукати опції"
+msgstr "Шукати опції"
 
 #: includes/components/class-attribute.php:306
 msgid "No options found."
-msgstr ""
-"Опцій не знайдено."
+msgstr "Опцій не знайдено."
 
 #: includes/components/class-attribute.php:398
 msgid "Edit Options"
-msgstr ""
-"Редагувати опції"
+msgstr "Редагувати опції"
 
 #: includes/components/class-attribute.php:547
 msgctxt "field"
 msgid "requires review"
-msgstr ""
-"вимагає перевірки"
+msgstr "вимагає перевірки"
 
 #: includes/components/class-attribute.php:626
 msgid "Relevance"
-msgstr ""
-"Релевантність"
+msgstr "Релевантність"
 
 #: includes/components/class-attribute.php:628
 #: includes/fields/class-date.php:65
@@ -112,13 +99,11 @@ msgstr "Дата"
 
 #: includes/components/class-attribute.php:756
 msgid "All Categories"
-msgstr ""
-"Усі категорії"
+msgstr "Усі категорії"
 
 #: includes/components/class-form.php:328
 msgid "Captcha is invalid."
-msgstr ""
-"Невірний код підтвердження."
+msgstr "Невірний код підтвердження."
 
 #: includes/components/class-listing.php:381
 #: includes/components/class-user.php:122
@@ -126,14 +111,13 @@ msgstr ""
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
-"Я погоджуюся з правилами і умовами"
+"Я погоджуюся з <a href=\"%s\" target=\"_blank\">правилами і умовами</a>"
 
 #: includes/components/class-listing.php:439 includes/configs/meta-boxes.php:28
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
-msgstr ""
-"Рекламується"
+msgstr "Рекламується"
 
 #: includes/components/class-listing.php:443 includes/configs/meta-boxes.php:21
 #: templates/listing/view/listing-verified-badge.php:7
@@ -144,8 +128,7 @@ msgstr "Перевіренe"
 #: includes/components/class-listing.php:489 includes/configs/strings.php:17
 #: includes/forms/class-listing-report.php:53
 msgid "Details"
-msgstr ""
-"Деталі"
+msgstr "Деталі"
 
 #: includes/components/class-listing.php:497
 msgid "Edit"
@@ -157,15 +140,13 @@ msgstr "Редагувати"
 #: templates/user/login/user-login-link.php:9
 #: templates/user/register/user-login-link.php:5
 msgid "Sign In"
-msgstr ""
-"Увійти"
+msgstr "Увійти"
 
 #: includes/components/class-user.php:197
 #: includes/forms/class-user-register.php:63
 #: templates/user/login/user-register-link.php:5
 msgid "Register"
-msgstr ""
-"Зареєструватися"
+msgstr "Зареєструватися"
 
 #: includes/components/class-user.php:209
 #: includes/controllers/class-user.php:142
@@ -173,8 +154,7 @@ msgstr ""
 #: includes/forms/class-user-password-reset.php:69
 #: templates/user/password-reset/user-password-reset-message.php:6
 msgid "Reset Password"
-msgstr ""
-"Скинути пароль"
+msgstr "Скинути пароль"
 
 #: includes/configs/meta-boxes.php:35
 msgid "Featuring Date"
@@ -188,122 +168,101 @@ msgstr "Дата закінчення терміну розміщення"
 #: includes/configs/post-types.php:44 includes/configs/post-types.php:50
 #: includes/configs/post-types.php:87 includes/configs/post-types.php:93
 msgid "Attributes"
-msgstr ""
-"Атрибути"
+msgstr "Атрибути"
 
 #: includes/configs/meta-boxes.php:60 includes/configs/meta-boxes.php:205
 msgid "Editing"
-msgstr ""
-"Редагування"
+msgstr "Редагування"
 
 #: includes/configs/meta-boxes.php:66 includes/configs/meta-boxes.php:211
 msgctxt "attribute"
 msgid "Editable"
-msgstr ""
-"Редагування"
+msgstr "Редагування"
 
 #: includes/configs/meta-boxes.php:67 includes/configs/meta-boxes.php:212
 msgid "Allow front-end editing"
-msgstr ""
-"Дозволити користувачам редагування"
+msgstr "Дозволити користувачам редагування"
 
 #: includes/configs/meta-boxes.php:73 includes/configs/meta-boxes.php:104
 #: includes/configs/meta-boxes.php:218 includes/configs/meta-boxes.php:249
 msgid "Field Type"
-msgstr ""
-"Тип поля"
+msgstr "Тип поля"
 
 #: includes/configs/meta-boxes.php:84 includes/configs/meta-boxes.php:229
 msgctxt "noun"
 msgid "Search"
-msgstr ""
-"Пошук"
+msgstr "Пошук"
 
 #: includes/configs/meta-boxes.php:90 includes/configs/meta-boxes.php:235
 msgctxt "attribute"
 msgid "Searchable"
-msgstr ""
-"Пошук"
+msgstr "Пошук"
 
 #: includes/configs/meta-boxes.php:91 includes/configs/meta-boxes.php:236
 msgid "Display in the search form"
-msgstr ""
-"Відображати в пошуковій формі"
+msgstr "Відображати в пошуковій формі"
 
 #: includes/configs/meta-boxes.php:97 includes/configs/meta-boxes.php:242
 msgctxt "attribute"
 msgid "Sortable"
-msgstr ""
-"Сортування"
+msgstr "Сортування"
 
 #: includes/configs/meta-boxes.php:98 includes/configs/meta-boxes.php:243
 msgid "Display as a sorting option"
-msgstr ""
-"Відображати як опцію сортування"
+msgstr "Відображати як опцію сортування"
 
 #: includes/configs/meta-boxes.php:114 includes/configs/meta-boxes.php:167
 #: includes/configs/meta-boxes.php:259 includes/configs/settings.php:20
 #: includes/configs/settings.php:172
 msgctxt "noun"
 msgid "Display"
-msgstr ""
-"Відображення"
+msgstr "Відображення"
 
 #: includes/configs/meta-boxes.php:120 includes/configs/meta-boxes.php:265
 msgid "Areas"
-msgstr ""
-"Зони"
+msgstr "Зони"
 
 #: includes/configs/meta-boxes.php:121 includes/configs/meta-boxes.php:266
 msgid "Choose the template areas where you want to display this attribute."
-msgstr ""
-"Виберіть зони шаблону, в яких ви хочете відображати цей атрибут."
+msgstr "Виберіть зони шаблону, в яких ви хочете відображати цей атрибут."
 
 #: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:127
 #: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:272
 msgid "Block"
-msgstr ""
-"Блок"
+msgstr "Блок"
 
 #: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:128
 #: includes/configs/meta-boxes.php:271 includes/configs/meta-boxes.php:273
 msgctxt "area"
 msgid "primary"
-msgstr ""
-"головна"
+msgstr "головна"
 
 #: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:129
 #: includes/configs/meta-boxes.php:272 includes/configs/meta-boxes.php:274
 msgctxt "area"
 msgid "secondary"
-msgstr ""
-"другорядна"
+msgstr "другорядна"
 
 #: includes/configs/meta-boxes.php:128 includes/configs/meta-boxes.php:129
 #: includes/configs/meta-boxes.php:273 includes/configs/meta-boxes.php:274
 msgid "Page"
-msgstr ""
-"Сторінка"
+msgstr "Сторінка"
 
 #: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:279
 msgid "Format"
-msgstr ""
-"Формат"
+msgstr "Формат"
 
 #: includes/configs/meta-boxes.php:135 includes/configs/meta-boxes.php:280
 msgid "Set the attribute display format."
-msgstr ""
-"Введіть формат відображення атрибута."
+msgstr "Введіть формат відображення атрибута."
 
 #: includes/configs/meta-boxes.php:150
 msgid "Image"
-msgstr ""
-"Зображення"
+msgstr "Зображення"
 
 #: includes/configs/meta-boxes.php:151 includes/models/class-user.php:101
 msgid "Select Image"
-msgstr ""
-"Вибрати зображення"
+msgstr "Вибрати зображення"
 
 #: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:180
 #: includes/configs/meta-boxes.php:295
@@ -313,91 +272,74 @@ msgstr "Порядок"
 
 #: includes/configs/meta-boxes.php:168
 msgid "Display subcategories"
-msgstr ""
-"Відображати підкатегорії"
+msgstr "Відображати підкатегорії"
 
 #: includes/configs/post-types.php:24
 msgctxt "listing"
 msgid "Add New"
-msgstr ""
-"Додати нове"
+msgstr "Додати нове"
 
 #: includes/configs/post-types.php:45 includes/configs/post-types.php:88
 msgid "Attribute"
-msgstr ""
-"Атрибут"
+msgstr "Атрибут"
 
 #: includes/configs/post-types.php:46 includes/configs/post-types.php:89
 msgctxt "attribute"
 msgid "Add New"
-msgstr ""
-"Додати новий"
+msgstr "Додати новий"
 
 #: includes/configs/post-types.php:47 includes/configs/post-types.php:49
 #: includes/configs/post-types.php:90 includes/configs/post-types.php:92
 msgid "Add Attribute"
-msgstr ""
-"Додати атрибут"
+msgstr "Додати атрибут"
 
 #: includes/configs/post-types.php:48 includes/configs/post-types.php:91
 msgid "Edit Attribute"
-msgstr ""
-"Редагувати атрибут"
+msgstr "Редагувати атрибут"
 
 #: includes/configs/post-types.php:51 includes/configs/post-types.php:94
 msgid "Search Attributes"
-msgstr ""
-"Шукати атрибути"
+msgstr "Шукати атрибути"
 
 #: includes/configs/post-types.php:52 includes/configs/post-types.php:53
 #: includes/configs/post-types.php:95 includes/configs/post-types.php:96
 msgid "No attributes found."
-msgstr ""
-"Атрибутів не знайдено."
+msgstr "Атрибутів не знайдено."
 
 #: includes/configs/post-types.php:68
 msgctxt "vendor"
 msgid "Add New"
-msgstr ""
-"Додати нового"
-""
+msgstr "Додати нового"
 
 #: includes/configs/settings.php:35
 msgid "Display categories"
-msgstr ""
-"Відображати категорії"
+msgstr "Відображати категорії"
 
 #: includes/configs/settings.php:70 includes/configs/settings.php:84
 #: includes/configs/strings.php:19
 msgid "Submission"
-msgstr ""
-"Додавання"
+msgstr "Додавання"
 
 #: includes/configs/settings.php:75
 msgid "Submission Terms Page"
-msgstr ""
-"Сторінка умов додавання"
+msgstr "Сторінка умов додавання"
 
 #: includes/configs/settings.php:102 includes/configs/strings.php:21
 msgid "Expiration"
-msgstr ""
-"Терміни"
+msgstr "Терміни"
 
 #: includes/configs/settings.php:107
 msgid "Expiration Period"
-msgstr ""
-"Термін розміщення"
+msgstr "Термін розміщення"
 
 #: includes/configs/settings.php:125 includes/configs/settings.php:220
 #: includes/configs/strings.php:18
 msgid "Emails"
-msgstr ""
-"Листи"
+msgstr "Листи"
 
 #: includes/configs/settings.php:131
 msgid "This email is sent to users when listing is approved."
-msgstr ""
-"Цей лист відправляється користувачам у разі схвалення оголошення."
+msgstr "Цей лист відправляється користувачам у разі схвалення оголошення."
 
 #: includes/configs/settings.php:133
 msgid ""
@@ -409,8 +351,7 @@ msgstr ""
 
 #: includes/configs/settings.php:142
 msgid "This email is sent to users when listing is rejected."
-msgstr ""
-"Цей лист відправляється користувачам у разі відхилення оголошення."
+msgstr "Цей лист відправляється користувачам у разі відхилення оголошення."
 
 #: includes/configs/settings.php:144
 msgid ""
@@ -435,18 +376,15 @@ msgstr ""
 
 #: includes/configs/settings.php:199
 msgid "Users"
-msgstr ""
-"Користувачі"
+msgstr "Користувачі"
 
 #: includes/configs/settings.php:204
 msgid "Registration"
-msgstr ""
-"Реєстрація"
+msgstr "Реєстрація"
 
 #: includes/configs/settings.php:209
 msgid "Registration Terms Page"
-msgstr ""
-"Сторінка умов реєстрації"
+msgstr "Сторінка умов реєстрації"
 
 #: includes/configs/settings.php:210
 msgid "Choose a page with terms that user has to accept before registering."
@@ -455,13 +393,11 @@ msgstr ""
 
 #: includes/configs/settings.php:225
 msgid "User Registered"
-msgstr ""
-"Користувач зареєстрований"
+msgstr "Користувач зареєстрований"
 
 #: includes/configs/settings.php:226
 msgid "This email is sent to users after registration."
-msgstr ""
-"Цей лист відправляється користувачам після реєстрації."
+msgstr "Цей лист відправляється користувачам після реєстрації."
 
 #: includes/configs/settings.php:228
 msgid ""
@@ -473,13 +409,11 @@ msgstr ""
 #: includes/configs/settings.php:236
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
-msgstr ""
-"Пароль скинуто"
+msgstr "Пароль скинуто"
 
 #: includes/configs/settings.php:237
 msgid "This email is sent to users when a password reset is requested."
-msgstr ""
-"Цей лист відправляється користувачам у разі запиту скидання пароля."
+msgstr "Цей лист відправляється користувачам у разі запиту скидання пароля."
 
 #: includes/configs/settings.php:239
 msgid ""
@@ -491,33 +425,27 @@ msgstr ""
 
 #: includes/configs/settings.php:251
 msgid "Integrations"
-msgstr ""
-"Інтеграції"
+msgstr "Інтеграції"
 
 #: includes/configs/settings.php:261
 msgid "Site Key"
-msgstr ""
-"Ключ сайту"
+msgstr "Ключ сайту"
 
 #: includes/configs/settings.php:268
 msgid "Secret Key"
-msgstr ""
-"Секретний ключ"
+msgstr "Секретний ключ"
 
 #: includes/configs/settings.php:275
 msgid "Protected Forms"
-msgstr ""
-"Захищені форми"
+msgstr "Захищені форми"
 
 #: includes/configs/strings.php:20
 msgid "Moderation"
-msgstr ""
-"Модерація"
+msgstr "Модерація"
 
 #: includes/configs/strings.php:22
 msgid "Free"
-msgstr ""
-"Безкоштовно"
+msgstr "Безкоштовно"
 
 #: includes/configs/strings.php:23
 msgid "Overview"
@@ -537,48 +465,40 @@ msgstr "Ключ API"
 
 #: includes/configs/strings.php:27
 msgid "Client ID"
-msgstr ""
-"ID клієнта"
+msgstr "ID клієнта"
 
 #: includes/configs/strings.php:28
 msgid "App ID"
-msgstr ""
-"ID додатку"
+msgstr "ID додатку"
 
 #: includes/configs/strings.php:29
 msgid "Return to My Account"
-msgstr ""
-"Повернутися в мій акаунт"
+msgstr "Повернутися в мій акаунт"
 
 #: includes/configs/strings.php:30
 msgctxt "quantity"
 msgid "Columns"
-msgstr ""
-"Колонки"
+msgstr "Колонки"
 
 #: includes/configs/strings.php:31
 msgctxt "quantity"
 msgid "Number"
-msgstr ""
-"Кількість"
+msgstr "Кількість"
 
 #: includes/configs/strings.php:32
 msgctxt "sort order"
 msgid "Item Count"
-msgstr ""
-"За кількістю позицій"
+msgstr "За кількістю позицій"
 
 #: includes/configs/strings.php:33
 msgctxt "sort order"
 msgid "Name"
-msgstr ""
-"За назвою"
+msgstr "За назвою"
 
 #: includes/configs/strings.php:34
 msgctxt "sort order"
 msgid "Date Added"
-msgstr ""
-"За датою додавання"
+msgstr "За датою додавання"
 
 #: includes/configs/strings.php:35
 msgctxt "sort order"
@@ -588,20 +508,17 @@ msgstr "За датою реєстрації"
 #: includes/configs/strings.php:36
 msgctxt "sort order"
 msgid "Title"
-msgstr ""
-"За заголовком"
+msgstr "За заголовком"
 
 #: includes/configs/strings.php:37
 msgctxt "sort order"
 msgid "Random"
-msgstr ""
-"Випадковий"
+msgstr "Випадковий"
 
 #: includes/configs/strings.php:38
 msgctxt "sort"
 msgid "Order"
-msgstr ""
-"Порядок"
+msgstr "Порядок"
 
 #: includes/configs/strings.php:39
 #, php-format
@@ -611,8 +528,7 @@ msgstr "Продукт %s"
 #: includes/configs/strings.php:40
 #, php-format
 msgid "The following tokens are available: %s."
-msgstr ""
-"Наступні токени доступні: %s."
+msgstr "Наступні токени доступні: %s."
 
 #: includes/configs/strings.php:41
 #, php-format
@@ -625,8 +541,7 @@ msgstr ""
 
 #: includes/configs/strings.php:44
 msgid "Listing"
-msgstr ""
-"Оголошення"
+msgstr "Оголошення"
 
 #: includes/configs/strings.php:45
 msgid "Listings"
@@ -850,13 +765,11 @@ msgstr ""
 
 #: includes/configs/strings.php:96
 msgid "Vendor"
-msgstr ""
-"Продавець"
+msgstr "Продавець"
 
 #: includes/configs/strings.php:97
 msgid "View Vendor"
-msgstr ""
-"Переглянути продавця"
+msgstr "Переглянути продавця"
 
 #: includes/configs/strings.php:98
 msgid "Add Vendor"
@@ -864,23 +777,19 @@ msgstr "Додати продавця"
 
 #: includes/configs/strings.php:99
 msgid "Edit Vendor"
-msgstr ""
-"Редагувати продавця"
+msgstr "Редагувати продавця"
 
 #: includes/configs/strings.php:100
 msgid "Vendors"
-msgstr ""
-"Продавці"
+msgstr "Продавці"
 
 #: includes/configs/strings.php:101
 msgid "Search Vendors"
-msgstr ""
-"Шукати продавців"
+msgstr "Шукати продавців"
 
 #: includes/configs/strings.php:102
 msgid "No vendors found."
-msgstr ""
-"Продавців не знайдено."
+msgstr "Продавців не знайдено."
 
 #: includes/configs/strings.php:103
 msgid "Vendor Search Form"
@@ -906,118 +815,96 @@ msgstr "Категорія"
 #: includes/configs/strings.php:110 includes/configs/taxonomies.php:27
 #: includes/configs/taxonomies.php:46
 msgid "Parent Category"
-msgstr ""
-"Батьківська категорія"
+msgstr "Батьківська категорія"
 
 #: includes/configs/taxonomies.php:21 includes/configs/taxonomies.php:40
 msgid "Categories"
-msgstr ""
-"Категорії"
+msgstr "Категорії"
 
 #: includes/configs/taxonomies.php:23 includes/configs/taxonomies.php:42
 msgid "Add Category"
-msgstr ""
-"Додати категорію"
+msgstr "Додати категорію"
 
 #: includes/configs/taxonomies.php:24 includes/configs/taxonomies.php:43
 msgid "Edit Category"
-msgstr ""
-"Редагувати категорію"
+msgstr "Редагувати категорію"
 
 #: includes/configs/taxonomies.php:25 includes/configs/taxonomies.php:44
 msgid "Update Category"
-msgstr ""
-"Змінити категорію"
+msgstr "Змінити категорію"
 
 #: includes/configs/taxonomies.php:26 includes/configs/taxonomies.php:45
 msgid "View Category"
-msgstr ""
-"Переглянути категорію"
+msgstr "Переглянути категорію"
 
 #: includes/configs/taxonomies.php:28 includes/configs/taxonomies.php:47
 msgid "Search Categories"
-msgstr ""
-"Шукати категорії"
+msgstr "Шукати категорії"
 
 #: includes/configs/taxonomies.php:29 includes/configs/taxonomies.php:48
 msgid "No categories found."
-msgstr ""
-"Категорій не знайдено."
+msgstr "Категорій не знайдено."
 
 #: includes/controllers/class-attachment.php:163
 #, php-format
 msgid "Only up to %s files can be uploaded."
-msgstr ""
-"Можна завантажити тільки до %s файлів."
+msgstr "Можна завантажити тільки до %s файлів."
 
 #: includes/controllers/class-attachment.php:176
 #, php-format
 msgid "Only %s files are allowed."
-msgstr ""
-"Тільки %s файли дозволені."
+msgstr "Тільки %s файли дозволені."
 
 #: includes/controllers/class-listing.php:131
 msgctxt "imperative"
 msgid "Select Category"
-msgstr ""
-"Оберіть категорію"
+msgstr "Оберіть категорію"
 
 #: includes/controllers/class-listing.php:139
 msgctxt "imperative"
 msgid "Add Details"
-msgstr ""
-"Заповніть деталі"
+msgstr "Заповніть деталі"
 
 #: includes/controllers/class-user.php:192
 msgid "Username contains invalid characters."
-msgstr ""
-"Ім'я користувача містить неприпустимі символи."
+msgstr "Ім'я користувача містить неприпустимі символи."
 
 #: includes/controllers/class-user.php:194
 msgid "This username is already in use."
-msgstr ""
-"Це ім'я користувача вже зайнято."
+msgstr "Це ім'я користувача вже зайнято."
 
 #: includes/controllers/class-user.php:200
 msgid "This email is already registered."
-msgstr ""
-"Ця ел. адреса вже використовується."
+msgstr "Ця ел. адреса вже використовується."
 
 #: includes/controllers/class-user.php:300
 #: includes/controllers/class-user.php:307
 msgid "Username or password is incorrect."
-msgstr ""
-"Неправильне ім'я користувача або пароль."
+msgstr "Неправильне ім'я користувача або пароль."
 
 #: includes/controllers/class-user.php:374
 msgid "User with this email doesn't exist."
-msgstr ""
-"Користувача з такою ел. адресою не знайдено."
+msgstr "Користувача з такою ел. адресою не знайдено."
 
 #: includes/controllers/class-user.php:376
 msgid "User with this username doesn't exist."
-msgstr ""
-"Користувача з таким ім'ям не знайдено."
+msgstr "Користувача з таким ім'ям не знайдено."
 
 #: includes/controllers/class-user.php:437
 msgid "Password reset key is expired or invalid."
-msgstr ""
-"Ключ для скидання пароля невірний або термін його дії закінчився."
+msgstr "Ключ для скидання пароля невірний або термін його дії закінчився."
 
 #: includes/controllers/class-user.php:501
 msgid "Current password is required."
-msgstr ""
-"Поточний пароль є обов'язковим."
+msgstr "Поточний пароль є обов'язковим."
 
 #: includes/controllers/class-user.php:505
 msgid "Current password is incorrect."
-msgstr ""
-"Невірний поточний пароль."
+msgstr "Невірний поточний пароль."
 
 #: includes/controllers/class-user.php:562
 msgid "Password is incorrect."
-msgstr ""
-"Невірний пароль."
+msgstr "Невірний пароль."
 
 #: includes/emails/class-listing-report.php:31
 msgid ""
@@ -1045,14 +932,12 @@ msgstr ""
 
 #: includes/emails/class-user-register.php:30
 msgid "Registration Complete"
-msgstr ""
-"Реєстрація завершена"
+msgstr "Реєстрація завершена"
 
 #: includes/fields/class-attachment-select.php:38
 #: includes/fields/class-attachment-upload.php:61
 msgid "Select File"
-msgstr ""
-"Вибрати файл"
+msgstr "Вибрати файл"
 
 #: includes/fields/class-attachment-select.php:71
 #: includes/fields/class-attachment-upload.php:145
@@ -1065,18 +950,15 @@ msgstr "Поле \"%s\" містить неприпустиме значення
 
 #: includes/fields/class-attachment-upload.php:59
 msgid "Select Files"
-msgstr ""
-"Вибрати файли"
+msgstr "Вибрати файли"
 
 #: includes/fields/class-checkbox.php:44
 msgid "Checkbox"
-msgstr ""
-"Прапорець"
+msgstr "Прапорець"
 
 #: includes/fields/class-checkbox.php:49
 msgid "Caption"
-msgstr ""
-"Підпис"
+msgstr "Підпис"
 
 #: includes/fields/class-checkbox.php:99
 msgid "Yes"
@@ -1088,29 +970,24 @@ msgstr "Ні"
 
 #: includes/fields/class-checkboxes.php:30
 msgid "Checkboxes"
-msgstr ""
-"Прапорці"
+msgstr "Прапорці"
 
 #: includes/fields/class-date-range.php:44
 msgid "Date Range"
-msgstr ""
-"Діапазон дат"
+msgstr "Діапазон дат"
 
 #: includes/fields/class-date.php:72 includes/fields/class-number.php:65
 #: includes/fields/class-text.php:71
 msgid "Placeholder"
-msgstr ""
-"Заступаючий текст"
+msgstr "Заступаючий текст"
 
 #: includes/fields/class-date.php:79
 msgid "Minimum Date"
-msgstr ""
-"Мінімальна дата"
+msgstr "Мінімальна дата"
 
 #: includes/fields/class-date.php:85
 msgid "Maximum Date"
-msgstr ""
-"Максимальна дата"
+msgstr "Максимальна дата"
 
 #: includes/fields/class-date.php:211
 #, php-format
@@ -1124,8 +1001,7 @@ msgstr "\"%1$s\" не може бути пізніше від %2$s."
 
 #: includes/fields/class-email.php:30 includes/models/class-user.php:56
 msgid "Email"
-msgstr ""
-"Ел. адреса"
+msgstr "Ел. адреса"
 
 #: includes/fields/class-embed.php:30
 msgctxt "field"
@@ -1135,8 +1011,7 @@ msgstr "Віджет"
 #: includes/fields/class-field.php:142
 msgctxt "field"
 msgid "Required"
-msgstr ""
-"Обов'язковість"
+msgstr "Обов'язковість"
 
 #: includes/fields/class-field.php:143
 msgid "Make this field required"
@@ -1148,14 +1023,12 @@ msgstr "Зробити це поле обов'язковим"
 #: includes/models/class-vendor-category.php:40
 #: includes/models/class-vendor.php:40
 msgid "Description"
-msgstr ""
-"Опис"
+msgstr "Опис"
 
 #: includes/fields/class-field.php:231
 msgctxt "field"
 msgid "optional"
-msgstr ""
-"опціонально"
+msgstr "опціонально"
 
 #: includes/fields/class-field.php:480
 #, php-format
@@ -1164,39 +1037,32 @@ msgstr "Поле \"%s\" є обов'язковим."
 
 #: includes/fields/class-number-range.php:44
 msgid "Number Range"
-msgstr ""
-"Діапазон чисел"
+msgstr "Діапазон чисел"
 
 #: includes/fields/class-number-range.php:71
 msgid "Min"
-msgstr ""
-"Мін."
+msgstr "Мін."
 
 #: includes/fields/class-number-range.php:84
 msgid "Max"
-msgstr ""
-"Макс."
+msgstr "Макс."
 
 #: includes/fields/class-number.php:58
 msgid "Number"
-msgstr ""
-"Число"
+msgstr "Число"
 
 #: includes/fields/class-number.php:72
 msgctxt "quantity"
 msgid "Decimals"
-msgstr ""
-"Знаки після коми"
+msgstr "Знаки після коми"
 
 #: includes/fields/class-number.php:82
 msgid "Minimum Value"
-msgstr ""
-"Мінімальне значення"
+msgstr "Мінімальне значення"
 
 #: includes/fields/class-number.php:89
 msgid "Maximum Value"
-msgstr ""
-"Максимальне значення"
+msgstr "Максимальне значення"
 
 #: includes/fields/class-number.php:182
 #, php-format
@@ -1210,8 +1076,7 @@ msgstr "\"%1$s\" не може бути більше за %2$s."
 
 #: includes/fields/class-radio.php:30
 msgid "Radio Buttons"
-msgstr ""
-"Радіокнопки"
+msgstr "Радіокнопки"
 
 #: includes/fields/class-select.php:51
 msgctxt "field"
@@ -1225,28 +1090,23 @@ msgstr "Множинність"
 
 #: includes/fields/class-select.php:57
 msgid "Allow multiple selection"
-msgstr ""
-"Дозволити множинний вибір"
+msgstr "Дозволити множинний вибір"
 
 #: includes/fields/class-select.php:63
 msgid "Options"
-msgstr ""
-"Опції"
+msgstr "Опції"
 
 #: includes/fields/class-text.php:65
 msgid "Text"
-msgstr ""
-"Текст"
+msgstr "Текст"
 
 #: includes/fields/class-text.php:78
 msgid "Minimum Length"
-msgstr ""
-"Мінімальна довжина"
+msgstr "Мінімальна довжина"
 
 #: includes/fields/class-text.php:85
 msgid "Maximum Length"
-msgstr ""
-"Максимальна довжина"
+msgstr "Максимальна довжина"
 
 #: includes/fields/class-text.php:92
 msgid "Regex Pattern"
@@ -1264,18 +1124,15 @@ msgstr "\"%1$s\" не може бути довшим %2$s символів."
 
 #: includes/fields/class-textarea.php:37
 msgid "Textarea"
-msgstr ""
-"Багатостроковий текст"
+msgstr "Багатостроковий текст"
 
 #: includes/fields/class-textarea.php:45
 msgid "Formatting"
-msgstr ""
-"Форматування"
+msgstr "Форматування"
 
 #: includes/fields/class-textarea.php:46
 msgid "Allow HTML formatting"
-msgstr ""
-"Дозволити HTML форматування"
+msgstr "Дозволити HTML форматування"
 
 #: includes/fields/class-url.php:30
 msgid "URL"
@@ -1283,20 +1140,17 @@ msgstr "URL"
 
 #: includes/forms/class-form.php:143
 msgid "Submit"
-msgstr ""
-"Відправити"
+msgstr "Відправити"
 
 #: includes/forms/class-listing-filter.php:71
 #: includes/forms/class-vendor-filter.php:71
 msgid "Filter"
-msgstr ""
-"Фільтрувати"
+msgstr "Фільтрувати"
 
 #: includes/forms/class-listing-search.php:51
 #: includes/forms/class-vendor-search.php:51
 msgid "Keywords"
-msgstr ""
-"Ключові слова"
+msgstr "Ключові слова"
 
 #: includes/forms/class-listing-search.php:65
 #: includes/forms/class-vendor-search.php:65
@@ -1306,32 +1160,27 @@ msgstr "Шукати"
 #: includes/forms/class-listing-sort.php:52
 #: includes/forms/class-vendor-sort.php:52
 msgid "Sort by"
-msgstr ""
-"Сортувати за"
+msgstr "Сортувати за"
 
 #: includes/forms/class-listing-update.php:46
 #: includes/forms/class-user-update.php:46
 msgid "Changes have been saved."
-msgstr ""
-"Зміни збережені."
+msgstr "Зміни збережені."
 
 #: includes/forms/class-listing-update.php:63
 #: includes/forms/class-user-update.php:83
 msgid "Save Changes"
-msgstr ""
-"Зберегти зміни"
+msgstr "Зберегти зміни"
 
 #: includes/forms/class-user-delete.php:46
 msgid "Please enter your password below to permanently delete your account."
-msgstr ""
-"Будь ласка, введіть свій пароль щоб назавжди видалити свій аккаунт."
+msgstr "Будь ласка, введіть свій пароль щоб назавжди видалити свій аккаунт."
 
 #: includes/forms/class-user-delete.php:59
 #: includes/templates/class-user-edit-settings-page.php:37
 #: templates/user/edit/page/user-delete-link.php:5
 msgid "Delete Account"
-msgstr ""
-"Видалити акаунт"
+msgstr "Видалити акаунт"
 
 #: includes/forms/class-user-login.php:30
 msgid "Login User"
@@ -1340,8 +1189,7 @@ msgstr "Авторизувати користувача"
 #: includes/forms/class-user-login.php:53
 #: includes/forms/class-user-password-request.php:53
 msgid "Username or Email"
-msgstr ""
-"Ім'я користувача або ел. адреса"
+msgstr "Ім'я користувача або ел. адреса"
 
 #: includes/forms/class-user-password-request.php:47
 msgid ""
@@ -1353,84 +1201,68 @@ msgstr ""
 
 #: includes/forms/class-user-password-request.php:48
 msgid "Password reset email has been sent."
-msgstr ""
-"Лист для скидання пароля надіслано."
+msgstr "Лист для скидання пароля надіслано."
 
 #: includes/forms/class-user-password-request.php:62
 msgid "Send Email"
-msgstr ""
-"Відправити лист"
+msgstr "Відправити лист"
 
 #: includes/forms/class-user-password-reset.php:46
 msgid "Please enter a new password below."
-msgstr ""
-"Будь ласка, введіть новий пароль."
+msgstr "Будь ласка, введіть новий пароль."
 
 #: includes/forms/class-user-password-reset.php:52
 #: includes/forms/class-user-update.php:70
 msgid "New Password"
-msgstr ""
-"Новий пароль"
+msgstr "Новий пароль"
 
 #: includes/forms/class-user-register.php:30
 msgid "Register User"
-msgstr ""
-"Зареєструвати користувача"
+msgstr "Зареєструвати користувача"
 
 #: includes/forms/class-user-update.php:75
 msgid "Current Password"
-msgstr ""
-"Поточний пароль"
+msgstr "Поточний пароль"
 
 #: includes/menus/class-user-account.php:37
 msgid "Sign Out"
-msgstr ""
-"Вийти"
+msgstr "Вийти"
 
 #: includes/models/class-listing-category.php:32
 #: includes/models/class-vendor-category.php:32
 #: includes/models/class-vendor.php:32
 msgid "Name"
-msgstr ""
-"Назва"
+msgstr "Назва"
 
 #: includes/models/class-listing.php:32
 msgid "Title"
-msgstr ""
-"Заголовок"
+msgstr "Заголовок"
 
 #: includes/models/class-listing.php:54
 msgctxt "listing"
 msgid "Hidden"
-msgstr ""
-"Прихованe"
-""
+msgstr "Прихованe"
 
 #: includes/models/class-listing.php:55
 msgctxt "listing"
 msgid "Pending"
-msgstr ""
-"На розгляді"
+msgstr "На розгляді"
 
 #: includes/models/class-listing.php:142
 msgid "Images"
-msgstr ""
-"Зображення"
+msgstr "Зображення"
 
 #: includes/models/class-listing.php:143
 msgid "Select Images"
-msgstr ""
-"Вибрати зображення"
+msgstr "Вибрати зображення"
 
 #: includes/models/class-user.php:48
 msgid "Username"
-msgstr ""
-"Ім'я користувача"
+msgstr "Ім'я користувача"
 
 #: includes/models/class-user.php:63
 msgid "Password"
-msgstr ""
-"Пароль"
+msgstr "Пароль"
 
 #: includes/models/class-user.php:70
 msgid "First Name"
@@ -1442,18 +1274,15 @@ msgstr "Прізвище"
 
 #: includes/models/class-user.php:92
 msgid "Profile Info"
-msgstr ""
-"Опис профілю"
+msgstr "Опис профілю"
 
 #: includes/models/class-user.php:100
 msgid "Profile Image"
-msgstr ""
-"Зображення профілю"
+msgstr "Зображення профілю"
 
 #: templates/page/no-results-message.php:6
 msgid "Nothing found"
-msgstr ""
-"Нічого не знайдено"
+msgstr "Нічого не знайдено"
 
 #: templates/page/no-results-message.php:7
 msgid ""
@@ -1465,24 +1294,20 @@ msgstr ""
 
 #: templates/listing/submit/listing-category-change-link.php:7
 msgid "Change Category"
-msgstr ""
-"Змінити категорію"
+msgstr "Змінити категорію"
 
 #: templates/listing/view/listing-created-date.php:5
 #, php-format
 msgid "Added on %s"
-msgstr ""
-"Додано %s"
+msgstr "Додано %s"
 
 #: templates/user/login/user-login-link.php:7
 msgid "My Account"
-msgstr ""
-"Мій аккаунт"
+msgstr "Мій аккаунт"
 
 #: templates/user/login/user-password-request-link.php:5
 msgid "Forgot password?"
-msgstr ""
-"Забули пароль?"
+msgstr "Забули пароль?"
 
 #: templates/user/login/user-register-link.php:5
 msgid "Don't have an account yet?"
@@ -1490,24 +1315,20 @@ msgstr "Ще немає облікового запису?"
 
 #: templates/user/password-reset/user-password-reset-message.php:5
 msgid "Password reset link is expired or invalid."
-msgstr ""
-"Посилання для скидання паролю невірне або термін його дії закінчився."
+msgstr "Посилання для скидання паролю невірне або термін його дії закінчився."
 
 #: templates/user/register/user-login-link.php:5
 msgid "Already have an account?"
-msgstr ""
-"Вже є акаунт?"
+msgstr "Вже є акаунт?"
 
 #: templates/vendor/view/vendor-registered-date.php:5
 #, php-format
 msgid "Member since %s"
-msgstr ""
-"Учасник з %s"
+msgstr "Учасник з %s"
 
 #: templates/listing/edit/block/listing-view-link.php:7
 msgid "View"
-msgstr ""
-"Переглянути"
+msgstr "Переглянути"
 
 #: templates/listing/edit/page/listing-delete-link.php:5
 msgid "Delete"
@@ -1516,15 +1337,12 @@ msgstr "Видалити"
 #. Name of the plugin
 #. Author of the plugin
 msgid "HivePress"
-msgstr ""
-"HivePress"
+msgstr "HivePress"
 
 #. Description of the plugin
 msgid "Multipurpose directory, listing & classifieds plugin."
-msgstr ""
-"Універсальний плагін для каталогів, агрегаторів і класифайдів."
+msgstr "Універсальний плагін для каталогів, агрегаторів і класифайдів."
 
 #. Author URI of the plugin
 msgid "https://hivepress.io/"
-msgstr ""
-"https://hivepress.io/"
+msgstr "https://hivepress.io/"
