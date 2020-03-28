@@ -16,6 +16,7 @@ return [
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
+	'editing'                                   => esc_html__( 'Editing', 'hivepress' ),
 	'submission'                                => esc_html__( 'Submission', 'hivepress' ),
 	'moderation'                                => esc_html__( 'Moderation', 'hivepress' ),
 	'expiration'                                => esc_html__( 'Expiration', 'hivepress' ),

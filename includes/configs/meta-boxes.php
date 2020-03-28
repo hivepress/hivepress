@@ -57,7 +57,7 @@ return [
 	],
 
 	'listing_attribute_edit'    => [
-		'title'  => esc_html__( 'Editing', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'editing' ),
 		'screen' => 'listing_attribute',
 		'model'  => 'listing',
 
@@ -202,7 +202,7 @@ return [
 	],
 
 	'vendor_attribute_edit'     => [
-		'title'  => esc_html__( 'Editing', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'editing' ),
 		'screen' => 'vendor_attribute',
 		'model'  => 'vendor',
 
