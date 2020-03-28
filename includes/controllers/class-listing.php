@@ -707,7 +707,7 @@ final class Listing extends Controller {
 		$listing = hivepress()->request->get_context( 'listing' );
 
 		// Check listing.
-		if ( $listing->get_title() ) {
+		if ( $listing->validate() ) {
 			return true;
 		}
 
