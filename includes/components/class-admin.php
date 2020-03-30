@@ -700,6 +700,19 @@ final class Admin extends Component {
 					 */
 					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
+					// Set default arguments.
+					$args = array_merge(
+						[
+							'title'    => '',
+							'screen'   => '',
+							'context'  => 'normal',
+							'priority' => 'default',
+							'fields'   => [],
+							'blocks'   => [],
+						],
+						$args
+					);
+
 					// Set field aliases.
 					foreach ( $args['fields'] as $field_name => $field ) {
 						if ( ! isset( $field['_alias'] ) ) {
@@ -729,10 +742,10 @@ final class Admin extends Component {
 	 */
 	public function add_meta_boxes( $post_type ) {
 		foreach ( $this->get_meta_boxes( $post_type ) as $name => $args ) {
-			if ( $args['fields'] ) {
+			if ( $args['fields'] || $args['blocks'] ) {
 
 				// Add meta box.
-				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), hp\get_array_value( $args, 'context', 'normal' ), hp\get_array_value( $args, 'priority', 'default' ) );
+				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
 		}
 	}
@@ -807,61 +820,78 @@ final class Admin extends Component {
 
 		if ( $meta_box ) {
 
-			// Render fields.
-			$output .= '<table class="form-table hp-form">';
+			// Render blocks.
+			if ( $meta_box['blocks'] ) {
+				foreach ( hp\sort_array( $meta_box['blocks'] ) as $block_name => $block_args ) {
 
-			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+					// Create block.
+					$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_args['type'], [ array_merge( $block_args, [ 'name' => $block_name ] ) ] );
 
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+					if ( $block ) {
 
-				if ( $field ) {
-
-					// Get field value.
-					$value = '';
-
-					if ( $field->get_arg( '_external' ) ) {
-						$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
-					} else {
-						$value = get_post_field( $field->get_arg( '_alias' ), $post );
-					}
-
-					// Set field value.
-					if ( '' !== $value ) {
-						$field->set_value( $value );
-					}
-
-					if ( 'hidden' === $field->get_display_type() ) {
-
-						// Render field.
-						$output .= $field->render();
-					} else {
-						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
-
-						// Render field label.
-						if ( $field->get_label() ) {
-							$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-							if ( $field->get_statuses() ) {
-								$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-							}
-
-							$output .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div></th>';
-							$output .= '<td>';
-						} else {
-							$output .= '<td colspan="2">';
-						}
-
-						// Render field.
-						$output .= $field->render();
-
-						$output .= '</td>';
-						$output .= '</tr>';
+						// Render block.
+						$output .= $block->render();
 					}
 				}
 			}
 
-			$output .= '</table>';
+			// Render fields.
+			if ( $meta_box['fields'] ) {
+				$output .= '<table class="form-table hp-form">';
+
+				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+
+					if ( $field ) {
+
+						// Get field value.
+						$value = '';
+
+						if ( $field->get_arg( '_external' ) ) {
+							$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+						} else {
+							$value = get_post_field( $field->get_arg( '_alias' ), $post );
+						}
+
+						// Set field value.
+						if ( '' !== $value ) {
+							$field->set_value( $value );
+						}
+
+						if ( 'hidden' === $field->get_display_type() ) {
+
+							// Render field.
+							$output .= $field->render();
+						} else {
+							$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
+
+							// Render field label.
+							if ( $field->get_label() ) {
+								$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+								if ( $field->get_statuses() ) {
+									$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+								}
+
+								$output .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div></th>';
+								$output .= '<td>';
+							} else {
+								$output .= '<td colspan="2">';
+							}
+
+							// Render field.
+							$output .= $field->render();
+
+							$output .= '</td>';
+							$output .= '</tr>';
+						}
+					}
+				}
+
+				$output .= '</table>';
+			}
 		}
 
 		echo $output;
