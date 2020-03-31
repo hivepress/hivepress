@@ -23,6 +23,7 @@
 
 		input[type=email],
 		input[type=text],
+		input[type=url],
 		select {
 			width: 25em;
 		}
@@ -128,7 +129,27 @@
 		}
 	}
 	/*--------------------------------------------------------------
-	Tooltip
+	Notices
+	--------------------------------------------------------------*/
+	&-notice {
+		background: #fff;
+		border-width: 1px;
+		border-style: solid;
+		border-top-color: #ccd0d4;
+		border-right-color: #ccd0d4;
+		border-bottom-color: #ccd0d4;
+		border-left-width: 4px;
+		box-shadow: 0 1px 1px rgba(0,0,0,.04);
+		padding: 1px 12px;
+		max-width: 500px;
+
+		p {
+			margin: 0.5em 0 !important;
+			padding: 2px;
+		}
+	}
+	/*--------------------------------------------------------------
+	Tooltips
 	--------------------------------------------------------------*/
 	&-tooltip {
 		position: relative;
@@ -179,7 +200,7 @@
 	}
 }
 /*--------------------------------------------------------------
-Menu
+Menus
 --------------------------------------------------------------*/
 
 #adminmenu .toplevel_page_hp_settings .wp-menu-image img {
