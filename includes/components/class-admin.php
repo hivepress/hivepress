@@ -1120,7 +1120,7 @@ final class Admin extends Component {
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {
-			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $notice_name ] ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
+			$output .= $this->render_notice( $notice );
 		}
 
 		// Render settings errors.
@@ -1134,6 +1134,49 @@ final class Admin extends Component {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Renders notice.
+	 *
+	 * @param array $args Notice arguments.
+	 * @return string
+	 */
+	public function render_notice( $args ) {
+		$output = '';
+
+		// Set defaults.
+		$args = array_merge(
+			[
+				'type'        => 'info',
+				'name'        => '',
+				'text'        => '',
+				'dismissible' => true,
+			],
+			$args
+		);
+
+		// Set attributes.
+		$attributes = [
+			'class' => [ 'notice', 'notice-' . $args['type'] ],
+		];
+
+		if ( $args['dismissible'] ) {
+			$attributes = hp\merge_arrays(
+				$attributes,
+				[
+					'class'          => [ 'is-dismissible' ],
+					'data-component' => 'notice',
+					'data-name'      => $args['name'],
+					'data-url'       => esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $args['name'] ] ) ),
+				]
+			);
+		}
+
+		// Render notice.
+		$output .= '<div ' . hp\html_attributes( $attributes ) . '><p>' . hp\sanitize_html( $args['text'] ) . '</p></div>';
+
+		return $output;
 	}
 
 	/**
