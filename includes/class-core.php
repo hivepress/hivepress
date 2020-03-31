@@ -198,6 +198,9 @@ final class Core {
 		// Setup extensions.
 		$this->setup_extensions();
 
+		// Include packages.
+		require_once $this->get_path() . '/vendor/autoload.php';
+
 		// Include helpers.
 		require_once $this->get_path() . '/includes/helpers.php';
 
