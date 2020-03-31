@@ -1120,7 +1120,7 @@ final class Admin extends Component {
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {
-			$output .= $this->render_notice( $notice );
+			$output .= $this->render_notice( array_merge( $notice, [ 'name' => $notice_name ] ) );
 		}
 
 		// Render settings errors.
