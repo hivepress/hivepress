@@ -1,5 +1,6 @@
 {
     "require": {
-        "league/oauth2-google": "^3.0"
+        "league/oauth2-google": "^3.0",
+        "woocommerce/action-scheduler": "^3.1"
     }
 }
