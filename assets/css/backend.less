@@ -1,5 +1,57 @@
 .hp {
 	/*--------------------------------------------------------------
+	Tables
+	--------------------------------------------------------------*/
+	&-table {
+		width: 100%;
+		text-align: left;
+		border-collapse: collapse;
+
+		&:not(:last-child) {
+			margin-bottom: 20px;
+		}
+
+		td,
+		th {
+			border: 1px solid rgba(0,0,0,0.1);
+			border-width: 0 0 1px;
+			padding: 8px 12px;
+			vertical-align: top;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&:last-child {
+				padding-right: 0;
+				text-align: right;
+			}
+		}
+
+		thead {
+			td,
+			th {
+				border-width: 0 0 2px;
+			}
+		}
+
+		tbody {
+			tr:last-child {
+				td,
+				th {
+					border-bottom-width: 0;
+				}
+			}
+		}
+
+		tfoot {
+			td,
+			th {
+				border-width: 2px 0 0;
+			}
+		}
+	}
+	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
