@@ -55,7 +55,11 @@ use HivePress\Helpers as hp;
 					</div>
 					<div class="desc column-description">
 						<p><?php echo esc_html( $extension['description'] ); ?></p>
-						<p class="authors"><cite><?php printf( esc_html__( 'By %s' ), '<a href="https://hivepress.io/" target="_blank">HivePress</a>' ); ?></cite></p>
+						<p class="hp-extension__menu">
+							<a href="<?php echo esc_url( $extension['docs_url'] ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'hivepress' ); ?></a>
+							<span>&nbsp;|&nbsp;</span>
+							<a href="<?php echo esc_url( $extension['support_url'] ); ?>" target="_blank"><?php echo esc_html_x( 'Support', 'noun', 'hivepress' ); ?></a>
+						</p>
 					</div>
 				</div>
 				<div class="plugin-card-bottom">

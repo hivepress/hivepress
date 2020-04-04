@@ -485,6 +485,23 @@ final class Admin extends Component {
 				);
 			}
 
+			// Set extension URLs.
+			$extensions = array_map(
+				function( $extension ) {
+					$slug = preg_replace( '/^hivepress-/', '', $extension['slug'] );
+
+					return array_merge(
+						$extension,
+						[
+							'buy_url'     => 'https://hivepress.io/extension/' . $slug,
+							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $slug,
+							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $slug,
+						]
+					);
+				},
+				$extensions
+			);
+
 			// Cache extensions.
 			if ( is_array( $paid_extensions ) && isset( $paid_extensions['data'] ) && ! is_wp_error( $free_extensions ) && count( $extensions ) <= 100 ) {
 				hivepress()->cache->set_cache( 'all_extensions', null, $extensions, DAY_IN_SECONDS );
