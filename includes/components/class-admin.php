@@ -427,13 +427,27 @@ final class Admin extends Component {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 		// Get cached extensions.
-		$extensions = hivepress()->cache->get_cache( 'extensions' );
+		$extensions = hivepress()->cache->get_cache( 'all_extensions' );
 
 		if ( is_null( $extensions ) ) {
 			$extensions = [];
 
-			// Query plugins.
-			$response = plugins_api(
+			// Get paid extensions.
+			$paid_extensions = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get( 'https://store.hivepress.io/api/v1/products?type=extension' )
+				),
+				true
+			);
+
+			if ( is_array( $paid_extensions ) && isset( $paid_extensions['data'] ) ) {
+
+				// Add extensions.
+				$extensions = array_merge( $extensions, $paid_extensions['data'] );
+			}
+
+			// Get free extensions.
+			$free_extensions = plugins_api(
 				'query_plugins',
 				[
 					'author' => 'hivepress',
@@ -444,40 +458,36 @@ final class Admin extends Component {
 				]
 			);
 
-			if ( ! is_wp_error( $response ) ) {
+			if ( ! is_wp_error( $free_extensions ) ) {
 
-				// Filter extensions.
-				$extensions = array_filter(
-					array_map(
-						function( $extension ) {
-							return array_intersect_key(
-								(array) $extension,
-								array_flip(
+				// Add extensions.
+				$extensions = array_merge(
+					$extensions,
+					array_filter(
+						array_map(
+							function( $extension ) {
+								$extension = (array) $extension;
+
+								return array_merge(
+									$extension,
 									[
-										'slug',
-										'name',
-										'version',
-										'status',
-										'url',
-										'icons',
-										'requires',
-										'author',
-										'short_description',
+										'description' => $extension['short_description'],
+										'image_url'   => hp\get_last_array_value( $extension['icons'] ),
 									]
-								)
-							);
-						},
-						$response->plugins
-					),
-					function( $extension ) {
-						return 'hivepress' !== $extension['slug'];
-					}
+								);
+							},
+							$free_extensions->plugins
+						),
+						function( $extension ) {
+							return 'hivepress' !== $extension['slug'];
+						}
+					)
 				);
+			}
 
-				// Cache extensions.
-				if ( count( $extensions ) <= 100 ) {
-					hivepress()->cache->set_cache( 'extensions', null, $extensions, DAY_IN_SECONDS );
-				}
+			// Cache extensions.
+			if ( is_array( $paid_extensions ) && isset( $paid_extensions['data'] ) && ! is_wp_error( $free_extensions ) && count( $extensions ) <= 100 ) {
+				hivepress()->cache->set_cache( 'all_extensions', null, $extensions, DAY_IN_SECONDS );
 			}
 		}
 
@@ -490,16 +500,20 @@ final class Admin extends Component {
 
 			// Set activation status.
 			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
-				$extension_status['status'] = 'activate';
-
-				$extension_status['url'] = admin_url(
-					'plugins.php?' . http_build_query(
-						[
-							'action'   => 'activate',
-							'plugin'   => $extension_path,
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $extension_path ),
-						]
-					)
+				$extension_status = array_merge(
+					$extension_status,
+					[
+						'status' => 'activate',
+						'url'    => admin_url(
+							'plugins.php?' . http_build_query(
+								[
+									'action'   => 'activate',
+									'plugin'   => $extension_path,
+									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $extension_path ),
+								]
+							)
+						),
+					]
 				);
 			}
 
@@ -593,50 +607,6 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
-	}
-
-	/**
-	 * Gets themes.
-	 *
-	 * @return array
-	 */
-	protected function get_themes() {
-
-		// Get cached themes.
-		$themes = hivepress()->cache->get_cache( 'themes' );
-
-		if ( is_null( $themes ) ) {
-			$themes = [];
-
-			// Query themes.
-			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( 'https://hivepress.io/wp-json/hivepress/v1/themes' ) ), true );
-
-			if ( is_array( $response ) && isset( $response['data'] ) ) {
-				$themes = (array) $response['data'];
-			}
-
-			// Cache themes.
-			if ( count( $themes ) <= 100 ) {
-				hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
-			}
-		}
-
-		// Filter themes.
-		$themes = array_map(
-			function( $theme ) {
-				return array_merge(
-					[
-						'name'    => '',
-						'slug'    => '',
-						'version' => '',
-					],
-					(array) $theme
-				);
-			},
-			$themes
-		);
-
-		return $themes;
 	}
 
 	/**
