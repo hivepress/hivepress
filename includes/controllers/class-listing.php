@@ -662,7 +662,7 @@ final class Listing extends Controller {
 			if ( ! $category->get_children__id() ) {
 
 				// Set listing category.
-				wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
+				$listing->set_categories( $category->get_id() )->save_categories();
 
 				return true;
 			}

@@ -134,12 +134,7 @@ final class Listing extends Component {
 			}
 
 			// Set vendor.
-			wp_update_post(
-				[
-					'ID'          => $listing->get_id(),
-					'post_parent' => $vendor->get_id(),
-				]
-			);
+			$listing->set_vendor( $vendor->get_id() )->save_vendor();
 		}
 	}
 
