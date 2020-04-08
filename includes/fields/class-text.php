@@ -55,6 +55,13 @@ class Text extends Field {
 	protected $html = false;
 
 	/**
+	 * Read-only flag.
+	 *
+	 * @var bool
+	 */
+	protected $readonly = false;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -126,6 +133,13 @@ class Text extends Field {
 		// Set regex pattern.
 		if ( ! is_null( $this->pattern ) ) {
 			$attributes['pattern'] = $this->pattern;
+		}
+
+		// Set readonly flag.
+		if ( $this->readonly ) {
+			$attributes['readonly'] = true;
+
+			$attributes['title'] = esc_html__( 'Click to copy', 'hivepress' );
 		}
 
 		// Set disabled flag.
