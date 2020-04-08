@@ -202,9 +202,11 @@ final class Admin extends Component {
 		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
-					$autoload = hp\get_array_value( $field, '_autoload', true ) ? 'yes' : 'no';
+					if ( ! hp\get_array_value( $field, 'readonly' ) ) {
+						$autoload = hp\get_array_value( $field, '_autoload', true ) ? 'yes' : 'no';
 
-					add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
+						add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
+					}
 				}
 			}
 		}
@@ -226,52 +228,56 @@ final class Admin extends Component {
 			}
 
 			foreach ( hp\sort_array( $tab['sections'] ) as $section_name => $section ) {
+				if ( $section['fields'] ) {
 
-				// Add settings section.
-				add_settings_section( $section_name, esc_html( hp\get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
+					// Add settings section.
+					add_settings_section( $section_name, esc_html( hp\get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
 
-				// Register settings.
-				foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field_args ) {
+					// Register settings.
+					foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field_args ) {
 
-					// Get field name.
-					$field_name = hp\prefix( $field_name );
+						// Get field name.
+						$field_name = hp\prefix( $field_name );
 
-					// Create field.
-					$field = hp\create_class_instance(
-						'\HivePress\Fields\\' . $field_args['type'],
-						[
-							array_merge(
-								$field_args,
-								[
-									'name'    => $field_name,
-									'default' => get_option( $field_name ),
-								]
-							),
-						]
-					);
-
-					if ( $field ) {
-
-						// Get field label.
-						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-						if ( $field->get_statuses() ) {
-							$field_label .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-						}
-
-						$field_label .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div>';
-
-						// Add field.
-						add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, $field->get_args() );
-
-						// Register setting.
-						register_setting(
-							'hp_settings',
-							$field_name,
+						// Create field.
+						$field = hp\create_class_instance(
+							'\HivePress\Fields\\' . $field_args['type'],
 							[
-								'sanitize_callback' => [ $this, 'validate_' . hp\unprefix( $field_name ) ],
+								array_merge(
+									$field_args,
+									[
+										'name'    => $field_name,
+										'default' => get_option( $field_name ),
+									]
+								),
 							]
 						);
+
+						if ( $field ) {
+
+							// Get field label.
+							$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+							if ( $field->get_statuses() ) {
+								$field_label .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+							}
+
+							$field_label .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div>';
+
+							// Add field.
+							add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, $field->get_args() );
+
+							// Register setting.
+							if ( 'options.php' !== $pagenow || ! hp\get_array_value( $field_args, 'readonly' ) ) {
+								register_setting(
+									'hp_settings',
+									$field_name,
+									[
+										'sanitize_callback' => [ $this, 'validate_' . hp\unprefix( $field_name ) ],
+									]
+								);
+							}
+						}
 					}
 				}
 			}
@@ -493,7 +499,7 @@ final class Admin extends Component {
 					return array_merge(
 						$extension,
 						[
-							'buy_url'     => 'https://hivepress.io/extension/' . $slug,
+							'buy_url'     => 'https://hivepress.io/extensions/' . $slug,
 							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $slug,
 							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $slug,
 						]
