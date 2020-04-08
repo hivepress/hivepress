@@ -1,6 +1,6 @@
 <?php
 /**
- * Event component.
+ * Scheduler component.
  *
  * @package HivePress\Components
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Event component class.
+ * Scheduler component class.
  *
- * @class Event
+ * @class Scheduler
  */
-final class Event extends Component {
+final class Scheduler extends Component {
 
 	/**
 	 * Class constructor.
@@ -25,6 +25,9 @@ final class Event extends Component {
 	 * @param array $args Component arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Include scheduler.
+		require_once hivepress()->get_path() . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
 		// Schedule events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
