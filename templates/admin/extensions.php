@@ -1,8 +1,6 @@
 <?php
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-use HivePress\Helpers as hp;
 ?>
 <div class="wrap hp-page">
 	<h1 class="hp-page__title"><?php echo esc_html( hivepress()->get_name() ); ?> <span>/</span> <?php esc_html_e( 'Extensions', 'hivepress' ); ?></h1>
@@ -15,7 +13,7 @@ use HivePress\Helpers as hp;
 						<?php echo esc_html( $tab_args['name'] ); ?>
 						<span class="count">(<?php echo esc_html( number_format_i18n( $tab_args['count'] ) ); ?>)</span>
 					</a>
-					<?php if ( hp\get_last_array_value( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
+					<?php if ( hivepress()->helper->get_last_array_value( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -70,7 +68,7 @@ use HivePress\Helpers as hp;
 						?>
 					</div>
 					<div class="column-compatibility">
-						<strong class="hp-extension__price"><?php echo esc_html( hp\get_array_value( $extension, 'price', hivepress()->translator->get_string( 'free' ) ) ); ?></strong>
+						<strong class="hp-extension__price"><?php echo esc_html( hivepress()->helper->get_array_value( $extension, 'price', hivepress()->translator->get_string( 'free' ) ) ); ?></strong>
 					</div>
 				</div>
 			</div>
