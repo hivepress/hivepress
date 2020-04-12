@@ -50,6 +50,9 @@ final class Listing extends Component {
 
 		if ( is_admin() ) {
 
+			// Alter meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
+
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 		} else {
@@ -80,6 +83,17 @@ final class Listing extends Component {
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
 		if ( ! $listing->get_user__id() ) {
+			return;
+		}
+
+		// Check vendor.
+		$vendor = null;
+
+		if ( $listing->get_vendor__id() ) {
+			$vendor = $listing->get_vendor();
+		}
+
+		if ( $vendor && $vendor->get_user__id() === $listing->get_user__id() ) {
 			return;
 		}
 
@@ -134,12 +148,7 @@ final class Listing extends Component {
 			}
 
 			// Set vendor.
-			wp_update_post(
-				[
-					'ID'          => $listing->get_id(),
-					'post_parent' => $vendor->get_id(),
-				]
-			);
+			$listing->set_vendor( $vendor->get_id() )->save_vendor();
 		}
 	}
 
@@ -378,7 +387,7 @@ final class Listing extends Component {
 
 				// Add terms field.
 				$form['fields']['_terms'] = [
-					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'caption'   => sprintf( hivepress()->translator->get_string( 'i_agree_to_terms_and_conditions' ), esc_url( $page_url ) ),
 					'type'      => 'checkbox',
 					'required'  => true,
 					'_separate' => true,
@@ -419,6 +428,20 @@ final class Listing extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Alters settings meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_settings_meta_box( $meta_box ) {
+		if ( isset( $meta_box['fields']['vendor'] ) ) {
+			$meta_box['fields']['vendor']['option_args']['author'] = get_post_field( 'post_author' );
+		}
+
+		return $meta_box;
 	}
 
 	/**
@@ -496,7 +519,7 @@ final class Listing extends Component {
 				$items['listing_edit'] = [
 					'label'  => esc_html__( 'Edit', 'hivepress' ),
 					'url'    => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
-					'_order' => 100,
+					'_order' => 1000,
 				];
 			}
 		}

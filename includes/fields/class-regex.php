@@ -71,6 +71,7 @@ class Regex extends Text {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && @preg_match( '/^' . $this->value . '$/', '' ) === false ) {
+			/* translators: %s: field label. */
 			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 

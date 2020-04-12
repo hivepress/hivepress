@@ -168,7 +168,8 @@ class Vendors extends Block {
 								'status' => 'publish',
 								'id__in' => $vendor_ids,
 							]
-						)->order( 'id__in' )->limit( count( $vendor_ids ) );
+						)->order( 'id__in' )
+						->limit( count( $vendor_ids ) );
 					}
 				}
 

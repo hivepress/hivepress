@@ -55,6 +55,13 @@ class Text extends Field {
 	protected $html = false;
 
 	/**
+	 * Read-only flag.
+	 *
+	 * @var bool
+	 */
+	protected $readonly = false;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -128,6 +135,13 @@ class Text extends Field {
 			$attributes['pattern'] = $this->pattern;
 		}
 
+		// Set readonly flag.
+		if ( $this->readonly ) {
+			$attributes['readonly'] = true;
+
+			$attributes['title'] = esc_html__( 'Click to copy', 'hivepress' );
+		}
+
 		// Set disabled flag.
 		if ( $this->disabled ) {
 			$attributes['disabled'] = true;
@@ -184,14 +198,17 @@ class Text extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && strlen( $this->value ) < $this->min_length ) {
+				/* translators: 1: field label, 2: length. */
 				$this->add_errors( sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && strlen( $this->value ) > $this->max_length ) {
+				/* translators: 1: field label, 2: length. */
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
 			}
 
 			if ( ! is_null( $this->pattern ) && ! preg_match( '/^' . $this->pattern . '$/', $this->value ) ) {
+				/* translators: %s: field label. */
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			}
 		}

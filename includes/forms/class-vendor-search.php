@@ -55,6 +55,10 @@ class Vendor_Search extends Form {
 						'_order'       => 10,
 					],
 
+					'_category' => [
+						'type' => 'hidden',
+					],
+
 					'post_type' => [
 						'type'    => 'hidden',
 						'default' => 'hp_vendor',

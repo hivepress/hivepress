@@ -62,5 +62,11 @@
 
 			e.preventDefault();
 		});
+
+		// Read-only field
+		hivepress.getComponent('form').find('input[readonly], textarea[readonly]').on('click', function() {
+			this.select();
+			document.execCommand('copy');
+		});
 	});
 })(jQuery);

@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php endforeach; ?>
 		</nav>
 	<?php endif; ?>
-	<form method="POST" action="<?php echo esc_url( admin_url( 'options.php?tab=' . $current_tab ) ); ?>" class="hp-form">
+	<form method="POST" action="<?php echo esc_url( admin_url( 'options.php?tab=' . $current_tab ) ); ?>" class="hp-form" data-component="form">
 		<?php
 		do_settings_sections( 'hp_settings' );
 		settings_fields( 'hp_settings' );

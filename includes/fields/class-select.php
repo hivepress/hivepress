@@ -206,6 +206,7 @@ class Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
+			/* translators: %s: field label. */
 			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 		}
 
@@ -220,11 +221,48 @@ class Select extends Field {
 	public function render() {
 		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]' : '' ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 
-		foreach ( $this->options as $value => $label ) {
-			$output .= '<option value="' . esc_attr( $value ) . '" ' . ( in_array( $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
-		}
+		// Render options.
+		$output .= $this->render_options();
 
 		$output .= '</select>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders field options.
+	 *
+	 * @param mixed $current Current value.
+	 * @param int   $level Nesting level.
+	 * @return string
+	 */
+	protected function render_options( $current = null, $level = 0 ) {
+		$output = '';
+
+		// Filter options.
+		$options = array_filter(
+			$this->options,
+			function( $option ) use ( $current ) {
+				$parent = hp\get_array_value( $option, 'parent' );
+
+				return ( is_null( $current ) && is_null( $parent ) ) || ( ! is_null( $current ) && $parent === $current );
+			}
+		);
+
+		// Render options.
+		foreach ( $options as $value => $label ) {
+
+			// Get label.
+			if ( is_array( $label ) ) {
+				$label = hp\get_array_value( $label, 'label' );
+			}
+
+			// Render option.
+			$output .= '<option value="' . esc_attr( $value ) . '" data-level=' . esc_attr( $level ) . ' ' . ( in_array( $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
+
+			// Render child options.
+			$output .= $this->render_options( $value, $level + 1 );
+		}
 
 		return $output;
 	}

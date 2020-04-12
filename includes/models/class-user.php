@@ -113,6 +113,15 @@ class User extends Model {
 	}
 
 	/**
+	 * Gets full name.
+	 *
+	 * @return string
+	 */
+	final public function get_full_name() {
+		return trim( $this->get_first_name() . ' ' . $this->get_last_name() );
+	}
+
+	/**
 	 * Gets image URL.
 	 *
 	 * @param string $size Image size.

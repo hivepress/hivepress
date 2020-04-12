@@ -29,6 +29,9 @@ matrix:
     - php: 5.6
       env: WP_VERSION=trunk
 
+install:
+  - composer install --no-interaction --no-progress
+
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |

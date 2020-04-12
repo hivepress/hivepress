@@ -31,6 +31,7 @@ return [
 	'slick'             => [
 		'handle' => 'slick',
 		'src'    => hivepress()->get_url() . '/assets/css/slick.min.css',
+		'scope'  => 'listing_view_page',
 	],
 
 	'flatpickr'         => [
@@ -42,6 +43,7 @@ return [
 	'select2'           => [
 		'handle' => 'select2',
 		'src'    => hivepress()->get_url() . '/assets/css/select2.min.css',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'jquery_ui'         => [

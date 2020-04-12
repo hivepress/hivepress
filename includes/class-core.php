@@ -204,6 +204,9 @@ final class Core {
 		// Load textdomains.
 		$this->load_textdomains();
 
+		// Load packages.
+		$this->load_packages();
+
 		// Initialize components.
 		$this->get_components();
 	}
@@ -272,6 +275,19 @@ final class Core {
 			$textdomain = hp\sanitize_slug( $dirname );
 
 			load_plugin_textdomain( $textdomain, false, $dirname . '/languages' );
+		}
+	}
+
+	/**
+	 * Loads packages.
+	 */
+	protected function load_packages() {
+		foreach ( $this->get_paths() as $dir ) {
+			$filepath = $dir . '/vendor/autoload.php';
+
+			if ( file_exists( $filepath ) ) {
+				require_once $filepath;
+			}
 		}
 	}
 

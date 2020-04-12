@@ -214,7 +214,8 @@ class Listings extends Block {
 								'status' => 'publish',
 								'id__in' => $listing_ids,
 							]
-						)->order( 'id__in' )->limit( count( $listing_ids ) );
+						)->order( 'id__in' )
+						->limit( count( $listing_ids ) );
 					}
 				}
 

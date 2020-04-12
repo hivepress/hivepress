@@ -92,6 +92,17 @@ class Textarea extends Text {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return apply_filters( 'the_content', make_clickable( $this->value ) );
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {

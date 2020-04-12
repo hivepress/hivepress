@@ -37,6 +37,12 @@ final class Vendor extends Component {
 		// Update vendor fields.
 		add_filter( 'hivepress/v1/forms/user_update/errors', [ $this, 'update_vendor_fields' ], 100, 2 );
 
+		// Alter post types.
+		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
+
+		// Alter templates.
+		add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -57,10 +63,23 @@ final class Vendor extends Component {
 		// Get user.
 		$user = Models\User::query()->get_by_id( $user_id );
 
+		// Get name.
+		$name = $user->get_display_name();
+
+		$name_attribute_id = get_option( 'hp_vendor_display_name' );
+
+		if ( $name_attribute_id ) {
+			$name_attribute = hivepress()->attribute->get_attribute_name( get_post_field( 'post_name', $name_attribute_id ) );
+
+			if ( $name_attribute ) {
+				$name = hp\get_array_value( $vendor->serialize(), $name_attribute, $name );
+			}
+		}
+
 		// Update vendor.
 		$vendor->fill(
 			[
-				'name'        => $user->get_display_name(),
+				'name'        => $name,
 				'description' => $user->get_description(),
 				'slug'        => $user->get_username(),
 				'image'       => $user->get_image__id(),
@@ -158,5 +177,42 @@ final class Vendor extends Component {
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Alters post types.
+	 *
+	 * @param array $post_types Post type arguments.
+	 * @return array
+	 */
+	public function alter_post_types( $post_types ) {
+		if ( isset( $post_types['vendor'] ) ) {
+			$post_types['vendor']['public'] = (bool) get_option( 'hp_vendor_enable_display' );
+		}
+
+		return $post_types;
+	}
+
+	/**
+	 * Alters listing view page.
+	 *
+	 * @param array $template Template arguments.
+	 * @return array
+	 */
+	public function alter_listing_view_page( $template ) {
+		if ( ! get_option( 'hp_vendor_enable_display' ) ) {
+			$template = hp\merge_trees(
+				$template,
+				[
+					'blocks' => [
+						'listing_vendor' => [
+							'type' => 'content',
+						],
+					],
+				]
+			);
+		}
+
+		return $template;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Event component.
+ * Scheduler component.
  *
  * @package HivePress\Components
  */
@@ -13,11 +13,11 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Event component class.
+ * Scheduler component class.
  *
- * @class Event
+ * @class Scheduler
  */
-final class Event extends Component {
+final class Scheduler extends Component {
 
 	/**
 	 * Class constructor.

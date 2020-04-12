@@ -4,6 +4,6 @@ defined( 'ABSPATH' ) || exit;
 
 if ( $vendor->get_description() ) :
 	?>
-	<div class="hp-vendor__description"><?php the_content(); ?></div>
+	<div class="hp-vendor__description"><?php echo $vendor->display_description(); ?></div>
 	<?php
 endif;

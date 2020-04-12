@@ -173,7 +173,8 @@ class Listing_Categories extends Block {
 				[
 					'id__in' => $listing_category_ids,
 				]
-			)->order( 'id__in' )->limit( count( $listing_category_ids ) );
+			)->order( 'id__in' )
+			->limit( count( $listing_category_ids ) );
 		}
 
 		// Query categories.

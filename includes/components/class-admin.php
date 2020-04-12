@@ -202,9 +202,11 @@ final class Admin extends Component {
 		foreach ( hivepress()->get_config( 'settings' ) as $tab ) {
 			foreach ( $tab['sections'] as $section ) {
 				foreach ( $section['fields'] as $field_name => $field ) {
-					$autoload = hp\get_array_value( $field, '_autoload', true ) ? 'yes' : 'no';
+					if ( ! hp\get_array_value( $field, 'readonly' ) ) {
+						$autoload = hp\get_array_value( $field, '_autoload', true ) ? 'yes' : 'no';
 
-					add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
+						add_option( hp\prefix( $field_name ), hp\get_array_value( $field, 'default', '' ), '', $autoload );
+					}
 				}
 			}
 		}
@@ -226,52 +228,56 @@ final class Admin extends Component {
 			}
 
 			foreach ( hp\sort_array( $tab['sections'] ) as $section_name => $section ) {
+				if ( $section['fields'] ) {
 
-				// Add settings section.
-				add_settings_section( $section_name, esc_html( hp\get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
+					// Add settings section.
+					add_settings_section( $section_name, esc_html( hp\get_array_value( $section, 'title' ) ), [ $this, 'render_settings_section' ], 'hp_settings' );
 
-				// Register settings.
-				foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field_args ) {
+					// Register settings.
+					foreach ( hp\sort_array( $section['fields'] ) as $field_name => $field_args ) {
 
-					// Get field name.
-					$field_name = hp\prefix( $field_name );
+						// Get field name.
+						$field_name = hp\prefix( $field_name );
 
-					// Create field.
-					$field = hp\create_class_instance(
-						'\HivePress\Fields\\' . $field_args['type'],
-						[
-							array_merge(
-								$field_args,
-								[
-									'name'    => $field_name,
-									'default' => get_option( $field_name ),
-								]
-							),
-						]
-					);
-
-					if ( $field ) {
-
-						// Get field label.
-						$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-						if ( $field->get_statuses() ) {
-							$field_label .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-						}
-
-						$field_label .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div>';
-
-						// Add field.
-						add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, $field->get_args() );
-
-						// Register setting.
-						register_setting(
-							'hp_settings',
-							$field_name,
+						// Create field.
+						$field = hp\create_class_instance(
+							'\HivePress\Fields\\' . $field_args['type'],
 							[
-								'sanitize_callback' => [ $this, 'validate_' . hp\unprefix( $field_name ) ],
+								array_merge(
+									$field_args,
+									[
+										'name'    => $field_name,
+										'default' => get_option( $field_name, hp\get_array_value( $field_args, 'default' ) ),
+									]
+								),
 							]
 						);
+
+						if ( $field ) {
+
+							// Get field label.
+							$field_label = '<div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+							if ( $field->get_statuses() ) {
+								$field_label .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+							}
+
+							$field_label .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div>';
+
+							// Add field.
+							add_settings_field( $field_name, $field_label, [ $this, 'render_settings_field' ], 'hp_settings', $section_name, $field->get_args() );
+
+							// Register setting.
+							if ( 'options.php' !== $pagenow || ! hp\get_array_value( $field_args, 'readonly' ) ) {
+								register_setting(
+									'hp_settings',
+									$field_name,
+									[
+										'sanitize_callback' => [ $this, 'validate_' . hp\unprefix( $field_name ) ],
+									]
+								);
+							}
+						}
 					}
 				}
 			}
@@ -427,13 +433,27 @@ final class Admin extends Component {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 		// Get cached extensions.
-		$extensions = hivepress()->cache->get_cache( 'extensions' );
+		$extensions = hivepress()->cache->get_cache( 'all_extensions' );
 
 		if ( is_null( $extensions ) ) {
 			$extensions = [];
 
-			// Query plugins.
-			$response = plugins_api(
+			// Get paid extensions.
+			$paid_extensions = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get( 'https://store.hivepress.io/api/v1/products?type=extension' )
+				),
+				true
+			);
+
+			if ( is_array( $paid_extensions ) && isset( $paid_extensions['data'] ) ) {
+
+				// Add extensions.
+				$extensions = array_merge( $extensions, $paid_extensions['data'] );
+			}
+
+			// Get free extensions.
+			$free_extensions = plugins_api(
 				'query_plugins',
 				[
 					'author' => 'hivepress',
@@ -444,40 +464,53 @@ final class Admin extends Component {
 				]
 			);
 
-			if ( ! is_wp_error( $response ) ) {
+			if ( ! is_wp_error( $free_extensions ) ) {
 
-				// Filter extensions.
-				$extensions = array_filter(
-					array_map(
-						function( $extension ) {
-							return array_intersect_key(
-								(array) $extension,
-								array_flip(
+				// Add extensions.
+				$extensions = array_merge(
+					$extensions,
+					array_filter(
+						array_map(
+							function( $extension ) {
+								$extension = (array) $extension;
+
+								return array_merge(
+									$extension,
 									[
-										'slug',
-										'name',
-										'version',
-										'status',
-										'url',
-										'icons',
-										'requires',
-										'author',
-										'short_description',
+										'description' => $extension['short_description'],
+										'image_url'   => hp\get_last_array_value( $extension['icons'] ),
 									]
-								)
-							);
-						},
-						$response->plugins
-					),
-					function( $extension ) {
-						return 'hivepress' !== $extension['slug'];
-					}
+								);
+							},
+							$free_extensions->plugins
+						),
+						function( $extension ) {
+							return 'hivepress' !== $extension['slug'];
+						}
+					)
 				);
+			}
 
-				// Cache extensions.
-				if ( count( $extensions ) <= 100 ) {
-					hivepress()->cache->set_cache( 'extensions', null, $extensions, DAY_IN_SECONDS );
-				}
+			// Set extension URLs.
+			$extensions = array_map(
+				function( $extension ) {
+					$slug = preg_replace( '/^hivepress-/', '', $extension['slug'] );
+
+					return array_merge(
+						$extension,
+						[
+							'buy_url'     => 'https://hivepress.io/extensions/' . $slug,
+							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $slug,
+							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $slug,
+						]
+					);
+				},
+				$extensions
+			);
+
+			// Cache extensions.
+			if ( is_array( $paid_extensions ) && isset( $paid_extensions['data'] ) && ! is_wp_error( $free_extensions ) && count( $extensions ) <= 100 ) {
+				hivepress()->cache->set_cache( 'all_extensions', null, $extensions, DAY_IN_SECONDS );
 			}
 		}
 
@@ -490,16 +523,20 @@ final class Admin extends Component {
 
 			// Set activation status.
 			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
-				$extension_status['status'] = 'activate';
-
-				$extension_status['url'] = admin_url(
-					'plugins.php?' . http_build_query(
-						[
-							'action'   => 'activate',
-							'plugin'   => $extension_path,
-							'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $extension_path ),
-						]
-					)
+				$extension_status = array_merge(
+					$extension_status,
+					[
+						'status' => 'activate',
+						'url'    => admin_url(
+							'plugins.php?' . http_build_query(
+								[
+									'action'   => 'activate',
+									'plugin'   => $extension_path,
+									'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $extension_path ),
+								]
+							)
+						),
+					]
 				);
 			}
 
@@ -596,50 +633,6 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets themes.
-	 *
-	 * @return array
-	 */
-	protected function get_themes() {
-
-		// Get cached themes.
-		$themes = hivepress()->cache->get_cache( 'themes' );
-
-		if ( is_null( $themes ) ) {
-			$themes = [];
-
-			// Query themes.
-			$response = json_decode( wp_remote_retrieve_body( wp_remote_get( 'https://hivepress.io/wp-json/hivepress/v1/themes' ) ), true );
-
-			if ( is_array( $response ) && isset( $response['data'] ) ) {
-				$themes = (array) $response['data'];
-			}
-
-			// Cache themes.
-			if ( count( $themes ) <= 100 ) {
-				hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
-			}
-		}
-
-		// Filter themes.
-		$themes = array_map(
-			function( $theme ) {
-				return array_merge(
-					[
-						'name'    => '',
-						'slug'    => '',
-						'version' => '',
-					],
-					(array) $theme
-				);
-			},
-			$themes
-		);
-
-		return $themes;
-	}
-
-	/**
 	 * Registers post states.
 	 */
 	public function register_post_states() {
@@ -700,6 +693,19 @@ final class Admin extends Component {
 					 */
 					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
+					// Set default arguments.
+					$args = array_merge(
+						[
+							'title'    => '',
+							'screen'   => '',
+							'context'  => 'normal',
+							'priority' => 'default',
+							'fields'   => [],
+							'blocks'   => [],
+						],
+						$args
+					);
+
 					// Set field aliases.
 					foreach ( $args['fields'] as $field_name => $field ) {
 						if ( ! isset( $field['_alias'] ) ) {
@@ -729,10 +735,10 @@ final class Admin extends Component {
 	 */
 	public function add_meta_boxes( $post_type ) {
 		foreach ( $this->get_meta_boxes( $post_type ) as $name => $args ) {
-			if ( $args['fields'] ) {
+			if ( $args['fields'] || $args['blocks'] ) {
 
 				// Add meta box.
-				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), hp\get_array_value( $args, 'context', 'normal' ), hp\get_array_value( $args, 'priority', 'default' ) );
+				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
 		}
 	}
@@ -807,61 +813,78 @@ final class Admin extends Component {
 
 		if ( $meta_box ) {
 
-			// Render fields.
-			$output .= '<table class="form-table hp-form">';
+			// Render blocks.
+			if ( $meta_box['blocks'] ) {
+				foreach ( hp\sort_array( $meta_box['blocks'] ) as $block_name => $block_args ) {
 
-			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+					// Create block.
+					$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_args['type'], [ array_merge( $block_args, [ 'name' => $block_name ] ) ] );
 
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+					if ( $block ) {
 
-				if ( $field ) {
-
-					// Get field value.
-					$value = '';
-
-					if ( $field->get_arg( '_external' ) ) {
-						$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
-					} else {
-						$value = get_post_field( $field->get_arg( '_alias' ), $post );
-					}
-
-					// Set field value.
-					if ( '' !== $value ) {
-						$field->set_value( $value );
-					}
-
-					if ( 'hidden' === $field->get_display_type() ) {
-
-						// Render field.
-						$output .= $field->render();
-					} else {
-						$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
-
-						// Render field label.
-						if ( $field->get_label() ) {
-							$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
-
-							if ( $field->get_statuses() ) {
-								$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
-							}
-
-							$output .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div></th>';
-							$output .= '<td>';
-						} else {
-							$output .= '<td colspan="2">';
-						}
-
-						// Render field.
-						$output .= $field->render();
-
-						$output .= '</td>';
-						$output .= '</tr>';
+						// Render block.
+						$output .= $block->render();
 					}
 				}
 			}
 
-			$output .= '</table>';
+			// Render fields.
+			if ( $meta_box['fields'] ) {
+				$output .= '<table class="form-table hp-form">';
+
+				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+
+					// Create field.
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+
+					if ( $field ) {
+
+						// Get field value.
+						$value = '';
+
+						if ( $field->get_arg( '_external' ) ) {
+							$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+						} else {
+							$value = get_post_field( $field->get_arg( '_alias' ), $post );
+						}
+
+						// Set field value.
+						if ( '' !== $value ) {
+							$field->set_value( $value );
+						}
+
+						if ( 'hidden' === $field->get_display_type() ) {
+
+							// Render field.
+							$output .= $field->render();
+						} else {
+							$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
+
+							// Render field label.
+							if ( $field->get_label() ) {
+								$output .= '<th scope="row"><div><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+								if ( $field->get_statuses() ) {
+									$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+								}
+
+								$output .= '</label>' . $this->render_tooltip( $field->get_description() ) . '</div></th>';
+								$output .= '<td>';
+							} else {
+								$output .= '<td colspan="2">';
+							}
+
+							// Render field.
+							$output .= $field->render();
+
+							$output .= '</td>';
+							$output .= '</tr>';
+						}
+					}
+				}
+
+				$output .= '</table>';
+			}
 		}
 
 		echo $output;
@@ -1071,8 +1094,10 @@ final class Admin extends Component {
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
-				'type' => 'warning',
-				'text' => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="' . esc_url( admin_url( 'theme-install.php?search=listinghive' ) ) . '">ListingHive</a>' ),
+				'type'        => 'warning',
+				/* translators: %s: theme name. */
+				'text'        => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="' . esc_url( admin_url( 'theme-install.php?search=listinghive' ) ) . '">ListingHive</a>' ),
+				'dismissible' => true,
 			];
 		}
 
@@ -1090,7 +1115,7 @@ final class Admin extends Component {
 
 		// Render notices.
 		foreach ( $notices as $notice_name => $notice ) {
-			$output .= '<div class="notice notice-' . esc_attr( $notice['type'] ) . ' is-dismissible" data-component="notice" data-name="' . esc_attr( $notice_name ) . '" data-url="' . esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $notice_name ] ) ) . '"><p>' . hp\sanitize_html( $notice['text'] ) . '</p></div>';
+			$output .= $this->render_notice( array_merge( $notice, [ 'name' => $notice_name ] ) );
 		}
 
 		// Render settings errors.
@@ -1104,6 +1129,66 @@ final class Admin extends Component {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Renders notice.
+	 *
+	 * @param array $args Notice arguments.
+	 * @return string
+	 */
+	public function render_notice( $args ) {
+		$output = '';
+
+		// Set defaults.
+		$args = array_merge(
+			[
+				'type'        => 'info',
+				'name'        => '',
+				'text'        => '',
+				'dismissible' => false,
+				'inline'      => false,
+			],
+			$args
+		);
+
+		// Set attributes.
+		$attributes = [
+			'class' => [ 'notice-' . $args['type'] ],
+		];
+
+		if ( $args['inline'] ) {
+			$attributes = hp\merge_arrays(
+				$attributes,
+				[
+					'class' => [ 'hp-notice' ],
+				]
+			);
+		} else {
+			$attributes = hp\merge_arrays(
+				$attributes,
+				[
+					'class' => [ 'notice' ],
+				]
+			);
+		}
+
+		if ( $args['dismissible'] ) {
+			$attributes = hp\merge_arrays(
+				$attributes,
+				[
+					'class'          => [ 'is-dismissible' ],
+					'data-component' => 'notice',
+					'data-name'      => $args['name'],
+					'data-url'       => esc_url( hivepress()->router->get_url( 'admin_notice_update_action', [ 'notice_name' => $args['name'] ] ) ),
+				]
+			);
+		}
+
+		// Render notice.
+		$output .= '<div ' . hp\html_attributes( $attributes ) . '><p>' . hp\sanitize_html( $args['text'] ) . '</p></div>';
+
+		return $output;
 	}
 
 	/**

@@ -142,6 +142,7 @@ class Attachment_Upload extends Field {
 			)->get_ids();
 
 			if ( count( $attachment_ids ) !== count( (array) $this->value ) ) {
+				/* translators: %s: field label. */
 				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
 			}
 		}

@@ -143,6 +143,9 @@ abstract class Email {
 
 		// Replace tokens.
 		$this->body = hp\replace_tokens( $this->tokens, $this->body );
+
+		// Convert URLs.
+		$this->body = make_clickable( $this->body );
 	}
 
 	/**

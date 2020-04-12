@@ -91,12 +91,32 @@ final class User extends Component {
 		// Get user.
 		$user = Models\User::query()->get_by_id( $user_id );
 
-		// Update user.
-		$user->fill(
-			[
-				'display_name' => $user->get_first_name() ? $user->get_first_name() : $user->get_username(),
-			]
-		)->save_display_name();
+		// Get display name.
+		$display_name = null;
+
+		switch ( get_option( 'hp_user_display_name' ) ) {
+			case 'first_name':
+				$display_name = $user->get_first_name();
+
+				break;
+
+			case 'last_name':
+				$display_name = $user->get_last_name();
+
+				break;
+
+			case 'full_name':
+				$display_name = $user->get_full_name();
+
+				break;
+		}
+
+		if ( ! $display_name ) {
+			$display_name = $user->get_username();
+		}
+
+		// Update display name.
+		$user->set_display_name( $display_name )->save_display_name();
 	}
 
 	/**
@@ -119,7 +139,7 @@ final class User extends Component {
 
 				// Add terms field.
 				$form['fields']['_terms'] = [
-					'caption'   => sprintf( hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ), esc_url( $page_url ) ),
+					'caption'   => sprintf( hivepress()->translator->get_string( 'i_agree_to_terms_and_conditions' ), esc_url( $page_url ) ),
 					'type'      => 'checkbox',
 					'required'  => true,
 					'_separate' => true,

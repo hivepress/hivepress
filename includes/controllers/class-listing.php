@@ -95,9 +95,10 @@ final class Listing extends Controller {
 					],
 
 					'listing_view_page'            => [
-						'url'    => [ $this, 'get_listing_view_url' ],
-						'match'  => [ $this, 'is_listing_view_page' ],
-						'action' => [ $this, 'render_listing_view_page' ],
+						'url'      => [ $this, 'get_listing_view_url' ],
+						'match'    => [ $this, 'is_listing_view_page' ],
+						'redirect' => [ $this, 'redirect_listing_view_page' ],
+						'action'   => [ $this, 'render_listing_view_page' ],
 					],
 
 					'listings_edit_page'           => [
@@ -112,8 +113,8 @@ final class Listing extends Controller {
 					'listing_edit_page'            => [
 						'base'     => 'listings_edit_page',
 						'path'     => '/(?P<listing_id>\d+)',
-						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'title'    => [ $this, 'get_listing_edit_title' ],
+						'redirect' => [ $this, 'redirect_listing_edit_page' ],
 						'action'   => [ $this, 'render_listing_edit_page' ],
 					],
 
@@ -136,7 +137,7 @@ final class Listing extends Controller {
 					],
 
 					'listing_submit_details_page'  => [
-						'title'    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'add_details_imperative' ),
 						'base'     => 'listing_submit_page',
 						'path'     => '/details',
 						'redirect' => [ $this, 'redirect_listing_submit_details_page' ],
@@ -432,23 +433,43 @@ final class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listing view page.
+	 * Redirects listing view page.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function render_listing_view_page() {
+	public function redirect_listing_view_page() {
 		the_post();
 
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( get_post() );
 
-		// Render template.
+		// Get vendor.
+		$vendor = $listing->get_vendor();
+
+		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
+			return true;
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		return false;
+	}
+
+	/**
+	 * Renders listing view page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_view_page() {
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_view_page',
 
 				'context'  => [
-					'listing' => $listing,
+					'listing' => hivepress()->request->get_context( 'listing' ),
+					'vendor'  => hivepress()->request->get_context( 'vendor' ),
 				],
 			]
 		) )->render();
@@ -589,6 +610,11 @@ final class Listing extends Controller {
 	 */
 	public function redirect_listing_submit_page() {
 
+		// Check permissions.
+		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
+			return home_url( '/' );
+		}
+
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hivepress()->router->get_url(
@@ -597,11 +623,6 @@ final class Listing extends Controller {
 					'redirect' => hivepress()->router->get_current_url(),
 				]
 			);
-		}
-
-		// Check permissions.
-		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
-			return home_url( '/' );
 		}
 
 		// Get listing.
@@ -616,23 +637,17 @@ final class Listing extends Controller {
 		if ( empty( $listing ) ) {
 
 			// Add listing.
-			$listing_id = wp_insert_post(
+			$listing = ( new Models\Listing() )->fill(
 				[
-					'post_type'   => 'hp_listing',
-					'post_status' => 'auto-draft',
-					'post_author' => get_current_user_id(),
+					'status'  => 'auto-draft',
+					'drafted' => true,
+					'user'    => get_current_user_id(),
 				]
 			);
 
-			if ( ! $listing_id ) {
+			if ( ! $listing->save( [ 'status', 'drafted', 'user' ] ) ) {
 				return home_url( '/' );
 			}
-
-			// Set draft flag.
-			update_post_meta( $listing_id, 'hp_drafted', '1' );
-
-			// Get listing.
-			$listing = Models\Listing::query()->get_by_id( $listing_id );
 		}
 
 		// Set request context.
@@ -668,7 +683,7 @@ final class Listing extends Controller {
 			if ( ! $category->get_children__id() ) {
 
 				// Set listing category.
-				wp_set_post_terms( $listing->get_id(), [ $category->get_id() ], 'hp_listing_category' );
+				$listing->set_categories( $category->get_id() )->save_categories();
 
 				return true;
 			}
@@ -713,7 +728,7 @@ final class Listing extends Controller {
 		$listing = hivepress()->request->get_context( 'listing' );
 
 		// Check listing.
-		if ( $listing->get_title() ) {
+		if ( $listing->validate() ) {
 			return true;
 		}
 
