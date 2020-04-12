@@ -26,9 +26,6 @@ final class Scheduler extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Include scheduler.
-		require_once hivepress()->get_path() . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
-
 		// Schedule events.
 		add_action( 'hivepress/v1/activate', [ $this, 'schedule_events' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'schedule_events' ] );

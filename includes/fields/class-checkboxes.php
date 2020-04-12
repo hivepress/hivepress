@@ -82,9 +82,10 @@ class Checkboxes extends Select {
 	 * Renders field options.
 	 *
 	 * @param mixed $current Current value.
+	 * @param int   $level Nesting level.
 	 * @return string
 	 */
-	protected function render_options( $current = null ) {
+	protected function render_options( $current = null, $level = 0 ) {
 		$output = '';
 
 		// Filter options.
@@ -127,7 +128,7 @@ class Checkboxes extends Select {
 				) )->render();
 
 				// Render child options.
-				$output .= $this->render_options( $value );
+				$output .= $this->render_options( $value, $level + 1 );
 
 				$output .= '</li>';
 			}

@@ -82,9 +82,10 @@ class Radio extends Select {
 	 * Renders field options.
 	 *
 	 * @param mixed $current Current value.
+	 * @param int   $level Nesting level.
 	 * @return string
 	 */
-	protected function render_options( $current = null ) {
+	protected function render_options( $current = null, $level = 0 ) {
 		$output = '';
 
 		// Filter options.
@@ -116,7 +117,7 @@ class Radio extends Select {
 				$output .= '<label for="' . esc_attr( $id ) . '"><input type="radio" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
 
 				// Render child options.
-				$output .= $this->render_options( $value );
+				$output .= $this->render_options( $value, $level + 1 );
 
 				$output .= '</li>';
 			}
