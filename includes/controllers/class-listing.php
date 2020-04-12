@@ -95,9 +95,10 @@ final class Listing extends Controller {
 					],
 
 					'listing_view_page'            => [
-						'url'    => [ $this, 'get_listing_view_url' ],
-						'match'  => [ $this, 'is_listing_view_page' ],
-						'action' => [ $this, 'render_listing_view_page' ],
+						'url'      => [ $this, 'get_listing_view_url' ],
+						'match'    => [ $this, 'is_listing_view_page' ],
+						'redirect' => [ $this, 'redirect_listing_view_page' ],
+						'action'   => [ $this, 'render_listing_view_page' ],
 					],
 
 					'listings_edit_page'           => [
@@ -432,24 +433,43 @@ final class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listing view page.
+	 * Redirects listing view page.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function render_listing_view_page() {
+	public function redirect_listing_view_page() {
 		the_post();
 
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( get_post() );
 
-		// Render template.
+		// Get vendor.
+		$vendor = $listing->get_vendor();
+
+		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
+			return true;
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing', $listing );
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		return false;
+	}
+
+	/**
+	 * Renders listing view page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_view_page() {
 		return ( new Blocks\Template(
 			[
 				'template' => 'listing_view_page',
 
 				'context'  => [
-					'listing' => $listing,
-					'vendor'  => $listing->get_vendor(),
+					'listing' => hivepress()->request->get_context( 'listing' ),
+					'vendor'  => hivepress()->request->get_context( 'vendor' ),
 				],
 			]
 		) )->render();
