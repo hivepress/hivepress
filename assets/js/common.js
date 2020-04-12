@@ -38,6 +38,17 @@ var hivepress = {
 					width: '100%',
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
+					templateResult: function(state) {
+						var template = state.text,
+							level = 0;
+
+						if (state.element) {
+							level = parseInt($(state.element).data('level'));
+							template = $('<div />').css('padding-left', 20 * level + 'px').text(template);
+						}
+
+						return template;
+					},
 				};
 
 			if (field.data('style') === 'inline') {
