@@ -50,6 +50,9 @@ final class Listing extends Component {
 
 		if ( is_admin() ) {
 
+			// Alter meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
+
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 		} else {
@@ -414,6 +417,20 @@ final class Listing extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Alters settings meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_settings_meta_box( $meta_box ) {
+		if ( isset( $meta_box['fields']['vendor'] ) ) {
+			$meta_box['fields']['vendor']['option_args']['author'] = get_post_field( 'post_author' );
+		}
+
+		return $meta_box;
 	}
 
 	/**

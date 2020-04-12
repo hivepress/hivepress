@@ -17,18 +17,28 @@ return [
 		'model'  => 'listing',
 
 		'fields' => [
+			'vendor'        => [
+				'label'       => hivepress()->translator->get_string( 'vendor' ),
+				'type'        => 'select',
+				'options'     => 'posts',
+				'option_args' => [ 'post_type' => 'hp_vendor' ],
+				'required'    => true,
+				'_alias'      => 'post_parent',
+				'_order'      => 10,
+			],
+
 			'verified'      => [
 				'label'   => esc_html_x( 'Verified', 'listing', 'hivepress' ),
 				'caption' => hivepress()->translator->get_string( 'mark_listing_as_verified' ),
 				'type'    => 'checkbox',
-				'_order'  => 10,
+				'_order'  => 20,
 			],
 
 			'featured'      => [
 				'label'   => esc_html_x( 'Featured', 'listing', 'hivepress' ),
 				'caption' => hivepress()->translator->get_string( 'make_listing_featured' ),
 				'type'    => 'checkbox',
-				'_order'  => 20,
+				'_order'  => 30,
 			],
 
 			'featured_time' => [
@@ -36,7 +46,7 @@ return [
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_not_featured' ),
 				'type'        => 'date',
 				'format'      => 'U',
-				'_order'      => 30,
+				'_order'      => 40,
 			],
 
 			'expired_time'  => [
@@ -44,7 +54,7 @@ return [
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_expired' ),
 				'type'        => 'date',
 				'format'      => 'U',
-				'_order'      => 40,
+				'_order'      => 50,
 			],
 		],
 	],
