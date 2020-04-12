@@ -173,7 +173,7 @@ return [
 				'_order' => 10,
 
 				'fields' => [
-					'page_vendors'     => [
+					'page_vendors'        => [
 						'label'       => hivepress()->translator->get_string( 'vendors_page' ),
 						'description' => hivepress()->translator->get_string( 'choose_page_that_displays_all_vendors' ),
 						'type'        => 'select',
@@ -182,13 +182,27 @@ return [
 						'_order'      => 10,
 					],
 
-					'vendors_per_page' => [
+					'vendors_per_page'    => [
 						'label'     => hivepress()->translator->get_string( 'regular_vendors_per_page' ),
 						'type'      => 'number',
 						'default'   => 10,
 						'min_value' => 1,
 						'required'  => true,
 						'_order'    => 20,
+					],
+
+					'vendor_display_name' => [
+						'label'       => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
+						'placeholder' => esc_html__( 'User Name', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'posts',
+						'_order'      => 30,
+
+						'option_args' => [
+							'post_type'  => 'hp_vendor_attribute',
+							'meta_key'   => 'hp_edit_field_type',
+							'meta_value' => 'text',
+						],
 					],
 				],
 			],
@@ -200,9 +214,30 @@ return [
 		'_order'   => 100,
 
 		'sections' => [
+			'display'      => [
+				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'_order' => 10,
+
+				'fields' => [
+					'user_display_name' => [
+						'label'       => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
+						'placeholder' => esc_html__( 'Username', 'hivepress' ),
+						'type'        => 'select',
+						'default'     => 'first_name',
+						'_order'      => 10,
+
+						'options'     => [
+							'first_name' => esc_html__( 'First Name', 'hivepress' ),
+							'last_name'  => esc_html__( 'Last Name', 'hivepress' ),
+							'full_name'  => esc_html__( 'Full Name', 'hivepress' ),
+						],
+					],
+				],
+			],
+
 			'registration' => [
 				'title'  => esc_html__( 'Registration', 'hivepress' ),
-				'_order' => 10,
+				'_order' => 20,
 
 				'fields' => [
 					'page_user_registration_terms' => [

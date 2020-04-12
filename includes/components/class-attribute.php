@@ -121,7 +121,7 @@ final class Attribute extends Component {
 	 * @param string $prefix Attribute prefix.
 	 * @return string
 	 */
-	protected function get_attribute_name( $slug, $prefix = '' ) {
+	public function get_attribute_name( $slug, $prefix = '' ) {
 		if ( $prefix ) {
 			$prefix .= '_';
 		}
