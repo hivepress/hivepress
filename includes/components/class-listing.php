@@ -86,6 +86,17 @@ final class Listing extends Component {
 			return;
 		}
 
+		// Check vendor.
+		$vendor = null;
+
+		if ( $listing->get_vendor__id() ) {
+			$vendor = $listing->get_vendor();
+		}
+
+		if ( $vendor && $vendor->get_user__id() === $listing->get_user__id() ) {
+			return;
+		}
+
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
 
