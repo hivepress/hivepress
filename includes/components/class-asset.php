@@ -60,13 +60,16 @@ final class Asset extends Component {
 		// Get styles.
 		$styles = hivepress()->get_config( 'styles' );
 
+		// Get route.
+		$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name' );
+
 		// Filter styles.
 		$styles = array_filter(
 			$styles,
-			function( $style ) {
-				$scope = (array) hp\get_array_value( $style, 'scope' );
+			function( $style ) use ( $route ) {
+				$scope = (array) hp\get_array_value( $style, 'scope', 'frontend' );
 
-				return ! array_diff( [ 'frontend', 'backend' ], $scope ) || ( ! is_admin() xor in_array( 'backend', $scope, true ) );
+				return ( in_array( 'frontend', $scope, true ) && ! is_admin() ) || ( in_array( 'backend', $scope, true ) && is_admin() ) || in_array( $route, $scope, true );
 			}
 		);
 
@@ -84,13 +87,16 @@ final class Asset extends Component {
 		// Get scripts.
 		$scripts = hivepress()->get_config( 'scripts' );
 
+		// Get route.
+		$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name' );
+
 		// Filter scripts.
 		$scripts = array_filter(
 			$scripts,
-			function( $script ) {
-				$scope = (array) hp\get_array_value( $script, 'scope' );
+			function( $script ) use ( $route ) {
+				$scope = (array) hp\get_array_value( $script, 'scope', 'frontend' );
 
-				return ! array_diff( [ 'frontend', 'backend' ], $scope ) || ( ! is_admin() xor in_array( 'backend', $scope, true ) );
+				return ( in_array( 'frontend', $scope, true ) && ! is_admin() ) || ( in_array( 'backend', $scope, true ) && is_admin() ) || in_array( $route, $scope, true );
 			}
 		);
 

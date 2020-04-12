@@ -41,6 +41,7 @@ return [
 	'slick'                 => [
 		'handle' => 'slick',
 		'src'    => hivepress()->get_url() . '/assets/js/slick.min.js',
+		'scope'  => 'listing_view_page',
 	],
 
 	'sticky_sidebar'        => [
@@ -76,7 +77,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [
