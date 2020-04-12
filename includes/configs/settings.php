@@ -220,13 +220,14 @@ return [
 
 				'fields' => [
 					'user_display_name' => [
-						'label'       => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
-						'placeholder' => esc_html__( 'Username', 'hivepress' ),
-						'type'        => 'select',
-						'default'     => 'first_name',
-						'_order'      => 10,
+						'label'    => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
+						'type'     => 'select',
+						'default'  => 'first_name',
+						'required' => true,
+						'_order'   => 10,
 
-						'options'     => [
+						'options'  => [
+							'username'   => esc_html__( 'Username', 'hivepress' ),
 							'first_name' => esc_html__( 'First Name', 'hivepress' ),
 							'last_name'  => esc_html__( 'Last Name', 'hivepress' ),
 							'full_name'  => esc_html__( 'Full Name', 'hivepress' ),

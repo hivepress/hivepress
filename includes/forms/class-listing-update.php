@@ -55,7 +55,7 @@ class Listing_Update extends Model_Form {
 					],
 
 					'description' => [
-						'_order' => 30,
+						'_order' => 200,
 					],
 				],
 
