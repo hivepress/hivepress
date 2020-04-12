@@ -449,6 +449,7 @@ final class Listing extends Controller {
 
 				'context'  => [
 					'listing' => $listing,
+					'vendor'  => $listing->get_vendor(),
 				],
 			]
 		) )->render();

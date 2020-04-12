@@ -183,8 +183,9 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							],
 
 							'listing_vendor'             => [
-								'type'   => 'related_vendors',
-								'_order' => 30,
+								'type'     => 'template',
+								'template' => 'vendor_view_block',
+								'_order'   => 30,
 							],
 
 							'page_sidebar_widgets'       => [
