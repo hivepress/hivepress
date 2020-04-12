@@ -66,8 +66,7 @@ final class Google extends Component {
 			$expiration = absint( get_option( $prefix . '_token_expiration' ) );
 
 			if ( $expiration <= time() ) {
-				// todo.
-				error_log('refreshed '.$namespace);
+
 				// Get refresh token.
 				$refresh_token = get_option( $prefix . '_refresh_token' );
 

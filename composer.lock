@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b7145bc32bb2fbb84cc2b19df1f8842",
+    "content-hash": "20fa77abab9923a662ca57d698d34ff5",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -451,41 +451,6 @@
             ],
             "description": "A polyfill for getallheaders.",
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "woocommerce/action-scheduler",
-            "version": "3.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "5a01f0b549a283dc88c2feeef877650215907a76"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/5a01f0b549a283dc88c2feeef877650215907a76",
-                "reference": "5a01f0b549a283dc88c2feeef877650215907a76",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.6",
-                "woocommerce/woocommerce-sniffs": "0.0.8",
-                "wp-cli/wp-cli": "~1.5.1"
-            },
-            "type": "wordpress-plugin",
-            "extra": {
-                "scripts-description": {
-                    "test": "Run unit tests",
-                    "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
-                    "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "description": "Action Scheduler for WordPress and WooCommerce",
-            "homepage": "https://actionscheduler.org/",
-            "time": "2020-03-18T15:05:10+00:00"
         }
     ],
     "packages-dev": [],
