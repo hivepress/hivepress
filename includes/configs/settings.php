@@ -173,30 +173,38 @@ return [
 				'_order' => 10,
 
 				'fields' => [
-					'page_vendors'        => [
+					'vendor_enable_display' => [
+						'label'   => esc_html_x( 'Display', 'noun', 'hivepress' ),
+						'caption' => hivepress()->translator->get_string( 'display_vendors_on_frontend' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_order'  => 10,
+					],
+
+					'page_vendors'          => [
 						'label'       => hivepress()->translator->get_string( 'vendors_page' ),
 						'description' => hivepress()->translator->get_string( 'choose_page_that_displays_all_vendors' ),
 						'type'        => 'select',
 						'options'     => 'posts',
 						'option_args' => [ 'post_type' => 'page' ],
-						'_order'      => 10,
+						'_order'      => 20,
 					],
 
-					'vendors_per_page'    => [
+					'vendors_per_page'      => [
 						'label'     => hivepress()->translator->get_string( 'regular_vendors_per_page' ),
 						'type'      => 'number',
 						'default'   => 10,
 						'min_value' => 1,
 						'required'  => true,
-						'_order'    => 20,
+						'_order'    => 30,
 					],
 
-					'vendor_display_name' => [
+					'vendor_display_name'   => [
 						'label'       => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'placeholder' => esc_html__( 'User Name', 'hivepress' ),
 						'type'        => 'select',
 						'options'     => 'posts',
-						'_order'      => 30,
+						'_order'      => 40,
 
 						'option_args' => [
 							'post_type'  => 'hp_vendor_attribute',
@@ -261,7 +269,7 @@ return [
 						'label'       => esc_html__( 'User Registered', 'hivepress' ),
 						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
 						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %1\$user_name%! Thank you for registering, here's your password: %2\$user_password%", 'hivepress' ) ),
+						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,

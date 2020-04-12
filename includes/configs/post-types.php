@@ -56,6 +56,7 @@ return [
 
 	'vendor'            => [
 		'public'             => true,
+		'show_ui'            => true,
 		'has_archive'        => true,
 		'supports'           => [ 'title', 'editor', 'thumbnail', 'author' ],
 		'menu_icon'          => 'dashicons-businessman',

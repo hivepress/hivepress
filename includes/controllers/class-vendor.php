@@ -31,9 +31,10 @@ final class Vendor extends Controller {
 			[
 				'routes' => [
 					'vendors_view_page' => [
-						'url'    => [ $this, 'get_vendors_view_url' ],
-						'match'  => [ $this, 'is_vendors_view_page' ],
-						'action' => [ $this, 'render_vendors_view_page' ],
+						'url'      => [ $this, 'get_vendors_view_url' ],
+						'match'    => [ $this, 'is_vendors_view_page' ],
+						'redirect' => [ $this, 'redirect_vendors_view_page' ],
+						'action'   => [ $this, 'render_vendors_view_page' ],
 					],
 
 					'vendor_view_page'  => [
@@ -71,6 +72,19 @@ final class Vendor extends Controller {
 		$page_id = absint( get_option( 'hp_page_vendors' ) );
 
 		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_vendor' ) || is_tax( 'hp_vendor_category' );
+	}
+
+	/**
+	 * Redirects vendors view page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_vendors_view_page() {
+		if ( ! get_option( 'hp_vendor_enable_display' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
