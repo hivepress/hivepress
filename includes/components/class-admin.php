@@ -247,7 +247,7 @@ final class Admin extends Component {
 									$field_args,
 									[
 										'name'    => $field_name,
-										'default' => get_option( $field_name ),
+										'default' => get_option( $field_name, hp\get_array_value( $field_args, 'default' ) ),
 									]
 								),
 							]
