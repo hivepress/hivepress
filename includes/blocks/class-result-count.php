@@ -53,6 +53,7 @@ class Result_Count extends Block {
 				$total_results += $featured_results;
 			}
 
+			/* translators: 1: results range start, 2: results range end, 3: total results. */
 			$output .= sprintf( esc_html__( 'Showing %1$s-%2$s of %3$s results', 'hivepress' ), number_format_i18n( $first_result ), number_format_i18n( $last_result ), number_format_i18n( $total_results ) );
 
 			$output .= '</div>';

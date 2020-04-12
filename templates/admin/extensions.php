@@ -13,7 +13,7 @@ use HivePress\Helpers as hp;
 				<li>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_extensions&tab=' . $active_tab ) ); ?>" <?php if ( $active_tab === $current_tab ) : ?>class="current"<?php endif; ?>>
 						<?php echo esc_html( $tab_args['name'] ); ?>
-						<span class="count">(<?php echo esc_html( $tab_args['count'] ); ?>)</span>
+						<span class="count">(<?php echo esc_html( number_format_i18n( $tab_args['count'] ) ); ?>)</span>
 					</a>
 					<?php if ( hp\get_last_array_value( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
 				</li>
@@ -37,18 +37,18 @@ use HivePress\Helpers as hp;
 								if ( 'install' === $extension['status'] ) :
 									if ( isset( $extension['price'] ) ) :
 										?>
-										<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Buy Now', 'hivepress' ); ?></a>
+										<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Purchase', 'hivepress' ); ?></a>
 									<?php else : ?>
-										<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install Now' ); ?></a>
+										<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install', 'hivepress' ); ?></a>
 									<?php
 									endif;
 								elseif ( 'update_available' === $extension['status'] ) :
 									?>
-									<a href="<?php echo esc_url( $extension['url'] ); ?>" class="update-now button"><?php esc_html_e( 'Update Now' ); ?></a>
+									<a href="<?php echo esc_url( $extension['url'] ); ?>" class="update-now button"><?php esc_html_e( 'Update', 'hivepress' ); ?></a>
 								<?php elseif ( 'activate' === $extension['status'] ) : ?>
-									<a href="<?php echo esc_url( $extension['url'] ); ?>" class="button activate-now"><?php esc_html_e( 'Activate' ); ?></a>
+									<a href="<?php echo esc_url( $extension['url'] ); ?>" class="button activate-now"><?php esc_html_e( 'Activate', 'hivepress' ); ?></a>
 								<?php else : ?>
-									<button type="button" class="button button-disabled" disabled="disabled"><?php echo esc_html_x( 'Active', 'plugin' ); ?></button>
+									<button type="button" class="button button-disabled" disabled="disabled"><?php echo esc_html_x( 'Active', 'extension', 'hivepress' ); ?></button>
 								<?php endif; ?>
 							</li>
 						</ul>
@@ -63,7 +63,12 @@ use HivePress\Helpers as hp;
 					</div>
 				</div>
 				<div class="plugin-card-bottom">
-					<div class="column-downloaded"><?php printf( esc_html__( 'Version %s' ), $extension['version'] ); ?></div>
+					<div class="column-downloaded">
+						<?php
+						/* translators: %s: version. */
+						printf( esc_html__( 'Version %s', 'hivepress' ), $extension['version'] );
+						?>
+					</div>
 					<div class="column-compatibility">
 						<strong class="hp-extension__price"><?php echo esc_html( hp\get_array_value( $extension, 'price', hivepress()->translator->get_string( 'free' ) ) ); ?></strong>
 					</div>

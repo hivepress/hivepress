@@ -41,9 +41,13 @@ return [
 	'by_random'                                 => esc_html_x( 'Random', 'sort order', 'hivepress' ),
 	'sort_order'                                => esc_html_x( 'Order', 'sort', 'hivepress' ),
 	'add_details_imperative'                    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
+	/* translators: %s: WooCommerce. */
 	'ecommerce_product'                         => sprintf( esc_html__( '%s Product', 'hivepress' ), 'WooCommerce' ),
+	/* translators: %s: token list. */
 	'these_tokens_are_available'                => esc_html__( 'The following tokens are available: %s.', 'hivepress' ),
+	/* translators: %s: extension name. */
 	'extension_is_incompatible_with_core'       => esc_html__( '%s extension is incompatible with the current HivePress version, please update HivePress or deactivate it.', 'hivepress' ),
+	/* translators: %s: terms URL. */
 	'i_agree_to_terms_and_conditions'           => hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ),
 
 	// Listings.
@@ -51,7 +55,9 @@ return [
 	'listings'                                  => esc_html__( 'Listings', 'hivepress' ),
 	'all_listings'                              => esc_html__( 'All Listings', 'hivepress' ),
 	'related_listings'                          => esc_html__( 'Related Listings', 'hivepress' ),
+	/* translators: %s: Listings number. */
 	'n_listings'                                => _n_noop( '%s Listing', '%s Listings', 'hivepress' ),
+	/* translators: %s: Vendor name. */
 	'listings_by_vendor'                        => esc_html__( 'Listings by %s', 'hivepress' ),
 	'featuring_of_listings'                     => esc_html__( 'Featuring of Listings', 'hivepress' ),
 	'featured_listings'                         => esc_html__( 'Featured Listings', 'hivepress' ),
@@ -75,7 +81,9 @@ return [
 	'listing_renewed'                           => esc_html__( 'Listing Renewed', 'hivepress' ),
 	'listing_updated'                           => esc_html__( 'Listing Updated', 'hivepress' ),
 	'listing_reported'                          => esc_html__( 'Listing Reported', 'hivepress' ),
+	/* translators: %s: Listing title. */
 	'listing_has_been_submitted'                => esc_html__( 'Thank you! Your listing "%s" has been submitted and will be reviewed as soon as possible.', 'hivepress' ),
+	/* translators: %s: Listing title. */
 	'listing_has_been_renewed'                  => esc_html__( 'Thank you! Your listing "%s" has been renewed and will appear at the top of the page.', 'hivepress' ),
 	'listing_has_been_reported'                 => esc_html__( 'Listing has been reported.', 'hivepress' ),
 	'listings_page'                             => esc_html__( 'Listings Page', 'hivepress' ),

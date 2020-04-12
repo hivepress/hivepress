@@ -179,10 +179,12 @@ class Number extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_value ) && $this->value < $this->min_value ) {
+				/* translators: 1: field label, 2: number. */
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be lower than %2$s.', 'hivepress' ), $this->label, hp\format_number( $this->min_value ) ) );
 			}
 
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
+				/* translators: 1: field label, 2: number. */
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->label, hp\format_number( $this->max_value ) ) );
 			}
 		}
