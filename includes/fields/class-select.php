@@ -96,6 +96,11 @@ class Select extends Field {
 	protected function boot() {
 		$attributes = [];
 
+		// Normalize options.
+		if ( ! is_array( $this->options ) ) {
+			$this->options = [];
+		}
+
 		// Set placeholder.
 		if ( ! is_null( $this->placeholder ) && ! $this->multiple ) {
 			$this->options = [ '' => $this->placeholder ] + $this->options;
