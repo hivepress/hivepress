@@ -308,10 +308,11 @@ return [
 					],
 
 					'recaptcha_forms'      => [
-						'label'   => esc_html__( 'Protected Forms', 'hivepress' ),
-						'type'    => 'checkboxes',
-						'options' => 'forms',
-						'_order'  => 30,
+						'label'    => esc_html__( 'Protected Forms', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'forms',
+						'multiple' => true,
+						'_order'   => 30,
 					],
 				],
 			],
