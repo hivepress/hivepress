@@ -11,7 +11,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'listing_category' => [
+	'listing_category'        => [
 		'post_type'         => [ 'listing', 'listing_attribute' ],
 		'hierarchical'      => true,
 		'show_admin_column' => true,
@@ -30,7 +30,27 @@ return [
 		],
 	],
 
-	'vendor_category'  => [
+	'listing_attribute_group' => [
+		'post_type'         => [ 'listing_attribute' ],
+		'public'            => false,
+		'show_ui'           => true,
+		'hierarchical'      => true,
+		'show_admin_column' => true,
+
+		'labels'            => [
+			'name'          => esc_html__( 'Groups', 'hivepress' ),
+			'singular_name' => esc_html__( 'Group', 'hivepress' ),
+			'add_new_item'  => esc_html__( 'Add Group', 'hivepress' ),
+			'edit_item'     => esc_html__( 'Edit Group', 'hivepress' ),
+			'update_item'   => esc_html__( 'Update Group', 'hivepress' ),
+			'view_item'     => esc_html__( 'View Group', 'hivepress' ),
+			'parent_item'   => esc_html__( 'Parent Group', 'hivepress' ),
+			'search_items'  => esc_html__( 'Search Groups', 'hivepress' ),
+			'not_found'     => esc_html__( 'No groups found.', 'hivepress' ),
+		],
+	],
+
+	'vendor_category'         => [
 		'public'       => false,
 		'post_type'    => [ 'vendor', 'vendor_attribute' ],
 		'hierarchical' => true,
@@ -46,6 +66,26 @@ return [
 			'parent_item'   => esc_html__( 'Parent Category', 'hivepress' ),
 			'search_items'  => esc_html__( 'Search Categories', 'hivepress' ),
 			'not_found'     => esc_html__( 'No categories found.', 'hivepress' ),
+		],
+	],
+
+	'vendor_attribute_group'  => [
+		'post_type'         => [ 'vendor_attribute' ],
+		'public'            => false,
+		'show_ui'           => true,
+		'hierarchical'      => true,
+		'show_admin_column' => true,
+
+		'labels'            => [
+			'name'          => esc_html__( 'Groups', 'hivepress' ),
+			'singular_name' => esc_html__( 'Group', 'hivepress' ),
+			'add_new_item'  => esc_html__( 'Add Group', 'hivepress' ),
+			'edit_item'     => esc_html__( 'Edit Group', 'hivepress' ),
+			'update_item'   => esc_html__( 'Update Group', 'hivepress' ),
+			'view_item'     => esc_html__( 'View Group', 'hivepress' ),
+			'parent_item'   => esc_html__( 'Parent Group', 'hivepress' ),
+			'search_items'  => esc_html__( 'Search Groups', 'hivepress' ),
+			'not_found'     => esc_html__( 'No groups found.', 'hivepress' ),
 		],
 	],
 ];
