@@ -40,6 +40,7 @@ class Vendor extends Post {
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
+						'html'       => true,
 						'_alias'     => 'post_content',
 					],
 
