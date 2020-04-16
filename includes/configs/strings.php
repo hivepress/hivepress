@@ -20,6 +20,8 @@ return [
 	'submission'                                => esc_html__( 'Submission', 'hivepress' ),
 	'moderation'                                => esc_html__( 'Moderation', 'hivepress' ),
 	'expiration'                                => esc_html__( 'Expiration', 'hivepress' ),
+	'expiration_period'                         => esc_html__( 'Expiration Period', 'hivepress' ),
+	'expiration_date'                           => esc_html__( 'Expiration Date', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
 	'overview'                                  => esc_html__( 'Overview', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),

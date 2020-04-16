@@ -50,7 +50,7 @@ return [
 			],
 
 			'expired_time'  => [
-				'label'       => esc_html__( 'Expiration Date', 'hivepress' ),
+				'label'       => hivepress()->translator->get_string( 'expiration_date' ),
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_expired' ),
 				'type'        => 'date',
 				'format'      => 'U',
