@@ -196,7 +196,7 @@ final class Attribute extends Component {
 					// Set defaults.
 					$attribute_args = [
 						'label'          => $attribute_object->post_title,
-						'display_areas'  => (array) $attribute_object->hp_display_areas,
+						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
