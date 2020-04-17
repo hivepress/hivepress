@@ -89,16 +89,29 @@ final class Listing extends Controller {
 					],
 
 					'listings_view_page'           => [
-						'url'    => [ $this, 'get_listings_view_url' ],
-						'match'  => [ $this, 'is_listings_view_page' ],
-						'action' => [ $this, 'render_listings_view_page' ],
+						'url'      => [ $this, 'get_listings_view_url' ],
+						'match'    => [ $this, 'is_listings_view_page' ],
+						'action'   => [ $this, 'render_listings_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listings_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listing_view_page'            => [
 						'url'      => [ $this, 'get_listing_view_url' ],
 						'match'    => [ $this, 'is_listing_view_page' ],
-						'redirect' => [ $this, 'redirect_listing_view_page' ],
 						'action'   => [ $this, 'render_listing_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listing_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listings_edit_page'           => [
@@ -341,11 +354,11 @@ final class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listings view page.
+	 * Redirects listings view page.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function render_listings_view_page() {
+	public function redirect_listings_view_page() {
 
 		// Get category.
 		$category    = null;
@@ -354,6 +367,22 @@ final class Listing extends Controller {
 		if ( $category_id ) {
 			$category = Models\Listing_Category::query()->get_by_id( $category_id );
 		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing_category', $category );
+
+		return false;
+	}
+
+	/**
+	 * Renders listings view page.
+	 *
+	 * @return string
+	 */
+	public function render_listings_view_page() {
+
+		// Get category.
+		$category = hivepress()->request->get_context( 'listing_category' );
 
 		if ( ( ( is_page() || ( empty( $category ) && is_post_type_archive() ) ) && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
 
