@@ -199,6 +199,7 @@ abstract class Model {
 			'set',
 			'get',
 			'is',
+			'has',
 			'display',
 			'save',
 		];
