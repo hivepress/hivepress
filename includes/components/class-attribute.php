@@ -137,7 +137,7 @@ final class Attribute extends Component {
 	 * @param array  $category_ids Category IDs.
 	 * @return array
 	 */
-	protected function get_attributes( $model, $category_ids ) {
+	public function get_attributes( $model, $category_ids ) {
 		return array_filter(
 			$this->attributes[ $model ],
 			function( $attribute ) use ( $category_ids ) {
@@ -195,6 +195,7 @@ final class Attribute extends Component {
 
 					// Set defaults.
 					$attribute_args = [
+						'id'             => $attribute_object->ID,
 						'label'          => $attribute_object->post_title,
 						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
@@ -328,6 +329,7 @@ final class Attribute extends Component {
 				function( $args ) {
 					return array_merge(
 						[
+							'id'             => null,
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '',
