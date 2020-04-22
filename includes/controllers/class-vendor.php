@@ -33,8 +33,14 @@ final class Vendor extends Controller {
 					'vendors_view_page' => [
 						'url'      => [ $this, 'get_vendors_view_url' ],
 						'match'    => [ $this, 'is_vendors_view_page' ],
-						'redirect' => [ $this, 'redirect_vendors_view_page' ],
 						'action'   => [ $this, 'render_vendors_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_vendors_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'vendor_view_page'  => [
