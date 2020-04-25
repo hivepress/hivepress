@@ -266,7 +266,17 @@ abstract class Menu {
 
 				// Render menu item.
 				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
+				$output .= '<span>';
+
+				// Render label.
 				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
+
+				// Render meta.
+				if ( isset( $args['meta'] ) ) {
+					$output .= '<small>' . esc_html( $args['meta'] ) . '</small>';
+				}
+
+				$output .= '</span>';
 
 				// Render child items.
 				$output .= $this->render_items( $name );
