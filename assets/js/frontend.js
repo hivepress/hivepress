@@ -50,7 +50,8 @@
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 						},
 						complete: function(xhr) {
-							var response = xhr.responseJSON;
+							var response = xhr.responseJSON,
+								redirect = form.data('redirect');
 
 							submitButton.prop('disabled', false);
 							submitButton.attr('data-state', '');
@@ -60,15 +61,15 @@
 							}
 
 							if (response === null || response.hasOwnProperty('data')) {
-								if (form.data('message')) {
+								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
 
-								if (form.data('redirect')) {
-									if (form.data('redirect') === true) {
-										window.location.reload(true);
+								if (redirect || xhr.status === 307) {
+									if (typeof redirect === 'string') {
+										window.location.replace(redirect);
 									} else {
-										window.location.replace(form.data('redirect'));
+										window.location.reload(true);
 									}
 								} else if (!form.is('[data-id]')) {
 									form.trigger('reset');
