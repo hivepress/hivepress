@@ -131,7 +131,7 @@ abstract class Model {
 	final protected function _set_fields( $fields ) {
 		$this->fields = [];
 
-		foreach ( array_filter( $fields ) as $name => $args ) {
+		foreach ( $fields as $name => $args ) {
 
 			// Set alias.
 			if ( ! isset( $args['_alias'] ) ) {
