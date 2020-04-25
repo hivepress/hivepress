@@ -106,7 +106,15 @@
 
 			button.on('click', function(e) {
 				var caption = button.attr('data-caption'),
+					iconClass = button.attr('data-icon'),
+					icon = button.find('i'),
 					label = button.find('span');
+
+				button.attr('data-icon', icon.attr('class').split(' fa-')[1]);
+
+				icon.attr('class', function(i, c) {
+					return c.replace(/ fa-[a-z0-9-]+/g, '');
+				}).addClass('fa-' + iconClass);
 
 				if (label.length) {
 					button.attr('data-caption', label.text());
