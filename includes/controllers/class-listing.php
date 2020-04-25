@@ -66,6 +66,14 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
+					'listing_hide_action'          => [
+						'base'   => 'listing_resource',
+						'path'   => '/hide',
+						'method' => 'POST',
+						'action' => [ $this, 'hide_listing' ],
+						'rest'   => true,
+					],
+
 					'listing_report_action'        => [
 						'base'   => 'listing_resource',
 						'path'   => '/report',
@@ -240,6 +248,47 @@ final class Listing extends Controller {
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
 		}
+
+		return hp\rest_response(
+			200,
+			[
+				'id' => $listing->get_id(),
+			]
+		);
+	}
+
+	/**
+	 * Hides listing.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function hide_listing( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
+
+		if ( empty( $listing ) ) {
+			return hp\rest_error( 404 );
+		}
+
+		if ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Update status.
+		if ( $listing->get_status() === 'draft' ) {
+			$listing->set_status( 'publish' );
+		} else {
+			$listing->set_status( 'draft' );
+		}
+
+		$listing->save_status();
 
 		return hp\rest_response(
 			200,
