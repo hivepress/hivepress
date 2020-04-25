@@ -238,19 +238,66 @@ final class Listing extends Controller {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
-		// Update listing.
+		// Get values.
 		$values = $form->get_values();
 
 		unset( $values['images'] );
 
+		// Get attributes.
+		$attributes = [];
+
+		foreach ( $form->get_fields() as $field ) {
+			if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
+				$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
+
+				if ( $field->get_value() !== $value ) {
+					$attributes[] = $field->get_label();
+				}
+			}
+		}
+
+		// Set values.
 		$listing->fill( $values );
+
+		if ( $attributes ) {
+
+			// Set status.
+			$listing->set_status( 'pending' );
+
+			// Send email.
+			( new Emails\Listing_Update(
+				[
+					'recipient' => get_option( 'admin_email' ),
+
+					'tokens'    => [
+						'listing_title'      => $listing->get_title(),
+						'listing_attributes' => implode( ', ', $attributes ),
+						'listing_url'        => admin_url(
+							'post.php?' . http_build_query(
+								[
+									'action' => 'edit',
+									'post'   => $listing->get_id(),
+								]
+							)
+						),
+					],
+				]
+			) )->send();
+		}
 
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
 		}
 
+		// Get code.
+		$code = 200;
+
+		if ( $attributes ) {
+			$code = 307;
+		}
+
 		return hp\rest_response(
-			200,
+			$code,
 			[
 				'id' => $listing->get_id(),
 			]

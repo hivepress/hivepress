@@ -549,7 +549,8 @@ final class Attribute extends Component {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
-							'statuses' => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
+							'statuses'   => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
+							'_moderated' => true,
 						]
 					);
 				}

@@ -79,6 +79,13 @@ return [
 				'_order'  => 1,
 			],
 
+			'moderated'       => [
+				'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+				'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+				'type'    => 'checkbox',
+				'_order'  => 20,
+			],
+
 			'edit_field_type' => [
 				'label'       => esc_html__( 'Field Type', 'hivepress' ),
 				'type'        => 'select',
