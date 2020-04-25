@@ -28,6 +28,9 @@ final class Listing extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Set request context.
+		add_action( 'init', [ $this, 'set_request_context' ], 100 );
+
 		// Update vendor.
 		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
@@ -67,6 +70,37 @@ final class Listing extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// Get cached listing count.
+		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
+
+		if ( is_null( $listing_count ) ) {
+
+			// Get listing count.
+			$listing_count = Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'draft', 'pending', 'publish' ],
+					'user'       => get_current_user_id(),
+				]
+			)->get_count();
+
+			// Cache listing count.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'listing_count', 'models/listing', $listing_count );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing_count', $listing_count );
 	}
 
 	/**
@@ -477,12 +511,7 @@ final class Listing extends Component {
 	 * @return array
 	 */
 	public function alter_user_account_menu( $menu ) {
-		if ( Models\Listing::query()->filter(
-			[
-				'user'       => get_current_user_id(),
-				'status__in' => [ 'draft', 'pending', 'publish' ],
-			]
-		)->get_first_id() ) {
+		if ( hivepress()->request->get_context( 'listing_count' ) ) {
 			$menu['items']['listings_edit'] = [
 				'route'  => 'listings_edit_page',
 				'_order' => 10,

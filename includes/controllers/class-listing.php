@@ -575,12 +575,7 @@ final class Listing extends Controller {
 		}
 
 		// Check listings.
-		if ( ! Models\Listing::query()->filter(
-			[
-				'user'       => get_current_user_id(),
-				'status__in' => [ 'draft', 'pending', 'publish' ],
-			]
-		)->get_first_id() ) {
+		if ( ! hivepress()->request->get_context( 'listing_count' ) ) {
 			return hivepress()->router->get_url( 'user_account_page' );
 		}
 
