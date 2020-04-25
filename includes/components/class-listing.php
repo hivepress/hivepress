@@ -243,7 +243,7 @@ final class Listing extends Component {
 		// Get expired listings.
 		$expired_listings = Models\Listing::query()->filter(
 			[
-				'status'            => 'publish',
+				'status__in'        => [ 'draft', 'pending', 'publish' ],
 				'expired_time__lte' => time(),
 			]
 		)->get();

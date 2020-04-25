@@ -53,18 +53,24 @@ class Listing_Hide_Toggle extends Toggle {
 		$listing = $this->get_context( 'listing' );
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
+			if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
 
-			// Set URL.
-			$this->url = hivepress()->router->get_url(
-				'listing_hide_action',
-				[
-					'listing_id' => $listing->get_id(),
-				]
-			);
+				// Hide toggle.
+				$this->states = [];
+			} else {
 
-			// Set active flag.
-			if ( $listing->get_status() === 'draft' ) {
-				$this->active = true;
+				// Set URL.
+				$this->url = hivepress()->router->get_url(
+					'listing_hide_action',
+					[
+						'listing_id' => $listing->get_id(),
+					]
+				);
+
+				// Set active flag.
+				if ( $listing->get_status() === 'draft' ) {
+					$this->active = true;
+				}
 			}
 		}
 

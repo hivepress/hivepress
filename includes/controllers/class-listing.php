@@ -281,6 +281,10 @@ final class Listing extends Controller {
 			return hp\rest_error( 400 );
 		}
 
+		if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
+			return hp\rest_error( 400 );
+		}
+
 		// Update status.
 		if ( $listing->get_status() === 'draft' ) {
 			$listing->set_status( 'publish' );
