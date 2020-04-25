@@ -127,39 +127,43 @@ class Toggle extends Block {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<a ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '';
 
-		if ( $this->icon ) {
+		if ( $this->icon || $this->captions ) {
+			$output .= '<a ' . hp\html_attributes( $this->attributes ) . '>';
 
-			// Get icon.
-			$icon = null;
+			if ( $this->icon ) {
 
-			if ( $this->active ) {
-				$icon = hp\get_last_array_value( $this->icon );
-			} else {
-				$icon = hp\get_first_array_value( $this->icon );
+				// Get icon.
+				$icon = null;
+
+				if ( $this->active ) {
+					$icon = hp\get_last_array_value( $this->icon );
+				} else {
+					$icon = hp\get_first_array_value( $this->icon );
+				}
+
+				// Render icon.
+				$output .= '<i class="hp-icon fas fa-' . esc_attr( $icon ) . '"></i>';
 			}
 
-			// Render icon.
-			$output .= '<i class="hp-icon fas fa-' . esc_attr( $icon ) . '"></i>';
-		}
+			if ( 'icon' !== $this->view ) {
 
-		if ( 'icon' !== $this->view ) {
+				// Get caption.
+				$caption = null;
 
-			// Get caption.
-			$caption = null;
+				if ( $this->active ) {
+					$caption = hp\get_last_array_value( $this->captions );
+				} else {
+					$caption = hp\get_first_array_value( $this->captions );
+				}
 
-			if ( $this->active ) {
-				$caption = hp\get_last_array_value( $this->captions );
-			} else {
-				$caption = hp\get_first_array_value( $this->captions );
+				// Render caption.
+				$output .= '<span>' . esc_html( $caption ) . '</span>';
 			}
 
-			// Render caption.
-			$output .= '<span>' . esc_html( $caption ) . '</span>';
+			$output .= '</a>';
 		}
-
-		$output .= '</a>';
 
 		return $output;
 	}
