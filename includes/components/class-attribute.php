@@ -428,6 +428,17 @@ final class Attribute extends Component {
 						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
 					}
 				}
+
+				// @todo replace temporary fix.
+				if ( 'edit' === $field_context ) {
+					$meta_box['fields'][ $field_context . '_field_description' ] = [
+						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'type'       => 'textarea',
+						'max_length' => 2048,
+						'html'       => true,
+						'_order'     => 120,
+					];
+				}
 			}
 		}
 
