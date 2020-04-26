@@ -245,8 +245,20 @@ final class Attribute extends Component {
 								// Set field type.
 								$field_args['type'] = $field_type;
 
+								// @todo replace temporary fix.
+								$field_settings['description'] = hp\create_class_instance(
+									'\HivePress\Fields\Textarea',
+									[
+										[
+											'max_length' => 2048,
+											'html'       => true,
+										],
+									]
+								);
+
 								// Set field settings.
-								foreach ( $field_settings as $settings_field_name => $settings_field ) {
+								// @todo remove array filtering.
+								foreach ( array_filter( $field_settings ) as $settings_field_name => $settings_field ) {
 
 									// Set field value.
 									$settings_field->set_value( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
