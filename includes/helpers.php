@@ -418,6 +418,15 @@ function is_plugin_active( $name ) {
 }
 
 /**
+ * Checks REST request.
+ *
+ * @return bool
+ */
+function is_rest() {
+	return defined( 'REST_REQUEST' ) && REST_REQUEST;
+}
+
+/**
  * Gets REST API response.
  *
  * @param int   $code Error code.

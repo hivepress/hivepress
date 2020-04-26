@@ -546,7 +546,7 @@ final class Admin extends Component {
 				$extension,
 				$extension_status,
 				[
-					'name' => substr( $extension['name'], strlen( hivepress()->get_name() ) + 1 ),
+					'name' => trim( str_replace( hivepress()->get_name(), '', $extension['name'] ) ),
 				]
 			);
 		}

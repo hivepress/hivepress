@@ -82,7 +82,7 @@ class User_Register_Form extends Form {
 	public function render() {
 		$output = '';
 
-		if ( ! is_user_logged_in() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
 			$output .= parent::render();
 		}
 

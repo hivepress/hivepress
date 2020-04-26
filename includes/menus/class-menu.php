@@ -215,28 +215,76 @@ abstract class Menu {
 
 		if ( $this->items ) {
 			$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
-			$output .= '<ul>';
+
+			// Render items.
+			$output .= $this->render_items();
+
+			$output .= '</nav>';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Renders menu items.
+	 *
+	 * @param mixed $current Current item.
+	 * @return string
+	 */
+	protected function render_items( $current = null ) {
+		$output = '';
+
+		// Filter items.
+		$items = array_filter(
+			$this->items,
+			function( $item ) use ( $current ) {
+				$parent = hp\get_array_value( $item, 'parent' );
+
+				return ( is_null( $current ) && is_null( $parent ) ) || ( ! is_null( $current ) && $parent === $current );
+			}
+		);
+
+		if ( $items ) {
+
+			// Get current URL.
+			$url = hivepress()->router->get_current_url();
 
 			// Get current route.
 			$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name', false );
 
-			foreach ( $this->items as $name => $args ) {
+			// Render items.
+			$output .= '<ul>';
+
+			foreach ( hp\sort_array( $items ) as $name => $args ) {
 
 				// Get current class.
 				$class = '';
 
-				if ( hivepress()->router->get_current_url() === $args['url'] || hp\get_array_value( $args, 'route' ) === $route ) {
+				if ( $args['url'] === $url || hp\get_array_value( $args, 'route' ) === $route ) {
 					$class = 'hp-menu__item--current current-menu-item';
 				}
 
 				// Render menu item.
 				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
+				$output .= '<span>';
+
+				// Render label.
 				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
+
+				// Render meta.
+				if ( isset( $args['meta'] ) ) {
+					$output .= '<small>' . esc_html( $args['meta'] ) . '</small>';
+				}
+
+				$output .= '</span>';
+
+				// Render child items.
+				$output .= $this->render_items( $name );
+
 				$output .= '</li>';
 			}
 
 			$output .= '</ul>';
-			$output .= '</nav>';
 		}
 
 		return $output;

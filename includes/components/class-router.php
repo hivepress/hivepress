@@ -79,7 +79,7 @@ final class Router extends Component {
 
 			// Merge routes.
 			foreach ( hivepress()->get_controllers() as $controller ) {
-				$this->routes = array_merge( $this->routes, $controller->get_routes() );
+				$this->routes = hp\merge_arrays( $this->routes, $controller->get_routes() );
 			}
 
 			/**
@@ -291,6 +291,37 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets redirect callbacks.
+	 *
+	 * @param array $callbacks Callback arguments.
+	 * @return array
+	 */
+	protected function get_redirect_callbacks( $callbacks ) {
+
+		// Normalize callbacks.
+		if ( count( $callbacks ) === 2 && is_object( hp\get_first_array_value( $callbacks ) ) ) {
+			$callbacks = [
+				[
+					'callback' => $callbacks,
+					'_order'   => 5,
+				],
+			];
+		}
+
+		// Sort callbacks.
+		$callbacks = array_filter(
+			array_map(
+				function( $args ) {
+					return hp\get_array_value( $args, 'callback' );
+				},
+				hp\sort_array( $callbacks )
+			)
+		);
+
+		return $callbacks;
+	}
+
+	/**
 	 * Registers REST routes.
 	 */
 	public function register_rest_routes() {
@@ -460,11 +491,13 @@ final class Router extends Component {
 								// Get menu route.
 								$menu_route = $this->get_route( $menu_item['route'] );
 
-								if ( $menu_route ) {
-									if ( isset( $menu_route['redirect'] ) && ! in_array( call_user_func( $menu_route['redirect'] ), [ null, true ], true ) ) {
-										wp_safe_redirect( $menu_item['url'] );
+								if ( $menu_route && isset( $menu_route['redirect'] ) ) {
+									foreach ( $this->get_redirect_callbacks( $menu_route['redirect'] ) as $menu_route_redirect ) {
+										if ( ! in_array( call_user_func( $menu_route_redirect ), [ null, true ], true ) ) {
+											wp_safe_redirect( $menu_item['url'] );
 
-										exit;
+											exit;
+										}
 									}
 								}
 							}
@@ -477,16 +510,18 @@ final class Router extends Component {
 
 			// Redirect page.
 			if ( isset( $route['redirect'] ) ) {
-				$redirect = call_user_func( $route['redirect'] );
+				foreach ( $this->get_redirect_callbacks( $route['redirect'] ) as $route_redirect ) {
+					$redirect = call_user_func( $route_redirect );
 
-				if ( $redirect ) {
-					if ( is_bool( $redirect ) ) {
-						$redirect = $menu_redirect;
+					if ( $redirect ) {
+						if ( is_bool( $redirect ) ) {
+							$redirect = $menu_redirect;
+						}
+
+						wp_safe_redirect( $redirect );
+
+						exit;
 					}
-
-					wp_safe_redirect( $redirect );
-
-					exit;
 				}
 			}
 

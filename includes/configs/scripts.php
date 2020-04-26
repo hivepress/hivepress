@@ -56,7 +56,7 @@ return [
 	],
 
 	'select2'               => [
-		'handle' => 'select2',
+		'handle' => 'select2-full',
 		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.full.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
@@ -64,7 +64,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [

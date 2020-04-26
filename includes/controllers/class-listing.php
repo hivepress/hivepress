@@ -66,6 +66,14 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
+					'listing_hide_action'          => [
+						'base'   => 'listing_resource',
+						'path'   => '/hide',
+						'method' => 'POST',
+						'action' => [ $this, 'hide_listing' ],
+						'rest'   => true,
+					],
+
 					'listing_report_action'        => [
 						'base'   => 'listing_resource',
 						'path'   => '/report',
@@ -89,16 +97,29 @@ final class Listing extends Controller {
 					],
 
 					'listings_view_page'           => [
-						'url'    => [ $this, 'get_listings_view_url' ],
-						'match'  => [ $this, 'is_listings_view_page' ],
-						'action' => [ $this, 'render_listings_view_page' ],
+						'url'      => [ $this, 'get_listings_view_url' ],
+						'match'    => [ $this, 'is_listings_view_page' ],
+						'action'   => [ $this, 'render_listings_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listings_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listing_view_page'            => [
 						'url'      => [ $this, 'get_listing_view_url' ],
 						'match'    => [ $this, 'is_listing_view_page' ],
-						'redirect' => [ $this, 'redirect_listing_view_page' ],
 						'action'   => [ $this, 'render_listing_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listing_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listings_edit_page'           => [
@@ -217,16 +238,108 @@ final class Listing extends Controller {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
-		// Update listing.
+		// Get values.
 		$values = $form->get_values();
 
 		unset( $values['images'] );
 
+		// Get attributes.
+		$attributes = [];
+
+		foreach ( $form->get_fields() as $field ) {
+			if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
+				$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
+
+				if ( $field->get_value() !== $value ) {
+					$attributes[] = $field->get_label();
+				}
+			}
+		}
+
+		// Set values.
 		$listing->fill( $values );
+
+		if ( $attributes ) {
+
+			// Set status.
+			$listing->set_status( 'pending' );
+
+			// Send email.
+			( new Emails\Listing_Update(
+				[
+					'recipient' => get_option( 'admin_email' ),
+
+					'tokens'    => [
+						'listing_title'      => $listing->get_title(),
+						'listing_attributes' => implode( ', ', $attributes ),
+						'listing_url'        => admin_url(
+							'post.php?' . http_build_query(
+								[
+									'action' => 'edit',
+									'post'   => $listing->get_id(),
+								]
+							)
+						),
+					],
+				]
+			) )->send();
+		}
 
 		if ( ! $listing->save() ) {
 			return hp\rest_error( 400, $listing->_get_errors() );
 		}
+
+		// Get code.
+		$code = 200;
+
+		if ( $attributes ) {
+			$code = 307;
+		}
+
+		return hp\rest_response(
+			$code,
+			[
+				'id' => $listing->get_id(),
+			]
+		);
+	}
+
+	/**
+	 * Hides listing.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function hide_listing( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
+
+		if ( empty( $listing ) ) {
+			return hp\rest_error( 404 );
+		}
+
+		if ( get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'draft', 'publish' ], true ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Update status.
+		if ( $listing->get_status() === 'draft' ) {
+			$listing->set_status( 'publish' );
+		} else {
+			$listing->set_status( 'draft' );
+		}
+
+		$listing->save_status();
 
 		return hp\rest_response(
 			200,
@@ -341,11 +454,11 @@ final class Listing extends Controller {
 	}
 
 	/**
-	 * Renders listings view page.
+	 * Redirects listings view page.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function render_listings_view_page() {
+	public function redirect_listings_view_page() {
 
 		// Get category.
 		$category    = null;
@@ -354,6 +467,22 @@ final class Listing extends Controller {
 		if ( $category_id ) {
 			$category = Models\Listing_Category::query()->get_by_id( $category_id );
 		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing_category', $category );
+
+		return false;
+	}
+
+	/**
+	 * Renders listings view page.
+	 *
+	 * @return string
+	 */
+	public function render_listings_view_page() {
+
+		// Get category.
+		$category = hivepress()->request->get_context( 'listing_category' );
 
 		if ( ( ( is_page() || ( empty( $category ) && is_post_type_archive() ) ) && get_option( 'hp_page_listings_display_categories' ) ) || ( $category && get_term_meta( $category->get_id(), 'hp_display_subcategories', true ) ) ) {
 
@@ -446,10 +575,6 @@ final class Listing extends Controller {
 		// Get vendor.
 		$vendor = $listing->get_vendor();
 
-		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
-			return true;
-		}
-
 		// Set request context.
 		hivepress()->request->set_context( 'listing', $listing );
 		hivepress()->request->set_context( 'vendor', $vendor );
@@ -493,12 +618,7 @@ final class Listing extends Controller {
 		}
 
 		// Check listings.
-		if ( ! Models\Listing::query()->filter(
-			[
-				'user'       => get_current_user_id(),
-				'status__in' => [ 'draft', 'pending', 'publish' ],
-			]
-		)->get_first_id() ) {
+		if ( ! hivepress()->request->get_context( 'listing_count' ) ) {
 			return hivepress()->router->get_url( 'user_account_page' );
 		}
 

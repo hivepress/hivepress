@@ -104,7 +104,7 @@ return [
 
 				'fields' => [
 					'listing_expiration_period' => [
-						'label'       => esc_html__( 'Expiration Period', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'expiration_period' ),
 						'description' => hivepress()->translator->get_string( 'set_number_of_days_until_listing_expires' ),
 						'type'        => 'number',
 						'min_value'   => 1,

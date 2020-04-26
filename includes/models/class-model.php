@@ -199,6 +199,7 @@ abstract class Model {
 			'set',
 			'get',
 			'is',
+			'has',
 			'display',
 			'save',
 		];
@@ -324,7 +325,7 @@ abstract class Model {
 						if ( is_array( $value ) ) {
 							$value = array_map(
 								function( $id ) use ( $model, $method ) {
-									$object = $model::query()->get_by_id( $id );
+									$object = $model->query()->get_by_id( $id );
 
 									if ( $object && $method ) {
 										$object = call_user_func( [ $object, $method ] );
@@ -335,7 +336,7 @@ abstract class Model {
 								$value
 							);
 						} else {
-							$value = $model::query()->get_by_id( $value );
+							$value = $model->query()->get_by_id( $value );
 
 							if ( $value && $method ) {
 								$value = call_user_func( [ $value, $method ] );

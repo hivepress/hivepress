@@ -40,8 +40,11 @@ final class Vendor extends Component {
 		// Alter post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
 
-		// Alter templates.
-		add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+		if ( ! is_admin() ) {
+
+			// Alter templates.
+			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+		}
 
 		parent::__construct( $args );
 	}
@@ -63,16 +66,28 @@ final class Vendor extends Component {
 		// Get user.
 		$user = Models\User::query()->get_by_id( $user_id );
 
+		// Get slug.
+		$slug = $user->get_username();
+
 		// Get name.
 		$name = $user->get_display_name();
 
+		// Get name attribute.
 		$name_attribute_id = get_option( 'hp_vendor_display_name' );
 
 		if ( $name_attribute_id ) {
 			$name_attribute = hivepress()->attribute->get_attribute_name( get_post_field( 'post_name', $name_attribute_id ) );
 
 			if ( $name_attribute ) {
-				$name = hp\get_array_value( $vendor->serialize(), $name_attribute, $name );
+
+				// Get attribute value.
+				$name_attribute_value = hp\get_array_value( $vendor->serialize(), $name_attribute );
+
+				// Set name and slug.
+				if ( $name_attribute_value ) {
+					$name = $name_attribute_value;
+					$slug = $name;
+				}
 			}
 		}
 
@@ -81,7 +96,7 @@ final class Vendor extends Component {
 			[
 				'name'        => $name,
 				'description' => $user->get_description(),
-				'slug'        => $user->get_username(),
+				'slug'        => $slug,
 				'image'       => $user->get_image__id(),
 			]
 		)->save(
@@ -200,7 +215,13 @@ final class Vendor extends Component {
 	 * @return array
 	 */
 	public function alter_listing_view_page( $template ) {
-		if ( ! get_option( 'hp_vendor_enable_display' ) ) {
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
+
+			// Hide vendor.
 			$template = hp\merge_trees(
 				$template,
 				[

@@ -137,7 +137,7 @@ final class Attribute extends Component {
 	 * @param array  $category_ids Category IDs.
 	 * @return array
 	 */
-	protected function get_attributes( $model, $category_ids ) {
+	public function get_attributes( $model, $category_ids ) {
 		return array_filter(
 			$this->attributes[ $model ],
 			function( $attribute ) use ( $category_ids ) {
@@ -195,8 +195,9 @@ final class Attribute extends Component {
 
 					// Set defaults.
 					$attribute_args = [
+						'id'             => $attribute_object->ID,
 						'label'          => $attribute_object->post_title,
-						'display_areas'  => (array) $attribute_object->hp_display_areas,
+						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
@@ -244,8 +245,20 @@ final class Attribute extends Component {
 								// Set field type.
 								$field_args['type'] = $field_type;
 
+								// @todo replace temporary fix.
+								$field_settings['description'] = hp\create_class_instance(
+									'\HivePress\Fields\Textarea',
+									[
+										[
+											'max_length' => 2048,
+											'html'       => true,
+										],
+									]
+								);
+
 								// Set field settings.
-								foreach ( $field_settings as $settings_field_name => $settings_field ) {
+								// @todo remove array filtering.
+								foreach ( array_filter( $field_settings ) as $settings_field_name => $settings_field ) {
 
 									// Set field value.
 									$settings_field->set_value( get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_' . $settings_field_name ), true ) );
@@ -328,6 +341,7 @@ final class Attribute extends Component {
 				function( $args ) {
 					return array_merge(
 						[
+							'id'             => null,
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '',
@@ -425,6 +439,17 @@ final class Attribute extends Component {
 						// Add field.
 						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
 					}
+				}
+
+				// @todo replace temporary fix.
+				if ( 'edit' === $field_context ) {
+					$meta_box['fields'][ $field_context . '_field_description' ] = [
+						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'type'       => 'textarea',
+						'max_length' => 2048,
+						'html'       => true,
+						'_order'     => 120,
+					];
 				}
 			}
 		}
@@ -547,7 +572,8 @@ final class Attribute extends Component {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
-							'statuses' => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
+							'statuses'   => [ 'moderated' => esc_html_x( 'requires review', 'field', 'hivepress' ) ],
+							'_moderated' => true,
 						]
 					);
 				}

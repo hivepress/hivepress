@@ -40,6 +40,7 @@ class Listing extends Post {
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
+						'html'       => true,
 						'required'   => true,
 						'_alias'     => 'post_content',
 					],

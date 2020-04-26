@@ -73,6 +73,15 @@ class Listing_Edit_Page extends Listing_Manage_Page {
 								],
 							],
 
+							'listing_hide_toggle'  => [
+								'type'       => 'listing_hide_toggle',
+								'_order'     => 100,
+
+								'attributes' => [
+									'class' => [ 'hp-listing__action', 'hp-listing__action--hide' ],
+								],
+							],
+
 							'listing_delete_link'  => [
 								'type'   => 'part',
 								'path'   => 'listing/edit/page/listing-delete-link',

@@ -58,6 +58,14 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
+	Buttons
+	--------------------------------------------------------------*/
+	&-button {
+		&--wide {
+			width: 100%;
+		}
+	}
+	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
@@ -77,7 +85,7 @@ Mixins
 		}
 
 		&--narrow {
-			width:100%;
+			width: 100%;
 		}
 
 		&__fields,
@@ -299,6 +307,9 @@ Mixins
 
 		&--checkboxes,
 		&--radio {
+			max-height: 24.33rem;
+			overflow-y: auto;
+
 			ul {
 				.unstyled-list;
 
@@ -442,6 +453,28 @@ Mixins
 	&-menu {
 		&:not(:last-child) {
 			margin-bottom: 2rem;
+		}
+
+		li {
+			& > span {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			small {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 1.5rem;
+				min-height: 1.5rem;
+				padding: 0 0.5rem;
+				margin-left: 0.5rem;
+				border-radius: 9999px;
+				background-color: rgba(0,0,0,0.05);
+				font-size: 80%;
+				white-space: nowrap;
+			}
 		}
 
 		&--site-header {

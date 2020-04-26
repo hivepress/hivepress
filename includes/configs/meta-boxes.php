@@ -50,7 +50,7 @@ return [
 			],
 
 			'expired_time'  => [
-				'label'       => esc_html__( 'Expiration Date', 'hivepress' ),
+				'label'       => hivepress()->translator->get_string( 'expiration_date' ),
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_expired' ),
 				'type'        => 'date',
 				'format'      => 'U',
@@ -77,6 +77,13 @@ return [
 				'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 1,
+			],
+
+			'moderated'       => [
+				'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+				'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+				'type'    => 'checkbox',
+				'_order'  => 20,
 			],
 
 			'edit_field_type' => [
