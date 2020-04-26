@@ -575,10 +575,6 @@ final class Listing extends Controller {
 		// Get vendor.
 		$vendor = $listing->get_vendor();
 
-		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
-			return true;
-		}
-
 		// Set request context.
 		hivepress()->request->set_context( 'listing', $listing );
 		hivepress()->request->set_context( 'vendor', $vendor );

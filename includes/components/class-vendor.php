@@ -40,8 +40,11 @@ final class Vendor extends Component {
 		// Alter post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
 
-		// Alter templates.
-		add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+		if ( ! is_admin() ) {
+
+			// Alter templates.
+			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+		}
 
 		parent::__construct( $args );
 	}
@@ -212,7 +215,13 @@ final class Vendor extends Component {
 	 * @return array
 	 */
 	public function alter_listing_view_page( $template ) {
-		if ( ! get_option( 'hp_vendor_enable_display' ) ) {
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
+
+			// Hide vendor.
 			$template = hp\merge_trees(
 				$template,
 				[
