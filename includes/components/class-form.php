@@ -362,7 +362,7 @@ final class Form extends Component {
 				wp_enqueue_script(
 					'select2-' . $language,
 					hivepress()->get_url() . $filepath,
-					[ 'select2' ],
+					[ 'select2-full' ],
 					hivepress()->get_version(),
 					true
 				);
