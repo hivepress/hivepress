@@ -115,13 +115,23 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Formats price.
+	 *
+	 * @param int $price Price.
+	 * @return string
+	 */
+	public function format_price( $price ) {
+		return wp_strip_all_tags( wc_price( $price ) );
+	}
+
+	/**
 	 * Gets product price text.
 	 *
 	 * @param WC_Product $product Product object.
 	 * @return string
 	 */
 	public function get_product_price_text( $product ) {
-		return wp_strip_all_tags( wc_price( $product->get_price() ) );
+		return $this->format_price( $product->get_price() );
 	}
 
 	/**
