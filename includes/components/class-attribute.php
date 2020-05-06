@@ -344,7 +344,7 @@ final class Attribute extends Component {
 							'id'             => null,
 							'label'          => '',
 							'display_areas'  => [],
-							'display_format' => '',
+							'display_format' => '%value%',
 							'protected'      => false,
 							'editable'       => false,
 							'moderated'      => false,
