@@ -238,7 +238,7 @@ abstract class Menu {
 		$items = array_filter(
 			$this->items,
 			function( $item ) use ( $current ) {
-				$parent = hp\get_array_value( $item, 'parent' );
+				$parent = hp\get_array_value( $item, '_parent' );
 
 				return ( is_null( $current ) && is_null( $parent ) ) || ( ! is_null( $current ) && $parent === $current );
 			}
