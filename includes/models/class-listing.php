@@ -36,6 +36,12 @@ class Listing extends Post {
 						'_alias'     => 'post_title',
 					],
 
+					'slug'             => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'post_name',
+					],
+
 					'description'      => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
