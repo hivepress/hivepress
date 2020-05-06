@@ -61,7 +61,7 @@ final class Asset extends Component {
 		$styles = hivepress()->get_config( 'styles' );
 
 		// Get route.
-		$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name' );
+		$route = hivepress()->router->get_current_route_name();
 
 		// Filter styles.
 		$styles = array_filter(
@@ -88,7 +88,7 @@ final class Asset extends Component {
 		$scripts = hivepress()->get_config( 'scripts' );
 
 		// Get route.
-		$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name' );
+		$route = hivepress()->router->get_current_route_name();
 
 		// Filter scripts.
 		$scripts = array_filter(

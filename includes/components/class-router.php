@@ -153,6 +153,15 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets the current route name.
+	 *
+	 * @return mixed
+	 */
+	public function get_current_route_name() {
+		return hp\get_array_value( $this->get_current_route(), 'name' );
+	}
+
+	/**
 	 * Gets URL path.
 	 *
 	 * @param string $name Route name.
