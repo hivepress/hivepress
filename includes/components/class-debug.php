@@ -84,7 +84,7 @@ final class Debug extends Component {
 		foreach ( $styles as $name => $style ) {
 			$parts = explode( '/', hp\get_array_value( $style, 'src' ) );
 
-			if ( in_array( hp\get_last_array_value( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css' ], true ) ) {
+			if ( in_array( hp\get_last_array_value( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css', 'common.min.css' ], true ) ) {
 				$this->styles[] = $style;
 
 				unset( $styles[ $name ] );

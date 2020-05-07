@@ -231,8 +231,8 @@ class Attachment_Upload extends Field {
 			$output .= '<div><span>' . esc_html( wp_basename( get_attached_file( $attachment->get_id() ) ) ) . '</span></div>';
 		}
 
-		// Render remove button.
-		$output .= '<a href="#" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+		// Render delete button.
+		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 		$output .= '</div>';
 

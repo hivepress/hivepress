@@ -20,17 +20,20 @@ return [
 		'handle' => 'jquery-ui-touch-punch',
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.ui.touch-punch.min.js',
 		'deps'   => [ 'jquery-ui-mouse' ],
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'iframe_transport'      => [
 		'handle' => 'iframe-transport',
 		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.iframe-transport.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fileupload'            => [
 		'handle' => 'fileupload',
 		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.fileupload.min.js',
 		'deps'   => [ 'jquery-ui-widget', 'iframe-transport' ],
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fancybox'              => [
@@ -64,7 +67,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
@@ -77,7 +80,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [
