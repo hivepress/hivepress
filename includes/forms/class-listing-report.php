@@ -50,7 +50,7 @@ class Listing_Report extends Model_Form {
 
 				'fields'      => [
 					'details' => [
-						'label'      => esc_html__( 'Details', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'details' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'required'   => true,

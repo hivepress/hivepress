@@ -538,7 +538,7 @@ final class Listing extends Component {
 			// Add menu items.
 			if ( $listing->get_status() === 'publish' ) {
 				$items['listing_view'] = [
-					'label'  => esc_html__( 'Details', 'hivepress' ),
+					'label'  => hivepress()->translator->get_string( 'details' ),
 					'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
 					'_order' => 5,
 				];
