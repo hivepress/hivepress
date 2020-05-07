@@ -399,6 +399,41 @@ Mixins
 						cursor: move;
 					}
 
+					> div {
+						position: relative;
+						padding-top: 100%;
+						background-color: rgba(0,0,0,0.04);
+
+						&::before {
+							.icon;
+							position: absolute;
+							left: 50%;
+							top: 50%;
+							content: '\f15b';
+							font-size: 64px;
+							margin: -32px 0 0 -24px;
+							color: rgba(0,0,0,0.05);
+							@media only screen and (max-width:47.99em) {
+								font-size: 48px;
+								margin: -24px 0 0 -18px;
+							}
+						}
+
+						span {
+							display: block;
+							overflow: hidden;
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							right: 0;
+							font-size: 80%;
+							padding: 1rem;
+							white-space: nowrap;
+							text-overflow: ellipsis;
+							text-align: center;
+						}
+					}
+
 					a {
 						.center-container;
 						position: absolute;

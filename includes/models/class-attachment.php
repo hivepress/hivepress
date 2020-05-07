@@ -44,6 +44,12 @@ class Attachment extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
+					'mime_type'    => [
+						'type'       => 'text',
+						'max_length' => 128,
+						'_alias'     => 'post_mime_type',
+					],
+
 					'sort_order'   => [
 						'type'      => 'number',
 						'min_value' => 0,

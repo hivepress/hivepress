@@ -236,7 +236,7 @@ final class Attachment extends Controller {
 		];
 
 		if ( $request->get_param( 'render' ) ) {
-			$data['html'] = $parent_field->render_attachment( $attachment->get_id() );
+			$data['html'] = $parent_field->render_attachment( $attachment );
 		}
 
 		return hp\rest_response( 201, $data );

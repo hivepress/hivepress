@@ -165,8 +165,17 @@ class Attachment_Upload extends Field {
 		$output .= '<div class="hp-row" ' . ( $this->multiple ? 'data-component="sortable"' : '' ) . '>';
 
 		if ( ! is_null( $this->value ) ) {
-			foreach ( (array) $this->value as $attachment_id ) {
-				$output .= $this->render_attachment( $attachment_id );
+
+			// Get attachments.
+			$attachments = Models\Attachment::query()->filter(
+				[
+					'id__in' => (array) $this->value,
+				]
+			)->get();
+
+			// Render attachments.
+			foreach ( $attachments as $attachment ) {
+				$output .= $this->render_attachment( $attachment );
 			}
 		}
 
@@ -209,26 +218,23 @@ class Attachment_Upload extends Field {
 	/**
 	 * Renders attachment HTML.
 	 *
-	 * @param int $attachment_id Attachment ID.
+	 * @param object $attachment Attachment object.
 	 * @return string
 	 */
-	public function render_attachment( $attachment_id ) {
-		$output = '';
+	public function render_attachment( $attachment ) {
+		$output = '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_update_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '">';
 
-		// Get attachment image.
-		$image = wp_get_attachment_image( $attachment_id, 'thumbnail' );
-
-		if ( $image ) {
-			$output .= '<div class="hp-col-sm-2 hp-col-xs-4" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_update_action', [ 'attachment_id' => $attachment_id ] ) ) . '">';
-
-			// Render attachment image.
-			$output .= $image;
-
-			// Render remove button.
-			$output .= '<a href="#" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment_id ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
-
-			$output .= '</div>';
+		// Render attachment.
+		if ( strpos( $attachment->get_mime_type(), 'image/' ) === 0 ) {
+			$output .= wp_get_attachment_image( $attachment->get_id(), 'thumbnail' );
+		} else {
+			$output .= '<div><span>' . esc_html( wp_basename( get_attached_file( $attachment->get_id() ) ) ) . '</span></div>';
 		}
+
+		// Render remove button.
+		$output .= '<a href="#" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+
+		$output .= '</div>';
 
 		return $output;
 	}
