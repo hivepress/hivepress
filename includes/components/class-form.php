@@ -253,6 +253,16 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets MIME type options.
+	 *
+	 * @param array $args MIME type arguments.
+	 * @return array
+	 */
+	protected function get_mime_types( $args ) {
+		return get_allowed_mime_types();
+	}
+
+	/**
 	 * Checks captcha status.
 	 *
 	 * @return bool
