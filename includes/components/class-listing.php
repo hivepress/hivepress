@@ -277,7 +277,7 @@ final class Listing extends Component {
 		// Get expired listings.
 		$expired_listings = Models\Listing::query()->filter(
 			[
-				'status__in'        => [ 'draft', 'pending', 'publish' ],
+				'status__in'        => [ 'pending', 'publish' ],
 				'expired_time__lte' => time(),
 			]
 		)->get();
@@ -285,12 +285,8 @@ final class Listing extends Component {
 		// Update expired listings.
 		foreach ( $expired_listings as $listing ) {
 
-			// Update listing.
-			$listing->fill(
-				[
-					'status' => 'draft',
-				]
-			)->save_status();
+			// Update status.
+			$listing->set_status( 'draft' )->save_status();
 
 			// Send email.
 			$user = $listing->get_user();
