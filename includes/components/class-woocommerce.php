@@ -49,6 +49,9 @@ final class WooCommerce extends Component {
 
 		if ( ! is_admin() ) {
 
+			// Set request context.
+			add_action( 'init', [ $this, 'set_request_context' ], 100 );
+
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
 
@@ -242,6 +245,23 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			return;
+		}
+
+		// Get order count.
+		$order_count = absint( get_user_meta( get_current_user_id(), '_order_count', true ) );
+
+		// Set request context.
+		hivepress()->request->set_context( 'user_order_count', $order_count );
+	}
+
+	/**
 	 * Sets account template.
 	 *
 	 * @param string $path Template path.
@@ -281,7 +301,7 @@ final class WooCommerce extends Component {
 	 * @return array
 	 */
 	public function alter_account_menu( $menu ) {
-		if ( wc_get_customer_order_count( get_current_user_id() ) ) {
+		if ( hivepress()->request->get_context( 'user_order_count' ) ) {
 			$menu['items']['orders_view'] = [
 				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'    => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),

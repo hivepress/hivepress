@@ -28,9 +28,6 @@ final class Listing extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set request context.
-		add_action( 'init', [ $this, 'set_request_context' ], 100 );
-
 		// Update vendor.
 		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
@@ -60,6 +57,9 @@ final class Listing extends Component {
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 		} else {
 
+			// Set request context.
+			add_action( 'init', [ $this, 'set_request_context' ], 100 );
+
 			// Alter menus.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
 			add_filter( 'hivepress/v1/menus/listing_manage/items', [ $this, 'alter_listing_manage_menu' ], 10, 2 );
@@ -70,37 +70,6 @@ final class Listing extends Component {
 		}
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Sets request context.
-	 */
-	public function set_request_context() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		// Get cached listing count.
-		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
-
-		if ( is_null( $listing_count ) ) {
-
-			// Get listing count.
-			$listing_count = Models\Listing::query()->filter(
-				[
-					'status__in' => [ 'draft', 'pending', 'publish' ],
-					'user'       => get_current_user_id(),
-				]
-			)->get_count();
-
-			// Cache listing count.
-			hivepress()->cache->set_user_cache( get_current_user_id(), 'listing_count', 'models/listing', $listing_count );
-		}
-
-		// Set request context.
-		hivepress()->request->set_context( 'listing_count', $listing_count );
 	}
 
 	/**
@@ -498,6 +467,37 @@ final class Listing extends Component {
 		}
 
 		return $states;
+	}
+
+	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			return;
+		}
+
+		// Get cached listing count.
+		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
+
+		if ( is_null( $listing_count ) ) {
+
+			// Get listing count.
+			$listing_count = Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'draft', 'pending', 'publish' ],
+					'user'       => get_current_user_id(),
+				]
+			)->get_count();
+
+			// Cache listing count.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'listing_count', 'models/listing', $listing_count );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing_count', $listing_count );
 	}
 
 	/**
