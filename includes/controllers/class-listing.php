@@ -246,12 +246,14 @@ final class Listing extends Controller {
 		// Get attributes.
 		$attributes = [];
 
-		foreach ( $form->get_fields() as $field ) {
-			if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
-				$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
+		if ( $listing->get_status() !== 'auto-draft' ) {
+			foreach ( $form->get_fields() as $field ) {
+				if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
+					$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
 
-				if ( $field->get_value() !== $value ) {
-					$attributes[] = $field->get_label();
+					if ( $field->get_value() !== $value ) {
+						$attributes[] = $field->get_label();
+					}
 				}
 			}
 		}
