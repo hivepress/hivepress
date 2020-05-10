@@ -47,6 +47,9 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
+		// Set countries configuration.
+		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
+
 		if ( ! is_admin() ) {
 
 			// Set request context.
@@ -242,6 +245,16 @@ final class WooCommerce extends Component {
 		}
 
 		return $meta;
+	}
+
+	/**
+	 * Sets countries configuration.
+	 *
+	 * @param array $countries Countries array.
+	 * @return array
+	 */
+	public function set_countries( $countries ) {
+		return WC()->countries->get_countries();
 	}
 
 	/**

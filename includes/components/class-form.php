@@ -263,6 +263,16 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets country options.
+	 *
+	 * @param array $args Country arguments.
+	 * @return array
+	 */
+	protected function get_countries( $args ) {
+		return hivepress()->get_config( 'countries' );
+	}
+
+	/**
 	 * Checks captcha status.
 	 *
 	 * @return bool
