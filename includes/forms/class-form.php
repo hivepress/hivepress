@@ -59,6 +59,13 @@ abstract class Form {
 	protected $redirect;
 
 	/**
+	 * Form reset.
+	 *
+	 * @var bool
+	 */
+	protected $reset = false;
+
+	/**
 	 * Form fields.
 	 *
 	 * @var array
@@ -209,6 +216,11 @@ abstract class Form {
 			} else {
 				$attributes['data-redirect'] = esc_url( $this->redirect );
 			}
+		}
+
+		// Set reset.
+		if ( $this->reset ) {
+			$attributes['data-reset'] = 'true';
 		}
 
 		// Set component.

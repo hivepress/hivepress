@@ -47,6 +47,7 @@ class Listing_Report extends Model_Form {
 			[
 				'description' => hivepress()->translator->get_string( 'provide_details_to_verify_listing_report' ),
 				'message'     => hivepress()->translator->get_string( 'listing_has_been_reported' ),
+				'reset'       => true,
 
 				'fields'      => [
 					'details' => [

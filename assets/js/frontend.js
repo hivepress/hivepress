@@ -71,7 +71,7 @@
 									} else {
 										window.location.href = window.location.href;
 									}
-								} else if (!form.is('[data-id]')) {
+								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
 								}
 							} else if (response.hasOwnProperty('error')) {
