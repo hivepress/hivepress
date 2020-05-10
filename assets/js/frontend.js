@@ -60,7 +60,7 @@
 								grecaptcha.reset(captchaId);
 							}
 
-							if (response === null || response.hasOwnProperty('data')) {
+							if (response == null || response.hasOwnProperty('data')) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
