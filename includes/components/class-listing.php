@@ -28,9 +28,9 @@ final class Listing extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Update vendor.
-		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
-		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
+		// Update listing.
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ] );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
 		// Update image.
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
@@ -54,9 +54,6 @@ final class Listing extends Component {
 			add_filter( 'manage_hp_listing_posts_columns', [ $this, 'add_listing_admin_columns' ] );
 			add_action( 'manage_hp_listing_posts_custom_column', [ $this, 'render_listing_admin_columns' ], 10, 2 );
 
-			// Alter meta boxes.
-			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
-
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 		} else {
@@ -77,14 +74,14 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Updates listing vendor.
+	 * Updates listing.
 	 *
 	 * @param int $listing_id Listing ID.
 	 */
-	public function update_vendor( $listing_id ) {
+	public function update_listing( $listing_id ) {
 
 		// Remove action.
-		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
+		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
@@ -138,23 +135,8 @@ final class Listing extends Component {
 			}
 		}
 
+		// Set vendor.
 		if ( $listing->get_vendor__id() !== $vendor->get_id() ) {
-
-			// Update attachments.
-			if ( $listing->get_vendor__id() ) {
-				$attachments = Models\Attachment::query()->filter(
-					[
-						'parent_model' => 'listing',
-						'parent'       => $listing->get_id(),
-					]
-				)->get();
-
-				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save_user();
-				}
-			}
-
-			// Set vendor.
 			$listing->set_vendor( $vendor->get_id() )->save_vendor();
 		}
 	}
@@ -479,20 +461,6 @@ final class Listing extends Component {
 
 			echo wp_kses_data( $output );
 		}
-	}
-
-	/**
-	 * Alters settings meta box.
-	 *
-	 * @param array $meta_box Meta box arguments.
-	 * @return array
-	 */
-	public function alter_settings_meta_box( $meta_box ) {
-		if ( isset( $meta_box['fields']['vendor'] ) ) {
-			$meta_box['fields']['vendor']['option_args']['author'] = get_post_field( 'post_author' );
-		}
-
-		return $meta_box;
 	}
 
 	/**
