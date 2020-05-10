@@ -830,7 +830,7 @@ final class Admin extends Component {
 
 			// Render fields.
 			if ( $meta_box['fields'] ) {
-				$output .= '<table class="form-table hp-form">';
+				$output .= '<table class="form-table hp-form" data-model="' . esc_attr( hp\unprefix( $post->post_type ) ) . '" data-id="' . esc_attr( $post->ID ) . '">';
 
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 

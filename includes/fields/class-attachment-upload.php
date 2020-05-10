@@ -220,6 +220,7 @@ class Attachment_Upload extends Field {
 				'attributes' => [
 					'id'             => $id,
 					'data-component' => 'file-upload',
+					'data-name'      => hp\unprefix( $this->name ),
 					'data-url'       => esc_url( hivepress()->router->get_url( 'attachment_upload_action' ) ),
 				],
 			]

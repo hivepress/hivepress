@@ -121,19 +121,24 @@ var hivepress = {
 		// File upload
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),
+				container = field.closest('form'),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
 				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
 				responseContainer = selectLabel.parent().children('div').first();
+
+			if (!container.data('model')) {
+				container = field.closest('table');
+			}
 
 			field.fileupload({
 				url: field.data('url'),
 				dataType: 'json',
 				paramName: 'file',
 				formData: {
-					'parent_model': field.closest('form').data('model'),
-					'parent_field': field.attr('name'),
-					'parent': field.closest('form').data('id'),
+					'parent_model': container.data('model'),
+					'parent_field': field.data('name'),
+					'parent': container.data('id'),
 					'render': true,
 					'_wpnonce': hivepressCoreData.apiNonce,
 				},
