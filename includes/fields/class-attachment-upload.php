@@ -49,6 +49,13 @@ class Attachment_Upload extends Field {
 	protected $max_files = 1;
 
 	/**
+	 * Protected flag.
+	 *
+	 * @var mixed
+	 */
+	protected $protected = false;
+
+	/**
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
@@ -90,6 +97,15 @@ class Attachment_Upload extends Field {
 	 */
 	final public function get_max_files() {
 		return $this->max_files;
+	}
+
+	/**
+	 * Checks protected flag.
+	 *
+	 * @return bool
+	 */
+	final public function is_protected() {
+		return $this->protected;
 	}
 
 	/**

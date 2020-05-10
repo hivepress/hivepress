@@ -170,12 +170,23 @@ final class Attachment extends Controller {
 		}
 
 		// Check file format.
-		$file_type    = wp_check_filetype_and_ext( $_FILES['file']['tmp_name'], $_FILES['file']['name'] );
-		$file_formats = array_map( 'strtoupper', $parent_field->get_formats() );
+		if ( $parent_field->get_formats() ) {
+			$file_type    = wp_check_filetype_and_ext( $_FILES['file']['tmp_name'], $_FILES['file']['name'] );
+			$file_formats = array_map( 'strtoupper', $parent_field->get_formats() );
 
-		if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
-			/* translators: %s: file extensions. */
-			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
+			if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+				/* translators: %s: file extensions. */
+				return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
+			}
+		}
+
+		// Get file callback.
+		$file_callback = null;
+
+		if ( $parent_field->is_protected() ) {
+			$file_callback = function( $dir, $name, $ext ) {
+				return apply_filters( 'hivepress/v1/models/attachment/filename', $name, $ext, $dir );
+			};
 		}
 
 		// Get parent ID.
@@ -186,7 +197,15 @@ final class Attachment extends Controller {
 		}
 
 		// Upload attachment.
-		$attachment_id = media_handle_upload( 'file', $parent_id );
+		$attachment_id = media_handle_upload(
+			'file',
+			$parent_id,
+			[],
+			[
+				'test_form'                => false,
+				'unique_filename_callback' => $file_callback,
+			]
+		);
 
 		if ( is_wp_error( $attachment_id ) ) {
 			return hp\rest_error( 400, $attachment_id->get_error_messages() );
