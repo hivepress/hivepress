@@ -124,7 +124,7 @@ final class Attachment extends Controller {
 		}
 
 		// Get parent object.
-		$parent = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
+		$parent = $parent_model->query()->get_by_id( $request->get_param( 'parent' ) );
 
 		if ( empty( $parent ) ) {
 			return hp\rest_error( 400 );
@@ -138,7 +138,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'upload_files' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -286,7 +286,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+		if ( ! current_user_can( 'upload_files' ) && get_current_user_id() !== $attachment->get_user__id() ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -329,7 +329,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+		if ( ! current_user_can( 'upload_files' ) && get_current_user_id() !== $attachment->get_user__id() ) {
 			return hp\rest_error( 403 );
 		}
 
