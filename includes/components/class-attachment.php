@@ -39,6 +39,9 @@ final class Attachment extends Component {
 		add_action( 'hivepress/v1/models/term/delete', [ $this, 'delete_attachments' ], 10, 2 );
 		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'delete_attachments' ], 10, 2 );
 
+		// Generate filename.
+		add_filter( 'hivepress/v1/models/attachment/filename', [ $this, 'generate_filename' ], 10, 3 );
+
 		parent::__construct( $args );
 	}
 
@@ -117,5 +120,23 @@ final class Attachment extends Component {
 				'parent_model' => $parent_model,
 			]
 		)->delete();
+	}
+
+	/**
+	 * Generates unique filename.
+	 *
+	 * @param string $filename Filename.
+	 * @param string $ext Extension.
+	 * @param string $dir Directory.
+	 * @return string
+	 */
+	public function generate_filename( $filename, $ext, $dir ) {
+		$name = pathinfo( $filename, PATHINFO_FILENAME );
+
+		do {
+			$filename = $name . '-' . strtolower( wp_generate_password( 6, false, false ) ) . $ext;
+		} while ( file_exists( $dir . '/' . $filename ) );
+
+		return $filename;
 	}
 }
