@@ -50,6 +50,10 @@ final class Listing extends Component {
 
 		if ( is_admin() ) {
 
+			// Manage admin columns.
+			add_filter( 'manage_hp_listing_posts_columns', [ $this, 'add_listing_admin_columns' ] );
+			add_action( 'manage_hp_listing_posts_custom_column', [ $this, 'render_listing_admin_columns' ], 10, 2 );
+
 			// Alter meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
 
@@ -427,6 +431,54 @@ final class Listing extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Adds listing admin columns.
+	 *
+	 * @param array $columns Columns.
+	 * @return array
+	 */
+	public function add_listing_admin_columns( $columns ) {
+		return array_merge(
+			array_slice( $columns, 0, 2, true ),
+			[
+				'vendor' => hivepress()->translator->get_string( 'vendor' ),
+			],
+			array_slice( $columns, 2, null, true )
+		);
+	}
+
+	/**
+	 * Renders listing admin columns.
+	 *
+	 * @param string $column Column name.
+	 * @param int    $listing_id Listing ID.
+	 */
+	public function render_listing_admin_columns( $column, $listing_id ) {
+		if ( 'vendor' === $column ) {
+			$output = '&mdash;';
+
+			// Get vendor ID.
+			$vendor_id = wp_get_post_parent_id( $listing_id );
+
+			if ( $vendor_id ) {
+
+				// Render link.
+				$output = '<a href="' . esc_url(
+					admin_url(
+						'post.php?' . http_build_query(
+							[
+								'action' => 'edit',
+								'post'   => $vendor_id,
+							]
+						)
+					)
+				) . '">' . esc_html( get_the_title( $vendor_id ) ) . '</a>';
+			}
+
+			echo wp_kses_data( $output );
+		}
 	}
 
 	/**

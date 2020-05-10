@@ -14,7 +14,7 @@ return [
 	'listing'           => [
 		'public'      => true,
 		'has_archive' => true,
-		'supports'    => [ 'title', 'editor', 'thumbnail', 'author' ],
+		'supports'    => [ 'title', 'editor', 'thumbnail' ],
 		'menu_icon'   => 'dashicons-format-aside',
 		'rewrite'     => [ 'slug' => 'listing' ],
 
