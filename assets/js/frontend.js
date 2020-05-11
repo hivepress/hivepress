@@ -69,7 +69,7 @@
 									if (typeof redirect === 'string') {
 										window.location.replace(redirect);
 									} else {
-										window.location.href = window.location.href;
+										window.location.reload(true);
 									}
 								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
