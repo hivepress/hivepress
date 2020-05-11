@@ -109,7 +109,7 @@ final class Attachment extends Component {
 		// Get parent model.
 		$parent_model = hivepress()->model->get_model_name( $parent_type, $parent_alias );
 
-		if ( empty( $parent_model ) ) {
+		if ( empty( $parent_model ) || 'attachment' === $parent_model ) {
 			return;
 		}
 
