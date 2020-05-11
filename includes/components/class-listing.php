@@ -56,6 +56,9 @@ final class Listing extends Component {
 
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
+
+			// Alter meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_listing_settings_meta_box' ] );
 		} else {
 
 			// Set request context.
@@ -90,21 +93,27 @@ final class Listing extends Component {
 			return;
 		}
 
-		// Check vendor.
+		// Get listing vendor.
 		$vendor = null;
 
 		if ( $listing->get_vendor__id() ) {
 			$vendor = $listing->get_vendor();
 		}
 
-		if ( $vendor && $vendor->get_user__id() === $listing->get_user__id() ) {
+		if ( $vendor ) {
+			if ( $vendor->get_user__id() !== $listing->get_user__id() ) {
+
+				// Update listing user.
+				$listing->set_user( $vendor->get_user__id() )->save_user();
+			}
+
 			return;
 		}
 
-		// Get vendor.
+		// Get user vendor.
 		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
 
-		if ( empty( $vendor ) ) {
+		if ( ! $vendor && $listing->get_status() === 'publish' ) {
 
 			// Get user.
 			$user = $listing->get_user();
@@ -135,8 +144,9 @@ final class Listing extends Component {
 			}
 		}
 
-		// Set vendor.
-		if ( $listing->get_vendor__id() !== $vendor->get_id() ) {
+		if ( $vendor ) {
+
+			// Update listing vendor.
 			$listing->set_vendor( $vendor->get_id() )->save_vendor();
 		}
 	}
@@ -441,22 +451,44 @@ final class Listing extends Component {
 		if ( 'vendor' === $column ) {
 			$output = '&mdash;';
 
+			// Get name and URL.
+			$name = null;
+			$url  = null;
+
 			// Get vendor ID.
 			$vendor_id = wp_get_post_parent_id( $listing_id );
 
 			if ( $vendor_id ) {
+				$name = get_the_title( $vendor_id );
+				$url  = admin_url(
+					'post.php?' . http_build_query(
+						[
+							'action' => 'edit',
+							'post'   => $vendor_id,
+						]
+					)
+				);
+			} else {
 
-				// Render link.
-				$output = '<a href="' . esc_url(
-					admin_url(
-						'post.php?' . http_build_query(
+				// Get user ID.
+				$user_id = get_post_field( 'post_author', $listing_id );
+
+				if ( $user_id ) {
+					$name = get_the_author_meta( 'display_name', $user_id );
+					$url  = admin_url(
+						'user-edit.php?' . http_build_query(
 							[
-								'action' => 'edit',
-								'post'   => $vendor_id,
+								'user_id' => $user_id,
 							]
 						)
-					)
-				) . '">' . esc_html( get_the_title( $vendor_id ) ) . '</a>';
+					);
+				}
+			}
+
+			if ( strlen( $name ) ) {
+
+				// Render link.
+				$output = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
 			}
 
 			echo wp_kses_data( $output );
@@ -487,6 +519,28 @@ final class Listing extends Component {
 		}
 
 		return $states;
+	}
+
+	/**
+	 * Alters listing settings meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_listing_settings_meta_box( $meta_box ) {
+		if ( ! get_post_field( 'post_parent' ) && in_array( get_post_status(), [ 'draft', 'pending' ], true ) ) {
+			$meta_box['fields']['vendor'] = array_merge(
+				$meta_box['fields']['vendor'],
+				[
+					'options'     => 'users',
+					'option_args' => [],
+					'disabled'    => true,
+					'_alias'      => 'post_author',
+				]
+			);
+		}
+
+		return $meta_box;
 	}
 
 	/**
