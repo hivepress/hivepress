@@ -69,6 +69,28 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets user options.
+	 *
+	 * @param array $args User arguments.
+	 * @return array
+	 */
+	protected function get_users( $args ) {
+
+		// Set default arguments.
+		$args = array_merge(
+			[
+				'fields' => [ 'ID', 'user_login' ],
+			],
+			$args
+		);
+
+		// Get users.
+		$users = wp_list_pluck( get_users( $args ), 'user_login', 'ID' );
+
+		return $users;
+	}
+
+	/**
 	 * Gets post options.
 	 *
 	 * @param array $args Post arguments.
