@@ -56,10 +56,9 @@ class Listing_Category extends Term {
 					],
 
 					'parent'      => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'_alias'    => 'parent',
-						'_model'    => 'listing_category',
+						'type'   => 'id',
+						'_alias' => 'parent',
+						'_model' => 'listing_category',
 					],
 
 					'children'    => [
@@ -72,8 +71,7 @@ class Listing_Category extends Term {
 					],
 
 					'image'       => [
-						'type'      => 'number',
-						'min_value' => 1,
+						'type'      => 'id',
 						'_model'    => 'attachment',
 						'_external' => true,
 					],

@@ -63,11 +63,10 @@ class Vendor extends Post {
 					],
 
 					'user'            => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'required'  => true,
-						'_alias'    => 'post_author',
-						'_model'    => 'user',
+						'type'     => 'id',
+						'required' => true,
+						'_alias'   => 'post_author',
+						'_model'   => 'user',
 					],
 
 					'categories'      => [
@@ -80,8 +79,7 @@ class Vendor extends Post {
 					],
 
 					'image'           => [
-						'type'      => 'number',
-						'min_value' => 1,
+						'type'      => 'id',
 						'_alias'    => '_thumbnail_id',
 						'_model'    => 'attachment',
 						'_external' => true,
