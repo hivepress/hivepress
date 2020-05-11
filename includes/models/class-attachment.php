@@ -46,7 +46,7 @@ class Attachment extends Post {
 				'fields' => [
 					'mime_type'    => [
 						'type'       => 'text',
-						'max_length' => 128,
+						'max_length' => 256,
 						'_alias'     => 'post_mime_type',
 					],
 

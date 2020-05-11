@@ -59,7 +59,7 @@ abstract class Component {
 				[
 					$callback['hook'],
 					$callback['action'],
-					hp\get_array_value( $callback, 'priority', 10 ),
+					hp\get_array_value( $callback, '_order', 10 ),
 					hp\get_array_value( $callback, 'args', 1 ),
 				]
 			);

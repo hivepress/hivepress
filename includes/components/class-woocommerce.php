@@ -123,7 +123,7 @@ final class WooCommerce extends Component {
 	/**
 	 * Formats price.
 	 *
-	 * @param int $price Price.
+	 * @param float $price Price.
 	 * @return string
 	 */
 	public function format_price( $price ) {
