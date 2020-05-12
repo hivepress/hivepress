@@ -187,7 +187,8 @@ class Attachment_Upload extends Field {
 				[
 					'id__in' => (array) $this->value,
 				]
-			)->get();
+			)->order( 'id__in' )
+			->get();
 
 			// Render attachments.
 			foreach ( $attachments as $attachment ) {

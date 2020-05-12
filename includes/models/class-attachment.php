@@ -119,6 +119,11 @@ class Attachment extends Post {
 
 		if ( $id ) {
 
+			// @todo remove temporary fix.
+			if ( ! $this->get_parent_model() && $this->fields['parent__id']->get_value() ) {
+				$this->set_parent_model( hp\unprefix( get_post_type( $id ) ) );
+			}
+
 			// Get model object.
 			$model = hp\create_class_instance( '\HivePress\Models\\' . $this->get_parent_model() );
 
