@@ -22,7 +22,6 @@ return [
 				'type'        => 'select',
 				'options'     => 'posts',
 				'option_args' => [ 'post_type' => 'hp_vendor' ],
-				'required'    => true,
 				'_alias'      => 'post_parent',
 				'_order'      => 10,
 			],
