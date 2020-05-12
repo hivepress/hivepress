@@ -17,7 +17,7 @@ return [
 
 		'sections' => [
 			'display'    => [
-				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'title'  => hivepress()->translator->get_string( 'display_noun' ),
 				'_order' => 10,
 
 				'fields' => [
@@ -169,12 +169,12 @@ return [
 
 		'sections' => [
 			'display' => [
-				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'title'  => hivepress()->translator->get_string( 'display_noun' ),
 				'_order' => 10,
 
 				'fields' => [
 					'vendor_enable_display' => [
-						'label'   => esc_html_x( 'Display', 'noun', 'hivepress' ),
+						'label'   => hivepress()->translator->get_string( 'display_noun' ),
 						'caption' => hivepress()->translator->get_string( 'display_vendors_on_frontend' ),
 						'type'    => 'checkbox',
 						'default' => true,
@@ -223,7 +223,7 @@ return [
 
 		'sections' => [
 			'display'      => [
-				'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'title'  => hivepress()->translator->get_string( 'display_noun' ),
 				'_order' => 10,
 
 				'fields' => [

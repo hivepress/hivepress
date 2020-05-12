@@ -28,12 +28,9 @@ final class Listing extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set request context.
-		add_action( 'init', [ $this, 'set_request_context' ], 100 );
-
-		// Update vendor.
-		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_vendor' ] );
-		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
+		// Update listing.
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ] );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
 		// Update image.
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
@@ -53,12 +50,19 @@ final class Listing extends Component {
 
 		if ( is_admin() ) {
 
-			// Alter meta boxes.
-			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_settings_meta_box' ] );
+			// Manage admin columns.
+			add_filter( 'manage_hp_listing_posts_columns', [ $this, 'add_listing_admin_columns' ] );
+			add_action( 'manage_hp_listing_posts_custom_column', [ $this, 'render_listing_admin_columns' ], 10, 2 );
 
 			// Add post states.
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
+
+			// Alter meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_listing_settings_meta_box' ] );
 		} else {
+
+			// Set request context.
+			add_action( 'init', [ $this, 'set_request_context' ], 100 );
 
 			// Alter menus.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
@@ -73,45 +77,14 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Sets request context.
-	 */
-	public function set_request_context() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		// Get cached listing count.
-		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
-
-		if ( is_null( $listing_count ) ) {
-
-			// Get listing count.
-			$listing_count = Models\Listing::query()->filter(
-				[
-					'status__in' => [ 'draft', 'pending', 'publish' ],
-					'user'       => get_current_user_id(),
-				]
-			)->get_count();
-
-			// Cache listing count.
-			hivepress()->cache->set_user_cache( get_current_user_id(), 'listing_count', 'models/listing', $listing_count );
-		}
-
-		// Set request context.
-		hivepress()->request->set_context( 'listing_count', $listing_count );
-	}
-
-	/**
-	 * Updates listing vendor.
+	 * Updates listing.
 	 *
 	 * @param int $listing_id Listing ID.
 	 */
-	public function update_vendor( $listing_id ) {
+	public function update_listing( $listing_id ) {
 
 		// Remove action.
-		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_vendor' ] );
+		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
@@ -120,21 +93,27 @@ final class Listing extends Component {
 			return;
 		}
 
-		// Check vendor.
+		// Get listing vendor.
 		$vendor = null;
 
 		if ( $listing->get_vendor__id() ) {
 			$vendor = $listing->get_vendor();
 		}
 
-		if ( $vendor && $vendor->get_user__id() === $listing->get_user__id() ) {
+		if ( $vendor ) {
+			if ( $vendor->get_user__id() !== $listing->get_user__id() ) {
+
+				// Update listing user.
+				$listing->set_user( $vendor->get_user__id() )->save_user();
+			}
+
 			return;
 		}
 
-		// Get vendor.
+		// Get user vendor.
 		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
 
-		if ( empty( $vendor ) ) {
+		if ( ! $vendor && $listing->get_status() === 'publish' ) {
 
 			// Get user.
 			$user = $listing->get_user();
@@ -165,23 +144,9 @@ final class Listing extends Component {
 			}
 		}
 
-		if ( $listing->get_vendor__id() !== $vendor->get_id() ) {
+		if ( $vendor ) {
 
-			// Update attachments.
-			if ( $listing->get_vendor__id() ) {
-				$attachments = Models\Attachment::query()->filter(
-					[
-						'parent_model' => 'listing',
-						'parent'       => $listing->get_id(),
-					]
-				)->get();
-
-				foreach ( $attachments as $attachment ) {
-					$attachment->set_user( $listing->get_user__id() )->save_user();
-				}
-			}
-
-			// Set vendor.
+			// Update listing vendor.
 			$listing->set_vendor( $vendor->get_id() )->save_vendor();
 		}
 	}
@@ -277,7 +242,7 @@ final class Listing extends Component {
 		// Get expired listings.
 		$expired_listings = Models\Listing::query()->filter(
 			[
-				'status__in'        => [ 'draft', 'pending', 'publish' ],
+				'status__in'        => [ 'pending', 'publish' ],
 				'expired_time__lte' => time(),
 			]
 		)->get();
@@ -285,12 +250,8 @@ final class Listing extends Component {
 		// Update expired listings.
 		foreach ( $expired_listings as $listing ) {
 
-			// Update listing.
-			$listing->fill(
-				[
-					'status' => 'draft',
-				]
-			)->save_status();
+			// Update status.
+			$listing->set_status( 'draft' )->save_status();
 
 			// Send email.
 			$user = $listing->get_user();
@@ -465,17 +426,73 @@ final class Listing extends Component {
 	}
 
 	/**
-	 * Alters settings meta box.
+	 * Adds listing admin columns.
 	 *
-	 * @param array $meta_box Meta box arguments.
+	 * @param array $columns Columns.
 	 * @return array
 	 */
-	public function alter_settings_meta_box( $meta_box ) {
-		if ( isset( $meta_box['fields']['vendor'] ) ) {
-			$meta_box['fields']['vendor']['option_args']['author'] = get_post_field( 'post_author' );
-		}
+	public function add_listing_admin_columns( $columns ) {
+		return array_merge(
+			array_slice( $columns, 0, 2, true ),
+			[
+				'vendor' => hivepress()->translator->get_string( 'vendor' ),
+			],
+			array_slice( $columns, 2, null, true )
+		);
+	}
 
-		return $meta_box;
+	/**
+	 * Renders listing admin columns.
+	 *
+	 * @param string $column Column name.
+	 * @param int    $listing_id Listing ID.
+	 */
+	public function render_listing_admin_columns( $column, $listing_id ) {
+		if ( 'vendor' === $column ) {
+			$output = '&mdash;';
+
+			// Get name and URL.
+			$name = null;
+			$url  = null;
+
+			// Get vendor ID.
+			$vendor_id = wp_get_post_parent_id( $listing_id );
+
+			if ( $vendor_id ) {
+				$name = get_the_title( $vendor_id );
+				$url  = admin_url(
+					'post.php?' . http_build_query(
+						[
+							'action' => 'edit',
+							'post'   => $vendor_id,
+						]
+					)
+				);
+			} else {
+
+				// Get user ID.
+				$user_id = get_post_field( 'post_author', $listing_id );
+
+				if ( $user_id ) {
+					$name = get_the_author_meta( 'display_name', $user_id );
+					$url  = admin_url(
+						'user-edit.php?' . http_build_query(
+							[
+								'user_id' => $user_id,
+							]
+						)
+					);
+				}
+			}
+
+			if ( strlen( $name ) ) {
+
+				// Render link.
+				$output = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+			}
+
+			echo wp_kses_data( $output );
+		}
 	}
 
 	/**
@@ -502,6 +519,59 @@ final class Listing extends Component {
 		}
 
 		return $states;
+	}
+
+	/**
+	 * Alters listing settings meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_listing_settings_meta_box( $meta_box ) {
+		if ( ! get_post_field( 'post_parent' ) && in_array( get_post_status(), [ 'draft', 'pending' ], true ) ) {
+			$meta_box['fields']['vendor'] = array_merge(
+				$meta_box['fields']['vendor'],
+				[
+					'options'     => 'users',
+					'option_args' => [],
+					'disabled'    => true,
+					'_alias'      => 'post_author',
+				]
+			);
+		}
+
+		return $meta_box;
+	}
+
+	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			return;
+		}
+
+		// Get cached listing count.
+		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
+
+		if ( is_null( $listing_count ) ) {
+
+			// Get listing count.
+			$listing_count = Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'draft', 'pending', 'publish' ],
+					'user'       => get_current_user_id(),
+				]
+			)->get_count();
+
+			// Cache listing count.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'listing_count', 'models/listing', $listing_count );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'listing_count', $listing_count );
 	}
 
 	/**
@@ -538,7 +608,7 @@ final class Listing extends Component {
 			// Add menu items.
 			if ( $listing->get_status() === 'publish' ) {
 				$items['listing_view'] = [
-					'label'  => esc_html__( 'Details', 'hivepress' ),
+					'label'  => hivepress()->translator->get_string( 'details' ),
 					'url'    => hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ),
 					'_order' => 5,
 				];

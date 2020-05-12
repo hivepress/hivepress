@@ -60,7 +60,7 @@
 								grecaptcha.reset(captchaId);
 							}
 
-							if (response === null || response.hasOwnProperty('data')) {
+							if (response == null || response.hasOwnProperty('data')) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
@@ -71,7 +71,7 @@
 									} else {
 										window.location.reload(true);
 									}
-								} else if (!form.is('[data-id]')) {
+								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
 								}
 							} else if (response.hasOwnProperty('error')) {
@@ -141,82 +141,6 @@
 
 				e.preventDefault();
 			});
-		});
-
-		// File upload
-		hivepress.getComponent('file-upload').each(function() {
-			var field = $(this),
-				selectLabel = field.closest('label'),
-				selectButton = selectLabel.find('button').first(),
-				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
-				responseContainer = selectLabel.parent().children('div').first();
-
-			field.fileupload({
-				url: field.data('url'),
-				dataType: 'json',
-				paramName: 'file',
-				formData: {
-					'parent_model': field.closest('form').data('model'),
-					'parent_field': field.attr('name'),
-					'parent': field.closest('form').data('id'),
-					'render': true,
-					'_wpnonce': hivepressCoreData.apiNonce,
-				},
-				start: function() {
-					field.prop('disabled', true);
-
-					selectButton.prop('disabled', true);
-					selectButton.attr('data-state', 'loading');
-
-					messageContainer.hide().html('');
-				},
-				stop: function() {
-					field.prop('disabled', false);
-
-					selectButton.prop('disabled', false);
-					selectButton.attr('data-state', '');
-				},
-				always: function(e, data) {
-					var response = data.jqXHR.responseJSON;
-
-					if (response.hasOwnProperty('data')) {
-						if (field.prop('multiple')) {
-							responseContainer.append(response.data.html);
-						} else {
-							responseContainer.html(response.data.html);
-						}
-					} else if (response.hasOwnProperty('error')) {
-						if (response.error.hasOwnProperty('errors')) {
-							$.each(response.error.errors, function(index, error) {
-								messageContainer.append('<div>' + error.message + '</div>');
-							});
-						} else if (response.error.hasOwnProperty('message')) {
-							messageContainer.html('<div>' + response.error.message + '</div>');
-						}
-
-						if (!messageContainer.is(':empty')) {
-							messageContainer.show();
-						}
-					}
-				},
-			});
-		});
-
-		// File delete
-		$(document).on('click', hivepress.getSelector('file-delete'), function(e) {
-			var container = $(this).parent();
-
-			$.ajax({
-				url: $(this).data('url'),
-				method: 'DELETE',
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-				},
-			});
-
-			container.remove();
-
-			e.preventDefault();
 		});
 
 		// Sortable

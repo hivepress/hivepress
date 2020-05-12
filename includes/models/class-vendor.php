@@ -36,18 +36,18 @@ class Vendor extends Post {
 						'_alias'     => 'post_title',
 					],
 
+					'slug'            => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'post_name',
+					],
+
 					'description'     => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'html'       => true,
 						'_alias'     => 'post_content',
-					],
-
-					'slug'            => [
-						'type'       => 'text',
-						'max_length' => 256,
-						'_alias'     => 'post_name',
 					],
 
 					'status'          => [
@@ -63,11 +63,10 @@ class Vendor extends Post {
 					],
 
 					'user'            => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'required'  => true,
-						'_alias'    => 'post_author',
-						'_model'    => 'user',
+						'type'     => 'id',
+						'required' => true,
+						'_alias'   => 'post_author',
+						'_model'   => 'user',
 					],
 
 					'categories'      => [
@@ -80,8 +79,7 @@ class Vendor extends Post {
 					],
 
 					'image'           => [
-						'type'      => 'number',
-						'min_value' => 1,
+						'type'      => 'id',
 						'_alias'    => '_thumbnail_id',
 						'_model'    => 'attachment',
 						'_external' => true,

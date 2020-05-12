@@ -69,6 +69,28 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets user options.
+	 *
+	 * @param array $args User arguments.
+	 * @return array
+	 */
+	protected function get_users( $args ) {
+
+		// Set default arguments.
+		$args = array_merge(
+			[
+				'fields' => [ 'ID', 'user_login' ],
+			],
+			$args
+		);
+
+		// Get users.
+		$users = wp_list_pluck( get_users( $args ), 'user_login', 'ID' );
+
+		return $users;
+	}
+
+	/**
 	 * Gets post options.
 	 *
 	 * @param array $args Post arguments.
@@ -250,6 +272,26 @@ final class Form extends Component {
 		asort( $options );
 
 		return $options;
+	}
+
+	/**
+	 * Gets MIME type options.
+	 *
+	 * @param array $args MIME type arguments.
+	 * @return array
+	 */
+	protected function get_mime_types( $args ) {
+		return get_allowed_mime_types();
+	}
+
+	/**
+	 * Gets country options.
+	 *
+	 * @param array $args Country arguments.
+	 * @return array
+	 */
+	protected function get_countries( $args ) {
+		return hivepress()->get_config( 'countries' );
 	}
 
 	/**

@@ -44,6 +44,12 @@ class Attachment extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
+					'mime_type'    => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'post_mime_type',
+					],
+
 					'sort_order'   => [
 						'type'      => 'number',
 						'min_value' => 0,
@@ -62,18 +68,21 @@ class Attachment extends Post {
 						'_external'  => true,
 					],
 
+					'parent__id'   => [
+						'type'   => 'id',
+						'_alias' => 'post_parent',
+					],
+
 					'parent'       => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'_alias'    => 'comment_count',
+						'type'   => 'id',
+						'_alias' => 'comment_count',
 					],
 
 					'user'         => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'required'  => true,
-						'_alias'    => 'post_author',
-						'_model'    => 'user',
+						'type'     => 'id',
+						'required' => true,
+						'_alias'   => 'post_author',
+						'_model'   => 'user',
 					],
 				],
 			],
@@ -84,6 +93,21 @@ class Attachment extends Post {
 	}
 
 	/**
+	 * Gets parent object ID.
+	 *
+	 * @return mixed
+	 */
+	final public function get_parent__id() {
+		$id = $this->fields['parent']->get_value();
+
+		if ( $this->fields['parent__id']->get_value() ) {
+			$id = $this->fields['parent__id']->get_value();
+		}
+
+		return $id;
+	}
+
+	/**
 	 * Gets parent object.
 	 *
 	 * @return mixed
@@ -91,9 +115,22 @@ class Attachment extends Post {
 	final public function get_parent() {
 
 		// Get object ID.
-		$id = $this->fields['parent']->get_value();
+		$id = $this->get_parent__id();
 
 		if ( $id ) {
+
+			// @todo remove temporary fix.
+			if ( ! $this->get_parent_model() && $this->fields['parent__id']->get_value() ) {
+				$this->set_parent_model( hp\unprefix( get_post_type( $id ) ) );
+
+				if ( ! $this->get_parent_field() ) {
+					$this->set_parent_field( 'images' );
+				}
+
+				if ( ! $this->fields['parent']->get_value() ) {
+					$this->fields['parent']->set_value( $id );
+				}
+			}
 
 			// Get model object.
 			$model = hp\create_class_instance( '\HivePress\Models\\' . $this->get_parent_model() );

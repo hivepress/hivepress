@@ -124,7 +124,7 @@ final class Attachment extends Controller {
 		}
 
 		// Get parent object.
-		$parent = $parent_model::query()->get_by_id( $request->get_param( 'parent' ) );
+		$parent = $parent_model->query()->get_by_id( $request->get_param( 'parent' ) );
 
 		if ( empty( $parent ) ) {
 			return hp\rest_error( 400 );
@@ -138,7 +138,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -170,12 +170,27 @@ final class Attachment extends Controller {
 		}
 
 		// Check file format.
-		$file_type    = wp_check_filetype_and_ext( $_FILES['file']['tmp_name'], $_FILES['file']['name'] );
-		$file_formats = array_map( 'strtoupper', $parent_field->get_formats() );
+		if ( $parent_field->get_formats() ) {
+			$file_type    = wp_check_filetype_and_ext( $_FILES['file']['tmp_name'], $_FILES['file']['name'] );
+			$file_formats = array_map( 'strtoupper', $parent_field->get_formats() );
 
-		if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
-			/* translators: %s: file extensions. */
-			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
+			if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+				/* translators: %s: file extensions. */
+				return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
+			}
+		}
+
+		// Get file callback.
+		$file_callback = null;
+
+		if ( $parent_field->is_protected() ) {
+			$file_callback = function( $dir, $filename, $ext ) {
+				if ( strlen( $filename ) ) {
+					$filename = apply_filters( 'hivepress/v1/models/attachment/filename', $filename, $ext, $dir );
+				}
+
+				return $filename;
+			};
 		}
 
 		// Get parent ID.
@@ -186,7 +201,15 @@ final class Attachment extends Controller {
 		}
 
 		// Upload attachment.
-		$attachment_id = media_handle_upload( 'file', $parent_id );
+		$attachment_id = media_handle_upload(
+			'file',
+			$parent_id,
+			[],
+			[
+				'test_form'                => false,
+				'unique_filename_callback' => $file_callback,
+			]
+		);
 
 		if ( is_wp_error( $attachment_id ) ) {
 			return hp\rest_error( 400, $attachment_id->get_error_messages() );
@@ -236,7 +259,7 @@ final class Attachment extends Controller {
 		];
 
 		if ( $request->get_param( 'render' ) ) {
-			$data['html'] = $parent_field->render_attachment( $attachment->get_id() );
+			$data['html'] = $parent_field->render_attachment( $attachment );
 		}
 
 		return hp\rest_response( 201, $data );
@@ -262,8 +285,22 @@ final class Attachment extends Controller {
 			return hp\rest_error( 404 );
 		}
 
+		// Get parent object.
+		$parent = $attachment->get_parent();
+
+		if ( empty( $parent ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get user ID.
+		$user_id = $parent->get_user__id();
+
+		if ( $parent::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $parent->get_id();
+		}
+
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -305,8 +342,22 @@ final class Attachment extends Controller {
 			return hp\rest_error( 404 );
 		}
 
+		// Get parent object.
+		$parent = $attachment->get_parent();
+
+		if ( empty( $parent ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get user ID.
+		$user_id = $parent->get_user__id();
+
+		if ( $parent::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $parent->get_id();
+		}
+
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && get_current_user_id() !== $attachment->get_user__id() ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) ) {
 			return hp\rest_error( 403 );
 		}
 

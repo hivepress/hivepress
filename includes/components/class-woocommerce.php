@@ -47,7 +47,13 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
+		// Set countries configuration.
+		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
+
 		if ( ! is_admin() ) {
+
+			// Set request context.
+			add_action( 'init', [ $this, 'set_request_context' ], 100 );
 
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
@@ -115,13 +121,23 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Formats price.
+	 *
+	 * @param float $price Price.
+	 * @return string
+	 */
+	public function format_price( $price ) {
+		return wp_strip_all_tags( wc_price( $price ) );
+	}
+
+	/**
 	 * Gets product price text.
 	 *
 	 * @param WC_Product $product Product object.
 	 * @return string
 	 */
 	public function get_product_price_text( $product ) {
-		return wp_strip_all_tags( wc_price( $product->get_price() ) );
+		return $this->format_price( $product->get_price() );
 	}
 
 	/**
@@ -232,6 +248,33 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Sets countries configuration.
+	 *
+	 * @param array $countries Countries array.
+	 * @return array
+	 */
+	public function set_countries( $countries ) {
+		return WC()->countries->get_countries();
+	}
+
+	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			return;
+		}
+
+		// Get order count.
+		$order_count = absint( get_user_meta( get_current_user_id(), '_order_count', true ) );
+
+		// Set request context.
+		hivepress()->request->set_context( 'user_order_count', $order_count );
+	}
+
+	/**
 	 * Sets account template.
 	 *
 	 * @param string $path Template path.
@@ -271,7 +314,7 @@ final class WooCommerce extends Component {
 	 * @return array
 	 */
 	public function alter_account_menu( $menu ) {
-		if ( wc_get_customer_order_count( get_current_user_id() ) ) {
+		if ( hivepress()->request->get_context( 'user_order_count' ) ) {
 			$menu['items']['orders_view'] = [
 				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'    => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),

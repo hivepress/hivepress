@@ -66,6 +66,43 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
+	Statuses
+	--------------------------------------------------------------*/
+	&-status {
+		span {
+			display: inline-block;
+			border: 1px solid rgba(0, 0, 0, 0.06);
+			padding: 0.4rem 0.5rem;
+			white-space: nowrap;
+			line-height: 1;
+			font-size: 80%;
+		}
+
+		&--draft span,
+		&--wc-refunded span {
+			color: #ff3860;
+			border-color: #ff3860;
+		}
+
+		&--pending span,
+		&--wc-processing span {
+			color: #ffcb00;
+			border-color: #ffcb00;
+		}
+
+		&--publish span,
+		&--wc-completed span {
+			color: #15cd72;
+			border-color: #15cd72;
+		}
+	}
+	/*--------------------------------------------------------------
+	Meta
+	--------------------------------------------------------------*/
+	&-meta {
+		font-size: 80%;
+	}
+	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
@@ -188,48 +225,6 @@ Mixins
 			&__actions,
 			&__footer {
 				flex-direction: column;
-			}
-		}
-
-		&__description,
-		&__messages {
-			&:not(:last-child) {
-				margin-bottom: 1rem;
-			}
-		}
-
-		& > &__messages {
-			&:not(:last-child) {
-				margin-bottom: 1.5rem;
-			}
-		}
-
-		&__messages {
-			display: none;
-			border-left: 3px solid transparent;
-			background-color: rgba(0,0,0,0.04);
-			padding: 1rem 1.5rem;
-
-			&--info {
-				border-left-color: #00a0d2;
-			}
-
-			&--warning {
-				border-left-color: #ffb900;
-			}
-
-			&--error {
-				border-left-color: #dc3232;
-			}
-
-			&--success {
-				border-left-color: #46b450;
-			}
-
-			> div {
-				&:not(:last-child) {
-					margin-bottom: 0.5rem;
-				}
 			}
 		}
 
@@ -358,61 +353,6 @@ Mixins
 		input[type=radio] {
 			margin-right: 0.5rem;
 			cursor: pointer;
-		}
-
-		&--attachment-upload {
-			&::after {
-				display: table;
-				clear: both;
-				content: '';
-			}
-
-			label {
-				position: relative;
-				float: left;
-				overflow: hidden;
-			}
-
-			input[type='file'] {
-				font-size: 200px !important;
-				position: absolute;
-				top: 0;
-				right: 0;
-				margin: 0;
-				cursor: pointer;
-				opacity: 0;
-				direction: ltr;
-			}
-
-			> div:first-child {
-				&:not(:empty) {
-					margin-bottom: -2rem;
-					padding-bottom: 1rem;
-				}
-
-				> div {
-					position: relative;
-					margin-bottom: 2rem;
-					.image-wrapper;
-
-					&:not(:only-child) img {
-						cursor: move;
-					}
-
-					a {
-						.center-container;
-						position: absolute;
-						top: 0.5rem;
-						right: 1.5rem;
-						width: 2rem;
-						height: 2rem;
-						border-radius: 50%;
-						text-decoration: none;
-						color: #fff;
-						background-color: rgba(0,0,0,.5);
-					}
-				}
-			}
 		}
 
 		&__label {
@@ -1155,5 +1095,13 @@ Mixins
 			margin: 0;
 			padding: 1.5rem 0;
 		}
+	}
+}
+/*--------------------------------------------------------------
+Select2
+--------------------------------------------------------------*/
+.select2 {
+	&-dropdown {
+		z-index: 99999;
 	}
 }

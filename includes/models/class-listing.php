@@ -36,6 +36,12 @@ class Listing extends Post {
 						'_alias'     => 'post_title',
 					],
 
+					'slug'             => [
+						'type'       => 'text',
+						'max_length' => 256,
+						'_alias'     => 'post_name',
+					],
+
 					'description'      => [
 						'label'      => esc_html__( 'Description', 'hivepress' ),
 						'type'       => 'textarea',
@@ -107,19 +113,16 @@ class Listing extends Post {
 					],
 
 					'user'             => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'required'  => true,
-						'_alias'    => 'post_author',
-						'_model'    => 'user',
+						'type'     => 'id',
+						'required' => true,
+						'_alias'   => 'post_author',
+						'_model'   => 'user',
 					],
 
 					'vendor'           => [
-						'type'      => 'number',
-						'min_value' => 1,
-						'required'  => true,
-						'_alias'    => 'post_parent',
-						'_model'    => 'vendor',
+						'type'   => 'id',
+						'_alias' => 'post_parent',
+						'_model' => 'vendor',
 					],
 
 					'categories'       => [
@@ -132,8 +135,7 @@ class Listing extends Post {
 					],
 
 					'image'            => [
-						'type'      => 'number',
-						'min_value' => 1,
+						'type'      => 'id',
 						'_alias'    => '_thumbnail_id',
 						'_model'    => 'attachment',
 						'_external' => true,

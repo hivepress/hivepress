@@ -54,7 +54,13 @@ return [
 	'grid'              => [
 		'handle' => 'hivepress-grid',
 		'src'    => hivepress()->get_url() . '/assets/css/grid.min.css',
-		'scope'  => [ 'frontend', 'editor' ],
+		'scope'  => [ 'frontend', 'backend', 'editor' ],
+	],
+
+	'core_common'       => [
+		'handle' => 'hivepress-core-common',
+		'src'    => hivepress()->get_url() . '/assets/css/common.min.css',
+		'scope'  => [ 'frontend', 'backend', 'editor' ],
 	],
 
 	'core_frontend'     => [

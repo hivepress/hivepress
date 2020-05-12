@@ -114,8 +114,8 @@ final class Admin extends Component {
 		$title = ' &lsaquo; ' . hivepress()->get_name();
 
 		// Add pages.
-		add_menu_page( esc_html__( 'Settings', 'hivepress' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
-		add_submenu_page( 'hp_settings', esc_html__( 'Settings', 'hivepress' ) . $title, esc_html__( 'Settings', 'hivepress' ), 'manage_options', 'hp_settings' );
+		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
+		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings' );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
 
@@ -768,7 +768,7 @@ final class Admin extends Component {
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field ) {
+				if ( $field && ! $field->get_arg( 'disabled' ) ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
@@ -830,7 +830,7 @@ final class Admin extends Component {
 
 			// Render fields.
 			if ( $meta_box['fields'] ) {
-				$output .= '<table class="form-table hp-form">';
+				$output .= '<table class="form-table hp-form" data-model="' . esc_attr( hp\unprefix( $post->post_type ) ) . '" data-id="' . esc_attr( $post->ID ) . '">';
 
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
@@ -949,7 +949,7 @@ final class Admin extends Component {
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field ) {
+				if ( $field && ! $field->get_arg( 'disabled' ) ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );

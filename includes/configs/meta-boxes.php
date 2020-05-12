@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'listing_settings'          => [
-		'title'  => esc_html__( 'Settings', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'listing',
 		'model'  => 'listing',
 
@@ -22,7 +22,6 @@ return [
 				'type'        => 'select',
 				'options'     => 'posts',
 				'option_args' => [ 'post_type' => 'hp_vendor' ],
-				'required'    => true,
 				'_alias'      => 'post_parent',
 				'_order'      => 10,
 			],
@@ -128,7 +127,7 @@ return [
 	],
 
 	'listing_attribute_display' => [
-		'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'display_noun' ),
 		'screen' => 'listing_attribute',
 		'model'  => 'listing',
 
@@ -181,7 +180,7 @@ return [
 			],
 
 			'display_subcategories' => [
-				'label'   => esc_html_x( 'Display', 'noun', 'hivepress' ),
+				'label'   => hivepress()->translator->get_string( 'display_noun' ),
 				'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 30,
@@ -205,7 +204,7 @@ return [
 	],
 
 	'vendor_settings'           => [
-		'title'  => esc_html__( 'Settings', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'vendor',
 		'model'  => 'vendor',
 		'fields' => [],
@@ -273,7 +272,7 @@ return [
 	],
 
 	'vendor_attribute_display'  => [
-		'title'  => esc_html_x( 'Display', 'noun', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'display_noun' ),
 		'screen' => 'vendor_attribute',
 		'model'  => 'vendor',
 

@@ -147,7 +147,7 @@ final class User extends Controller {
 					],
 
 					'user_edit_settings_page'      => [
-						'title'    => esc_html__( 'Settings', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'settings' ),
 						'base'     => 'user_account_page',
 						'path'     => '/settings',
 						'redirect' => [ $this, 'redirect_user_edit_settings_page' ],

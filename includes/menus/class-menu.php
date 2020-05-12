@@ -238,7 +238,7 @@ abstract class Menu {
 		$items = array_filter(
 			$this->items,
 			function( $item ) use ( $current ) {
-				$parent = hp\get_array_value( $item, 'parent' );
+				$parent = hp\get_array_value( $item, '_parent' );
 
 				return ( is_null( $current ) && is_null( $parent ) ) || ( ! is_null( $current ) && $parent === $current );
 			}
@@ -250,7 +250,7 @@ abstract class Menu {
 			$url = hivepress()->router->get_current_url();
 
 			// Get current route.
-			$route = hp\get_array_value( hivepress()->router->get_current_route(), 'name', false );
+			$route = hivepress()->router->get_current_route_name();
 
 			// Render items.
 			$output .= '<ul>';
@@ -260,7 +260,7 @@ abstract class Menu {
 				// Get current class.
 				$class = '';
 
-				if ( $args['url'] === $url || hp\get_array_value( $args, 'route' ) === $route ) {
+				if ( $args['url'] === $url || hp\get_array_value( $args, 'route', false ) === $route ) {
 					$class = 'hp-menu__item--current current-menu-item';
 				}
 

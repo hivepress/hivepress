@@ -14,6 +14,7 @@ return [
 
 	// Common.
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
+	'display_noun'                              => esc_html_x( 'Display', 'noun', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
 	'editing'                                   => esc_html__( 'Editing', 'hivepress' ),
