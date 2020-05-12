@@ -68,6 +68,11 @@ class Attachment extends Post {
 						'_external'  => true,
 					],
 
+					'parent__id'   => [
+						'type'   => 'id',
+						'_alias' => 'post_parent',
+					],
+
 					'parent'       => [
 						'type'   => 'id',
 						'_alias' => 'comment_count',
@@ -88,6 +93,21 @@ class Attachment extends Post {
 	}
 
 	/**
+	 * Gets parent object ID.
+	 *
+	 * @return mixed
+	 */
+	final public function get_parent__id() {
+		$id = $this->fields['parent']->get_value();
+
+		if ( $this->fields['parent__id']->get_value() ) {
+			$id = $this->fields['parent__id']->get_value();
+		}
+
+		return $id;
+	}
+
+	/**
 	 * Gets parent object.
 	 *
 	 * @return mixed
@@ -95,7 +115,7 @@ class Attachment extends Post {
 	final public function get_parent() {
 
 		// Get object ID.
-		$id = $this->fields['parent']->get_value();
+		$id = $this->get_parent__id();
 
 		if ( $id ) {
 
