@@ -122,6 +122,10 @@ class Attachment extends Post {
 			// @todo remove temporary fix.
 			if ( ! $this->get_parent_model() && $this->fields['parent__id']->get_value() ) {
 				$this->set_parent_model( hp\unprefix( get_post_type( $id ) ) );
+
+				if ( ! $this->get_parent_field() ) {
+					$this->set_parent_field( 'images' );
+				}
 			}
 
 			// Get model object.

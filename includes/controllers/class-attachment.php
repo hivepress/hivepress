@@ -307,7 +307,7 @@ final class Attachment extends Controller {
 		// Update attachment.
 		$attachment->set_sort_order( $request->get_param( 'sort_order' ) );
 
-		if ( ! $attachment->save_sort_order() ) {
+		if ( ! $attachment->save() ) {
 			return hp\rest_error( 400, $attachment->_get_errors() );
 		}
 
