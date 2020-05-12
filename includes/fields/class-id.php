@@ -59,7 +59,7 @@ class ID extends Number {
 	protected function normalize() {
 		parent::normalize();
 
-		if ( 0 === $this->value ) {
+		if ( 0 === absint( $this->value ) ) {
 			$this->value = null;
 		}
 	}

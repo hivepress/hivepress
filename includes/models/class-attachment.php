@@ -126,6 +126,10 @@ class Attachment extends Post {
 				if ( ! $this->get_parent_field() ) {
 					$this->set_parent_field( 'images' );
 				}
+
+				if ( ! $this->fields['parent']->get_value() ) {
+					$this->fields['parent']->set_value( $id );
+				}
 			}
 
 			// Get model object.
