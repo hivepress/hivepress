@@ -38,6 +38,9 @@ final class WooCommerce extends Component {
 			return;
 		}
 
+		// Update order status.
+		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
+
 		// Set order item meta.
 		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'set_order_item_meta' ], 10, 3 );
 
@@ -138,6 +141,25 @@ final class WooCommerce extends Component {
 	 */
 	public function get_product_price_text( $product ) {
 		return $this->format_price( $product->get_price() );
+	}
+
+	/**
+	 * Updates order status.
+	 *
+	 * @param int      $order_id Order ID.
+	 * @param string   $old_status Old status.
+	 * @param string   $new_status New status.
+	 * @param WC_Order $order Order object.
+	 */
+	public function update_order_status( $order_id, $old_status, $new_status, $order ) {
+
+		// Check user.
+		if ( ! $order->get_user_id() ) {
+			return;
+		}
+
+		// Delete cached order count.
+		hivepress()->cache->delete_user_cache( $order->get_user_id(), 'order_count' );
 	}
 
 	/**
@@ -267,11 +289,20 @@ final class WooCommerce extends Component {
 			return;
 		}
 
-		// Get order count.
-		$order_count = absint( get_user_meta( get_current_user_id(), '_order_count', true ) );
+		// Get cached order count.
+		$order_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'order_count' );
+
+		if ( is_null( $order_count ) ) {
+
+			// Get order count.
+			$order_count = wc_get_customer_order_count( get_current_user_id() );
+
+			// Cache order count.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'order_count', null, $order_count );
+		}
 
 		// Set request context.
-		hivepress()->request->set_context( 'user_order_count', $order_count );
+		hivepress()->request->set_context( 'order_count', $order_count );
 	}
 
 	/**
@@ -314,7 +345,7 @@ final class WooCommerce extends Component {
 	 * @return array
 	 */
 	public function alter_account_menu( $menu ) {
-		if ( hivepress()->request->get_context( 'user_order_count' ) ) {
+		if ( hivepress()->request->get_context( 'order_count' ) ) {
 			$menu['items']['orders_view'] = [
 				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'orders' ),
 				'url'    => wc_get_endpoint_url( 'orders', '', wc_get_page_permalink( 'myaccount' ) ),
