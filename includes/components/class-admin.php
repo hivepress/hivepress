@@ -751,24 +751,32 @@ final class Admin extends Component {
 	public function update_meta_box( $post_id ) {
 		global $pagenow;
 
+		// Check current page.
 		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {
+			return;
+		}
+
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Check post ID.
+		if ( get_the_ID() !== $post_id ) {
 			return;
 		}
 
 		// Remove action.
 		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
-		// Get post type.
-		$post_type = get_post_type( $post_id );
-
 		// Update field values.
-		foreach ( $this->get_meta_boxes( $post_type ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field && ! $field->get_arg( 'disabled' ) ) {
+				if ( $field && ! $field->is_disabled() ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
@@ -949,7 +957,7 @@ final class Admin extends Component {
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field && ! $field->get_arg( 'disabled' ) ) {
+				if ( $field && ! $field->is_disabled() ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );

@@ -88,7 +88,7 @@ final class Editor extends Component {
 
 				// Register block script.
 				wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
-				wp_localize_script( $block['script'], 'hivepressBlock', $block );
+				wp_add_inline_script( $block['script'], 'var hivepressBlock = ' . wp_json_encode( $block ) . ';', 'before' );
 
 				// Register block type.
 				register_block_type(

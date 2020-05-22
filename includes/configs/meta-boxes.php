@@ -97,7 +97,7 @@ return [
 	],
 
 	'listing_attribute_search'  => [
-		'title'  => esc_html_x( 'Search', 'noun', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'search_noun' ),
 		'screen' => 'listing_attribute',
 		'model'  => 'listing',
 
@@ -242,7 +242,7 @@ return [
 	],
 
 	'vendor_attribute_search'   => [
-		'title'  => esc_html_x( 'Search', 'noun', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'search_noun' ),
 		'screen' => 'vendor_attribute',
 		'model'  => 'vendor',
 

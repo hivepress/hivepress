@@ -127,6 +127,17 @@ final class User extends Component {
 	 */
 	public function add_registration_fields( $form ) {
 
+		// Add username field.
+		if ( ! get_option( 'hp_user_generate_username' ) ) {
+			$form['fields']['username'] = [
+				'label'      => esc_html__( 'Username', 'hivepress' ),
+				'type'       => 'text',
+				'max_length' => 60,
+				'required'   => true,
+				'_order'     => 5,
+			];
+		}
+
 		// Get terms page ID.
 		$page_id = absint( get_option( 'hp_page_user_registration_terms' ) );
 

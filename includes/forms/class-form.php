@@ -345,8 +345,10 @@ abstract class Form {
 	final public function get_values() {
 		$values = [];
 
-		foreach ( array_keys( $this->fields ) as $name ) {
-			$values[ $name ] = $this->get_value( $name );
+		foreach ( $this->fields as $name => $field ) {
+			if ( ! $field->is_disabled() ) {
+				$values[ $name ] = $field->get_value();
+			}
 		}
 
 		return $values;
@@ -359,8 +361,10 @@ abstract class Form {
 	 * @return mixed
 	 */
 	final public function get_value( $name ) {
-		if ( isset( $this->fields[ $name ] ) ) {
-			return $this->fields[ $name ]->get_value();
+		$field = hp\get_array_value( $this->fields, $name );
+
+		if ( $field && ! $field->is_disabled() ) {
+			return $field->get_value();
 		}
 	}
 
@@ -374,7 +378,7 @@ abstract class Form {
 
 		// Validate fields.
 		foreach ( $this->fields as $field ) {
-			if ( ! $field->validate() ) {
+			if ( ! $field->is_disabled() && ! $field->validate() ) {
 				$this->add_errors( $field->get_errors() );
 			}
 		}

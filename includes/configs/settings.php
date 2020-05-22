@@ -257,6 +257,14 @@ return [
 						'option_args' => [ 'post_type' => 'page' ],
 						'_order'      => 10,
 					],
+
+					'user_generate_username'       => [
+						'label'   => esc_html__( 'Username', 'hivepress' ),
+						'caption' => esc_html__( 'Generate username from the email address', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_order'  => 20,
+					],
 				],
 			],
 
