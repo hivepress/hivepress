@@ -437,6 +437,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Checks disabled flag.
+	 *
+	 * @return bool
+	 */
+	final public function is_disabled() {
+		return $this->disabled;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param mixed $errors Field errors.

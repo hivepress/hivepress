@@ -776,7 +776,7 @@ final class Admin extends Component {
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field && ! $field->get_arg( 'disabled' ) ) {
+				if ( $field && ! $field->is_disabled() ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
@@ -957,7 +957,7 @@ final class Admin extends Component {
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
 
-				if ( $field && ! $field->get_arg( 'disabled' ) ) {
+				if ( $field && ! $field->is_disabled() ) {
 
 					// Validate field.
 					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );

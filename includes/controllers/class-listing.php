@@ -238,11 +238,6 @@ final class Listing extends Controller {
 			return hp\rest_error( 400, $form->get_errors() );
 		}
 
-		// Get values.
-		$values = $form->get_values();
-
-		unset( $values['images'] );
-
 		// Get attributes.
 		$attributes = [];
 
@@ -259,7 +254,7 @@ final class Listing extends Controller {
 		}
 
 		// Set values.
-		$listing->fill( $values );
+		$listing->fill( $form->get_values() );
 
 		if ( $attributes ) {
 

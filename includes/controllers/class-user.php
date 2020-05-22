@@ -507,11 +507,7 @@ final class User extends Controller {
 		}
 
 		// Update user.
-		$values = $form->get_values();
-
-		unset( $values['image'] );
-
-		$user->fill( $values );
+		$user->fill( $form->get_values() );
 
 		if ( ! $user->save() ) {
 			return hp\rest_error( 400, $user->_get_errors() );
