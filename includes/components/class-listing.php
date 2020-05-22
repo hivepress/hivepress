@@ -142,6 +142,13 @@ final class Listing extends Component {
 			) ) {
 				return;
 			}
+
+			// Update user role.
+			$user_object = get_userdata( $user->get_id() );
+
+			if ( array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
+				$user_object->set_role( 'contributor' );
+			}
 		}
 
 		if ( $vendor ) {
