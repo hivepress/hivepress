@@ -90,7 +90,7 @@ final class User extends Component {
 
 		// Check email verification.
 		if ( get_option( 'hp_user_verify_email' ) && hp\is_class_instance( $user, 'WP_User' ) && $user->hp_email_verify_key ) {
-			return new \WP_Error( 'email_not_verified', esc_html__( 'Please check your email to verify your account.', 'hivepress' ) );
+			return new \WP_Error( 'email_not_verified', esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
 		}
 
 		return $user;
@@ -114,17 +114,23 @@ final class User extends Component {
 
 		switch ( get_option( 'hp_user_display_name' ) ) {
 			case 'first_name':
-				$display_name = $user->get_first_name();
+				if ( $user->get_first_name() ) {
+					$display_name = $user->get_first_name();
+				}
 
 				break;
 
 			case 'last_name':
-				$display_name = $user->get_last_name();
+				if ( $user->get_last_name() ) {
+					$display_name = $user->get_last_name();
+				}
 
 				break;
 
 			case 'full_name':
-				$display_name = $user->get_full_name();
+				if ( $user->get_full_name() ) {
+					$display_name = $user->get_full_name();
+				}
 
 				break;
 		}
@@ -148,7 +154,7 @@ final class User extends Component {
 		// Set form message.
 		if ( get_option( 'hp_user_verify_email' ) ) {
 			$form['redirect'] = false;
-			$form['message']  = esc_html__( 'Please check your email to verify your account.', 'hivepress' );
+			$form['message']  = esc_html__( 'Please check your email to activate your account.', 'hivepress' );
 		}
 
 		// Add username field.

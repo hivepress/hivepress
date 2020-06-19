@@ -343,7 +343,7 @@ final class User extends Controller {
 
 		// Check email key.
 		if ( get_option( 'hp_user_verify_email' ) && $user_object->hp_email_verify_key ) {
-			return hp\rest_error( 401, esc_html__( 'Please check your email to verify your account.', 'hivepress' ) );
+			return hp\rest_error( 401, esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
 		}
 
 		// Authenticate user.
