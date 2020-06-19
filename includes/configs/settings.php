@@ -265,6 +265,13 @@ return [
 						'default' => true,
 						'_order'  => 20,
 					],
+
+					'user_verify_email'            => [
+						'label'   => esc_html__( 'Email', 'hivepress' ),
+						'caption' => esc_html__( 'Require email address verification', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 30,
+					],
 				],
 			],
 
@@ -293,6 +300,17 @@ return [
 						'html'        => true,
 						'_autoload'   => false,
 						'_order'      => 20,
+					],
+
+					'email_user_email_verify'     => [
+						'label'       => esc_html__( 'Email Verification', 'hivepress' ),
+						'description' => esc_html__( 'This email is sent to users when email verification is required.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %email_verify_url%' ),
+						'type'        => 'textarea',
+						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to verify your email address: %email_verify_url%', 'hivepress' ) ),
+						'max_length'  => 2048,
+						'html'        => true,
+						'_autoload'   => false,
+						'_order'      => 30,
 					],
 				],
 			],

@@ -146,6 +146,14 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_password_reset_page' ],
 					],
 
+					'user_email_verify_page'       => [
+						'title'    => esc_html__( 'Email Verified', 'hivepress' ),
+						'base'     => 'user_account_page',
+						'path'     => '/verify-email',
+						'redirect' => [ $this, 'redirect_user_email_verify_page' ],
+						'action'   => [ $this, 'render_user_email_verify_page' ],
+					],
+
 					'user_edit_settings_page'      => [
 						'title'    => hivepress()->translator->get_string( 'settings' ),
 						'base'     => 'user_account_page',
@@ -241,8 +249,34 @@ final class User extends Controller {
 		 */
 		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $form->get_values() );
 
-		// Authenticate user.
-		if ( ! is_user_logged_in() ) {
+		if ( get_option( 'hp_user_verify_email' ) ) {
+
+			// Generate email key.
+			$email_key = md5( $user->get_email() . time() . wp_rand() );
+
+			// Set email key.
+			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+
+			// Send email.
+			( new Emails\User_Email_Verify(
+				[
+					'recipient' => $user->get_email(),
+
+					'tokens'    => [
+						'user_name'        => $user->get_display_name(),
+						'email_verify_url' => hivepress()->router->get_url(
+							'user_email_verify_page',
+							[
+								'username'         => $user->get_username(),
+								'email_verify_key' => $email_key,
+							]
+						),
+					],
+				]
+			) )->send();
+		} elseif ( ! is_user_logged_in() ) {
+
+			// Authenticate user.
 			do_action( 'hivepress/v1/models/user/login' );
 
 			wp_signon(
@@ -305,6 +339,11 @@ final class User extends Controller {
 		// Check password.
 		if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
 			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect.', 'hivepress' ) );
+		}
+
+		// Check email key.
+		if ( get_option( 'hp_user_verify_email' ) && $user_object->hp_email_verify_key ) {
+			return hp\rest_error( 401, esc_html__( 'Please check your email to verify your account.', 'hivepress' ) );
 		}
 
 		// Authenticate user.
@@ -653,6 +692,58 @@ final class User extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template' => 'user_password_reset_page',
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects user email verify page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_email_verify_page() {
+
+		// Check permissions.
+		if ( ! get_option( 'hp_user_verify_email' ) ) {
+			return true;
+		}
+
+		// Get username and email key.
+		$username  = sanitize_user( hp\get_array_value( $_GET, 'username' ) );
+		$email_key = sanitize_key( hp\get_array_value( $_GET, 'email_verify_key' ) );
+
+		if ( ! $username || ! $email_key ) {
+			return true;
+		}
+
+		// Get user.
+		$user = get_user_by( 'login', $username );
+
+		// Check email key.
+		if ( ! $user || $user->hp_email_verify_key !== $email_key ) {
+			return true;
+		}
+
+		// Delete email key.
+		delete_user_meta( $user->ID, 'hp_email_verify_key' );
+
+		// Check authentication.
+		if ( is_user_logged_in() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders user email verify page.
+	 *
+	 * @return string
+	 */
+	public function render_user_email_verify_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_email_verify_page',
 			]
 		) )->render();
 	}
