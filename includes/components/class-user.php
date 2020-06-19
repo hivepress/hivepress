@@ -114,23 +114,17 @@ final class User extends Component {
 
 		switch ( get_option( 'hp_user_display_name' ) ) {
 			case 'first_name':
-				if ( $user->get_first_name() ) {
-					$display_name = $user->get_first_name();
-				}
+				$display_name = $user->get_first_name();
 
 				break;
 
 			case 'last_name':
-				if ( $user->get_last_name() ) {
-					$display_name = $user->get_last_name();
-				}
+				$display_name = $user->get_last_name();
 
 				break;
 
 			case 'full_name':
-				if ( $user->get_full_name() ) {
-					$display_name = $user->get_full_name();
-				}
+				$display_name = $user->get_full_name();
 
 				break;
 		}
