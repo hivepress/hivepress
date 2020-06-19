@@ -732,6 +732,13 @@ final class User extends Controller {
 			return hivepress()->router->get_url( 'user_account_page' );
 		}
 
+		// Authenticate user.
+		do_action( 'hivepress/v1/models/user/login' );
+
+		wp_set_auth_cookie( $user->ID, true );
+
+		do_action( 'wp_login', $user->user_login, $user );
+
 		return false;
 	}
 
