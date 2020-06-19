@@ -263,7 +263,7 @@ final class User extends Controller {
 					'recipient' => $user->get_email(),
 
 					'tokens'    => [
-						'user_name'        => $user->get_display_name(),
+						'user_name'        => $user->get_username(),
 						'email_verify_url' => hivepress()->router->get_url(
 							'user_email_verify_page',
 							[
