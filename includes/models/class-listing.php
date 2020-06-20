@@ -210,7 +210,13 @@ class Listing extends Post {
 		if ( ! isset( $this->values['images__id'] ) ) {
 
 			// Get image IDs.
-			$image_ids = wp_list_pluck( get_attached_media( 'image', $this->id ), 'ID' );
+			$image_ids = [];
+
+			foreach ( get_attached_media( 'image', $this->id ) as $image ) {
+				if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
+					$image_ids[] = $image->ID;
+				}
+			}
 
 			if ( has_post_thumbnail( $this->id ) ) {
 				$image_id = absint( get_post_thumbnail_id( $this->id ) );
