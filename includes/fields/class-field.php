@@ -446,6 +446,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Checks required flag.
+	 *
+	 * @return bool
+	 */
+	final public function is_required() {
+		return $this->required;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param mixed $errors Field errors.
