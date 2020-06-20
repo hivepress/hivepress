@@ -361,6 +361,18 @@ final class Attachment extends Controller {
 			return hp\rest_error( 403 );
 		}
 
+		// Get parent field.
+		$parent_field = hp\get_array_value( $parent->_get_fields(), $attachment->get_parent_field() );
+
+		if ( empty( $parent_field ) || $parent_field::get_meta( 'name' ) !== 'attachment_upload' ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Check requirements.
+		if ( $parent_field->is_required() && ! $parent_field->is_multiple() ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Delete attachment.
 		if ( ! $attachment->delete() ) {
 			return hp\rest_error( 400 );
