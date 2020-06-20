@@ -122,6 +122,34 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			$urls = array_filter(
+				array_map(
+					function( $attachment_id ) {
+						return wp_get_attachment_url( $attachment_id );
+					},
+					(array) $this->value
+				)
+			);
+
+			if ( $urls ) {
+				$urls = implode( ', ', $urls );
+
+				if ( strpos( $this->display_template, '<a ' ) === false ) {
+					$urls = str_replace( '<a ', '<a target="_blank" ', make_clickable( $urls ) );
+				}
+
+				return $urls;
+			}
+		}
+	}
+
+	/**
 	 * Gets file formats.
 	 *
 	 * @return array
@@ -299,7 +327,9 @@ class Attachment_Upload extends Field {
 		}
 
 		// Render delete button.
-		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+		if ( ! $this->required || $this->multiple ) {
+			$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+		}
 
 		$output .= '</div>';
 
