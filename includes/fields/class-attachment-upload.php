@@ -56,6 +56,39 @@ class Attachment_Upload extends Field {
 	protected $protected = false;
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Field meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label'    => esc_html__( 'Attachment', 'hivepress' ),
+
+				'settings' => [
+					'formats' => [
+						'label'    => esc_html__( 'File Types', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'mime_types',
+						'multiple' => true,
+						'_order'   => 10,
+					],
+
+					'caption' => [
+						'label'      => esc_html__( 'Caption', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 100,
+					],
+				],
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Field arguments.
