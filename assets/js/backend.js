@@ -21,6 +21,29 @@
 			});
 		});
 
+		// Field
+		hivepress.getComponent('field').each(function() {
+			var field = $(this);
+
+			if (field.data('parent')) {
+				var parentField = $('input[name="' + field.data('parent') + '"]');
+
+				if (parentField.length) {
+					if (!parentField.prop('checked')) {
+						field.hide();
+					}
+
+					parentField.on('change', function() {
+						if (parentField.prop('checked')) {
+							field.show();
+						} else {
+							field.hide();
+						}
+					});
+				}
+			}
+		});
+
 		// File select
 		hivepress.getComponent('file-select').on('click', function(e) {
 			var button = $(this),

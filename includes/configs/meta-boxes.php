@@ -45,6 +45,7 @@ return [
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_not_featured' ),
 				'type'        => 'date',
 				'format'      => 'U',
+				'_parent'     => 'featured',
 				'_order'      => 40,
 			],
 

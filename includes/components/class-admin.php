@@ -866,7 +866,19 @@ final class Admin extends Component {
 							// Render field.
 							$output .= $field->render();
 						} else {
-							$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
+
+							// Get field attributes.
+							$attributes = [
+								'class' => 'hp-form__field hp-form__field--' . hp\sanitize_slug( $field->get_display_type() ),
+							];
+
+							if ( $field->get_arg( '_parent' ) ) {
+								$attributes['data-component'] = 'field';
+								$attributes['data-parent']    = hp\prefix( $field->get_arg( '_parent' ) );
+							}
+
+							// Render field.
+							$output .= '<tr ' . hp\html_attributes( $attributes ) . '>';
 
 							// Render field label.
 							if ( $field->get_label() ) {
