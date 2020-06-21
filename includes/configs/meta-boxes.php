@@ -83,6 +83,7 @@ return [
 				'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
 				'type'    => 'checkbox',
+				'_parent' => 'editable',
 				'_order'  => 20,
 			],
 
@@ -122,6 +123,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'fields',
 				'option_args' => [ 'filterable' => true ],
+				'_parent'     => 'filterable',
 				'_order'      => 100,
 			],
 		],
@@ -136,7 +138,8 @@ return [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
-				'type'        => 'checkboxes',
+				'type'        => 'select',
+				'multiple'    => true,
 				'_order'      => 10,
 
 				'options'     => [
@@ -154,6 +157,7 @@ return [
 				'max_length'  => 2048,
 				'default'     => '%value%',
 				'html'        => true,
+				'_parent'     => 'display_areas[]',
 				'_order'      => 20,
 			],
 		],
@@ -267,6 +271,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'fields',
 				'option_args' => [ 'filterable' => true ],
+				'_parent'     => 'filterable',
 				'_order'      => 100,
 			],
 		],
@@ -281,7 +286,8 @@ return [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
-				'type'        => 'checkboxes',
+				'type'        => 'select',
+				'multiple'    => true,
 				'_order'      => 10,
 
 				'options'     => [
@@ -299,6 +305,7 @@ return [
 				'max_length'  => 2048,
 				'default'     => '%value%',
 				'html'        => true,
+				'_parent'     => 'display_areas[]',
 				'_order'      => 20,
 			],
 		],

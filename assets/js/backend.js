@@ -26,18 +26,18 @@
 			var field = $(this);
 
 			if (field.data('parent')) {
-				var parentField = $('input[name="' + field.data('parent') + '"]');
+				var parentField = $(':input[name="' + field.data('parent') + '"]');
 
 				if (parentField.length) {
-					if (!parentField.prop('checked')) {
+					if (!parentField.val() || (parentField.is(':checkbox') && !parentField.prop('checked'))) {
 						field.hide();
 					}
 
 					parentField.on('change', function() {
-						if (parentField.prop('checked')) {
-							field.show();
-						} else {
+						if (!parentField.val() || (parentField.is(':checkbox') && !parentField.prop('checked'))) {
 							field.hide();
+						} else {
+							field.show();
 						}
 					});
 				}
