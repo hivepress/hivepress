@@ -28,6 +28,10 @@
 			if (field.data('parent')) {
 				var parentField = $(':input[name="' + field.data('parent') + '"]');
 
+				if (field.parent().is('td')) {
+					field = field.closest('tr');
+				}
+
 				if (parentField.length) {
 					if (!parentField.val() || (parentField.is(':checkbox') && !parentField.prop('checked'))) {
 						field.hide();

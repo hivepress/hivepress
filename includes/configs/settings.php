@@ -93,6 +93,7 @@ return [
 						'caption' => hivepress()->translator->get_string( 'manually_approve_listings' ),
 						'type'    => 'checkbox',
 						'default' => true,
+						'_parent' => 'listing_enable_submission',
 						'_order'  => 30,
 					],
 				],
@@ -134,6 +135,7 @@ return [
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,
+						'_parent'     => 'listing_enable_moderation',
 						'_order'      => 10,
 					],
 
@@ -145,6 +147,7 @@ return [
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,
+						'_parent'     => 'listing_enable_moderation',
 						'_order'      => 20,
 					],
 
@@ -187,6 +190,7 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'option_args' => [ 'post_type' => 'page' ],
+						'_parent'     => 'vendor_enable_display',
 						'_order'      => 20,
 					],
 
@@ -196,6 +200,7 @@ return [
 						'default'   => 10,
 						'min_value' => 1,
 						'required'  => true,
+						'_parent'   => 'vendor_enable_display',
 						'_order'    => 30,
 					],
 
@@ -310,6 +315,7 @@ return [
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,
+						'_parent'     => 'user_verify_email',
 						'_order'      => 30,
 					],
 				],
@@ -327,26 +333,28 @@ return [
 				'_order' => 10,
 
 				'fields' => [
+					'recaptcha_forms'      => [
+						'label'    => esc_html__( 'Protected Forms', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'forms',
+						'multiple' => true,
+						'_order'   => 10,
+					],
+
 					'recaptcha_site_key'   => [
 						'label'      => esc_html__( 'Site Key', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 10,
+						'_parent'    => 'recaptcha_forms[]',
+						'_order'     => 20,
 					],
 
 					'recaptcha_secret_key' => [
 						'label'      => esc_html__( 'Secret Key', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 20,
-					],
-
-					'recaptcha_forms'      => [
-						'label'    => esc_html__( 'Protected Forms', 'hivepress' ),
-						'type'     => 'select',
-						'options'  => 'forms',
-						'multiple' => true,
-						'_order'   => 30,
+						'_parent'    => 'recaptcha_forms[]',
+						'_order'     => 30,
 					],
 				],
 			],
