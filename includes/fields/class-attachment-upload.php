@@ -70,7 +70,7 @@ class Attachment_Upload extends Field {
 						'label'      => esc_html__( 'Caption', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'_order'     => 20,
+						'_order'     => 100,
 					],
 
 					'formats' => [
@@ -78,7 +78,7 @@ class Attachment_Upload extends Field {
 						'type'     => 'select',
 						'options'  => 'mime_types',
 						'multiple' => true,
-						'_order'   => 30,
+						'_order'   => 110,
 					],
 				],
 			],

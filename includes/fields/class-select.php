@@ -41,6 +41,13 @@ class Select extends Field {
 	protected $multiple = false;
 
 	/**
+	 * Field filter operator.
+	 *
+	 * @var mixed
+	 */
+	protected $filter_operator;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -52,19 +59,30 @@ class Select extends Field {
 				'filterable' => true,
 
 				'settings'   => [
-					'multiple' => [
+					'multiple'        => [
 						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 100,
 					],
 
-					'options'  => [
+					'options'         => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => [],
 						'multiple' => true,
+						'_context' => 'edit',
 						'_order'   => 110,
+					],
+
+					// @todo remove prefix from parent.
+					'filter_operator' => [
+						'label'    => esc_html__( 'Options', 'hivepress' ),
+						'caption'  => esc_html__( 'Search any of the selected options', 'hivepress' ),
+						'type'     => 'checkbox',
+						'_context' => 'search',
+						'_parent'  => 'search_field_multiple',
+						'_order'   => 120,
 					],
 				],
 			],
@@ -161,7 +179,11 @@ class Select extends Field {
 		parent::add_filter();
 
 		if ( $this->multiple ) {
-			$this->filter['operator'] = 'AND';
+			if ( $this->filter_operator ) {
+				$this->filter['operator'] = 'IN';
+			} else {
+				$this->filter['operator'] = 'AND';
+			}
 		} else {
 			$this->filter['operator'] = 'IN';
 		}

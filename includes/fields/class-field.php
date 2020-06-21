@@ -139,10 +139,11 @@ abstract class Field {
 
 				'settings'   => [
 					'required'    => [
-						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
-						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 10,
+						'label'    => esc_html_x( 'Required', 'field', 'hivepress' ),
+						'caption'  => esc_html__( 'Make this field required', 'hivepress' ),
+						'type'     => 'checkbox',
+						'_context' => 'edit',
+						'_order'   => 10,
 					],
 
 					'description' => [
@@ -150,6 +151,7 @@ abstract class Field {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'html'       => true,
+						'_context'   => 'edit',
 						'_order'     => 20,
 					],
 				],
