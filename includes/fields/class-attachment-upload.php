@@ -66,19 +66,19 @@ class Attachment_Upload extends Field {
 				'label'    => esc_html__( 'Attachment', 'hivepress' ),
 
 				'settings' => [
+					'caption' => [
+						'label'      => esc_html__( 'Caption', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 20,
+					],
+
 					'formats' => [
 						'label'    => esc_html__( 'File Types', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => 'mime_types',
 						'multiple' => true,
-						'_order'   => 10,
-					],
-
-					'caption' => [
-						'label'      => esc_html__( 'Caption', 'hivepress' ),
-						'type'       => 'text',
-						'max_length' => 256,
-						'_order'     => 100,
+						'_order'   => 30,
 					],
 				],
 			],
