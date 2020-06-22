@@ -67,7 +67,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
@@ -80,7 +80,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'serializejson', 'fileupload', 'fancybox', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'serializejson', 'fancybox', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [

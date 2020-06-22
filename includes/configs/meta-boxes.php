@@ -59,6 +59,23 @@ return [
 		],
 	],
 
+	'listing_images'            => [
+		'title'  => esc_html__( 'Images', 'hivepress' ),
+		'screen' => 'listing',
+		'model'  => 'listing',
+
+		'fields' => [
+			'images' => [
+				'caption'   => esc_html__( 'Select Images', 'hivepress' ),
+				'type'      => 'attachment_upload',
+				'multiple'  => true,
+				'max_files' => 10,
+				'formats'   => [ 'jpg', 'jpeg', 'png' ],
+				'_order'    => 10,
+			],
+		],
+	],
+
 	'listing_attributes'        => [
 		'title'  => esc_html__( 'Attributes', 'hivepress' ),
 		'screen' => 'listing',

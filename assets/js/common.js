@@ -218,5 +218,29 @@ var hivepress = {
 
 			e.preventDefault();
 		});
+
+		// Sortable
+		hivepress.getComponent('sortable').each(function() {
+			var container = $(this);
+
+			container.sortable({
+				stop: function() {
+					if (container.children().length > 1) {
+						container.children().each(function(index) {
+							$.ajax({
+								url: $(this).data('url'),
+								method: 'POST',
+								data: {
+									'sort_order': index,
+								},
+								beforeSend: function(xhr) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								},
+							});
+						});
+					}
+				},
+			});
+		});
 	});
 })(jQuery);

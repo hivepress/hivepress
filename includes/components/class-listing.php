@@ -59,6 +59,7 @@ final class Listing extends Component {
 
 			// Alter meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_listing_settings_meta_box' ] );
+			add_filter( 'hivepress/v1/meta_boxes/listing_images', [ $this, 'alter_listing_images_meta_box' ] );
 		} else {
 
 			// Set request context.
@@ -545,6 +546,26 @@ final class Listing extends Component {
 					'_alias'      => 'post_author',
 				]
 			);
+		}
+
+		return $meta_box;
+	}
+
+	/**
+	 * Alters listing images meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_listing_images_meta_box( $meta_box ) {
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( get_post() );
+
+		if ( $listing ) {
+
+			// Set image IDs.
+			$meta_box['fields']['images']['default'] = $listing->get_images__id();
 		}
 
 		return $meta_box;
