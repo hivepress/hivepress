@@ -206,6 +206,8 @@ final class Listing extends Component {
 							'recipient' => $user->get_email(),
 
 							'tokens'    => [
+								'user'          => $user,
+								'listing'       => $listing,
 								'user_name'     => $user->get_display_name(),
 								'listing_title' => $listing->get_title(),
 								'listing_url'   => get_permalink( $listing->get_id() ),
@@ -220,6 +222,8 @@ final class Listing extends Component {
 							'recipient' => $user->get_email(),
 
 							'tokens'    => [
+								'user'          => $user,
+								'listing'       => $listing,
 								'user_name'     => $user->get_display_name(),
 								'listing_title' => $listing->get_title(),
 							],
@@ -270,6 +274,8 @@ final class Listing extends Component {
 						'recipient' => $user->get_email(),
 
 						'tokens'    => [
+							'user'          => $user,
+							'listing'       => $listing,
 							'user_name'     => $user->get_display_name(),
 							'listing_title' => $listing->get_title(),
 							'listing_url'   => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),

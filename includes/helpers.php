@@ -304,7 +304,19 @@ function call_class_method( $class, $method, $args = [] ) {
  */
 function replace_tokens( $tokens, $text ) {
 	foreach ( $tokens as $name => $value ) {
-		if ( ! is_array( $value ) ) {
+		if ( is_object( $value ) && strpos( get_class( $value ), 'HivePress\Models\\' ) === 0 ) {
+			preg_match_all( '/%' . $name . '\.([a-z0-9_]+)%/', $text, $matches );
+
+			$fields = get_last_array_value( $matches );
+
+			if ( $fields ) {
+				foreach ( $value->_get_fields() as $field ) {
+					if ( in_array( $field->get_name(), $fields, true ) ) {
+						$text = str_replace( '%' . $name . '.' . $field->get_name() . '%', $field->get_display_value(), $text );
+					}
+				}
+			}
+		} elseif ( ! is_array( $value ) ) {
 			$text = str_replace( '%' . $name . '%', $value, $text );
 		}
 	}

@@ -263,6 +263,7 @@ final class User extends Controller {
 					'recipient' => $user->get_email(),
 
 					'tokens'    => [
+						'user'             => $user,
 						'user_name'        => $user->get_username(),
 						'email_verify_url' => hivepress()->router->get_url(
 							'user_email_verify_page',
@@ -424,6 +425,7 @@ final class User extends Controller {
 				'recipient' => $user->get_email(),
 
 				'tokens'    => [
+					'user'               => $user,
 					'user_name'          => $user->get_display_name(),
 					'password_reset_url' => hivepress()->router->get_url(
 						'user_password_reset_page',

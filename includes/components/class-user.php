@@ -74,6 +74,7 @@ final class User extends Component {
 				'recipient' => $user->get_email(),
 
 				'tokens'    => [
+					'user'          => $user,
 					'user_name'     => $user->get_display_name(),
 					'user_password' => hp\get_array_value( $values, 'password' ),
 				],
