@@ -61,6 +61,26 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('template') === 'icon') {
+				var template = function(icon) {
+					var output = icon.text;
+
+					if (icon.id) {
+						output = '<i class="fas fa-fw fa-' + icon.id + '"></i> ' + icon.text;
+					}
+
+					return output;
+				};
+
+				$.extend(settings, {
+					templateResult: template,
+					templateSelection: template,
+					escapeMarkup: function(output) {
+						return output;
+					},
+				});
+			}
+
 			field.select2(settings);
 		});
 

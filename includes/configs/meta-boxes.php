@@ -150,15 +150,23 @@ return [
 				],
 			],
 
+			'icon'           => [
+				'label'   => esc_html__( 'Icon', 'hivepress' ),
+				'type'    => 'select',
+				'options' => 'icons',
+				'_parent' => 'display_areas[]',
+				'_order'  => 20,
+			],
+
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %value%' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
 				'type'        => 'textarea',
 				'max_length'  => 2048,
-				'default'     => '%value%',
+				'default'     => '%icon% %label%: %value%',
 				'html'        => true,
 				'_parent'     => 'display_areas[]',
-				'_order'      => 20,
+				'_order'      => 30,
 			],
 		],
 	],
@@ -298,15 +306,23 @@ return [
 				],
 			],
 
+			'icon'           => [
+				'label'   => esc_html__( 'Icon', 'hivepress' ),
+				'type'    => 'select',
+				'options' => 'icons',
+				'_parent' => 'display_areas[]',
+				'_order'  => 20,
+			],
+
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %value%' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
 				'type'        => 'textarea',
 				'max_length'  => 2048,
-				'default'     => '%value%',
+				'default'     => '%icon% %label%: %value%',
 				'html'        => true,
 				'_parent'     => 'display_areas[]',
-				'_order'      => 20,
+				'_order'      => 30,
 			],
 		],
 	],

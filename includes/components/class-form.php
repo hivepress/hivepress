@@ -61,6 +61,11 @@ final class Form extends Component {
 				$options = call_user_func( [ $this, $option_method ], $option_args );
 			}
 
+			// Set attributes.
+			if ( 'icons' === $args['options'] ) {
+				$args['attributes']['data-template'] = 'icon';
+			}
+
 			// Set options.
 			$args['options'] = $options;
 		}
@@ -292,6 +297,16 @@ final class Form extends Component {
 	 */
 	protected function get_countries( $args ) {
 		return hivepress()->get_config( 'countries' );
+	}
+
+	/**
+	 * Gets icon options.
+	 *
+	 * @param array $args Icon arguments.
+	 * @return array
+	 */
+	protected function get_icons( $args ) {
+		return hivepress()->get_config( 'icons' );
 	}
 
 	/**
