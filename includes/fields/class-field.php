@@ -519,7 +519,7 @@ abstract class Field {
 	public function display() {
 		return hp\replace_tokens(
 			[
-				'label' => $this->label,
+				'label' => '<strong>' . $this->label . '</strong>',
 				'value' => $this->get_display_value(),
 			],
 			$this->display_template

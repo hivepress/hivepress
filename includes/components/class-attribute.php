@@ -209,6 +209,15 @@ final class Attribute extends Component {
 						'search_field'   => [],
 					];
 
+					// Set icon.
+					$icon = $attribute_object->hp_icon;
+
+					if ( $icon ) {
+						$icon = '<i class="hp-icon fas fa-fw fa-' . esc_attr( $icon ) . '"></i>';
+					}
+
+					$attribute_args['display_format'] = str_replace( '%icon%', $icon, $attribute_args['display_format'] );
+
 					// Get categories.
 					if ( taxonomy_exists( hp\prefix( $model . '_category' ) ) ) {
 						$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
