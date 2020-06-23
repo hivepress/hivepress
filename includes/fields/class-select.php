@@ -162,6 +162,24 @@ class Select extends Field {
 	}
 
 	/**
+	 * Sets field value.
+	 *
+	 * @param mixed $value Field value.
+	 * @return object
+	 */
+	final public function set_value( $value ) {
+		parent::set_value( $value );
+
+		if ( ! is_null( $this->value ) && $this->source ) {
+
+			// Set field options.
+			$this->options = apply_filters( 'hivepress/v1/fields/field/options', $this->options, $this );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Gets field display value.
 	 *
 	 * @return mixed

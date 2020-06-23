@@ -361,7 +361,7 @@ abstract class Field {
 	 * @param mixed $value Field value.
 	 * @return object
 	 */
-	final public function set_value( $value ) {
+	public function set_value( $value ) {
 		$this->value  = $value;
 		$this->filter = null;
 
