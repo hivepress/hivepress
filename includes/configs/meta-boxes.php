@@ -22,6 +22,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'posts',
 				'option_args' => [ 'post_type' => 'hp_vendor' ],
+				'source'      => hivepress()->router->get_url( 'vendors_resource' ),
 				'_alias'      => 'post_parent',
 				'_order'      => 10,
 			],

@@ -48,6 +48,13 @@ class Select extends Field {
 	protected $filter_operator;
 
 	/**
+	 * Field options source.
+	 *
+	 * @var string
+	 */
+	protected $source;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -137,6 +144,11 @@ class Select extends Field {
 		// Set multiple flag.
 		if ( $this->multiple ) {
 			$attributes['multiple'] = true;
+		}
+
+		// Set source.
+		if ( $this->source ) {
+			$attributes['data-source'] = esc_url( $this->source );
 		}
 
 		// Set component.

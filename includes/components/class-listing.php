@@ -548,6 +548,7 @@ final class Listing extends Component {
 				[
 					'options'     => 'users',
 					'option_args' => [],
+					'source'      => hivepress()->router->get_url( 'users_resource' ),
 					'disabled'    => true,
 					'_alias'      => 'post_author',
 				]

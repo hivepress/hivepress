@@ -41,8 +41,10 @@ final class User extends Controller {
 					 * @description The users API allows you to register, update and delete users.
 					 */
 					'users_resource'               => [
-						'path' => '/users',
-						'rest' => true,
+						'path'   => '/users',
+						'method' => 'GET',
+						'action' => [ $this, 'get_users' ],
+						'rest'   => true,
 					],
 
 					'user_resource'                => [
@@ -167,6 +169,51 @@ final class User extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets users.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function get_users( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get search query.
+		$query = sanitize_text_field( $request->get_param( 'search' ) );
+
+		if ( strlen( $query ) < 3 ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get users.
+		$users = Models\User::query()->search( $query )
+		->limit( 20 )
+		->get();
+
+		// Get results.
+		$results = [];
+
+		if ( $request->get_param( 'context' ) === 'list' ) {
+			foreach ( $users as $user ) {
+				$results[] = [
+					'id'   => $user->get_id(),
+					'text' => $user->get_username(),
+				];
+			}
+		}
+
+		return hp\rest_response( 200, $results );
 	}
 
 	/**

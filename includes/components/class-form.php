@@ -53,17 +53,20 @@ final class Form extends Component {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
 			$options = [];
 
-			// Get options.
-			$option_method = 'get_' . $args['options'];
-			$option_args   = hp\get_array_value( $args, 'option_args', [] );
+			if ( ! isset( $args['source'] ) ) {
 
-			if ( method_exists( $this, $option_method ) ) {
-				$options = call_user_func( [ $this, $option_method ], $option_args );
-			}
+				// Get options.
+				$option_method = 'get_' . $args['options'];
+				$option_args   = hp\get_array_value( $args, 'option_args', [] );
 
-			// Set attributes.
-			if ( 'icons' === $args['options'] ) {
-				$args['attributes']['data-template'] = 'icon';
+				if ( method_exists( $this, $option_method ) ) {
+					$options = call_user_func( [ $this, $option_method ], $option_args );
+				}
+
+				// Set attributes.
+				if ( 'icons' === $args['options'] ) {
+					$args['attributes']['data-template'] = 'icon';
+				}
 			}
 
 			// Set options.

@@ -81,6 +81,36 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('source')) {
+				$.extend(settings, {
+					minimumInputLength: 3,
+					ajax: {
+						url: field.data('source'),
+						dataType: 'json',
+						delay: 250,
+						cache: true,
+						data: function(params) {
+							return {
+								'search': params.term,
+								'context': 'list',
+								'_wpnonce': hivepressCoreData.apiNonce,
+							};
+						},
+						processResults: function(response) {
+							var results = [];
+
+							if (response && response.hasOwnProperty('data')) {
+								results = response.data;
+							}
+
+							return {
+								results: results,
+							};
+						},
+					},
+				});
+			}
+
 			field.select2(settings);
 		});
 
