@@ -28,6 +28,7 @@ class Post extends Query {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
+					'search' => 's',
 					'limit'  => 'posts_per_page',
 
 					'filter' => [
