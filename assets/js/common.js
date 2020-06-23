@@ -142,6 +142,10 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
+			if (field.data('time')) {
+				settings['enableTime'] = true;
+			}
+
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
 
