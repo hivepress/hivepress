@@ -115,6 +115,8 @@ var hivepress = {
 		});
 
 		// Date
+		var dateFormatter = new DateFormatter();
+
 		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
 			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
 		}
@@ -124,6 +126,8 @@ var hivepress = {
 				settings = {
 					altInput: true,
 					dateFormat: 'Y-m-d',
+					altFormat: 'Y-m-d',
+					defaultHour: 0,
 				};
 
 			if (field.data('format')) {
@@ -157,7 +161,7 @@ var hivepress = {
 						errorHandler: function(error) {},
 						onChange: function(selectedDates) {
 							var formattedDates = selectedDates.map(function(date) {
-								return flatpickr.formatDate(date, settings['dateFormat']);
+								return dateFormatter.formatDate(date, settings['dateFormat']);
 							});
 
 							if (formattedDates.length === 2) {
@@ -168,6 +172,16 @@ var hivepress = {
 					});
 				}
 			}
+
+			$.extend(settings, {
+				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
+				parseDate: function(date) {
+					return dateFormatter.parseDate(date, settings['dateFormat']);
+				},
+				formatDate: function(date, format) {
+					return dateFormatter.formatDate(date, format);
+				},
+			});
 
 			field.flatpickr(settings);
 		});

@@ -52,9 +52,16 @@ return [
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.sticky-sidebar.min.js',
 	],
 
+	'php_date_formatter'    => [
+		'handle' => 'php-date-formatter',
+		'src'    => hivepress()->get_url() . '/assets/js/php-date-formatter.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
 	'flatpickr'             => [
 		'handle' => 'flatpickr',
 		'src'    => hivepress()->get_url() . '/assets/js/flatpickr/flatpickr.min.js',
+		'deps'   => [ 'php-date-formatter' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 

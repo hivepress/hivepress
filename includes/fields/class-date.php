@@ -138,7 +138,7 @@ class Date extends Field {
 			}
 		}
 
-		$attributes['data-format'] = str_replace( 's', 'S', $this->format );
+		$attributes['data-format'] = $this->format;
 
 		// Set display format.
 		if ( is_null( $this->display_format ) ) {
