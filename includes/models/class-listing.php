@@ -209,21 +209,28 @@ class Listing extends Post {
 	final public function get_images__id() {
 		if ( ! isset( $this->values['images__id'] ) ) {
 
-			// Get image IDs.
-			$image_ids = [];
+			// Get cached image IDs.
+			$image_ids = hivepress()->cache->get_post_cache( $this->id, 'image_ids', 'models/attachment' );
 
-			foreach ( get_attached_media( 'image', $this->id ) as $image ) {
-				if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
-					$image_ids[] = $image->ID;
+			if ( is_null( $image_ids ) ) {
+				$image_ids = [];
+
+				foreach ( get_attached_media( 'image', $this->id ) as $image ) {
+					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
+						$image_ids[] = $image->ID;
+					}
 				}
-			}
 
-			if ( has_post_thumbnail( $this->id ) ) {
-				$image_id = absint( get_post_thumbnail_id( $this->id ) );
+				if ( has_post_thumbnail( $this->id ) ) {
+					$image_id = absint( get_post_thumbnail_id( $this->id ) );
 
-				if ( ! in_array( $image_id, $image_ids, true ) ) {
-					array_unshift( $image_ids, $image_id );
+					if ( ! in_array( $image_id, $image_ids, true ) ) {
+						array_unshift( $image_ids, $image_id );
+					}
 				}
+
+				// Cache image IDs.
+				hivepress()->cache->set_post_cache( $this->id, 'image_ids', 'models/attachment', $image_ids );
 			}
 
 			// Set field value.
