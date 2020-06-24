@@ -42,6 +42,9 @@ final class Hook extends Component {
 		// Update posts.
 		add_action( 'save_post', [ $this, 'update_post' ], 10, 3 );
 		add_action( 'before_delete_post', [ $this, 'update_post' ] );
+
+		add_action( 'add_attachment', [ $this, 'update_post' ] );
+		add_action( 'edit_attachment', [ $this, 'update_post' ] );
 		add_action( 'delete_attachment', [ $this, 'update_post' ] );
 
 		// Update post status.
@@ -178,8 +181,8 @@ final class Hook extends Component {
 			// Get action.
 			$action = hp\get_first_array_value( explode( '_', current_action() ) );
 
-			if ( 'save' === $action ) {
-				if ( $update ) {
+			if ( in_array( $action, [ 'save', 'add', 'edit' ], true ) ) {
+				if ( $update || 'edit' === $action ) {
 					$action = 'update';
 				} else {
 					$action = 'create';
