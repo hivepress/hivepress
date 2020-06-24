@@ -895,6 +895,9 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = hivepress()->request->get_context( 'listing' );
 
+		// @todo replace temporary fix.
+		$listing->get_images__id();
+
 		// Check listing.
 		if ( $listing->validate() ) {
 			return true;
