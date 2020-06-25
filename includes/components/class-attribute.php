@@ -87,6 +87,7 @@ final class Attribute extends Component {
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
 
 			// Add category options.
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_category_options' ], 100, 2 );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
 
 			// Set category value.
