@@ -58,6 +58,7 @@ abstract class Query extends \ArrayObject {
 		$args = hp\merge_arrays(
 			[
 				'aliases' => [
+					'search'    => 'search',
 					'limit'     => 'number',
 					'offset'    => 'offset',
 					'paginate'  => 'paged',
@@ -321,6 +322,18 @@ abstract class Query extends \ArrayObject {
 		if ( $args ) {
 			$this->args[ $this->get_alias( 'order' ) ] = $args;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Searches objects by query string.
+	 *
+	 * @param string $query Search query.
+	 * @return object
+	 */
+	public function search( $query ) {
+		$this->args[ $this->get_alias( 'search' ) ] = $query;
 
 		return $this;
 	}

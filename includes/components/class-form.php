@@ -26,8 +26,11 @@ final class Form extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Set field arguments.
+		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_arguments' ] );
+
 		// Set field options.
-		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_options' ] );
+		add_filter( 'hivepress/v1/fields/field/options', [ $this, 'set_field_options' ], 10, 2 );
 
 		// Manage captcha.
 		if ( $this->is_captcha_enabled() ) {
@@ -44,37 +47,73 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Sets field options.
+	 * Gets field options.
+	 *
+	 * @param string $type Options type.
+	 * @param array  $args Option arguments.
+	 * @param mixed  $value Current value.
+	 * @return array
+	 */
+	protected function get_field_options( $type, $args, $value = null ) {
+		$options = [];
+
+		// Set method.
+		$method = 'get_' . $type;
+
+		// Get options.
+		if ( method_exists( $this, $method ) ) {
+			$options = call_user_func_array( [ $this, $method ], [ $args, $value ] );
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Sets field arguments.
 	 *
 	 * @param array $args Field arguments.
 	 * @return array
 	 */
-	public function set_field_options( $args ) {
+	public function set_field_arguments( $args ) {
 		if ( isset( $args['options'] ) && ! is_array( $args['options'] ) ) {
-			$options = [];
 
-			// Get options.
-			$option_method = 'get_' . $args['options'];
-			$option_args   = hp\get_array_value( $args, 'option_args', [] );
-
-			if ( method_exists( $this, $option_method ) ) {
-				$options = call_user_func( [ $this, $option_method ], $option_args );
+			// Set attributes.
+			if ( 'icons' === $args['options'] ) {
+				$args['attributes']['data-template'] = 'icon';
 			}
 
 			// Set options.
-			$args['options'] = $options;
+			if ( ! isset( $args['source'] ) ) {
+				$args['options'] = $this->get_field_options( $args['options'], hp\get_array_value( $args, 'option_args', [] ) );
+			}
 		}
 
 		return $args;
 	}
 
 	/**
+	 * Sets field options.
+	 *
+	 * @param array  $options Field options.
+	 * @param object $field Field object.
+	 * @return array
+	 */
+	public function set_field_options( $options, $field ) {
+		return $this->get_field_options(
+			$field->get_arg( 'options' ),
+			(array) $field->get_arg( 'option_args' ),
+			$field->get_value()
+		);
+	}
+
+	/**
 	 * Gets user options.
 	 *
 	 * @param array $args User arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_users( $args ) {
+	protected function get_users( $args, $value ) {
 
 		// Set default arguments.
 		$args = array_merge(
@@ -83,6 +122,11 @@ final class Form extends Component {
 			],
 			$args
 		);
+
+		// Set IDs.
+		if ( $value ) {
+			$args['include'] = (array) $value;
+		}
 
 		// Get users.
 		$users = wp_list_pluck( get_users( $args ), 'user_login', 'ID' );
@@ -94,9 +138,10 @@ final class Form extends Component {
 	 * Gets post options.
 	 *
 	 * @param array $args Post arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_posts( $args ) {
+	protected function get_posts( $args, $value ) {
 
 		// Set default arguments.
 		$args = array_merge(
@@ -109,6 +154,11 @@ final class Form extends Component {
 			],
 			$args
 		);
+
+		// Set IDs.
+		if ( $value ) {
+			$args['post__in'] = (array) $value;
+		}
 
 		// Get options.
 		$options = [];
@@ -142,9 +192,10 @@ final class Form extends Component {
 	 * Gets term options.
 	 *
 	 * @param array $args Term arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_terms( $args ) {
+	protected function get_terms( $args, $value ) {
 
 		// Set default arguments.
 		$args = array_merge(
@@ -155,6 +206,11 @@ final class Form extends Component {
 			],
 			$args
 		);
+
+		// Set IDs.
+		if ( $value ) {
+			$args['include'] = (array) $value;
+		}
 
 		// Get options.
 		$options = [];
@@ -238,9 +294,10 @@ final class Form extends Component {
 	 * Gets form options.
 	 *
 	 * @param array $args Form arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_forms( $args ) {
+	protected function get_forms( $args, $value ) {
 		$options = [];
 
 		foreach ( hivepress()->get_classes( 'forms' ) as $form_name => $form ) {
@@ -258,9 +315,10 @@ final class Form extends Component {
 	 * Gets field options.
 	 *
 	 * @param array $args Field arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_fields( $args ) {
+	protected function get_fields( $args, $value ) {
 		$options = [];
 
 		foreach ( hivepress()->get_classes( 'fields' ) as $field_name => $field ) {
@@ -278,9 +336,10 @@ final class Form extends Component {
 	 * Gets MIME type options.
 	 *
 	 * @param array $args MIME type arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_mime_types( $args ) {
+	protected function get_mime_types( $args, $value ) {
 		return get_allowed_mime_types();
 	}
 
@@ -288,10 +347,22 @@ final class Form extends Component {
 	 * Gets country options.
 	 *
 	 * @param array $args Country arguments.
+	 * @param mixed $value Current value.
 	 * @return array
 	 */
-	protected function get_countries( $args ) {
+	protected function get_countries( $args, $value ) {
 		return hivepress()->get_config( 'countries' );
+	}
+
+	/**
+	 * Gets icon options.
+	 *
+	 * @param array $args Icon arguments.
+	 * @param mixed $value Current value.
+	 * @return array
+	 */
+	protected function get_icons( $args, $value ) {
+		return hivepress()->get_config( 'icons' );
 	}
 
 	/**

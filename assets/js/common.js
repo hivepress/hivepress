@@ -61,10 +61,62 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('template') === 'icon') {
+				var template = function(icon) {
+					var output = icon.text;
+
+					if (icon.id) {
+						output = '<i class="fas fa-fw fa-' + icon.id + '"></i> ' + icon.text;
+					}
+
+					return output;
+				};
+
+				$.extend(settings, {
+					templateResult: template,
+					templateSelection: template,
+					escapeMarkup: function(output) {
+						return output;
+					},
+				});
+			}
+
+			if (field.data('source')) {
+				$.extend(settings, {
+					minimumInputLength: 3,
+					ajax: {
+						url: field.data('source'),
+						dataType: 'json',
+						delay: 250,
+						cache: true,
+						data: function(params) {
+							return {
+								'search': params.term,
+								'context': 'list',
+								'_wpnonce': hivepressCoreData.apiNonce,
+							};
+						},
+						processResults: function(response) {
+							var results = [];
+
+							if (response && response.hasOwnProperty('data')) {
+								results = response.data;
+							}
+
+							return {
+								results: results,
+							};
+						},
+					},
+				});
+			}
+
 			field.select2(settings);
 		});
 
 		// Date
+		var dateFormatter = new DateFormatter();
+
 		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
 			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
 		}
@@ -74,6 +126,8 @@ var hivepress = {
 				settings = {
 					altInput: true,
 					dateFormat: 'Y-m-d',
+					altFormat: 'Y-m-d',
+					defaultHour: 0,
 				};
 
 			if (field.data('format')) {
@@ -92,6 +146,10 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
+			if (field.data('time')) {
+				settings['enableTime'] = true;
+			}
+
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
 
@@ -103,7 +161,7 @@ var hivepress = {
 						errorHandler: function(error) {},
 						onChange: function(selectedDates) {
 							var formattedDates = selectedDates.map(function(date) {
-								return flatpickr.formatDate(date, settings['dateFormat']);
+								return dateFormatter.formatDate(date, settings['dateFormat']);
 							});
 
 							if (formattedDates.length === 2) {
@@ -114,6 +172,16 @@ var hivepress = {
 					});
 				}
 			}
+
+			$.extend(settings, {
+				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
+				parseDate: function(date) {
+					return dateFormatter.parseDate(date, settings['dateFormat']);
+				},
+				formatDate: function(date, format) {
+					return dateFormatter.formatDate(date, format);
+				},
+			});
 
 			field.flatpickr(settings);
 		});
@@ -197,6 +265,30 @@ var hivepress = {
 			container.remove();
 
 			e.preventDefault();
+		});
+
+		// Sortable
+		hivepress.getComponent('sortable').each(function() {
+			var container = $(this);
+
+			container.sortable({
+				stop: function() {
+					if (container.children().length > 1) {
+						container.children().each(function(index) {
+							$.ajax({
+								url: $(this).data('url'),
+								method: 'POST',
+								data: {
+									'sort_order': index,
+								},
+								beforeSend: function(xhr) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								},
+							});
+						});
+					}
+				},
+			});
 		});
 	});
 })(jQuery);

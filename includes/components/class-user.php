@@ -31,11 +31,14 @@ final class User extends Component {
 		// Register user.
 		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ], 10, 2 );
 
+		// Login user.
+		add_filter( 'authenticate', [ $this, 'login_user' ], 100 );
+
 		// Update user.
 		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_user' ] );
 
-		// Add registration fields.
-		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ] );
+		// Alter registration form.
+		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'alter_register_form' ] );
 
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
@@ -71,11 +74,27 @@ final class User extends Component {
 				'recipient' => $user->get_email(),
 
 				'tokens'    => [
+					'user'          => $user,
 					'user_name'     => $user->get_display_name(),
 					'user_password' => hp\get_array_value( $values, 'password' ),
 				],
 			]
 		) )->send();
+	}
+
+	/**
+	 * Logins user.
+	 *
+	 * @param WP_User $user User object.
+	 */
+	public function login_user( $user ) {
+
+		// Check email verification.
+		if ( get_option( 'hp_user_verify_email' ) && hp\is_class_instance( $user, 'WP_User' ) && $user->hp_email_verify_key ) {
+			return new \WP_Error( 'email_not_verified', esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
+		}
+
+		return $user;
 	}
 
 	/**
@@ -120,12 +139,18 @@ final class User extends Component {
 	}
 
 	/**
-	 * Adds registration fields.
+	 * Alters registration form.
 	 *
 	 * @param array $form Form arguments.
 	 * @return array
 	 */
-	public function add_registration_fields( $form ) {
+	public function alter_register_form( $form ) {
+
+		// Set form message.
+		if ( get_option( 'hp_user_verify_email' ) ) {
+			$form['redirect'] = false;
+			$form['message']  = esc_html__( 'Please check your email to activate your account.', 'hivepress' );
+		}
 
 		// Add username field.
 		if ( ! get_option( 'hp_user_generate_username' ) ) {

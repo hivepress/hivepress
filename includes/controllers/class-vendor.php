@@ -30,6 +30,13 @@ final class Vendor extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
+					'vendors_resource'  => [
+						'path'   => '/vendors',
+						'method' => 'GET',
+						'action' => [ $this, 'get_vendors' ],
+						'rest'   => true,
+					],
+
 					'vendors_view_page' => [
 						'url'      => [ $this, 'get_vendors_view_url' ],
 						'match'    => [ $this, 'is_vendors_view_page' ],
@@ -55,6 +62,55 @@ final class Vendor extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets vendors.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function get_vendors( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get search query.
+		$query = sanitize_text_field( $request->get_param( 'search' ) );
+
+		if ( strlen( $query ) < 3 ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get vendors.
+		$vendors = Models\Vendor::query()->filter(
+			[
+				'status' => 'publish',
+			]
+		)->search( $query )
+		->limit( 20 )
+		->get();
+
+		// Get results.
+		$results = [];
+
+		if ( $request->get_param( 'context' ) === 'list' ) {
+			foreach ( $vendors as $vendor ) {
+				$results[] = [
+					'id'   => $vendor->get_id(),
+					'text' => $vendor->get_name(),
+				];
+			}
+		}
+
+		return hp\rest_response( 200, $results );
 	}
 
 	/**

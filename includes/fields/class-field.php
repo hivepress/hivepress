@@ -139,10 +139,11 @@ abstract class Field {
 
 				'settings'   => [
 					'required'    => [
-						'label'   => esc_html_x( 'Required', 'field', 'hivepress' ),
-						'caption' => esc_html__( 'Make this field required', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 10,
+						'label'    => esc_html_x( 'Required', 'field', 'hivepress' ),
+						'caption'  => esc_html__( 'Make this field required', 'hivepress' ),
+						'type'     => 'checkbox',
+						'_context' => 'edit',
+						'_order'   => 10,
 					],
 
 					'description' => [
@@ -150,6 +151,7 @@ abstract class Field {
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'html'       => true,
+						'_context'   => 'edit',
 						'_order'     => 20,
 					],
 				],
@@ -359,7 +361,7 @@ abstract class Field {
 	 * @param mixed $value Field value.
 	 * @return object
 	 */
-	final public function set_value( $value ) {
+	public function set_value( $value ) {
 		$this->value  = $value;
 		$this->filter = null;
 
@@ -446,6 +448,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Checks required flag.
+	 *
+	 * @return bool
+	 */
+	final public function is_required() {
+		return $this->required;
+	}
+
+	/**
 	 * Adds field errors.
 	 *
 	 * @param mixed $errors Field errors.
@@ -508,7 +519,7 @@ abstract class Field {
 	public function display() {
 		return hp\replace_tokens(
 			[
-				'label' => $this->label,
+				'label' => '<strong>' . $this->label . '</strong>',
 				'value' => $this->get_display_value(),
 			],
 			$this->display_template

@@ -22,6 +22,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'posts',
 				'option_args' => [ 'post_type' => 'hp_vendor' ],
+				'source'      => hivepress()->router->get_url( 'vendors_resource' ),
 				'_alias'      => 'post_parent',
 				'_order'      => 10,
 			],
@@ -45,6 +46,7 @@ return [
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_not_featured' ),
 				'type'        => 'date',
 				'format'      => 'U',
+				'_parent'     => 'featured',
 				'_order'      => 40,
 			],
 
@@ -54,6 +56,23 @@ return [
 				'type'        => 'date',
 				'format'      => 'U',
 				'_order'      => 50,
+			],
+		],
+	],
+
+	'listing_images'            => [
+		'title'  => esc_html__( 'Images', 'hivepress' ),
+		'screen' => 'listing',
+		'model'  => 'listing',
+
+		'fields' => [
+			'images' => [
+				'caption'   => esc_html__( 'Select Images', 'hivepress' ),
+				'type'      => 'attachment_upload',
+				'multiple'  => true,
+				'max_files' => 10,
+				'formats'   => [ 'jpg', 'jpeg', 'png' ],
+				'_order'    => 10,
 			],
 		],
 	],
@@ -82,6 +101,7 @@ return [
 				'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
 				'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
 				'type'    => 'checkbox',
+				'_parent' => 'editable',
 				'_order'  => 20,
 			],
 
@@ -121,6 +141,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'fields',
 				'option_args' => [ 'filterable' => true ],
+				'_parent'     => 'filterable',
 				'_order'      => 100,
 			],
 		],
@@ -135,7 +156,8 @@ return [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
-				'type'        => 'checkboxes',
+				'type'        => 'select',
+				'multiple'    => true,
 				'_order'      => 10,
 
 				'options'     => [
@@ -146,14 +168,23 @@ return [
 				],
 			],
 
+			'icon'           => [
+				'label'   => esc_html__( 'Icon', 'hivepress' ),
+				'type'    => 'select',
+				'options' => 'icons',
+				'_parent' => 'display_areas[]',
+				'_order'  => 20,
+			],
+
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %value%' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
 				'type'        => 'textarea',
 				'max_length'  => 2048,
 				'default'     => '%value%',
 				'html'        => true,
-				'_order'      => 20,
+				'_parent'     => 'display_areas[]',
+				'_order'      => 30,
 			],
 		],
 	],
@@ -266,6 +297,7 @@ return [
 				'type'        => 'select',
 				'options'     => 'fields',
 				'option_args' => [ 'filterable' => true ],
+				'_parent'     => 'filterable',
 				'_order'      => 100,
 			],
 		],
@@ -280,7 +312,8 @@ return [
 			'display_areas'  => [
 				'label'       => esc_html__( 'Areas', 'hivepress' ),
 				'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
-				'type'        => 'checkboxes',
+				'type'        => 'select',
+				'multiple'    => true,
 				'_order'      => 10,
 
 				'options'     => [
@@ -291,14 +324,23 @@ return [
 				],
 			],
 
+			'icon'           => [
+				'label'   => esc_html__( 'Icon', 'hivepress' ),
+				'type'    => 'select',
+				'options' => 'icons',
+				'_parent' => 'display_areas[]',
+				'_order'  => 20,
+			],
+
 			'display_format' => [
 				'label'       => esc_html__( 'Format', 'hivepress' ),
-				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %value%' ),
+				'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
 				'type'        => 'textarea',
 				'max_length'  => 2048,
 				'default'     => '%value%',
 				'html'        => true,
-				'_order'      => 20,
+				'_parent'     => 'display_areas[]',
+				'_order'      => 30,
 			],
 		],
 	],

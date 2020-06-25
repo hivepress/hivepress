@@ -58,7 +58,7 @@ class Vendor extends Post {
 
 					'registered_date' => [
 						'type'   => 'date',
-						'format' => 'Y-m-d H:i:s',
+						'time'   => true,
 						'_alias' => 'post_date',
 					],
 

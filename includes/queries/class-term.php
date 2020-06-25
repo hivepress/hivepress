@@ -96,7 +96,7 @@ class Term extends Query {
 
 		// Set term IDs.
 		if ( isset( $this->args['include'] ) && empty( $this->args['include'] ) ) {
-			$this->args['include'] = [ 0 ];
+			$this->args['name'] = md5( time() );
 		}
 
 		return $this;

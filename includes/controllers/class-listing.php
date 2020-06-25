@@ -40,8 +40,10 @@ final class Listing extends Controller {
 					 * @description The listings API allows you to update and delete listings.
 					 */
 					'listings_resource'            => [
-						'path' => '/listings',
-						'rest' => true,
+						'path'   => '/listings',
+						'method' => 'GET',
+						'action' => [ $this, 'get_listings' ],
+						'rest'   => true,
 					],
 
 					'listing_resource'             => [
@@ -196,6 +198,55 @@ final class Listing extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets listings.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function get_listings( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get search query.
+		$query = sanitize_text_field( $request->get_param( 'search' ) );
+
+		if ( strlen( $query ) < 3 ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get listings.
+		$listings = Models\Listing::query()->filter(
+			[
+				'status' => 'publish',
+			]
+		)->search( $query )
+		->limit( 20 )
+		->get();
+
+		// Get results.
+		$results = [];
+
+		if ( $request->get_param( 'context' ) === 'list' ) {
+			foreach ( $listings as $listing ) {
+				$results[] = [
+					'id'   => $listing->get_id(),
+					'text' => $listing->get_title(),
+				];
+			}
+		}
+
+		return hp\rest_response( 200, $results );
 	}
 
 	/**
@@ -843,6 +894,9 @@ final class Listing extends Controller {
 
 		// Get listing.
 		$listing = hivepress()->request->get_context( 'listing' );
+
+		// @todo replace temporary fix.
+		$listing->get_images__id();
 
 		// Check listing.
 		if ( $listing->validate() ) {

@@ -41,6 +41,20 @@ class Select extends Field {
 	protected $multiple = false;
 
 	/**
+	 * Field filter operator.
+	 *
+	 * @var mixed
+	 */
+	protected $filter_operator;
+
+	/**
+	 * Field options source.
+	 *
+	 * @var string
+	 */
+	protected $source;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -52,19 +66,30 @@ class Select extends Field {
 				'filterable' => true,
 
 				'settings'   => [
-					'multiple' => [
+					'multiple'        => [
 						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 100,
 					],
 
-					'options'  => [
+					'options'         => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => [],
 						'multiple' => true,
+						'_context' => 'edit',
 						'_order'   => 110,
+					],
+
+					// @todo remove prefix from parent.
+					'filter_operator' => [
+						'label'    => esc_html__( 'Options', 'hivepress' ),
+						'caption'  => esc_html__( 'Search any of the selected options', 'hivepress' ),
+						'type'     => 'checkbox',
+						'_context' => 'search',
+						'_parent'  => 'search_field_multiple',
+						'_order'   => 120,
 					],
 				],
 			],
@@ -121,6 +146,11 @@ class Select extends Field {
 			$attributes['multiple'] = true;
 		}
 
+		// Set source.
+		if ( $this->source ) {
+			$attributes['data-source'] = esc_url( $this->source );
+		}
+
 		// Set component.
 		if ( 'hidden' !== $this->display_type ) {
 			$attributes['data-component'] = 'select';
@@ -129,6 +159,24 @@ class Select extends Field {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();
+	}
+
+	/**
+	 * Sets field value.
+	 *
+	 * @param mixed $value Field value.
+	 * @return object
+	 */
+	final public function set_value( $value ) {
+		parent::set_value( $value );
+
+		if ( ! is_null( $this->value ) && $this->source ) {
+
+			// Set field options.
+			$this->options = apply_filters( 'hivepress/v1/fields/field/options', $this->options, $this );
+		}
+
+		return $this;
 	}
 
 	/**
@@ -161,7 +209,11 @@ class Select extends Field {
 		parent::add_filter();
 
 		if ( $this->multiple ) {
-			$this->filter['operator'] = 'AND';
+			if ( $this->filter_operator ) {
+				$this->filter['operator'] = 'IN';
+			} else {
+				$this->filter['operator'] = 'AND';
+			}
 		} else {
 			$this->filter['operator'] = 'IN';
 		}

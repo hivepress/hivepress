@@ -31,7 +31,7 @@ class Date extends Field {
 	 *
 	 * @var string
 	 */
-	protected $format = 'Y-m-d';
+	protected $format;
 
 	/**
 	 * Date display format.
@@ -53,6 +53,13 @@ class Date extends Field {
 	 * @var string
 	 */
 	protected $max_date;
+
+	/**
+	 * Time flag.
+	 *
+	 * @var bool
+	 */
+	protected $time = false;
 
 	/**
 	 * Class initializer.
@@ -86,28 +93,19 @@ class Date extends Field {
 						'type'   => 'date',
 						'_order' => 120,
 					],
+
+					'time'        => [
+						'label'   => esc_html__( 'Time', 'hivepress' ),
+						'caption' => esc_html__( 'Allow setting time', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 130,
+					],
 				],
 			],
 			$meta
 		);
 
 		parent::init( $meta );
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'display_format' => get_option( 'date_format' ),
-			],
-			$args
-		);
-
-		parent::__construct( $args );
 	}
 
 	/**
@@ -132,14 +130,26 @@ class Date extends Field {
 		}
 
 		// Set format.
-		if ( ! is_null( $this->format ) ) {
-			$attributes['data-format'] = str_replace( 's', 'S', $this->format );
+		if ( is_null( $this->format ) ) {
+			$this->format = 'Y-m-d';
+
+			if ( $this->time ) {
+				$this->format .= ' H:i:s';
+			}
 		}
 
+		$attributes['data-format'] = $this->format;
+
 		// Set display format.
-		if ( ! is_null( $this->display_format ) ) {
-			$attributes['data-display-format'] = $this->display_format;
+		if ( is_null( $this->display_format ) ) {
+			$this->display_format = get_option( 'date_format' );
+
+			if ( $this->time ) {
+				$this->display_format .= ' ' . get_option( 'time_format' );
+			}
 		}
+
+		$attributes['data-display-format'] = $this->display_format;
 
 		// Set minimum date.
 		if ( ! is_null( $this->min_date ) ) {
@@ -149,6 +159,11 @@ class Date extends Field {
 		// Set maximum date.
 		if ( ! is_null( $this->max_date ) ) {
 			$attributes['data-max-date'] = $this->max_date;
+		}
+
+		// Set time flag.
+		if ( $this->time ) {
+			$attributes['data-time'] = true;
 		}
 
 		// Set component.

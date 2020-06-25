@@ -324,8 +324,16 @@ final class Admin extends Component {
 
 		if ( $field ) {
 
+			// Get field attributes.
+			$attributes = [];
+
+			if ( $field->get_arg( '_parent' ) ) {
+				$attributes['data-component'] = 'field';
+				$attributes['data-parent']    = hp\prefix( $field->get_arg( '_parent' ) );
+			}
+
 			// Render field.
-			$output .= $field->render();
+			$output .= '<div ' . hp\html_attributes( $attributes ) . '>' . $field->render() . '</div>';
 		}
 
 		echo $output;
@@ -866,7 +874,19 @@ final class Admin extends Component {
 							// Render field.
 							$output .= $field->render();
 						} else {
-							$output .= '<tr class="hp-form__field hp-form__field--' . esc_attr( hp\sanitize_slug( $field->get_display_type() ) ) . '">';
+
+							// Get field attributes.
+							$attributes = [
+								'class' => 'hp-form__field hp-form__field--' . hp\sanitize_slug( $field->get_display_type() ),
+							];
+
+							if ( $field->get_arg( '_parent' ) ) {
+								$attributes['data-component'] = 'field';
+								$attributes['data-parent']    = hp\prefix( $field->get_arg( '_parent' ) );
+							}
+
+							// Render field.
+							$output .= '<tr ' . hp\html_attributes( $attributes ) . '>';
 
 							// Render field label.
 							if ( $field->get_label() ) {
@@ -1011,8 +1031,19 @@ final class Admin extends Component {
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
 
 				if ( $field ) {
+
+					// Get field attributes.
+					$attributes = [
+						'class' => 'form-field',
+					];
+
+					if ( $field->get_arg( '_parent' ) ) {
+						$attributes['data-component'] = 'field';
+						$attributes['data-parent']    = hp\prefix( $field->get_arg( '_parent' ) );
+					}
+
 					if ( ! is_object( $term ) ) {
-						$output .= '<div class="form-field">';
+						$output .= '<div ' . hp\html_attributes( $attributes ) . '>';
 
 						// Render label.
 						$output .= '<label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
@@ -1033,7 +1064,7 @@ final class Admin extends Component {
 
 						$output .= '</div>';
 					} else {
-						$output .= '<tr class="form-field">';
+						$output .= '<tr ' . hp\html_attributes( $attributes ) . '>';
 
 						// Render label.
 						$output .= '<th scope="row"><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';

@@ -59,6 +59,7 @@ final class Listing extends Component {
 
 			// Alter meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_listing_settings_meta_box' ] );
+			add_filter( 'hivepress/v1/meta_boxes/listing_images', [ $this, 'alter_listing_images_meta_box' ] );
 		} else {
 
 			// Set request context.
@@ -205,6 +206,8 @@ final class Listing extends Component {
 							'recipient' => $user->get_email(),
 
 							'tokens'    => [
+								'user'          => $user,
+								'listing'       => $listing,
 								'user_name'     => $user->get_display_name(),
 								'listing_title' => $listing->get_title(),
 								'listing_url'   => get_permalink( $listing->get_id() ),
@@ -219,6 +222,8 @@ final class Listing extends Component {
 							'recipient' => $user->get_email(),
 
 							'tokens'    => [
+								'user'          => $user,
+								'listing'       => $listing,
 								'user_name'     => $user->get_display_name(),
 								'listing_title' => $listing->get_title(),
 							],
@@ -269,6 +274,8 @@ final class Listing extends Component {
 						'recipient' => $user->get_email(),
 
 						'tokens'    => [
+							'user'          => $user,
+							'listing'       => $listing,
 							'user_name'     => $user->get_display_name(),
 							'listing_title' => $listing->get_title(),
 							'listing_url'   => hivepress()->router->get_url( 'listing_edit_page', [ 'listing_id' => $listing->get_id() ] ),
@@ -541,10 +548,31 @@ final class Listing extends Component {
 				[
 					'options'     => 'users',
 					'option_args' => [],
+					'source'      => hivepress()->router->get_url( 'users_resource' ),
 					'disabled'    => true,
 					'_alias'      => 'post_author',
 				]
 			);
+		}
+
+		return $meta_box;
+	}
+
+	/**
+	 * Alters listing images meta box.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function alter_listing_images_meta_box( $meta_box ) {
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( get_post() );
+
+		if ( $listing ) {
+
+			// Set image IDs.
+			$meta_box['fields']['images']['default'] = $listing->get_images__id();
 		}
 
 		return $meta_box;

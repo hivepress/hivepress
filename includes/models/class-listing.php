@@ -84,19 +84,19 @@ class Listing extends Post {
 
 					'created_date'     => [
 						'type'   => 'date',
-						'format' => 'Y-m-d H:i:s',
+						'time'   => true,
 						'_alias' => 'post_date',
 					],
 
 					'created_date_gmt' => [
 						'type'   => 'date',
-						'format' => 'Y-m-d H:i:s',
+						'time'   => true,
 						'_alias' => 'post_date_gmt',
 					],
 
 					'modified_date'    => [
 						'type'   => 'date',
-						'format' => 'Y-m-d H:i:s',
+						'time'   => true,
 						'_alias' => 'post_modified',
 					],
 
@@ -209,15 +209,28 @@ class Listing extends Post {
 	final public function get_images__id() {
 		if ( ! isset( $this->values['images__id'] ) ) {
 
-			// Get image IDs.
-			$image_ids = wp_list_pluck( get_attached_media( 'image', $this->id ), 'ID' );
+			// Get cached image IDs.
+			$image_ids = hivepress()->cache->get_post_cache( $this->id, 'image_ids', 'models/attachment' );
 
-			if ( has_post_thumbnail( $this->id ) ) {
-				$image_id = absint( get_post_thumbnail_id( $this->id ) );
+			if ( is_null( $image_ids ) ) {
+				$image_ids = [];
 
-				if ( ! in_array( $image_id, $image_ids, true ) ) {
-					array_unshift( $image_ids, $image_id );
+				foreach ( get_attached_media( 'image', $this->id ) as $image ) {
+					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
+						$image_ids[] = $image->ID;
+					}
 				}
+
+				if ( has_post_thumbnail( $this->id ) ) {
+					$image_id = absint( get_post_thumbnail_id( $this->id ) );
+
+					if ( ! in_array( $image_id, $image_ids, true ) ) {
+						array_unshift( $image_ids, $image_id );
+					}
+				}
+
+				// Cache image IDs.
+				hivepress()->cache->set_post_cache( $this->id, 'image_ids', 'models/attachment', $image_ids );
 			}
 
 			// Set field value.

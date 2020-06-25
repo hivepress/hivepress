@@ -59,7 +59,7 @@ abstract class Page_Wide extends Page {
 										'type'       => 'container',
 										'blocks'     => [],
 										'optional'   => true,
-										'_order'     => 10,
+										'_order'     => 9,
 
 										'attributes' => [
 											'class' => [ 'hp-page__topbar' ],

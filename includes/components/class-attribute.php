@@ -87,6 +87,7 @@ final class Attribute extends Component {
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
 
 			// Add category options.
+			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_category_options' ], 100, 2 );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
 
 			// Set category value.
@@ -208,6 +209,15 @@ final class Attribute extends Component {
 						'edit_field'     => [],
 						'search_field'   => [],
 					];
+
+					// Set icon.
+					$icon = $attribute_object->hp_icon;
+
+					if ( $icon ) {
+						$icon = '<i class="hp-icon fas fa-fw fa-' . esc_attr( $icon ) . '"></i>';
+					}
+
+					$attribute_args['display_format'] = str_replace( '%icon%', $icon, $attribute_args['display_format'] );
 
 					// Get categories.
 					if ( taxonomy_exists( hp\prefix( $model . '_category' ) ) ) {
@@ -402,7 +412,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			if ( $field_settings ) {
 				foreach ( $field_settings as $field_name => $field ) {
-					if ( 'edit' === $field_context || ! in_array( $field_name, [ 'required', 'description', 'options' ], true ) ) {
+					if ( ( 'edit' === $field_context && 'search' !== $field->get_arg( '_context' ) ) || ( 'search' === $field_context && 'edit' !== $field->get_arg( '_context' ) ) ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();

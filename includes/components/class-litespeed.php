@@ -27,7 +27,7 @@ final class LiteSpeed extends Component {
 	public function __construct( $args = [] ) {
 
 		// Check LiteSpeed status.
-		if ( ! hp\is_plugin_active( 'litespeed_cache' ) ) {
+		if ( ! defined( 'LSCWP_DIR' ) ) {
 			return;
 		}
 

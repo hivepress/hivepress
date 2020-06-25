@@ -132,16 +132,23 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 
 					'page_content' => [
 						'blocks' => [
-							'listings'           => [
-								'type'    => 'listings',
-								'columns' => 2,
-								'_order'  => 10,
-							],
-
-							'listing_pagination' => [
-								'type'   => 'part',
-								'path'   => 'page/pagination',
+							'listings_container' => [
+								'type'   => 'results',
 								'_order' => 20,
+
+								'blocks' => [
+									'listings'           => [
+										'type'    => 'listings',
+										'columns' => 2,
+										'_order'  => 10,
+									],
+
+									'listing_pagination' => [
+										'type'   => 'part',
+										'path'   => 'page/pagination',
+										'_order' => 20,
+									],
+								],
 							],
 						],
 					],
