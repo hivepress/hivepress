@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-22 17:17+0000\n"
-"PO-Revision-Date: 2020-05-22 17:26+0000\n"
+"POT-Creation-Date: 2020-06-25 12:21+0000\n"
+"PO-Revision-Date: 2020-06-25 13:29+0000\n"
 "Last-Translator: фцув\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.4; wp-5.4.1"
+"X-Loco-Version: 2.4.0; wp-5.4.2"
 
 #: includes/blocks/class-listing-hide-toggle.php:33
 msgid "Hide"
@@ -23,6 +23,7 @@ msgstr "Спрятать"
 msgid "Unhide"
 msgstr "Показать"
 
+#. 1: results range start, 2: results range end, 3: total results.
 #: includes/blocks/class-result-count.php:57
 #, php-format
 msgid "Showing %1$s-%2$s of %3$s results"
@@ -36,17 +37,18 @@ msgstr "Форма регистрации пользователей"
 msgid "Extensions"
 msgstr "Расширения"
 
-#: includes/components/class-admin.php:577
+#: includes/components/class-admin.php:585
 msgctxt "plural"
 msgid "All"
 msgstr "Все"
 
-#: includes/components/class-admin.php:582
+#: includes/components/class-admin.php:590
 msgctxt "plural"
 msgid "Installed"
 msgstr "Установленные"
 
-#: includes/components/class-admin.php:1107
+#. %s: theme name.
+#: includes/components/class-admin.php:1138
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
@@ -55,36 +57,36 @@ msgstr ""
 "Текущая тема не поддерживает HivePress, если вы заметите проблемы с версткой "
 "или стилями, пожалуйста, используйте официальную тему %s."
 
-#: includes/components/class-attribute.php:317
+#: includes/components/class-attribute.php:327
 msgid "Add Option"
 msgstr "Добавить опцию"
 
-#: includes/components/class-attribute.php:318
+#: includes/components/class-attribute.php:328
 msgid "Edit Option"
 msgstr "Редактировать опцию"
 
-#: includes/components/class-attribute.php:319
+#: includes/components/class-attribute.php:329
 msgid "Update Option"
 msgstr "Изменить опцию"
 
-#: includes/components/class-attribute.php:320
+#: includes/components/class-attribute.php:330
 msgid "Parent Option"
 msgstr "Родительская опция"
 
-#: includes/components/class-attribute.php:321
+#: includes/components/class-attribute.php:331
 msgid "Search Options"
 msgstr "Искать опции"
 
-#: includes/components/class-attribute.php:322
+#: includes/components/class-attribute.php:332
 msgid "No options found."
 msgstr "Опций не найдено."
 
-#: includes/components/class-attribute.php:415
+#: includes/components/class-attribute.php:425
 msgid "Edit Options"
 msgstr "Редактировать опции"
 
-#: includes/components/class-attribute.php:447
-#: includes/fields/class-field.php:149
+#: includes/components/class-attribute.php:457
+#: includes/fields/class-field.php:150
 #: includes/models/class-listing-category.php:40
 #: includes/models/class-listing.php:46
 #: includes/models/class-vendor-category.php:40
@@ -92,174 +94,191 @@ msgstr "Редактировать опции"
 msgid "Description"
 msgstr "Описание"
 
-#: includes/components/class-attribute.php:575
+#: includes/components/class-attribute.php:585
 msgctxt "field"
 msgid "requires review"
 msgstr "требует проверки"
 
-#: includes/components/class-attribute.php:655
+#: includes/components/class-attribute.php:665
 msgid "Relevance"
 msgstr "Релевантность"
 
-#: includes/components/class-attribute.php:657
-#: includes/fields/class-date.php:65
+#: includes/components/class-attribute.php:667
+#: includes/fields/class-date.php:72
 msgid "Date"
 msgstr "Дата"
 
-#: includes/components/class-attribute.php:785
+#: includes/components/class-attribute.php:795
 msgid "All Categories"
 msgstr "Все категории"
 
-#: includes/components/class-form.php:370
+#: includes/components/class-form.php:441
 msgid "Captcha is invalid."
 msgstr "Неверный код подтверждения."
 
-#: includes/components/class-listing.php:520 includes/configs/meta-boxes.php:37
+#: includes/components/class-listing.php:527 includes/configs/meta-boxes.php:38
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
 msgstr "Рекламируется"
 
-#: includes/components/class-listing.php:524 includes/configs/meta-boxes.php:30
+#: includes/components/class-listing.php:531 includes/configs/meta-boxes.php:31
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
 msgstr "Проверено"
 
-#: includes/components/class-listing.php:626
+#: includes/components/class-listing.php:654
 msgid "Edit"
 msgstr "Редактировать"
 
-#: includes/components/class-user.php:133 includes/configs/settings.php:238
-#: includes/configs/settings.php:262 includes/models/class-user.php:48
+#: includes/components/class-user.php:94 includes/components/class-user.php:152
+#: includes/controllers/class-user.php:394
+msgid "Please check your email to activate your account."
+msgstr "Пожалуйста, проверьте вашу эл. почту, чтобы активировать аккаунт."
+
+#: includes/components/class-user.php:158 includes/configs/settings.php:243
+#: includes/configs/settings.php:267 includes/models/class-user.php:48
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: includes/components/class-user.php:216
-#: includes/controllers/class-user.php:134
+#: includes/components/class-user.php:241
+#: includes/controllers/class-user.php:136
 #: includes/forms/class-user-login.php:69
 #: templates/user/login/user-login-link.php:9
 #: templates/user/register/user-login-link.php:5
 msgid "Sign In"
 msgstr "Войти"
 
-#: includes/components/class-user.php:228
+#: includes/components/class-user.php:253
 #: includes/forms/class-user-register.php:63
 #: templates/user/login/user-register-link.php:5
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: includes/components/class-user.php:240
-#: includes/controllers/class-user.php:142
+#: includes/components/class-user.php:265
+#: includes/controllers/class-user.php:144
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:69
 #: templates/user/password-reset/user-password-reset-message.php:6
 msgid "Reset Password"
 msgstr "Сбросить пароль"
 
-#: includes/configs/meta-boxes.php:44
+#: includes/configs/meta-boxes.php:45
 msgid "Featuring Date"
 msgstr "Дата истечения срока рекламирования"
 
-#: includes/configs/meta-boxes.php:62 includes/configs/meta-boxes.php:214
+#: includes/configs/meta-boxes.php:64 includes/models/class-listing.php:145
+msgid "Images"
+msgstr "Изображения"
+
+#: includes/configs/meta-boxes.php:70 includes/models/class-listing.php:146
+msgid "Select Images"
+msgstr "Выбрать изображения"
+
+#: includes/configs/meta-boxes.php:81 includes/configs/meta-boxes.php:245
 #: includes/configs/strings.php:134
 msgid "Attributes"
 msgstr "Атрибуты"
 
-#: includes/configs/meta-boxes.php:75 includes/configs/meta-boxes.php:227
+#: includes/configs/meta-boxes.php:94 includes/configs/meta-boxes.php:258
 msgctxt "attribute"
 msgid "Editable"
 msgstr "Редактирование"
 
-#: includes/configs/meta-boxes.php:76 includes/configs/meta-boxes.php:228
+#: includes/configs/meta-boxes.php:95 includes/configs/meta-boxes.php:259
 msgid "Allow front-end editing"
 msgstr "Разрешить пользователям редактирование"
 
-#: includes/configs/meta-boxes.php:82
+#: includes/configs/meta-boxes.php:101
 msgctxt "attribute"
 msgid "Moderated"
 msgstr "Модерация"
 
-#: includes/configs/meta-boxes.php:83
+#: includes/configs/meta-boxes.php:102
 msgid "Manually approve changes"
 msgstr "Вручную одобрять изменения"
 
-#: includes/configs/meta-boxes.php:89 includes/configs/meta-boxes.php:120
-#: includes/configs/meta-boxes.php:234 includes/configs/meta-boxes.php:265
+#: includes/configs/meta-boxes.php:109 includes/configs/meta-boxes.php:140
+#: includes/configs/meta-boxes.php:265 includes/configs/meta-boxes.php:296
 msgid "Field Type"
 msgstr "Тип поля"
 
-#: includes/configs/meta-boxes.php:106 includes/configs/meta-boxes.php:251
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:282
 msgctxt "attribute"
 msgid "Searchable"
 msgstr "Поиск"
 
-#: includes/configs/meta-boxes.php:107 includes/configs/meta-boxes.php:252
+#: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:283
 msgid "Display in the search form"
 msgstr "Отображать в поисковой форме"
 
-#: includes/configs/meta-boxes.php:113 includes/configs/meta-boxes.php:258
+#: includes/configs/meta-boxes.php:133 includes/configs/meta-boxes.php:289
 msgctxt "attribute"
 msgid "Sortable"
 msgstr "Сортировка"
 
-#: includes/configs/meta-boxes.php:114 includes/configs/meta-boxes.php:259
+#: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:290
 msgid "Display as a sorting option"
 msgstr "Отображать как опцию сортировки"
 
-#: includes/configs/meta-boxes.php:136 includes/configs/meta-boxes.php:281
+#: includes/configs/meta-boxes.php:157 includes/configs/meta-boxes.php:313
 msgid "Areas"
 msgstr "Зоны"
 
-#: includes/configs/meta-boxes.php:137 includes/configs/meta-boxes.php:282
+#: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:314
 msgid "Choose the template areas where you want to display this attribute."
 msgstr "Выберите зоны шаблона, в которых вы хотите отображать этот атрибут."
 
-#: includes/configs/meta-boxes.php:142 includes/configs/meta-boxes.php:143
-#: includes/configs/meta-boxes.php:287 includes/configs/meta-boxes.php:288
+#: includes/configs/meta-boxes.php:164 includes/configs/meta-boxes.php:165
+#: includes/configs/meta-boxes.php:320 includes/configs/meta-boxes.php:321
 msgid "Block"
 msgstr "Блок"
 
-#: includes/configs/meta-boxes.php:142 includes/configs/meta-boxes.php:144
-#: includes/configs/meta-boxes.php:287 includes/configs/meta-boxes.php:289
+#: includes/configs/meta-boxes.php:164 includes/configs/meta-boxes.php:166
+#: includes/configs/meta-boxes.php:320 includes/configs/meta-boxes.php:322
 msgctxt "area"
 msgid "primary"
 msgstr "главная"
 
-#: includes/configs/meta-boxes.php:143 includes/configs/meta-boxes.php:145
-#: includes/configs/meta-boxes.php:288 includes/configs/meta-boxes.php:290
+#: includes/configs/meta-boxes.php:165 includes/configs/meta-boxes.php:167
+#: includes/configs/meta-boxes.php:321 includes/configs/meta-boxes.php:323
 msgctxt "area"
 msgid "secondary"
 msgstr "второстепенная"
 
-#: includes/configs/meta-boxes.php:144 includes/configs/meta-boxes.php:145
-#: includes/configs/meta-boxes.php:289 includes/configs/meta-boxes.php:290
+#: includes/configs/meta-boxes.php:166 includes/configs/meta-boxes.php:167
+#: includes/configs/meta-boxes.php:322 includes/configs/meta-boxes.php:323
 msgid "Page"
 msgstr "Страница"
 
-#: includes/configs/meta-boxes.php:150 includes/configs/meta-boxes.php:295
+#: includes/configs/meta-boxes.php:172 includes/configs/meta-boxes.php:328
+msgid "Icon"
+msgstr "Иконка"
+
+#: includes/configs/meta-boxes.php:180 includes/configs/meta-boxes.php:336
 msgid "Format"
 msgstr "Формат"
 
-#: includes/configs/meta-boxes.php:151 includes/configs/meta-boxes.php:296
+#: includes/configs/meta-boxes.php:181 includes/configs/meta-boxes.php:337
 msgid "Set the attribute display format."
 msgstr "Введите формат отображения атрибута."
 
-#: includes/configs/meta-boxes.php:166
+#: includes/configs/meta-boxes.php:197
 msgid "Image"
 msgstr "Изображение"
 
-#: includes/configs/meta-boxes.php:167 includes/models/class-user.php:101
+#: includes/configs/meta-boxes.php:198 includes/models/class-user.php:101
 msgid "Select Image"
 msgstr "Выбрать изображение"
 
-#: includes/configs/meta-boxes.php:174 includes/configs/meta-boxes.php:196
-#: includes/configs/meta-boxes.php:311
+#: includes/configs/meta-boxes.php:205 includes/configs/meta-boxes.php:227
+#: includes/configs/meta-boxes.php:353
 msgctxt "sort priority"
 msgid "Order"
 msgstr "Порядок"
 
-#: includes/configs/meta-boxes.php:184
+#: includes/configs/meta-boxes.php:215
 msgid "Display subcategories"
 msgstr "Отображать подкатегории"
 
@@ -286,20 +305,20 @@ msgstr "Добавление"
 msgid "Submission Terms Page"
 msgstr "Страница условий добавления"
 
-#: includes/configs/settings.php:102 includes/configs/strings.php:24
+#: includes/configs/settings.php:103 includes/configs/strings.php:24
 msgid "Expiration"
 msgstr "Сроки"
 
-#: includes/configs/settings.php:125 includes/configs/settings.php:272
+#: includes/configs/settings.php:126 includes/configs/settings.php:284
 #: includes/configs/strings.php:20
 msgid "Emails"
 msgstr "Письма"
 
-#: includes/configs/settings.php:131
+#: includes/configs/settings.php:132
 msgid "This email is sent to users when listing is approved."
 msgstr "Это письмо отправляется пользователям при одобрении объявления."
 
-#: includes/configs/settings.php:133
+#: includes/configs/settings.php:134
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
@@ -307,11 +326,11 @@ msgstr ""
 "Привет, %username%! Ваше объявление \"%listing_title%\" одобрено, кликните "
 "на эту ссылку для просмотра: %listing_url%"
 
-#: includes/configs/settings.php:142
+#: includes/configs/settings.php:144
 msgid "This email is sent to users when listing is rejected."
 msgstr "Это письмо отправляется пользователям при отклонении объявления."
 
-#: includes/configs/settings.php:144
+#: includes/configs/settings.php:146
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
@@ -319,13 +338,13 @@ msgstr ""
 "Привет, %username%! К сожалению, ваше объявление \"%listing_title%\" "
 "отклонено."
 
-#: includes/configs/settings.php:153
+#: includes/configs/settings.php:156
 msgid "This email is sent to users when listing is expired."
 msgstr ""
 "Это письмо отправляется пользователям при истечении срока размещения "
 "объявления."
 
-#: includes/configs/settings.php:155
+#: includes/configs/settings.php:158
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
@@ -333,74 +352,83 @@ msgstr ""
 "Привет, %user_name%! Срок размещения объявления \"%listing_title%\" истек, "
 "кликните на эту ссылку, чтобы обновить его: %listing_url%"
 
-#: includes/configs/settings.php:203 includes/configs/settings.php:231
+#: includes/configs/settings.php:208 includes/configs/settings.php:236
 msgctxt "noun"
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: includes/configs/settings.php:204
+#: includes/configs/settings.php:209
 msgid "User Name"
 msgstr "Имя пользователя"
 
-#: includes/configs/settings.php:221
+#: includes/configs/settings.php:226
 msgid "Users"
 msgstr "Пользователи"
 
-#: includes/configs/settings.php:239 includes/models/class-user.php:70
+#: includes/configs/settings.php:244 includes/models/class-user.php:70
 msgid "First Name"
 msgstr "Имя"
 
-#: includes/configs/settings.php:240 includes/models/class-user.php:78
+#: includes/configs/settings.php:245 includes/models/class-user.php:78
 msgid "Last Name"
 msgstr "Фамилия"
 
-#: includes/configs/settings.php:241
+#: includes/configs/settings.php:246
 msgid "Full Name"
 msgstr "Имя и фамилия"
 
-#: includes/configs/settings.php:248
+#: includes/configs/settings.php:253
 msgid "Registration"
 msgstr "Регистрация"
 
-#: includes/configs/settings.php:253
+#: includes/configs/settings.php:258
 msgid "Registration Terms Page"
 msgstr "Страница условий регистрации"
 
-#: includes/configs/settings.php:254
+#: includes/configs/settings.php:259
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 "Выберите страницу условий, которые пользователь должен принять перед "
 "регистрацией."
 
-#: includes/configs/settings.php:263
+#: includes/configs/settings.php:268
 msgid "Generate username from the email address"
 msgstr "Генерировать имя пользователя из эл. адреса"
 
-#: includes/configs/settings.php:277
+#: includes/configs/settings.php:275 includes/fields/class-email.php:30
+#: includes/models/class-user.php:56
+msgid "Email"
+msgstr "Эл. адрес"
+
+#: includes/configs/settings.php:276
+msgid "Require email address verification"
+msgstr "Требовать подтверждения эл. адреса"
+
+#: includes/configs/settings.php:289
 msgid "User Registered"
 msgstr "Пользователь зарегистрирован"
 
-#: includes/configs/settings.php:278
+#: includes/configs/settings.php:290
 msgid "This email is sent to users after registration."
 msgstr "Это письмо отправляется пользователям после регистрации."
 
-#: includes/configs/settings.php:280
+#: includes/configs/settings.php:292
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
 msgstr ""
 "Привет, %username%! Спасибо за регистрацию, вот ваш пароль: %user_password%"
 
-#: includes/configs/settings.php:288
+#: includes/configs/settings.php:300
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr "Пароль сброшен"
 
-#: includes/configs/settings.php:289
+#: includes/configs/settings.php:301
 msgid "This email is sent to users when a password reset is requested."
 msgstr "Это письмо отправляется пользователям при запросе сброса пароля."
 
-#: includes/configs/settings.php:291
+#: includes/configs/settings.php:303
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
@@ -408,21 +436,40 @@ msgstr ""
 "Привет, %username%! Пожалуйста, кликните на эту ссылку для сброса пароля: "
 "%password_reset_url%"
 
-#: includes/configs/settings.php:303
+#: includes/configs/settings.php:311
+#: includes/emails/class-user-email-verify.php:30
+msgid "Email Verification"
+msgstr "Подтверждение эл. адреса"
+
+#: includes/configs/settings.php:312
+msgid "This email is sent to users when email verification is required."
+msgstr ""
+"Это письмо отправляется пользователям если требуется подтверждение эл. "
+"адреса."
+
+#: includes/configs/settings.php:314
+msgid ""
+"Hi, %user_name%! Please click on the following link to verify your email "
+"address: %email_verify_url%"
+msgstr ""
+"Привет, %username%! Пожалуйста, кликните на эту ссылку для подтверждения эл. "
+"адреса: %email_verify_url%"
+
+#: includes/configs/settings.php:327
 msgid "Integrations"
 msgstr "Интеграции"
 
-#: includes/configs/settings.php:313
+#: includes/configs/settings.php:337
+msgid "Protected Forms"
+msgstr "Защищенные формы"
+
+#: includes/configs/settings.php:345
 msgid "Site Key"
 msgstr "Ключ сайта"
 
-#: includes/configs/settings.php:320
+#: includes/configs/settings.php:353
 msgid "Secret Key"
 msgstr "Секретный ключ"
-
-#: includes/configs/settings.php:327
-msgid "Protected Forms"
-msgstr "Защищенные формы"
 
 #: includes/configs/strings.php:16 templates/admin/settings.php:6
 msgid "Settings"
@@ -552,16 +599,19 @@ msgctxt "imperative"
 msgid "Add Details"
 msgstr "Заполните детали"
 
+#. %s: WooCommerce.
 #: includes/configs/strings.php:49
 #, php-format
 msgid "%s Product"
 msgstr "Продукт %s"
 
+#. %s: token list.
 #: includes/configs/strings.php:51
 #, php-format
 msgid "The following tokens are available: %s."
 msgstr "Следующие токены доступны: %s."
 
+#. %s: extension name.
 #: includes/configs/strings.php:53
 #, php-format
 msgid ""
@@ -571,6 +621,7 @@ msgstr ""
 "Расширение %s несовместимо с текущей версией HivePress, пожалуйста, обновите "
 "HivePress или отключите его."
 
+#. %s: terms URL.
 #: includes/configs/strings.php:55
 #, php-format
 msgid ""
@@ -594,6 +645,7 @@ msgstr "Все объявления"
 msgid "Related Listings"
 msgstr "Похожие объявления"
 
+#. %s: Listings number.
 #: includes/configs/strings.php:63
 #, php-format
 msgid "%s Listing"
@@ -602,6 +654,7 @@ msgstr[0] "%s объявление"
 msgstr[1] "%s объявлений"
 msgstr[2] "%s объявлений"
 
+#. %s: Vendor name.
 #: includes/configs/strings.php:65
 #, php-format
 msgid "Listings by %s"
@@ -699,6 +752,7 @@ msgstr "Объявление изменено"
 msgid "Listing Reported"
 msgstr "Получена жалоба на объявление"
 
+#. %s: Listing title.
 #: includes/configs/strings.php:90
 #, php-format
 msgid ""
@@ -708,6 +762,7 @@ msgstr ""
 "Спасибо! Ваше объявление \"%s\" отправлено и будет рассмотрено как можно "
 "скорее."
 
+#. %s: Listing title.
 #: includes/configs/strings.php:92
 #, php-format
 msgid ""
@@ -922,59 +977,65 @@ msgstr "Искать категории"
 msgid "No categories found."
 msgstr "Категорий не найдено."
 
+#. %s: files number.
 #: includes/controllers/class-attachment.php:164
 #, php-format
 msgid "Only up to %s files can be uploaded."
 msgstr "Можно загрузить только до %s файлов."
 
+#. %s: file extensions.
 #: includes/controllers/class-attachment.php:179
 #, php-format
 msgid "Only %s files are allowed."
 msgstr "Только %s файлы разрешены."
 
-#: includes/controllers/class-listing.php:153
+#: includes/controllers/class-listing.php:155
 msgctxt "imperative"
 msgid "Select Category"
 msgstr "Выберите категорию"
 
-#: includes/controllers/class-user.php:192
+#: includes/controllers/class-user.php:152
+msgid "Email Verified"
+msgstr "Эл. адрес подтвержден"
+
+#: includes/controllers/class-user.php:247
 msgid "Username contains invalid characters."
 msgstr "Имя пользователя содержит недопустимые символы."
 
-#: includes/controllers/class-user.php:194
+#: includes/controllers/class-user.php:249
 msgid "This username is already in use."
 msgstr "Это имя пользователя уже занято."
 
-#: includes/controllers/class-user.php:200
+#: includes/controllers/class-user.php:255
 msgid "This email is already registered."
 msgstr "Этот эл. адрес уже используется."
 
-#: includes/controllers/class-user.php:300
-#: includes/controllers/class-user.php:307
+#: includes/controllers/class-user.php:382
+#: includes/controllers/class-user.php:389
 msgid "Username or password is incorrect."
 msgstr "Неверное имя пользователя или пароль."
 
-#: includes/controllers/class-user.php:374
+#: includes/controllers/class-user.php:461
 msgid "User with this email doesn't exist."
 msgstr "Пользователь с таким эл. адресом не найден."
 
-#: includes/controllers/class-user.php:376
+#: includes/controllers/class-user.php:463
 msgid "User with this username doesn't exist."
 msgstr "Пользователь с таким именем не найден."
 
-#: includes/controllers/class-user.php:437
+#: includes/controllers/class-user.php:525
 msgid "Password reset key is expired or invalid."
 msgstr "Ключ для сброса пароля неверен или срок его действия истек."
 
-#: includes/controllers/class-user.php:501
+#: includes/controllers/class-user.php:589
 msgid "Current password is required."
 msgstr "Текущий пароль является обязательным."
 
-#: includes/controllers/class-user.php:505
+#: includes/controllers/class-user.php:593
 msgid "Current password is incorrect."
 msgstr "Неверный текущий пароль."
 
-#: includes/controllers/class-user.php:558
+#: includes/controllers/class-user.php:646
 msgid "Password is incorrect."
 msgstr "Неверный пароль."
 
@@ -1007,24 +1068,38 @@ msgid "Registration Complete"
 msgstr "Регистрация завершена"
 
 #: includes/fields/class-attachment-select.php:38
-#: includes/fields/class-attachment-upload.php:84
+#: includes/fields/class-attachment-upload.php:117
 msgid "Select File"
 msgstr "Выбрать файл"
 
+#. %s: field label.
 #: includes/fields/class-attachment-select.php:72
-#: includes/fields/class-attachment-upload.php:178
-#: includes/fields/class-date.php:206 includes/fields/class-email.php:90
-#: includes/fields/class-regex.php:75 includes/fields/class-select.php:215
+#: includes/fields/class-attachment-upload.php:239
+#: includes/fields/class-date.php:221 includes/fields/class-email.php:90
+#: includes/fields/class-regex.php:75 includes/fields/class-select.php:267
 #: includes/fields/class-text.php:212
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr "Поле \"%s\" содержит недопустимое значение."
 
-#: includes/fields/class-attachment-upload.php:82
+#: includes/fields/class-attachment-upload.php:66
+msgid "Attachment"
+msgstr "Вложение"
+
+#: includes/fields/class-attachment-upload.php:70
+#: includes/fields/class-checkbox.php:49
+msgid "Caption"
+msgstr "Подпись"
+
+#: includes/fields/class-attachment-upload.php:77
+msgid "File Types"
+msgstr "Типы файлов"
+
+#: includes/fields/class-attachment-upload.php:115
 msgid "Select Files"
 msgstr "Выбрать файлы"
 
-#: includes/fields/class-attachment-upload.php:269
+#: includes/fields/class-attachment-upload.php:331
 #: templates/listing/edit/page/listing-delete-link.php:5
 msgid "Delete"
 msgstr "Удалить"
@@ -1032,10 +1107,6 @@ msgstr "Удалить"
 #: includes/fields/class-checkbox.php:44
 msgid "Checkbox"
 msgstr "Флажок"
-
-#: includes/fields/class-checkbox.php:49
-msgid "Caption"
-msgstr "Подпись"
 
 #: includes/fields/class-checkbox.php:99
 msgid "Yes"
@@ -1053,32 +1124,38 @@ msgstr "Флажки"
 msgid "Date Range"
 msgstr "Диапазон дат"
 
-#: includes/fields/class-date.php:72 includes/fields/class-number.php:65
+#: includes/fields/class-date.php:79 includes/fields/class-number.php:65
 #: includes/fields/class-text.php:78
 msgid "Placeholder"
 msgstr "Замещающий текст"
 
-#: includes/fields/class-date.php:79
+#: includes/fields/class-date.php:86
 msgid "Minimum Date"
 msgstr "Минимальная дата"
 
-#: includes/fields/class-date.php:85
+#: includes/fields/class-date.php:92
 msgid "Maximum Date"
 msgstr "Максимальная дата"
 
-#: includes/fields/class-date.php:213
+#: includes/fields/class-date.php:98
+msgid "Time"
+msgstr "Время"
+
+#: includes/fields/class-date.php:99
+msgid "Allow setting time"
+msgstr "Разрешить выбор времени"
+
+#. 1: field label, 2: date.
+#: includes/fields/class-date.php:228
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr "\"%1$s\" не может быть раньше %2$s."
 
-#: includes/fields/class-date.php:222
+#. 1: field label, 2: date.
+#: includes/fields/class-date.php:237
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr "\"%1$s\" не может быть позже %2$s."
-
-#: includes/fields/class-email.php:30 includes/models/class-user.php:56
-msgid "Email"
-msgstr "Эл. адрес"
 
 #: includes/fields/class-embed.php:30
 msgctxt "field"
@@ -1094,12 +1171,13 @@ msgstr "Обязательность"
 msgid "Make this field required"
 msgstr "Сделать это поле обязательным"
 
-#: includes/fields/class-field.php:231
+#: includes/fields/class-field.php:233
 msgctxt "field"
 msgid "optional"
 msgstr "опционально"
 
-#: includes/fields/class-field.php:490
+#. %s: field label.
+#: includes/fields/class-field.php:501
 #, php-format
 msgid "\"%s\" field is required."
 msgstr "Поле \"%s\" является обязательным."
@@ -1146,11 +1224,13 @@ msgstr "Минимальное значение"
 msgid "Maximum Value"
 msgstr "Максимальное значение"
 
+#. 1: field label, 2: number.
 #: includes/fields/class-number.php:183
 #, php-format
 msgid "\"%1$s\" can't be lower than %2$s."
 msgstr "\"%1$s\" не может быть меньше %2$s."
 
+#. 1: field label, 2: number.
 #: includes/fields/class-number.php:188
 #, php-format
 msgid "\"%1$s\" can't be greater than %2$s."
@@ -1160,23 +1240,27 @@ msgstr "\"%1$s\" не может быть больше %2$s."
 msgid "Radio Buttons"
 msgstr "Радиокнопки"
 
-#: includes/fields/class-select.php:51
+#: includes/fields/class-select.php:65
 msgctxt "field"
 msgid "Select"
 msgstr "Список"
 
-#: includes/fields/class-select.php:56
+#: includes/fields/class-select.php:70
 msgctxt "selection"
 msgid "Multiple"
 msgstr "Множественность"
 
-#: includes/fields/class-select.php:57
+#: includes/fields/class-select.php:71
 msgid "Allow multiple selection"
 msgstr "Разрешить множественный выбор"
 
-#: includes/fields/class-select.php:63
+#: includes/fields/class-select.php:77 includes/fields/class-select.php:87
 msgid "Options"
 msgstr "Опции"
+
+#: includes/fields/class-select.php:88
+msgid "Search any of the selected options"
+msgstr "Искать любые из выбранных опций"
 
 #: includes/fields/class-text.php:72
 msgid "Text"
@@ -1198,11 +1282,13 @@ msgstr "Регулярное выражение"
 msgid "Click to copy"
 msgstr "Кликните, чтобы скопировать"
 
+#. 1: field label, 2: length.
 #: includes/fields/class-text.php:202
 #, php-format
 msgid "\"%1$s\" should be at least %2$s characters long."
 msgstr "\"%1$s\" не может быть короче %2$s символов."
 
+#. 1: field label, 2: length.
 #: includes/fields/class-text.php:207
 #, php-format
 msgid "\"%1$s\" can't be longer than %2$s characters."
@@ -1334,14 +1420,6 @@ msgctxt "listing"
 msgid "Pending"
 msgstr "На рассмотрении"
 
-#: includes/models/class-listing.php:145
-msgid "Images"
-msgstr "Изображения"
-
-#: includes/models/class-listing.php:146
-msgid "Select Images"
-msgstr "Выбрать изображения"
-
 #: includes/models/class-user.php:63
 msgid "Password"
 msgstr "Пароль"
@@ -1406,6 +1484,7 @@ msgstr ""
 msgid "Change Category"
 msgstr "Изменить категорию"
 
+#. %s: date.
 #: templates/listing/view/listing-created-date.php:8
 #, php-format
 msgid "Added on %s"
@@ -1427,10 +1506,18 @@ msgstr "Еще нет аккаунта?"
 msgid "Password reset link is expired or invalid."
 msgstr "Ссылка для сброса пароля неверна или срок её действия истек."
 
+#: templates/user/register/user-email-verify-message.php:5
+msgid ""
+"Thank you! Your email address has been verified and you can start using your "
+"account."
+msgstr ""
+"Спасибо! Ваш эл. адрес подтвержден и вы можете начать пользоваться аккаунтом."
+
 #: templates/user/register/user-login-link.php:5
 msgid "Already have an account?"
 msgstr "Уже есть аккаунт?"
 
+#. %s: date.
 #: templates/vendor/view/vendor-registered-date.php:8
 #, php-format
 msgid "Member since %s"
