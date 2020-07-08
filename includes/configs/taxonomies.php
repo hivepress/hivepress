@@ -30,6 +30,11 @@ return [
 		],
 	],
 
+	'listing_tag'      => [
+		'post_type' => [ 'listing' ],
+		'rewrite'   => [ 'slug' => 'listing-tag' ],
+	],
+
 	'vendor_category'  => [
 		'public'       => false,
 		'post_type'    => [ 'vendor', 'vendor_attribute' ],

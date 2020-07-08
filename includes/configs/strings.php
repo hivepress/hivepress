@@ -70,6 +70,7 @@ return [
 	'no_listings_found'                         => esc_html__( 'No listings found.', 'hivepress' ),
 	'listing_attributes'                        => esc_html__( 'Listing Attributes', 'hivepress' ),
 	'listing_categories'                        => esc_html__( 'Listing Categories', 'hivepress' ),
+	'listing_tags'                              => esc_html__( 'Listing Tags', 'hivepress' ),
 	'listing_search_form'                       => esc_html__( 'Listing Search Form', 'hivepress' ),
 	'listing_expiration'                        => esc_html__( 'Listing Expiration', 'hivepress' ),
 	'submit_listing'                            => esc_html__( 'Submit Listing', 'hivepress' ),
