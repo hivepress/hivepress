@@ -76,6 +76,6 @@ class Button extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<button type="' . esc_attr( $this->display_type ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_html( $this->caption ) . '</button>';
+		return '<button type="' . esc_attr( $this->display_type ) . '" ' . hp\html_attributes( $this->attributes ) . '><span>' . esc_html( $this->caption ) . '</span></button>';
 	}
 }
