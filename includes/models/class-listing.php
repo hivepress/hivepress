@@ -84,19 +84,19 @@ class Listing extends Post {
 
 					'created_date'     => [
 						'type'   => 'date',
-						'time'   => true,
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_date',
 					],
 
 					'created_date_gmt' => [
 						'type'   => 'date',
-						'time'   => true,
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_date_gmt',
 					],
 
 					'modified_date'    => [
 						'type'   => 'date',
-						'time'   => true,
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_modified',
 					],
 
