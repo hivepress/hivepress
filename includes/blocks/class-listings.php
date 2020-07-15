@@ -63,6 +63,13 @@ class Listings extends Block {
 	protected $featured;
 
 	/**
+	 * Container attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Block meta.
@@ -144,6 +151,26 @@ class Listings extends Block {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps block properties.
+	 */
+	protected function boot() {
+		$attributes = [];
+
+		// Set class.
+		$attributes['class'] = [ 'hp-listings', 'hp-block' ];
+
+		if ( 'edit' === $this->mode ) {
+			$attributes['class'][] = 'hp-table';
+		} else {
+			$attributes['class'][] = 'hp-grid';
+		}
+
+		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
+
+		parent::boot();
 	}
 
 	/**
@@ -243,9 +270,9 @@ class Listings extends Block {
 
 			if ( $regular_query->have_posts() || $featured_query ) {
 				if ( 'edit' === $this->mode ) {
-					$output .= '<table class="hp-listings hp-table">';
+					$output .= '<table ' . hp\html_attributes( $this->attributes ) . '>';
 				} else {
-					$output .= '<div class="hp-listings hp-grid hp-block">';
+					$output .= '<div ' . hp\html_attributes( $this->attributes ) . '>';
 					$output .= '<div class="hp-row">';
 				}
 
