@@ -126,6 +126,7 @@ return [
 	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
 	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),
 	'display_vendors_on_frontend'               => esc_html__( 'Display vendors on the front-end', 'hivepress' ),
+	'mark_vendor_as_verified'                   => esc_html__( 'Mark this vendor as verified', 'hivepress' ),
 
 	// Categories.
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),

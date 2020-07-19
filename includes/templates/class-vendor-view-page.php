@@ -72,6 +72,12 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 												'path'   => 'vendor/view/page/vendor-name',
 												'_order' => 10,
 											],
+
+											'vendor_verified_badge' => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-verified-badge',
+												'_order' => 20,
+											],
 										],
 									],
 

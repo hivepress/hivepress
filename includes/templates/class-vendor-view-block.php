@@ -82,6 +82,12 @@ class Vendor_View_Block extends Template {
 												'path'   => 'vendor/view/block/vendor-name',
 												'_order' => 10,
 											],
+
+											'vendor_verified_badge' => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-verified-badge',
+												'_order' => 20,
+											],
 										],
 									],
 
