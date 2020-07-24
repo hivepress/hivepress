@@ -99,6 +99,7 @@ class Listing_View_Block extends Template {
 
 									'listing_details_primary' => [
 										'type'       => 'container',
+										'optional'   => true,
 										'_order'     => 20,
 
 										'attributes' => [
