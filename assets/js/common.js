@@ -111,6 +111,13 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('input')) {
+				$.extend(settings, {
+					tags: true,
+					tokenSeparators: [','],
+				});
+			}
+
 			field.select2(settings);
 		});
 
