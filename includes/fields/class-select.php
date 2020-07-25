@@ -263,8 +263,7 @@ class Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
-			/* translators: %s: field label. */
-			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+			$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->label ) );
 		}
 
 		return empty( $this->errors );
