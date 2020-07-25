@@ -311,28 +311,32 @@ final class Attribute extends Component {
 			// Register taxonomies.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				if ( isset( $attribute_args['edit_field']['options'] ) ) {
-					register_taxonomy(
-						hp\prefix( $model . '_' . $attribute_name ),
-						hp\prefix( $model ),
-						[
-							'hierarchical' => true,
-							'public'       => false,
-							'show_ui'      => true,
-							'show_in_menu' => false,
-							'rewrite'      => false,
+					$taxonomy = hp\prefix( $model . '_' . $attribute_name );
 
-							'labels'       => [
-								'name'          => $attribute_args['label'],
-								'singular_name' => $attribute_args['label'],
-								'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
-								'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
-								'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
-								'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
-								'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
-								'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
-							],
-						]
-					);
+					if ( ! taxonomy_exists( $taxonomy ) ) {
+						register_taxonomy(
+							$taxonomy,
+							hp\prefix( $model ),
+							[
+								'hierarchical' => true,
+								'public'       => false,
+								'show_ui'      => true,
+								'show_in_menu' => false,
+								'rewrite'      => false,
+
+								'labels'       => [
+									'name'          => $attribute_args['label'],
+									'singular_name' => $attribute_args['label'],
+									'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
+									'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
+									'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
+									'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
+									'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
+									'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
+								],
+							]
+						);
+					}
 				}
 			}
 
