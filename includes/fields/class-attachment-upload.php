@@ -118,6 +118,13 @@ class Attachment_Upload extends Field {
 			}
 		}
 
+		// Set required flag.
+		if ( $this->required ) {
+
+			// @todo remove when available for all fields.
+			$this->attributes['data-required'] = 'true';
+		}
+
 		parent::boot();
 	}
 
@@ -145,6 +152,19 @@ class Attachment_Upload extends Field {
 				}
 
 				return $urls;
+			}
+		}
+	}
+
+	/**
+	 * Sets file formats.
+	 *
+	 * @param array $formats File formats.
+	 */
+	final protected function set_formats( $formats ) {
+		if ( is_array( $formats ) ) {
+			foreach ( $formats as $format ) {
+				$this->formats = array_merge( $this->formats, explode( '|', $format ) );
 			}
 		}
 	}
@@ -327,9 +347,7 @@ class Attachment_Upload extends Field {
 		}
 
 		// Render delete button.
-		if ( ! $this->required || $this->multiple ) {
-			$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
-		}
+		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 		$output .= '</div>';
 

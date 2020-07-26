@@ -129,6 +129,20 @@ abstract class Template {
 	}
 
 	/**
+	 * Sets context value.
+	 *
+	 * @param string $name Context name.
+	 * @param mixed  $value Context value.
+	 */
+	final public function set_context( $name, $value = null ) {
+		if ( is_array( $name ) ) {
+			$this->context = $name;
+		} else {
+			$this->context[ $name ] = $value;
+		}
+	}
+
+	/**
 	 * Gets context values.
 	 *
 	 * @param string $name Context name.

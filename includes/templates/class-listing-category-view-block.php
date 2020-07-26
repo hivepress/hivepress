@@ -73,7 +73,7 @@ class Listing_Category_View_Block extends Template {
 										'_order'     => 10,
 
 										'attributes' => [
-											'class' => [ 'hp-listing_category__name' ],
+											'class' => [ 'hp-listing-category__name' ],
 										],
 
 										'blocks'     => [

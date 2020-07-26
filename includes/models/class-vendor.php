@@ -56,9 +56,14 @@ class Vendor extends Post {
 						'_alias'     => 'post_status',
 					],
 
+					'verified'        => [
+						'type'      => 'checkbox',
+						'_external' => true,
+					],
+
 					'registered_date' => [
 						'type'   => 'date',
-						'time'   => true,
+						'format' => 'Y-m-d H:i:s',
 						'_alias' => 'post_date',
 					],
 

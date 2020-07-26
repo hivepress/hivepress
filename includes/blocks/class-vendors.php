@@ -42,6 +42,13 @@ class Vendors extends Block {
 	protected $order;
 
 	/**
+	 * Container attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Block meta.
@@ -109,6 +116,22 @@ class Vendors extends Block {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Bootstraps block properties.
+	 */
+	protected function boot() {
+
+		// Set attributes.
+		$this->attributes = hp\merge_arrays(
+			$this->attributes,
+			[
+				'class' => [ 'hp-vendors', 'hp-block', 'hp-grid' ],
+			]
+		);
+
+		parent::boot();
 	}
 
 	/**
@@ -183,7 +206,7 @@ class Vendors extends Block {
 			}
 
 			if ( $regular_query->have_posts() ) {
-				$output .= '<div class="hp-vendors hp-grid hp-block">';
+				$output .= '<div ' . hp\html_attributes( $this->attributes ) . '>';
 				$output .= '<div class="hp-row">';
 
 				// Render vendors.

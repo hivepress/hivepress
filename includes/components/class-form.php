@@ -63,6 +63,8 @@ final class Form extends Component {
 		// Get options.
 		if ( method_exists( $this, $method ) ) {
 			$options = call_user_func_array( [ $this, $method ], [ $args, $value ] );
+		} else {
+			$options = hivepress()->get_config( $type );
 		}
 
 		return $options;
@@ -341,28 +343,6 @@ final class Form extends Component {
 	 */
 	protected function get_mime_types( $args, $value ) {
 		return get_allowed_mime_types();
-	}
-
-	/**
-	 * Gets country options.
-	 *
-	 * @param array $args Country arguments.
-	 * @param mixed $value Current value.
-	 * @return array
-	 */
-	protected function get_countries( $args, $value ) {
-		return hivepress()->get_config( 'countries' );
-	}
-
-	/**
-	 * Gets icon options.
-	 *
-	 * @param array $args Icon arguments.
-	 * @param mixed $value Current value.
-	 * @return array
-	 */
-	protected function get_icons( $args, $value ) {
-		return hivepress()->get_config( 'icons' );
 	}
 
 	/**

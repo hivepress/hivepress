@@ -53,6 +53,10 @@ return [
 	'extension_is_incompatible_with_core'       => esc_html__( '%s extension is incompatible with the current HivePress version, please update HivePress or deactivate it.', 'hivepress' ),
 	/* translators: %s: terms URL. */
 	'i_agree_to_terms_and_conditions'           => hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ),
+	/* translators: %s: field label. */
+	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
+	/* translators: %s: field label. */
+	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),
@@ -125,6 +129,7 @@ return [
 	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
 	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),
 	'display_vendors_on_frontend'               => esc_html__( 'Display vendors on the front-end', 'hivepress' ),
+	'mark_vendor_as_verified'                   => esc_html__( 'Mark this vendor as verified', 'hivepress' ),
 
 	// Categories.
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),

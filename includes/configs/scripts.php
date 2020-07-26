@@ -44,7 +44,6 @@ return [
 	'slick'                 => [
 		'handle' => 'slick',
 		'src'    => hivepress()->get_url() . '/assets/js/slick.min.js',
-		'scope'  => 'listing_view_page',
 	],
 
 	'sticky_sidebar'        => [

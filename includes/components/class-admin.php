@@ -116,7 +116,8 @@ final class Admin extends Component {
 		// Add pages.
 		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings' );
-		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'manage_options', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 	}
 
 	/**
@@ -178,6 +179,8 @@ final class Admin extends Component {
 					$tabs        = $this->get_extensions_tabs();
 					$current_tab = $this->get_extensions_tab();
 					$extensions  = $this->get_extensions( $current_tab );
+				} elseif ( 'themes' === $template_name ) {
+					$themes = $this->get_themes();
 				}
 
 				include $template_path;
@@ -429,6 +432,132 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
+	}
+
+	/**
+	 * Gets themes.
+	 *
+	 * @return array
+	 */
+	protected function get_themes() {
+
+		// Get cached themes.
+		$themes = hivepress()->cache->get_cache( 'themes' );
+
+		if ( is_null( $themes ) ) {
+			$themes = [];
+
+			// Get free themes.
+			$free_themes = themes_api(
+				'query_themes',
+				[
+					'author' => 'hivepress',
+				]
+			);
+
+			if ( ! is_wp_error( $free_themes ) ) {
+
+				// Add themes.
+				$themes = array_merge(
+					$themes,
+					array_map(
+						function( $theme ) {
+							$theme = (array) $theme;
+
+							return array_merge(
+								$theme,
+								[
+									'buy_url'   => $theme['homepage'],
+									'image_url' => $theme['screenshot_url'],
+								]
+							);
+						},
+						$free_themes->themes
+					)
+				);
+			}
+
+			// Get paid themes.
+			$paid_themes = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get( 'https://store.hivepress.io/api/v1/products?type=theme' )
+				),
+				true
+			);
+
+			if ( is_array( $paid_themes ) && isset( $paid_themes['data'] ) ) {
+
+				// Add themes.
+				$themes = array_merge( $themes, $paid_themes['data'] );
+			}
+
+			// Set theme URLs.
+			$themes = array_map(
+				function( $theme ) {
+					$slug = sanitize_key( $theme['slug'] );
+
+					if ( 'listinghive' === $slug ) {
+						$theme['preview_url'] = 'https://demo.hivepress.io/';
+					} else {
+						$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
+					}
+
+					if ( isset( $theme['price'] ) ) {
+						$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug;
+					}
+
+					return $theme;
+				},
+				$themes
+			);
+
+			// Cache themes.
+			if ( is_array( $paid_themes ) && isset( $paid_themes['data'] ) && ! is_wp_error( $free_themes ) && count( $themes ) <= 100 ) {
+				hivepress()->cache->set_cache( 'themes', null, $themes, DAY_IN_SECONDS );
+			}
+		}
+
+		// Set theme statuses.
+		$all_themes    = array_keys( wp_get_themes() );
+		$current_theme = get_template();
+
+		foreach ( $themes as $theme_index => $theme ) {
+			$slug = sanitize_key( $theme['slug'] );
+
+			// Get status and URL.
+			$status = 'active';
+			$url    = '';
+
+			if ( ! in_array( $slug, $all_themes, true ) ) {
+				$status = 'install';
+				$url    = admin_url(
+					'update.php?' . http_build_query(
+						[
+							'action'   => 'install-theme',
+							'theme'    => $slug,
+							'_wpnonce' => wp_create_nonce( 'install-theme_' . $slug ),
+						]
+					)
+				);
+			} elseif ( $slug !== $current_theme ) {
+				$status = 'activate';
+				$url    = admin_url(
+					'themes.php?' . http_build_query(
+						[
+							'action'     => 'activate',
+							'stylesheet' => $slug,
+							'_wpnonce'   => wp_create_nonce( 'switch-theme_' . $slug ),
+						]
+					)
+				);
+			}
+
+			// Set status and URL.
+			$themes[ $theme_index ]['status'] = $status;
+			$themes[ $theme_index ]['url']    = $url;
+		}
+
+		return $themes;
 	}
 
 	/**
@@ -742,10 +871,15 @@ final class Admin extends Component {
 	 * @param string $post_type Post type.
 	 */
 	public function add_meta_boxes( $post_type ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
+
+		// Add meta boxes.
 		foreach ( $this->get_meta_boxes( $post_type ) as $name => $args ) {
 			if ( $args['fields'] || $args['blocks'] ) {
-
-				// Add meta box.
 				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
 		}
@@ -758,6 +892,11 @@ final class Admin extends Component {
 	 */
 	public function update_meta_box( $post_id ) {
 		global $pagenow;
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
 
 		// Check current page.
 		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {

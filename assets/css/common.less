@@ -172,6 +172,16 @@ Mixins
 					}
 				}
 			}
+
+			&[data-required=true] {
+				> div:first-child {
+					> div:only-child {
+						a {
+							display: none;
+						}
+					}
+				}
+			}
 		}
 	}
 }

@@ -238,7 +238,14 @@ return [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'vendor',
 		'model'  => 'vendor',
-		'fields' => [],
+		'fields' => [
+			'verified' => [
+				'label'   => esc_html_x( 'Verified', 'vendor', 'hivepress' ),
+				'caption' => hivepress()->translator->get_string( 'mark_vendor_as_verified' ),
+				'type'    => 'checkbox',
+				'_order'  => 10,
+			],
+		],
 	],
 
 	'vendor_attributes'         => [
