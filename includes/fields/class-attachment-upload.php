@@ -157,6 +157,19 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
+	 * Sets file formats.
+	 *
+	 * @param array $formats File formats.
+	 */
+	final protected function set_formats( $formats ) {
+		if ( is_array( $formats ) ) {
+			foreach ( $formats as $format ) {
+				$this->formats = array_merge( $this->formats, explode( '|', $format ) );
+			}
+		}
+	}
+
+	/**
 	 * Gets file formats.
 	 *
 	 * @return array
