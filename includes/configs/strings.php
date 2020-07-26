@@ -55,6 +55,8 @@ return [
 	'i_agree_to_terms_and_conditions'           => hp\sanitize_html( __( 'I agree to the <a href="%s" target="_blank">terms and conditions</a>', 'hivepress' ) ),
 	/* translators: %s: field label. */
 	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
+	/* translators: %s: field label. */
+	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),

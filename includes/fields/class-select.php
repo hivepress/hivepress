@@ -41,6 +41,13 @@ class Select extends Field {
 	protected $multiple = false;
 
 	/**
+	 * Maximum values.
+	 *
+	 * @var int
+	 */
+	protected $max_values;
+
+	/**
 	 * Field filter operator.
 	 *
 	 * @var mixed
@@ -73,13 +80,23 @@ class Select extends Field {
 						'_order'  => 100,
 					],
 
+					// @todo remove prefix from parent.
+					'max_values'      => [
+						'label'     => esc_html__( 'Maximum Selection', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+						'_context'  => 'edit',
+						'_parent'   => 'edit_field_multiple',
+						'_order'    => 110,
+					],
+
 					'options'         => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => [],
 						'multiple' => true,
 						'_context' => 'edit',
-						'_order'   => 110,
+						'_order'   => 120,
 					],
 
 					// @todo remove prefix from parent.
@@ -89,7 +106,7 @@ class Select extends Field {
 						'type'     => 'checkbox',
 						'_context' => 'search',
 						'_parent'  => 'search_field_multiple',
-						'_order'   => 120,
+						'_order'   => 130,
 					],
 				],
 			],
@@ -262,8 +279,14 @@ class Select extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
-			$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->label ) );
+		if ( parent::validate() && ! is_null( $this->value ) ) {
+			if ( count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
+				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->label ) );
+			}
+
+			if ( $this->multiple && $this->max_values && count( (array) $this->value ) > $this->max_values ) {
+				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_too_many_values' ), $this->label ) );
+			}
 		}
 
 		return empty( $this->errors );

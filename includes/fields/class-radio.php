@@ -31,6 +31,7 @@ class Radio extends Select {
 
 				'settings' => [
 					'multiple'        => null,
+					'max_values'      => null,
 					'filter_operator' => null,
 				],
 			],
