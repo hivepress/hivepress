@@ -904,18 +904,22 @@ final class Attribute extends Component {
 
 					// Get range.
 					$range = [
-						floatval(
-							get_post_meta(
-								hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
-								hp\prefix( $field_name ),
-								true
+						floor(
+							floatval(
+								get_post_meta(
+									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
+									hp\prefix( $field_name ),
+									true
+								)
 							)
 						),
-						floatval(
-							get_post_meta(
-								hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
-								hp\prefix( $field_name ),
-								true
+						ceil(
+							floatval(
+								get_post_meta(
+									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
+									hp\prefix( $field_name ),
+									true
+								)
 							)
 						),
 					];
