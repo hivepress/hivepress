@@ -104,9 +104,6 @@ final class Attribute extends Component {
 			// Add option settings.
 			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_option_settings' ], 100 );
 
-			// Disable quick edit.
-			add_filter( 'post_row_actions', [ $this, 'disable_quick_edit' ], 10, 2 );
-
 			// Remove term boxes.
 			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
 		} else {
@@ -318,13 +315,14 @@ final class Attribute extends Component {
 							$taxonomy,
 							hp\prefix( $model ),
 							[
-								'hierarchical' => true,
-								'public'       => false,
-								'show_ui'      => true,
-								'show_in_menu' => false,
-								'rewrite'      => false,
+								'hierarchical'       => true,
+								'public'             => false,
+								'show_ui'            => true,
+								'show_in_quick_edit' => false,
+								'show_in_menu'       => false,
+								'rewrite'            => false,
 
-								'labels'       => [
+								'labels'             => [
 									'name'          => $attribute_args['label'],
 									'singular_name' => $attribute_args['label'],
 									'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
@@ -976,21 +974,6 @@ final class Attribute extends Component {
 		}
 
 		return $meta_boxes;
-	}
-
-	/**
-	 * Disables quick edit.
-	 *
-	 * @param array   $actions Post actions.
-	 * @param WP_Post $post Post object.
-	 * @return array
-	 */
-	public function disable_quick_edit( $actions, $post ) {
-		if ( in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
-			unset( $actions['inline hide-if-no-js'] );
-		}
-
-		return $actions;
 	}
 
 	/**
