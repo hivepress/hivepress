@@ -125,7 +125,19 @@ var hivepress = {
 		var dateFormatter = new DateFormatter();
 
 		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
-			flatpickr.localize(flatpickr.l10ns[hivepressCoreData.language]);
+			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
+
+			flatpickr.localize(dateSettings);
+
+			dateFormatter = new DateFormatter({
+				dateSettings: {
+					days: dateSettings.weekdays.longhand,
+					daysShort: dateSettings.weekdays.shorthand,
+					months: dateSettings.months.longhand,
+					monthsShort: dateSettings.months.shorthand,
+					meridiem: dateSettings.amPM,
+				},
+			});
 		}
 
 		hivepress.getComponent('date').each(function() {
