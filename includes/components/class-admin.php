@@ -871,10 +871,15 @@ final class Admin extends Component {
 	 * @param string $post_type Post type.
 	 */
 	public function add_meta_boxes( $post_type ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
+
+		// Add meta boxes.
 		foreach ( $this->get_meta_boxes( $post_type ) as $name => $args ) {
 			if ( $args['fields'] || $args['blocks'] ) {
-
-				// Add meta box.
 				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
 		}
@@ -887,6 +892,11 @@ final class Admin extends Component {
 	 */
 	public function update_meta_box( $post_id ) {
 		global $pagenow;
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			return;
+		}
 
 		// Check current page.
 		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {
