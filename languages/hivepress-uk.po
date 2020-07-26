@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 12:21+0000\n"
-"PO-Revision-Date: 2020-06-25 13:42+0000\n"
-"Last-Translator: фцув\n"
+"POT-Creation-Date: 2020-07-26 15:25+0000\n"
+"PO-Revision-Date: 2020-07-26 15:35+0000\n"
+"Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
@@ -37,18 +37,22 @@ msgstr "Форма реєстрації користувачів"
 msgid "Extensions"
 msgstr "Розширення"
 
-#: includes/components/class-admin.php:585
+#: includes/components/class-admin.php:120 templates/admin/themes.php:6
+msgid "Themes"
+msgstr "Теми"
+
+#: includes/components/class-admin.php:714
 msgctxt "plural"
 msgid "All"
 msgstr "Всі"
 
-#: includes/components/class-admin.php:590
+#: includes/components/class-admin.php:719
 msgctxt "plural"
 msgid "Installed"
 msgstr "Встановлені"
 
 #. %s: theme name.
-#: includes/components/class-admin.php:1138
+#: includes/components/class-admin.php:1277
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you encounter layout "
@@ -57,35 +61,35 @@ msgstr ""
 "Поточна тема не підтримує HivePress, якщо ви помітите проблеми з версткою "
 "або стилями, будь ласка, використовуйте офіційну тему %s."
 
-#: includes/components/class-attribute.php:327
+#: includes/components/class-attribute.php:328
 msgid "Add Option"
 msgstr "Додати опцію"
 
-#: includes/components/class-attribute.php:328
+#: includes/components/class-attribute.php:329
 msgid "Edit Option"
 msgstr "Редагувати опцію"
 
-#: includes/components/class-attribute.php:329
+#: includes/components/class-attribute.php:330
 msgid "Update Option"
 msgstr "Змінити опцію"
 
-#: includes/components/class-attribute.php:330
+#: includes/components/class-attribute.php:331
 msgid "Parent Option"
 msgstr "Батьківська опція"
 
-#: includes/components/class-attribute.php:331
+#: includes/components/class-attribute.php:332
 msgid "Search Options"
 msgstr "Шукати опції"
 
-#: includes/components/class-attribute.php:332
+#: includes/components/class-attribute.php:333
 msgid "No options found."
 msgstr "Опцій не знайдено."
 
-#: includes/components/class-attribute.php:425
+#: includes/components/class-attribute.php:427
 msgid "Edit Options"
 msgstr "Редагувати опції"
 
-#: includes/components/class-attribute.php:457
+#: includes/components/class-attribute.php:459
 #: includes/fields/class-field.php:150
 #: includes/models/class-listing-category.php:40
 #: includes/models/class-listing.php:46
@@ -94,25 +98,25 @@ msgstr "Редагувати опції"
 msgid "Description"
 msgstr "Опис"
 
-#: includes/components/class-attribute.php:585
+#: includes/components/class-attribute.php:587
 msgctxt "field"
 msgid "requires review"
 msgstr "вимагає перевірки"
 
-#: includes/components/class-attribute.php:665
+#: includes/components/class-attribute.php:667
 msgid "Relevance"
 msgstr "Релевантність"
 
-#: includes/components/class-attribute.php:667
+#: includes/components/class-attribute.php:669
 #: includes/fields/class-date.php:72
 msgid "Date"
 msgstr "Дата"
 
-#: includes/components/class-attribute.php:795
+#: includes/components/class-attribute.php:797
 msgid "All Categories"
 msgstr "Усі категорії"
 
-#: includes/components/class-form.php:441
+#: includes/components/class-form.php:421
 msgid "Captcha is invalid."
 msgstr "Невірний код підтвердження."
 
@@ -176,17 +180,17 @@ msgstr "Зображення"
 msgid "Select Images"
 msgstr "Вибрати зображення"
 
-#: includes/configs/meta-boxes.php:81 includes/configs/meta-boxes.php:245
-#: includes/configs/strings.php:134
+#: includes/configs/meta-boxes.php:81 includes/configs/meta-boxes.php:252
+#: includes/configs/strings.php:139
 msgid "Attributes"
 msgstr "Атрибути"
 
-#: includes/configs/meta-boxes.php:94 includes/configs/meta-boxes.php:258
+#: includes/configs/meta-boxes.php:94 includes/configs/meta-boxes.php:265
 msgctxt "attribute"
 msgid "Editable"
 msgstr "Редагування"
 
-#: includes/configs/meta-boxes.php:95 includes/configs/meta-boxes.php:259
+#: includes/configs/meta-boxes.php:95 includes/configs/meta-boxes.php:266
 msgid "Allow front-end editing"
 msgstr "Дозволити користувачам редагування"
 
@@ -200,67 +204,67 @@ msgid "Manually approve changes"
 msgstr "Вручну схвалювати зміни"
 
 #: includes/configs/meta-boxes.php:109 includes/configs/meta-boxes.php:140
-#: includes/configs/meta-boxes.php:265 includes/configs/meta-boxes.php:296
+#: includes/configs/meta-boxes.php:272 includes/configs/meta-boxes.php:303
 msgid "Field Type"
 msgstr "Тип поля"
 
-#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:282
+#: includes/configs/meta-boxes.php:126 includes/configs/meta-boxes.php:289
 msgctxt "attribute"
 msgid "Searchable"
 msgstr "Пошук"
 
-#: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:283
+#: includes/configs/meta-boxes.php:127 includes/configs/meta-boxes.php:290
 msgid "Display in the search form"
 msgstr "Відображати в пошуковій формі"
 
-#: includes/configs/meta-boxes.php:133 includes/configs/meta-boxes.php:289
+#: includes/configs/meta-boxes.php:133 includes/configs/meta-boxes.php:296
 msgctxt "attribute"
 msgid "Sortable"
 msgstr "Сортування"
 
-#: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:290
+#: includes/configs/meta-boxes.php:134 includes/configs/meta-boxes.php:297
 msgid "Display as a sorting option"
 msgstr "Відображати як опцію сортування"
 
-#: includes/configs/meta-boxes.php:157 includes/configs/meta-boxes.php:313
+#: includes/configs/meta-boxes.php:157 includes/configs/meta-boxes.php:320
 msgid "Areas"
 msgstr "Зони"
 
-#: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:314
+#: includes/configs/meta-boxes.php:158 includes/configs/meta-boxes.php:321
 msgid "Choose the template areas where you want to display this attribute."
 msgstr "Виберіть зони шаблону, в яких ви хочете відображати цей атрибут."
 
 #: includes/configs/meta-boxes.php:164 includes/configs/meta-boxes.php:165
-#: includes/configs/meta-boxes.php:320 includes/configs/meta-boxes.php:321
+#: includes/configs/meta-boxes.php:327 includes/configs/meta-boxes.php:328
 msgid "Block"
 msgstr "Блок"
 
 #: includes/configs/meta-boxes.php:164 includes/configs/meta-boxes.php:166
-#: includes/configs/meta-boxes.php:320 includes/configs/meta-boxes.php:322
+#: includes/configs/meta-boxes.php:327 includes/configs/meta-boxes.php:329
 msgctxt "area"
 msgid "primary"
 msgstr "головна"
 
 #: includes/configs/meta-boxes.php:165 includes/configs/meta-boxes.php:167
-#: includes/configs/meta-boxes.php:321 includes/configs/meta-boxes.php:323
+#: includes/configs/meta-boxes.php:328 includes/configs/meta-boxes.php:330
 msgctxt "area"
 msgid "secondary"
 msgstr "другорядна"
 
 #: includes/configs/meta-boxes.php:166 includes/configs/meta-boxes.php:167
-#: includes/configs/meta-boxes.php:322 includes/configs/meta-boxes.php:323
+#: includes/configs/meta-boxes.php:329 includes/configs/meta-boxes.php:330
 msgid "Page"
 msgstr "Сторінка"
 
-#: includes/configs/meta-boxes.php:172 includes/configs/meta-boxes.php:328
+#: includes/configs/meta-boxes.php:172 includes/configs/meta-boxes.php:335
 msgid "Icon"
 msgstr "Іконка"
 
-#: includes/configs/meta-boxes.php:180 includes/configs/meta-boxes.php:336
+#: includes/configs/meta-boxes.php:180 includes/configs/meta-boxes.php:343
 msgid "Format"
 msgstr "Формат"
 
-#: includes/configs/meta-boxes.php:181 includes/configs/meta-boxes.php:337
+#: includes/configs/meta-boxes.php:181 includes/configs/meta-boxes.php:344
 msgid "Set the attribute display format."
 msgstr "Введіть формат відображення атрибута."
 
@@ -273,7 +277,7 @@ msgid "Select Image"
 msgstr "Вибрати зображення"
 
 #: includes/configs/meta-boxes.php:205 includes/configs/meta-boxes.php:227
-#: includes/configs/meta-boxes.php:353
+#: includes/configs/meta-boxes.php:360
 msgctxt "sort priority"
 msgid "Order"
 msgstr "Порядок"
@@ -281,6 +285,12 @@ msgstr "Порядок"
 #: includes/configs/meta-boxes.php:215
 msgid "Display subcategories"
 msgstr "Відображати підкатегорії"
+
+#: includes/configs/meta-boxes.php:243
+#: templates/vendor/view/vendor-verified-badge.php:7
+msgctxt "vendor"
+msgid "Verified"
+msgstr "Перевірений"
 
 #: includes/configs/post-types.php:24
 msgctxt "listing"
@@ -625,24 +635,40 @@ msgid ""
 msgstr ""
 "Я погоджуюся з <a href=\"%s\" target=\"_blank\">правилами і умовами</a>"
 
-#: includes/configs/strings.php:58
+#. %s: field label.
+#: includes/configs/strings.php:57
+#: includes/fields/class-attachment-select.php:72
+#: includes/fields/class-attachment-upload.php:259
+#: includes/fields/class-date.php:221 includes/fields/class-email.php:90
+#: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
+#, php-format
+msgid "\"%s\" field contains an invalid value."
+msgstr "Поле \"%s\" містить неприпустиме значення."
+
+#. %s: field label.
+#: includes/configs/strings.php:59
+#, php-format
+msgid "\"%s\" field contains too many values."
+msgstr "Поле \"%s\" містить забагато значень."
+
+#: includes/configs/strings.php:62
 msgid "Listing"
 msgstr "Оголошення"
 
-#: includes/configs/strings.php:59
+#: includes/configs/strings.php:63
 msgid "Listings"
 msgstr "Оголошення"
 
-#: includes/configs/strings.php:60
+#: includes/configs/strings.php:64
 msgid "All Listings"
 msgstr "Всі оголошення"
 
-#: includes/configs/strings.php:61
+#: includes/configs/strings.php:65
 msgid "Related Listings"
 msgstr "Схожі оголошення"
 
 #. %s: Listings number.
-#: includes/configs/strings.php:63
+#: includes/configs/strings.php:67
 #, php-format
 msgid "%s Listing"
 msgid_plural "%s Listings"
@@ -651,105 +677,105 @@ msgstr[1] "%s оголошень"
 msgstr[2] "%s оголошень"
 
 #. %s: Vendor name.
-#: includes/configs/strings.php:65
+#: includes/configs/strings.php:69
 #, php-format
 msgid "Listings by %s"
 msgstr "Оголошення від %s"
 
-#: includes/configs/strings.php:66
+#: includes/configs/strings.php:70
 msgid "Featuring of Listings"
 msgstr "Реклама оголошень"
 
-#: includes/configs/strings.php:67
+#: includes/configs/strings.php:71
 msgid "Featured Listings"
 msgstr "Рекламовані оголошення"
 
-#: includes/configs/strings.php:68
+#: includes/configs/strings.php:72
 msgid "View Listings"
 msgstr "Переглянути оголошення"
 
-#: includes/configs/strings.php:69
+#: includes/configs/strings.php:73
 msgid "Search Listings"
 msgstr "Знайти оголошення"
 
-#: includes/configs/strings.php:70
+#: includes/configs/strings.php:74
 msgid "No listings found."
 msgstr "Не знайдено оголошень"
 
-#: includes/configs/strings.php:71
+#: includes/configs/strings.php:75
 msgid "Listing Attributes"
 msgstr "Атрибути оголошень"
 
-#: includes/configs/strings.php:72
+#: includes/configs/strings.php:76
 msgid "Listing Categories"
 msgstr "Категорії оголошень"
 
-#: includes/configs/strings.php:73
+#: includes/configs/strings.php:77
 msgid "Listing Search Form"
 msgstr "Форма пошуку оголошень"
 
-#: includes/configs/strings.php:74
+#: includes/configs/strings.php:78
 msgid "Listing Expiration"
 msgstr "Термін розміщення оголошень"
 
-#: includes/configs/strings.php:75
+#: includes/configs/strings.php:79
 msgid "Submit Listing"
 msgstr "Відправити оголошення"
 
-#: includes/configs/strings.php:76
+#: includes/configs/strings.php:80
 msgid "Renew Listing"
 msgstr "Оновити оголошення"
 
-#: includes/configs/strings.php:77
+#: includes/configs/strings.php:81
 msgid "Add Listing"
 msgstr "Додати оголошення"
 
-#: includes/configs/strings.php:78
+#: includes/configs/strings.php:82
 msgid "View Listing"
 msgstr "Переглянути оголошення"
 
-#: includes/configs/strings.php:79
+#: includes/configs/strings.php:83
 msgid "Edit Listing"
 msgstr "Редагувати оголошення"
 
-#: includes/configs/strings.php:80
+#: includes/configs/strings.php:84
 msgid "Delete Listing"
 msgstr "Видалитити оголошення"
 
-#: includes/configs/strings.php:81
+#: includes/configs/strings.php:85
 msgid "Report Listing"
 msgstr "Поскаржитись на оголошення"
 
-#: includes/configs/strings.php:82
+#: includes/configs/strings.php:86
 msgid "Listing Submitted"
 msgstr "Оголошення відправлено"
 
-#: includes/configs/strings.php:83
+#: includes/configs/strings.php:87
 msgid "Listing Approved"
 msgstr "Оголошення схвалено"
 
-#: includes/configs/strings.php:84
+#: includes/configs/strings.php:88
 msgid "Listing Rejected"
 msgstr "Оголошення відхилено"
 
-#: includes/configs/strings.php:85
+#: includes/configs/strings.php:89
 msgid "Listing Expired"
 msgstr "Закінчився термін розміщення оголошення"
 
-#: includes/configs/strings.php:86
+#: includes/configs/strings.php:90
 msgid "Listing Renewed"
 msgstr "Оголошення оновлено"
 
-#: includes/configs/strings.php:87
+#: includes/configs/strings.php:91
 msgid "Listing Updated"
 msgstr "Оголошення змінено"
 
-#: includes/configs/strings.php:88
+#: includes/configs/strings.php:92
 msgid "Listing Reported"
 msgstr "Отримано скаргу на оголошення"
 
 #. %s: Listing title.
-#: includes/configs/strings.php:90
+#: includes/configs/strings.php:94
 #, php-format
 msgid ""
 "Thank you! Your listing \"%s\" has been submitted and will be reviewed as "
@@ -758,90 +784,90 @@ msgstr ""
 "Дякуємо! Ваше оголошення \"%s\" відправлено і буде розглянуто якнайшвидше."
 
 #. %s: Listing title.
-#: includes/configs/strings.php:92
+#: includes/configs/strings.php:96
 #, php-format
 msgid ""
 "Thank you! Your listing \"%s\" has been renewed and will appear at the top "
 "of the page."
 msgstr "Дякуємо! Ваше оголошення \"%s\" оновлено і з'явиться на горі сторінки."
 
-#: includes/configs/strings.php:93
+#: includes/configs/strings.php:97
 msgid "Listing has been reported."
 msgstr "Скарга на оголошення відправлена."
 
-#: includes/configs/strings.php:94
+#: includes/configs/strings.php:98
 msgid "Listings Page"
 msgstr "Сторінка оголошень"
 
-#: includes/configs/strings.php:95
+#: includes/configs/strings.php:99
 msgid "Listings Page Display"
 msgstr "Відображення сторінки оголошень"
 
-#: includes/configs/strings.php:96
+#: includes/configs/strings.php:100
 msgid "Regular Listings per Page"
 msgstr "Кількість звичайних оголошень на сторінку"
 
-#: includes/configs/strings.php:97
+#: includes/configs/strings.php:101
 msgid "Featured Listings per Page"
 msgstr "Кількість рекламованих оголошень на сторінку"
 
-#: includes/configs/strings.php:98
+#: includes/configs/strings.php:102
 msgid "Related Listings per Page"
 msgstr "Кількість схожих оголошень на сторінку"
 
-#: includes/configs/strings.php:99
+#: includes/configs/strings.php:103
 msgid "Mark this listing as verified"
 msgstr "Відзначити це оголошення як перевірене"
 
-#: includes/configs/strings.php:100
+#: includes/configs/strings.php:104
 msgid "Make this listing featured"
 msgstr "Рекламувати це оголошення"
 
-#: includes/configs/strings.php:101
+#: includes/configs/strings.php:105
 msgid "Make listings featured"
 msgstr "Рекламувати оголошення"
 
-#: includes/configs/strings.php:102
+#: includes/configs/strings.php:106
 msgid "Display only featured listings"
 msgstr "Відображати тільки рекламовані оголошення"
 
-#: includes/configs/strings.php:103
+#: includes/configs/strings.php:107
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr "Ви впевнені, що хочете назавжди видалити це оголошення?"
 
-#: includes/configs/strings.php:104
+#: includes/configs/strings.php:108
 msgid "Manually approve new listings"
 msgstr "Вручну схвалювати нові оголошення"
 
-#: includes/configs/strings.php:105
+#: includes/configs/strings.php:109
 msgid "Allow submitting new listings"
 msgstr "Дозволити додавання нових оголошень"
 
-#: includes/configs/strings.php:106
+#: includes/configs/strings.php:110
 msgid "Set the number of days after which a listing expires."
 msgstr ""
 "Введіть кількість днів, після якого закінчується термін розміщення "
 "оголошення."
 
-#: includes/configs/strings.php:107
+#: includes/configs/strings.php:111
 msgid "Set the number of days after which an expired listing is deleted."
 msgstr ""
 "Введіть кількість днів, після якого оголошення з закінченим терміном "
 "розміщення буде видалено."
 
-#: includes/configs/strings.php:108
+#: includes/configs/strings.php:112
 msgid "Set a date on which the listing will expire."
 msgstr "Виберіть дату, в яку закінчиться термін розміщення оголошення."
 
-#: includes/configs/strings.php:109
+#: includes/configs/strings.php:113
 msgid "Set a date on which the listing will lose featured status."
 msgstr "Виберіть дату, в яку оголошення перестане рекламуватися."
 
-#: includes/configs/strings.php:110
+#: includes/configs/strings.php:114
 msgid "Choose a page that displays all listings."
 msgstr "Виберіть сторінку, яка відображає всі оголошення."
 
-#: includes/configs/strings.php:111
+#: includes/configs/strings.php:115
 msgid ""
 "Choose a page with terms that user has to accept before submitting a new "
 "listing."
@@ -849,7 +875,7 @@ msgstr ""
 "Виберіть сторінку умов, які користувач повинен прийняти перед додаванням "
 "нового оголошення."
 
-#: includes/configs/strings.php:112
+#: includes/configs/strings.php:116
 msgid ""
 "Please provide details that will help us verify that this listing violates "
 "the terms of service."
@@ -857,90 +883,94 @@ msgstr ""
 "Будь ласка, надайте деталі які допоможуть нам перевірити, що це оголошення "
 "порушує умови використання."
 
-#: includes/configs/strings.php:115
+#: includes/configs/strings.php:119
 msgid "Vendor"
 msgstr "Продавець"
 
-#: includes/configs/strings.php:116
+#: includes/configs/strings.php:120
 msgid "View Vendor"
 msgstr "Переглянути продавця"
 
-#: includes/configs/strings.php:117
+#: includes/configs/strings.php:121
 msgid "Add Vendor"
 msgstr "Додати продавця"
 
-#: includes/configs/strings.php:118
+#: includes/configs/strings.php:122
 msgid "Edit Vendor"
 msgstr "Редагувати продавця"
 
-#: includes/configs/strings.php:119
+#: includes/configs/strings.php:123
 msgid "Vendors"
 msgstr "Продавці"
 
-#: includes/configs/strings.php:120
+#: includes/configs/strings.php:124
 msgid "Search Vendors"
 msgstr "Шукати продавців"
 
-#: includes/configs/strings.php:121
+#: includes/configs/strings.php:125
 msgid "No vendors found."
 msgstr "Продавців не знайдено."
 
-#: includes/configs/strings.php:122
+#: includes/configs/strings.php:126
 msgid "Vendor Attributes"
 msgstr "Атрибути продавців"
 
-#: includes/configs/strings.php:123
+#: includes/configs/strings.php:127
 msgid "Vendor Search Form"
 msgstr "Форма пошуку продавців"
 
-#: includes/configs/strings.php:124
+#: includes/configs/strings.php:128
 msgid "Vendors Page"
 msgstr "Сторінка продавців"
 
-#: includes/configs/strings.php:125
+#: includes/configs/strings.php:129
 msgid "Vendors per Page"
 msgstr "Кількість продавців на сторінку"
 
-#: includes/configs/strings.php:126
+#: includes/configs/strings.php:130
 msgid "Choose a page that displays all vendors."
 msgstr "Виберіть сторінку, яка відображає всіх продавців."
 
-#: includes/configs/strings.php:127
+#: includes/configs/strings.php:131
 msgid "Display vendors on the front-end"
 msgstr "Відображати продавців на сайті"
 
-#: includes/configs/strings.php:130 includes/configs/taxonomies.php:22
+#: includes/configs/strings.php:132
+msgid "Mark this vendor as verified"
+msgstr "Відзначити цього продавця як перевіреного"
+
+#: includes/configs/strings.php:135 includes/configs/taxonomies.php:22
 #: includes/configs/taxonomies.php:41
 msgid "Category"
 msgstr "Категорія"
 
-#: includes/configs/strings.php:131 includes/configs/taxonomies.php:27
+#: includes/configs/strings.php:136 includes/configs/taxonomies.php:27
 #: includes/configs/taxonomies.php:46
 msgid "Parent Category"
 msgstr "Батьківська категорія"
 
-#: includes/configs/strings.php:135
+#: includes/configs/strings.php:140
 msgid "Attribute"
 msgstr "Атрибут"
 
-#: includes/configs/strings.php:136
+#: includes/configs/strings.php:141
 msgctxt "attribute"
 msgid "Add New"
 msgstr "Додати новий"
 
-#: includes/configs/strings.php:137
+#: includes/configs/strings.php:142
 msgid "Add Attribute"
 msgstr "Додати атрибут"
 
-#: includes/configs/strings.php:138
+#: includes/configs/strings.php:143
 msgid "Edit Attribute"
 msgstr "Редагувати атрибут"
 
-#: includes/configs/strings.php:139
+#: includes/configs/strings.php:144
 msgid "Search Attributes"
 msgstr "Шукати атрибути"
 
-#: includes/configs/strings.php:140
+#: includes/configs/strings.php:145
 msgid "No attributes found."
 msgstr "Атрибутів не знайдено."
 
@@ -1067,16 +1097,6 @@ msgstr "Реєстрація завершена"
 msgid "Select File"
 msgstr "Вибрати файл"
 
-#. %s: field label.
-#: includes/fields/class-attachment-select.php:72
-#: includes/fields/class-attachment-upload.php:239
-#: includes/fields/class-date.php:221 includes/fields/class-email.php:90
-#: includes/fields/class-regex.php:75 includes/fields/class-select.php:267
-#: includes/fields/class-text.php:212
-#, php-format
-msgid "\"%s\" field contains an invalid value."
-msgstr "Поле \"%s\" містить неприпустиме значення."
-
 #: includes/fields/class-attachment-upload.php:66
 msgid "Attachment"
 msgstr "Вкладення"
@@ -1094,7 +1114,7 @@ msgstr "Типи файлів"
 msgid "Select Files"
 msgstr "Вибрати файли"
 
-#: includes/fields/class-attachment-upload.php:331
+#: includes/fields/class-attachment-upload.php:350
 #: templates/listing/edit/page/listing-delete-link.php:5
 msgid "Delete"
 msgstr "Видалити"
@@ -1235,25 +1255,29 @@ msgstr "\"%1$s\" не може бути більше за %2$s."
 msgid "Radio Buttons"
 msgstr "Радіокнопки"
 
-#: includes/fields/class-select.php:65
+#: includes/fields/class-select.php:72
 msgctxt "field"
 msgid "Select"
 msgstr "Список"
 
-#: includes/fields/class-select.php:70
+#: includes/fields/class-select.php:77
 msgctxt "selection"
 msgid "Multiple"
 msgstr "Множинність"
 
-#: includes/fields/class-select.php:71
+#: includes/fields/class-select.php:78
 msgid "Allow multiple selection"
 msgstr "Дозволити множинний вибір"
 
-#: includes/fields/class-select.php:77 includes/fields/class-select.php:87
+#: includes/fields/class-select.php:85
+msgid "Maximum Selection"
+msgstr "Максимальний вибір"
+
+#: includes/fields/class-select.php:94 includes/fields/class-select.php:104
 msgid "Options"
 msgstr "Опції"
 
-#: includes/fields/class-select.php:88
+#: includes/fields/class-select.php:105
 msgid "Search any of the selected options"
 msgstr "Шукати будь-які з вибраних опцій"
 
@@ -1427,11 +1451,11 @@ msgstr "Опис профілю"
 msgid "Profile Image"
 msgstr "Зображення профілю"
 
-#: templates/admin/extensions.php:38
+#: templates/admin/extensions.php:38 templates/admin/themes.php:25
 msgid "Purchase"
 msgstr "Купити"
 
-#: templates/admin/extensions.php:40
+#: templates/admin/extensions.php:40 templates/admin/themes.php:27
 msgid "Install"
 msgstr "Встановити"
 
@@ -1439,7 +1463,7 @@ msgstr "Встановити"
 msgid "Update"
 msgstr "Оновити"
 
-#: templates/admin/extensions.php:47
+#: templates/admin/extensions.php:47 templates/admin/themes.php:32
 msgid "Activate"
 msgstr "Активувати"
 
@@ -1462,6 +1486,19 @@ msgstr "Підтримка"
 #, php-format
 msgid "Version %s"
 msgstr "Версія %s"
+
+#: templates/admin/themes.php:15
+msgid "Theme Details"
+msgstr "Деталі теми"
+
+#: templates/admin/themes.php:20
+msgid "Preview"
+msgstr "Переглянути"
+
+#: templates/admin/themes.php:34
+msgctxt "theme"
+msgid "Active"
+msgstr "Активна"
 
 #: templates/page/no-results-message.php:6
 msgid "Nothing found"
