@@ -520,7 +520,7 @@ abstract class Field {
 		return hp\replace_tokens(
 			[
 				'label' => '<strong>' . $this->label . '</strong>',
-				'value' => '<span>' . $this->get_display_value() . '</span>',
+				'value' => $this->get_display_value(),
 			],
 			$this->display_template
 		);
