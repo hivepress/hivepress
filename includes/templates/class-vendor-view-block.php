@@ -93,6 +93,7 @@ class Vendor_View_Block extends Template {
 
 									'vendor_details_primary' => [
 										'type'       => 'container',
+										'optional'   => true,
 										'_order'     => 20,
 
 										'attributes' => [

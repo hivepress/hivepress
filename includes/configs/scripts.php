@@ -73,7 +73,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload' ],
+		'deps'   => [ 'jquery', 'jquery-migrate', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [

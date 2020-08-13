@@ -78,6 +78,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 
 									'vendor_details_primary' => [
 										'type'       => 'container',
+										'optional'   => true,
 										'_order'     => 30,
 
 										'attributes' => [
