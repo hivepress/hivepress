@@ -2,9 +2,9 @@
 Contributors: hivepress
 Tags: directory, business directory, classifieds, classified ads, listing, listings, real estate, job board
 Requires at least: 4.9
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 1.3.11
+Stable tag: 1.3.12
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
