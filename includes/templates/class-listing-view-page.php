@@ -95,6 +95,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 
 							'listing_details_primary'      => [
 								'type'       => 'container',
+								'optional'   => true,
 								'_order'     => 20,
 
 								'attributes' => [
