@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="name column-name">
 						<h3>
 							<?php echo esc_html( $extension['name'] ); ?>
-							<img src="<?php echo esc_url( $extension['image_url'] ); ?>" class="plugin-icon" alt="<?php echo esc_attr( $extension['name'] ); ?>">
+							<img src="<?php echo esc_url( $extension['image_url'] ); ?>" class="plugin-icon" alt="<?php echo esc_attr( $extension['name'] ); ?>" loading="lazy">
 						</h3>
 					</div>
 					<div class="action-links">
