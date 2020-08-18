@@ -4,7 +4,7 @@ var hivepress = {
 	 * Gets component selector.
 	 */
 	getSelector: function(name) {
-		return '[data-component=' + name + ']';
+		return '[data-component="' + name + '"]';
 	},
 
 	/**

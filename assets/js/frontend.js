@@ -7,7 +7,7 @@
 		hivepress.getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
-			$('a[href=' + url + '], button[data-url=' + url + ']').on('click', function(e) {
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
