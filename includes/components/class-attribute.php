@@ -661,13 +661,9 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, $category_id );
 
 		// Add default option.
-		$options = [];
-
-		if ( is_search() ) {
-			$options[''] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$options[''] = esc_html__( 'Date', 'hivepress' );
-		}
+		$options = [
+			'' => esc_html__( 'Date', 'hivepress' ),
+		];
 
 		// Add attribute options.
 		foreach ( $attributes as $attribute_name => $attribute ) {
