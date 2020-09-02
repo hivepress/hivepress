@@ -87,7 +87,7 @@ final class Debug extends Component {
 			if ( in_array( hp\get_last_array_value( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css', 'common.min.css' ], true ) ) {
 				$this->styles[] = $style;
 
-				unset( $styles[ $name ] );
+				$styles[ $name ]['src'] = hivepress()->get_url() . '/assets/css/empty.css';
 			}
 		}
 
