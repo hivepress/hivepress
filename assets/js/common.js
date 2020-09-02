@@ -173,7 +173,7 @@ var hivepress = {
 				settings['mode'] = field.data('mode');
 
 				if (field.data('mode') === 'range') {
-					var fields = field.parent().find('input[type=hidden]').not(field);
+					var fields = field.parent().find('input[type="hidden"]').not(field);
 
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],

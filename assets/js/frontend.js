@@ -146,7 +146,7 @@
 		// Range slider
 		hivepress.getComponent('range-slider').each(function() {
 			var container = $(this),
-				fields = $(this).find('input[type=number]'),
+				fields = $(this).find('input[type="number"]'),
 				minField = fields.first(),
 				maxField = fields.last(),
 				slider = null;
