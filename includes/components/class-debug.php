@@ -123,6 +123,7 @@ final class Debug extends Component {
 			'src'       => '//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js',
 			'version'   => false,
 			'in_footer' => false,
+			'scope'     => [ 'frontend', 'backend' ],
 		];
 
 		return $scripts;
