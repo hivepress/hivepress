@@ -32,6 +32,7 @@ class Site_Header_Block extends Template {
 				'blocks' => [
 					'site_header_menu' => [
 						'type'       => 'container',
+						'optional'   => true,
 						'_order'     => 10,
 
 						'attributes' => [
