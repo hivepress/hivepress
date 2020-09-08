@@ -660,13 +660,9 @@ final class Attribute extends Component {
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_id );
 
-		// Add default option.
-		$options = [
-			''      => esc_html__( 'Date', 'hivepress' ),
-			'title' => esc_html__( 'Title', 'hivepress' ),
-		];
-
 		// Add attribute options.
+		$options = [];
+
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['sortable'] ) {
 

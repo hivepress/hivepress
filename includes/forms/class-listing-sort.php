@@ -52,9 +52,13 @@ class Listing_Sort extends Form {
 						'label'       => esc_html__( 'Sort by', 'hivepress' ),
 						'type'        => 'select',
 						'placeholder' => null,
-						'options'     => [],
 						'required'    => true,
 						'_order'      => 10,
+
+						'options'     => [
+							''      => esc_html__( 'Date', 'hivepress' ),
+							'title' => esc_html__( 'Title', 'hivepress' ),
+						],
 
 						'attributes'  => [
 							'data-style' => 'inline',
