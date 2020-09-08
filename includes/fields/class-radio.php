@@ -61,6 +61,12 @@ class Radio extends Select {
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
+
+		// Normalize options.
+		if ( ! is_array( $this->options ) ) {
+			$this->options = [];
+		}
+
 		Field::boot();
 	}
 
