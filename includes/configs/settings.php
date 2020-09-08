@@ -77,6 +77,7 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'option_args' => [ 'post_type' => 'page' ],
+						'_parent'     => 'listing_enable_submission',
 						'_order'      => 10,
 					],
 
@@ -260,7 +261,16 @@ return [
 						'type'        => 'select',
 						'options'     => 'posts',
 						'option_args' => [ 'post_type' => 'page' ],
+						'_parent'     => 'user_enable_registration',
 						'_order'      => 10,
+					],
+
+					'user_enable_registration'     => [
+						'label'   => esc_html__( 'Registration', 'hivepress' ),
+						'caption' => esc_html__( 'Allow user registration', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_order'  => 20,
 					],
 
 					'user_generate_username'       => [
@@ -268,14 +278,16 @@ return [
 						'caption' => esc_html__( 'Generate username from the email address', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
-						'_order'  => 20,
+						'_parent' => 'user_enable_registration',
+						'_order'  => 30,
 					],
 
 					'user_verify_email'            => [
 						'label'   => esc_html__( 'Email', 'hivepress' ),
 						'caption' => esc_html__( 'Require email address verification', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 30,
+						'_parent' => 'user_enable_registration',
+						'_order'  => 40,
 					],
 				],
 			],
@@ -293,6 +305,7 @@ return [
 						'max_length'  => 2048,
 						'html'        => true,
 						'_autoload'   => false,
+						'_parent'     => 'user_enable_registration',
 						'_order'      => 10,
 					],
 
