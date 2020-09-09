@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-26 15:25+0000\n"
-"PO-Revision-Date: 2020-07-26 15:35+0000\n"
+"POT-Creation-Date: 2020-09-09 15:12+0000\n"
+"PO-Revision-Date: 2020-09-09 15:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.0; wp-5.4.2"
+"X-Loco-Version: 2.4.3; wp-5.5.1"
 
 #: includes/blocks/class-listing-hide-toggle.php:33
 msgid "Hide"
@@ -103,16 +103,7 @@ msgctxt "field"
 msgid "requires review"
 msgstr "вимагає перевірки"
 
-#: includes/components/class-attribute.php:667
-msgid "Relevance"
-msgstr "Релевантність"
-
-#: includes/components/class-attribute.php:669
-#: includes/fields/class-date.php:72
-msgid "Date"
-msgstr "Дата"
-
-#: includes/components/class-attribute.php:797
+#: includes/components/class-attribute.php:790
 msgid "All Categories"
 msgstr "Усі категорії"
 
@@ -137,12 +128,12 @@ msgid "Edit"
 msgstr "Редагувати"
 
 #: includes/components/class-user.php:94 includes/components/class-user.php:152
-#: includes/controllers/class-user.php:394
+#: includes/controllers/class-user.php:388
 msgid "Please check your email to activate your account."
 msgstr "Будь ласка, перевірте вашу ел. пошту щоб активувати акаунт."
 
-#: includes/components/class-user.php:158 includes/configs/settings.php:243
-#: includes/configs/settings.php:267 includes/models/class-user.php:48
+#: includes/components/class-user.php:158 includes/configs/settings.php:244
+#: includes/configs/settings.php:277 includes/models/class-user.php:48
 msgid "Username"
 msgstr "Ім'я користувача"
 
@@ -156,7 +147,7 @@ msgstr "Увійти"
 
 #: includes/components/class-user.php:253
 #: includes/forms/class-user-register.php:63
-#: templates/user/login/user-register-link.php:5
+#: templates/user/login/user-register-link.php:7
 msgid "Register"
 msgstr "Зареєструватися"
 
@@ -306,7 +297,7 @@ msgstr "Додати нового"
 msgid "Display categories"
 msgstr "Відображати категорії"
 
-#: includes/configs/settings.php:70 includes/configs/settings.php:84
+#: includes/configs/settings.php:70 includes/configs/settings.php:85
 #: includes/configs/strings.php:22
 msgid "Submission"
 msgstr "Додавання"
@@ -315,20 +306,20 @@ msgstr "Додавання"
 msgid "Submission Terms Page"
 msgstr "Сторінка умов додавання"
 
-#: includes/configs/settings.php:103 includes/configs/strings.php:24
+#: includes/configs/settings.php:104 includes/configs/strings.php:24
 msgid "Expiration"
 msgstr "Терміни"
 
-#: includes/configs/settings.php:126 includes/configs/settings.php:284
+#: includes/configs/settings.php:127 includes/configs/settings.php:296
 #: includes/configs/strings.php:20
 msgid "Emails"
 msgstr "Листи"
 
-#: includes/configs/settings.php:132
+#: includes/configs/settings.php:133
 msgid "This email is sent to users when listing is approved."
 msgstr "Цей лист відправляється користувачам у разі схвалення оголошення."
 
-#: includes/configs/settings.php:134
+#: includes/configs/settings.php:135
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
@@ -336,24 +327,24 @@ msgstr ""
 "Привіт, %username%! Ваше оголошення \"%listing_title%\" схвалено, клікніть "
 "на це посилання для перегляду: %listing_url%"
 
-#: includes/configs/settings.php:144
+#: includes/configs/settings.php:145
 msgid "This email is sent to users when listing is rejected."
 msgstr "Цей лист відправляється користувачам у разі відхилення оголошення."
 
-#: includes/configs/settings.php:146
+#: includes/configs/settings.php:147
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
 msgstr ""
 "Привіт, %username%! На жаль, ваше оголошення \"%listing_title%\" відхилено."
 
-#: includes/configs/settings.php:156
+#: includes/configs/settings.php:157
 msgid "This email is sent to users when listing is expired."
 msgstr ""
 "Цей лист відправляється користувачам у разі закінчення терміну розміщення "
 "оголошення."
 
-#: includes/configs/settings.php:158
+#: includes/configs/settings.php:159
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
@@ -361,82 +352,86 @@ msgstr ""
 "Привіт, %username%! Термін розміщення оголошення \"%listing_title%\" "
 "закінчився, клікніть на це посилання, щоб оновити його: %listing_url%"
 
-#: includes/configs/settings.php:208 includes/configs/settings.php:236
+#: includes/configs/settings.php:209 includes/configs/settings.php:237
 msgctxt "noun"
 msgid "Display Name"
 msgstr "Відображувальнe ім'я"
 
-#: includes/configs/settings.php:209
+#: includes/configs/settings.php:210
 msgid "User Name"
 msgstr "Ім'я користувача"
 
-#: includes/configs/settings.php:226
+#: includes/configs/settings.php:227
 msgid "Users"
 msgstr "Користувачі"
 
-#: includes/configs/settings.php:244 includes/models/class-user.php:70
+#: includes/configs/settings.php:245 includes/models/class-user.php:70
 msgid "First Name"
 msgstr "Ім'я"
 
-#: includes/configs/settings.php:245 includes/models/class-user.php:78
+#: includes/configs/settings.php:246 includes/models/class-user.php:78
 msgid "Last Name"
 msgstr "Прізвище"
 
-#: includes/configs/settings.php:246
+#: includes/configs/settings.php:247
 msgid "Full Name"
 msgstr "Ім'я і прізвище"
 
-#: includes/configs/settings.php:253
+#: includes/configs/settings.php:254 includes/configs/settings.php:269
 msgid "Registration"
 msgstr "Реєстрація"
 
-#: includes/configs/settings.php:258
+#: includes/configs/settings.php:259
 msgid "Registration Terms Page"
 msgstr "Сторінка умов реєстрації"
 
-#: includes/configs/settings.php:259
+#: includes/configs/settings.php:260
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 "Виберіть сторінку умов, які користувач повинен прийняти перед реєстрацією."
 
-#: includes/configs/settings.php:268
+#: includes/configs/settings.php:270
+msgid "Allow user registration"
+msgstr "Дозволити реєстрацію користувачів"
+
+#: includes/configs/settings.php:278
 msgid "Generate username from the email address"
 msgstr "Генерувати ім'я користувача з ел. адреси"
 
-#: includes/configs/settings.php:275 includes/fields/class-email.php:30
+#: includes/configs/settings.php:286 includes/fields/class-email.php:30
 #: includes/models/class-user.php:56
 msgid "Email"
 msgstr "Ел. адреса"
 
-#: includes/configs/settings.php:276
+#: includes/configs/settings.php:287
 msgid "Require email address verification"
 msgstr "Вимагати підтвердження ел. адреси"
 
-#: includes/configs/settings.php:289
+#: includes/configs/settings.php:301
 msgid "User Registered"
 msgstr "Користувач зареєстрований"
 
-#: includes/configs/settings.php:290
+#: includes/configs/settings.php:302
 msgid "This email is sent to users after registration."
 msgstr "Цей лист відправляється користувачам після реєстрації."
 
-#: includes/configs/settings.php:292
+#: includes/configs/settings.php:304
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
 msgstr ""
 "Привіт, %username%! Дякуємо за реєстрацію, ось ваш пароль: %user_password%"
 
-#: includes/configs/settings.php:300
+#: includes/configs/settings.php:313
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr "Пароль скинуто"
 
-#: includes/configs/settings.php:301
+#: includes/configs/settings.php:314
 msgid "This email is sent to users when a password reset is requested."
 msgstr "Цей лист відправляється користувачам у разі запиту скидання пароля."
 
-#: includes/configs/settings.php:303
+#: includes/configs/settings.php:316
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
@@ -444,16 +439,16 @@ msgstr ""
 "Привіт, %username%! Будь ласка, клікніть на це посилання, щоб встановити "
 "новий пароль: %password_reset_url%"
 
-#: includes/configs/settings.php:311
+#: includes/configs/settings.php:324
 #: includes/emails/class-user-email-verify.php:30
 msgid "Email Verification"
 msgstr "Підтвердження ел. адреси"
 
-#: includes/configs/settings.php:312
+#: includes/configs/settings.php:325
 msgid "This email is sent to users when email verification is required."
 msgstr "Цей лист відправляється користувачам у разі перевірки ел. адреси."
 
-#: includes/configs/settings.php:314
+#: includes/configs/settings.php:327
 msgid ""
 "Hi, %user_name%! Please click on the following link to verify your email "
 "address: %email_verify_url%"
@@ -461,19 +456,19 @@ msgstr ""
 "Привіт, %username%! Будь ласка, клікніть на це посилання, щоб підтвердити ел."
 " адресу: %email_verify_url%"
 
-#: includes/configs/settings.php:327
+#: includes/configs/settings.php:340
 msgid "Integrations"
 msgstr "Інтеграції"
 
-#: includes/configs/settings.php:337
+#: includes/configs/settings.php:350
 msgid "Protected Forms"
 msgstr "Захищені форми"
 
-#: includes/configs/settings.php:345
+#: includes/configs/settings.php:358
 msgid "Site Key"
 msgstr "Ключ сайту"
 
-#: includes/configs/settings.php:353
+#: includes/configs/settings.php:366
 msgid "Secret Key"
 msgstr "Секретний ключ"
 
@@ -1023,44 +1018,44 @@ msgstr "Оберіть категорію"
 msgid "Email Verified"
 msgstr "Ел. адреса підтверджена"
 
-#: includes/controllers/class-user.php:247
+#: includes/controllers/class-user.php:246
 msgid "Username contains invalid characters."
 msgstr "Ім'я користувача містить неприпустимі символи."
 
-#: includes/controllers/class-user.php:249
+#: includes/controllers/class-user.php:248
 msgid "This username is already in use."
 msgstr "Це ім'я користувача вже зайнято."
 
-#: includes/controllers/class-user.php:255
+#: includes/controllers/class-user.php:254
 msgid "This email is already registered."
 msgstr "Ця ел. адреса вже використовується."
 
-#: includes/controllers/class-user.php:382
-#: includes/controllers/class-user.php:389
+#: includes/controllers/class-user.php:376
+#: includes/controllers/class-user.php:383
 msgid "Username or password is incorrect."
 msgstr "Неправильне ім'я користувача або пароль."
 
-#: includes/controllers/class-user.php:461
+#: includes/controllers/class-user.php:450
 msgid "User with this email doesn't exist."
 msgstr "Користувача з такою ел. адресою не знайдено."
 
-#: includes/controllers/class-user.php:463
+#: includes/controllers/class-user.php:452
 msgid "User with this username doesn't exist."
 msgstr "Користувача з таким ім'ям не знайдено."
 
-#: includes/controllers/class-user.php:525
+#: includes/controllers/class-user.php:509
 msgid "Password reset key is expired or invalid."
 msgstr "Ключ для скидання пароля невірний або термін його дії закінчився."
 
-#: includes/controllers/class-user.php:589
+#: includes/controllers/class-user.php:573
 msgid "Current password is required."
 msgstr "Поточний пароль є обов'язковим."
 
-#: includes/controllers/class-user.php:593
+#: includes/controllers/class-user.php:577
 msgid "Current password is incorrect."
 msgstr "Невірний поточний пароль."
 
-#: includes/controllers/class-user.php:646
+#: includes/controllers/class-user.php:630
 msgid "Password is incorrect."
 msgstr "Невірний пароль."
 
@@ -1138,6 +1133,11 @@ msgstr "Прапорці"
 #: includes/fields/class-date-range.php:44
 msgid "Date Range"
 msgstr "Діапазон дат"
+
+#: includes/fields/class-date.php:72 includes/forms/class-listing-sort.php:59
+#: includes/forms/class-vendor-sort.php:59
+msgid "Date"
+msgstr "Дата"
 
 #: includes/fields/class-date.php:79 includes/fields/class-number.php:65
 #: includes/fields/class-text.php:78
@@ -1353,6 +1353,11 @@ msgstr "Шукати"
 msgid "Sort by"
 msgstr "Сортувати за"
 
+#: includes/forms/class-listing-sort.php:60
+#: includes/models/class-listing.php:32
+msgid "Title"
+msgstr "Заголовок"
+
 #: includes/forms/class-listing-update.php:46
 #: includes/forms/class-user-update.php:46
 msgid "Changes have been saved."
@@ -1415,19 +1420,16 @@ msgstr "Зареєструвати користувача"
 msgid "Current Password"
 msgstr "Поточний пароль"
 
-#: includes/menus/class-user-account.php:37
-msgid "Sign Out"
-msgstr "Вийти"
-
+#: includes/forms/class-vendor-sort.php:60
 #: includes/models/class-listing-category.php:32
 #: includes/models/class-vendor-category.php:32
 #: includes/models/class-vendor.php:32
 msgid "Name"
 msgstr "Назва"
 
-#: includes/models/class-listing.php:32
-msgid "Title"
-msgstr "Заголовок"
+#: includes/menus/class-user-account.php:37
+msgid "Sign Out"
+msgstr "Вийти"
 
 #: includes/models/class-listing.php:61
 msgctxt "listing"
@@ -1530,7 +1532,7 @@ msgstr "Мій акаунт"
 msgid "Forgot password?"
 msgstr "Забули пароль?"
 
-#: templates/user/login/user-register-link.php:5
+#: templates/user/login/user-register-link.php:7
 msgid "Don't have an account yet?"
 msgstr "Ще немає акаунту?"
 
