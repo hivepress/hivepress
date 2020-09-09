@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php foreach ( $themes as $theme ) : ?>
 				<div class="hp-theme theme" tabindex="0">
 					<div class="theme-screenshot">
-						<img src="<?php echo esc_url( $theme['image_url'] ); ?>" alt="<?php echo esc_attr( $theme['name'] ); ?>">
+						<img src="<?php echo esc_url( $theme['image_url'] ); ?>" alt="<?php echo esc_attr( $theme['name'] ); ?>" loading="lazy">
 					</div>
 					<a href="<?php echo esc_url( $theme['buy_url'] ); ?>" target="_blank" class="hp-theme__link more-details"><?php esc_html_e( 'Theme Details', 'hivepress' ); ?></a>
 					<div class="hp-theme__content theme-id-container">

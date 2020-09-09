@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-26 15:25+0000\n"
+"POT-Creation-Date: 2020-09-09 15:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -101,16 +101,7 @@ msgctxt "field"
 msgid "requires review"
 msgstr ""
 
-#: includes/components/class-attribute.php:667
-msgid "Relevance"
-msgstr ""
-
-#: includes/components/class-attribute.php:669
-#: includes/fields/class-date.php:72
-msgid "Date"
-msgstr ""
-
-#: includes/components/class-attribute.php:797
+#: includes/components/class-attribute.php:790
 msgid "All Categories"
 msgstr ""
 
@@ -135,12 +126,12 @@ msgid "Edit"
 msgstr ""
 
 #: includes/components/class-user.php:94 includes/components/class-user.php:152
-#: includes/controllers/class-user.php:394
+#: includes/controllers/class-user.php:388
 msgid "Please check your email to activate your account."
 msgstr ""
 
-#: includes/components/class-user.php:158 includes/configs/settings.php:243
-#: includes/configs/settings.php:267 includes/models/class-user.php:48
+#: includes/components/class-user.php:158 includes/configs/settings.php:244
+#: includes/configs/settings.php:277 includes/models/class-user.php:48
 msgid "Username"
 msgstr ""
 
@@ -154,7 +145,7 @@ msgstr ""
 
 #: includes/components/class-user.php:253
 #: includes/forms/class-user-register.php:63
-#: templates/user/login/user-register-link.php:5
+#: templates/user/login/user-register-link.php:7
 msgid "Register"
 msgstr ""
 
@@ -304,7 +295,7 @@ msgstr ""
 msgid "Display categories"
 msgstr ""
 
-#: includes/configs/settings.php:70 includes/configs/settings.php:84
+#: includes/configs/settings.php:70 includes/configs/settings.php:85
 #: includes/configs/strings.php:22
 msgid "Submission"
 msgstr ""
@@ -313,152 +304,156 @@ msgstr ""
 msgid "Submission Terms Page"
 msgstr ""
 
-#: includes/configs/settings.php:103 includes/configs/strings.php:24
+#: includes/configs/settings.php:104 includes/configs/strings.php:24
 msgid "Expiration"
 msgstr ""
 
-#: includes/configs/settings.php:126 includes/configs/settings.php:284
+#: includes/configs/settings.php:127 includes/configs/settings.php:296
 #: includes/configs/strings.php:20
 msgid "Emails"
 msgstr ""
 
-#: includes/configs/settings.php:132
+#: includes/configs/settings.php:133
 msgid "This email is sent to users when listing is approved."
 msgstr ""
 
-#: includes/configs/settings.php:134
+#: includes/configs/settings.php:135
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
 msgstr ""
 
-#: includes/configs/settings.php:144
+#: includes/configs/settings.php:145
 msgid "This email is sent to users when listing is rejected."
 msgstr ""
 
-#: includes/configs/settings.php:146
+#: includes/configs/settings.php:147
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
 msgstr ""
 
-#: includes/configs/settings.php:156
+#: includes/configs/settings.php:157
 msgid "This email is sent to users when listing is expired."
 msgstr ""
 
-#: includes/configs/settings.php:158
+#: includes/configs/settings.php:159
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
 msgstr ""
 
-#: includes/configs/settings.php:208 includes/configs/settings.php:236
+#: includes/configs/settings.php:209 includes/configs/settings.php:237
 msgctxt "noun"
 msgid "Display Name"
 msgstr ""
 
-#: includes/configs/settings.php:209
+#: includes/configs/settings.php:210
 msgid "User Name"
 msgstr ""
 
-#: includes/configs/settings.php:226
+#: includes/configs/settings.php:227
 msgid "Users"
 msgstr ""
 
-#: includes/configs/settings.php:244 includes/models/class-user.php:70
+#: includes/configs/settings.php:245 includes/models/class-user.php:70
 msgid "First Name"
 msgstr ""
 
-#: includes/configs/settings.php:245 includes/models/class-user.php:78
+#: includes/configs/settings.php:246 includes/models/class-user.php:78
 msgid "Last Name"
 msgstr ""
 
-#: includes/configs/settings.php:246
+#: includes/configs/settings.php:247
 msgid "Full Name"
 msgstr ""
 
-#: includes/configs/settings.php:253
+#: includes/configs/settings.php:254 includes/configs/settings.php:269
 msgid "Registration"
 msgstr ""
 
-#: includes/configs/settings.php:258
+#: includes/configs/settings.php:259
 msgid "Registration Terms Page"
 msgstr ""
 
-#: includes/configs/settings.php:259
+#: includes/configs/settings.php:260
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 
-#: includes/configs/settings.php:268
+#: includes/configs/settings.php:270
+msgid "Allow user registration"
+msgstr ""
+
+#: includes/configs/settings.php:278
 msgid "Generate username from the email address"
 msgstr ""
 
-#: includes/configs/settings.php:275 includes/fields/class-email.php:30
+#: includes/configs/settings.php:286 includes/fields/class-email.php:30
 #: includes/models/class-user.php:56
 msgid "Email"
 msgstr ""
 
-#: includes/configs/settings.php:276
+#: includes/configs/settings.php:287
 msgid "Require email address verification"
 msgstr ""
 
-#: includes/configs/settings.php:289
+#: includes/configs/settings.php:301
 msgid "User Registered"
 msgstr ""
 
-#: includes/configs/settings.php:290
+#: includes/configs/settings.php:302
 msgid "This email is sent to users after registration."
 msgstr ""
 
-#: includes/configs/settings.php:292
+#: includes/configs/settings.php:304
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
 msgstr ""
 
-#: includes/configs/settings.php:300
+#: includes/configs/settings.php:313
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr ""
 
-#: includes/configs/settings.php:301
+#: includes/configs/settings.php:314
 msgid "This email is sent to users when a password reset is requested."
 msgstr ""
 
-#: includes/configs/settings.php:303
+#: includes/configs/settings.php:316
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
 msgstr ""
 
-#: includes/configs/settings.php:311
+#: includes/configs/settings.php:324
 #: includes/emails/class-user-email-verify.php:30
 msgid "Email Verification"
 msgstr ""
 
-#: includes/configs/settings.php:312
+#: includes/configs/settings.php:325
 msgid "This email is sent to users when email verification is required."
 msgstr ""
 
-#: includes/configs/settings.php:314
+#: includes/configs/settings.php:327
 msgid ""
 "Hi, %user_name%! Please click on the following link to verify your email "
 "address: %email_verify_url%"
 msgstr ""
 
-#: includes/configs/settings.php:327
+#: includes/configs/settings.php:340
 msgid "Integrations"
 msgstr ""
 
-#: includes/configs/settings.php:337
+#: includes/configs/settings.php:350
 msgid "Protected Forms"
 msgstr ""
 
-#: includes/configs/settings.php:345
+#: includes/configs/settings.php:358
 msgid "Site Key"
 msgstr ""
 
-#: includes/configs/settings.php:353
+#: includes/configs/settings.php:366
 msgid "Secret Key"
 msgstr ""
 
@@ -995,44 +990,44 @@ msgstr ""
 msgid "Email Verified"
 msgstr ""
 
-#: includes/controllers/class-user.php:247
+#: includes/controllers/class-user.php:246
 msgid "Username contains invalid characters."
 msgstr ""
 
-#: includes/controllers/class-user.php:249
+#: includes/controllers/class-user.php:248
 msgid "This username is already in use."
 msgstr ""
 
-#: includes/controllers/class-user.php:255
+#: includes/controllers/class-user.php:254
 msgid "This email is already registered."
 msgstr ""
 
-#: includes/controllers/class-user.php:382
-#: includes/controllers/class-user.php:389
+#: includes/controllers/class-user.php:376
+#: includes/controllers/class-user.php:383
 msgid "Username or password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:461
+#: includes/controllers/class-user.php:450
 msgid "User with this email doesn't exist."
 msgstr ""
 
-#: includes/controllers/class-user.php:463
+#: includes/controllers/class-user.php:452
 msgid "User with this username doesn't exist."
 msgstr ""
 
-#: includes/controllers/class-user.php:525
+#: includes/controllers/class-user.php:509
 msgid "Password reset key is expired or invalid."
 msgstr ""
 
-#: includes/controllers/class-user.php:589
+#: includes/controllers/class-user.php:573
 msgid "Current password is required."
 msgstr ""
 
-#: includes/controllers/class-user.php:593
+#: includes/controllers/class-user.php:577
 msgid "Current password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:646
+#: includes/controllers/class-user.php:630
 msgid "Password is incorrect."
 msgstr ""
 
@@ -1103,6 +1098,11 @@ msgstr ""
 
 #: includes/fields/class-date-range.php:44
 msgid "Date Range"
+msgstr ""
+
+#: includes/fields/class-date.php:72 includes/forms/class-listing-sort.php:59
+#: includes/forms/class-vendor-sort.php:59
+msgid "Date"
 msgstr ""
 
 #: includes/fields/class-date.php:79 includes/fields/class-number.php:65
@@ -1318,6 +1318,11 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
+#: includes/forms/class-listing-sort.php:60
+#: includes/models/class-listing.php:32
+msgid "Title"
+msgstr ""
+
 #: includes/forms/class-listing-update.php:46
 #: includes/forms/class-user-update.php:46
 msgid "Changes have been saved."
@@ -1378,18 +1383,15 @@ msgstr ""
 msgid "Current Password"
 msgstr ""
 
-#: includes/menus/class-user-account.php:37
-msgid "Sign Out"
-msgstr ""
-
+#: includes/forms/class-vendor-sort.php:60
 #: includes/models/class-listing-category.php:32
 #: includes/models/class-vendor-category.php:32
 #: includes/models/class-vendor.php:32
 msgid "Name"
 msgstr ""
 
-#: includes/models/class-listing.php:32
-msgid "Title"
+#: includes/menus/class-user-account.php:37
+msgid "Sign Out"
 msgstr ""
 
 #: includes/models/class-listing.php:61
@@ -1491,7 +1493,7 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
-#: templates/user/login/user-register-link.php:5
+#: templates/user/login/user-register-link.php:7
 msgid "Don't have an account yet?"
 msgstr ""
 

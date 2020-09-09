@@ -38,6 +38,9 @@ final class Upgrade extends Component {
 		// Upgrade database.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_database' ], 40 );
 
+		// Upgrade attributes.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
+
 		parent::__construct( $args );
 	}
 
@@ -170,6 +173,33 @@ final class Upgrade extends Component {
 
 			// Upgrade options.
 			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_password_request' ], [ 'option_name' => 'hp_email_user_request_password' ] );
+		}
+	}
+
+	/**
+	 * Upgrades attributes.
+	 *
+	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.13
+	 */
+	public function upgrade_attributes( $version ) {
+		if ( version_compare( $version, '1.3.13', '<' ) ) {
+			$attributes = get_posts(
+				[
+					'post_type'      => [ 'hp_listing_attribute', 'hp_vendor_attribute' ],
+					'post_status'    => 'any',
+					'posts_per_page' => -1,
+				]
+			);
+
+			foreach ( $attributes as $attribute ) {
+				$areas  = (array) $attribute->hp_display_areas;
+				$format = (string) $attribute->hp_display_format;
+
+				if ( array_intersect( [ 'view_block_secondary', 'view_page_secondary' ], $areas ) && strpos( $format, '%label%' ) === false ) {
+					update_post_meta( $attribute->ID, 'hp_display_format', '%label%: ' . $format );
+				}
+			}
 		}
 	}
 }

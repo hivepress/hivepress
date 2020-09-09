@@ -27,6 +27,13 @@ class Form extends Block {
 	protected $form;
 
 	/**
+	 * Form redirect.
+	 *
+	 * @var mixed
+	 */
+	protected $redirect;
+
+	/**
 	 * Form values.
 	 *
 	 * @var array
@@ -70,6 +77,11 @@ class Form extends Block {
 
 		if ( $model ) {
 			$form_args['model'] = $this->get_context( $model );
+		}
+
+		// Set redirect.
+		if ( $this->redirect ) {
+			$form_args['redirect'] = $this->redirect;
 		}
 
 		// Set attributes.

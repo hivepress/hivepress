@@ -340,8 +340,9 @@ final class Router extends Component {
 					'hivepress/v1',
 					$this->get_url_path( $name ),
 					[
-						'methods'  => hp\get_array_value( $route, 'method', 'GET' ),
-						'callback' => $route['action'],
+						'methods'             => hp\get_array_value( $route, 'method', 'GET' ),
+						'callback'            => $route['action'],
+						'permission_callback' => '__return_true',
 					]
 				);
 			}

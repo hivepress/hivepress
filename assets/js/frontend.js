@@ -7,7 +7,7 @@
 		hivepress.getComponent('modal').each(function() {
 			var url = '#' + $(this).attr('id');
 
-			$('a[href=' + url + '], button[data-url=' + url + ']').on('click', function(e) {
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
@@ -146,7 +146,7 @@
 		// Range slider
 		hivepress.getComponent('range-slider').each(function() {
 			var container = $(this),
-				fields = $(this).find('input[type=number]'),
+				fields = $(this).find('input[type="number"]'),
 				minField = fields.first(),
 				maxField = fields.last(),
 				slider = null;

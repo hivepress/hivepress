@@ -54,7 +54,18 @@ final class Template extends Component {
 	 * @return array
 	 */
 	public function add_theme_class( $classes ) {
-		return array_merge( $classes, [ 'hp-theme', 'hp-theme--' . hp\sanitize_slug( get_template() ) ] );
+
+		// Add theme class.
+		$classes[] = 'hp-theme--' . hp\sanitize_slug( get_template() );
+
+		// Add template class.
+		$route = hivepress()->router->get_current_route_name();
+
+		if ( $route ) {
+			$classes[] = 'hp-template--' . hp\sanitize_slug( $route );
+		}
+
+		return $classes;
 	}
 
 	/**

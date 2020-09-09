@@ -27,7 +27,15 @@ class User_Register_Form extends Form {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => esc_html__( 'User Registration Form', 'hivepress' ),
+				'label'    => esc_html__( 'User Registration Form', 'hivepress' ),
+
+				'settings' => [
+					'redirect' => [
+						'label'  => hivepress()->translator->get_string( 'redirect_url' ),
+						'type'   => 'text',
+						'_order' => 10,
+					],
+				],
 			],
 			$meta
 		);

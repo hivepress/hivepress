@@ -660,16 +660,9 @@ final class Attribute extends Component {
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_id );
 
-		// Add default option.
+		// Add attribute options.
 		$options = [];
 
-		if ( is_search() ) {
-			$options[''] = esc_html__( 'Relevance', 'hivepress' );
-		} else {
-			$options[''] = esc_html__( 'Date', 'hivepress' );
-		}
-
-		// Add attribute options.
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['sortable'] ) {
 
@@ -1074,35 +1067,41 @@ final class Attribute extends Component {
 				// Get sort parameter.
 				$sort_param = $sort_form->get_value( '_sort' );
 
-				// Get sort order.
-				$sort_order = 'ASC';
+				if ( 'title' === $sort_param ) {
 
-				if ( strpos( $sort_param, '__' ) ) {
-					list($sort_param, $sort_order) = explode( '__', $sort_param );
-				}
+					// Set sort order.
+					$query->set( 'orderby', 'title' );
+					$query->set( 'order', 'ASC' );
+				} else {
 
-				// Get sort attribute.
-				$sort_attribute = hp\get_array_value( $attributes, $sort_param );
+					// Get sort order.
+					$sort_order = 'ASC';
 
-				if ( $sort_attribute && $sort_attribute['sortable'] ) {
+					if ( strpos( $sort_param, '__' ) ) {
+						list($sort_param, $sort_order) = explode( '__', $sort_param );
+					}
 
-					// Get sort type.
-					$sort_type = hp\call_class_method( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], 'get_meta', [ 'type' ] );
+					// Get sort attribute.
+					$sort_attribute = hp\get_array_value( $attributes, $sort_param );
 
-					if ( $sort_type ) {
+					if ( $sort_attribute && $sort_attribute['sortable'] ) {
 
-						// Add meta clause.
-						$meta_query[ $sort_param . '__order' ] = [
-							'key'     => hp\prefix( $sort_param ),
-							'compare' => 'EXISTS',
-							'type'    => $sort_type,
-						];
+						// Get sort type.
+						$sort_type = hp\call_class_method( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], 'get_meta', [ 'type' ] );
 
-						// Set sort parameter.
-						$query->set( 'orderby', $sort_param . '__order' );
+						if ( $sort_type ) {
 
-						// Set sort order.
-						$query->set( 'order', strtoupper( $sort_order ) );
+							// Add meta clause.
+							$meta_query[ $sort_param . '__order' ] = [
+								'key'     => hp\prefix( $sort_param ),
+								'compare' => 'EXISTS',
+								'type'    => $sort_type,
+							];
+
+							// Set sort order.
+							$query->set( 'orderby', $sort_param . '__order' );
+							$query->set( 'order', strtoupper( $sort_order ) );
+						}
 					}
 				}
 			}

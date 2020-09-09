@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 final class Debug extends Component {
 
 	/**
-	 * Array of styles.
-	 *
-	 * @var array
-	 */
-	protected $styles = [];
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -42,9 +35,8 @@ final class Debug extends Component {
 		add_filter( 'hivepress/v1/styles', [ $this, 'alter_styles' ] );
 		add_filter( 'hivetheme/v1/styles', [ $this, 'alter_styles' ] );
 
-		// Enqueue styles.
-		add_action( 'wp_head', [ $this, 'enqueue_styles' ], 1000 );
-		add_action( 'admin_head', [ $this, 'enqueue_styles' ], 1000 );
+		// Alter style tag.
+		add_filter( 'style_loader_tag', [ $this, 'alter_style_tag' ], 10, 3 );
 
 		// Alter scripts.
 		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );
@@ -85,9 +77,7 @@ final class Debug extends Component {
 			$parts = explode( '/', hp\get_array_value( $style, 'src' ) );
 
 			if ( in_array( hp\get_last_array_value( $parts ), [ 'style.css', 'frontend.min.css', 'backend.min.css', 'common.min.css' ], true ) ) {
-				$this->styles[] = $style;
-
-				unset( $styles[ $name ] );
+				$styles[ $name ]['src'] = preg_replace( '/(\.min)?\.css$/', '.less', $style['src'] );
 			}
 		}
 
@@ -95,22 +85,19 @@ final class Debug extends Component {
 	}
 
 	/**
-	 * Enqueues styles.
+	 * Alters style tag.
+	 *
+	 * @param string $tag Style HTML.
+	 * @param string $handle Style handle.
+	 * @param string $src Style URL.
+	 * @return string
 	 */
-	public function enqueue_styles() {
-		$output = '';
-
-		// Enqueue styles.
-		foreach ( $this->styles as $style ) {
-			$url = preg_replace( '/(\.min)?\.css$/', '.less', $style['src'] );
-
-			$output .= '<link rel="stylesheet/less" type="text/css" href="' . esc_url( $url ) . '">';
+	public function alter_style_tag( $tag, $handle, $src ) {
+		if ( strpos( $src, '.less?' ) ) {
+			$tag = str_replace( "rel='stylesheet'", "rel='stylesheet/less'", $tag );
 		}
 
-		// Enqueue LESS.
-		$output .= '<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>';
-
-		echo $output;
+		return $tag;
 	}
 
 	/**
@@ -120,6 +107,8 @@ final class Debug extends Component {
 	 * @return array
 	 */
 	public function alter_scripts( $scripts ) {
+
+		// Alter scripts.
 		foreach ( $scripts as $name => $script ) {
 			$parts = explode( '/', hp\get_array_value( $script, 'src' ) );
 
@@ -127,6 +116,15 @@ final class Debug extends Component {
 				$scripts[ $name ]['src'] = preg_replace( '/\.min\.js$/', '.js', $scripts[ $name ]['src'] );
 			}
 		}
+
+		// Enqueue LESS.
+		$scripts['less'] = [
+			'handle'    => 'less',
+			'src'       => '//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js',
+			'version'   => false,
+			'in_footer' => false,
+			'scope'     => [ 'frontend', 'backend' ],
+		];
 
 		return $scripts;
 	}

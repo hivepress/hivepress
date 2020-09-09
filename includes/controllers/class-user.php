@@ -224,12 +224,11 @@ final class User extends Controller {
 	 */
 	public function register_user( $request ) {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			return hp\rest_error( 401 );
+		// Check permissions.
+		if ( ! get_option( 'hp_user_enable_registration', true ) ) {
+			return hp\rest_error( 403 );
 		}
 
-		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'create_users' ) ) {
 			return hp\rest_error( 403 );
 		}
@@ -352,11 +351,6 @@ final class User extends Controller {
 	 */
 	public function login_user( $request ) {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			return hp\rest_error( 401 );
-		}
-
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
 			return hp\rest_error( 403 );
@@ -430,11 +424,6 @@ final class User extends Controller {
 	 */
 	public function request_user_password( $request ) {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			return hp\rest_error( 401 );
-		}
-
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
 			return hp\rest_error( 403 );
@@ -500,11 +489,6 @@ final class User extends Controller {
 	 * @return WP_Rest_Response
 	 */
 	public function reset_user_password( $request ) {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() && ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			return hp\rest_error( 401 );
-		}
 
 		// Check permissions.
 		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
