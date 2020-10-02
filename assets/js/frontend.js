@@ -208,54 +208,57 @@
 
 		// Carousel slider
 		hivepress.getComponent('carousel-slider').each(function() {
-			if ($(this).find('img').length > 1) {
-				var container = $(this),
-					containerClass = container.attr('class').split(' ')[0],
-					images = container.find('img'),
-					slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
-					carousel = slider.clone();
+			var container = $(this);
 
-				container.html('');
+			if (container.find('img').length > 1) {
+				container.imagesLoaded(function() {
+					var containerClass = container.attr('class').split(' ')[0],
+						images = container.find('img'),
+						slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
+						carousel = slider.clone();
 
-				slider.appendTo(container);
-				carousel.appendTo(container);
+					container.html('');
 
-				slider.addClass(containerClass + '-slider').slick({
-					slidesToShow: 1,
-					slidesToScroll: 1,
-					adaptiveHeight: true,
-					infinite: false,
-					arrows: false,
-					asNavFor: carousel,
-				});
+					slider.appendTo(container);
+					carousel.appendTo(container);
 
-				carousel.addClass(containerClass + '-carousel').slick({
-					slidesToShow: 6,
-					slidesToScroll: 1,
-					infinite: false,
-					focusOnSelect: true,
-					prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-					nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
-					asNavFor: slider,
-					responsive: [{
-							breakpoint: 1025,
-							settings: {
-								slidesToShow: 5,
+					slider.addClass(containerClass + '-slider').slick({
+						slidesToShow: 1,
+						slidesToScroll: 1,
+						adaptiveHeight: true,
+						infinite: false,
+						arrows: false,
+						asNavFor: carousel,
+					});
+
+					carousel.addClass(containerClass + '-carousel').slick({
+						slidesToShow: 6,
+						slidesToScroll: 1,
+						infinite: false,
+						focusOnSelect: true,
+						prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
+						nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+						asNavFor: slider,
+						responsive: [{
+								breakpoint: 1025,
+								settings: {
+									slidesToShow: 5,
+								},
 							},
-						},
-						{
-							breakpoint: 769,
-							settings: {
-								slidesToShow: 4,
+							{
+								breakpoint: 769,
+								settings: {
+									slidesToShow: 4,
+								},
 							},
-						},
-						{
-							breakpoint: 481,
-							settings: {
-								slidesToShow: 3,
+							{
+								breakpoint: 481,
+								settings: {
+									slidesToShow: 3,
+								},
 							},
-						},
-					],
+						],
+					});
 				});
 			}
 		});
