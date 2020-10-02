@@ -47,7 +47,9 @@
 						method: form.data('method') ? form.data('method') : form.attr('method'),
 						data: form.serializeJSON(),
 						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
 						},
 						complete: function(xhr) {
 							var response = xhr.responseJSON,
@@ -135,7 +137,9 @@
 					url: button.data('url'),
 					method: 'POST',
 					beforeSend: function(xhr) {
-						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+						if ($('body').hasClass('logged-in')) {
+							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+						}
 					},
 				});
 
