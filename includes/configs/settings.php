@@ -97,6 +97,14 @@ return [
 						'_parent' => 'listing_enable_submission',
 						'_order'  => 30,
 					],
+
+					'listing_enable_reporting'      => [
+						'label'   => esc_html__( 'Reporting', 'hivepress' ),
+						'caption' => hivepress()->translator->get_string( 'allow_reporting_listings' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_order'  => 40,
+					],
 				],
 			],
 
