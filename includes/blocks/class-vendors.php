@@ -42,6 +42,13 @@ class Vendors extends Block {
 	protected $order;
 
 	/**
+	 * Verified flag.
+	 *
+	 * @var bool
+	 */
+	protected $verified;
+
+	/**
 	 * Container attributes.
 	 *
 	 * @var array
@@ -59,7 +66,7 @@ class Vendors extends Block {
 				'label'    => hivepress()->translator->get_string( 'vendors' ),
 
 				'settings' => [
-					'columns' => [
+					'columns'  => [
 						'label'    => hivepress()->translator->get_string( 'columns_number' ),
 						'type'     => 'select',
 						'default'  => 3,
@@ -74,7 +81,7 @@ class Vendors extends Block {
 						],
 					],
 
-					'number'  => [
+					'number'   => [
 						'label'     => hivepress()->translator->get_string( 'items_number' ),
 						'type'      => 'number',
 						'min_value' => 1,
@@ -83,7 +90,7 @@ class Vendors extends Block {
 						'_order'    => 20,
 					],
 
-					'order'   => [
+					'order'    => [
 						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
@@ -94,6 +101,12 @@ class Vendors extends Block {
 							'name'            => hivepress()->translator->get_string( 'by_name' ),
 							'random'          => hivepress()->translator->get_string( 'by_random' ),
 						],
+					],
+
+					'verified' => [
+						'label'  => hivepress()->translator->get_string( 'display_only_verified_vendors' ),
+						'type'   => 'checkbox',
+						'_order' => 40,
 					],
 				],
 			],
@@ -177,6 +190,11 @@ class Vendors extends Block {
 						$query->order( 'random' );
 					} else {
 						$query->order( [ 'registered_date' => 'desc' ] );
+					}
+
+					// Set verified flag.
+					if ( $this->verified ) {
+						$query->filter( [ 'verified' => true ] );
 					}
 				}
 

@@ -63,6 +63,13 @@ class Listings extends Block {
 	protected $featured;
 
 	/**
+	 * Verified flag.
+	 *
+	 * @var bool
+	 */
+	protected $verified;
+
+	/**
 	 * Container attributes.
 	 *
 	 * @var array
@@ -129,6 +136,12 @@ class Listings extends Block {
 						'label'  => hivepress()->translator->get_string( 'display_only_featured_listings' ),
 						'type'   => 'checkbox',
 						'_order' => 50,
+					],
+
+					'verified' => [
+						'label'  => hivepress()->translator->get_string( 'display_only_verified_listings' ),
+						'type'   => 'checkbox',
+						'_order' => 60,
 					],
 				],
 			],
@@ -227,6 +240,11 @@ class Listings extends Block {
 					// Set featured flag.
 					if ( $this->featured ) {
 						$query->filter( [ 'featured' => true ] );
+					}
+
+					// Set verified flag.
+					if ( $this->verified ) {
+						$query->filter( [ 'verified' => true ] );
 					}
 				}
 
