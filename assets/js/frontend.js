@@ -191,19 +191,21 @@
 
 		// Sticky
 		$(window).on('load', function() {
-			if ($(window).width() >= 768) {
-				hivepress.getComponent('sticky').each(function() {
-					var container = $(this),
-						spacing = 32 + $('#wpadminbar').height();
+			hivepress.getComponent('sticky').each(function() {
+				var container = $(this),
+					spacing = 32 + $('#wpadminbar').height();
 
+				if (container.height() === 0) {
+					container.hide();
+				} else if ($(window).width() >= 768) {
 					container.wrapInner('<div />');
 
 					container.children('div').stickySidebar({
 						topSpacing: spacing,
 						bottomSpacing: spacing,
 					});
-				});
-			}
+				}
+			});
 		});
 
 		// Carousel slider
