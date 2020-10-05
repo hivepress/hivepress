@@ -36,6 +36,12 @@ class Listings_View_Page extends Page_Sidebar_Left {
 								'type'   => 'listing_search_form',
 								'_order' => 10,
 							],
+
+							'listing_filter_link' => [
+								'type'   => 'part',
+								'path'   => 'listing/view/listing-filter-link',
+								'_order' => 20,
+							],
 						],
 					],
 
@@ -45,17 +51,39 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						],
 
 						'blocks'     => [
-							'listing_filter_form'  => [
-								'type'       => 'form',
-								'form'       => 'listing_filter',
+							'listing_filter_container' => [
+								'type'       => 'container',
 								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
+									'class' => [ 'widget', 'hp-widget', 'hp-widget--listing-filter' ],
+								],
+
+								'blocks'     => [
+									'listing_filter_modal' => [
+										'type'       => 'modal',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-modal--mobile' ],
+										],
+
+										'blocks'     => [
+											'listing_filter_form' => [
+												'type'   => 'form',
+												'form'   => 'listing_filter',
+												'_order' => 10,
+
+												'attributes' => [
+													'class' => [ 'hp-form--narrow' ],
+												],
+											],
+										],
+									],
 								],
 							],
 
-							'page_sidebar_widgets' => [
+							'page_sidebar_widgets'     => [
 								'type'   => 'widgets',
 								'area'   => 'hp_listings_view_sidebar',
 								'_order' => 20,

@@ -158,11 +158,6 @@ class Select extends Field {
 			$attributes['required'] = true;
 		}
 
-		// Set multiple flag.
-		if ( $this->multiple ) {
-			$attributes['multiple'] = true;
-		}
-
 		// Set source.
 		if ( $this->source ) {
 			$attributes['data-source'] = esc_url( $this->source );
@@ -298,7 +293,7 @@ class Select extends Field {
 	 * @return string
 	 */
 	public function render() {
-		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]' : '' ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '<select name="' . esc_attr( $this->name ) . ( $this->multiple ? '[]" multiple' : '"' ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
 
 		// Render options.
 		$output .= $this->render_options();

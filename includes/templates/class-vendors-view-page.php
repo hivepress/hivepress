@@ -36,6 +36,12 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 								'type'   => 'vendor_search_form',
 								'_order' => 10,
 							],
+
+							'vendor_filter_link' => [
+								'type'   => 'part',
+								'path'   => 'vendor/view/vendor-filter-link',
+								'_order' => 20,
+							],
 						],
 					],
 
@@ -45,17 +51,39 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						],
 
 						'blocks'     => [
-							'vendor_filter_form'   => [
-								'type'       => 'form',
-								'form'       => 'vendor_filter',
+							'vendor_filter_container' => [
+								'type'       => 'container',
 								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'hp-form--narrow', 'hp-widget', 'widget' ],
+									'class' => [ 'widget', 'hp-widget', 'hp-widget--vendor-filter' ],
+								],
+
+								'blocks'     => [
+									'vendor_filter_modal' => [
+										'type'       => 'modal',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-modal--mobile' ],
+										],
+
+										'blocks'     => [
+											'vendor_filter_form' => [
+												'type'   => 'form',
+												'form'   => 'vendor_filter',
+												'_order' => 10,
+
+												'attributes' => [
+													'class' => [ 'hp-form--narrow' ],
+												],
+											],
+										],
+									],
 								],
 							],
 
-							'page_sidebar_widgets' => [
+							'page_sidebar_widgets'    => [
 								'type'   => 'widgets',
 								'area'   => 'hp_vendors_view_sidebar',
 								'_order' => 20,

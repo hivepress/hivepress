@@ -405,6 +405,11 @@ final class Listing extends Controller {
 	 */
 	public function report_listing( $request ) {
 
+		// Check permissions.
+		if ( ! get_option( 'hp_listing_enable_reporting', true ) ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp\rest_error( 401 );

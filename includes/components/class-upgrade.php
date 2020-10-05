@@ -198,6 +198,12 @@ final class Upgrade extends Component {
 
 				if ( array_intersect( [ 'view_block_secondary', 'view_page_secondary' ], $areas ) && strpos( $format, '%label%' ) === false ) {
 					update_post_meta( $attribute->ID, 'hp_display_format', '%label%: ' . $format );
+
+					wp_update_post(
+						[
+							'ID' => $attribute->ID,
+						]
+					);
 				}
 			}
 		}

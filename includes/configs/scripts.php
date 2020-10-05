@@ -86,7 +86,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'serializejson', 'fancybox', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'serializejson', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [

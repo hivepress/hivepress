@@ -104,9 +104,11 @@ return [
 	'make_listing_featured'                     => esc_html__( 'Make this listing featured', 'hivepress' ),
 	'make_listings_featured'                    => esc_html__( 'Make listings featured', 'hivepress' ),
 	'display_only_featured_listings'            => esc_html__( 'Display only featured listings', 'hivepress' ),
+	'display_only_verified_listings'            => esc_html__( 'Display only verified listings', 'hivepress' ),
 	'confirm_listing_deletion'                  => esc_html__( 'Are you sure you want to permanently delete this listing?', 'hivepress' ),
 	'manually_approve_listings'                 => esc_html__( 'Manually approve new listings', 'hivepress' ),
 	'allow_submitting_listings'                 => esc_html__( 'Allow submitting new listings', 'hivepress' ),
+	'allow_reporting_listings'                  => esc_html__( 'Allow reporting listings', 'hivepress' ),
 	'set_number_of_days_until_listing_expires'  => esc_html__( 'Set the number of days after which a listing expires.', 'hivepress' ),
 	'set_number_of_days_until_listing_deleted'  => esc_html__( 'Set the number of days after which an expired listing is deleted.', 'hivepress' ),
 	'set_date_on_which_listing_expired'         => esc_html__( 'Set a date on which the listing will expire.', 'hivepress' ),
@@ -129,6 +131,7 @@ return [
 	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
 	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),
 	'display_vendors_on_frontend'               => esc_html__( 'Display vendors on the front-end', 'hivepress' ),
+	'display_only_verified_vendors'             => esc_html__( 'Display only verified vendors', 'hivepress' ),
 	'mark_vendor_as_verified'                   => esc_html__( 'Mark this vendor as verified', 'hivepress' ),
 
 	// Categories.

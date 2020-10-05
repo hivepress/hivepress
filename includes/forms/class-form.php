@@ -224,7 +224,8 @@ abstract class Form {
 		}
 
 		// Set component.
-		$attributes['data-component'] = 'form';
+		$attributes['data-component']  = 'form';
+		$attributes['data-selectable'] = 'true';
 
 		// Set attributes.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_meta( 'name' ) ) ];
