@@ -62,8 +62,24 @@ Mixins
 	Buttons
 	--------------------------------------------------------------*/
 	&-button {
+		display: inline-flex;
+		align-items: center;
+		white-space: nowrap;
+
 		&--wide {
 			width: 100%;
+		}
+
+		&--mobile {
+			@media only screen and (min-width:48em) {
+				display: none!important;
+			}
+		}
+
+		i {
+			&:first-child {
+				margin-right: 0.5rem;
+			}
 		}
 	}
 	/*--------------------------------------------------------------
@@ -384,6 +400,13 @@ Mixins
 	&-modal {
 		display: none;
 		width: 24.33rem;
+
+		&--mobile {
+			@media only screen and (min-width:48em) {
+				display: block;
+				width: auto;
+			}
+		}
 	}
 
 	&-modal &-form {
