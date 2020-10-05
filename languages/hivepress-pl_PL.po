@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-09 15:12+0000\n"
-"PO-Revision-Date: 2020-09-09 15:14+0000\n"
+"POT-Creation-Date: 2020-10-05 15:21+0000\n"
+"PO-Revision-Date: 2020-10-05 15:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "Language: pl_PL\n"
@@ -132,8 +132,8 @@ msgstr "Edytuj"
 msgid "Please check your email to activate your account."
 msgstr "Proszę sprawdzić skrzynkę e-mail aby aktywować konto."
 
-#: includes/components/class-user.php:158 includes/configs/settings.php:244
-#: includes/configs/settings.php:277 includes/models/class-user.php:48
+#: includes/components/class-user.php:158 includes/configs/settings.php:252
+#: includes/configs/settings.php:285 includes/models/class-user.php:48
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
@@ -172,7 +172,7 @@ msgid "Select Images"
 msgstr "Wybierz zdjęcia"
 
 #: includes/configs/meta-boxes.php:81 includes/configs/meta-boxes.php:252
-#: includes/configs/strings.php:139
+#: includes/configs/strings.php:142
 msgid "Attributes"
 msgstr "Atrybuty"
 
@@ -306,20 +306,24 @@ msgstr "Dodawanie"
 msgid "Submission Terms Page"
 msgstr "Strona regulaminu dodawania"
 
-#: includes/configs/settings.php:104 includes/configs/strings.php:24
+#: includes/configs/settings.php:102
+msgid "Reporting"
+msgstr "Zgłaszanie"
+
+#: includes/configs/settings.php:112 includes/configs/strings.php:24
 msgid "Expiration"
 msgstr "Wygaśnięcie"
 
-#: includes/configs/settings.php:127 includes/configs/settings.php:296
+#: includes/configs/settings.php:135 includes/configs/settings.php:304
 #: includes/configs/strings.php:20
 msgid "Emails"
 msgstr "E-maile"
 
-#: includes/configs/settings.php:133
+#: includes/configs/settings.php:141
 msgid "This email is sent to users when listing is approved."
 msgstr "Ten e-mail jest wysyłany użytkownikom po zatwierdzeniu ogłoszenia."
 
-#: includes/configs/settings.php:135
+#: includes/configs/settings.php:143
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
@@ -327,11 +331,11 @@ msgstr ""
 "Cześć %user_name%! Twoje ogłoszenie \"%listing_title%\" zostało zatwierdzone,"
 " aby go zobaczyć kliknij w podany link: %listing_url%"
 
-#: includes/configs/settings.php:145
+#: includes/configs/settings.php:153
 msgid "This email is sent to users when listing is rejected."
 msgstr "Ten e-mail jest wysyłany użytkownikom po odrzuceniu ogłoszenia."
 
-#: includes/configs/settings.php:147
+#: includes/configs/settings.php:155
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
@@ -339,11 +343,11 @@ msgstr ""
 "Cześć %user_name%! Przykro nam, ale twoje ogłoszenie \"%listing_title%\" "
 "zostało odrzucone."
 
-#: includes/configs/settings.php:157
+#: includes/configs/settings.php:165
 msgid "This email is sent to users when listing is expired."
 msgstr "Ten e-mail jest wysyłany użytkownikom po wygaśnięciu ogłoszenia."
 
-#: includes/configs/settings.php:159
+#: includes/configs/settings.php:167
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
@@ -351,71 +355,71 @@ msgstr ""
 "Cześć %user_name%! Twoje ogłoszenie \"%listing_title%\" wygasło, aby go "
 "odświeżyć kliknij w podany link: %listing_url%"
 
-#: includes/configs/settings.php:209 includes/configs/settings.php:237
+#: includes/configs/settings.php:217 includes/configs/settings.php:245
 msgctxt "noun"
 msgid "Display Name"
 msgstr "Wyświetlane imię"
 
-#: includes/configs/settings.php:210
+#: includes/configs/settings.php:218
 msgid "User Name"
 msgstr "Imię użytkownika"
 
-#: includes/configs/settings.php:227
+#: includes/configs/settings.php:235
 msgid "Users"
 msgstr "Użytkownicy"
 
-#: includes/configs/settings.php:245 includes/models/class-user.php:70
+#: includes/configs/settings.php:253 includes/models/class-user.php:70
 msgid "First Name"
 msgstr "Imię"
 
-#: includes/configs/settings.php:246 includes/models/class-user.php:78
+#: includes/configs/settings.php:254 includes/models/class-user.php:78
 msgid "Last Name"
 msgstr "Nazwisko"
 
-#: includes/configs/settings.php:247
+#: includes/configs/settings.php:255
 msgid "Full Name"
 msgstr "Imię i nazwisko"
 
-#: includes/configs/settings.php:254 includes/configs/settings.php:269
+#: includes/configs/settings.php:262 includes/configs/settings.php:277
 msgid "Registration"
 msgstr "Rejestracja"
 
-#: includes/configs/settings.php:259
+#: includes/configs/settings.php:267
 msgid "Registration Terms Page"
 msgstr "Strona regulaminu rejestracji"
 
-#: includes/configs/settings.php:260
+#: includes/configs/settings.php:268
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 "Wybierz stronę regulaminu, który użytkownik musi zaakceptować przed "
 "rejestracją."
 
-#: includes/configs/settings.php:270
+#: includes/configs/settings.php:278
 msgid "Allow user registration"
 msgstr "Pozwól użytkownikom rejestrować się"
 
-#: includes/configs/settings.php:278
+#: includes/configs/settings.php:286
 msgid "Generate username from the email address"
 msgstr "Generuj nazwę użytkownika z adresu e-mail"
 
-#: includes/configs/settings.php:286 includes/fields/class-email.php:30
+#: includes/configs/settings.php:294 includes/fields/class-email.php:30
 #: includes/models/class-user.php:56
 msgid "Email"
 msgstr "E-mail"
 
-#: includes/configs/settings.php:287
+#: includes/configs/settings.php:295
 msgid "Require email address verification"
 msgstr "Wymagaj potwierdzenia adresu e-mail"
 
-#: includes/configs/settings.php:301
+#: includes/configs/settings.php:309
 msgid "User Registered"
 msgstr "Użytkownik zarejestrowany"
 
-#: includes/configs/settings.php:302
+#: includes/configs/settings.php:310
 msgid "This email is sent to users after registration."
 msgstr "Ten e-mail jest wysyłany użytkownikom po rejestracji."
 
-#: includes/configs/settings.php:304
+#: includes/configs/settings.php:312
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
@@ -423,16 +427,16 @@ msgstr ""
 "Cześć %user_name%! Dziękuję za rejestrację, to jest twoje hasło: "
 "%user_password%"
 
-#: includes/configs/settings.php:313
+#: includes/configs/settings.php:321
 #: includes/emails/class-user-password-request.php:30
 msgid "Password Reset"
 msgstr "Resetowanie hasła"
 
-#: includes/configs/settings.php:314
+#: includes/configs/settings.php:322
 msgid "This email is sent to users when a password reset is requested."
 msgstr "Ten e-mail jest wysyłany użytkownikom na prośbę o resetowanie hasła."
 
-#: includes/configs/settings.php:316
+#: includes/configs/settings.php:324
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
@@ -440,18 +444,18 @@ msgstr ""
 "Cześć %user_name%! Proszę kliknąć w podany link, aby ustawić nowe hasło: "
 "%password_reset_url%"
 
-#: includes/configs/settings.php:324
+#: includes/configs/settings.php:332
 #: includes/emails/class-user-email-verify.php:30
 msgid "Email Verification"
 msgstr "Potwierdzenie adresu e-mail"
 
-#: includes/configs/settings.php:325
+#: includes/configs/settings.php:333
 msgid "This email is sent to users when email verification is required."
 msgstr ""
 "Ten e-mail jest wysyłany użytkownikom gdy wymanage jest potwierdzenie adresu "
 "e-mail."
 
-#: includes/configs/settings.php:327
+#: includes/configs/settings.php:335
 msgid ""
 "Hi, %user_name%! Please click on the following link to verify your email "
 "address: %email_verify_url%"
@@ -459,19 +463,19 @@ msgstr ""
 "Cześć %user_name%! Proszę kliknąć w podany link, aby potwierdzić adres e-"
 "mail: %email_verify_url%"
 
-#: includes/configs/settings.php:340
+#: includes/configs/settings.php:348
 msgid "Integrations"
 msgstr "Integracje"
 
-#: includes/configs/settings.php:350
+#: includes/configs/settings.php:358
 msgid "Protected Forms"
 msgstr "Zabezpieczone formularze"
 
-#: includes/configs/settings.php:358
+#: includes/configs/settings.php:366
 msgid "Site Key"
 msgstr "Klucz strony"
 
-#: includes/configs/settings.php:366
+#: includes/configs/settings.php:374
 msgid "Secret Key"
 msgstr "Sekretny klucz"
 
@@ -832,38 +836,46 @@ msgid "Display only featured listings"
 msgstr "Wyświetlaj tylko promowane ogłoszenia"
 
 #: includes/configs/strings.php:107
+msgid "Display only verified listings"
+msgstr "Wyświetlaj tylko sprawdzone ogłoszenia"
+
+#: includes/configs/strings.php:108
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr "Jesteś pewien, ze chcesz na zawsze usunąć to ogłoszenie?"
 
-#: includes/configs/strings.php:108
+#: includes/configs/strings.php:109
 msgid "Manually approve new listings"
 msgstr "Ręcznie zatwierdzaj nowe ogłoszenia"
 
-#: includes/configs/strings.php:109
+#: includes/configs/strings.php:110
 msgid "Allow submitting new listings"
 msgstr "Pozwól na dodanie nowych ogłoszeń"
 
-#: includes/configs/strings.php:110
+#: includes/configs/strings.php:111
+msgid "Allow reporting listings"
+msgstr "Pozwól na zgłoszenie ogłoszeń"
+
+#: includes/configs/strings.php:112
 msgid "Set the number of days after which a listing expires."
 msgstr "Podaj liczbę dni, po których ogłoszenie wygaśnie."
 
-#: includes/configs/strings.php:111
+#: includes/configs/strings.php:113
 msgid "Set the number of days after which an expired listing is deleted."
 msgstr "Podaj liczbę dni, po których wygasłe ogłoszenie zostanie usunięte."
 
-#: includes/configs/strings.php:112
+#: includes/configs/strings.php:114
 msgid "Set a date on which the listing will expire."
 msgstr "Wybierz datę wygaśnięcia ogłoszenia."
 
-#: includes/configs/strings.php:113
+#: includes/configs/strings.php:115
 msgid "Set a date on which the listing will lose featured status."
 msgstr "Wybierz datę zakończenia promowania ogłoszenia."
 
-#: includes/configs/strings.php:114
+#: includes/configs/strings.php:116
 msgid "Choose a page that displays all listings."
 msgstr "Wybierz stronę, która wyświetla wszystkie ogłoszenia."
 
-#: includes/configs/strings.php:115
+#: includes/configs/strings.php:117
 msgid ""
 "Choose a page with terms that user has to accept before submitting a new "
 "listing."
@@ -871,7 +883,7 @@ msgstr ""
 "Wybierz stronę regulaminu, który użytkownik musi zaakceptować przed dodaniem "
 "nowego ogłoszenia."
 
-#: includes/configs/strings.php:116
+#: includes/configs/strings.php:118
 msgid ""
 "Please provide details that will help us verify that this listing violates "
 "the terms of service."
@@ -879,94 +891,98 @@ msgstr ""
 "Proszę podać szczegóły, które pozwolą nam sprawdzić, czy to ogłoszenie "
 "narusza regulamin."
 
-#: includes/configs/strings.php:119
+#: includes/configs/strings.php:121
 msgid "Vendor"
 msgstr "Sprzedawca"
 
-#: includes/configs/strings.php:120
+#: includes/configs/strings.php:122
 msgid "View Vendor"
 msgstr "Zobacz sprzedawcę"
 
-#: includes/configs/strings.php:121
+#: includes/configs/strings.php:123
 msgid "Add Vendor"
 msgstr "Dodaj sprzedawcę"
 
-#: includes/configs/strings.php:122
+#: includes/configs/strings.php:124
 msgid "Edit Vendor"
 msgstr "Edytuj sprzedawcę"
 
-#: includes/configs/strings.php:123
+#: includes/configs/strings.php:125
 msgid "Vendors"
 msgstr "Sprzedawcy"
 
-#: includes/configs/strings.php:124
+#: includes/configs/strings.php:126
 msgid "Search Vendors"
 msgstr "Szukaj sprzedawców"
 
-#: includes/configs/strings.php:125
+#: includes/configs/strings.php:127
 msgid "No vendors found."
 msgstr "Nie znaleziono żadnych sprzedawców."
 
-#: includes/configs/strings.php:126
+#: includes/configs/strings.php:128
 msgid "Vendor Attributes"
 msgstr "Atrybuty sprzedawców"
 
-#: includes/configs/strings.php:127
+#: includes/configs/strings.php:129
 msgid "Vendor Search Form"
 msgstr "Formularz wyszukiwania sprzedawców"
 
-#: includes/configs/strings.php:128
+#: includes/configs/strings.php:130
 msgid "Vendors Page"
 msgstr "Strona sprzedawców"
 
-#: includes/configs/strings.php:129
+#: includes/configs/strings.php:131
 msgid "Vendors per Page"
 msgstr "Ilość sprzedawców na stronę"
 
-#: includes/configs/strings.php:130
+#: includes/configs/strings.php:132
 msgid "Choose a page that displays all vendors."
 msgstr "Wybierz stronę, która wyświetla wszystkich sprzedawców."
 
-#: includes/configs/strings.php:131
+#: includes/configs/strings.php:133
 msgid "Display vendors on the front-end"
 msgstr "Wyświetlaj sprzedawców na stronie"
 
-#: includes/configs/strings.php:132
+#: includes/configs/strings.php:134
+msgid "Display only verified vendors"
+msgstr "Wyświetlaj tylko sprawdzonych sprzedawców"
+
+#: includes/configs/strings.php:135
 msgid "Mark this vendor as verified"
 msgstr "Oznacz tego sprzedawcę jako sprawdzonego"
 
-#: includes/configs/strings.php:135 includes/configs/taxonomies.php:22
+#: includes/configs/strings.php:138 includes/configs/taxonomies.php:22
 #: includes/configs/taxonomies.php:41
 msgid "Category"
 msgstr "Kategoria"
 
-#: includes/configs/strings.php:136 includes/configs/taxonomies.php:27
+#: includes/configs/strings.php:139 includes/configs/taxonomies.php:27
 #: includes/configs/taxonomies.php:46
 msgid "Parent Category"
 msgstr "Kategoria nadrzędna"
 
-#: includes/configs/strings.php:140
+#: includes/configs/strings.php:143
 msgid "Attribute"
 msgstr "Atrybut"
 
-#: includes/configs/strings.php:141
+#: includes/configs/strings.php:144
 msgctxt "attribute"
 msgid "Add New"
 msgstr "Dodaj nowy"
 
-#: includes/configs/strings.php:142
+#: includes/configs/strings.php:145
 msgid "Add Attribute"
 msgstr "Dodaj atrybut"
 
-#: includes/configs/strings.php:143
+#: includes/configs/strings.php:146
 msgid "Edit Attribute"
 msgstr "Edytuj atrybut"
 
-#: includes/configs/strings.php:144
+#: includes/configs/strings.php:147
 msgid "Search Attributes"
 msgstr "Szukaj atrybutów"
 
-#: includes/configs/strings.php:145
+#: includes/configs/strings.php:148
 msgid "No attributes found."
 msgstr "Nie znaleziono żadnych atrybutów."
 
@@ -1335,6 +1351,8 @@ msgstr "Wyślij"
 
 #: includes/forms/class-listing-filter.php:71
 #: includes/forms/class-vendor-filter.php:71
+#: templates/listing/view/listing-filter-link.php:5
+#: templates/vendor/view/vendor-filter-link.php:5
 msgid "Filter"
 msgstr "Filtruj"
 
