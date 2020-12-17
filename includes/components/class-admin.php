@@ -1273,9 +1273,12 @@ final class Admin extends Component {
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type'        => 'warning',
-				/* translators: %s: theme name. */
-				'text'        => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="' . esc_url( admin_url( 'theme-install.php?search=listinghive' ) ) . '">ListingHive</a>' ),
 				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: themes URL. */
+					hp\sanitize_html( __( 'The current theme doesn\'t declare HivePress support, if you notice any styling issues please consider using one of the <a href="%s">official themes</a> instead.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_themes' ) )
+				),
 			];
 		}
 
