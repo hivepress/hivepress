@@ -190,7 +190,7 @@
 		});
 
 		// Sticky
-		$(window).on('load', function() {
+		$('body').imagesLoaded(function() {
 			hivepress.getComponent('sticky').each(function() {
 				var container = $(this),
 					spacing = 32;
