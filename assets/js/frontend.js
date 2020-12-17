@@ -193,7 +193,11 @@
 		$(window).on('load', function() {
 			hivepress.getComponent('sticky').each(function() {
 				var container = $(this),
-					spacing = 32 + $('#wpadminbar').height();
+					spacing = 32;
+
+				if ($('#wpadminbar').length) {
+					spacing = spacing + $('#wpadminbar').height();
+				}
 
 				if (container.height() === 0) {
 					container.hide();
