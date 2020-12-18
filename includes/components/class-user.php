@@ -160,6 +160,10 @@ final class User extends Component {
 				'max_length' => 60,
 				'required'   => true,
 				'_order'     => 5,
+
+				'attributes' => [
+					'autocomplete' => 'username',
+				],
 			];
 		}
 

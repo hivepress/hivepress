@@ -55,6 +55,10 @@ class User_Password_Request extends Form {
 						'max_length' => 254,
 						'required'   => true,
 						'_order'     => 10,
+
+						'attributes' => [
+							'autocomplete' => 'username',
+						],
 					],
 				],
 

@@ -67,15 +67,23 @@ class User_Update extends Model_Form {
 					],
 
 					'password'         => [
-						'label'  => esc_html__( 'New Password', 'hivepress' ),
-						'_order' => 310,
+						'label'      => esc_html__( 'New Password', 'hivepress' ),
+						'_order'     => 310,
+
+						'attributes' => [
+							'autocomplete' => 'new-password',
+						],
 					],
 
 					'current_password' => [
-						'label'     => esc_html__( 'Current Password', 'hivepress' ),
-						'type'      => 'password',
-						'_separate' => true,
-						'_order'    => 320,
+						'label'      => esc_html__( 'Current Password', 'hivepress' ),
+						'type'       => 'password',
+						'_separate'  => true,
+						'_order'     => 320,
+
+						'attributes' => [
+							'autocomplete' => 'current-password',
+						],
 					],
 				],
 

@@ -50,12 +50,20 @@ class User_Register extends Model_Form {
 
 				'fields'   => [
 					'email'    => [
-						'_order' => 10,
+						'_order'     => 10,
+
+						'attributes' => [
+							'autocomplete' => 'email',
+						],
 					],
 
 					'password' => [
-						'required' => true,
-						'_order'   => 20,
+						'required'   => true,
+						'_order'     => 20,
+
+						'attributes' => [
+							'autocomplete' => 'new-password',
+						],
 					],
 				],
 

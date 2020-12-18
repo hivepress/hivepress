@@ -56,12 +56,20 @@ class User_Login extends Model_Form {
 						'required'   => true,
 						'_separate'  => true,
 						'_order'     => 10,
+
+						'attributes' => [
+							'autocomplete' => 'username',
+						],
 					],
 
 					'password'          => [
 						'min_length' => null,
 						'required'   => true,
 						'_order'     => 20,
+
+						'attributes' => [
+							'autocomplete' => 'current-password',
+						],
 					],
 				],
 

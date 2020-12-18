@@ -52,6 +52,10 @@ class User_Delete extends Model_Form {
 						'min_length' => null,
 						'required'   => true,
 						'_order'     => 10,
+
+						'attributes' => [
+							'autocomplete' => 'current-password',
+						],
 					],
 				],
 
