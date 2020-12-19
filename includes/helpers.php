@@ -490,3 +490,20 @@ function rest_error( $code, $errors = [] ) {
 		$code
 	);
 }
+
+/**
+ * Gets column width.
+ *
+ * @param int $number Columns number.
+ * @return int
+ */
+function get_column_width( $number ) {
+	$number = absint( $number );
+	$width  = 12;
+
+	if ( $number > 0 && $number <= 12 ) {
+		$width = round( $width / $number );
+	}
+
+	return $width;
+}

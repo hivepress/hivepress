@@ -116,8 +116,8 @@ final class Admin extends Component {
 		// Add pages.
 		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings' );
-		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
+		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
 
 	/**
@@ -1273,9 +1273,12 @@ final class Admin extends Component {
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type'        => 'warning',
-				/* translators: %s: theme name. */
-				'text'        => sprintf( esc_html__( 'The current theme doesn\'t declare HivePress support, if you encounter layout or styling issues please consider using the official %s theme.', 'hivepress' ), '<a href="' . esc_url( admin_url( 'theme-install.php?search=listinghive' ) ) . '">ListingHive</a>' ),
 				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: themes URL. */
+					hp\sanitize_html( __( 'The current theme doesn\'t declare HivePress support, if you notice any styling issues please consider using one of the <a href="%s">official themes</a> instead.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_themes' ) )
+				),
 			];
 		}
 

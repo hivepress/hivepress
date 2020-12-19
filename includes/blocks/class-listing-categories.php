@@ -143,12 +143,7 @@ class Listing_Categories extends Block {
 		$output = '';
 
 		// Get column width.
-		$columns      = absint( $this->columns );
-		$column_width = 12;
-
-		if ( $columns > 0 && $columns <= 12 ) {
-			$column_width = round( $column_width / $columns );
-		}
+		$column_width = hp\get_column_width( $this->columns );
 
 		// Set query.
 		$query = Models\Listing_Category::query()->limit( $this->number );

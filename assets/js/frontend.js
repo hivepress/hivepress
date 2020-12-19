@@ -103,6 +103,15 @@
 			});
 		});
 
+		$(window).on('pageshow', function(e) {
+			if (e.originalEvent.persisted) {
+				var buttons = $('input[type=submit], button[type=submit]');
+
+				buttons.prop('disabled', false);
+				buttons.attr('data-state', '');
+			}
+		});
+
 		// Toggle
 		hivepress.getComponent('toggle').each(function() {
 			var button = $(this);
@@ -190,10 +199,14 @@
 		});
 
 		// Sticky
-		$(window).on('load', function() {
+		$('body').imagesLoaded(function() {
 			hivepress.getComponent('sticky').each(function() {
 				var container = $(this),
-					spacing = 32 + $('#wpadminbar').height();
+					spacing = 32;
+
+				if ($('#wpadminbar').length) {
+					spacing = spacing + $('#wpadminbar').height();
+				}
 
 				if (container.height() === 0) {
 					container.hide();

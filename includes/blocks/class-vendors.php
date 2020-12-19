@@ -161,12 +161,7 @@ class Vendors extends Block {
 		if ( $this->number ) {
 
 			// Get column width.
-			$columns      = absint( $this->columns );
-			$column_width = 12;
-
-			if ( $columns > 0 && $columns <= 12 ) {
-				$column_width = round( $column_width / $columns );
-			}
+			$column_width = hp\get_column_width( $this->columns );
 
 			// Get vendor query.
 			$regular_query = $wp_query;

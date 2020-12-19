@@ -49,9 +49,13 @@ class User_Password_Reset extends Model_Form {
 
 				'fields'      => [
 					'password'           => [
-						'label'    => esc_html__( 'New Password', 'hivepress' ),
-						'required' => true,
-						'_order'   => 10,
+						'label'      => esc_html__( 'New Password', 'hivepress' ),
+						'required'   => true,
+						'_order'     => 10,
+
+						'attributes' => [
+							'autocomplete' => 'new-password',
+						],
 					],
 
 					'username'           => [

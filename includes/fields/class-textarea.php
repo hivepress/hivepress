@@ -98,7 +98,7 @@ class Textarea extends Text {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return apply_filters( 'the_content', make_clickable( $this->value ) );
+			return make_clickable( apply_filters( 'the_content', $this->value ) );
 		}
 	}
 
