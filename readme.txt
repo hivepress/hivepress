@@ -1,11 +1,11 @@
 === HivePress - Multipurpose Directory, Listing & Classifieds WordPress Plugin ===
 Contributors: hivepress
-Donate link: https://patreon.com/hivepress
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7785WBVGMNB44&source=url
 Tags: directory, business directory, classifieds, classified ads, listing, listings, real estate, job board
 Requires at least: 4.9
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.3.15
+Stable tag: 1.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
