@@ -223,12 +223,33 @@
 
 		// Carousel slider
 		hivepress.getComponent('carousel-slider').each(function() {
-			var container = $(this);
+			var container = $(this),
+				images = container.find('img');
 
-			if (container.find('img').length > 1) {
+			if (images.length && images.first().data('src')) {
+				var imageURLs = [];
+
+				images.each(function() {
+					imageURLs.push({
+						src: $(this).data('src'),
+					});
+				});
+
+				container.on('click', 'img', function() {
+					var index = container.find('img').index($(this).get(0));
+
+					if (index < imageURLs.length) {
+						$.fancybox.open(imageURLs, {
+							loop: true,
+							buttons: ['close'],
+						}, index);
+					}
+				});
+			}
+
+			if (images.length > 1) {
 				container.imagesLoaded(function() {
 					var containerClass = container.attr('class').split(' ')[0],
-						images = container.find('img'),
 						slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
 						carousel = slider.clone();
 

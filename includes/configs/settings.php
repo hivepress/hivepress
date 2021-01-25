@@ -63,6 +63,13 @@ return [
 						'required'  => true,
 						'_order'    => 50,
 					],
+
+					'listing_enable_image_zoom'        => [
+						'label'   => esc_html__( 'Images', 'hivepress' ),
+						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 60,
+					],
 				],
 			],
 
