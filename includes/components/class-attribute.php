@@ -57,6 +57,9 @@ final class Attribute extends Component {
 	 */
 	protected function boot() {
 
+		// Filter models.
+		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
+
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
