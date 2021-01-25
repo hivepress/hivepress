@@ -46,7 +46,7 @@ class Listing_Search_Form extends Form {
 				'form'       => 'listing_search',
 
 				'attributes' => [
-					'class' => [ 'hp-form--wide', 'hp-block' ],
+					'class' => [ 'hp-form--wide', 'hp-form--primary', 'hp-block' ],
 				],
 			],
 			$args
