@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Block {
 	use Traits\Mutator;
 
-	use Traits \Meta {
+	use Traits\Meta {
 		set_meta as _set_meta;
 	}
 
