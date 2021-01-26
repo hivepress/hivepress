@@ -9,6 +9,7 @@ namespace HivePress\Emails;
 
 use HivePress\Helpers as hp;
 use HivePress\Traits;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -159,26 +160,47 @@ abstract class Email {
 	}
 
 	/**
+	 * Gets email body.
+	 *
+	 * @return string
+	 */
+	final public function get_body() {
+		return $this->body;
+	}
+
+	/**
 	 * Sends email.
 	 *
 	 * @return bool
 	 */
 	final public function send() {
-		if ( $this->body ) {
-			return wp_mail(
-				$this->recipient,
-				$this->subject,
-				$this->body,
-				array_map(
-					function( $name, $value ) {
-						return $name . ': ' . $value;
-					},
-					array_keys( $this->headers ),
-					$this->headers
-				)
-			);
+
+		// Check content.
+		if ( ! $this->body ) {
+			return false;
 		}
 
-		return false;
+		// Get headers.
+		$headers = array_map(
+			function( $name, $value ) {
+				return $name . ': ' . $value;
+			},
+			array_keys( $this->headers ),
+			$this->headers
+		);
+
+		// Get content.
+		$content = ( new Blocks\Template(
+			[
+				'template' => 'email',
+
+				'context'  => [
+					'email' => $this,
+				],
+			]
+		) )->render();
+
+		// Send email.
+		return wp_mail( $this->recipient, $this->subject, $content, $headers );
 	}
 }
