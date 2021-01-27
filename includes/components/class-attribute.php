@@ -104,8 +104,8 @@ final class Attribute extends Component {
 
 		if ( is_admin() ) {
 
-			// Add option settings.
-			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_option_settings' ], 100 );
+			// Add meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 
 			// Remove term boxes.
 			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
@@ -946,30 +946,175 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Adds option settings.
+	 * Adds meta boxes.
 	 *
 	 * @param array $meta_boxes Meta box arguments.
 	 * @return array
 	 */
-	public function add_option_settings( $meta_boxes ) {
+	public function add_meta_boxes( $meta_boxes ) {
+
+		// Set defaults.
+		$meta_box_args = [
+			'attributes'        => [
+				'title'  => esc_html__( 'Attributes', 'hivepress' ),
+				'fields' => [],
+			],
+
+			'attribute_edit'    => [
+				'title'  => hivepress()->translator->get_string( 'editing' ),
+
+				'fields' => [
+					'editable'        => [
+						'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 1,
+					],
+
+					'edit_field_type' => [
+						'label'       => esc_html__( 'Field Type', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'fields',
+						'option_args' => [ 'editable' => true ],
+						'required'    => true,
+						'_order'      => 100,
+					],
+				],
+			],
+
+			'attribute_search'  => [
+				'title'  => hivepress()->translator->get_string( 'search_noun' ),
+
+				'fields' => [
+					'filterable'        => [
+						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
+					],
+
+					'indexable'         => [
+						'label'   => esc_html_x( 'Indexable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Include in keyword search', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 15,
+					],
+
+					'sortable'          => [
+						'label'   => esc_html_x( 'Sortable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display as a sorting option', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 20,
+					],
+
+					'search_field_type' => [
+						'label'       => esc_html__( 'Field Type', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'fields',
+						'option_args' => [ 'filterable' => true ],
+						'_parent'     => 'filterable',
+						'_order'      => 100,
+					],
+				],
+			],
+
+			'attribute_display' => [
+				'title'  => hivepress()->translator->get_string( 'display_noun' ),
+
+				'fields' => [
+					'display_areas'  => [
+						'label'       => esc_html__( 'Areas', 'hivepress' ),
+						'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
+						'type'        => 'select',
+						'multiple'    => true,
+						'_order'      => 10,
+
+						'options'     => [
+							'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+							'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+							'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+						],
+					],
+
+					'icon'           => [
+						'label'   => esc_html__( 'Icon', 'hivepress' ),
+						'type'    => 'select',
+						'options' => 'icons',
+						'_parent' => 'display_areas[]',
+						'_order'  => 20,
+					],
+
+					'display_format' => [
+						'label'       => esc_html__( 'Format', 'hivepress' ),
+						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
+						'type'        => 'textarea',
+						'max_length'  => 2048,
+						'default'     => '%value%',
+						'html'        => true,
+						'_parent'     => 'display_areas[]',
+						'_order'      => 30,
+					],
+				],
+			],
+
+			'option_settings'   => [
+				'screen' => [],
+
+				'fields' => [
+					'sort_order' => [
+						'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 0,
+						'default'   => 0,
+						'required'  => true,
+						'_order'    => 10,
+					],
+				],
+			],
+		];
+
+		// Add meta boxes.
 		foreach ( $this->models as $model ) {
+			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
 
-			// Get meta box name.
-			$meta_box_name = $model . '_option_settings';
+				// Set screen and model.
+				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
+					$meta_box['model'] = $model;
 
-			if ( isset( $meta_boxes[ $meta_box_name ] ) ) {
-				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-					if ( isset( $attribute['edit_field']['options'] ) ) {
+					if ( 'attributes' === $meta_box_name ) {
+						$meta_box['screen'] = $model;
+					} else {
+						$meta_box['screen'] = $model . '_attribute';
+					}
 
-						// Get screen name.
-						$screen = $model . '_' . $attribute_name;
+					// @todo replace temporary fix.
+					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['moderated'] = [
+							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+							'type'    => 'checkbox',
+							'_parent' => 'editable',
+							'_order'  => 20,
+						];
+					}
+				} elseif ( 'option_settings' === $meta_box_name ) {
+					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+						if ( isset( $attribute['edit_field']['options'] ) ) {
 
-						// Add screen.
-						if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
-							$meta_boxes[ $meta_box_name ]['screen'][] = $screen;
+							// Get screen.
+							$screen = $model . '_' . $attribute_name;
+
+							// Add screen.
+							if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
+								$meta_box['screen'][] = $screen;
+							}
 						}
 					}
 				}
+
+				// Add meta box.
+				$meta_boxes[ $model . '_' . $meta_box_name ] = $meta_box;
 			}
 		}
 
