@@ -78,6 +78,10 @@ final class Attribute extends Component {
 			// Add model fields.
 			add_filter( 'hivepress/v1/models/' . $model . '/fields', [ $this, 'add_model_fields' ], 100, 2 );
 
+			// Update model snippet.
+			add_action( 'hivepress/v1/models/' . $model . '/create', [ $this, 'update_model_snippet' ], 100, 2 );
+			add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'update_model_snippet' ], 100, 2 );
+
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
 
@@ -202,6 +206,7 @@ final class Attribute extends Component {
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
+						'indexable'      => (bool) $attribute_object->hp_indexable,
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
@@ -363,6 +368,7 @@ final class Attribute extends Component {
 							'protected'      => false,
 							'editable'       => false,
 							'moderated'      => false,
+							'indexable'      => false,
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
@@ -538,6 +544,10 @@ final class Attribute extends Component {
 					$field_args['required'] = false;
 				}
 
+				if ( $attribute['indexable'] ) {
+					$field_args['_indexable'] = true;
+				}
+
 				if ( isset( $field_args['options'] ) ) {
 					$field_args = array_merge(
 						$field_args,
@@ -556,7 +566,43 @@ final class Attribute extends Component {
 			}
 		}
 
+		// Add snippet field.
+		$fields['snippet'] = [
+			'type'       => 'textarea',
+			'max_length' => 10240,
+			'html'       => true,
+			'_alias'     => 'post_excerpt',
+		];
+
 		return $fields;
+	}
+
+	/**
+	 * Updates model snippet.
+	 *
+	 * @param int    $model_id Model ID.
+	 * @param object $model Model object.
+	 */
+	public function update_model_snippet( $model_id, $model ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/' . $model::_get_meta( 'name' ) . '/update', [ $this, 'update_model_snippet' ], 100 );
+
+		// Get snippet.
+		$snippet = '';
+
+		foreach ( $model->_get_fields() as $field ) {
+			if ( $field->get_arg( '_indexable' ) ) {
+				$snippet .= $field->get_label() . ': ' . $field->get_display_value() . '; ';
+			}
+		}
+
+		$snippet = rtrim( $snippet, ' ;' ) . '.';
+
+		// Update snippet.
+		if ( $model->get_snippet() !== $snippet ) {
+			$model->set_snippet( $snippet )->save_snippet();
+		}
 	}
 
 	/**
