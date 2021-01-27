@@ -35,6 +35,34 @@ final class Model extends Component {
 	}
 
 	/**
+	 * Gets model object.
+	 *
+	 * @param string $model Model name.
+	 * @param int    $id Object ID.
+	 * @return mixed
+	 */
+	public function get_model_object( $model, $id ) {
+		$object = null;
+
+		// Get class.
+		$class = '\HivePress\Models\\' . $model;
+
+		if ( class_exists( $class ) ) {
+
+			// Get query.
+			$query = call_user_func( [ $class, 'query' ] );
+
+			if ( $query ) {
+
+				// Get object.
+				$object = $query->get_by_id( $id );
+			}
+		}
+
+		return $object;
+	}
+
+	/**
 	 * Gets cache group.
 	 *
 	 * @param string $type Model type.
