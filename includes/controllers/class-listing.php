@@ -151,6 +151,14 @@ final class Listing extends Controller {
 						'base' => 'listing_submit_page',
 					],
 
+					'listing_submit_profile_page'  => [
+						'title'    => esc_html_x( 'Complete Profile', 'imperative', 'hivepress' ),
+						'base'     => 'listing_submit_page',
+						'path'     => '/profile',
+						'redirect' => [ $this, 'redirect_listing_submit_profile_page' ],
+						'action'   => [ $this, 'render_listing_submit_profile_page' ],
+					],
+
 					'listing_submit_category_page' => [
 						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
 						'base'     => 'listing_submit_page',
@@ -827,6 +835,81 @@ final class Listing extends Controller {
 		hivepress()->request->set_context( 'listing', $listing );
 
 		return true;
+	}
+
+	/**
+	 * Redirects listing submit profile page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_listing_submit_profile_page() {
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => get_current_user_id(),
+			]
+		)->get_first();
+
+		if ( ! $vendor ) {
+
+			// Get user.
+			$user = hivepress()->request->get_context( 'user' );
+
+			// Add vendor.
+			$vendor = ( new Models\Vendor() )->fill(
+				[
+					'name'        => $user->get_display_name(),
+					'description' => $user->get_description(),
+					'slug'        => $user->get_username(),
+					'status'      => 'auto-draft',
+					'image'       => $user->get_image__id(),
+					'user'        => $user->get_id(),
+				]
+			);
+
+			if ( ! $vendor->save(
+				[
+					'name',
+					'description',
+					'slug',
+					'status',
+					'image',
+					'user',
+				]
+			) ) {
+				return home_url( '/' );
+			}
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		// Check vendor.
+		if ( $vendor->validate() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders listing submit profile page.
+	 *
+	 * @return string
+	 */
+	public function render_listing_submit_profile_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'listing_submit_profile_page',
+
+				'context'  => [
+					'vendor' => hivepress()->request->get_context( 'vendor' ),
+					'user'   => hivepress()->request->get_context( 'user' ),
+				],
+			]
+		) )->render();
 	}
 
 	/**

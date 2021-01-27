@@ -112,43 +112,55 @@ final class Listing extends Component {
 		}
 
 		// Get user vendor.
-		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => $listing->get_user__id(),
+			]
+		)->get_first();
 
-		if ( ! $vendor && $listing->get_status() === 'publish' ) {
+		if ( ( ! $vendor || $vendor->get_status() === 'auto-draft' ) && $listing->get_status() === 'publish' ) {
 
 			// Get user.
 			$user = $listing->get_user();
-
-			// Add vendor.
-			$vendor = ( new Models\Vendor() )->fill(
-				[
-					'name'        => $user->get_display_name(),
-					'description' => $user->get_description(),
-					'slug'        => $user->get_username(),
-					'status'      => 'publish',
-					'image'       => $user->get_image__id(),
-					'user'        => $user->get_id(),
-				]
-			);
-
-			if ( ! $vendor->save(
-				[
-					'name',
-					'description',
-					'slug',
-					'status',
-					'image',
-					'user',
-				]
-			) ) {
-				return;
-			}
 
 			// Update user role.
 			$user_object = get_userdata( $user->get_id() );
 
 			if ( array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
 				$user_object->set_role( 'contributor' );
+			}
+
+			if ( ! $vendor ) {
+
+				// Add vendor.
+				$vendor = ( new Models\Vendor() )->fill(
+					[
+						'name'        => $user->get_display_name(),
+						'description' => $user->get_description(),
+						'slug'        => $user->get_username(),
+						'status'      => 'publish',
+						'image'       => $user->get_image__id(),
+						'user'        => $user->get_id(),
+					]
+				);
+
+				if ( ! $vendor->save(
+					[
+						'name',
+						'description',
+						'slug',
+						'status',
+						'image',
+						'user',
+					]
+				) ) {
+					return;
+				}
+			} else {
+
+				// Update vendor status.
+				$vendor->set_status( 'publish' )->save_status();
 			}
 		}
 

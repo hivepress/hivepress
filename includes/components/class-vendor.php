@@ -57,9 +57,14 @@ final class Vendor extends Component {
 	public function update_vendor( $user_id ) {
 
 		// Get vendor.
-		$vendor = Models\Vendor::query()->filter( [ 'user' => $user_id ] )->get_first();
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => $user_id,
+			]
+		)->get_first();
 
-		if ( empty( $vendor ) ) {
+		if ( ! $vendor ) {
 			return;
 		}
 
@@ -124,7 +129,12 @@ final class Vendor extends Component {
 		if ( $user->get_id() ) {
 
 			// Get vendor.
-			$vendor = Models\Vendor::query()->filter( [ 'user' => $user->get_id() ] )->get_first();
+			$vendor = Models\Vendor::query()->filter(
+				[
+					'status' => [ 'auto-draft', 'publish' ],
+					'user'   => $user->get_id(),
+				]
+			)->get_first();
 
 			if ( $vendor ) {
 
@@ -165,7 +175,12 @@ final class Vendor extends Component {
 			if ( $user->get_id() ) {
 
 				// Get vendor.
-				$vendor = Models\Vendor::query()->filter( [ 'user' => $user->get_id() ] )->get_first();
+				$vendor = Models\Vendor::query()->filter(
+					[
+						'status' => [ 'auto-draft', 'publish' ],
+						'user'   => $user->get_id(),
+					]
+				)->get_first();
 
 				if ( $vendor ) {
 

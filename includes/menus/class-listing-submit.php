@@ -49,6 +49,11 @@ class Listing_Submit extends Menu {
 						'_order' => 0,
 					],
 
+					'listing_submit_profile'  => [
+						'route'  => 'listing_submit_profile_page',
+						'_order' => 5,
+					],
+
 					'listing_submit_category' => [
 						'route'  => 'listing_submit_category_page',
 						'_order' => 10,
