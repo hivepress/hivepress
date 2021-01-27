@@ -132,12 +132,7 @@ class Attachment extends Post {
 				}
 			}
 
-			// Get model object.
-			$model = hp\create_class_instance( '\HivePress\Models\\' . $this->get_parent_model() );
-
-			if ( $model ) {
-				return $model::query()->get_by_id( $id );
-			}
+			return hivepress()->model->get_model_object( $this->get_parent_model(), $id );
 		}
 	}
 }

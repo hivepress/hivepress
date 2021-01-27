@@ -35,7 +35,7 @@ final class User extends Component {
 		add_filter( 'authenticate', [ $this, 'login_user' ], 100 );
 
 		// Update user.
-		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_user' ] );
+		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 10, 2 );
 
 		// Alter registration form.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'alter_register_form' ] );
@@ -100,15 +100,13 @@ final class User extends Component {
 	/**
 	 * Updates user.
 	 *
-	 * @param int $user_id User ID.
+	 * @param int    $user_id User ID.
+	 * @param object $user User object.
 	 */
-	public function update_user( $user_id ) {
+	public function update_user( $user_id, $user ) {
 
 		// Remove action.
-		remove_action( 'hivepress/v1/models/user/update', [ $this, 'update_user' ] );
-
-		// Get user.
-		$user = Models\User::query()->get_by_id( $user_id );
+		remove_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ] );
 
 		// Get display name.
 		$display_name = null;

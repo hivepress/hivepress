@@ -29,8 +29,8 @@ final class Listing extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update listing.
-		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ] );
-		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ], 10, 2 );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ], 10, 2 );
 
 		// Update image.
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
@@ -80,16 +80,15 @@ final class Listing extends Component {
 	/**
 	 * Updates listing.
 	 *
-	 * @param int $listing_id Listing ID.
+	 * @param int    $listing_id Listing ID.
+	 * @param object $listing Listing object.
 	 */
-	public function update_listing( $listing_id ) {
+	public function update_listing( $listing_id, $listing ) {
 
 		// Remove action.
 		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( $listing_id );
-
+		// Check user.
 		if ( ! $listing->get_user__id() ) {
 			return;
 		}
