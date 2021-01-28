@@ -430,27 +430,37 @@ final class Attribute extends Component {
 
 						// Set field arguments.
 						if ( 'options' === $field_name ) {
-							$field_args = array_merge(
-								$field_args,
-								[
-									'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
-									'type'       => 'button',
+							if ( get_post_status() === 'publish' ) {
+								$field_args = array_merge(
+									$field_args,
+									[
+										'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
+										'type'       => 'button',
 
-									'attributes' => [
-										'data-component' => 'link',
-										'data-url'       => esc_url(
-											admin_url(
-												'edit-tags.php?' . http_build_query(
-													[
-														'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-														'post_type' => hp\prefix( $model ),
-													]
+										'attributes' => [
+											'data-component' => 'link',
+											'data-url' => esc_url(
+												admin_url(
+													'edit-tags.php?' . http_build_query(
+														[
+															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
+															'post_type' => hp\prefix( $model ),
+														]
+													)
 												)
-											)
-										),
-									],
-								]
-							);
+											),
+										],
+									]
+								);
+							} else {
+								$field_args = array_merge(
+									$field_args,
+									[
+										'disabled'     => true,
+										'display_type' => 'hidden',
+									]
+								);
+							}
 						}
 
 						if ( 'required' !== $field_name ) {
@@ -1036,9 +1046,16 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'search_noun' ),
 
 				'fields' => [
-					'filterable'        => [
+					'searchable'        => [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
 						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
+					],
+
+					'filterable'        => [
+						'label'   => esc_html_x( 'Filterable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the filter form', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 10,
 					],
