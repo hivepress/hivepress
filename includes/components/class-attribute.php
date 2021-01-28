@@ -592,12 +592,16 @@ final class Attribute extends Component {
 		$snippet = '';
 
 		foreach ( $model->_get_fields() as $field ) {
-			if ( $field->get_arg( '_indexable' ) ) {
-				$snippet .= $field->get_label() . ': ' . $field->get_display_value() . '; ';
+			if ( $field->get_arg( '_indexable' ) && ! is_null( $field->get_value() ) ) {
+				if ( $field->get_label() ) {
+					$snippet .= $field->get_label() . ': ';
+				}
+
+				$snippet .= $field->get_display_value() . '; ';
 			}
 		}
 
-		$snippet = rtrim( $snippet, ' ;' ) . '.';
+		$snippet = rtrim( $snippet, '; ' ) . '.';
 
 		// Update snippet.
 		if ( $model->get_snippet() !== $snippet ) {
