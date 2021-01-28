@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Template {
 	use Traits\Mutator;
 	use Traits\Meta;
+	use Traits\Context;
 
 	/**
 	 * Template blocks.
@@ -28,13 +29,6 @@ abstract class Template {
 	 * @var array
 	 */
 	protected $blocks = [];
-
-	/**
-	 * Template context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Class initializer.
@@ -140,15 +134,5 @@ abstract class Template {
 		} else {
 			$this->context[ $name ] = $value;
 		}
-	}
-
-	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @return mixed
-	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 }

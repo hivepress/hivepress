@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Email {
 	use Traits\Mutator;
 	use Traits\Meta;
+	use Traits\Context;
 
 	/**
 	 * Email recipient.
@@ -57,13 +58,6 @@ abstract class Email {
 	 * @var array
 	 */
 	protected $tokens = [];
-
-	/**
-	 * Email context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Class initializer.
@@ -147,16 +141,6 @@ abstract class Email {
 
 		// Convert URLs.
 		$this->body = make_clickable( $this->body );
-	}
-
-	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @return mixed
-	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 
 	/**

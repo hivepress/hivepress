@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Menu {
 	use Traits\Mutator;
 	use Traits\Meta;
+	use Traits\Context;
 
 	/**
 	 * Menu items.
@@ -28,13 +29,6 @@ abstract class Menu {
 	 * @var array
 	 */
 	protected $items = [];
-
-	/**
-	 * Menu context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Menu attributes.
@@ -193,16 +187,6 @@ abstract class Menu {
 	 */
 	final public function get_items() {
 		return $this->items;
-	}
-
-	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @return mixed
-	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 
 	/**
