@@ -203,7 +203,6 @@ final class Form extends Component {
 		$args = array_merge(
 			[
 				'taxonomy'   => 'category',
-				'fields'     => 'id=>name',
 				'hide_empty' => false,
 			],
 			$args
@@ -230,6 +229,7 @@ final class Form extends Component {
 			}
 
 			if ( is_null( $options ) ) {
+				$options = [];
 
 				// Set custom order.
 				if ( strpos( $args['taxonomy'], 'hp_' ) === 0 && ! isset( $args['orderby'] ) && get_terms(
@@ -251,8 +251,8 @@ final class Form extends Component {
 					)
 				) ) {
 
-					// Get options.
-					$options = get_terms(
+					// Get terms.
+					$terms = get_terms(
 						array_merge(
 							$args,
 							[
@@ -278,8 +278,16 @@ final class Form extends Component {
 					);
 				} else {
 
-					// Get options.
-					$options = get_terms( $args );
+					// Get terms.
+					$terms = get_terms( $args );
+				}
+
+				// Add options.
+				foreach ( $terms as $term ) {
+					$options[ $term->term_id ] = [
+						'label'  => $term->name,
+						'parent' => $term->parent ? $term->parent : null,
+					];
 				}
 
 				// Cache options.
