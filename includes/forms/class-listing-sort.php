@@ -57,7 +57,7 @@ class Listing_Sort extends Form {
 
 						'options'     => [
 							''      => esc_html__( 'Date', 'hivepress' ),
-							'title' => esc_html__( 'Title', 'hivepress' ),
+							'title' => hivepress()->translator->get_string( 'title' ),
 						],
 
 						'attributes'  => [

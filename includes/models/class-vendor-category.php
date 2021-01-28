@@ -37,7 +37,7 @@ class Vendor_Category extends Term {
 					],
 
 					'description' => [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'_alias'     => 'description',

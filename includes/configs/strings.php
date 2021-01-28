@@ -16,6 +16,8 @@ return [
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'display_noun'                              => esc_html_x( 'Display', 'noun', 'hivepress' ),
 	'search_noun'                               => esc_html_x( 'Search', 'noun', 'hivepress' ),
+	'title'                                     => esc_html__( 'Title', 'hivepress' ),
+	'description'                               => esc_html__( 'Description', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
 	'editing'                                   => esc_html__( 'Editing', 'hivepress' ),
@@ -25,6 +27,7 @@ return [
 	'expiration_period'                         => esc_html__( 'Expiration Period', 'hivepress' ),
 	'expiration_date'                           => esc_html__( 'Expiration Date', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
+	'price'                                     => esc_html__( 'Price', 'hivepress' ),
 	'overview'                                  => esc_html__( 'Overview', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
@@ -35,6 +38,8 @@ return [
 	'app_id'                                    => esc_html__( 'App ID', 'hivepress' ),
 	'authorization'                             => esc_html__( 'Authorization', 'hivepress' ),
 	'return_to_my_account'                      => esc_html__( 'Return to My Account', 'hivepress' ),
+	'save_changes'                              => esc_html__( 'Save Changes', 'hivepress' ),
+	'changes_have_been_saved'                   => esc_html__( 'Changes have been saved.', 'hivepress' ),
 	'columns_number'                            => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
 	'items_number'                              => esc_html_x( 'Number', 'quantity', 'hivepress' ),
 	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
@@ -45,6 +50,8 @@ return [
 	'by_random'                                 => esc_html_x( 'Random', 'sort order', 'hivepress' ),
 	'sort_order'                                => esc_html_x( 'Order', 'sort', 'hivepress' ),
 	'add_details_imperative'                    => esc_html_x( 'Add Details', 'imperative', 'hivepress' ),
+	/* translators: %s: date. */
+	'added_on_date'                             => esc_html__( 'Added on %s', 'hivepress' ),
 	/* translators: %s: WooCommerce. */
 	'ecommerce_product'                         => sprintf( esc_html__( '%s Product', 'hivepress' ), 'WooCommerce' ),
 	/* translators: %s: token list. */

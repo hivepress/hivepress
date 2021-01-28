@@ -147,7 +147,7 @@ abstract class Field {
 					],
 
 					'description' => [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'html'       => true,

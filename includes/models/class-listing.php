@@ -29,7 +29,7 @@ class Listing extends Post {
 			[
 				'fields' => [
 					'title'            => [
-						'label'      => esc_html__( 'Title', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'title' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'required'   => true,
@@ -43,7 +43,7 @@ class Listing extends Post {
 					],
 
 					'description'      => [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'html'       => true,
