@@ -112,7 +112,7 @@ final class Attachment extends Component {
 		}
 
 		// Delete attachments.
-		$attachments = Models\Attachment::query()->filter(
+		Models\Attachment::query()->filter(
 			[
 				'parent'       => $parent_id,
 				'parent_model' => $parent_model,

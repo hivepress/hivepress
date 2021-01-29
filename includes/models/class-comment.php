@@ -181,4 +181,18 @@ abstract class Comment extends Model {
 
 		return $id && wp_delete_comment( absint( $id ), true );
 	}
+
+	/**
+	 * Trashes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function trash( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_trash_comment( absint( $id ) );
+	}
 }

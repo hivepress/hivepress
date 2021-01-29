@@ -307,7 +307,7 @@ final class Listing extends Component {
 					'status'            => 'draft',
 					'expired_time__lte' => time() - DAY_IN_SECONDS * $storage_period,
 				]
-			)->delete();
+			)->trash();
 		}
 
 		// Get featured listings.
