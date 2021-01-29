@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 use HivePress\Models;
 
 // Exit if accessed directly.
