@@ -46,9 +46,9 @@ class Listing_Edit_Block extends Template {
 								'_order' => 10,
 							],
 
-							'listing_status'          => [
+							'listing_categories'      => [
 								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-status',
+								'path'   => 'listing/edit/block/listing-categories',
 								'_order' => 20,
 							],
 
@@ -58,10 +58,16 @@ class Listing_Edit_Block extends Template {
 								'_order' => 30,
 							],
 
+							'listing_status'          => [
+								'type'   => 'part',
+								'path'   => 'listing/edit/block/listing-status',
+								'_order' => 40,
+							],
+
 							'listing_actions_primary' => [
 								'type'       => 'container',
 								'tag'        => 'td',
-								'_order'     => 40,
+								'_order'     => 100,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__actions', 'hp-listing__actions--primary' ],

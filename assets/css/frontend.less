@@ -46,7 +46,6 @@ Mixins
 	&-link {
 		display: inline-flex;
 		align-items: center;
-		white-space: nowrap;
 
 		&:not(:hover) {
 			color: inherit;
@@ -790,6 +789,12 @@ Mixins
 			a {
 				text-decoration: none;
 				color: inherit;
+			}
+		}
+
+		&--edit-block &__categories {
+			@media only screen and (max-width:47.99em) {
+				display: none;
 			}
 		}
 
