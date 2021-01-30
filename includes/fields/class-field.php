@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Field {
 	use Traits\Mutator;
+	use Traits\Context;
 
 	use Traits\Meta {
 		set_meta as _set_meta;
@@ -518,10 +519,13 @@ abstract class Field {
 	 */
 	public function display() {
 		return hp\replace_tokens(
-			[
-				'label' => '<strong>' . $this->label . '</strong>',
-				'value' => $this->get_display_value(),
-			],
+			array_merge(
+				$this->context,
+				[
+					'label' => '<strong>' . $this->label . '</strong>',
+					'value' => $this->get_display_value(),
+				]
+			),
 			$this->display_template
 		);
 	}

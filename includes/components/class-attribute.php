@@ -550,14 +550,22 @@ final class Attribute extends Component {
 					]
 				);
 
+				// Set field context.
+				if ( $attribute['display_areas'] ) {
+					$field_args['context'][ $model ] = $object;
+				}
+
+				// Set required flag.
 				if ( ! $attribute['editable'] ) {
 					$field_args['required'] = false;
 				}
 
+				// Set indexable flag.
 				if ( $attribute['indexable'] ) {
 					$field_args['_indexable'] = true;
 				}
 
+				// Set field relation.
 				if ( isset( $field_args['options'] ) ) {
 					$field_args = array_merge(
 						$field_args,
