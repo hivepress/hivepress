@@ -250,17 +250,17 @@ abstract class Menu {
 
 				// Render menu item.
 				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
-				$output .= '<span>';
+				$output .= '<a href="' . esc_url( $args['url'] ) . '">';
 
 				// Render label.
-				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
+				$output .= '<span>' . esc_html( $args['label'] ) . '</span>';
 
 				// Render meta.
 				if ( isset( $args['meta'] ) ) {
 					$output .= '<small>' . esc_html( $args['meta'] ) . '</small>';
 				}
 
-				$output .= '</span>';
+				$output .= '</a>';
 
 				// Render child items.
 				$output .= $this->render_items( $name );

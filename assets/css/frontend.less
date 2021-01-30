@@ -420,23 +420,25 @@ Mixins
 		}
 
 		li {
-			& > span {
+			& > a {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 			}
+		}
 
+		&__item {
 			small {
-				display: flex;
-				align-items: center;
-				justify-content: center;
+				.center-container;
 				min-width: 1.5rem;
 				min-height: 1.5rem;
 				padding: 0 0.5rem;
 				margin-left: 0.5rem;
 				border-radius: 9999px;
-				background-color: rgba(0,0,0,0.05);
+				background-color: #ff5a5f;
+				color: #fff;
 				font-size: 80%;
+				line-height: 1;
 				white-space: nowrap;
 			}
 		}
@@ -450,6 +452,9 @@ Mixins
 		&--site-header &__item {
 			&:not(:last-child) {
 				margin-right: 2rem;
+				@media only screen and (max-width:47.99em) {
+					margin-right: 1.5rem;
+				}
 			}
 		}
 
@@ -637,7 +642,7 @@ Mixins
 		&--listing-filter,
 		&--vendor-filter {
 			@media only screen and (max-width: 47.99em) {
-				display:none;
+				display: none;
 			}
 		}
 	}
@@ -1166,6 +1171,6 @@ body.admin-bar {
 
 #wpadminbar {
 	@media screen and (max-width: 600px) {
-		top:-46px;
+		top: -46px;
 	}
 }
