@@ -481,6 +481,13 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
+					$meta_box['fields']['searchable'] = [
+						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
+					];
 				}
 			}
 		}
@@ -1054,13 +1061,6 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'search_noun' ),
 
 				'fields' => [
-					'searchable'        => [
-						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
-						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 5,
-					],
-
 					'filterable'        => [
 						'label'   => esc_html_x( 'Filterable', 'attribute', 'hivepress' ),
 						'caption' => esc_html__( 'Display in the filter form', 'hivepress' ),
@@ -1087,7 +1087,6 @@ final class Attribute extends Component {
 						'type'        => 'select',
 						'options'     => 'fields',
 						'option_args' => [ 'filterable' => true ],
-						'_parent'     => 'filterable',
 						'_order'      => 100,
 					],
 				],
