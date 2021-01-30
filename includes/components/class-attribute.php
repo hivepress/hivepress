@@ -94,7 +94,6 @@ final class Attribute extends Component {
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
 
 			// Add category options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_category_options' ], 100, 2 );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
 
 			// Set category value.
@@ -717,6 +716,15 @@ final class Attribute extends Component {
 			}
 		}
 
+		// Switch category fields.
+		if ( get_option( hp\prefix( $model . '_enable_category_search' ) ) ) {
+			if ( 'search' === $form_context ) {
+				$form_args['fields']['_category']['display_type'] = 'select';
+			} elseif ( 'filter' === $form_context ) {
+				$form_args['fields']['_category']['display_type'] = 'hidden';
+			}
+		}
+
 		return $form_args;
 	}
 
@@ -780,6 +788,11 @@ final class Attribute extends Component {
 
 		// Get model.
 		$model = $form::get_meta( 'model' );
+
+		// Check category option.
+		if ( get_option( hp\prefix( $model . '_enable_category_search' ) ) ) {
+			return $form_args;
+		}
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );

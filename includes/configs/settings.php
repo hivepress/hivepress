@@ -73,6 +73,20 @@ return [
 				],
 			],
 
+			'search'     => [
+				'title'  => hivepress()->translator->get_string( 'search_noun' ),
+				'_order' => 15,
+
+				'fields' => [
+					'listing_enable_category_search' => [
+						'label'   => esc_html__( 'Categories', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
+					],
+				],
+			],
+
 			'submission' => [
 				'title'  => esc_html__( 'Submission', 'hivepress' ),
 				'_order' => 20,
