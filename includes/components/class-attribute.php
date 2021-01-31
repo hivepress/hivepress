@@ -716,8 +716,14 @@ final class Attribute extends Component {
 			}
 		}
 
-		// Switch category fields.
-		if ( get_option( hp\prefix( $model . '_enable_category_search' ) ) ) {
+		// Set default fields.
+		$default_fields = (array) get_option( hp\prefix( $model . '_search_fields' ), [ 'keyword' ] );
+
+		if ( ! in_array( 'keyword', $default_fields, true ) && 'search' === $form_context ) {
+			$form_args['fields']['s']['display_type'] = 'hidden';
+		}
+
+		if ( in_array( 'category', $default_fields, true ) ) {
 			if ( 'search' === $form_context ) {
 				$form_args['fields']['_category']['display_type'] = 'select';
 				$form_args['fields']['_category']['_order']       = 30;
@@ -791,7 +797,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		// Check category option.
-		if ( get_option( hp\prefix( $model . '_enable_category_search' ) ) ) {
+		if ( in_array( 'category', (array) get_option( hp\prefix( $model . '_search_fields' ) ), true ) ) {
 			return $form_args;
 		}
 

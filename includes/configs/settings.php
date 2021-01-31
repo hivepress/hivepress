@@ -78,11 +78,17 @@ return [
 				'_order' => 15,
 
 				'fields' => [
-					'listing_enable_category_search' => [
-						'label'   => esc_html__( 'Categories', 'hivepress' ),
-						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 10,
+					'listing_search_fields' => [
+						'label'    => esc_html__( 'Default Fields', 'hivepress' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'default'  => [ 'keyword' ],
+						'_order'   => 10,
+
+						'options'  => [
+							'keyword'  => esc_html__( 'Keywords', 'hivepress' ),
+							'category' => esc_html__( 'Categories', 'hivepress' ),
+						],
 					],
 				],
 			],
