@@ -720,6 +720,7 @@ final class Attribute extends Component {
 		if ( get_option( hp\prefix( $model . '_enable_category_search' ) ) ) {
 			if ( 'search' === $form_context ) {
 				$form_args['fields']['_category']['display_type'] = 'select';
+				$form_args['fields']['_category']['_order']       = 30;
 			} elseif ( 'filter' === $form_context ) {
 				$form_args['fields']['_category']['display_type'] = 'hidden';
 			}

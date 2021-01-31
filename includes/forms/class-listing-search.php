@@ -61,7 +61,7 @@ class Listing_Search extends Form {
 						'display_type' => 'hidden',
 						'options'      => 'terms',
 						'option_args'  => [ 'taxonomy' => 'hp_listing_category' ],
-						'_order'       => 1000,
+						'_order'       => 5,
 					],
 
 					'post_type' => [
