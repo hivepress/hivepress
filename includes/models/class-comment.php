@@ -159,7 +159,7 @@ abstract class Comment extends Model {
 
 				// Fire actions.
 				do_action( 'hivepress/v1/models/comment/update', $this->id, static::_get_meta( 'alias' ) );
-				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id );
+				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id, $this );
 			} else {
 				return (bool) wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) );
 			}
