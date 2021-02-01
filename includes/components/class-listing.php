@@ -100,7 +100,7 @@ final class Listing extends Component {
 			$vendor = $listing->get_vendor();
 		}
 
-		if ( $vendor ) {
+		if ( $vendor && $vendor->get_status() === 'publish' ) {
 			if ( $vendor->get_user__id() !== $listing->get_user__id() ) {
 
 				// Update listing user.
