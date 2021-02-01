@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Fields;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -285,6 +286,39 @@ final class Admin extends Component {
 				}
 			}
 		}
+
+		if ( in_array( $pagenow, [ 'options.php', 'options-media.php' ], true ) ) {
+			foreach ( hivepress()->get_config( 'image_sizes' ) as $image_size_name => $image_size ) {
+				if ( isset( $image_size['label'] ) ) {
+
+					// Get field name.
+					$field_name = hp\prefix( 'image_size_' . $image_size_name );
+
+					// Add field.
+					add_settings_field(
+						$field_name,
+						$image_size['label'],
+						[ $this, 'render_settings_field' ],
+						'media',
+						'default',
+						[
+							'name'    => $field_name,
+							'type'    => 'image_size',
+							'default' => get_option( $field_name, $image_size ),
+						]
+					);
+
+					// Register setting.
+					register_setting(
+						'media',
+						$field_name,
+						[
+							'sanitize_callback' => [ $this, 'validate_image_size_field' ],
+						]
+					);
+				}
+			}
+		}
 	}
 
 	/**
@@ -395,6 +429,25 @@ final class Admin extends Component {
 
 				return get_option( $field_name );
 			}
+		}
+	}
+
+	/**
+	 * Validates image size field.
+	 *
+	 * @param mixed $value Field value.
+	 * @return mixed
+	 */
+	public function validate_image_size_field( $value ) {
+
+		// Create field.
+		$field = new Fields\Image_Size();
+
+		// Validate field.
+		$field->set_value( $value );
+
+		if ( $field->validate() ) {
+			return $field->get_value();
 		}
 	}
 

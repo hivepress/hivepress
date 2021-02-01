@@ -48,7 +48,14 @@ final class Asset extends Component {
 	 */
 	public function add_image_sizes() {
 		foreach ( hivepress()->get_config( 'image_sizes' ) as $name => $args ) {
-			add_image_size( hp\prefix( $name ), $args['width'], hp\get_array_value( $args, 'height', 0 ), hp\get_array_value( $args, 'crop', false ) );
+			$args = get_option( hp\prefix( 'image_size_' . $name ), $args );
+
+			add_image_size(
+				hp\prefix( $name ),
+				hp\get_array_value( $args, 'width', 0 ),
+				hp\get_array_value( $args, 'height', 0 ),
+				hp\get_array_value( $args, 'crop', false )
+			);
 		}
 	}
 

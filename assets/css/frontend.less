@@ -46,7 +46,6 @@ Mixins
 	&-link {
 		display: inline-flex;
 		align-items: center;
-		white-space: nowrap;
 
 		&:not(:hover) {
 			color: inherit;
@@ -394,6 +393,10 @@ Mixins
 		margin: 0 0.5rem 0 0;
 		white-space: nowrap;
 	}
+
+	&-form--primary &-field__label {
+		display: none;
+	}
 	/*--------------------------------------------------------------
 	Modals
 	--------------------------------------------------------------*/
@@ -421,23 +424,25 @@ Mixins
 		}
 
 		li {
-			& > span {
+			& > a {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 			}
+		}
 
+		&__item {
 			small {
-				display: flex;
-				align-items: center;
-				justify-content: center;
+				.center-container;
 				min-width: 1.5rem;
 				min-height: 1.5rem;
 				padding: 0 0.5rem;
 				margin-left: 0.5rem;
 				border-radius: 9999px;
-				background-color: rgba(0,0,0,0.05);
+				background-color: #ff5a5f;
+				color: #fff;
 				font-size: 80%;
+				line-height: 1;
 				white-space: nowrap;
 			}
 		}
@@ -451,6 +456,9 @@ Mixins
 		&--site-header &__item {
 			&:not(:last-child) {
 				margin-right: 2rem;
+				@media only screen and (max-width:47.99em) {
+					margin-right: 1.5rem;
+				}
 			}
 		}
 
@@ -638,7 +646,7 @@ Mixins
 		&--listing-filter,
 		&--vendor-filter {
 			@media only screen and (max-width: 47.99em) {
-				display:none;
+				display: none;
 			}
 		}
 	}
@@ -777,14 +785,25 @@ Mixins
 					right: 1rem;
 				}
 			}
+
+			img[data-src^=http] {
+				cursor: pointer;
+			}
 		}
 
 		&__title {
 			margin: 0;
+			word-wrap: break-word;
 
 			a {
 				text-decoration: none;
 				color: inherit;
+			}
+		}
+
+		&--edit-block &__categories {
+			@media only screen and (max-width:47.99em) {
+				display: none;
 			}
 		}
 
@@ -904,6 +923,7 @@ Mixins
 
 		&__name {
 			margin: 0;
+			word-wrap: break-word;
 
 			a {
 				text-decoration: none;
@@ -1043,6 +1063,7 @@ Mixins
 
 		&__name {
 			margin: 0;
+			word-wrap: break-word;
 
 			a {
 				text-decoration: none;
@@ -1138,6 +1159,41 @@ Mixins
 			padding: 1.5rem 0;
 		}
 	}
+
+	&-theme--listinghive &-form--primary,
+	&-theme--taskhive &-form--primary {
+		.select2-container--default .select2-selection {
+			border: none;
+
+			&__rendered {
+				padding-top: 0;
+				padding-bottom: 0;
+				font-size: 1.125rem;
+				line-height: 3rem;
+				height: 3rem;
+			}
+
+			&__arrow {
+				top: 0.75rem;
+			}
+		}
+	}
+
+	&-theme--jobhive &-form--primary {
+		.select2-container--default .select2-selection {
+			margin-top: -2px;
+
+			&__rendered {
+				font-size: 1.125rem;
+				line-height: 3.125rem;
+				height: 4rem;
+			}
+
+			&__arrow {
+				top: 1.125rem;
+			}
+		}
+	}
 }
 /*--------------------------------------------------------------
 Select2
@@ -1150,4 +1206,10 @@ Select2
 
 body.admin-bar {
 	position: relative;
+}
+
+#wpadminbar {
+	@media screen and (max-width: 600px) {
+		top: -46px;
+	}
 }

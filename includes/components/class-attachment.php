@@ -31,7 +31,7 @@ final class Attachment extends Component {
 		add_filter( 'wp_insert_attachment_data', [ $this, 'set_parent_id' ], 10, 2 );
 
 		// Delete attachment.
-		add_action( 'hivepress/v1/models/attachment/delete', [ $this, 'delete_attachment' ] );
+		add_action( 'hivepress/v1/models/attachment/delete', [ $this, 'delete_attachment' ], 10, 2 );
 
 		// Delete attachments.
 		add_action( 'hivepress/v1/models/user/delete', [ $this, 'delete_attachments' ], 10, 2 );
@@ -63,12 +63,10 @@ final class Attachment extends Component {
 	/**
 	 * Deletes attachment.
 	 *
-	 * @param int $attachment_id Attachment ID.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param object $attachment Attachment object.
 	 */
-	public function delete_attachment( $attachment_id ) {
-
-		// Get attachment.
-		$attachment = Models\Attachment::query()->get_by_id( $attachment_id );
+	public function delete_attachment( $attachment_id, $attachment ) {
 
 		// Get parent object.
 		$parent = $attachment->get_parent();
@@ -114,7 +112,7 @@ final class Attachment extends Component {
 		}
 
 		// Delete attachments.
-		$attachments = Models\Attachment::query()->filter(
+		Models\Attachment::query()->filter(
 			[
 				'parent'       => $parent_id,
 				'parent_model' => $parent_model,

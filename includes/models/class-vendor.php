@@ -43,7 +43,7 @@ class Vendor extends Post {
 					],
 
 					'description'     => [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'html'       => true,

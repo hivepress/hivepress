@@ -170,4 +170,22 @@ class Post extends Query {
 	final public function get_count() {
 		return count( $this->get_ids() );
 	}
+
+	/**
+	 * Trashes objects.
+	 */
+	final public function trash() {
+		foreach ( $this->get_ids() as $id ) {
+			$this->trash_by_id( $id );
+		}
+	}
+
+	/**
+	 * Trashes object by ID.
+	 *
+	 * @param int $id Object ID.
+	 */
+	final public function trash_by_id( $id ) {
+		$this->model->trash( $id );
+	}
 }

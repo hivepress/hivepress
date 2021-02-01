@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 use HivePress\Models;
 
 // Exit if accessed directly.
@@ -19,13 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Request
  */
 final class Request extends Component {
-
-	/**
-	 * Request context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
+	use Traits\Context;
 
 	/**
 	 * Class constructor.
@@ -83,17 +78,6 @@ final class Request extends Component {
 	 */
 	public function set_context( $name, $value ) {
 		$this->context[ $name ] = $value;
-	}
-
-	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @param mixed  $default Default value.
-	 * @return mixed
-	 */
-	public function get_context( $name = null, $default = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name, $default );
 	}
 
 	/**

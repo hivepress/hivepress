@@ -57,6 +57,9 @@ final class Attribute extends Component {
 	 */
 	protected function boot() {
 
+		// Filter models.
+		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
+
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
@@ -75,6 +78,10 @@ final class Attribute extends Component {
 			// Add model fields.
 			add_filter( 'hivepress/v1/models/' . $model . '/fields', [ $this, 'add_model_fields' ], 100, 2 );
 
+			// Update model snippet.
+			add_action( 'hivepress/v1/models/' . $model . '/create', [ $this, 'update_model_snippet' ], 100, 2 );
+			add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'update_model_snippet' ], 100, 2 );
+
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
 
@@ -87,7 +94,6 @@ final class Attribute extends Component {
 			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
 
 			// Add category options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_category_options' ], 100, 2 );
 			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
 
 			// Set category value.
@@ -101,8 +107,8 @@ final class Attribute extends Component {
 
 		if ( is_admin() ) {
 
-			// Add option settings.
-			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_option_settings' ], 100 );
+			// Add meta boxes.
+			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 
 			// Remove term boxes.
 			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
@@ -199,6 +205,7 @@ final class Attribute extends Component {
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
+						'indexable'      => (bool) $attribute_object->hp_indexable,
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
@@ -360,6 +367,7 @@ final class Attribute extends Component {
 							'protected'      => false,
 							'editable'       => false,
 							'moderated'      => false,
+							'indexable'      => false,
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
@@ -421,27 +429,37 @@ final class Attribute extends Component {
 
 						// Set field arguments.
 						if ( 'options' === $field_name ) {
-							$field_args = array_merge(
-								$field_args,
-								[
-									'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
-									'type'       => 'button',
+							if ( get_post_status() === 'publish' ) {
+								$field_args = array_merge(
+									$field_args,
+									[
+										'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
+										'type'       => 'button',
 
-									'attributes' => [
-										'data-component' => 'link',
-										'data-url'       => esc_url(
-											admin_url(
-												'edit-tags.php?' . http_build_query(
-													[
-														'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-														'post_type' => hp\prefix( $model ),
-													]
+										'attributes' => [
+											'data-component' => 'link',
+											'data-url' => esc_url(
+												admin_url(
+													'edit-tags.php?' . http_build_query(
+														[
+															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
+															'post_type' => hp\prefix( $model ),
+														]
+													)
 												)
-											)
-										),
-									],
-								]
-							);
+											),
+										],
+									]
+								);
+							} else {
+								$field_args = array_merge(
+									$field_args,
+									[
+										'disabled'     => true,
+										'display_type' => 'hidden',
+									]
+								);
+							}
 						}
 
 						if ( 'required' !== $field_name ) {
@@ -456,11 +474,18 @@ final class Attribute extends Component {
 				// @todo replace temporary fix.
 				if ( 'edit' === $field_context ) {
 					$meta_box['fields'][ $field_context . '_field_description' ] = [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
 						'html'       => true,
 						'_order'     => 120,
+					];
+				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
+					$meta_box['fields']['searchable'] = [
+						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
 					];
 				}
 			}
@@ -531,10 +556,22 @@ final class Attribute extends Component {
 					]
 				);
 
+				// Set field context.
+				if ( $attribute['display_areas'] ) {
+					$field_args['context'][ $model ] = $object;
+				}
+
+				// Set required flag.
 				if ( ! $attribute['editable'] ) {
 					$field_args['required'] = false;
 				}
 
+				// Set indexable flag.
+				if ( $attribute['indexable'] ) {
+					$field_args['_indexable'] = true;
+				}
+
+				// Set field relation.
 				if ( isset( $field_args['options'] ) ) {
 					$field_args = array_merge(
 						$field_args,
@@ -553,7 +590,47 @@ final class Attribute extends Component {
 			}
 		}
 
+		// Add snippet field.
+		$fields['snippet'] = [
+			'type'       => 'textarea',
+			'max_length' => 10240,
+			'html'       => true,
+			'_alias'     => 'post_excerpt',
+		];
+
 		return $fields;
+	}
+
+	/**
+	 * Updates model snippet.
+	 *
+	 * @param int    $model_id Model ID.
+	 * @param object $model Model object.
+	 */
+	public function update_model_snippet( $model_id, $model ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/' . $model::_get_meta( 'name' ) . '/update', [ $this, 'update_model_snippet' ], 100 );
+
+		// Get snippet.
+		$snippet = '';
+
+		foreach ( $model->_get_fields() as $field ) {
+			if ( $field->get_arg( '_indexable' ) && ! is_null( $field->get_value() ) ) {
+				if ( $field->get_label() ) {
+					$snippet .= $field->get_label() . ': ';
+				}
+
+				$snippet .= $field->get_display_value() . '; ';
+			}
+		}
+
+		$snippet = rtrim( $snippet, '; ' ) . '.';
+
+		// Update snippet.
+		if ( $model->get_snippet() !== $snippet ) {
+			$model->set_snippet( $snippet )->save_snippet();
+		}
 	}
 
 	/**
@@ -639,6 +716,22 @@ final class Attribute extends Component {
 			}
 		}
 
+		// Set default fields.
+		$default_fields = (array) get_option( hp\prefix( $model . '_search_fields' ), [ 'keyword' ] );
+
+		if ( ! in_array( 'keyword', $default_fields, true ) && 'search' === $form_context ) {
+			$form_args['fields']['s']['display_type'] = 'hidden';
+		}
+
+		if ( in_array( 'category', $default_fields, true ) ) {
+			if ( 'search' === $form_context ) {
+				$form_args['fields']['_category']['display_type'] = 'select';
+				$form_args['fields']['_category']['_order']       = 30;
+			} elseif ( 'filter' === $form_context ) {
+				$form_args['fields']['_category']['display_type'] = 'hidden';
+			}
+		}
+
 		return $form_args;
 	}
 
@@ -702,6 +795,11 @@ final class Attribute extends Component {
 
 		// Get model.
 		$model = $form::get_meta( 'model' );
+
+		// Check category option.
+		if ( in_array( 'category', (array) get_option( hp\prefix( $model . '_search_fields' ) ), true ) ) {
+			return $form_args;
+		}
 
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
@@ -943,30 +1041,174 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Adds option settings.
+	 * Adds meta boxes.
 	 *
 	 * @param array $meta_boxes Meta box arguments.
 	 * @return array
 	 */
-	public function add_option_settings( $meta_boxes ) {
+	public function add_meta_boxes( $meta_boxes ) {
+
+		// Set defaults.
+		$meta_box_args = [
+			'attributes'        => [
+				'title'  => esc_html__( 'Attributes', 'hivepress' ),
+				'fields' => [],
+			],
+
+			'attribute_edit'    => [
+				'title'  => hivepress()->translator->get_string( 'editing' ),
+
+				'fields' => [
+					'editable'        => [
+						'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 1,
+					],
+
+					'edit_field_type' => [
+						'label'       => esc_html__( 'Field Type', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'fields',
+						'option_args' => [ 'editable' => true ],
+						'required'    => true,
+						'_order'      => 100,
+					],
+				],
+			],
+
+			'attribute_search'  => [
+				'title'  => hivepress()->translator->get_string( 'search_noun' ),
+
+				'fields' => [
+					'filterable'        => [
+						'label'   => esc_html_x( 'Filterable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display in the filter form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
+					],
+
+					'indexable'         => [
+						'label'   => esc_html_x( 'Indexable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Include in keyword search', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 15,
+					],
+
+					'sortable'          => [
+						'label'   => esc_html_x( 'Sortable', 'attribute', 'hivepress' ),
+						'caption' => esc_html__( 'Display as a sorting option', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 20,
+					],
+
+					'search_field_type' => [
+						'label'       => esc_html__( 'Field Type', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'fields',
+						'option_args' => [ 'filterable' => true ],
+						'_order'      => 100,
+					],
+				],
+			],
+
+			'attribute_display' => [
+				'title'  => hivepress()->translator->get_string( 'display_noun' ),
+
+				'fields' => [
+					'display_areas'  => [
+						'label'       => esc_html__( 'Areas', 'hivepress' ),
+						'description' => esc_html__( 'Choose the template areas where you want to display this attribute.', 'hivepress' ),
+						'type'        => 'select',
+						'multiple'    => true,
+						'_order'      => 10,
+
+						'options'     => [
+							'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+							'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
+							'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+						],
+					],
+
+					'icon'           => [
+						'label'   => esc_html__( 'Icon', 'hivepress' ),
+						'type'    => 'select',
+						'options' => 'icons',
+						'_parent' => 'display_areas[]',
+						'_order'  => 20,
+					],
+
+					'display_format' => [
+						'label'       => esc_html__( 'Format', 'hivepress' ),
+						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
+						'type'        => 'textarea',
+						'max_length'  => 2048,
+						'default'     => '%value%',
+						'html'        => true,
+						'_parent'     => 'display_areas[]',
+						'_order'      => 30,
+					],
+				],
+			],
+
+			'option_settings'   => [
+				'screen' => [],
+
+				'fields' => [
+					'sort_order' => [
+						'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 0,
+						'default'   => 0,
+						'required'  => true,
+						'_order'    => 10,
+					],
+				],
+			],
+		];
+
+		// Add meta boxes.
 		foreach ( $this->models as $model ) {
+			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
 
-			// Get meta box name.
-			$meta_box_name = $model . '_option_settings';
+				// Set screen and model.
+				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
+					$meta_box['model'] = $model;
 
-			if ( isset( $meta_boxes[ $meta_box_name ] ) ) {
-				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-					if ( isset( $attribute['edit_field']['options'] ) ) {
+					if ( 'attributes' === $meta_box_name ) {
+						$meta_box['screen'] = $model;
+					} else {
+						$meta_box['screen'] = $model . '_attribute';
+					}
 
-						// Get screen name.
-						$screen = $model . '_' . $attribute_name;
+					// @todo replace temporary fix.
+					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['moderated'] = [
+							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+							'type'    => 'checkbox',
+							'_parent' => 'editable',
+							'_order'  => 20,
+						];
+					}
+				} elseif ( 'option_settings' === $meta_box_name ) {
+					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+						if ( isset( $attribute['edit_field']['options'] ) ) {
 
-						// Add screen.
-						if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
-							$meta_boxes[ $meta_box_name ]['screen'][] = $screen;
+							// Get screen.
+							$screen = $model . '_' . $attribute_name;
+
+							// Add screen.
+							if ( ! post_type_exists( hp\prefix( $screen ) ) ) {
+								$meta_box['screen'][] = $screen;
+							}
 						}
 					}
 				}
+
+				// Add meta box.
+				$meta_boxes[ $model . '_' . $meta_box_name ] = $meta_box;
 			}
 		}
 

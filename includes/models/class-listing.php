@@ -29,7 +29,7 @@ class Listing extends Post {
 			[
 				'fields' => [
 					'title'            => [
-						'label'      => esc_html__( 'Title', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'title' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'required'   => true,
@@ -43,7 +43,7 @@ class Listing extends Post {
 					],
 
 					'description'      => [
-						'label'      => esc_html__( 'Description', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 10240,
 						'html'       => true,
@@ -126,10 +126,12 @@ class Listing extends Post {
 					],
 
 					'categories'       => [
+						'label'       => esc_html__( 'Categories', 'hivepress' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
 						'multiple'    => true,
+						'_indexable'  => true,
 						'_model'      => 'listing_category',
 						'_relation'   => 'many_to_many',
 					],

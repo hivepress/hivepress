@@ -98,6 +98,21 @@
 	}
 
 	&-field {
+		&__label {
+			small {
+				font-size: 1em;
+				color: #666;
+				font-weight: normal;
+			}
+		}
+
+		label {
+			display: block;
+			width: 25em;
+			line-height: 1.4em;
+			margin-top: 0.35em;
+		}
+
 		&--hidden {
 			display: none;
 		}
@@ -161,23 +176,21 @@
 			}
 		}
 
-		&--date[readonly] {
-			background-color: #fff;
-		}
+		&--image-size {
+			label {
+				width: auto;
+			}
 
-		&__label {
-			small {
-				font-size: 1em;
-				color: #666;
-				font-weight: normal;
+			select,
+			.select2-container {
+				margin-bottom: 1em;
+				width:auto!important;
+				min-width: 65px;
 			}
 		}
 
-		label {
-			display: block;
-			width: 25em;
-			line-height: 1.4em;
-			margin-top: 0.35em;
+		&--date[readonly] {
+			background-color: #fff;
 		}
 	}
 	/*--------------------------------------------------------------

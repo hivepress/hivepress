@@ -209,6 +209,7 @@ var hivepress = {
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),
 				container = field.closest('form'),
+				submitButton = container.find(':submit'),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
 				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
@@ -235,6 +236,11 @@ var hivepress = {
 					selectButton.prop('disabled', true);
 					selectButton.attr('data-state', 'loading');
 
+					if (submitButton.length) {
+						submitButton.prop('disabled', true);
+						submitButton.attr('data-state', 'loading');
+					}
+
 					messageContainer.hide().html('');
 				},
 				stop: function() {
@@ -242,6 +248,11 @@ var hivepress = {
 
 					selectButton.prop('disabled', false);
 					selectButton.attr('data-state', '');
+
+					if (submitButton.length) {
+						submitButton.prop('disabled', false);
+						submitButton.attr('data-state', '');
+					}
 				},
 				always: function(e, data) {
 					var response = data.jqXHR.responseJSON;

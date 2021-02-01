@@ -188,7 +188,7 @@ abstract class Post extends Model {
 
 				// Fire actions.
 				do_action( 'hivepress/v1/models/post/update', $this->id, static::_get_meta( 'alias' ) );
-				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id );
+				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id, $this );
 			} else {
 				return (bool) wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) );
 			}
@@ -209,5 +209,19 @@ abstract class Post extends Model {
 		}
 
 		return $id && wp_delete_post( absint( $id ), true );
+	}
+
+	/**
+	 * Trashes object.
+	 *
+	 * @param int $id Object ID.
+	 * @return bool
+	 */
+	final public function trash( $id = null ) {
+		if ( is_null( $id ) ) {
+			$id = $this->id;
+		}
+
+		return $id && wp_trash_post( absint( $id ) );
 	}
 }

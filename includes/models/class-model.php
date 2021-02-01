@@ -19,11 +19,11 @@ defined( 'ABSPATH' ) || exit;
  * @class Model
  */
 abstract class Model {
-	use Traits \Mutator {
+	use Traits\Mutator {
 		set_property as _set_property;
 	}
 
-	use Traits \Meta {
+	use Traits\Meta {
 		get_meta as _get_meta;
 		set_meta as _set_meta;
 	}

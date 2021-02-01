@@ -20,8 +20,9 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Block {
 	use Traits\Mutator;
+	use Traits\Context;
 
-	use Traits \Meta {
+	use Traits\Meta {
 		set_meta as _set_meta;
 	}
 
@@ -31,13 +32,6 @@ abstract class Block {
 	 * @var string
 	 */
 	protected $name;
-
-	/**
-	 * Block context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Class initializer.
@@ -133,16 +127,6 @@ abstract class Block {
 		}
 
 		static::_set_meta( $meta );
-	}
-
-	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @return mixed
-	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
 	}
 
 	/**

@@ -123,8 +123,9 @@ final class Hook extends Component {
 			$action = 'delete';
 		}
 
-		// Fire action.
+		// Fire actions.
 		do_action( 'hivepress/v1/models/user/' . $action, $user_id, 'user' );
+		do_action( 'hivepress/v2/models/user/' . $action, $user_id, hivepress()->model->get_model_object( 'user', $user_id ) );
 	}
 
 	/**
@@ -195,7 +196,7 @@ final class Hook extends Component {
 			do_action( 'hivepress/v1/models/post/' . $action, $post_id, $post_type );
 
 			if ( $model ) {
-				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $post_id );
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $post_id, hivepress()->model->get_model_object( $model, $post_id ) );
 			}
 		}
 	}
@@ -359,7 +360,7 @@ final class Hook extends Component {
 			do_action( 'hivepress/v1/models/term/' . $action, $term_id, $taxonomy );
 
 			if ( $model ) {
-				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $term_id );
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $term_id, hivepress()->model->get_model_object( $model, $term_id ) );
 			}
 		}
 	}
@@ -433,7 +434,7 @@ final class Hook extends Component {
 			do_action( 'hivepress/v1/models/comment/' . $action, $comment_id, $comment_type );
 
 			if ( $model ) {
-				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $comment_id );
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $comment_id, hivepress()->model->get_model_object( $model, $comment_id ) );
 			}
 		}
 	}

@@ -29,8 +29,8 @@ final class Listing extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update listing.
-		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ] );
-		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ], 10, 2 );
+		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ], 10, 2 );
 
 		// Update image.
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
@@ -80,16 +80,15 @@ final class Listing extends Component {
 	/**
 	 * Updates listing.
 	 *
-	 * @param int $listing_id Listing ID.
+	 * @param int    $listing_id Listing ID.
+	 * @param object $listing Listing object.
 	 */
-	public function update_listing( $listing_id ) {
+	public function update_listing( $listing_id, $listing ) {
 
 		// Remove action.
 		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( $listing_id );
-
+		// Check user.
 		if ( ! $listing->get_user__id() ) {
 			return;
 		}
@@ -101,7 +100,7 @@ final class Listing extends Component {
 			$vendor = $listing->get_vendor();
 		}
 
-		if ( $vendor ) {
+		if ( $vendor && $vendor->get_status() === 'publish' ) {
 			if ( $vendor->get_user__id() !== $listing->get_user__id() ) {
 
 				// Update listing user.
@@ -112,43 +111,55 @@ final class Listing extends Component {
 		}
 
 		// Get user vendor.
-		$vendor = Models\Vendor::query()->filter( [ 'user' => $listing->get_user__id() ] )->get_first();
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => $listing->get_user__id(),
+			]
+		)->get_first();
 
-		if ( ! $vendor && $listing->get_status() === 'publish' ) {
+		if ( ( ! $vendor || $vendor->get_status() === 'auto-draft' ) && $listing->get_status() === 'publish' ) {
 
 			// Get user.
 			$user = $listing->get_user();
-
-			// Add vendor.
-			$vendor = ( new Models\Vendor() )->fill(
-				[
-					'name'        => $user->get_display_name(),
-					'description' => $user->get_description(),
-					'slug'        => $user->get_username(),
-					'status'      => 'publish',
-					'image'       => $user->get_image__id(),
-					'user'        => $user->get_id(),
-				]
-			);
-
-			if ( ! $vendor->save(
-				[
-					'name',
-					'description',
-					'slug',
-					'status',
-					'image',
-					'user',
-				]
-			) ) {
-				return;
-			}
 
 			// Update user role.
 			$user_object = get_userdata( $user->get_id() );
 
 			if ( array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
 				$user_object->set_role( 'contributor' );
+			}
+
+			if ( ! $vendor ) {
+
+				// Add vendor.
+				$vendor = ( new Models\Vendor() )->fill(
+					[
+						'name'        => $user->get_display_name(),
+						'description' => $user->get_description(),
+						'slug'        => $user->get_username(),
+						'status'      => 'publish',
+						'image'       => $user->get_image__id(),
+						'user'        => $user->get_id(),
+					]
+				);
+
+				if ( ! $vendor->save(
+					[
+						'name',
+						'description',
+						'slug',
+						'status',
+						'image',
+						'user',
+					]
+				) ) {
+					return;
+				}
+			} else {
+
+				// Update vendor status.
+				$vendor->set_status( 'publish' )->save_status();
 			}
 		}
 
@@ -296,7 +307,7 @@ final class Listing extends Component {
 					'status'            => 'draft',
 					'expired_time__lte' => time() - DAY_IN_SECONDS * $storage_period,
 				]
-			)->delete();
+			)->trash();
 		}
 
 		// Get featured listings.

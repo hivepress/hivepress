@@ -63,6 +63,33 @@ return [
 						'required'  => true,
 						'_order'    => 50,
 					],
+
+					'listing_enable_image_zoom'        => [
+						'label'   => esc_html__( 'Images', 'hivepress' ),
+						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 60,
+					],
+				],
+			],
+
+			'search'     => [
+				'title'  => hivepress()->translator->get_string( 'search_noun' ),
+				'_order' => 15,
+
+				'fields' => [
+					'listing_search_fields' => [
+						'label'    => esc_html__( 'Default Fields', 'hivepress' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'default'  => [ 'keyword' ],
+						'_order'   => 10,
+
+						'options'  => [
+							'keyword'  => esc_html__( 'Keywords', 'hivepress' ),
+							'category' => esc_html__( 'Categories', 'hivepress' ),
+						],
+					],
 				],
 			],
 

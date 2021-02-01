@@ -9,6 +9,7 @@ namespace HivePress\Emails;
 
 use HivePress\Helpers as hp;
 use HivePress\Traits;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -21,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Email {
 	use Traits\Mutator;
 	use Traits\Meta;
+	use Traits\Context;
 
 	/**
 	 * Email recipient.
@@ -56,13 +58,6 @@ abstract class Email {
 	 * @var array
 	 */
 	protected $tokens = [];
-
-	/**
-	 * Email context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Class initializer.
@@ -149,13 +144,12 @@ abstract class Email {
 	}
 
 	/**
-	 * Gets context values.
+	 * Gets email body.
 	 *
-	 * @param string $name Context name.
-	 * @return mixed
+	 * @return string
 	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
+	final public function get_body() {
+		return $this->body;
 	}
 
 	/**
@@ -164,21 +158,33 @@ abstract class Email {
 	 * @return bool
 	 */
 	final public function send() {
-		if ( $this->body ) {
-			return wp_mail(
-				$this->recipient,
-				$this->subject,
-				$this->body,
-				array_map(
-					function( $name, $value ) {
-						return $name . ': ' . $value;
-					},
-					array_keys( $this->headers ),
-					$this->headers
-				)
-			);
+
+		// Check content.
+		if ( ! $this->body ) {
+			return false;
 		}
 
-		return false;
+		// Get headers.
+		$headers = array_map(
+			function( $name, $value ) {
+				return $name . ': ' . $value;
+			},
+			array_keys( $this->headers ),
+			$this->headers
+		);
+
+		// Get content.
+		$content = ( new Blocks\Template(
+			[
+				'template' => 'email',
+
+				'context'  => [
+					'email' => $this,
+				],
+			]
+		) )->render();
+
+		// Send email.
+		return wp_mail( $this->recipient, $this->subject, $content, $headers );
 	}
 }

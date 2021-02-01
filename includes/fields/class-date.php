@@ -55,6 +55,13 @@ class Date extends Field {
 	protected $max_date;
 
 	/**
+	 * Date offset.
+	 *
+	 * @var int
+	 */
+	protected $offset;
+
+	/**
 	 * Time flag.
 	 *
 	 * @var bool
@@ -94,11 +101,19 @@ class Date extends Field {
 						'_order' => 120,
 					],
 
+					'offset'      => [
+						'label'       => esc_html__( 'Date Offset', 'hivepress' ),
+						'description' => esc_html__( 'Set the number of days after today to define the minimum date.', 'hivepress' ),
+						'type'        => 'number',
+						'min_value'   => 0,
+						'_order'      => 130,
+					],
+
 					'time'        => [
 						'label'   => esc_html__( 'Time', 'hivepress' ),
 						'caption' => esc_html__( 'Allow setting time', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 130,
+						'_order'  => 140,
 					],
 				],
 			],
@@ -152,6 +167,10 @@ class Date extends Field {
 		$attributes['data-display-format'] = $this->display_format;
 
 		// Set minimum date.
+		if ( ! is_null( $this->offset ) ) {
+			$this->min_date = date( 'Y-m-d H:i:s', time() + $this->offset * DAY_IN_SECONDS );
+		}
+
 		if ( ! is_null( $this->min_date ) ) {
 			$attributes['data-min-date'] = $this->min_date;
 		}

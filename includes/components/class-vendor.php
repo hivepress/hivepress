@@ -29,7 +29,7 @@ final class Vendor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Update vendor.
-		add_action( 'hivepress/v1/models/user/update', [ $this, 'update_vendor' ], 100 );
+		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_vendor' ], 100, 2 );
 
 		// Add vendor fields.
 		add_filter( 'hivepress/v1/forms/user_update', [ $this, 'add_vendor_fields' ], 100, 2 );
@@ -52,19 +52,22 @@ final class Vendor extends Component {
 	/**
 	 * Updates vendor.
 	 *
-	 * @param int $user_id User ID.
+	 * @param int    $user_id User ID.
+	 * @param object $user User object.
 	 */
-	public function update_vendor( $user_id ) {
+	public function update_vendor( $user_id, $user ) {
 
 		// Get vendor.
-		$vendor = Models\Vendor::query()->filter( [ 'user' => $user_id ] )->get_first();
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => $user_id,
+			]
+		)->get_first();
 
-		if ( empty( $vendor ) ) {
+		if ( ! $vendor ) {
 			return;
 		}
-
-		// Get user.
-		$user = Models\User::query()->get_by_id( $user_id );
 
 		// Get slug.
 		$slug = $user->get_username();
@@ -124,7 +127,12 @@ final class Vendor extends Component {
 		if ( $user->get_id() ) {
 
 			// Get vendor.
-			$vendor = Models\Vendor::query()->filter( [ 'user' => $user->get_id() ] )->get_first();
+			$vendor = Models\Vendor::query()->filter(
+				[
+					'status' => [ 'auto-draft', 'publish' ],
+					'user'   => $user->get_id(),
+				]
+			)->get_first();
 
 			if ( $vendor ) {
 
@@ -165,7 +173,12 @@ final class Vendor extends Component {
 			if ( $user->get_id() ) {
 
 				// Get vendor.
-				$vendor = Models\Vendor::query()->filter( [ 'user' => $user->get_id() ] )->get_first();
+				$vendor = Models\Vendor::query()->filter(
+					[
+						'status' => [ 'auto-draft', 'publish' ],
+						'user'   => $user->get_id(),
+					]
+				)->get_first();
 
 				if ( $vendor ) {
 

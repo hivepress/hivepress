@@ -43,7 +43,7 @@ class User_Update extends Model_Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'message' => esc_html__( 'Changes have been saved.', 'hivepress' ),
+				'message' => hivepress()->translator->get_string( 'changes_have_been_saved' ),
 
 				'fields'  => [
 					'image'            => [
@@ -88,7 +88,7 @@ class User_Update extends Model_Form {
 				],
 
 				'button'  => [
-					'label' => esc_html__( 'Save Changes', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'save_changes' ),
 				],
 			],
 			$args

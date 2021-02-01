@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Menu {
 	use Traits\Mutator;
 	use Traits\Meta;
+	use Traits\Context;
 
 	/**
 	 * Menu items.
@@ -28,13 +29,6 @@ abstract class Menu {
 	 * @var array
 	 */
 	protected $items = [];
-
-	/**
-	 * Menu context.
-	 *
-	 * @var array
-	 */
-	protected $context = [];
 
 	/**
 	 * Menu attributes.
@@ -196,16 +190,6 @@ abstract class Menu {
 	}
 
 	/**
-	 * Gets context values.
-	 *
-	 * @param string $name Context name.
-	 * @return mixed
-	 */
-	final public function get_context( $name = null ) {
-		return empty( $name ) ? $this->context : hp\get_array_value( $this->context, $name );
-	}
-
-	/**
 	 * Renders menu HTML.
 	 *
 	 * @return string
@@ -266,17 +250,17 @@ abstract class Menu {
 
 				// Render menu item.
 				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
-				$output .= '<span>';
+				$output .= '<a href="' . esc_url( $args['url'] ) . '">';
 
 				// Render label.
-				$output .= '<a href="' . esc_url( $args['url'] ) . '">' . esc_html( $args['label'] ) . '</a>';
+				$output .= '<span>' . esc_html( $args['label'] ) . '</span>';
 
 				// Render meta.
 				if ( isset( $args['meta'] ) ) {
 					$output .= '<small>' . esc_html( $args['meta'] ) . '</small>';
 				}
 
-				$output .= '</span>';
+				$output .= '</a>';
 
 				// Render child items.
 				$output .= $this->render_items( $name );

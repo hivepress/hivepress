@@ -198,15 +198,19 @@ class Select extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			$labels = array_filter(
-				array_map(
-					function( $value ) {
-						return hp\get_array_value( $this->options, $value );
-					},
-					(array) $this->value
-				),
-				'strlen'
-			);
+			$labels = [];
+
+			foreach ( (array) $this->value as $value ) {
+				$label = hp\get_array_value( $this->options, $value );
+
+				if ( is_array( $label ) ) {
+					$label = hp\get_array_value( $label, 'label' );
+				}
+
+				if ( strlen( $label ) ) {
+					$labels[] = $label;
+				}
+			}
 
 			if ( $labels ) {
 				return implode( ', ', $labels );

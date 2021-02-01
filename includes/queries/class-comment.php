@@ -144,4 +144,22 @@ class Comment extends Query {
 	final protected function get_results( $args ) {
 		return get_comments( $args );
 	}
+
+	/**
+	 * Trashes objects.
+	 */
+	final public function trash() {
+		foreach ( $this->get_ids() as $id ) {
+			$this->trash_by_id( $id );
+		}
+	}
+
+	/**
+	 * Trashes object by ID.
+	 *
+	 * @param int $id Object ID.
+	 */
+	final public function trash_by_id( $id ) {
+		$this->model->trash( $id );
+	}
 }
