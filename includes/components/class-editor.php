@@ -66,8 +66,14 @@ final class Editor extends Component {
 					// Get field arguments.
 					$field_args = $field->get_args();
 
-					if ( isset( $field_args['options'] ) && ! hp\get_array_value( $field_args, 'required', false ) && ! isset( $field_args['options'][''] ) ) {
-						$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
+					if ( isset( $field_args['options'] ) ) {
+						if ( is_array( hp\get_first_array_value( $field_args['options'] ) ) ) {
+							$field_args['options'] = wp_list_pluck( $field_args['options'], 'label' );
+						}
+
+						if ( ! hp\get_array_value( $field_args, 'required', false ) && ! isset( $field_args['options'][''] ) ) {
+							$field_args['options'] = [ '' => '&mdash;' ] + $field_args['options'];
+						}
 					}
 
 					// Add attribute.
