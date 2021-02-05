@@ -65,7 +65,7 @@ return [
 					],
 
 					'listing_enable_image_zoom'        => [
-						'label'   => esc_html__( 'Images', 'hivepress' ),
+						'label'   => hivepress()->translator->get_string( 'images' ),
 						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 60,
@@ -86,8 +86,8 @@ return [
 						'_order'   => 10,
 
 						'options'  => [
-							'keyword'  => esc_html__( 'Keywords', 'hivepress' ),
-							'category' => esc_html__( 'Categories', 'hivepress' ),
+							'keyword'  => hivepress()->translator->get_string( 'keywords' ),
+							'category' => hivepress()->translator->get_string( 'categories' ),
 						],
 					],
 				],
@@ -269,7 +269,7 @@ return [
 						'_order'   => 10,
 
 						'options'  => [
-							'keyword' => esc_html__( 'Keywords', 'hivepress' ),
+							'keyword' => hivepress()->translator->get_string( 'keywords' ),
 						],
 					],
 				],

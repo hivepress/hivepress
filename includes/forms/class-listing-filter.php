@@ -69,7 +69,7 @@ class Listing_Filter extends Form {
 				],
 
 				'button' => [
-					'label' => esc_html__( 'Filter', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'filter' ),
 				],
 			],
 			$args

@@ -48,7 +48,7 @@ class Vendor_Search extends Form {
 
 				'fields' => [
 					's'         => [
-						'placeholder'  => esc_html__( 'Keywords', 'hivepress' ),
+						'placeholder'  => hivepress()->translator->get_string( 'keywords' ),
 						'type'         => 'text',
 						'display_type' => 'search',
 						'max_length'   => 256,
@@ -66,7 +66,7 @@ class Vendor_Search extends Form {
 				],
 
 				'button' => [
-					'label' => esc_html__( 'Search', 'hivepress' ),
+					'label' => hivepress()->translator->get_string( 'search' ),
 				],
 			],
 			$args

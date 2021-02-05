@@ -76,7 +76,7 @@ class Date extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Date', 'hivepress' ),
+				'label'      => hivepress()->translator->get_string( 'date' ),
 				'type'       => 'DATE',
 				'filterable' => true,
 				'sortable'   => true,

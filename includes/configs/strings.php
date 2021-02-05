@@ -16,7 +16,15 @@ return [
 	'settings'                                  => esc_html__( 'Settings', 'hivepress' ),
 	'display_noun'                              => esc_html_x( 'Display', 'noun', 'hivepress' ),
 	'search_noun'                               => esc_html_x( 'Search', 'noun', 'hivepress' ),
+	'search'                                    => esc_html__( 'Search', 'hivepress' ),
+	'filter'                                    => esc_html__( 'Filter', 'hivepress' ),
+	'sort_by'                                   => esc_html__( 'Sort by', 'hivepress' ),
+	'keywords'                                  => esc_html__( 'Keywords', 'hivepress' ),
 	'title'                                     => esc_html__( 'Title', 'hivepress' ),
+	'name'                                      => esc_html__( 'Name', 'hivepress' ),
+	'date'                                      => esc_html__( 'Date', 'hivepress' ),
+	'images'                                    => esc_html__( 'Images', 'hivepress' ),
+	'select_images'                             => esc_html__( 'Select Images', 'hivepress' ),
 	'description'                               => esc_html__( 'Description', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
@@ -143,6 +151,7 @@ return [
 
 	// Categories.
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),
+	'categories'                                => esc_html__( 'Categories', 'hivepress' ),
 	'parent_category'                           => esc_html__( 'Parent Category', 'hivepress' ),
 
 	// Attributes.
