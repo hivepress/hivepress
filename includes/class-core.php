@@ -219,6 +219,14 @@ final class Core {
 
 		// Initialize components.
 		$this->get_components();
+
+		/**
+		 * Fires on HivePress setup.
+		 *
+		 * @action /setup
+		 * @description Fires on HivePress setup.
+		 */
+		do_action( 'hivepress/v1/setup' );
 	}
 
 	/**
