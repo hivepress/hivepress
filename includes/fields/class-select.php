@@ -73,11 +73,18 @@ class Select extends Field {
 				'filterable' => true,
 
 				'settings'   => [
+					'placeholder'     => [
+						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
+						'type'       => 'text',
+						'max_length' => 256,
+						'_order'     => 100,
+					],
+
 					'multiple'        => [
 						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
 						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 100,
+						'_order'  => 105,
 					],
 
 					// @todo remove prefix from parent.
@@ -117,22 +124,6 @@ class Select extends Field {
 	}
 
 	/**
-	 * Class constructor.
-	 *
-	 * @param array $args Field arguments.
-	 */
-	public function __construct( $args = [] ) {
-		$args = hp\merge_arrays(
-			[
-				'placeholder' => '&mdash;',
-			],
-			$args
-		);
-
-		parent::__construct( $args );
-	}
-
-	/**
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
@@ -144,8 +135,14 @@ class Select extends Field {
 		}
 
 		// Set placeholder.
-		if ( ! is_null( $this->placeholder ) && ! $this->multiple ) {
+		if ( ! $this->multiple ) {
+			if ( is_null( $this->placeholder ) ) {
+				$this->placeholder = '&mdash;';
+			}
+
 			$this->options = [ '' => $this->placeholder ] + $this->options;
+		} elseif ( ! is_null( $this->placeholder ) ) {
+			$attributes['data-placeholder'] = $this->placeholder;
 		}
 
 		// Set disabled flag.

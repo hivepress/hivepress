@@ -65,7 +65,7 @@ return [
 					],
 
 					'listing_enable_image_zoom'        => [
-						'label'   => esc_html__( 'Images', 'hivepress' ),
+						'label'   => hivepress()->translator->get_string( 'images' ),
 						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 60,
@@ -79,15 +79,15 @@ return [
 
 				'fields' => [
 					'listing_search_fields' => [
-						'label'    => esc_html__( 'Default Fields', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'default_fields' ),
 						'type'     => 'select',
 						'multiple' => true,
 						'default'  => [ 'keyword' ],
 						'_order'   => 10,
 
 						'options'  => [
-							'keyword'  => esc_html__( 'Keywords', 'hivepress' ),
-							'category' => esc_html__( 'Categories', 'hivepress' ),
+							'keyword'  => hivepress()->translator->get_string( 'keywords' ),
+							'category' => hivepress()->translator->get_string( 'categories' ),
 						],
 					],
 				],
@@ -251,6 +251,25 @@ return [
 							'post_type'  => 'hp_vendor_attribute',
 							'meta_key'   => 'hp_edit_field_type',
 							'meta_value' => 'text',
+						],
+					],
+				],
+			],
+
+			'search'  => [
+				'title'  => hivepress()->translator->get_string( 'search_noun' ),
+				'_order' => 20,
+
+				'fields' => [
+					'vendor_search_fields' => [
+						'label'    => hivepress()->translator->get_string( 'default_fields' ),
+						'type'     => 'select',
+						'multiple' => true,
+						'default'  => [ 'keyword' ],
+						'_order'   => 10,
+
+						'options'  => [
+							'keyword' => hivepress()->translator->get_string( 'keywords' ),
 						],
 					],
 				],

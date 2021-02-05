@@ -61,13 +61,13 @@ return [
 	],
 
 	'listing_images'            => [
-		'title'  => esc_html__( 'Images', 'hivepress' ),
+		'title'  => hivepress()->translator->get_string( 'images' ),
 		'screen' => 'listing',
 		'model'  => 'listing',
 
 		'fields' => [
 			'images' => [
-				'caption'   => esc_html__( 'Select Images', 'hivepress' ),
+				'caption'   => hivepress()->translator->get_string( 'select_images' ),
 				'type'      => 'attachment_upload',
 				'multiple'  => true,
 				'max_files' => 10,

@@ -49,14 +49,14 @@ class Listing_Sort extends Form {
 
 				'fields' => [
 					'_sort'     => [
-						'label'       => esc_html__( 'Sort by', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'sort_by' ),
 						'type'        => 'select',
 						'placeholder' => null,
 						'required'    => true,
 						'_order'      => 10,
 
 						'options'     => [
-							''      => esc_html__( 'Date', 'hivepress' ),
+							''      => hivepress()->translator->get_string( 'date' ),
 							'title' => hivepress()->translator->get_string( 'title' ),
 						],
 

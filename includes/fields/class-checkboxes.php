@@ -30,7 +30,8 @@ class Checkboxes extends Select {
 				'label'    => esc_html__( 'Checkboxes', 'hivepress' ),
 
 				'settings' => [
-					'multiple' => null,
+					'placeholder' => null,
+					'multiple'    => null,
 				],
 			],
 			$meta

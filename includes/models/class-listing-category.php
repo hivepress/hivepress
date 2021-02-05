@@ -29,7 +29,7 @@ class Listing_Category extends Term {
 			[
 				'fields' => [
 					'name'        => [
-						'label'      => esc_html__( 'Name', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'name' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'required'   => true,

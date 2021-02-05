@@ -11,7 +11,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'listing'           => [
+	'listing' => [
 		'public'           => true,
 		'has_archive'      => true,
 		'delete_with_user' => true,
@@ -35,27 +35,7 @@ return [
 		],
 	],
 
-	'listing_attribute' => [
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => 'edit.php?post_type=hp_listing',
-		'supports'     => [ 'title', 'page-attributes' ],
-
-		'labels'       => [
-			'name'               => hivepress()->translator->get_string( 'attributes' ),
-			'singular_name'      => hivepress()->translator->get_string( 'attribute' ),
-			'add_new'            => hivepress()->translator->get_string( 'add_new_attribute' ),
-			'add_new_item'       => hivepress()->translator->get_string( 'add_attribute' ),
-			'edit_item'          => hivepress()->translator->get_string( 'edit_attribute' ),
-			'new_item'           => hivepress()->translator->get_string( 'add_attribute' ),
-			'all_items'          => hivepress()->translator->get_string( 'attributes' ),
-			'search_items'       => hivepress()->translator->get_string( 'search_attributes' ),
-			'not_found'          => hivepress()->translator->get_string( 'no_attributes_found' ),
-			'not_found_in_trash' => hivepress()->translator->get_string( 'no_attributes_found' ),
-		],
-	],
-
-	'vendor'            => [
+	'vendor'  => [
 		'public'             => true,
 		'show_ui'            => true,
 		'has_archive'        => true,
@@ -76,26 +56,6 @@ return [
 			'search_items'       => hivepress()->translator->get_string( 'search_vendors' ),
 			'not_found'          => hivepress()->translator->get_string( 'no_vendors_found' ),
 			'not_found_in_trash' => hivepress()->translator->get_string( 'no_vendors_found' ),
-		],
-	],
-
-	'vendor_attribute'  => [
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => 'edit.php?post_type=hp_vendor',
-		'supports'     => [ 'title', 'page-attributes' ],
-
-		'labels'       => [
-			'name'               => hivepress()->translator->get_string( 'attributes' ),
-			'singular_name'      => hivepress()->translator->get_string( 'attribute' ),
-			'add_new'            => hivepress()->translator->get_string( 'add_new_attribute' ),
-			'add_new_item'       => hivepress()->translator->get_string( 'add_attribute' ),
-			'edit_item'          => hivepress()->translator->get_string( 'edit_attribute' ),
-			'new_item'           => hivepress()->translator->get_string( 'add_attribute' ),
-			'all_items'          => hivepress()->translator->get_string( 'attributes' ),
-			'search_items'       => hivepress()->translator->get_string( 'search_attributes' ),
-			'not_found'          => hivepress()->translator->get_string( 'no_attributes_found' ),
-			'not_found_in_trash' => hivepress()->translator->get_string( 'no_attributes_found' ),
 		],
 	],
 ];

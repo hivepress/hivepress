@@ -126,7 +126,7 @@ class Listing extends Post {
 					],
 
 					'categories'       => [
-						'label'       => esc_html__( 'Categories', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'categories' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
@@ -144,8 +144,8 @@ class Listing extends Post {
 					],
 
 					'images'           => [
-						'label'     => esc_html__( 'Images', 'hivepress' ),
-						'caption'   => esc_html__( 'Select Images', 'hivepress' ),
+						'label'     => hivepress()->translator->get_string( 'images' ),
+						'caption'   => hivepress()->translator->get_string( 'select_images' ),
 						'type'      => 'attachment_upload',
 						'multiple'  => true,
 						'max_files' => 10,

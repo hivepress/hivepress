@@ -18,8 +18,8 @@ return [
 		'rewrite'           => [ 'slug' => 'listing-category' ],
 
 		'labels'            => [
-			'name'          => esc_html__( 'Categories', 'hivepress' ),
-			'singular_name' => esc_html__( 'Category', 'hivepress' ),
+			'name'          => hivepress()->translator->get_string( 'categories' ),
+			'singular_name' => hivepress()->translator->get_string( 'category' ),
 			'add_new_item'  => esc_html__( 'Add Category', 'hivepress' ),
 			'edit_item'     => esc_html__( 'Edit Category', 'hivepress' ),
 			'update_item'   => esc_html__( 'Update Category', 'hivepress' ),
@@ -37,8 +37,8 @@ return [
 		'rewrite'      => [ 'slug' => 'vendor-category' ],
 
 		'labels'       => [
-			'name'          => esc_html__( 'Categories', 'hivepress' ),
-			'singular_name' => esc_html__( 'Category', 'hivepress' ),
+			'name'          => hivepress()->translator->get_string( 'categories' ),
+			'singular_name' => hivepress()->translator->get_string( 'category' ),
 			'add_new_item'  => esc_html__( 'Add Category', 'hivepress' ),
 			'edit_item'     => esc_html__( 'Edit Category', 'hivepress' ),
 			'update_item'   => esc_html__( 'Update Category', 'hivepress' ),

@@ -57,8 +57,11 @@ final class Attribute extends Component {
 	 */
 	protected function boot() {
 
-		// Filter models.
-		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
+		// Register models.
+		add_action( 'hivepress/v1/setup', [ $this, 'register_models' ] );
+
+		// Register post types.
+		add_filter( 'hivepress/v1/post_types', [ $this, 'register_post_types' ], 1 );
 
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
@@ -166,6 +169,47 @@ final class Attribute extends Component {
 		}
 
 		return $category_id;
+	}
+
+	/**
+	 * Registers models.
+	 */
+	public function register_models() {
+
+		// Filter models.
+		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
+	}
+
+	/**
+	 * Registers post types.
+	 *
+	 * @param array $post_types Post types.
+	 * @return array
+	 */
+	public function register_post_types( $post_types ) {
+		foreach ( $this->models as $model ) {
+			$post_types[ $model . '_attribute' ] = [
+				'public'       => false,
+				'show_ui'      => true,
+				'show_in_menu' => 'edit.php?post_type=' . hp\prefix( $model ),
+				'supports'     => [ 'title', 'page-attributes' ],
+
+				'labels'       => [
+					'name'               => hivepress()->translator->get_string( 'attributes' ),
+					'singular_name'      => hivepress()->translator->get_string( 'attribute' ),
+					'add_new'            => hivepress()->translator->get_string( 'add_new_attribute' ),
+					'add_new_item'       => hivepress()->translator->get_string( 'add_attribute' ),
+					'edit_item'          => hivepress()->translator->get_string( 'edit_attribute' ),
+					'new_item'           => hivepress()->translator->get_string( 'add_attribute' ),
+					'all_items'          => hivepress()->translator->get_string( 'attributes' ),
+					'search_items'       => hivepress()->translator->get_string( 'search_attributes' ),
+					'not_found'          => hivepress()->translator->get_string( 'no_attributes_found' ),
+					'not_found_in_trash' => hivepress()->translator->get_string( 'no_attributes_found' ),
+				],
+			];
+		}
+
+		return $post_types;
 	}
 
 	/**
