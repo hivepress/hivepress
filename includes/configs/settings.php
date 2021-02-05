@@ -79,7 +79,7 @@ return [
 
 				'fields' => [
 					'listing_search_fields' => [
-						'label'    => esc_html__( 'Default Fields', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'default_fields' ),
 						'type'     => 'select',
 						'multiple' => true,
 						'default'  => [ 'keyword' ],
@@ -262,7 +262,7 @@ return [
 
 				'fields' => [
 					'vendor_search_fields' => [
-						'label'    => esc_html__( 'Default Fields', 'hivepress' ),
+						'label'    => hivepress()->translator->get_string( 'default_fields' ),
 						'type'     => 'select',
 						'multiple' => true,
 						'default'  => [ 'keyword' ],

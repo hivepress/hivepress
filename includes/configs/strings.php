@@ -34,6 +34,7 @@ return [
 	'expiration'                                => esc_html__( 'Expiration', 'hivepress' ),
 	'expiration_period'                         => esc_html__( 'Expiration Period', 'hivepress' ),
 	'expiration_date'                           => esc_html__( 'Expiration Date', 'hivepress' ),
+	'default_fields'                            => esc_html__( 'Default Fields', 'hivepress' ),
 	'free'                                      => esc_html__( 'Free', 'hivepress' ),
 	'price'                                     => esc_html__( 'Price', 'hivepress' ),
 	'overview'                                  => esc_html__( 'Overview', 'hivepress' ),
