@@ -30,6 +30,7 @@ class Radio extends Select {
 				'label'    => esc_html__( 'Radio Buttons', 'hivepress' ),
 
 				'settings' => [
+					'placeholder'     => null,
 					'multiple'        => null,
 					'max_values'      => null,
 					'filter_operator' => null,

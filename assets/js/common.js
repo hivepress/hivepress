@@ -51,6 +51,10 @@ var hivepress = {
 					},
 				};
 
+			if (field.data('placeholder')) {
+				settings['placeholder'] = field.data('placeholder');
+			}
+
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',
