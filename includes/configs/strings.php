@@ -49,6 +49,8 @@ return [
 	'return_to_my_account'                      => esc_html__( 'Return to My Account', 'hivepress' ),
 	'save_changes'                              => esc_html__( 'Save Changes', 'hivepress' ),
 	'changes_have_been_saved'                   => esc_html__( 'Changes have been saved.', 'hivepress' ),
+	'all_users'                                 => esc_html__( 'All Users', 'hivepress' ),
+	'registered_users'                          => esc_html__( 'Registered Users', 'hivepress' ),
 	'columns_number'                            => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
 	'items_number'                              => esc_html_x( 'Number', 'quantity', 'hivepress' ),
 	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
