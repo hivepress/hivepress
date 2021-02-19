@@ -91,12 +91,7 @@ class Listing_Sort extends Form {
 	protected function boot() {
 
 		// Set attributes.
-		$this->attributes = hp\merge_arrays(
-			$this->attributes,
-			[
-				'data-autosubmit' => 'true',
-			]
-		);
+		$this->attributes['data-autosubmit'] = 'true';
 
 		parent::boot();
 	}
