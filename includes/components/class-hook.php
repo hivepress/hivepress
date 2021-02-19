@@ -223,7 +223,7 @@ final class Hook extends Component {
 			if ( $model ) {
 
 				// Fire action.
-				do_action( 'hivepress/v1/models/' . $model . '/update_status', $post->ID, $new_status, $old_status );
+				do_action( 'hivepress/v1/models/' . $model . '/update_status', $post->ID, $new_status, $old_status, hivepress()->model->get_model_object( $model, $post->ID ) );
 			}
 		}
 	}
@@ -461,7 +461,7 @@ final class Hook extends Component {
 			if ( $model ) {
 
 				// Fire action.
-				do_action( 'hivepress/v1/models/' . $model . '/update_status', $comment_id, $new_status );
+				do_action( 'hivepress/v1/models/' . $model . '/update_status', $comment_id, $new_status, null, hivepress()->model->get_model_object( $model, $comment_id ) );
 			}
 		}
 	}
