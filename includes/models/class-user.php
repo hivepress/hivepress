@@ -44,7 +44,7 @@ class User extends Model {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
-					'username'     => [
+					'username'        => [
 						'label'      => esc_html__( 'Username', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 60,
@@ -52,21 +52,21 @@ class User extends Model {
 						'_alias'     => 'user_login',
 					],
 
-					'email'        => [
+					'email'           => [
 						'label'    => esc_html__( 'Email', 'hivepress' ),
 						'type'     => 'email',
 						'required' => true,
 						'_alias'   => 'user_email',
 					],
 
-					'password'     => [
+					'password'        => [
 						'label'      => esc_html__( 'Password', 'hivepress' ),
 						'type'       => 'password',
 						'min_length' => 8,
 						'_alias'     => 'user_pass',
 					],
 
-					'first_name'   => [
+					'first_name'      => [
 						'label'      => esc_html__( 'First Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
@@ -74,7 +74,7 @@ class User extends Model {
 						'_external'  => true,
 					],
 
-					'last_name'    => [
+					'last_name'       => [
 						'label'      => esc_html__( 'Last Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 64,
@@ -82,13 +82,13 @@ class User extends Model {
 						'_external'  => true,
 					],
 
-					'display_name' => [
+					'display_name'    => [
 						'type'       => 'text',
 						'max_length' => 256,
 						'_alias'     => 'display_name',
 					],
 
-					'description'  => [
+					'description'     => [
 						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
@@ -96,7 +96,13 @@ class User extends Model {
 						'_external'  => true,
 					],
 
-					'image'        => [
+					'registered_date' => [
+						'type'   => 'date',
+						'format' => 'Y-m-d H:i:s',
+						'_alias' => 'user_registered',
+					],
+
+					'image'           => [
 						'label'     => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption'   => esc_html__( 'Select Image', 'hivepress' ),
 						'type'      => 'attachment_upload',
