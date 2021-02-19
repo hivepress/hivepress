@@ -5,7 +5,7 @@ Tags: directory, business directory, classifieds, classified ads, listing, listi
 Requires at least: 4.9
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,8 @@ HivePress is an extensible, highly customizable, easy-to-use plugin that allows 
 [Demo](https://demo.hivepress.io/) | [Docs](https://hivepress.io/docs/) | [Support](https://hivepress.io/support/)
 
 Whether it's a business directory, job board, real estate, classifieds or basically any listing website — HivePress is a great choice for it.
+
+https://www.youtube.com/watch?v=-OzyG6vhR_o
 
 = Free Theme =
 HivePress comes with a free [ListingHive](https://hivepress.io/themes/) theme that is fully compatible with HivePress and its official extensions.
