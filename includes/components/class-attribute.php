@@ -669,7 +669,7 @@ final class Attribute extends Component {
 			}
 		}
 
-		$snippet = rtrim( $snippet, '; ' ) . '.';
+		$snippet = ltrim( rtrim( $snippet, '; ' ) . '.', '.' );
 
 		// Update snippet.
 		if ( $model->get_snippet() !== $snippet ) {
