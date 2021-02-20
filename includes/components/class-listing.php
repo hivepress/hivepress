@@ -36,7 +36,7 @@ final class Listing extends Component {
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
 
 		// Update status.
-		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
+		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 4 );
 
 		// Expire listings.
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
@@ -197,13 +197,10 @@ final class Listing extends Component {
 	 * @param int    $listing_id Listing ID.
 	 * @param string $new_status New status.
 	 * @param string $old_status Old status.
+	 * @param object $listing Listing.
 	 */
-	public function update_status( $listing_id, $new_status, $old_status ) {
-
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( $listing_id );
-
-		if ( 'pending' === $old_status ) {
+	public function update_status( $listing_id, $new_status, $old_status, $listing ) {
+		if ( 'pending' === $old_status && get_option( 'hp_listing_enable_moderation' ) ) {
 
 			// Get user.
 			$user = $listing->get_user();
