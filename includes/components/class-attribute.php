@@ -669,6 +669,10 @@ final class Attribute extends Component {
 			}
 		}
 
+		if ( $model::_get_meta( 'name' ) === 'listing' && $model->get_vendor__id() ) {
+			$snippet .= hivepress()->translator->get_string( 'vendor' ) . ': ' . $model->get_vendor__name() . '; ';
+		}
+
 		$snippet = ltrim( rtrim( $snippet, '; ' ) . '.', '.' );
 
 		// Update snippet.
