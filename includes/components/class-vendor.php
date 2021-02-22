@@ -134,7 +134,7 @@ final class Vendor extends Component {
 				]
 			)->get_first();
 
-			if ( $vendor ) {
+			if ( $vendor && ( $vendor->get_status() === 'publish' || $form::get_meta( 'name' ) === 'user_update_profile' ) ) {
 
 				// Get form.
 				$vendor_form = ( new Forms\Vendor_Update( [ 'model' => $vendor ] ) );
@@ -180,7 +180,7 @@ final class Vendor extends Component {
 					]
 				)->get_first();
 
-				if ( $vendor ) {
+				if ( $vendor && ( $vendor->get_status() === 'publish' || $form::get_meta( 'name' ) === 'user_update_profile' ) ) {
 
 					// Get fields.
 					$vendor_fields = array_keys( ( new Forms\Vendor_Update( [ 'model' => $vendor ] ) )->get_fields() );
@@ -214,9 +214,7 @@ final class Vendor extends Component {
 	 * @return array
 	 */
 	public function alter_post_types( $post_types ) {
-		if ( isset( $post_types['vendor'] ) ) {
-			$post_types['vendor']['public'] = (bool) get_option( 'hp_vendor_enable_display' );
-		}
+		$post_types['vendor']['public'] = (bool) get_option( 'hp_vendor_enable_display' );
 
 		return $post_types;
 	}
