@@ -315,40 +315,50 @@ abstract class Model {
 			} else {
 				$value = $this->fields[ $name ]->get_value();
 
-				if ( $this->fields[ $name ]->get_arg( '_model' ) && 'id' !== $field ) {
+				// Get model name.
+				$model = $this->fields[ $name ]->get_arg( '_model' );
 
-					// Get model object.
-					$model = hp\create_class_instance( '\HivePress\Models\\' . $this->fields[ $name ]->get_arg( '_model' ) );
+				if ( $model && 'id' !== $field ) {
 
-					if ( $model ) {
-
-						// Get object method.
-						$method = null;
-
-						if ( $field ) {
-							$method = ( $display ? 'display' : 'get' ) . '_' . $field;
+					// Get model objects.
+					if ( ! isset( $this->values[ $name ] ) ) {
+						if ( is_array( $value ) ) {
+							$value = array_filter(
+								array_map(
+									function( $id ) use ( $model ) {
+										return hivepress()->model->get_model_object( $model, $id );
+									},
+									$value
+								)
+							);
+						} else {
+							$value = hivepress()->model->get_model_object( $model, $value );
 						}
 
-						// Get object fields.
+						$this->values[ $name ] = is_null( $value ) ? false : $value;
+					} else {
+						$value = $this->values[ $name ];
+
+						if ( false === $value ) {
+							$value = null;
+						}
+					}
+
+					if ( $field ) {
+
+						// Get object method.
+						$method = ( $display ? 'display' : 'get' ) . '_' . $field;
+
+						// Get object values.
 						if ( is_array( $value ) ) {
 							$value = array_map(
-								function( $id ) use ( $model, $method, $args ) {
-									$object = $model->query()->get_by_id( $id );
-
-									if ( $object && $method ) {
-										$object = call_user_func_array( [ $object, $method ], $args );
-									}
-
-									return $object;
+								function( $object ) use ( $method, $args ) {
+									return call_user_func_array( [ $object, $method ], $args );
 								},
 								$value
 							);
-						} else {
-							$value = $model->query()->get_by_id( $value );
-
-							if ( $value && $method ) {
-								$value = call_user_func_array( [ $value, $method ], $args );
-							}
+						} elseif ( $value ) {
+							$value = call_user_func_array( [ $value, $method ], $args );
 						}
 					}
 				}
