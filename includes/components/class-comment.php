@@ -39,6 +39,9 @@ final class Comment extends Component {
 		add_action( 'wp_insert_comment', [ $this, 'clear_comment_count' ] );
 		add_action( 'wp_set_comment_status', [ $this, 'clear_comment_count' ] );
 
+		// Disable notifications.
+		add_filter( 'notify_post_author', [ $this, 'disable_notifications' ], 10, 2 );
+
 		parent::__construct( $args );
 	}
 
@@ -219,5 +222,20 @@ final class Comment extends Component {
 	 */
 	public static function clear_comment_count() {
 		hivepress()->cache->delete_cache( 'comment_counts' );
+	}
+
+	/**
+	 * Disables notifications.
+	 *
+	 * @param bool $notify Notification flag.
+	 * @param int  $comment_id Comment ID.
+	 * @return bool
+	 */
+	public function disable_notifications( $notify, $comment_id ) {
+		if ( strpos( get_comment_type( $comment_id ), 'hp_' ) === 0 ) {
+			return false;
+		}
+
+		return $notify;
 	}
 }

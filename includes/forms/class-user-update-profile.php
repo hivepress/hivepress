@@ -42,6 +42,13 @@ class User_Update_Profile extends User_Update {
 					'current_password' => [
 						'display_type' => 'hidden',
 					],
+
+					// @todo remove temporary fix.
+					'_form'            => [
+						'type'      => 'hidden',
+						'default'   => 'user_update_profile',
+						'_separate' => true,
+					],
 				],
 			],
 			$args

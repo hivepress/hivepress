@@ -561,7 +561,15 @@ final class User extends Controller {
 		}
 
 		// Validate form.
-		$form = ( new Forms\User_Update( [ 'model' => $user ] ) )->set_values( $request->get_params() );
+		$form = null;
+
+		if ( $request->get_param( '_form' ) === 'user_update_profile' ) {
+			$form = new Forms\User_Update_Profile( [ 'model' => $user ] );
+		} else {
+			$form = new Forms\User_Update( [ 'model' => $user ] );
+		}
+
+		$form->set_values( $request->get_params() );
 
 		if ( ! $form->validate() ) {
 			return hp\rest_error( 400, $form->get_errors() );

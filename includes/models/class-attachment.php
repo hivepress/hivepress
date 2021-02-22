@@ -135,4 +135,65 @@ class Attachment extends Post {
 			return hivepress()->model->get_model_object( $this->get_parent_model(), $id );
 		}
 	}
+
+	/**
+	 * Gets attachment URL.
+	 *
+	 * @param string $size Image size.
+	 * @return mixed
+	 */
+	final public function get_url( $size = 'thumbnail' ) {
+		$url  = null;
+		$name = 'url';
+
+		if ( $this->id ) {
+
+			// Get image flag.
+			$image = strpos( $this->get_mime_type(), 'image/' ) === 0;
+
+			if ( $image ) {
+				$name .= '__' . $size;
+			}
+
+			if ( ! isset( $this->values[ $name ] ) ) {
+				$this->values[ $name ] = '';
+
+				if ( $image ) {
+
+					// Get image URL.
+					$urls = wp_get_attachment_image_src( $this->id, $size );
+
+					if ( $urls ) {
+						$this->values[ $name ] = hp\get_first_array_value( $urls );
+					}
+				} else {
+
+					// Get file URL.
+					$this->values[ $name ] = wp_get_attachment_url( $this->id );
+				}
+			}
+
+			if ( $this->values[ $name ] ) {
+				$url = $this->values[ $name ];
+			}
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Gets attachment name.
+	 *
+	 * @return mixed
+	 */
+	final public function get_name() {
+		$name = null;
+		$url  = $this->get_url();
+
+		if ( $url ) {
+			$name = wp_basename( $url );
+		}
+
+		return $name;
+	}
 }

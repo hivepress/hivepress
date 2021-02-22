@@ -9,6 +9,7 @@ namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
 use HivePress\Models;
+use HivePress\Emails;
 use HivePress\Blocks;
 
 // Exit if accessed directly.
@@ -30,14 +31,14 @@ final class Vendor extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'vendors_resource'  => [
+					'vendors_resource'              => [
 						'path'   => '/vendors',
 						'method' => 'GET',
 						'action' => [ $this, 'get_vendors' ],
 						'rest'   => true,
 					],
 
-					'vendors_view_page' => [
+					'vendors_view_page'             => [
 						'url'      => [ $this, 'get_vendors_view_url' ],
 						'match'    => [ $this, 'is_vendors_view_page' ],
 						'action'   => [ $this, 'render_vendors_view_page' ],
@@ -50,11 +51,30 @@ final class Vendor extends Controller {
 						],
 					],
 
-					'vendor_view_page'  => [
+					'vendor_view_page'              => [
 						'match'  => [ $this, 'is_vendor_view_page' ],
 						'url'    => [ $this, 'get_vendor_view_url' ],
 						'title'  => [ $this, 'get_vendor_view_title' ],
 						'action' => [ $this, 'render_vendor_view_page' ],
+					],
+
+					'vendor_register_page'          => [
+						'path'     => '/register-vendor',
+						'redirect' => [ $this, 'redirect_vendor_register_page' ],
+					],
+
+					'vendor_register_profile_page'  => [
+						'title'    => esc_html_x( 'Complete Profile', 'imperative', 'hivepress' ),
+						'base'     => 'vendor_register_page',
+						'path'     => '/profile',
+						'redirect' => [ $this, 'redirect_vendor_register_profile_page' ],
+						'action'   => [ $this, 'render_vendor_register_profile_page' ],
+					],
+
+					'vendor_register_complete_page' => [
+						'base'     => 'vendor_register_page',
+						'path'     => '/complete',
+						'redirect' => [ $this, 'redirect_vendor_register_complete_page' ],
 					],
 				],
 			],
@@ -269,5 +289,137 @@ final class Vendor extends Controller {
 				],
 			]
 		) )->render();
+	}
+
+	/**
+	 * Redirects vendor register page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_vendor_register_page() {
+
+		// Check permissions.
+		if ( ! get_option( 'hp_vendor_enable_registration' ) ) {
+			return home_url( '/' );
+		}
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hivepress()->router->get_url(
+				'user_login_page',
+				[
+					'redirect' => hivepress()->router->get_current_url(),
+				]
+			);
+		}
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'publish' ],
+				'user'   => get_current_user_id(),
+			]
+		)->get_first();
+
+		if ( ! $vendor ) {
+
+			// Get user.
+			$user = hivepress()->request->get_context( 'user' );
+
+			// Add vendor.
+			$vendor = ( new Models\Vendor() )->fill(
+				[
+					'name'        => $user->get_display_name(),
+					'description' => $user->get_description(),
+					'slug'        => $user->get_username(),
+					'status'      => 'auto-draft',
+					'image'       => $user->get_image__id(),
+					'user'        => $user->get_id(),
+				]
+			);
+
+			if ( ! $vendor->save(
+				[
+					'name',
+					'description',
+					'slug',
+					'status',
+					'image',
+					'user',
+				]
+			) ) {
+				return home_url( '/' );
+			}
+		} elseif ( $vendor->get_status() === 'publish' ) {
+			return home_url( '/' );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'vendor', $vendor );
+
+		return true;
+	}
+
+	/**
+	 * Redirects vendor register profile page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_vendor_register_profile_page() {
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		// Check vendor.
+		if ( $vendor->validate() ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders vendor register profile page.
+	 *
+	 * @return string
+	 */
+	public function render_vendor_register_profile_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'vendor_register_profile_page',
+
+				'context'  => [
+					'vendor' => hivepress()->request->get_context( 'vendor' ),
+					'user'   => hivepress()->request->get_context( 'user' ),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects vendor register complete page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_vendor_register_complete_page() {
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		// Update vendor.
+		$vendor->set_status( 'publish' )->save_status();
+
+		// Send email.
+		( new Emails\Vendor_Register(
+			[
+				'recipient' => get_option( 'admin_email' ),
+
+				'tokens'    => [
+					'vendor_url' => get_permalink( $vendor->get_id() ),
+				],
+			]
+		) )->send();
+
+		return get_permalink( $vendor->get_id() );
 	}
 }

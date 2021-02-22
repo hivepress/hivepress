@@ -211,12 +211,19 @@ abstract class Model {
 				$action = ! in_array( $prefix, [ 'set', 'save' ], true ) ? 'get' : $prefix;
 				$field  = substr( $name, strlen( $prefix . '_' ) );
 
-				if ( 'display' === $prefix ) {
-					$args[] = true;
+				// Get field arguments.
+				if ( 'get' === $action ) {
+					$args = [ $args ];
+
+					if ( 'display' === $prefix ) {
+						$args[] = true;
+					}
 				}
 
+				array_unshift( $args, $field );
+
 				// Get field value.
-				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], array_merge( [ $field ], $args ) );
+				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], $args );
 
 				if ( 'set' !== $action ) {
 					return $value;
@@ -285,10 +292,11 @@ abstract class Model {
 	 * Gets field value.
 	 *
 	 * @param string $name Field name.
+	 * @param array  $args Field arguments.
 	 * @param bool   $display Display flag.
 	 * @return mixed
 	 */
-	final protected function _get_value( $name, $display = false ) {
+	final protected function _get_value( $name, $args = [], $display = false ) {
 
 		// Get model field.
 		$field = null;
@@ -307,40 +315,50 @@ abstract class Model {
 			} else {
 				$value = $this->fields[ $name ]->get_value();
 
-				if ( $this->fields[ $name ]->get_arg( '_model' ) && 'id' !== $field ) {
+				// Get model name.
+				$model = $this->fields[ $name ]->get_arg( '_model' );
 
-					// Get model object.
-					$model = hp\create_class_instance( '\HivePress\Models\\' . $this->fields[ $name ]->get_arg( '_model' ) );
+				if ( $model && 'id' !== $field ) {
 
-					if ( $model ) {
-
-						// Get object method.
-						$method = null;
-
-						if ( $field ) {
-							$method = ( $display ? 'display' : 'get' ) . '_' . $field;
+					// Get model objects.
+					if ( ! isset( $this->values[ $name ] ) ) {
+						if ( is_array( $value ) ) {
+							$value = array_filter(
+								array_map(
+									function( $id ) use ( $model ) {
+										return hivepress()->model->get_model_object( $model, $id );
+									},
+									$value
+								)
+							);
+						} else {
+							$value = hivepress()->model->get_model_object( $model, $value );
 						}
 
-						// Get object fields.
+						$this->values[ $name ] = is_null( $value ) ? false : $value;
+					} else {
+						$value = $this->values[ $name ];
+
+						if ( false === $value ) {
+							$value = null;
+						}
+					}
+
+					if ( $field ) {
+
+						// Get object method.
+						$method = ( $display ? 'display' : 'get' ) . '_' . $field;
+
+						// Get object values.
 						if ( is_array( $value ) ) {
 							$value = array_map(
-								function( $id ) use ( $model, $method ) {
-									$object = $model->query()->get_by_id( $id );
-
-									if ( $object && $method ) {
-										$object = call_user_func( [ $object, $method ] );
-									}
-
-									return $object;
+								function( $object ) use ( $method, $args ) {
+									return call_user_func_array( [ $object, $method ], $args );
 								},
 								$value
 							);
-						} else {
-							$value = $model->query()->get_by_id( $value );
-
-							if ( $value && $method ) {
-								$value = call_user_func( [ $value, $method ] );
-							}
+						} elseif ( $value ) {
+							$value = call_user_func_array( [ $value, $method ], $args );
 						}
 					}
 				}

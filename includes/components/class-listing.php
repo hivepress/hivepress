@@ -36,7 +36,7 @@ final class Listing extends Component {
 		add_action( 'hivepress/v1/models/listing/update_images', [ $this, 'update_image' ] );
 
 		// Update status.
-		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 3 );
+		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 4 );
 
 		// Expire listings.
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
@@ -63,7 +63,7 @@ final class Listing extends Component {
 		} else {
 
 			// Set request context.
-			add_action( 'init', [ $this, 'set_request_context' ], 100 );
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
 			// Alter menus.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
@@ -197,13 +197,10 @@ final class Listing extends Component {
 	 * @param int    $listing_id Listing ID.
 	 * @param string $new_status New status.
 	 * @param string $old_status Old status.
+	 * @param object $listing Listing.
 	 */
-	public function update_status( $listing_id, $new_status, $old_status ) {
-
-		// Get listing.
-		$listing = Models\Listing::query()->get_by_id( $listing_id );
-
-		if ( 'pending' === $old_status ) {
+	public function update_status( $listing_id, $new_status, $old_status, $listing ) {
+		if ( 'pending' === $old_status && get_option( 'hp_listing_enable_moderation' ) ) {
 
 			// Get user.
 			$user = $listing->get_user();
@@ -591,13 +588,11 @@ final class Listing extends Component {
 
 	/**
 	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
 	 */
-	public function set_request_context() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() || hp\is_rest() ) {
-			return;
-		}
+	public function set_request_context( $context ) {
 
 		// Get cached listing count.
 		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
@@ -617,7 +612,9 @@ final class Listing extends Component {
 		}
 
 		// Set request context.
-		hivepress()->request->set_context( 'listing_count', $listing_count );
+		$context['listing_count'] = $listing_count;
+
+		return $context;
 	}
 
 	/**

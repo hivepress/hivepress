@@ -140,7 +140,9 @@ class Select extends Field {
 				$this->placeholder = '&mdash;';
 			}
 
-			$this->options = [ '' => $this->placeholder ] + $this->options;
+			if ( ! isset( $this->options[''] ) ) {
+				$this->options = [ '' => $this->placeholder ] + $this->options;
+			}
 		} elseif ( ! is_null( $this->placeholder ) ) {
 			$attributes['data-placeholder'] = $this->placeholder;
 		}

@@ -56,7 +56,7 @@ final class WooCommerce extends Component {
 		if ( ! is_admin() ) {
 
 			// Set request context.
-			add_action( 'init', [ $this, 'set_request_context' ], 100 );
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
@@ -281,13 +281,11 @@ final class WooCommerce extends Component {
 
 	/**
 	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
 	 */
-	public function set_request_context() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() || hp\is_rest() ) {
-			return;
-		}
+	public function set_request_context( $context ) {
 
 		// Get cached order count.
 		$order_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'order_count' );
@@ -302,7 +300,9 @@ final class WooCommerce extends Component {
 		}
 
 		// Set request context.
-		hivepress()->request->set_context( 'order_count', $order_count );
+		$context['order_count'] = $order_count;
+
+		return $context;
 	}
 
 	/**

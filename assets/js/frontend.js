@@ -75,6 +75,14 @@
 									}
 								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
+
+									form.find(hivepress.getSelector('file-upload')).each(function() {
+										var field = $(this),
+											selectLabel = field.closest('label'),
+											responseContainer = selectLabel.parent().children('div').first();
+
+										responseContainer.html('');
+									});
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
@@ -198,29 +206,6 @@
 			});
 		});
 
-		// Sticky
-		$(window).on('load', function() {
-			hivepress.getComponent('sticky').each(function() {
-				var container = $(this),
-					spacing = 32;
-
-				if ($('#wpadminbar').length) {
-					spacing = spacing + $('#wpadminbar').height();
-				}
-
-				if (container.height() === 0) {
-					container.hide();
-				} else if ($(window).width() >= 768) {
-					container.wrapInner('<div />');
-
-					container.children('div').stickySidebar({
-						topSpacing: spacing,
-						bottomSpacing: spacing,
-					});
-				}
-			});
-		});
-
 		// Carousel slider
 		hivepress.getComponent('carousel-slider').each(function() {
 			var container = $(this),
@@ -295,6 +280,30 @@
 							},
 						],
 					});
+				});
+			}
+		});
+	});
+
+	$(window).on('load', function() {
+
+		// Sticky
+		hivepress.getComponent('sticky').each(function() {
+			var container = $(this),
+				spacing = 32;
+
+			if ($('#wpadminbar').length) {
+				spacing = spacing + $('#wpadminbar').height();
+			}
+
+			if (container.height() === 0) {
+				container.hide();
+			} else if ($(window).width() >= 768) {
+				container.wrapInner('<div />');
+
+				container.children('div').stickySidebar({
+					topSpacing: spacing,
+					bottomSpacing: spacing,
 				});
 			}
 		});
