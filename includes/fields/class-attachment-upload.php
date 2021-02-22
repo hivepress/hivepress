@@ -343,7 +343,7 @@ class Attachment_Upload extends Field {
 		if ( strpos( $attachment->get_mime_type(), 'image/' ) === 0 ) {
 			$output .= wp_get_attachment_image( $attachment->get_id(), 'thumbnail' );
 		} else {
-			$output .= '<div><span>' . esc_html( wp_basename( get_attached_file( $attachment->get_id() ) ) ) . '</span></div>';
+			$output .= '<div><span>' . esc_html( $attachment->get_name() ) . '</span></div>';
 		}
 
 		// Render delete button.

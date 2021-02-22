@@ -211,12 +211,19 @@ abstract class Model {
 				$action = ! in_array( $prefix, [ 'set', 'save' ], true ) ? 'get' : $prefix;
 				$field  = substr( $name, strlen( $prefix . '_' ) );
 
-				if ( 'display' === $prefix ) {
-					$args[] = true;
+				// Get field arguments.
+				if ( 'get' === $action ) {
+					$args = [ $args ];
+
+					if ( 'display' === $prefix ) {
+						$args[] = true;
+					}
 				}
 
+				array_unshift( $args, $field );
+
 				// Get field value.
-				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], array_merge( [ $field ], $args ) );
+				$value = call_user_func_array( [ $this, '_' . $action . '_value' ], $args );
 
 				if ( 'set' !== $action ) {
 					return $value;
@@ -285,10 +292,11 @@ abstract class Model {
 	 * Gets field value.
 	 *
 	 * @param string $name Field name.
+	 * @param array  $args Field arguments.
 	 * @param bool   $display Display flag.
 	 * @return mixed
 	 */
-	final protected function _get_value( $name, $display = false ) {
+	final protected function _get_value( $name, $args = [], $display = false ) {
 
 		// Get model field.
 		$field = null;
@@ -324,11 +332,11 @@ abstract class Model {
 						// Get object fields.
 						if ( is_array( $value ) ) {
 							$value = array_map(
-								function( $id ) use ( $model, $method ) {
+								function( $id ) use ( $model, $method, $args ) {
 									$object = $model->query()->get_by_id( $id );
 
 									if ( $object && $method ) {
-										$object = call_user_func( [ $object, $method ] );
+										$object = call_user_func_array( [ $object, $method ], $args );
 									}
 
 									return $object;
@@ -339,7 +347,7 @@ abstract class Model {
 							$value = $model->query()->get_by_id( $value );
 
 							if ( $value && $method ) {
-								$value = call_user_func( [ $value, $method ] );
+								$value = call_user_func_array( [ $value, $method ], $args );
 							}
 						}
 					}

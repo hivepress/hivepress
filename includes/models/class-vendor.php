@@ -111,31 +111,4 @@ class Vendor extends Post {
 			}
 		);
 	}
-
-	/**
-	 * Gets image URL.
-	 *
-	 * @param string $size Image size.
-	 * @return string
-	 */
-	final public function get_image__url( $size = 'thumbnail' ) {
-
-		// Get field name.
-		$name = 'image__url__' . $size;
-
-		if ( ! isset( $this->values[ $name ] ) ) {
-			$this->values[ $name ] = '';
-
-			// Get image URL.
-			if ( $this->get_image__id() ) {
-				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
-
-				if ( $urls ) {
-					$this->values[ $name ] = hp\get_first_array_value( $urls );
-				}
-			}
-		}
-
-		return $this->values[ $name ];
-	}
 }

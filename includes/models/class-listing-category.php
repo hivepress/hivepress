@@ -115,33 +115,6 @@ class Listing_Category extends Term {
 	 *
 	 * @param string $size Image size.
 	 * @return string
-	 */
-	final public function get_image__url( $size = 'thumbnail' ) {
-
-		// Get field name.
-		$name = 'image__url__' . $size;
-
-		if ( ! isset( $this->values[ $name ] ) ) {
-			$this->values[ $name ] = '';
-
-			// Get image URL.
-			if ( $this->get_image__id() ) {
-				$urls = wp_get_attachment_image_src( $this->get_image__id(), $size );
-
-				if ( $urls ) {
-					$this->values[ $name ] = hp\get_first_array_value( $urls );
-				}
-			}
-		}
-
-		return $this->values[ $name ];
-	}
-
-	/**
-	 * Gets image URL.
-	 *
-	 * @param string $size Image size.
-	 * @return string
 	 * @deprecated Since version 1.3.0
 	 */
 	final public function get_image_url( $size ) {
