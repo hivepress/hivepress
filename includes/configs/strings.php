@@ -145,6 +145,7 @@ return [
 	'no_vendors_found'                          => esc_html__( 'No vendors found.', 'hivepress' ),
 	'vendor_attributes'                         => esc_html__( 'Vendor Attributes', 'hivepress' ),
 	'vendor_search_form'                        => esc_html__( 'Vendor Search Form', 'hivepress' ),
+	'vendor_registered'                         => esc_html__( 'Vendor Registered', 'hivepress' ),
 	'vendors_page'                              => esc_html__( 'Vendors Page', 'hivepress' ),
 	'regular_vendors_per_page'                  => esc_html__( 'Vendors per Page', 'hivepress' ),
 	'choose_page_that_displays_all_vendors'     => esc_html__( 'Choose a page that displays all vendors.', 'hivepress' ),

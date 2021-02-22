@@ -207,7 +207,7 @@ return [
 		'_order'   => 50,
 
 		'sections' => [
-			'display' => [
+			'display'      => [
 				'title'  => hivepress()->translator->get_string( 'display_noun' ),
 				'_order' => 10,
 
@@ -256,7 +256,7 @@ return [
 				],
 			],
 
-			'search'  => [
+			'search'       => [
 				'title'  => hivepress()->translator->get_string( 'search_noun' ),
 				'_order' => 20,
 
@@ -271,6 +271,20 @@ return [
 						'options'  => [
 							'keyword' => hivepress()->translator->get_string( 'keywords' ),
 						],
+					],
+				],
+			],
+
+			'registration' => [
+				'title'  => esc_html__( 'Registration', 'hivepress' ),
+				'_order' => 30,
+
+				'fields' => [
+					'vendor_enable_registration' => [
+						'label'   => esc_html__( 'Registration', 'hivepress' ),
+						'caption' => esc_html__( 'Allow direct registration', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
 					],
 				],
 			],
