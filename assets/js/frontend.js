@@ -75,6 +75,14 @@
 									}
 								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
+
+									form.find(hivepress.getSelector('file-upload')).each(function() {
+										var field = $(this),
+											selectLabel = field.closest('label'),
+											responseContainer = selectLabel.parent().children('div').first();
+
+										responseContainer.html('');
+									});
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
