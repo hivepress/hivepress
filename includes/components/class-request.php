@@ -30,7 +30,10 @@ final class Request extends Component {
 	public function __construct( $args = [] ) {
 
 		// Set the current user.
-		add_action( 'init', [ $this, 'set_user' ] );
+		add_action( 'init', [ $this, 'set_user' ], 1 );
+
+		// Set request context.
+		add_action( 'init', [ $this, 'set_request_context' ], 100 );
 
 		parent::__construct( $args );
 	}
@@ -108,5 +111,19 @@ final class Request extends Component {
 		}
 
 		return $this->get_context( 'page_number' );
+	}
+
+	/**
+	 * Sets request context.
+	 */
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			return;
+		}
+
+		// Filter request context.
+		$this->context = apply_filters( 'hivepress/v1/components/request/context', $this->context );
 	}
 }

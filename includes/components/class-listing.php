@@ -63,7 +63,7 @@ final class Listing extends Component {
 		} else {
 
 			// Set request context.
-			add_action( 'init', [ $this, 'set_request_context' ], 100 );
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
 			// Alter menus.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_user_account_menu' ] );
@@ -588,13 +588,11 @@ final class Listing extends Component {
 
 	/**
 	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
 	 */
-	public function set_request_context() {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() || hp\is_rest() ) {
-			return;
-		}
+	public function set_request_context( $context ) {
 
 		// Get cached listing count.
 		$listing_count = hivepress()->cache->get_user_cache( get_current_user_id(), 'listing_count', 'models/listing' );
@@ -614,7 +612,9 @@ final class Listing extends Component {
 		}
 
 		// Set request context.
-		hivepress()->request->set_context( 'listing_count', $listing_count );
+		$context['listing_count'] = $listing_count;
+
+		return $context;
 	}
 
 	/**
