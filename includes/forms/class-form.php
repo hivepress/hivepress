@@ -251,13 +251,15 @@ abstract class Form {
 		$this->fields = [];
 
 		foreach ( hp\sort_array( $fields ) as $name => $args ) {
+			if ( isset( $args['type'] ) ) {
 
-			// Create field.
-			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
 
-			// Add field.
-			if ( $field ) {
-				$this->fields[ $name ] = $field;
+				// Add field.
+				if ( $field ) {
+					$this->fields[ $name ] = $field;
+				}
 			}
 		}
 	}
