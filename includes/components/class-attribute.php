@@ -1310,7 +1310,7 @@ final class Attribute extends Component {
 		$model = null;
 
 		foreach ( $this->models as $model_name ) {
-			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( [ $model_name . '_category', $model_name . '_tags' ] ) ) ) {
 				$model = $model_name;
 
 				break;
