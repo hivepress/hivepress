@@ -330,6 +330,15 @@ abstract class Field {
 	}
 
 	/**
+	 * Gets field slug.
+	 *
+	 * @return string
+	 */
+	final public function get_slug() {
+		return hp\sanitize_slug( $this->name );
+	}
+
+	/**
 	 * Gets field label.
 	 *
 	 * @return string
