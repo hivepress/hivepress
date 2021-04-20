@@ -555,9 +555,7 @@ final class Admin extends Component {
 						$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
 					}
 
-					if ( isset( $theme['price'] ) ) {
-						$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
-					}
+					$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
 
 					return $theme;
 				},
