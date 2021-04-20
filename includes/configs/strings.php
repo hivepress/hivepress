@@ -23,6 +23,7 @@ return [
 	'title'                                     => esc_html__( 'Title', 'hivepress' ),
 	'name'                                      => esc_html__( 'Name', 'hivepress' ),
 	'date'                                      => esc_html__( 'Date', 'hivepress' ),
+	'status'                                    => esc_html__( 'Status', 'hivepress' ),
 	'images'                                    => esc_html__( 'Images', 'hivepress' ),
 	'select_images'                             => esc_html__( 'Select Images', 'hivepress' ),
 	'description'                               => esc_html__( 'Description', 'hivepress' ),
