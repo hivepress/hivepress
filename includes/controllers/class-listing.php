@@ -670,12 +670,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Check listings.
@@ -749,12 +744,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Check listing.
@@ -798,12 +788,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get listing.
@@ -1077,12 +1062,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get listing.

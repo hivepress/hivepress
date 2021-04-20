@@ -291,6 +291,21 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets return URL.
+	 *
+	 * @param string $name Route name.
+	 * @return string
+	 */
+	public function get_return_url( $name ) {
+		return $this->get_url(
+			$name,
+			[
+				'redirect' => $this->get_current_url(),
+			]
+		);
+	}
+
+	/**
 	 * Gets redirect URL.
 	 *
 	 * @return string
@@ -443,7 +458,7 @@ final class Router extends Component {
 			$args,
 			[
 				'context' => [
-					'page_title' => hp\get_array_value( hivepress()->router->get_current_route(), 'title' ),
+					'page_title' => hp\get_array_value( $this->get_current_route(), 'title' ),
 				],
 			]
 		);

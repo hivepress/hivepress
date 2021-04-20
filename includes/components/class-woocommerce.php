@@ -346,14 +346,7 @@ final class WooCommerce extends Component {
 	 */
 	public function redirect_account_page() {
 		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect(
-				hivepress()->router->get_url(
-					'user_login_page',
-					[
-						'redirect' => hivepress()->router->get_current_url(),
-					]
-				)
-			);
+			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
 
 			exit;
 		}
