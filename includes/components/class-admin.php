@@ -556,7 +556,7 @@ final class Admin extends Component {
 					}
 
 					if ( isset( $theme['price'] ) ) {
-						$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug;
+						$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
 					}
 
 					return $theme;
@@ -684,14 +684,14 @@ final class Admin extends Component {
 			// Set extension URLs.
 			$extensions = array_map(
 				function( $extension ) {
-					$slug = preg_replace( '/^hivepress-/', '', $extension['slug'] );
+					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					return array_merge(
 						$extension,
 						[
-							'buy_url'     => 'https://hivepress.io/extensions/' . $slug,
-							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $slug,
-							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $slug,
+							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
+							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
+							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $path,
 						]
 					);
 				},
