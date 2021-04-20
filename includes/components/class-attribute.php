@@ -105,13 +105,19 @@ final class Attribute extends Component {
 	 * @param array  $category_ids Category IDs.
 	 * @return array
 	 */
-	public function get_attributes( $model, $category_ids ) {
-		return array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_ids ) {
-				return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
-			}
-		);
+	public function get_attributes( $model, $category_ids = [] ) {
+		$attributes = hp\get_array_value( $this->attributes, $model, [] );
+
+		if ( $category_ids ) {
+			$attributes = array_filter(
+				$attributes,
+				function( $attribute ) use ( $category_ids ) {
+					return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
+				}
+			);
+		}
+
+		return $attributes;
 	}
 
 	/**
