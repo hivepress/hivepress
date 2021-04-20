@@ -124,6 +124,27 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Gets related product.
+	 *
+	 * @param int   $parent_id Parent ID.
+	 * @param array $args Query arguments.
+	 * @return object
+	 */
+	public function get_related_product( $parent_id, $args = [] ) {
+		return hp\get_first_array_value(
+			wc_get_products(
+				array_merge(
+					[
+						'parent' => $parent_id,
+						'limit'  => 1,
+					],
+					$args
+				)
+			)
+		);
+	}
+
+	/**
 	 * Formats price.
 	 *
 	 * @param float $price Price.
