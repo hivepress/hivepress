@@ -157,48 +157,6 @@ return [
 					],
 				],
 			],
-
-			'emails'     => [
-				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'_order' => 1000,
-
-				'fields' => [
-					'email_listing_approve' => [
-						'label'       => hivepress()->translator->get_string( 'listing_approved' ),
-						'description' => esc_html__( 'This email is sent to users when listing is approved.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%, %listing_url%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_parent'     => 'listing_enable_moderation',
-						'_order'      => 10,
-					],
-
-					'email_listing_reject'  => [
-						'label'       => hivepress()->translator->get_string( 'listing_rejected' ),
-						'description' => esc_html__( 'This email is sent to users when listing is rejected.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_parent'     => 'listing_enable_moderation',
-						'_order'      => 20,
-					],
-
-					'email_listing_expire'  => [
-						'label'       => hivepress()->translator->get_string( 'listing_expired' ),
-						'description' => esc_html__( 'This email is sent to users when listing is expired.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %listing_title%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired, click on the following link to renew it: %listing_url%', 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_order'      => 30,
-					],
-				],
-			],
 		],
 	],
 
@@ -356,48 +314,6 @@ return [
 						'type'    => 'checkbox',
 						'_parent' => 'user_enable_registration',
 						'_order'  => 40,
-					],
-				],
-			],
-
-			'emails'       => [
-				'title'  => esc_html__( 'Emails', 'hivepress' ),
-				'_order' => 1000,
-
-				'fields' => [
-					'email_user_register'         => [
-						'label'       => esc_html__( 'User Registered', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %user_password%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( "Hi, %user_name%! Thank you for registering, here's your password: %user_password%", 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_parent'     => 'user_enable_registration',
-						'_order'      => 10,
-					],
-
-					'email_user_password_request' => [
-						'label'       => esc_html__( 'Password Reset', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users when a password reset is requested.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %password_reset_url%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to set a new password: %password_reset_url%', 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_order'      => 20,
-					],
-
-					'email_user_email_verify'     => [
-						'label'       => esc_html__( 'Email Verification', 'hivepress' ),
-						'description' => esc_html__( 'This email is sent to users when email verification is required.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%user_name%, %email_verify_url%' ),
-						'type'        => 'textarea',
-						'default'     => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to verify your email address: %email_verify_url%', 'hivepress' ) ),
-						'max_length'  => 2048,
-						'html'        => true,
-						'_autoload'   => false,
-						'_parent'     => 'user_verify_email',
-						'_order'      => 30,
 					],
 				],
 			],
