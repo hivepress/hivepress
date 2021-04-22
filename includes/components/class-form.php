@@ -354,6 +354,27 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets emails.
+	 *
+	 * @param array $args Email arguments.
+	 * @param mixed $value Current value.
+	 * @return array
+	 */
+	protected function get_emails( $args, $value ) {
+		$options = [];
+
+		foreach ( hivepress()->get_classes( 'emails' ) as $email_name => $email ) {
+			if ( $email::get_meta( 'label' ) ) {
+				$options[ $email_name ] = $email::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		return $options;
+	}
+
+	/**
 	 * Checks captcha status.
 	 *
 	 * @return bool
