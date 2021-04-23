@@ -36,7 +36,7 @@ return [
 		'show_ui'      => true,
 		'show_in_menu' => 'hp_settings',
 		'show_in_rest' => true,
-		'supports'     => [ 'title', 'editor' ],
+		'supports'     => [ 'editor' ],
 
 		'labels'       => [
 			'name'               => esc_html__( 'Templates', 'hivepress' ),

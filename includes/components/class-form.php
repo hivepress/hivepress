@@ -354,6 +354,27 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets templates.
+	 *
+	 * @param array $args Template arguments.
+	 * @param mixed $value Current value.
+	 * @return array
+	 */
+	protected function get_templates( $args, $value ) {
+		$options = [];
+
+		foreach ( hivepress()->get_classes( 'templates' ) as $template_name => $template ) {
+			if ( $template::get_meta( 'label' ) ) {
+				$options[ $template_name ] = $template::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		return $options;
+	}
+
+	/**
 	 * Gets emails.
 	 *
 	 * @param array $args Email arguments.
