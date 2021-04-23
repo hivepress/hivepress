@@ -30,7 +30,7 @@ class Listing_Reject extends Email {
 				'label'       => hivepress()->translator->get_string( 'listing_rejected' ),
 				'description' => esc_html__( 'This email is sent to users when listing is rejected.', 'hivepress' ),
 				'recipient'   => hivepress()->translator->get_string( 'vendor' ),
-				'tokens'      => [ 'user_name', 'listing_title' ],
+				'tokens'      => [ 'user_name', 'listing_title', 'user', 'listing' ],
 			],
 			$meta
 		);

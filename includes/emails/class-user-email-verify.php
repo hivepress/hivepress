@@ -30,7 +30,7 @@ class User_Email_Verify extends Email {
 				'label'       => esc_html__( 'Email Verification', 'hivepress' ),
 				'description' => esc_html__( 'This email is sent to users when email verification is required.', 'hivepress' ),
 				'recipient'   => hivepress()->translator->get_string( 'user' ),
-				'tokens'      => [ 'user_name', 'email_verify_url' ],
+				'tokens'      => [ 'user_name', 'email_verify_url', 'user' ],
 			],
 			$meta
 		);

@@ -30,7 +30,7 @@ class User_Password_Request extends Email {
 				'label'       => esc_html__( 'Password Reset', 'hivepress' ),
 				'description' => esc_html__( 'This email is sent to users when a password reset is requested.', 'hivepress' ),
 				'recipient'   => hivepress()->translator->get_string( 'user' ),
-				'tokens'      => [ 'user_name', 'password_reset_url' ],
+				'tokens'      => [ 'user_name', 'password_reset_url', 'user' ],
 			],
 			$meta
 		);

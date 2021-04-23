@@ -33,6 +33,9 @@ final class Email extends Component {
 
 			// Disable editor settings.
 			add_filter( 'wp_editor_settings', [ $this, 'disable_editor_settings' ], 10, 2 );
+
+			// Render email details.
+			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
 		}
 
 		parent::__construct( $args );
@@ -103,5 +106,39 @@ final class Email extends Component {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Renders email details.
+	 *
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
+	 */
+	public function render_email_details( $meta_box ) {
+
+		// Get email.
+		$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), get_post_field( 'post_name' ) );
+
+		if ( $email && $email::get_meta( 'label' ) ) {
+			$output = '';
+
+			if ( $email::get_meta( 'description' ) ) {
+				$output .= $email::get_meta( 'description' ) . ' ';
+			}
+
+			if ( $email::get_meta( 'tokens' ) ) {
+				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+			}
+
+			if ( $output ) {
+				$meta_box['blocks']['email_details'] = [
+					'type'    => 'content',
+					'content' => '<p>' . trim( $output ) . '</p>',
+					'_order'  => 10,
+				];
+			}
+		}
+
+		return $meta_box;
 	}
 }

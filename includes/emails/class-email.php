@@ -140,7 +140,7 @@ abstract class Email {
 			// Get email.
 			$email = get_page_by_path( static::get_meta( 'name' ), OBJECT, 'hp_email' );
 
-			if ( $email ) {
+			if ( $email && 'publish' === $email->post_status ) {
 
 				// Set subject.
 				if ( $email->post_title ) {

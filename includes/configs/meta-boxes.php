@@ -27,6 +27,12 @@ return [
 		],
 	],
 
+	'email_details'             => [
+		'title'  => hivepress()->translator->get_string( 'details' ),
+		'screen' => 'email',
+		'blocks' => [],
+	],
+
 	'listing_settings'          => [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'listing',
