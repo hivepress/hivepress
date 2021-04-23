@@ -41,6 +41,9 @@ final class Upgrade extends Component {
 		// Upgrade attributes.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
 
+		// Ugrade emails.
+		add_action( 'hivepress/v1/activate', [ $this, 'upgrade_emails' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -204,6 +207,50 @@ final class Upgrade extends Component {
 							'ID' => $attribute->ID,
 						]
 					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Upgrades emails.
+	 *
+	 * @deprecated Since version 1.5.0
+	 */
+	public function upgrade_emails() {
+
+		// Get email classes.
+		$email_classes = hivepress()->get_classes( 'emails' );
+
+		foreach ( $email_classes as $email_class ) {
+			if ( $email_class::get_meta( 'label' ) ) {
+
+				// Get option value.
+				$option_name  = 'hp_email_' . $email_class::get_meta( 'name' );
+				$option_value = get_option( $option_name );
+
+				if ( false !== $option_value ) {
+
+					// Create email object.
+					$email = hp\create_class_instance( $email_class );
+
+					if ( $email ) {
+
+						// Add email post.
+						if ( wp_insert_post(
+							[
+								'post_title'   => $email->get_subject(),
+								'post_name'    => $email_class::get_meta( 'name' ),
+								'post_content' => $option_value,
+								'post_type'    => 'hp_email',
+								'post_status'  => 'publish',
+							]
+						) ) {
+
+							// Delete option.
+							delete_option( $option_name );
+						}
+					}
 				}
 			}
 		}

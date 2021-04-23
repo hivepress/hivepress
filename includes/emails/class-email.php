@@ -153,10 +153,20 @@ abstract class Email {
 		}
 
 		// Replace tokens.
-		$this->body = hp\replace_tokens( $this->tokens, $this->body );
+		$this->subject = hp\replace_tokens( $this->tokens, $this->subject );
+		$this->body    = hp\replace_tokens( $this->tokens, $this->body );
 
 		// Convert URLs.
 		$this->body = make_clickable( $this->body );
+	}
+
+	/**
+	 * Gets email subject.
+	 *
+	 * @return string
+	 */
+	final public function get_subject() {
+		return $this->subject;
 	}
 
 	/**
