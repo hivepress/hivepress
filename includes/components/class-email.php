@@ -25,6 +25,10 @@ final class Email extends Component {
 	 * @param array $args Component arguments.
 	 */
 	public function __construct( $args = [] ) {
+
+		// Set email content.
+		add_filter( 'hivepress/v1/emails/email', [ $this, 'set_email_content' ], 10, 2 );
+
 		if ( is_admin() ) {
 
 			// Manage admin columns.
@@ -39,6 +43,34 @@ final class Email extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Sets email content.
+	 *
+	 * @param array  $args Email arguments.
+	 * @param object $email Email object.
+	 * @return array
+	 */
+	public function set_email_content( $args, $email ) {
+		if ( $email::get_meta( 'label' ) ) {
+
+			// Get content.
+			$content = get_page_by_path( $email::get_meta( 'name' ), OBJECT, 'hp_email' );
+
+			if ( $content && 'publish' === $content->post_status ) {
+
+				// Set subject.
+				if ( $content->post_title ) {
+					$args['subject'] = $content->post_title;
+				}
+
+				// Set body.
+				$args['body'] = apply_filters( 'the_content', $content->post_content );
+			}
+		}
+
+		return $args;
 	}
 
 	/**
