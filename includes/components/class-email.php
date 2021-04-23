@@ -50,8 +50,9 @@ final class Email extends Component {
 		return array_merge(
 			$columns,
 			[
-				'title' => esc_html__( 'Subject', 'hivepress' ),
-				'event' => esc_html__( 'Event', 'hivepress' ),
+				'title'     => esc_html__( 'Subject', 'hivepress' ),
+				'event'     => esc_html__( 'Event', 'hivepress' ),
+				'recipient' => esc_html__( 'Recipient', 'hivepress' ),
 			]
 		);
 	}
@@ -63,23 +64,25 @@ final class Email extends Component {
 	 * @param int    $email_id Email ID.
 	 */
 	public function render_admin_columns( $column, $email_id ) {
-
-		// Check column.
-		if ( 'event' !== $column ) {
-			return;
-		}
-
-		$output = '&mdash;';
+		$output = '';
 
 		// Get email.
 		$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), get_post_field( 'post_name' ) );
 
-		// Set label.
-		if ( $email && $email::get_meta( 'label' ) ) {
-			$output = $email::get_meta( 'label' );
+		if ( ! $email ) {
+			return;
 		}
 
-		echo wp_kses_data( $output );
+		// Render output.
+		if ( 'event' === $column ) {
+			$output = $email::get_meta( 'label' );
+		} elseif ( 'recipient' === $column ) {
+			$output = $email::get_meta( 'recipient' );
+		}
+
+		if ( $output ) {
+			echo wp_kses_data( $output );
+		}
 	}
 
 	/**

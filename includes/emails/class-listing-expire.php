@@ -29,6 +29,7 @@ class Listing_Expire extends Email {
 			[
 				'label'       => hivepress()->translator->get_string( 'listing_expired' ),
 				'description' => esc_html__( 'This email is sent to users when listing is expired.', 'hivepress' ),
+				'recipient'   => hivepress()->translator->get_string( 'vendor' ),
 				'tokens'      => [ 'user_name', 'listing_title', 'listing_url' ],
 			],
 			$meta

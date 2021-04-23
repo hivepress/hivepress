@@ -29,6 +29,7 @@ class User_Register extends Email {
 			[
 				'label'       => esc_html__( 'User Registered', 'hivepress' ),
 				'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ),
+				'recipient'   => hivepress()->translator->get_string( 'user' ),
 				'tokens'      => [ 'user_name', 'user_password' ],
 			],
 			$meta

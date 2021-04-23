@@ -135,6 +135,22 @@ abstract class Email {
 	 * Bootstraps email properties.
 	 */
 	protected function boot() {
+		if ( static::get_meta( 'label' ) ) {
+
+			// Get email.
+			$email = get_page_by_path( static::get_meta( 'name' ), OBJECT, 'hp_email' );
+
+			if ( $email ) {
+
+				// Set subject.
+				if ( $email->post_title ) {
+					$this->subject = $email->post_title;
+				}
+
+				// Set body.
+				$this->body = apply_filters( 'the_content', $email->post_content );
+			}
+		}
 
 		// Replace tokens.
 		$this->body = hp\replace_tokens( $this->tokens, $this->body );
