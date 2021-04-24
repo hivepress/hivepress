@@ -783,7 +783,7 @@ final class Listing extends Controller {
 
 		// Check permissions.
 		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Check authentication.
@@ -812,7 +812,7 @@ final class Listing extends Controller {
 			);
 
 			if ( ! $listing->save( [ 'status', 'drafted', 'user' ] ) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		}
 
@@ -864,7 +864,7 @@ final class Listing extends Controller {
 					'user',
 				]
 			) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		}
 
@@ -1069,7 +1069,7 @@ final class Listing extends Controller {
 		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Set request context.

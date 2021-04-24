@@ -485,7 +485,7 @@ final class Router extends Component {
 			}
 
 			// Get menu redirect.
-			$menu_redirect = home_url( '/' );
+			$menu_redirect = home_url();
 
 			foreach ( hivepress()->get_classes( 'menus' ) as $menu_class ) {
 				if ( $menu_class::get_meta( 'chained' ) ) {

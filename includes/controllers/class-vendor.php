@@ -300,7 +300,7 @@ final class Vendor extends Controller {
 
 		// Check permissions.
 		if ( ! get_option( 'hp_vendor_enable_registration' ) ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Check authentication.
@@ -343,10 +343,10 @@ final class Vendor extends Controller {
 					'user',
 				]
 			) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		} elseif ( $vendor->get_status() === 'publish' ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Set request context.
