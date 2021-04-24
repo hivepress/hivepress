@@ -79,4 +79,19 @@ class User_Login_Form extends Form {
 
 		parent::__construct( $args );
 	}
+
+	/**
+	 * Renders block HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		$output = '';
+
+		if ( ! is_user_logged_in() || hp\is_rest() ) {
+			$output .= parent::render();
+		}
+
+		return $output;
+	}
 }
