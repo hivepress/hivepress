@@ -1333,6 +1333,18 @@ final class Admin extends Component {
 			];
 		}
 
+		if ( absint( get_option( 'hp_installed_time' ) ) < time() - WEEK_IN_SECONDS * 2 ) {
+			$notices['review_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'It\'s been more than 2 weeks since you installed HivePress, that\'s awesome! If you find it useful, please leave a review on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word.', 'hivepress' ) ),
+					'https://wordpress.org/support/plugin/hivepress/reviews/'
+				),
+			];
+		}
+
 		/**
 		 * Filters admin notices.
 		 *
