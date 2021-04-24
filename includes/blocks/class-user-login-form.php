@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 class User_Login_Form extends Form {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Block meta.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => esc_html__( 'User Login Form', 'hivepress' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Block arguments.
