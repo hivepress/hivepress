@@ -64,11 +64,19 @@ return [
 						'_order'    => 50,
 					],
 
+					'listing_title_format'             => [
+						'label'       => hivepress()->translator->get_string( 'title' ),
+						'description' => esc_html__( 'Set the title display format to generate titles based on attributes.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%listing%' ),
+						'type'        => 'text',
+						'max_length'  => 256,
+						'_order'      => 60,
+					],
+
 					'listing_enable_image_zoom'        => [
 						'label'   => hivepress()->translator->get_string( 'images' ),
 						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 60,
+						'_order'  => 70,
 					],
 				],
 			],
