@@ -312,7 +312,7 @@ function replace_tokens( $tokens, $text ) {
 			if ( $fields ) {
 				foreach ( $value->_get_fields() as $field ) {
 					if ( in_array( $field->get_name(), $fields, true ) ) {
-						$text = str_replace( '%' . $name . '.' . $field->get_name() . '%', $field->get_display_value(), $text );
+						$text = str_replace( '%' . $name . '.' . $field->get_name() . '%', $field->display(), $text );
 					}
 				}
 			}
