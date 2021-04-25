@@ -133,19 +133,11 @@ final class Listing extends Component {
 			]
 		)->get_first();
 
-		if ( ( ! $vendor || $vendor->get_status() === 'auto-draft' ) && $listing->get_status() === 'publish' ) {
-
-			// Get user.
-			$user = $listing->get_user();
-
-			// Update user role.
-			$user_object = get_userdata( $user->get_id() );
-
-			if ( array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
-				$user_object->set_role( 'contributor' );
-			}
-
+		if ( $listing->get_status() === 'publish' ) {
 			if ( ! $vendor ) {
+
+				// Get user.
+				$user = $listing->get_user();
 
 				// Add vendor.
 				$vendor = ( new Models\Vendor() )->fill(
@@ -171,7 +163,7 @@ final class Listing extends Component {
 				) ) {
 					return;
 				}
-			} else {
+			} elseif ( $vendor->get_status() === 'auto-draft' ) {
 
 				// Update vendor status.
 				$vendor->set_status( 'publish' )->save_status();

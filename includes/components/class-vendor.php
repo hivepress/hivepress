@@ -31,6 +31,9 @@ final class Vendor extends Component {
 		// Update vendor.
 		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_vendor' ], 100, 2 );
 
+		// Update vendor status.
+		add_action( 'hivepress/v1/models/vendor/update_status', [ $this, 'update_vendor_status' ], 10, 4 );
+
 		// Add vendor fields.
 		add_filter( 'hivepress/v1/forms/user_update', [ $this, 'add_vendor_fields' ], 100, 2 );
 
@@ -47,6 +50,33 @@ final class Vendor extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Updates vendor status.
+	 *
+	 * @param int    $vendor_id Vendor ID.
+	 * @param string $new_status New status.
+	 * @param string $old_status Old status.
+	 * @param object $vendor Vendor object.
+	 */
+	public function update_vendor_status( $vendor_id, $new_status, $old_status, $vendor ) {
+
+		// Check user.
+		if ( ! $vendor->get_user__id() ) {
+			return;
+		}
+
+		if ( 'publish' === $new_status ) {
+
+			// Get user object.
+			$user_object = get_userdata( $vendor->get_user__id() );
+
+			// Update user role.
+			if ( $user_object && array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
+				$user_object->set_role( 'contributor' );
+			}
+		}
 	}
 
 	/**
