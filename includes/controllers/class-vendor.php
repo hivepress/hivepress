@@ -178,7 +178,8 @@ final class Vendor extends Controller {
 		if ( is_page() ) {
 
 			// Query vendors.
-			query_posts(
+			hivepress()->request->set_context(
+				'post_query',
 				Models\Vendor::query()->filter(
 					[
 						'status' => 'publish',
@@ -265,7 +266,8 @@ final class Vendor extends Controller {
 		}
 
 		// Query listings.
-		query_posts(
+		hivepress()->request->set_context(
+			'post_query',
 			Models\Listing::query()->filter(
 				[
 					'status'     => 'publish',

@@ -576,7 +576,8 @@ final class Listing extends Controller {
 				}
 
 				// Query listings.
-				query_posts(
+				hivepress()->request->set_context(
+					'post_query',
 					Models\Listing::query()->filter(
 						[
 							'status'     => 'publish',
@@ -689,7 +690,8 @@ final class Listing extends Controller {
 	public function render_listings_edit_page() {
 
 		// Query listings.
-		query_posts(
+		hivepress()->request->set_context(
+			'post_query',
 			Models\Listing::query()->filter(
 				[
 					'status__in' => [ 'draft', 'pending', 'publish' ],
