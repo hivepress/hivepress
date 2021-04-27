@@ -38,6 +38,12 @@ final class Elementor extends Component {
 		// Register widgets.
 		add_action( 'elementor/widgets/widgets_registered', [ $this, 'register_widgets' ] );
 
+		// Set preview mode.
+		add_filter( 'hivepress/v1/components/editor/preview', [ $this, 'set_preview_mode' ] );
+
+		// Add icon styles.
+		add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'add_icon_styles' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -71,5 +77,37 @@ final class Elementor extends Component {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Sets preview mode.
+	 *
+	 * @param bool $preview Preview flag.
+	 * @return bool
+	 */
+	public function set_preview_mode( $preview ) {
+		return $preview || \Elementor\Plugin::$instance->editor->is_edit_mode();
+	}
+
+	/**
+	 * Adds icon styles.
+	 */
+	public function add_icon_styles() {
+
+		// Get icon URL.
+		$icon_url = hivepress()->get_url() . '/assets/images/logo-dark.svg';
+
+		// Add icon styles.
+		wp_add_inline_style(
+			'elementor-icons',
+			'.eicon-hivepress {
+				display: block;
+				margin: 0 auto;
+				width: 28px;
+				height: 28px;
+				background: url("' . esc_url( $icon_url ) . '") center center no-repeat;
+				background-size: 28px;
+			}'
+		);
 	}
 }

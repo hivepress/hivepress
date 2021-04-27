@@ -8,6 +8,7 @@
 namespace HivePress\Integrations;
 
 use HivePress\Helpers as hp;
+use HivePress\Traits;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -18,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @class Elementor_Widget
  */
 final class Elementor_Widget extends \Elementor\Widget_Base {
+	use Traits\Context;
 
 	/**
 	 * Widget constructor.
@@ -28,13 +30,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 	public function __construct( $data = [], $args = null ) {
 
 		// Get block slug.
-		$block_slug = hp\get_array_value( $data, 'widgetType' );
-
-		if ( isset( $args['widgetType'] ) ) {
-			$block_slug = $args['widgetType'];
-		} else {
-			$args['widgetType'] = $block_slug;
-		}
+		$block_slug = hp\get_array_value( $data, 'widgetType', hp\get_array_value( $args, 'widgetType' ) );
 
 		if ( $block_slug ) {
 
@@ -43,9 +39,15 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 
 			if ( class_exists( $block_class ) ) {
 
-				// Set block arguments.
-				$args['widgetClass'] = $block_class;
-				$args['widgetTitle'] = $block_class::get_meta( 'label' );
+				// Set block context.
+				$this->context = array_merge(
+					$this->context,
+					[
+						'name'  => $block_slug,
+						'title' => $block_class::get_meta( 'label' ),
+						'class' => $block_class,
+					]
+				);
 			}
 		}
 
@@ -58,7 +60,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name() {
-		return $this->get_default_args( 'widgetType' );
+		return $this->get_context( 'name' );
 	}
 
 	/**
@@ -67,7 +69,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->get_default_args( 'widgetTitle' );
+		return $this->get_context( 'title' );
 	}
 
 	/**
@@ -100,10 +102,10 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Registers widget controls.
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 
 		// Get block class.
-		$block_class = $this->get_default_args( 'widgetClass' );
+		$block_class = $this->get_context( 'class' );
 
 		if ( ! $block_class || ! $block_class::get_meta( 'settings' ) ) {
 			return;
@@ -149,7 +151,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 	protected function render() {
 
 		// Get block class.
-		$block_class = $this->get_default_args( 'widgetClass' );
+		$block_class = $this->get_context( 'class' );
 
 		if ( ! $block_class ) {
 			return;
