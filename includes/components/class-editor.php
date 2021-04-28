@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 final class Editor extends Component {
 
 	/**
+	 * Registered blocks.
+	 *
+	 * @var mixed
+	 */
+	protected $blocks;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -36,6 +43,37 @@ final class Editor extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Checks preview mode.
+	 *
+	 * @return bool
+	 */
+	public function is_preview() {
+		return apply_filters( 'hivepress/v1/components/editor/preview', hp\is_rest() );
+	}
+
+	/**
+	 * Gets blocks.
+	 *
+	 * @param array $container Container arguments.
+	 * @return array
+	 */
+	protected function get_blocks( $container ) {
+		$blocks = [];
+
+		foreach ( $container['blocks'] as $name => $block ) {
+			if ( is_array( $block ) ) {
+				if ( isset( $block['_label'] ) ) {
+					$blocks[ $name ] = $block;
+				} elseif ( isset( $block['blocks'] ) ) {
+					$blocks = array_merge( $blocks, $this->get_blocks( $block ) );
+				}
+			}
+		}
+
+		return $blocks;
 	}
 
 	/**
