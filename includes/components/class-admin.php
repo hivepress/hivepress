@@ -942,15 +942,14 @@ final class Admin extends Component {
 	 * @param int $post_id Post ID.
 	 */
 	public function update_meta_box( $post_id ) {
-		global $pagenow;
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			return;
 		}
 
-		// Check current page.
-		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
 			return;
 		}
 
