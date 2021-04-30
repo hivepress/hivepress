@@ -22,22 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class User_Login_Page extends Page_Narrow {
 
 	/**
-	 * Class initializer.
-	 *
-	 * @param array $meta Form meta.
-	 */
-	public static function init( $meta = [] ) {
-		$meta = hp\merge_arrays(
-			[
-				'label' => esc_html__( 'User Login Page', 'hivepress' ),
-			],
-			$meta
-		);
-
-		parent::init( $meta );
-	}
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.

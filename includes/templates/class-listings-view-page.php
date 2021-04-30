@@ -22,22 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class Listings_View_Page extends Page_Sidebar_Left {
 
 	/**
-	 * Class initializer.
-	 *
-	 * @param array $meta Form meta.
-	 */
-	public static function init( $meta = [] ) {
-		$meta = hp\merge_arrays(
-			[
-				'label' => hivepress()->translator->get_string( 'listings_page' ),
-			],
-			$meta
-		);
-
-		parent::init( $meta );
-	}
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
