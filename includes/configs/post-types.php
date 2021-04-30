@@ -34,7 +34,7 @@ return [
 	'template' => [
 		'public'       => false,
 		'show_ui'      => true,
-		'show_in_menu' => 'hp_settings',
+		'show_in_menu' => false,
 		'show_in_rest' => true,
 		'supports'     => [ 'editor' ],
 
