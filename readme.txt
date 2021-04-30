@@ -22,7 +22,7 @@ Whether it's a business directory, job board, real estate, classifieds or basica
 https://www.youtube.com/watch?v=-OzyG6vhR_o
 
 = Free Theme =
-HivePress comes with a free [ListingHive](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) theme that is fully compatible with HivePress and its official extensions.
+HivePress comes with a free [ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=wordpress.org) theme that is fully compatible with HivePress and its official extensions.
 
 = Free Extensions =
 There's a bunch of [free extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) that can be installed with 1 click directly from the WordPress dashboard.
