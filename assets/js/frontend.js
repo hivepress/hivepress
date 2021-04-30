@@ -11,6 +11,7 @@
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
+					touch: false,
 				});
 
 				e.preventDefault();
