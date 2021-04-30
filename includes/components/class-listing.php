@@ -508,14 +508,7 @@ final class Listing extends Component {
 
 			if ( $vendor_id ) {
 				$name = get_the_title( $vendor_id );
-				$url  = admin_url(
-					'post.php?' . http_build_query(
-						[
-							'action' => 'edit',
-							'post'   => $vendor_id,
-						]
-					)
-				);
+				$url  = hivepress()->router->get_admin_url( 'post', $vendor_id );
 			} else {
 
 				// Get user ID.
@@ -523,13 +516,7 @@ final class Listing extends Component {
 
 				if ( $user_id ) {
 					$name = get_the_author_meta( 'display_name', $user_id );
-					$url  = admin_url(
-						'user-edit.php?' . http_build_query(
-							[
-								'user_id' => $user_id,
-							]
-						)
-					);
+					$url  = hivepress()->router->get_admin_url( 'user', $user_id );
 				}
 			}
 

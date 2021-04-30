@@ -306,6 +306,48 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets admin URL.
+	 *
+	 * @param string $type Object type.
+	 * @param int    $id Object ID.
+	 * @return string
+	 */
+	public function get_admin_url( $type, $id ) {
+		$path = '';
+		$args = [];
+
+		switch ( $type ) {
+			case 'user':
+				$path = $type . '-edit.php';
+				$args = [
+					'user_id' => $id,
+				];
+
+				break;
+
+			case 'post':
+				$path = $type . '.php';
+				$args = [
+					'action' => 'edit',
+					'post'   => $id,
+				];
+
+				break;
+
+			case 'comment':
+				$path = $type . '.php';
+				$args = [
+					'action' => 'editcomment',
+					'c'      => $id,
+				];
+
+				break;
+		}
+
+		return admin_url( $path . '?' . http_build_query( $args ) );
+	}
+
+	/**
 	 * Gets redirect URL.
 	 *
 	 * @return string

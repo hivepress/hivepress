@@ -328,14 +328,7 @@ final class Listing extends Controller {
 					'tokens'    => [
 						'listing_title'      => $listing->get_title(),
 						'listing_attributes' => implode( ', ', $attributes ),
-						'listing_url'        => admin_url(
-							'post.php?' . http_build_query(
-								[
-									'action' => 'edit',
-									'post'   => $listing->get_id(),
-								]
-							)
-						),
+						'listing_url'        => hivepress()->router->get_admin_url( 'post', $listing->get_id() ),
 					],
 				]
 			) )->send();
