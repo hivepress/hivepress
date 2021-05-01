@@ -82,42 +82,19 @@ Mixins
 		}
 	}
 	/*--------------------------------------------------------------
-	Statuses
-	--------------------------------------------------------------*/
-	&-status {
-		span {
-			display: inline-block;
-			border: 1px solid rgba(0, 0, 0, 0.06);
-			padding: 0.4rem 0.5rem;
-			white-space: nowrap;
-			line-height: 1;
-			font-size: 80%;
-		}
-
-		&--draft span,
-		&--wc-refunded span {
-			color: #ff3860;
-			border-color: #ff3860;
-		}
-
-		&--pending span,
-		&--wc-on-hold span,
-		&--wc-processing span {
-			color: #ffcb00;
-			border-color: #ffcb00;
-		}
-
-		&--publish span,
-		&--wc-completed span {
-			color: #15cd72;
-			border-color: #15cd72;
-		}
-	}
-	/*--------------------------------------------------------------
 	Meta
 	--------------------------------------------------------------*/
 	&-meta {
 		font-size: 80%;
+	}
+	/*--------------------------------------------------------------
+	Blocks
+	--------------------------------------------------------------*/
+	&-block {
+		.wp-block &,
+		.elementor-element-edit-mode & {
+			pointer-events: none;
+		}
 	}
 	/*--------------------------------------------------------------
 	Forms

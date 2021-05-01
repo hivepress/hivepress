@@ -179,6 +179,11 @@ final class Core {
 			if ( count( $this->extensions ) !== absint( get_option( 'hp_extensions_number' ) ) ) {
 				update_option( 'hp_extensions_number', count( $this->extensions ) );
 			}
+
+			// Set installation time.
+			if ( ! get_option( 'hp_installed_time' ) ) {
+				update_option( 'hp_installed_time', time() );
+			}
 		}
 
 		if ( ! get_option( 'hp_core_version' ) || version_compare( get_option( 'hp_core_version' ), $this->get_version(), '<' ) ) {

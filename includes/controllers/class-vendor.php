@@ -178,7 +178,8 @@ final class Vendor extends Controller {
 		if ( is_page() ) {
 
 			// Query vendors.
-			query_posts(
+			hivepress()->request->set_context(
+				'post_query',
 				Models\Vendor::query()->filter(
 					[
 						'status' => 'publish',
@@ -265,7 +266,8 @@ final class Vendor extends Controller {
 		}
 
 		// Query listings.
-		query_posts(
+		hivepress()->request->set_context(
+			'post_query',
 			Models\Listing::query()->filter(
 				[
 					'status'     => 'publish',
@@ -300,17 +302,12 @@ final class Vendor extends Controller {
 
 		// Check permissions.
 		if ( ! get_option( 'hp_vendor_enable_registration' ) ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get vendor.
@@ -348,10 +345,10 @@ final class Vendor extends Controller {
 					'user',
 				]
 			) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		} elseif ( $vendor->get_status() === 'publish' ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Set request context.

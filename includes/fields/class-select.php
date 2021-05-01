@@ -291,6 +291,25 @@ class Select extends Field {
 	}
 
 	/**
+	 * Displays field HTML.
+	 *
+	 * @return string
+	 */
+	public function display() {
+		if ( ! $this->multiple && ! is_null( $this->value ) ) {
+			$this->context['parent_value'] = null;
+
+			$value = hp\get_array_value( $this->options, $this->value );
+
+			if ( is_array( $value ) && isset( $value['parent'] ) ) {
+				$this->context['parent_value'] = hp\get_array_value( hp\get_array_value( $this->options, $value['parent'] ), 'label' );
+			}
+		}
+
+		return parent::display();
+	}
+
+	/**
 	 * Renders field HTML.
 	 *
 	 * @return string

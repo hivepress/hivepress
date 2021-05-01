@@ -43,7 +43,7 @@ class Vendor_Sort extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'action' => home_url( '/' ),
+				'action' => home_url(),
 				'method' => 'GET',
 				'button' => null,
 

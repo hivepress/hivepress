@@ -124,6 +124,27 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Gets related product.
+	 *
+	 * @param int   $parent_id Parent ID.
+	 * @param array $args Query arguments.
+	 * @return object
+	 */
+	public function get_related_product( $parent_id, $args = [] ) {
+		return hp\get_first_array_value(
+			wc_get_products(
+				array_merge(
+					[
+						'parent' => $parent_id,
+						'limit'  => 1,
+					],
+					$args
+				)
+			)
+		);
+	}
+
+	/**
 	 * Formats price.
 	 *
 	 * @param float $price Price.
@@ -325,14 +346,7 @@ final class WooCommerce extends Component {
 	 */
 	public function redirect_account_page() {
 		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect(
-				hivepress()->router->get_url(
-					'user_login_page',
-					[
-						'redirect' => hivepress()->router->get_current_url(),
-					]
-				)
-			);
+			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
 
 			exit;
 		}

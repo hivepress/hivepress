@@ -11,7 +11,48 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'listing' => [
+	'email'    => [
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => 'hp_settings',
+		'supports'     => [ 'title', 'editor' ],
+
+		'labels'       => [
+			'name'               => esc_html__( 'Emails', 'hivepress' ),
+			'singular_name'      => esc_html__( 'Email', 'hivepress' ),
+			'add_new'            => esc_html_x( 'Add New', 'email', 'hivepress' ),
+			'add_new_item'       => esc_html__( 'Add Email', 'hivepress' ),
+			'edit_item'          => esc_html__( 'Edit Email', 'hivepress' ),
+			'new_item'           => esc_html__( 'Add Email', 'hivepress' ),
+			'all_items'          => esc_html__( 'Emails', 'hivepress' ),
+			'search_items'       => esc_html__( 'Search Emails', 'hivepress' ),
+			'not_found'          => esc_html__( 'No emails found.', 'hivepress' ),
+			'not_found_in_trash' => esc_html__( 'No emails found.', 'hivepress' ),
+		],
+	],
+
+	'template' => [
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => false,
+		'show_in_rest' => true,
+		'supports'     => [ 'editor' ],
+
+		'labels'       => [
+			'name'               => esc_html__( 'Templates', 'hivepress' ),
+			'singular_name'      => esc_html__( 'Template', 'hivepress' ),
+			'add_new'            => esc_html_x( 'Add New', 'template', 'hivepress' ),
+			'add_new_item'       => esc_html__( 'Add Template', 'hivepress' ),
+			'edit_item'          => esc_html__( 'Edit Template', 'hivepress' ),
+			'new_item'           => esc_html__( 'Add Template', 'hivepress' ),
+			'all_items'          => esc_html__( 'Templates', 'hivepress' ),
+			'search_items'       => esc_html__( 'Search Templates', 'hivepress' ),
+			'not_found'          => esc_html__( 'No templates found.', 'hivepress' ),
+			'not_found_in_trash' => esc_html__( 'No templates found.', 'hivepress' ),
+		],
+	],
+
+	'listing'  => [
 		'public'           => true,
 		'has_archive'      => true,
 		'delete_with_user' => true,
@@ -35,7 +76,7 @@ return [
 		],
 	],
 
-	'vendor'  => [
+	'vendor'   => [
 		'public'             => true,
 		'show_ui'            => true,
 		'has_archive'        => true,

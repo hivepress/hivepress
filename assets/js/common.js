@@ -169,6 +169,10 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
+			if (field.data('disabled-dates')) {
+				settings['disable'] = field.data('disabled-dates');
+			}
+
 			if (field.data('time')) {
 				settings['enableTime'] = true;
 			}

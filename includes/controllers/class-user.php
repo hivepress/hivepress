@@ -659,12 +659,7 @@ final class User extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get menu items.
@@ -803,12 +798,7 @@ final class User extends Controller {
 	 */
 	public function redirect_user_edit_settings_page() {
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		return false;

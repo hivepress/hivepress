@@ -44,6 +44,9 @@ final class Listing extends Component {
 		// Set category count callback.
 		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
 
+		// Alter model fields.
+		add_filter( 'hivepress/v1/models/listing', [ $this, 'alter_model_fields' ] );
+
 		// Alter forms.
 		add_filter( 'hivepress/v1/forms/listing_submit', [ $this, 'alter_submit_form' ] );
 		add_filter( 'hivepress/v1/forms/listing_update', [ $this, 'alter_update_form' ], 10, 2 );
@@ -88,6 +91,18 @@ final class Listing extends Component {
 		// Remove action.
 		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
+		// Get title.
+		$title = get_option( 'hp_listing_title_format' );
+
+		if ( $title ) {
+			$title = hp\replace_tokens( [ 'listing' => $listing ], $title );
+
+			// Update title.
+			if ( $listing->get_title() !== $title ) {
+				$listing->set_title( $title )->save_title();
+			}
+		}
+
 		// Check user.
 		if ( ! $listing->get_user__id() ) {
 			return;
@@ -118,19 +133,11 @@ final class Listing extends Component {
 			]
 		)->get_first();
 
-		if ( ( ! $vendor || $vendor->get_status() === 'auto-draft' ) && $listing->get_status() === 'publish' ) {
-
-			// Get user.
-			$user = $listing->get_user();
-
-			// Update user role.
-			$user_object = get_userdata( $user->get_id() );
-
-			if ( array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
-				$user_object->set_role( 'contributor' );
-			}
-
+		if ( $listing->get_status() === 'publish' ) {
 			if ( ! $vendor ) {
+
+				// Get user.
+				$user = $listing->get_user();
 
 				// Add vendor.
 				$vendor = ( new Models\Vendor() )->fill(
@@ -156,7 +163,7 @@ final class Listing extends Component {
 				) ) {
 					return;
 				}
-			} else {
+			} elseif ( $vendor->get_status() === 'auto-draft' ) {
 
 				// Update vendor status.
 				$vendor->set_status( 'publish' )->save_status();
@@ -385,6 +392,20 @@ final class Listing extends Component {
 	}
 
 	/**
+	 * Alters model fields.
+	 *
+	 * @param array $model Model arguments.
+	 * @return array
+	 */
+	public function alter_model_fields( $model ) {
+		if ( get_option( 'hp_listing_title_format' ) ) {
+			$model['fields']['title']['required'] = false;
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Alters submit form.
 	 *
 	 * @param array $form Form arguments.
@@ -444,6 +465,11 @@ final class Listing extends Component {
 			);
 		}
 
+		// Remove title field.
+		if ( get_option( 'hp_listing_title_format' ) ) {
+			unset( $form_args['fields']['title'] );
+		}
+
 		return $form_args;
 	}
 
@@ -482,14 +508,7 @@ final class Listing extends Component {
 
 			if ( $vendor_id ) {
 				$name = get_the_title( $vendor_id );
-				$url  = admin_url(
-					'post.php?' . http_build_query(
-						[
-							'action' => 'edit',
-							'post'   => $vendor_id,
-						]
-					)
-				);
+				$url  = hivepress()->router->get_admin_url( 'post', $vendor_id );
 			} else {
 
 				// Get user ID.
@@ -497,13 +516,7 @@ final class Listing extends Component {
 
 				if ( $user_id ) {
 					$name = get_the_author_meta( 'display_name', $user_id );
-					$url  = admin_url(
-						'user-edit.php?' . http_build_query(
-							[
-								'user_id' => $user_id,
-							]
-						)
-					);
+					$url  = hivepress()->router->get_admin_url( 'user', $user_id );
 				}
 			}
 

@@ -130,6 +130,20 @@ abstract class Block {
 	}
 
 	/**
+	 * Sets context value.
+	 *
+	 * @param string $name Context name.
+	 * @param mixed  $value Context value.
+	 */
+	final protected function set_context( $name, $value = null ) {
+		if ( is_array( $name ) ) {
+			$this->context = $name;
+		} else {
+			$this->context[ $name ] = $value;
+		}
+	}
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string

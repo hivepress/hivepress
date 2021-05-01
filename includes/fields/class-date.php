@@ -55,11 +55,25 @@ class Date extends Field {
 	protected $max_date;
 
 	/**
+	 * Disabled dates.
+	 *
+	 * @var array
+	 */
+	protected $disabled_dates = [];
+
+	/**
 	 * Date offset.
 	 *
 	 * @var int
 	 */
 	protected $offset;
+
+	/**
+	 * Date window.
+	 *
+	 * @var int
+	 */
+	protected $window;
 
 	/**
 	 * Time flag.
@@ -176,8 +190,24 @@ class Date extends Field {
 		}
 
 		// Set maximum date.
+		if ( ! is_null( $this->window ) && ! is_null( $this->min_date ) ) {
+			$this->max_date = date( 'Y-m-d H:i:s', strtotime( $this->min_date ) + ( $this->window - 1 ) * DAY_IN_SECONDS );
+		}
+
 		if ( ! is_null( $this->max_date ) ) {
 			$attributes['data-max-date'] = $this->max_date;
+		}
+
+		// Set disabled dates.
+		if ( $this->disabled_dates ) {
+			$attributes['data-disabled-dates'] = wp_json_encode(
+				array_map(
+					function( $date ) {
+						return is_array( $date ) ? array_combine( [ 'from', 'to' ], $date ) : $date;
+					},
+					$this->disabled_dates
+				)
+			);
 		}
 
 		// Set time flag.

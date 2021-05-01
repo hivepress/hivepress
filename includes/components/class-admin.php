@@ -115,8 +115,8 @@ final class Admin extends Component {
 		$title = ' &lsaquo; ' . hivepress()->get_name();
 
 		// Add pages.
-		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo.svg' );
-		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings' );
+		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo-light.svg' );
+		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
@@ -555,9 +555,7 @@ final class Admin extends Component {
 						$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
 					}
 
-					if ( isset( $theme['price'] ) ) {
-						$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug;
-					}
+					$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
 
 					return $theme;
 				},
@@ -684,14 +682,14 @@ final class Admin extends Component {
 			// Set extension URLs.
 			$extensions = array_map(
 				function( $extension ) {
-					$slug = preg_replace( '/^hivepress-/', '', $extension['slug'] );
+					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					return array_merge(
 						$extension,
 						[
-							'buy_url'     => 'https://hivepress.io/extensions/' . $slug,
-							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $slug,
-							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $slug,
+							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
+							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
+							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $path,
 						]
 					);
 				},
@@ -944,15 +942,14 @@ final class Admin extends Component {
 	 * @param int $post_id Post ID.
 	 */
 	public function update_meta_box( $post_id ) {
-		global $pagenow;
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			return;
 		}
 
-		// Check current page.
-		if ( 'post.php' !== $pagenow || isset( $_GET['action'] ) ) {
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
 			return;
 		}
 
@@ -1331,6 +1328,18 @@ final class Admin extends Component {
 					/* translators: %s: themes URL. */
 					hp\sanitize_html( __( 'The current theme doesn\'t declare HivePress support, if you notice any styling issues please consider using one of the <a href="%s">official themes</a> instead.', 'hivepress' ) ),
 					esc_url( admin_url( 'admin.php?page=hp_themes' ) )
+				),
+			];
+		}
+
+		if ( absint( get_option( 'hp_installed_time' ) ) < time() - WEEK_IN_SECONDS * 2 ) {
+			$notices['review_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'It\'s been more than 2 weeks since you installed HivePress, that\'s awesome! If you find it useful, please leave a review on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word.', 'hivepress' ) ),
+					'https://wordpress.org/support/plugin/hivepress/reviews/'
 				),
 			];
 		}

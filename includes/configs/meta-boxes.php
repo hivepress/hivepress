@@ -11,6 +11,45 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'template_settings'         => [
+		'title'   => hivepress()->translator->get_string( 'settings' ),
+		'screen'  => 'template',
+		'context' => 'side',
+
+		'fields'  => [
+			'template' => [
+				'label'    => esc_html__( 'Template', 'hivepress' ),
+				'type'     => 'select',
+				'options'  => 'templates',
+				'required' => true,
+				'_alias'   => 'post_name',
+				'_order'   => 10,
+			],
+		],
+	],
+
+	'email_settings'            => [
+		'title'  => hivepress()->translator->get_string( 'settings' ),
+		'screen' => 'email',
+
+		'fields' => [
+			'event' => [
+				'label'    => esc_html__( 'Event', 'hivepress' ),
+				'type'     => 'select',
+				'options'  => 'emails',
+				'required' => true,
+				'_alias'   => 'post_name',
+				'_order'   => 10,
+			],
+		],
+	],
+
+	'email_details'             => [
+		'title'  => hivepress()->translator->get_string( 'details' ),
+		'screen' => 'email',
+		'blocks' => [],
+	],
+
 	'listing_settings'          => [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'listing',

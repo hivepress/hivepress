@@ -328,14 +328,7 @@ final class Listing extends Controller {
 					'tokens'    => [
 						'listing_title'      => $listing->get_title(),
 						'listing_attributes' => implode( ', ', $attributes ),
-						'listing_url'        => admin_url(
-							'post.php?' . http_build_query(
-								[
-									'action' => 'edit',
-									'post'   => $listing->get_id(),
-								]
-							)
-						),
+						'listing_url'        => hivepress()->router->get_admin_url( 'post', $listing->get_id() ),
 					],
 				]
 			) )->send();
@@ -576,7 +569,8 @@ final class Listing extends Controller {
 				}
 
 				// Query listings.
-				query_posts(
+				hivepress()->request->set_context(
+					'post_query',
 					Models\Listing::query()->filter(
 						[
 							'status'     => 'publish',
@@ -670,12 +664,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Check listings.
@@ -694,7 +683,8 @@ final class Listing extends Controller {
 	public function render_listings_edit_page() {
 
 		// Query listings.
-		query_posts(
+		hivepress()->request->set_context(
+			'post_query',
 			Models\Listing::query()->filter(
 				[
 					'status__in' => [ 'draft', 'pending', 'publish' ],
@@ -749,12 +739,7 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Check listing.
@@ -793,17 +778,12 @@ final class Listing extends Controller {
 
 		// Check permissions.
 		if ( ! get_option( 'hp_listing_enable_submission' ) ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get listing.
@@ -827,7 +807,7 @@ final class Listing extends Controller {
 			);
 
 			if ( ! $listing->save( [ 'status', 'drafted', 'user' ] ) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		}
 
@@ -879,7 +859,7 @@ final class Listing extends Controller {
 					'user',
 				]
 			) ) {
-				return home_url( '/' );
+				return home_url();
 			}
 		}
 
@@ -1077,19 +1057,14 @@ final class Listing extends Controller {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_url(
-				'user_login_page',
-				[
-					'redirect' => hivepress()->router->get_current_url(),
-				]
-			);
+			return hivepress()->router->get_return_url( 'user_login_page' );
 		}
 
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
-			return home_url( '/' );
+			return home_url();
 		}
 
 		// Set request context.

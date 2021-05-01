@@ -90,7 +90,7 @@ class User_Register_Form extends Form {
 	public function render() {
 		$output = '';
 
-		if ( ! is_user_logged_in() || hp\is_rest() ) {
+		if ( ! is_user_logged_in() || hivepress()->editor->is_preview() ) {
 			$output .= parent::render();
 		}
 

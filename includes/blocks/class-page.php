@@ -41,42 +41,49 @@ class Page extends Container {
 	 * @return string
 	 */
 	public function render() {
-		$output = parent::render();
+
+		// Render header.
+		ob_start();
+
+		get_header();
+		$header = ob_get_contents();
+
+		ob_end_clean();
+
+		// Render footer.
+		ob_start();
+
+		get_footer();
+		$footer = ob_get_contents();
+
+		ob_end_clean();
+
+		// Query posts.
+		if ( hivepress()->request->get_context( 'post_query' ) ) {
+			query_posts( hivepress()->request->get_context( 'post_query' ) );
+		}
+
+		// Render content.
+		$content = parent::render();
 
 		// Add wrapper.
 		switch ( get_template() ) {
 			case 'twentyseventeen':
-				$output = '<div class="wrap"><div class="content-area">' . $output . '</div></div>';
+				$content = '<div class="wrap"><div class="content-area">' . $content . '</div></div>';
 
 				break;
 
 			case 'twentynineteen':
-				$output = '<div class="entry"><div class="entry-content">' . $output . '</div></div>';
+				$content = '<div class="entry"><div class="entry-content">' . $content . '</div></div>';
 
 				break;
 
 			default:
-				$output = '<div class="content-area">' . $output . '</div>';
+				$content = '<div class="content-area">' . $content . '</div>';
 
 				break;
 		}
 
-		// Add header.
-		ob_start();
-
-		get_header();
-		$output = ob_get_contents() . $output;
-
-		ob_end_clean();
-
-		// Add footer.
-		ob_start();
-
-		get_footer();
-		$output .= ob_get_contents();
-
-		ob_end_clean();
-
-		return $output;
+		return $header . $content . $footer;
 	}
 }

@@ -291,6 +291,63 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets return URL.
+	 *
+	 * @param string $name Route name.
+	 * @return string
+	 */
+	public function get_return_url( $name ) {
+		return $this->get_url(
+			$name,
+			[
+				'redirect' => $this->get_current_url(),
+			]
+		);
+	}
+
+	/**
+	 * Gets admin URL.
+	 *
+	 * @param string $type Object type.
+	 * @param int    $id Object ID.
+	 * @return string
+	 */
+	public function get_admin_url( $type, $id ) {
+		$path = '';
+		$args = [];
+
+		switch ( $type ) {
+			case 'user':
+				$path = $type . '-edit.php';
+				$args = [
+					'user_id' => $id,
+				];
+
+				break;
+
+			case 'post':
+				$path = $type . '.php';
+				$args = [
+					'action' => 'edit',
+					'post'   => $id,
+				];
+
+				break;
+
+			case 'comment':
+				$path = $type . '.php';
+				$args = [
+					'action' => 'editcomment',
+					'c'      => $id,
+				];
+
+				break;
+		}
+
+		return admin_url( $path . '?' . http_build_query( $args ) );
+	}
+
+	/**
 	 * Gets redirect URL.
 	 *
 	 * @return string
@@ -443,7 +500,7 @@ final class Router extends Component {
 			$args,
 			[
 				'context' => [
-					'page_title' => hp\get_array_value( hivepress()->router->get_current_route(), 'title' ),
+					'page_title' => hp\get_array_value( $this->get_current_route(), 'title' ),
 				],
 			]
 		);
@@ -470,7 +527,7 @@ final class Router extends Component {
 			}
 
 			// Get menu redirect.
-			$menu_redirect = home_url( '/' );
+			$menu_redirect = home_url();
 
 			foreach ( hivepress()->get_classes( 'menus' ) as $menu_class ) {
 				if ( $menu_class::get_meta( 'chained' ) ) {

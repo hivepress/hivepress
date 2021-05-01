@@ -105,13 +105,19 @@ final class Attribute extends Component {
 	 * @param array  $category_ids Category IDs.
 	 * @return array
 	 */
-	public function get_attributes( $model, $category_ids ) {
-		return array_filter(
-			$this->attributes[ $model ],
-			function( $attribute ) use ( $category_ids ) {
-				return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
-			}
-		);
+	public function get_attributes( $model, $category_ids = null ) {
+		$attributes = hp\get_array_value( $this->attributes, $model, [] );
+
+		if ( ! is_null( $category_ids ) ) {
+			$attributes = array_filter(
+				$attributes,
+				function( $attribute ) use ( $category_ids ) {
+					return empty( $attribute['categories'] ) || array_intersect( (array) $category_ids, $attribute['categories'] );
+				}
+			);
+		}
+
+		return $attributes;
 	}
 
 	/**
@@ -697,7 +703,7 @@ final class Attribute extends Component {
 		$category_ids = $form->get_model()->get_categories__id();
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model, (array) $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -742,7 +748,7 @@ final class Attribute extends Component {
 		$category_id = $this->get_category_id( $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_context, [ 'sort', 'filter' ], true ) ) || ( $attribute['searchable'] && 'search' === $form_context ) ) ) {
@@ -799,7 +805,7 @@ final class Attribute extends Component {
 		$category_id = $this->get_category_id( $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Add attribute options.
 		$options = [];
@@ -1189,7 +1195,7 @@ final class Attribute extends Component {
 
 					'display_format' => [
 						'label'       => esc_html__( 'Format', 'hivepress' ),
-						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%' ),
+						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%, %parent_value%' ),
 						'type'        => 'textarea',
 						'max_length'  => 2048,
 						'default'     => '%value%',
@@ -1304,7 +1310,7 @@ final class Attribute extends Component {
 		$model = null;
 
 		foreach ( $this->models as $model_name ) {
-			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( $model_name . '_category' ) ) ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( [ $model_name . '_category', $model_name . '_tags' ] ) ) ) {
 				$model = $model_name;
 
 				break;
@@ -1342,7 +1348,7 @@ final class Attribute extends Component {
 		}
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Sort results.
 		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );

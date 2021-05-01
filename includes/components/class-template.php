@@ -26,7 +26,18 @@ final class Template extends Component {
 	 * @param array $args Component arguments.
 	 */
 	public function __construct( $args = [] ) {
-		if ( ! is_admin() ) {
+
+		// Set template title.
+		add_action( 'hivepress/v1/models/post/update', [ $this, 'set_template_title' ], 10, 2 );
+
+		if ( is_admin() ) {
+
+			// Add admin columns.
+			add_filter( 'manage_hp_template_posts_columns', [ $this, 'add_admin_columns' ] );
+		} else {
+
+			// Set template content.
+			add_filter( 'hivepress/v1/templates/template', [ $this, 'set_template_content' ], 10, 2 );
 
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
@@ -45,6 +56,88 @@ final class Template extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Sets template title.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $post_type Post type.
+	 */
+	public function set_template_title( $post_id, $post_type ) {
+
+		// Check post type.
+		if ( 'hp_template' !== $post_type ) {
+			return;
+		}
+
+		// Get post.
+		$post = get_post( $post_id );
+
+		// Get template.
+		$template = '\HivePress\Templates\\' . $post->post_name;
+
+		if ( ! class_exists( $template ) || ! $template::get_meta( 'label' ) ) {
+			return;
+		}
+
+		// Update title.
+		if ( $post->post_title !== $template::get_meta( 'label' ) ) {
+			wp_update_post(
+				[
+					'ID'         => $post->ID,
+					'post_title' => $template::get_meta( 'label' ),
+				]
+			);
+		}
+	}
+
+	/**
+	 * Adds admin columns.
+	 *
+	 * @param array $columns Columns.
+	 * @return array
+	 */
+	public function add_admin_columns( $columns ) {
+		$columns['title'] = esc_html__( 'Template', 'hivepress' );
+
+		return $columns;
+	}
+
+	/**
+	 * Sets template content.
+	 *
+	 * @param array  $args Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function set_template_content( $args, $template ) {
+		if ( $template::get_meta( 'label' ) ) {
+
+			// Get content.
+			$content = get_page_by_path( $template::get_meta( 'name' ), OBJECT, 'hp_template' );
+
+			if ( $content && 'publish' === $content->post_status ) {
+
+				// Set blocks.
+				$args['blocks'] = [
+					'page_container' => [
+						'type'   => 'page',
+						'_order' => 10,
+
+						'blocks' => [
+							'page_content' => [
+								'type'    => 'content',
+								'content' => apply_filters( 'the_content', $content->post_content ),
+								'_order'  => 10,
+							],
+						],
+					],
+				];
+			}
+		}
+
+		return $args;
 	}
 
 	/**

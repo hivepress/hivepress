@@ -224,8 +224,7 @@ abstract class Form {
 		}
 
 		// Set component.
-		$attributes['data-component']  = 'form';
-		$attributes['data-selectable'] = 'true';
+		$attributes['data-component'] = 'form';
 
 		// Set attributes.
 		$attributes['class'] = [ 'hp-form', 'hp-form--' . hp\sanitize_slug( static::get_meta( 'name' ) ) ];
@@ -251,13 +250,15 @@ abstract class Form {
 		$this->fields = [];
 
 		foreach ( hp\sort_array( $fields ) as $name => $args ) {
+			if ( isset( $args['type'] ) ) {
 
-			// Create field.
-			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
 
-			// Add field.
-			if ( $field ) {
-				$this->fields[ $name ] = $field;
+				// Add field.
+				if ( $field ) {
+					$this->fields[ $name ] = $field;
+				}
 			}
 		}
 	}

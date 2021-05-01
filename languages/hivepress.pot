@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 20:02+0000\n"
+"POT-Creation-Date: 2021-05-01 10:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Domain: hivepress"
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:247
+#: includes/fields/class-date.php:277
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr ""
@@ -29,7 +29,7 @@ msgid "\"%1$s\" can't be greater than %2$s."
 msgstr ""
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:256
+#: includes/fields/class-date.php:286
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr ""
@@ -53,29 +53,29 @@ msgid "\"%1$s\" should be at least %2$s characters long."
 msgstr ""
 
 #. %s: field label.
-#: includes/configs/strings.php:75
+#: includes/configs/strings.php:77
 #: includes/fields/class-attachment-select.php:72
 #: includes/fields/class-attachment-upload.php:259
-#: includes/fields/class-date.php:240 includes/fields/class-email.php:90
+#: includes/fields/class-date.php:270 includes/fields/class-email.php:90
 #: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr ""
 
 #. %s: field label.
-#: includes/configs/strings.php:77
+#: includes/configs/strings.php:79
 #, php-format
 msgid "\"%s\" field contains too many values."
 msgstr ""
 
 #. %s: field label.
-#: includes/fields/class-field.php:502
+#: includes/fields/class-field.php:511
 #, php-format
 msgid "\"%s\" field is required."
 msgstr ""
 
 #. %s: extension name.
-#: includes/configs/strings.php:71
+#: includes/configs/strings.php:73
 #, php-format
 msgid ""
 "%s extension is incompatible with the current HivePress version, please "
@@ -83,7 +83,7 @@ msgid ""
 msgstr ""
 
 #. %s: Listings number.
-#: includes/configs/strings.php:85
+#: includes/configs/strings.php:87
 #, php-format
 msgid "%s Listing"
 msgid_plural "%s Listings"
@@ -91,7 +91,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s: WooCommerce.
-#: includes/configs/strings.php:67
+#: includes/configs/strings.php:69
 #, php-format
 msgid "%s Product"
 msgstr ""
@@ -112,7 +112,7 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: includes/configs/strings.php:165
+#: includes/configs/strings.php:167
 msgid "Add Attribute"
 msgstr ""
 
@@ -120,42 +120,50 @@ msgstr ""
 msgid "Add Category"
 msgstr ""
 
-#: includes/configs/strings.php:99
+#: includes/configs/post-types.php:24 includes/configs/post-types.php:26
+msgid "Add Email"
+msgstr ""
+
+#: includes/configs/strings.php:101
 msgid "Add Listing"
 msgstr ""
 
-#: includes/components/class-attribute.php:379
+#: includes/components/class-attribute.php:385
 msgid "Add Option"
 msgstr ""
 
-#: includes/configs/strings.php:141
+#: includes/configs/post-types.php:45 includes/configs/post-types.php:47
+msgid "Add Template"
+msgstr ""
+
+#: includes/configs/strings.php:143
 msgid "Add Vendor"
 msgstr ""
 
 #. %s: date.
-#: includes/configs/strings.php:65
+#: includes/configs/strings.php:67
 #, php-format
 msgid "Added on %s"
 msgstr ""
 
-#: includes/components/class-attribute.php:936
+#: includes/components/class-attribute.php:942
 #: includes/forms/class-listing-search.php:59
 msgid "All Categories"
 msgstr ""
 
-#: includes/configs/strings.php:82
+#: includes/configs/strings.php:84
 msgid "All Listings"
 msgstr ""
 
-#: includes/configs/strings.php:52
+#: includes/configs/strings.php:54
 msgid "All Users"
 msgstr ""
 
-#: includes/configs/settings.php:285
+#: includes/configs/settings.php:251
 msgid "Allow direct registration"
 msgstr ""
 
-#: includes/components/class-attribute.php:1112
+#: includes/components/class-attribute.php:1118
 msgid "Allow front-end editing"
 msgstr ""
 
@@ -167,19 +175,19 @@ msgstr ""
 msgid "Allow multiple selection"
 msgstr ""
 
-#: includes/configs/strings.php:129
+#: includes/configs/strings.php:131
 msgid "Allow reporting listings"
 msgstr ""
 
-#: includes/fields/class-date.php:114
+#: includes/fields/class-date.php:128
 msgid "Allow setting time"
 msgstr ""
 
-#: includes/configs/strings.php:128
+#: includes/configs/strings.php:130
 msgid "Allow submitting new listings"
 msgstr ""
 
-#: includes/configs/settings.php:338
+#: includes/configs/settings.php:304
 msgid "Allow user registration"
 msgstr ""
 
@@ -187,31 +195,31 @@ msgstr ""
 msgid "Already have an account?"
 msgstr ""
 
-#: includes/configs/strings.php:43
+#: includes/configs/strings.php:44
 msgid "API Key"
 msgstr ""
 
-#: includes/configs/strings.php:47
+#: includes/configs/strings.php:48
 msgid "App ID"
 msgstr ""
 
-#: includes/configs/strings.php:126
+#: includes/configs/strings.php:128
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1175
-#: includes/components/class-attribute.php:1177
+#: includes/components/class-attribute.php:1181
+#: includes/components/class-attribute.php:1183
 msgctxt "area"
 msgid "primary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1176
-#: includes/components/class-attribute.php:1178
+#: includes/components/class-attribute.php:1182
+#: includes/components/class-attribute.php:1184
 msgctxt "area"
 msgid "secondary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1168
+#: includes/components/class-attribute.php:1174
 msgid "Areas"
 msgstr ""
 
@@ -219,56 +227,56 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
-#: includes/configs/strings.php:163
+#: includes/configs/strings.php:165
 msgid "Attribute"
 msgstr ""
 
-#: includes/configs/strings.php:164
+#: includes/configs/strings.php:166
 msgctxt "attribute"
 msgid "Add New"
 msgstr ""
 
-#: includes/components/class-attribute.php:1111
+#: includes/components/class-attribute.php:1117
 msgctxt "attribute"
 msgid "Editable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1133
+#: includes/components/class-attribute.php:1139
 msgctxt "attribute"
 msgid "Filterable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1140
+#: includes/components/class-attribute.php:1146
 msgctxt "attribute"
 msgid "Indexable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1236
+#: includes/components/class-attribute.php:1242
 msgctxt "attribute"
 msgid "Moderated"
 msgstr ""
 
-#: includes/components/class-attribute.php:529
+#: includes/components/class-attribute.php:535
 msgctxt "attribute"
 msgid "Searchable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1147
+#: includes/components/class-attribute.php:1153
 msgctxt "attribute"
 msgid "Sortable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1102
-#: includes/configs/strings.php:162
+#: includes/components/class-attribute.php:1108
+#: includes/configs/strings.php:164
 msgid "Attributes"
 msgstr ""
 
-#: includes/configs/strings.php:48
+#: includes/configs/strings.php:49
 msgid "Authorization"
 msgstr ""
 
-#: includes/components/class-attribute.php:1175
-#: includes/components/class-attribute.php:1176
+#: includes/components/class-attribute.php:1181
+#: includes/components/class-attribute.php:1182
 msgid "Block"
 msgstr ""
 
@@ -276,7 +284,7 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: includes/components/class-form.php:429
+#: includes/components/class-form.php:471
 msgid "Captcha is invalid."
 msgstr ""
 
@@ -285,11 +293,11 @@ msgstr ""
 msgid "Caption"
 msgstr ""
 
-#: includes/configs/strings.php:158
+#: includes/configs/strings.php:160
 msgid "Categories"
 msgstr ""
 
-#: includes/configs/strings.php:157
+#: includes/configs/strings.php:159
 msgid "Category"
 msgstr ""
 
@@ -302,7 +310,7 @@ msgstr ""
 msgid "Change Category"
 msgstr ""
 
-#: includes/configs/strings.php:51
+#: includes/configs/strings.php:52
 msgid "Changes have been saved."
 msgstr ""
 
@@ -314,25 +322,25 @@ msgstr ""
 msgid "Checkboxes"
 msgstr ""
 
-#: includes/configs/strings.php:134
+#: includes/configs/strings.php:136
 msgid "Choose a page that displays all listings."
 msgstr ""
 
-#: includes/configs/strings.php:151
+#: includes/configs/strings.php:153
 msgid "Choose a page that displays all vendors."
 msgstr ""
 
-#: includes/configs/settings.php:328
+#: includes/configs/settings.php:294
 msgid "Choose a page with terms that user has to accept before registering."
 msgstr ""
 
-#: includes/configs/strings.php:135
+#: includes/configs/strings.php:137
 msgid ""
 "Choose a page with terms that user has to accept before submitting a new "
 "listing."
 msgstr ""
 
-#: includes/components/class-attribute.php:1169
+#: includes/components/class-attribute.php:1175
 msgid "Choose the template areas where you want to display this attribute."
 msgstr ""
 
@@ -340,11 +348,11 @@ msgstr ""
 msgid "Click to copy"
 msgstr ""
 
-#: includes/configs/strings.php:44
+#: includes/configs/strings.php:45
 msgid "Client ID"
 msgstr ""
 
-#: includes/configs/strings.php:45
+#: includes/configs/strings.php:46
 msgid "Client Secret"
 msgstr ""
 
@@ -369,7 +377,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/fields/class-date.php:105
+#: includes/fields/class-date.php:119
 msgid "Date Offset"
 msgstr ""
 
@@ -377,7 +385,7 @@ msgstr ""
 msgid "Date Range"
 msgstr ""
 
-#: includes/configs/strings.php:37
+#: includes/configs/strings.php:38
 msgid "Default Fields"
 msgstr ""
 
@@ -392,19 +400,19 @@ msgstr ""
 msgid "Delete Account"
 msgstr ""
 
-#: includes/configs/strings.php:102
+#: includes/configs/strings.php:104
 msgid "Delete Listing"
 msgstr ""
 
-#: includes/configs/strings.php:28
+#: includes/configs/strings.php:29
 msgid "Description"
 msgstr ""
 
-#: includes/configs/strings.php:29
+#: includes/configs/strings.php:30
 msgid "Details"
 msgstr ""
 
-#: includes/components/class-attribute.php:1148
+#: includes/components/class-attribute.php:1154
 msgid "Display as a sorting option"
 msgstr ""
 
@@ -412,31 +420,31 @@ msgstr ""
 msgid "Display categories"
 msgstr ""
 
-#: includes/components/class-attribute.php:1134
+#: includes/components/class-attribute.php:1140
 msgid "Display in the filter form"
 msgstr ""
 
-#: includes/components/class-attribute.php:530
+#: includes/components/class-attribute.php:536
 msgid "Display in the search form"
 msgstr ""
 
-#: includes/configs/strings.php:124
+#: includes/configs/strings.php:126
 msgid "Display only featured listings"
 msgstr ""
 
-#: includes/configs/strings.php:125
+#: includes/configs/strings.php:127
 msgid "Display only verified listings"
 msgstr ""
 
-#: includes/configs/strings.php:153
+#: includes/configs/strings.php:155
 msgid "Display only verified vendors"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:103
+#: includes/configs/meta-boxes.php:142
 msgid "Display subcategories"
 msgstr ""
 
-#: includes/configs/strings.php:152
+#: includes/configs/strings.php:154
 msgid "Display vendors on the front-end"
 msgstr ""
 
@@ -448,11 +456,11 @@ msgstr ""
 msgid "Don't have an account yet?"
 msgstr ""
 
-#: includes/components/class-listing.php:662
+#: includes/components/class-listing.php:675
 msgid "Edit"
 msgstr ""
 
-#: includes/configs/strings.php:166
+#: includes/configs/strings.php:168
 msgid "Edit Attribute"
 msgstr ""
 
@@ -460,33 +468,46 @@ msgstr ""
 msgid "Edit Category"
 msgstr ""
 
-#: includes/configs/strings.php:101
+#: includes/configs/post-types.php:25
+msgid "Edit Email"
+msgstr ""
+
+#: includes/configs/strings.php:103
 msgid "Edit Listing"
 msgstr ""
 
-#: includes/components/class-attribute.php:380
+#: includes/components/class-attribute.php:386
 msgid "Edit Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:480
+#: includes/components/class-attribute.php:486
 msgid "Edit Options"
 msgstr ""
 
-#: includes/configs/strings.php:142
+#: includes/configs/post-types.php:46
+msgid "Edit Template"
+msgstr ""
+
+#: includes/configs/strings.php:144
 msgid "Edit Vendor"
 msgstr ""
 
-#: includes/configs/strings.php:31
+#: includes/configs/strings.php:32
 msgid "Editing"
 msgstr ""
 
-#: includes/configs/settings.php:354 includes/fields/class-email.php:30
-#: includes/models/class-user.php:56
+#: includes/configs/post-types.php:22 includes/configs/settings.php:320
+#: includes/fields/class-email.php:30 includes/models/class-user.php:56
 msgid "Email"
 msgstr ""
 
-#: includes/configs/settings.php:392
+#: includes/configs/post-types.php:23
+msgctxt "email"
+msgid "Add New"
+msgstr ""
+
 #: includes/emails/class-user-email-verify.php:30
+#: includes/emails/class-user-email-verify.php:49
 msgid "Email Verification"
 msgstr ""
 
@@ -494,24 +515,28 @@ msgstr ""
 msgid "Email Verified"
 msgstr ""
 
-#: includes/configs/settings.php:162 includes/configs/settings.php:364
-#: includes/configs/strings.php:30
+#: includes/configs/post-types.php:21 includes/configs/post-types.php:27
+#: includes/configs/strings.php:31
 msgid "Emails"
 msgstr ""
 
-#: includes/configs/settings.php:69
+#: includes/configs/settings.php:77
 msgid "Enable image zoom"
 msgstr ""
 
-#: includes/configs/settings.php:139 includes/configs/strings.php:34
+#: includes/components/class-email.php:89 includes/configs/meta-boxes.php:37
+msgid "Event"
+msgstr ""
+
+#: includes/configs/settings.php:147 includes/configs/strings.php:35
 msgid "Expiration"
 msgstr ""
 
-#: includes/configs/strings.php:36
+#: includes/configs/strings.php:37
 msgid "Expiration Date"
 msgstr ""
 
-#: includes/configs/strings.php:35
+#: includes/configs/strings.php:36
 msgid "Expiration Period"
 msgstr ""
 
@@ -524,19 +549,19 @@ msgstr ""
 msgid "Extensions"
 msgstr ""
 
-#: includes/configs/strings.php:89
+#: includes/configs/strings.php:91
 msgid "Featured Listings"
 msgstr ""
 
-#: includes/configs/strings.php:119
+#: includes/configs/strings.php:121
 msgid "Featured Listings per Page"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:45
+#: includes/configs/meta-boxes.php:84
 msgid "Featuring Date"
 msgstr ""
 
-#: includes/configs/strings.php:88
+#: includes/configs/strings.php:90
 msgid "Featuring of Listings"
 msgstr ""
 
@@ -555,7 +580,7 @@ msgctxt "field"
 msgid "Required"
 msgstr ""
 
-#: includes/components/class-attribute.php:712
+#: includes/components/class-attribute.php:718
 msgctxt "field"
 msgid "requires review"
 msgstr ""
@@ -565,8 +590,8 @@ msgctxt "field"
 msgid "Select"
 msgstr ""
 
-#: includes/components/class-attribute.php:1118
-#: includes/components/class-attribute.php:1154
+#: includes/components/class-attribute.php:1124
+#: includes/components/class-attribute.php:1160
 msgid "Field Type"
 msgstr ""
 
@@ -578,7 +603,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: includes/configs/settings.php:313 includes/models/class-user.php:70
+#: includes/configs/settings.php:279 includes/models/class-user.php:70
 msgid "First Name"
 msgstr ""
 
@@ -586,7 +611,7 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1191
+#: includes/components/class-attribute.php:1197
 msgid "Format"
 msgstr ""
 
@@ -594,15 +619,15 @@ msgstr ""
 msgid "Formatting"
 msgstr ""
 
-#: includes/configs/strings.php:38
+#: includes/configs/strings.php:39
 msgid "Free"
 msgstr ""
 
-#: includes/configs/settings.php:315
+#: includes/configs/settings.php:281
 msgid "Full Name"
 msgstr ""
 
-#: includes/configs/settings.php:346
+#: includes/configs/settings.php:312
 msgid "Generate username from the email address"
 msgstr ""
 
@@ -614,37 +639,37 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
-#: includes/configs/settings.php:384
+#: includes/emails/class-user-password-request.php:50
 msgid ""
 "Hi, %user_name%! Please click on the following link to set a new password: "
 "%password_reset_url%"
 msgstr ""
 
-#: includes/configs/settings.php:395
+#: includes/emails/class-user-email-verify.php:50
 msgid ""
 "Hi, %user_name%! Please click on the following link to verify your email "
 "address: %email_verify_url%"
 msgstr ""
 
-#: includes/configs/settings.php:372
+#: includes/emails/class-user-register.php:50
 msgid ""
 "Hi, %user_name%! Thank you for registering, here's your password: "
 "%user_password%"
 msgstr ""
 
-#: includes/configs/settings.php:182
+#: includes/emails/class-listing-reject.php:50
 msgid ""
 "Hi, %user_name%! Unfortunately, your listing \"%listing_title%\" has been "
 "rejected."
 msgstr ""
 
-#: includes/configs/settings.php:170
+#: includes/emails/class-listing-approve.php:50
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has been approved, click "
 "on the following link to view it: %listing_url%"
 msgstr ""
 
-#: includes/configs/settings.php:194
+#: includes/emails/class-listing-expire.php:50
 msgid ""
 "Hi, %user_name%! Your listing \"%listing_title%\" has expired, click on the "
 "following link to renew it: %listing_url%"
@@ -664,25 +689,25 @@ msgid "https://hivepress.io/"
 msgstr ""
 
 #. %s: terms URL.
-#: includes/configs/strings.php:73
+#: includes/configs/strings.php:75
 #, php-format
 msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-attribute.php:1183
+#: includes/components/class-attribute.php:1189
 msgid "Icon"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:85
+#: includes/configs/meta-boxes.php:124
 msgid "Image"
 msgstr ""
 
-#: includes/configs/strings.php:26
+#: includes/configs/strings.php:27
 msgid "Images"
 msgstr ""
 
-#: includes/configs/strings.php:63
+#: includes/configs/strings.php:65
 msgctxt "imperative"
 msgid "Add Details"
 msgstr ""
@@ -698,7 +723,7 @@ msgctxt "imperative"
 msgid "Select Category"
 msgstr ""
 
-#: includes/components/class-attribute.php:1141
+#: includes/components/class-attribute.php:1147
 msgid "Include in keyword search"
 msgstr ""
 
@@ -706,8 +731,17 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: includes/configs/settings.php:408
+#: includes/configs/settings.php:332
 msgid "Integrations"
+msgstr ""
+
+#. %s: link URL.
+#: includes/components/class-admin.php:1341
+#, php-format
+msgid ""
+"It's been more than 2 weeks since you installed HivePress, that's awesome! "
+"If you find it useful, please leave a review on <a href=\"%s\" "
+"target=\"_blank\">WordPress.org</a> to help us spread the word."
 msgstr ""
 
 #: includes/configs/strings.php:22
@@ -718,7 +752,7 @@ msgstr ""
 msgid "Landscape size"
 msgstr ""
 
-#: includes/configs/settings.php:314 includes/models/class-user.php:78
+#: includes/configs/settings.php:280 includes/models/class-user.php:78
 msgid "Last Name"
 msgstr ""
 
@@ -726,16 +760,16 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: includes/configs/strings.php:80
+#: includes/configs/strings.php:82
 msgid "Listing"
 msgstr ""
 
-#: includes/configs/post-types.php:25
+#: includes/configs/post-types.php:66
 msgctxt "listing"
 msgid "Add New"
 msgstr ""
 
-#: includes/components/class-listing.php:535 includes/configs/meta-boxes.php:38
+#: includes/components/class-listing.php:548 includes/configs/meta-boxes.php:77
 #: templates/listing/view/listing-featured-badge.php:7
 msgctxt "listing"
 msgid "Featured"
@@ -751,7 +785,7 @@ msgctxt "listing"
 msgid "Pending"
 msgstr ""
 
-#: includes/components/class-listing.php:539 includes/configs/meta-boxes.php:31
+#: includes/components/class-listing.php:552 includes/configs/meta-boxes.php:70
 #: templates/listing/view/listing-verified-badge.php:7
 msgctxt "listing"
 msgid "Verified"
@@ -769,69 +803,69 @@ msgid ""
 "following details: %listing_attributes%."
 msgstr ""
 
-#: includes/configs/strings.php:105
+#: includes/configs/strings.php:107
 msgid "Listing Approved"
 msgstr ""
 
-#: includes/configs/strings.php:93
+#: includes/configs/strings.php:95
 msgid "Listing Attributes"
 msgstr ""
 
-#: includes/configs/strings.php:94
+#: includes/configs/strings.php:96
 msgid "Listing Categories"
 msgstr ""
 
-#: includes/configs/strings.php:96
+#: includes/configs/strings.php:98
 msgid "Listing Expiration"
 msgstr ""
 
-#: includes/configs/strings.php:107
+#: includes/configs/strings.php:109
 msgid "Listing Expired"
 msgstr ""
 
-#: includes/configs/strings.php:115
+#: includes/configs/strings.php:117
 msgid "Listing has been reported."
 msgstr ""
 
-#: includes/configs/strings.php:106
+#: includes/configs/strings.php:108
 msgid "Listing Rejected"
 msgstr ""
 
-#: includes/configs/strings.php:108
+#: includes/configs/strings.php:110
 msgid "Listing Renewed"
 msgstr ""
 
-#: includes/configs/strings.php:110
+#: includes/configs/strings.php:112
 msgid "Listing Reported"
 msgstr ""
 
-#: includes/configs/strings.php:95
+#: includes/configs/strings.php:97
 msgid "Listing Search Form"
 msgstr ""
 
-#: includes/configs/strings.php:104
+#: includes/configs/strings.php:106
 msgid "Listing Submitted"
 msgstr ""
 
-#: includes/configs/strings.php:109
+#: includes/configs/strings.php:111
 msgid "Listing Updated"
 msgstr ""
 
-#: includes/configs/strings.php:81
+#: includes/configs/strings.php:83
 msgid "Listings"
 msgstr ""
 
 #. %s: Vendor name.
-#: includes/configs/strings.php:87
+#: includes/configs/strings.php:89
 #, php-format
 msgid "Listings by %s"
 msgstr ""
 
-#: includes/configs/strings.php:116
+#: includes/configs/strings.php:118
 msgid "Listings Page"
 msgstr ""
 
-#: includes/configs/strings.php:117
+#: includes/configs/strings.php:119
 msgid "Listings Page Display"
 msgstr ""
 
@@ -839,7 +873,7 @@ msgstr ""
 msgid "Login User"
 msgstr ""
 
-#: includes/configs/strings.php:123
+#: includes/configs/strings.php:125
 msgid "Make listings featured"
 msgstr ""
 
@@ -847,23 +881,23 @@ msgstr ""
 msgid "Make this field required"
 msgstr ""
 
-#: includes/configs/strings.php:122
+#: includes/configs/strings.php:124
 msgid "Make this listing featured"
 msgstr ""
 
-#: includes/components/class-attribute.php:1237
+#: includes/components/class-attribute.php:1243
 msgid "Manually approve changes"
 msgstr ""
 
-#: includes/configs/strings.php:127
+#: includes/configs/strings.php:129
 msgid "Manually approve new listings"
 msgstr ""
 
-#: includes/configs/strings.php:121
+#: includes/configs/strings.php:123
 msgid "Mark this listing as verified"
 msgstr ""
 
-#: includes/configs/strings.php:154
+#: includes/configs/strings.php:156
 msgid "Mark this vendor as verified"
 msgstr ""
 
@@ -871,7 +905,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: includes/fields/class-date.php:99
+#: includes/fields/class-date.php:113
 msgid "Maximum Date"
 msgstr ""
 
@@ -898,7 +932,7 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: includes/fields/class-date.php:93
+#: includes/fields/class-date.php:107
 msgid "Minimum Date"
 msgstr ""
 
@@ -910,7 +944,7 @@ msgstr ""
 msgid "Minimum Value"
 msgstr ""
 
-#: includes/configs/strings.php:33
+#: includes/configs/strings.php:34
 msgid "Moderation"
 msgstr ""
 
@@ -935,7 +969,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/configs/strings.php:168
+#: includes/configs/strings.php:170
 msgid "No attributes found."
 msgstr ""
 
@@ -943,15 +977,23 @@ msgstr ""
 msgid "No categories found."
 msgstr ""
 
-#: includes/configs/strings.php:92
+#: includes/configs/post-types.php:29 includes/configs/post-types.php:30
+msgid "No emails found."
+msgstr ""
+
+#: includes/configs/strings.php:94
 msgid "No listings found."
 msgstr ""
 
-#: includes/components/class-attribute.php:384
+#: includes/components/class-attribute.php:390
 msgid "No options found."
 msgstr ""
 
-#: includes/configs/strings.php:145
+#: includes/configs/post-types.php:50 includes/configs/post-types.php:51
+msgid "No templates found."
+msgstr ""
+
+#: includes/configs/strings.php:147
 msgid "No vendors found."
 msgstr ""
 
@@ -964,7 +1006,7 @@ msgctxt "noun"
 msgid "Display"
 msgstr ""
 
-#: includes/configs/settings.php:244 includes/configs/settings.php:305
+#: includes/configs/settings.php:210 includes/configs/settings.php:271
 msgctxt "noun"
 msgid "Display Name"
 msgstr ""
@@ -1003,21 +1045,21 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-#: includes/configs/strings.php:40
+#: includes/configs/strings.php:41
 msgid "Overview"
 msgstr ""
 
-#: includes/components/class-attribute.php:1177
-#: includes/components/class-attribute.php:1178
+#: includes/components/class-attribute.php:1183
+#: includes/components/class-attribute.php:1184
 msgid "Page"
 msgstr ""
 
-#: includes/configs/strings.php:159 includes/configs/taxonomies.php:27
+#: includes/configs/strings.php:161 includes/configs/taxonomies.php:27
 #: includes/configs/taxonomies.php:46
 msgid "Parent Category"
 msgstr ""
 
-#: includes/components/class-attribute.php:382
+#: includes/components/class-attribute.php:388
 msgid "Parent Option"
 msgstr ""
 
@@ -1029,8 +1071,8 @@ msgstr ""
 msgid "Password is incorrect."
 msgstr ""
 
-#: includes/configs/settings.php:381
 #: includes/emails/class-user-password-request.php:30
+#: includes/emails/class-user-password-request.php:49
 msgid "Password Reset"
 msgstr ""
 
@@ -1046,7 +1088,7 @@ msgstr ""
 msgid "Password reset link is expired or invalid."
 msgstr ""
 
-#: includes/fields/class-date.php:86 includes/fields/class-number.php:65
+#: includes/fields/class-date.php:100 includes/fields/class-number.php:65
 #: includes/fields/class-select.php:77 includes/fields/class-text.php:78
 msgid "Placeholder"
 msgstr ""
@@ -1070,7 +1112,7 @@ msgid ""
 "create a new password via email."
 msgstr ""
 
-#: includes/configs/strings.php:136
+#: includes/configs/strings.php:138
 msgid ""
 "Please provide details that will help us verify that this listing violates "
 "the terms of service."
@@ -1080,12 +1122,12 @@ msgstr ""
 msgid "Please set Google Client ID and Secret to proceed."
 msgstr ""
 
-#: includes/components/class-admin.php:767
+#: includes/components/class-admin.php:765
 msgctxt "plural"
 msgid "All"
 msgstr ""
 
-#: includes/components/class-admin.php:772
+#: includes/components/class-admin.php:770
 msgctxt "plural"
 msgid "Installed"
 msgstr ""
@@ -1094,7 +1136,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: includes/configs/strings.php:39
+#: includes/configs/strings.php:40
 msgid "Price"
 msgstr ""
 
@@ -1106,7 +1148,7 @@ msgstr ""
 msgid "Profile Info"
 msgstr ""
 
-#: includes/configs/settings.php:418
+#: includes/configs/settings.php:342
 msgid "Protected Forms"
 msgstr ""
 
@@ -1114,7 +1156,7 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#: includes/configs/strings.php:54
+#: includes/configs/strings.php:56
 msgctxt "quantity"
 msgid "Columns"
 msgstr ""
@@ -1124,7 +1166,7 @@ msgctxt "quantity"
 msgid "Decimals"
 msgstr ""
 
-#: includes/configs/strings.php:55
+#: includes/configs/strings.php:57
 msgctxt "quantity"
 msgid "Number"
 msgstr ""
@@ -1133,7 +1175,11 @@ msgstr ""
 msgid "Radio Buttons"
 msgstr ""
 
-#: includes/configs/strings.php:46
+#: includes/components/class-email.php:90
+msgid "Recipient"
+msgstr ""
+
+#: includes/configs/strings.php:47
 msgid "Redirect URL"
 msgstr ""
 
@@ -1151,48 +1197,48 @@ msgstr ""
 msgid "Register User"
 msgstr ""
 
-#: includes/configs/strings.php:53
+#: includes/configs/strings.php:55
 msgid "Registered Users"
 msgstr ""
 
-#: includes/configs/settings.php:279 includes/configs/settings.php:284
-#: includes/configs/settings.php:322 includes/configs/settings.php:337
+#: includes/configs/settings.php:245 includes/configs/settings.php:250
+#: includes/configs/settings.php:288 includes/configs/settings.php:303
 msgid "Registration"
 msgstr ""
 
-#: includes/emails/class-user-register.php:30
+#: includes/emails/class-user-register.php:49
 msgid "Registration Complete"
 msgstr ""
 
-#: includes/configs/settings.php:327
+#: includes/configs/settings.php:293
 msgid "Registration Terms Page"
 msgstr ""
 
-#: includes/configs/strings.php:118
+#: includes/configs/strings.php:120
 msgid "Regular Listings per Page"
 msgstr ""
 
-#: includes/configs/strings.php:83
+#: includes/configs/strings.php:85
 msgid "Related Listings"
 msgstr ""
 
-#: includes/configs/strings.php:120
+#: includes/configs/strings.php:122
 msgid "Related Listings per Page"
 msgstr ""
 
-#: includes/configs/strings.php:98
+#: includes/configs/strings.php:100
 msgid "Renew Listing"
 msgstr ""
 
-#: includes/configs/strings.php:103
+#: includes/configs/strings.php:105
 msgid "Report Listing"
 msgstr ""
 
-#: includes/configs/settings.php:129
+#: includes/configs/settings.php:137
 msgid "Reporting"
 msgstr ""
 
-#: includes/configs/settings.php:355
+#: includes/configs/settings.php:321
 msgid "Require email address verification"
 msgstr ""
 
@@ -1204,7 +1250,7 @@ msgstr ""
 msgid "Reset Password"
 msgstr ""
 
-#: includes/configs/strings.php:49
+#: includes/configs/strings.php:50
 msgid "Return to My Account"
 msgstr ""
 
@@ -1216,7 +1262,7 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: includes/configs/strings.php:50
+#: includes/configs/strings.php:51
 msgid "Save Changes"
 msgstr ""
 
@@ -1228,7 +1274,7 @@ msgstr ""
 msgid "Search any of the selected options"
 msgstr ""
 
-#: includes/configs/strings.php:167
+#: includes/configs/strings.php:169
 msgid "Search Attributes"
 msgstr ""
 
@@ -1236,19 +1282,27 @@ msgstr ""
 msgid "Search Categories"
 msgstr ""
 
-#: includes/configs/strings.php:91
+#: includes/configs/post-types.php:28
+msgid "Search Emails"
+msgstr ""
+
+#: includes/configs/strings.php:93
 msgid "Search Listings"
 msgstr ""
 
-#: includes/components/class-attribute.php:383
+#: includes/components/class-attribute.php:389
 msgid "Search Options"
 msgstr ""
 
-#: includes/configs/strings.php:144
+#: includes/configs/post-types.php:49
+msgid "Search Templates"
+msgstr ""
+
+#: includes/configs/strings.php:146
 msgid "Search Vendors"
 msgstr ""
 
-#: includes/configs/settings.php:434
+#: includes/configs/settings.php:358
 msgid "Secret Key"
 msgstr ""
 
@@ -1261,11 +1315,11 @@ msgstr ""
 msgid "Select Files"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:86 includes/models/class-user.php:107
+#: includes/configs/meta-boxes.php:125 includes/models/class-user.php:107
 msgid "Select Image"
 msgstr ""
 
-#: includes/configs/strings.php:27
+#: includes/configs/strings.php:28
 msgid "Select Images"
 msgstr ""
 
@@ -1278,28 +1332,32 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: includes/configs/strings.php:132
+#: includes/configs/strings.php:134
 msgid "Set a date on which the listing will expire."
 msgstr ""
 
-#: includes/configs/strings.php:133
+#: includes/configs/strings.php:135
 msgid "Set a date on which the listing will lose featured status."
 msgstr ""
 
-#: includes/components/class-attribute.php:1192
+#: includes/components/class-attribute.php:1198
 msgid "Set the attribute display format."
 msgstr ""
 
-#: includes/fields/class-date.php:106
+#: includes/fields/class-date.php:120
 msgid "Set the number of days after today to define the minimum date."
 msgstr ""
 
-#: includes/configs/strings.php:130
+#: includes/configs/strings.php:132
 msgid "Set the number of days after which a listing expires."
 msgstr ""
 
-#: includes/configs/strings.php:131
+#: includes/configs/strings.php:133
 msgid "Set the number of days after which an expired listing is deleted."
+msgstr ""
+
+#: includes/configs/settings.php:69
+msgid "Set the title display format to generate titles based on attributes."
 msgstr ""
 
 #: includes/configs/strings.php:16 templates/admin/settings.php:6
@@ -1324,7 +1382,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: includes/configs/settings.php:426
+#: includes/configs/settings.php:350
 msgid "Site Key"
 msgstr ""
 
@@ -1344,7 +1402,7 @@ msgid ""
 "different keywords."
 msgstr ""
 
-#: includes/configs/strings.php:62
+#: includes/configs/strings.php:64
 msgctxt "sort"
 msgid "Order"
 msgstr ""
@@ -1353,38 +1411,38 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: includes/configs/strings.php:58
+#: includes/configs/strings.php:60
 msgctxt "sort order"
 msgid "Date Added"
 msgstr ""
 
-#: includes/configs/strings.php:59
+#: includes/configs/strings.php:61
 msgctxt "sort order"
 msgid "Date Registered"
 msgstr ""
 
-#: includes/configs/strings.php:56
+#: includes/configs/strings.php:58
 msgctxt "sort order"
 msgid "Item Count"
 msgstr ""
 
-#: includes/configs/strings.php:57
+#: includes/configs/strings.php:59
 msgctxt "sort order"
 msgid "Name"
 msgstr ""
 
-#: includes/configs/strings.php:61
+#: includes/configs/strings.php:63
 msgctxt "sort order"
 msgid "Random"
 msgstr ""
 
-#: includes/configs/strings.php:60
+#: includes/configs/strings.php:62
 msgctxt "sort order"
 msgid "Title"
 msgstr ""
 
-#: includes/components/class-attribute.php:1208
-#: includes/configs/meta-boxes.php:93
+#: includes/components/class-attribute.php:1214
+#: includes/configs/meta-boxes.php:132
 msgctxt "sort priority"
 msgid "Order"
 msgstr ""
@@ -1393,20 +1451,28 @@ msgstr ""
 msgid "Square size"
 msgstr ""
 
-#: includes/configs/strings.php:41
-msgid "Storage"
+#: includes/configs/strings.php:26
+msgid "Status"
 msgstr ""
 
 #: includes/configs/strings.php:42
+msgid "Storage"
+msgstr ""
+
+#: includes/configs/strings.php:43
 msgid "Storage Period"
 msgstr ""
 
-#: includes/configs/settings.php:97 includes/configs/settings.php:112
-#: includes/configs/strings.php:32
+#: includes/components/class-email.php:88
+msgid "Subject"
+msgstr ""
+
+#: includes/configs/settings.php:105 includes/configs/settings.php:120
+#: includes/configs/strings.php:33
 msgid "Submission"
 msgstr ""
 
-#: includes/configs/settings.php:102
+#: includes/configs/settings.php:110
 msgid "Submission Terms Page"
 msgstr ""
 
@@ -1414,8 +1480,22 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: includes/configs/strings.php:97
+#: includes/configs/strings.php:99
 msgid "Submit Listing"
+msgstr ""
+
+#: includes/components/class-template.php:102
+#: includes/configs/meta-boxes.php:21 includes/configs/post-types.php:43
+msgid "Template"
+msgstr ""
+
+#: includes/configs/post-types.php:44
+msgctxt "template"
+msgid "Add New"
+msgstr ""
+
+#: includes/configs/post-types.php:42 includes/configs/post-types.php:48
+msgid "Templates"
 msgstr ""
 
 #: includes/fields/class-text.php:72
@@ -1433,7 +1513,7 @@ msgid ""
 msgstr ""
 
 #. %s: Listing title.
-#: includes/configs/strings.php:114
+#: includes/configs/strings.php:116
 #, php-format
 msgid ""
 "Thank you! Your listing \"%s\" has been renewed and will appear at the top "
@@ -1441,7 +1521,7 @@ msgid ""
 msgstr ""
 
 #. %s: Listing title.
-#: includes/configs/strings.php:112
+#: includes/configs/strings.php:114
 #, php-format
 msgid ""
 "Thank you! Your listing \"%s\" has been submitted and will be reviewed as "
@@ -1449,7 +1529,7 @@ msgid ""
 msgstr ""
 
 #. %s: themes URL.
-#: includes/components/class-admin.php:1332
+#: includes/components/class-admin.php:1329
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you notice any "
@@ -1458,7 +1538,7 @@ msgid ""
 msgstr ""
 
 #. %s: token list.
-#: includes/configs/strings.php:69
+#: includes/configs/strings.php:71
 #, php-format
 msgid "The following tokens are available: %s."
 msgstr ""
@@ -1480,27 +1560,27 @@ msgstr ""
 msgid "This email is already registered."
 msgstr ""
 
-#: includes/configs/settings.php:370
+#: includes/emails/class-user-register.php:31
 msgid "This email is sent to users after registration."
 msgstr ""
 
-#: includes/configs/settings.php:382
+#: includes/emails/class-user-password-request.php:31
 msgid "This email is sent to users when a password reset is requested."
 msgstr ""
 
-#: includes/configs/settings.php:393
+#: includes/emails/class-user-email-verify.php:31
 msgid "This email is sent to users when email verification is required."
 msgstr ""
 
-#: includes/configs/settings.php:168
+#: includes/emails/class-listing-approve.php:31
 msgid "This email is sent to users when listing is approved."
 msgstr ""
 
-#: includes/configs/settings.php:192
+#: includes/emails/class-listing-expire.php:31
 msgid "This email is sent to users when listing is expired."
 msgstr ""
 
-#: includes/configs/settings.php:180
+#: includes/emails/class-listing-reject.php:31
 msgid "This email is sent to users when listing is rejected."
 msgstr ""
 
@@ -1508,7 +1588,7 @@ msgstr ""
 msgid "This username is already in use."
 msgstr ""
 
-#: includes/fields/class-date.php:113
+#: includes/fields/class-date.php:127
 msgid "Time"
 msgstr ""
 
@@ -1532,7 +1612,7 @@ msgstr ""
 msgid "Update Category"
 msgstr ""
 
-#: includes/components/class-attribute.php:381
+#: includes/components/class-attribute.php:387
 msgid "Update Option"
 msgstr ""
 
@@ -1540,11 +1620,19 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: includes/configs/settings.php:245
+#: includes/configs/strings.php:53
+msgid "User"
+msgstr ""
+
+#: includes/blocks/class-user-login-form.php:30
+msgid "User Login Form"
+msgstr ""
+
+#: includes/configs/settings.php:211
 msgid "User Name"
 msgstr ""
 
-#: includes/configs/settings.php:369
+#: includes/emails/class-user-register.php:30
 msgid "User Registered"
 msgstr ""
 
@@ -1560,8 +1648,8 @@ msgstr ""
 msgid "User with this username doesn't exist."
 msgstr ""
 
-#: includes/components/class-user.php:156 includes/configs/settings.php:312
-#: includes/configs/settings.php:345 includes/models/class-user.php:48
+#: includes/components/class-user.php:156 includes/configs/settings.php:278
+#: includes/configs/settings.php:311 includes/models/class-user.php:48
 msgid "Username"
 msgstr ""
 
@@ -1579,46 +1667,46 @@ msgstr ""
 msgid "Username or password is incorrect."
 msgstr ""
 
-#: includes/configs/settings.php:295
+#: includes/configs/settings.php:261
 msgid "Users"
 msgstr ""
 
-#: includes/configs/strings.php:139
+#: includes/configs/strings.php:141
 msgid "Vendor"
 msgstr ""
 
-#: includes/configs/post-types.php:50
+#: includes/configs/post-types.php:91
 msgctxt "vendor"
 msgid "Add New"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:116
+#: includes/configs/meta-boxes.php:155
 #: templates/vendor/view/vendor-verified-badge.php:7
 msgctxt "vendor"
 msgid "Verified"
 msgstr ""
 
-#: includes/configs/strings.php:146
+#: includes/configs/strings.php:148
 msgid "Vendor Attributes"
 msgstr ""
 
-#: includes/configs/strings.php:148
+#: includes/configs/strings.php:150
 msgid "Vendor Registered"
 msgstr ""
 
-#: includes/configs/strings.php:147
+#: includes/configs/strings.php:149
 msgid "Vendor Search Form"
 msgstr ""
 
-#: includes/configs/strings.php:143
+#: includes/configs/strings.php:145
 msgid "Vendors"
 msgstr ""
 
-#: includes/configs/strings.php:149
+#: includes/configs/strings.php:151
 msgid "Vendors Page"
 msgstr ""
 
-#: includes/configs/strings.php:150
+#: includes/configs/strings.php:152
 msgid "Vendors per Page"
 msgstr ""
 
@@ -1636,15 +1724,15 @@ msgstr ""
 msgid "View Category"
 msgstr ""
 
-#: includes/configs/strings.php:100
+#: includes/configs/strings.php:102
 msgid "View Listing"
 msgstr ""
 
-#: includes/configs/strings.php:90
+#: includes/configs/strings.php:92
 msgid "View Listings"
 msgstr ""
 
-#: includes/configs/strings.php:140
+#: includes/configs/strings.php:142
 msgid "View Vendor"
 msgstr ""
 
