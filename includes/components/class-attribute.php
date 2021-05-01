@@ -105,10 +105,10 @@ final class Attribute extends Component {
 	 * @param array  $category_ids Category IDs.
 	 * @return array
 	 */
-	public function get_attributes( $model, $category_ids = [] ) {
+	public function get_attributes( $model, $category_ids = null ) {
 		$attributes = hp\get_array_value( $this->attributes, $model, [] );
 
-		if ( $category_ids ) {
+		if ( ! is_null( $category_ids ) ) {
 			$attributes = array_filter(
 				$attributes,
 				function( $attribute ) use ( $category_ids ) {
@@ -703,7 +703,7 @@ final class Attribute extends Component {
 		$category_ids = $form->get_model()->get_categories__id();
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model, (array) $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -748,7 +748,7 @@ final class Attribute extends Component {
 		$category_id = $this->get_category_id( $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && ( ( ( $attribute['searchable'] || $attribute['filterable'] ) && in_array( $form_context, [ 'sort', 'filter' ], true ) ) || ( $attribute['searchable'] && 'search' === $form_context ) ) ) {
@@ -805,7 +805,7 @@ final class Attribute extends Component {
 		$category_id = $this->get_category_id( $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Add attribute options.
 		$options = [];
@@ -1348,7 +1348,7 @@ final class Attribute extends Component {
 		}
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_id );
+		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Sort results.
 		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
