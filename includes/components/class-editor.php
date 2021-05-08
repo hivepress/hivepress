@@ -33,6 +33,9 @@ final class Editor extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Register categories.
+		add_filter( 'block_categories', [ $this, 'register_categories' ] );
+
 		// Register blocks.
 		add_action( 'init', [ $this, 'register_blocks' ] );
 
@@ -74,6 +77,21 @@ final class Editor extends Component {
 		}
 
 		return $blocks;
+	}
+
+	/**
+	 * Registers block categories.
+	 *
+	 * @param array $categories Block categories.
+	 * @return array
+	 */
+	public function register_categories( $categories ) {
+		$categories[] = [
+			'title' => hivepress()->get_name(),
+			'slug'  => 'hivepress',
+		];
+
+		return $categories;
 	}
 
 	/**
