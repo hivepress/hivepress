@@ -34,6 +34,20 @@ class Date_Range extends Date {
 	protected $max_field;
 
 	/**
+	 * Minimum length.
+	 *
+	 * @var int
+	 */
+	protected $min_length;
+
+	/**
+	 * Maximum length.
+	 *
+	 * @var int
+	 */
+	protected $max_length;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -150,7 +164,9 @@ class Date_Range extends Date {
 					'default'      => null,
 
 					'attributes'   => [
-						'data-mode' => 'range',
+						'data-mode'       => 'range',
+						'data-min-length' => $this->min_length,
+						'data-max-length' => $this->max_length,
 					],
 				]
 			)
