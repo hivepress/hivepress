@@ -42,6 +42,11 @@ final class Email extends Component {
 			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
 		}
 
+		// Register Mailchimp integration.
+		if ( hp\is_plugin_active( 'mc4wp' ) ) {
+			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
+		}
+
 		parent::__construct( $args );
 	}
 
