@@ -181,17 +181,37 @@ var hivepress = {
 				settings['mode'] = field.data('mode');
 
 				if (field.data('mode') === 'range') {
-					var fields = field.parent().find('input[type="hidden"]').not(field);
+					var fields = field.parent().find('input[type="hidden"]').not(field),
+						minLength = field.data('min-length'),
+						maxLength = field.data('max-length');
 
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function(error) {},
-						onChange: function(selectedDates) {
-							var formattedDates = selectedDates.map(function(date) {
-								return dateFormatter.formatDate(date, settings['dateFormat']);
-							});
+						onChange: function(selectedDates, dateStr, instance) {
+							if (selectedDates.length === 2) {
+								if (minLength || maxLength) {
+									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
+										shift = 0;
 
-							if (formattedDates.length === 2) {
+									if (length < minLength) {
+										shift = minLength - length;
+									} else if (length > maxLength) {
+										shift = maxLength - length;
+									}
+
+									if (shift) {
+										selectedDates[1].setDate(selectedDates[1].getDate() + shift);
+
+										instance.setDate(selectedDates);
+										instance.open();
+									}
+								}
+
+								var formattedDates = selectedDates.map(function(date) {
+									return dateFormatter.formatDate(date, settings['dateFormat']);
+								});
+
 								fields.eq(0).val(formattedDates[0]);
 								fields.eq(1).val(formattedDates[1]);
 							}

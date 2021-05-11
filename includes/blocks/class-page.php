@@ -41,20 +41,13 @@ class Page extends Container {
 	 * @return string
 	 */
 	public function render() {
+		$output = '';
 
 		// Render header.
 		ob_start();
 
 		get_header();
-		$header = ob_get_contents();
-
-		ob_end_clean();
-
-		// Render footer.
-		ob_start();
-
-		get_footer();
-		$footer = ob_get_contents();
+		$output .= ob_get_contents();
 
 		ob_end_clean();
 
@@ -66,7 +59,6 @@ class Page extends Container {
 		// Render content.
 		$content = parent::render();
 
-		// Add wrapper.
 		switch ( get_template() ) {
 			case 'twentyseventeen':
 				$content = '<div class="wrap"><div class="content-area">' . $content . '</div></div>';
@@ -84,6 +76,16 @@ class Page extends Container {
 				break;
 		}
 
-		return $header . $content . $footer;
+		$output .= $content;
+
+		// Render footer.
+		ob_start();
+
+		get_footer();
+		$output .= ob_get_contents();
+
+		ob_end_clean();
+
+		return $output;
 	}
 }
