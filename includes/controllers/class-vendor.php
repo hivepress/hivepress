@@ -38,6 +38,11 @@ final class Vendor extends Controller {
 						'rest'   => true,
 					],
 
+					'vendor_account_page'           => [
+						'base' => 'user_account_page',
+						'path' => '/vendor',
+					],
+
 					'vendors_view_page'             => [
 						'url'      => [ $this, 'get_vendors_view_url' ],
 						'match'    => [ $this, 'is_vendors_view_page' ],
