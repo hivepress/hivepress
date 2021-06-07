@@ -181,19 +181,11 @@ class Date extends Field {
 		$attributes['data-display-format'] = $this->display_format;
 
 		// Set minimum date.
-		if ( ! is_null( $this->offset ) ) {
-			$this->min_date = date( 'Y-m-d H:i:s', time() + $this->offset * DAY_IN_SECONDS );
-		}
-
 		if ( ! is_null( $this->min_date ) ) {
 			$attributes['data-min-date'] = $this->min_date;
 		}
 
 		// Set maximum date.
-		if ( ! is_null( $this->window ) && ! is_null( $this->min_date ) ) {
-			$this->max_date = date( 'Y-m-d H:i:s', strtotime( $this->min_date ) + ( $this->window - 1 ) * DAY_IN_SECONDS );
-		}
-
 		if ( ! is_null( $this->max_date ) ) {
 			$attributes['data-max-date'] = $this->max_date;
 		}
@@ -208,6 +200,16 @@ class Date extends Field {
 					$this->disabled_dates
 				)
 			);
+		}
+
+		// Set offset.
+		if ( ! is_null( $this->offset ) ) {
+			$attributes['data-offset'] = $this->offset;
+		}
+
+		// Set window.
+		if ( ! is_null( $this->window ) ) {
+			$attributes['data-window'] = $this->window;
 		}
 
 		// Set time flag.

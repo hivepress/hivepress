@@ -154,23 +154,30 @@ class Date_Range extends Date {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
-		// Render date field.
-		$output .= ( new Date(
-			array_merge(
-				$this->args,
-				[
-					'display_type' => 'text',
-					'name'         => null,
-					'default'      => null,
+		// Get field arguments.
+		$field_args = array_merge(
+			$this->args,
+			[
+				'display_type' => 'text',
+				'name'         => null,
+				'default'      => null,
 
-					'attributes'   => [
-						'data-mode'       => 'range',
-						'data-min-length' => $this->min_length,
-						'data-max-length' => $this->max_length,
-					],
-				]
-			)
-		) )->render();
+				'attributes'   => [
+					'data-mode' => 'range',
+				],
+			]
+		);
+
+		if ( ! is_null( $this->min_length ) ) {
+			$field_args['attributes']['data-min-length'] = $this->min_length;
+		}
+
+		if ( ! is_null( $this->max_length ) ) {
+			$field_args['attributes']['data-max-length'] = $this->max_length;
+		}
+
+		// Render date field.
+		$output .= ( new Date( $field_args ) )->render();
 
 		// Render range fields.
 		$output .= ( new Hidden(

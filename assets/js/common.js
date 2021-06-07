@@ -181,6 +181,14 @@ var hivepress = {
 				settings['disable'] = field.data('disabled-dates');
 			}
 
+			if (field.is('[data-offset]')) {
+				settings['minDate'] = new Date().fp_incr(field.data('offset'));
+			}
+
+			if (field.is('[data-window]')) {
+				settings['maxDate'] = new Date().fp_incr(field.data('window'));
+			}
+
 			if (field.data('time')) {
 				settings['enableTime'] = true;
 			}
