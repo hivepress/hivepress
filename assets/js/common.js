@@ -147,10 +147,18 @@ var hivepress = {
 		hivepress.getComponent('date').each(function() {
 			var field = $(this),
 				settings = {
+					allowInput: true,
 					altInput: true,
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					onOpen: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', true);
+					},
+					onClose: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', false);
+						$(instance.altInput).blur();
+					}
 				};
 
 			if (field.data('format')) {
