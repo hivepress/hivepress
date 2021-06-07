@@ -20,12 +20,16 @@ defined( 'ABSPATH' ) || exit;
 final class Mailchimp extends \MC4WP_Integration {
 
 	/**
+	 * Integration name.
+	 *
+	 * @var string
+	 */
+	public $name = 'HivePress';
+
+	/**
 	 * Adds hooks.
 	 */
 	public function add_hooks() {
-
-		// Set name.
-		$this->name = hivepress()->get_name();
 
 		// Add checkbox.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_checkbox' ] );
