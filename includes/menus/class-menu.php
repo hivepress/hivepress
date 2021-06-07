@@ -158,7 +158,7 @@ abstract class Menu {
 					if ( ! isset( $args['label'] ) ) {
 						$title = hp\get_array_value( $route, 'title' );
 
-						if ( is_callable( $title ) ) {
+						if ( is_callable( $title ) && ! static::get_meta( 'chained' ) ) {
 							$title = call_user_func( $title );
 						}
 

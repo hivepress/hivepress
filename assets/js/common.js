@@ -147,10 +147,18 @@ var hivepress = {
 		hivepress.getComponent('date').each(function() {
 			var field = $(this),
 				settings = {
+					allowInput: true,
 					altInput: true,
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					onOpen: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', true);
+					},
+					onClose: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', false);
+						$(instance.altInput).blur();
+					}
 				};
 
 			if (field.data('format')) {
@@ -171,6 +179,14 @@ var hivepress = {
 
 			if (field.data('disabled-dates')) {
 				settings['disable'] = field.data('disabled-dates');
+			}
+
+			if (field.is('[data-offset]')) {
+				settings['minDate'] = new Date().fp_incr(field.data('offset'));
+			}
+
+			if (field.is('[data-window]')) {
+				settings['maxDate'] = new Date().fp_incr(field.data('window'));
 			}
 
 			if (field.data('time')) {

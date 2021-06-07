@@ -147,7 +147,7 @@ class Attachment_Upload extends Field {
 			if ( $urls ) {
 				$urls = implode( ', ', $urls );
 
-				if ( strpos( $this->display_template, '<a ' ) === false ) {
+				if ( strpos( $this->display_template, '<a ' ) === false && strpos( $this->display_template, '<img ' ) === false ) {
 					$urls = str_replace( '<a ', '<a target="_blank" ', make_clickable( $urls ) );
 				}
 
