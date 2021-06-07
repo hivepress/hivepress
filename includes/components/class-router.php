@@ -136,17 +136,6 @@ final class Router extends Component {
 					}
 				}
 			}
-
-			// Set title.
-			if ( $this->route ) {
-				$title = hp\get_array_value( $this->route, 'title' );
-
-				if ( is_callable( $title ) ) {
-					$title = call_user_func( $title );
-				}
-
-				$this->route['title'] = $title;
-			}
 		}
 
 		return $this->route;
@@ -573,6 +562,13 @@ final class Router extends Component {
 						break;
 					}
 				}
+			}
+
+			// Set title.
+			$title = hp\get_array_value( $route, 'title' );
+
+			if ( is_callable( $title ) ) {
+				$this->route['title'] = call_user_func( $title );
 			}
 
 			// Redirect page.
