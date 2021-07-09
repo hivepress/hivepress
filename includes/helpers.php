@@ -349,6 +349,22 @@ function html_attributes( $attributes ) {
 }
 
 /**
+ * Escapes JSON.
+ *
+ * @param string $json JSON string.
+ * @param bool   $html HTML flag.
+ * @return string
+ */
+function esc_json( $json, $html = false ) {
+	return _wp_specialchars(
+		$json,
+		$html ? ENT_NOQUOTES : ENT_QUOTES,
+		'UTF-8',
+		true
+	);
+}
+
+/**
  * Sanitizes HTML.
  *
  * @param string $html HTML to sanitize.
