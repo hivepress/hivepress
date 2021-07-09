@@ -136,6 +136,7 @@ return [
 	'choose_page_that_displays_all_listings'    => esc_html__( 'Choose a page that displays all listings.', 'hivepress' ),
 	'choose_page_with_listing_submission_terms' => esc_html__( 'Choose a page with terms that user has to accept before submitting a new listing.', 'hivepress' ),
 	'provide_details_to_verify_listing_report'  => esc_html__( 'Please provide details that will help us verify that this listing violates the terms of service.', 'hivepress' ),
+	'set_title_format_based_on_attributes'      => esc_html__( 'Set the title display format to generate titles based on attributes.', 'hivepress' ),
 
 	// Vendors.
 	'vendor'                                    => esc_html__( 'Vendor', 'hivepress' ),
@@ -159,6 +160,13 @@ return [
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),
 	'categories'                                => esc_html__( 'Categories', 'hivepress' ),
 	'parent_category'                           => esc_html__( 'Parent Category', 'hivepress' ),
+	'add_category'                              => esc_html__( 'Add Category', 'hivepress' ),
+	'edit_category'                             => esc_html__( 'Edit Category', 'hivepress' ),
+	'update_category'                           => esc_html__( 'Update Category', 'hivepress' ),
+	'view_category'                             => esc_html__( 'View Category', 'hivepress' ),
+	'search_categories'                         => esc_html__( 'Search Categories', 'hivepress' ),
+	'no_categories_found'                       => esc_html__( 'No categories found.', 'hivepress' ),
+	'select_category_imperative'                => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
 
 	// Attributes.
 	'attributes'                                => esc_html__( 'Attributes', 'hivepress' ),
@@ -168,4 +176,10 @@ return [
 	'edit_attribute'                            => esc_html__( 'Edit Attribute', 'hivepress' ),
 	'search_attributes'                         => esc_html__( 'Search Attributes', 'hivepress' ),
 	'no_attributes_found'                       => esc_html__( 'No attributes found.', 'hivepress' ),
+
+	// Attachments.
+	'attachment'                                => esc_html__( 'Attachment', 'hivepress' ),
+	'attachments'                               => esc_html__( 'Attachments', 'hivepress' ),
+	'allow_file_attachments'                    => esc_html__( 'Allow file attachments', 'hivepress' ),
+	'allowed_file_types'                        => esc_html__( 'Allowed File Types', 'hivepress' ),
 ];

@@ -160,7 +160,7 @@ final class Listing extends Controller {
 					],
 
 					'listing_submit_category_page' => [
-						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'select_category_imperative' ),
 						'base'     => 'listing_submit_page',
 						'path'     => '/category/?(?P<listing_category_id>\d+)?',
 						'redirect' => [ $this, 'redirect_listing_submit_category_page' ],
