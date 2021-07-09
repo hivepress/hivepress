@@ -151,11 +151,17 @@ final class Template extends Component {
 		// Add theme class.
 		$classes[] = 'hp-theme--' . hp\sanitize_slug( get_template() );
 
-		// Add template class.
+		// Add template classes.
 		$route = hivepress()->router->get_current_route_name();
 
 		if ( $route ) {
-			$classes[] = 'hp-template--' . hp\sanitize_slug( $route );
+			$template = '\HivePress\Templates\\' . $route;
+
+			if ( class_exists( $template ) ) {
+				foreach ( array_slice( hp\get_class_parents( $template ), 2 ) as $class ) {
+					$classes[] = 'hp-template--' . hp\sanitize_slug( hp\get_class_name( $class ) );
+				}
+			}
 		}
 
 		return $classes;
