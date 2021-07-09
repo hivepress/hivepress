@@ -142,7 +142,7 @@ class Attachment extends Post {
 	 * @param string $size Image size.
 	 * @return mixed
 	 */
-	final public function get_url( $size = 'thumbnail' ) {
+	final public function get_url( $size = 'full' ) {
 		$url  = null;
 		$name = 'url';
 

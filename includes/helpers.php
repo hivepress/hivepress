@@ -349,6 +349,22 @@ function html_attributes( $attributes ) {
 }
 
 /**
+ * Escapes JSON.
+ *
+ * @param string $json JSON string.
+ * @param bool   $html HTML flag.
+ * @return string
+ */
+function esc_json( $json, $html = false ) {
+	return _wp_specialchars(
+		$json,
+		$html ? ENT_NOQUOTES : ENT_QUOTES,
+		'UTF-8',
+		true
+	);
+}
+
+/**
  * Sanitizes HTML.
  *
  * @param string $html HTML to sanitize.
@@ -413,10 +429,15 @@ function sanitize_key( $text ) {
  * Formats number.
  *
  * @param float $number Number.
+ * @param int   $decimals Precision.
  * @return string
  */
-function format_number( $number ) {
-	return number_format_i18n( $number, strlen( substr( strrchr( (string) $number, '.' ), 1 ) ) );
+function format_number( $number, $decimals = null ) {
+	if ( is_null( $decimals ) ) {
+		$decimals = strlen( substr( strrchr( (string) $number, '.' ), 1 ) );
+	}
+
+	return number_format_i18n( $number, $decimals );
 }
 
 /**

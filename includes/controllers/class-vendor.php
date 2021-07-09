@@ -418,6 +418,8 @@ final class Vendor extends Controller {
 
 				'tokens'    => [
 					'vendor_url' => get_permalink( $vendor->get_id() ),
+					'vendor'     => $vendor,
+					'user'       => hivepress()->request->get_user(),
 				],
 			]
 		) )->send();

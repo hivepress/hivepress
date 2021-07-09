@@ -145,7 +145,7 @@ class Number extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return hp\format_number( $this->value );
+			return hp\format_number( $this->value, $this->decimals );
 		}
 	}
 

@@ -286,7 +286,7 @@
 		});
 	});
 
-	$(window).on('load', function() {
+	$('body').imagesLoaded(function() {
 
 		// Sticky
 		hivepress.getComponent('sticky').each(function() {

@@ -160,7 +160,7 @@ final class Listing extends Controller {
 					],
 
 					'listing_submit_category_page' => [
-						'title'    => esc_html_x( 'Select Category', 'imperative', 'hivepress' ),
+						'title'    => hivepress()->translator->get_string( 'select_category_imperative' ),
 						'base'     => 'listing_submit_page',
 						'path'     => '/category/?(?P<listing_category_id>\d+)?',
 						'redirect' => [ $this, 'redirect_listing_submit_category_page' ],
@@ -329,6 +329,8 @@ final class Listing extends Controller {
 						'listing_title'      => $listing->get_title(),
 						'listing_attributes' => implode( ', ', $attributes ),
 						'listing_url'        => hivepress()->router->get_admin_url( 'post', $listing->get_id() ),
+						'listing'            => $listing,
+						'user'               => hivepress()->request->get_user(),
 					],
 				]
 			) )->send();
@@ -439,6 +441,8 @@ final class Listing extends Controller {
 					'listing_title'  => $listing->get_title(),
 					'listing_url'    => get_permalink( $listing->get_id() ),
 					'report_details' => $form->get_value( 'details' ),
+					'listing'        => $listing,
+					'user'           => hivepress()->request->get_user(),
 				],
 			]
 		) )->send();
@@ -1020,6 +1024,8 @@ final class Listing extends Controller {
 				'tokens'    => [
 					'listing_title' => $listing->get_title(),
 					'listing_url'   => 'publish' === $status ? get_permalink( $listing->get_id() ) : get_preview_post_link( $listing->get_id() ),
+					'listing'       => $listing,
+					'user'          => hivepress()->request->get_user(),
 				],
 			]
 		) )->send();

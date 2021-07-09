@@ -297,11 +297,17 @@ final class User extends Controller {
 
 		if ( get_option( 'hp_user_verify_email' ) ) {
 
-			// Generate email key.
+			// Set email key.
 			$email_key = md5( $user->get_email() . time() . wp_rand() );
 
-			// Set email key.
 			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+
+			// Set email redirect.
+			$email_redirect = wp_validate_redirect( $form->get_value( '_redirect' ) );
+
+			if ( $email_redirect ) {
+				update_user_meta( $user->get_id(), 'hp_email_verify_redirect', $email_redirect );
+			}
 
 			// Send email.
 			( new Emails\User_Email_Verify(
@@ -774,6 +780,15 @@ final class User extends Controller {
 		wp_set_auth_cookie( $user->ID, true );
 
 		do_action( 'wp_login', $user->user_login, $user );
+
+		// Redirect user.
+		$redirect = $user->hp_email_verify_redirect;
+
+		if ( $redirect ) {
+			delete_user_meta( $user->ID, 'hp_email_verify_redirect' );
+
+			return $redirect;
+		}
 
 		return false;
 	}

@@ -143,11 +143,19 @@ final class User extends Component {
 	 * @return array
 	 */
 	public function alter_register_form( $form ) {
-
-		// Set form message.
 		if ( get_option( 'hp_user_verify_email' ) ) {
-			$form['redirect'] = false;
+
+			// Set form message.
 			$form['message']  = esc_html__( 'Please check your email to activate your account.', 'hivepress' );
+			$form['redirect'] = false;
+
+			// Add redirect field.
+			$form['fields']['_redirect'] = [
+				'type'         => 'url',
+				'display_type' => 'hidden',
+				'default'      => hp\get_array_value( $_GET, 'redirect' ),
+				'_separate'    => true,
+			];
 		}
 
 		// Add username field.

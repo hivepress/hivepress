@@ -35,7 +35,7 @@ final class Asset extends Component {
 
 		// Enqueue scripts.
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 5 );
 
 		// Add script attributes.
 		add_filter( 'script_loader_tag', [ $this, 'add_script_attributes' ], 10, 2 );
