@@ -252,16 +252,12 @@ var hivepress = {
 		// File upload
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),
-				container = field.closest('form'),
-				submitButton = container.find(':submit'),
+				container = field.parents('[data-model]:first'),
+				submitButton = field.closest('form').find(':submit'),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
 				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
 				responseContainer = selectLabel.parent().children('div').first();
-
-			if (!container.data('model')) {
-				container = field.closest('table');
-			}
 
 			field.fileupload({
 				url: field.data('url'),

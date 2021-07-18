@@ -172,8 +172,15 @@ final class Vendor extends Component {
 				// Add fields.
 				foreach ( $vendor_form->get_fields() as $field_name => $field ) {
 					if ( ! isset( $form_args['fields'][ $field_name ] ) ) {
+						$field_args = $field->get_args();
+
+						if ( 'attachment_upload' === $field_args['type'] ) {
+							$field_args['attributes']['data-model'] = 'vendor';
+							$field_args['attributes']['data-id']    = $vendor->get_id();
+						}
+
 						$form_args['fields'][ $field_name ] = array_merge(
-							$field->get_args(),
+							$field_args,
 							[
 								'default'   => $field->get_value(),
 								'_separate' => true,
