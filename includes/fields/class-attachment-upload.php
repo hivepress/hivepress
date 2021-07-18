@@ -83,7 +83,7 @@ class Attachment_Upload extends Field {
 
 					'protected' => [
 						'label'   => esc_html_x( 'Protected', 'attachment', 'hivepress' ),
-						'caption' => esc_html__( 'Prevent direct URL access', 'hivepress' ),
+						'caption' => esc_html__( 'Protect files from direct access', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 120,
 					],
