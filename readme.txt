@@ -5,7 +5,7 @@ Tags: directory, business directory, classifieds, classified ads, listing, listi
 Requires at least: 4.9
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
