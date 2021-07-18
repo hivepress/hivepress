@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-09 22:45+0000\n"
+"POT-Creation-Date: 2021-07-18 22:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -55,7 +55,7 @@ msgstr ""
 #. %s: field label.
 #: includes/configs/strings.php:77
 #: includes/fields/class-attachment-select.php:72
-#: includes/fields/class-attachment-upload.php:259
+#: includes/fields/class-attachment-upload.php:266
 #: includes/fields/class-date.php:272 includes/fields/class-email.php:90
 #: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
 #, php-format
@@ -236,6 +236,11 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
+#: includes/fields/class-attachment-upload.php:85
+msgctxt "attachment"
+msgid "Protected"
+msgstr ""
+
 #: includes/configs/strings.php:182
 msgid "Attachments"
 msgstr ""
@@ -297,7 +302,7 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: includes/components/class-form.php:471
+#: includes/components/class-form.php:495
 msgid "Captcha is invalid."
 msgstr ""
 
@@ -402,7 +407,7 @@ msgstr ""
 msgid "Default Fields"
 msgstr ""
 
-#: includes/fields/class-attachment-upload.php:350
+#: includes/fields/class-attachment-upload.php:357
 #: templates/listing/edit/page/listing-delete-link.php:5
 msgid "Delete"
 msgstr ""
@@ -1160,6 +1165,10 @@ msgstr ""
 msgid "Profile Info"
 msgstr ""
 
+#: includes/fields/class-attachment-upload.php:86
+msgid "Protect files from direct access"
+msgstr ""
+
 #: includes/configs/settings.php:342
 msgid "Protected Forms"
 msgstr ""
@@ -1319,11 +1328,11 @@ msgid "Secret Key"
 msgstr ""
 
 #: includes/fields/class-attachment-select.php:38
-#: includes/fields/class-attachment-upload.php:117
+#: includes/fields/class-attachment-upload.php:124
 msgid "Select File"
 msgstr ""
 
-#: includes/fields/class-attachment-upload.php:115
+#: includes/fields/class-attachment-upload.php:122
 msgid "Select Files"
 msgstr ""
 
