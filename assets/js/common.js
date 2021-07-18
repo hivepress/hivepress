@@ -87,7 +87,6 @@ var hivepress = {
 
 			if (field.data('source')) {
 				$.extend(settings, {
-					minimumInputLength: 3,
 					ajax: {
 						url: field.data('source'),
 						dataType: 'json',
@@ -97,6 +96,7 @@ var hivepress = {
 							return {
 								'search': params.term,
 								'context': 'list',
+								'parent_value': field.data('parent-value'),
 								'_wpnonce': hivepressCoreData.apiNonce,
 							};
 						},
@@ -113,6 +113,18 @@ var hivepress = {
 						},
 					},
 				});
+
+				if (field.data('parent')) {
+					var parentField = $(':input[name="' + field.data('parent') + '"]');
+
+					if (parentField.length) {
+						parentField.on('change', function() {
+							field.data('parent-value', $(this).val());
+						});
+					}
+				} else {
+					settings['minimumInputLength'] = 3;
+				}
 			}
 
 			if (field.data('input')) {
@@ -249,19 +261,62 @@ var hivepress = {
 			field.flatpickr(settings);
 		});
 
+		// Time
+		hivepress.getComponent('time').each(function() {
+			var field = $(this),
+				settings = {
+					allowInput: true,
+					altInput: true,
+					noCalendar: true,
+					enableTime: true,
+					dateFormat: 'U',
+					altFormat: 'g:i A',
+					defaultHour: 0,
+					parseDate: function(time) {
+						var date = new Date();
+
+						date.setHours(Math.floor(time / 3600));
+						date.setMinutes(Math.floor((time % 3600) / 60));
+						date.setSeconds(time % 60);
+
+						return date;
+					},
+					formatDate: function(date, format) {
+						if (format === 'U') {
+							return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+						}
+
+						return dateFormatter.formatDate(date, format);
+					},
+					onOpen: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', true);
+					},
+					onClose: function(selectedDates, dateStr, instance) {
+						$(instance.altInput).prop('readonly', false);
+						$(instance.altInput).blur();
+					}
+				};
+
+			if (field.data('display-format')) {
+				settings['altFormat'] = field.data('display-format');
+			}
+
+			if (settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1) {
+				settings['time_24hr'] = true;
+			}
+
+			field.flatpickr(settings);
+		});
+
 		// File upload
 		hivepress.getComponent('file-upload').each(function() {
 			var field = $(this),
-				container = field.closest('form'),
-				submitButton = container.find(':submit'),
+				container = field.parents('[data-model]:first'),
+				submitButton = field.closest('form').find(':submit'),
 				selectLabel = field.closest('label'),
 				selectButton = selectLabel.find('button').first(),
 				messageContainer = selectLabel.parent().find(hivepress.getSelector('messages')).first(),
 				responseContainer = selectLabel.parent().children('div').first();
-
-			if (!container.data('model')) {
-				container = field.closest('table');
-			}
 
 			field.fileupload({
 				url: field.data('url'),
