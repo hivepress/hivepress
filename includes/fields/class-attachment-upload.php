@@ -66,19 +66,26 @@ class Attachment_Upload extends Field {
 				'label'    => esc_html__( 'Attachment', 'hivepress' ),
 
 				'settings' => [
-					'caption' => [
+					'caption'   => [
 						'label'      => esc_html__( 'Caption', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'_order'     => 100,
 					],
 
-					'formats' => [
+					'formats'   => [
 						'label'    => esc_html__( 'File Types', 'hivepress' ),
 						'type'     => 'select',
 						'options'  => 'mime_types',
 						'multiple' => true,
 						'_order'   => 110,
+					],
+
+					'protected' => [
+						'label'   => esc_html_x( 'Protected', 'attachment', 'hivepress' ),
+						'caption' => esc_html__( 'Prevent direct URL access', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 120,
 					],
 				],
 			],
