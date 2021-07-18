@@ -375,6 +375,30 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets days.
+	 *
+	 * @param array $args Day arguments.
+	 * @param mixed $value Current value.
+	 * @return array
+	 */
+	protected function get_days( $args, $value ) {
+		return array_map(
+			function( $day ) {
+				return date_i18n( 'D', strtotime( $day ) );
+			},
+			[
+				1 => 'monday',
+				2 => 'tuesday',
+				3 => 'wednesday',
+				4 => 'thursday',
+				5 => 'friday',
+				6 => 'saturday',
+				0 => 'sunday',
+			]
+		);
+	}
+
+	/**
 	 * Gets emails.
 	 *
 	 * @param array $args Email arguments.
