@@ -87,7 +87,6 @@ var hivepress = {
 
 			if (field.data('source')) {
 				$.extend(settings, {
-					minimumInputLength: 3,
 					ajax: {
 						url: field.data('source'),
 						dataType: 'json',
@@ -97,6 +96,7 @@ var hivepress = {
 							return {
 								'search': params.term,
 								'context': 'list',
+								'parent_value': field.data('parent-value'),
 								'_wpnonce': hivepressCoreData.apiNonce,
 							};
 						},
@@ -113,6 +113,18 @@ var hivepress = {
 						},
 					},
 				});
+
+				if (field.data('parent')) {
+					var parentField = $(':input[name="' + field.data('parent') + '"]');
+
+					if (parentField.length) {
+						parentField.on('change', function() {
+							field.data('parent-value', $(this).val());
+						});
+					}
+				} else {
+					settings['minimumInputLength'] = 3;
+				}
 			}
 
 			if (field.data('input')) {
