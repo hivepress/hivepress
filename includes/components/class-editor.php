@@ -34,7 +34,7 @@ final class Editor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Register categories.
-		add_filter( 'block_categories', [ $this, 'register_categories' ] );
+		add_filter( 'block_categories_all', [ $this, 'register_categories' ] );
 
 		// Register blocks.
 		add_action( 'init', [ $this, 'register_blocks' ] );
