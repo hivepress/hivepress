@@ -91,8 +91,8 @@ Mixins
 	Blocks
 	--------------------------------------------------------------*/
 	&-block {
-		.wp-block &,
-		.elementor-element-edit-mode & {
+		.elementor-element-edit-mode &,
+		.wp-block & {
 			pointer-events: none;
 		}
 	}
@@ -1121,6 +1121,18 @@ Mixins
 				width: 100%;
 				margin-right: 0;
 				margin-left: 0;
+			}
+		}
+	}
+
+	&-theme--generatepress {
+		.grid-container {
+			padding-left: 1.4rem;
+
+			.site-content {
+				.content-area {
+					width: 100%;
+				}
 			}
 		}
 	}
