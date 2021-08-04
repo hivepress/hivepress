@@ -91,8 +91,8 @@ Mixins
 	Blocks
 	--------------------------------------------------------------*/
 	&-block {
-		.wp-block &,
-		.elementor-element-edit-mode & {
+		.elementor-element-edit-mode &,
+		.wp-block & {
 			pointer-events: none;
 		}
 	}
@@ -1121,6 +1121,35 @@ Mixins
 				width: 100%;
 				margin-right: 0;
 				margin-left: 0;
+			}
+		}
+	}
+
+	&-theme--astra {
+		.hp-template--listings-view-page .site-cotent{
+			padding: 30rem 0;
+		}
+			.site-content {
+				padding: 3rem 0;
+				main {
+					h1 {
+						line-height: 1.5;
+					}
+				}
+			}
+		}
+
+	&-theme--generatepress {
+		.grid-container {
+			padding-left: 1.4rem;
+
+			.site-content {
+				.content-area {
+					main {
+						padding-left: 2.5rem;
+					}
+					width: 100%;
+				}
 			}
 		}
 	}
