@@ -164,6 +164,7 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					disable: [],
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 					},
@@ -190,7 +191,19 @@ var hivepress = {
 			}
 
 			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
+				settings['disable'].concat(field.data('disabled-dates'));
+			}
+
+			if (field.data('disabled-days')) {
+				var disabledDates = field.data('disabled-days');
+
+				if (disabledDates.length) {
+					function disableDates(date) {
+						return disabledDates.indexOf(date.getDay()) !== -1;
+					}
+
+					settings['disable'].push(disableDates);
+				}
 			}
 
 			if (field.is('[data-offset]')) {

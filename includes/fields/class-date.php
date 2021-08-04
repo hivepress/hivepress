@@ -62,6 +62,13 @@ class Date extends Field {
 	protected $disabled_dates = [];
 
 	/**
+	 * Disabled days.
+	 *
+	 * @var array
+	 */
+	protected $disabled_days = [];
+
+	/**
 	 * Date offset.
 	 *
 	 * @var int
@@ -200,6 +207,11 @@ class Date extends Field {
 					$this->disabled_dates
 				)
 			);
+		}
+
+		// Set disabled days.
+		if ( $this->disabled_days ) {
+			$attributes['data-disabled-days'] = '[' . implode( ',', $this->disabled_days ) . ']';
 		}
 
 		// Set offset.
