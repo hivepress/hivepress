@@ -461,6 +461,11 @@ final class User extends Controller {
 
 		$user = Models\User::query()->get_by_id( $user_object );
 
+		// Check email key.
+		if ( get_option( 'hp_user_verify_email' ) && $user_object->hp_email_verify_key ) {
+			return hp\rest_error( 401, esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
+		}
+
 		// Send email.
 		( new Emails\User_Password_Request(
 			[
