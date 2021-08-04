@@ -63,6 +63,9 @@ final class Attribute extends Component {
 		// Register post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'register_post_types' ], 1 );
 
+		// Register taxonomies.
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'register_taxonomies' ], 1 );
+
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
@@ -216,6 +219,36 @@ final class Attribute extends Component {
 		}
 
 		return $post_types;
+	}
+
+	/**
+	 * Registers taxonomies.
+	 *
+	 * @param array $taxonomies Taxonomies.
+	 * @return array
+	 */
+	public function register_taxonomies( $taxonomies ) {
+		foreach ( $this->models as $model ) {
+			$taxonomies[ $model . '_attribute_group' ] = [
+				'public'            => false,
+				'show_ui'           => true,
+				'hierarchical'      => true,
+				'show_admin_column' => true,
+				'post_type'         => [ $model . '_attribute' ],
+
+				'labels'            => [
+					'name'          => esc_html__( 'Groups', 'hivepress' ),
+					'singular_name' => esc_html__( 'Group', 'hivepress' ),
+					'add_new_item'  => esc_html__( 'Add Group', 'hivepress' ),
+					'edit_item'     => esc_html__( 'Edit Group', 'hivepress' ),
+					'update_item'   => esc_html__( 'Update Group', 'hivepress' ),
+					'search_items'  => esc_html__( 'Search Groups', 'hivepress' ),
+					'not_found'     => esc_html__( 'No groups found.', 'hivepress' ),
+				],
+			];
+		}
+
+		return $taxonomies;
 	}
 
 	/**
