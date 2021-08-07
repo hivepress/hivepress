@@ -165,6 +165,7 @@ var hivepress = {
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
 					disable: [],
+					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 					},
@@ -285,6 +286,7 @@ var hivepress = {
 					dateFormat: 'U',
 					altFormat: 'g:i A',
 					defaultHour: 0,
+					disableMobile: true,
 					parseDate: function(time) {
 						var date = new Date();
 
