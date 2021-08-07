@@ -265,10 +265,24 @@ var hivepress = {
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
 				parseDate: function(date) {
-					return dateFormatter.parseDate(date, settings['dateFormat']);
+					var parsedDate = dateFormatter.parseDate(date, settings['dateFormat']);
+
+					if (settings['dateFormat'] === 'U') {
+						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
+							timeZone: 'UTC',
+						}));
+					}
+
+					return parsedDate;
 				},
 				formatDate: function(date, format) {
-					return dateFormatter.formatDate(date, format);
+					var formattedDate = dateFormatter.formatDate(date, format);
+
+					if (format === 'U') {
+						formattedDate = parseInt(formattedDate) - date.getTimezoneOffset() * 60;
+					}
+
+					return formattedDate;
 				},
 			});
 
