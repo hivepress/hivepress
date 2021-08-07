@@ -226,7 +226,7 @@ class Date extends Field {
 
 		// Set time flag.
 		if ( $this->time ) {
-			$attributes['data-time'] = true;
+			$attributes['data-time'] = 'true';
 		}
 
 		// Set component.
