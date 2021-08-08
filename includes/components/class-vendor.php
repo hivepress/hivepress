@@ -230,7 +230,7 @@ final class Vendor extends Component {
 						array_filter(
 							$form->get_fields(),
 							function( $field ) use ( $vendor_fields ) {
-								return in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
+								return ! $field->is_disabled() && in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
 							}
 						)
 					);

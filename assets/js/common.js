@@ -164,6 +164,8 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					disable: [],
+					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 					},
@@ -190,7 +192,19 @@ var hivepress = {
 			}
 
 			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
+				settings['disable'].concat(field.data('disabled-dates'));
+			}
+
+			if (field.data('disabled-days')) {
+				var disabledDates = field.data('disabled-days');
+
+				if (disabledDates.length) {
+					function disableDates(date) {
+						return disabledDates.indexOf(date.getDay()) !== -1;
+					}
+
+					settings['disable'].push(disableDates);
+				}
 			}
 
 			if (field.is('[data-offset]')) {
@@ -251,10 +265,24 @@ var hivepress = {
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
 				parseDate: function(date) {
-					return dateFormatter.parseDate(date, settings['dateFormat']);
+					var parsedDate = dateFormatter.parseDate(date, settings['dateFormat']);
+
+					if (settings['dateFormat'] === 'U') {
+						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
+							timeZone: 'UTC',
+						}));
+					}
+
+					return parsedDate;
 				},
 				formatDate: function(date, format) {
-					return dateFormatter.formatDate(date, format);
+					var formattedDate = dateFormatter.formatDate(date, format);
+
+					if (format === 'U') {
+						formattedDate = parseInt(formattedDate) - date.getTimezoneOffset() * 60;
+					}
+
+					return formattedDate;
 				},
 			});
 
@@ -272,6 +300,7 @@ var hivepress = {
 					dateFormat: 'U',
 					altFormat: 'g:i A',
 					defaultHour: 0,
+					disableMobile: true,
 					parseDate: function(time) {
 						var date = new Date();
 
