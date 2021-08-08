@@ -293,6 +293,7 @@ final class Attribute extends Component {
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
 						'categories'     => [],
+						'groups'         => [],
 						'edit_field'     => [],
 						'search_field'   => [],
 					];
@@ -316,6 +317,9 @@ final class Attribute extends Component {
 
 						$attribute_args['categories'] = array_unique( $category_ids );
 					}
+
+					// Get groups.
+					$attribute_args['groups'] = wp_get_post_terms( $attribute_object->ID, hp\prefix( $model . '_attribute_group' ), [ 'fields' => 'ids' ] );
 
 					// Get fields.
 					$field_contexts = [ 'edit', 'search' ];
@@ -455,6 +459,7 @@ final class Attribute extends Component {
 							'filterable'     => false,
 							'sortable'       => false,
 							'categories'     => [],
+							'groups'         => [],
 							'edit_field'     => [],
 							'search_field'   => [],
 						],
