@@ -88,28 +88,28 @@ class Time extends Number {
 	 * @return string
 	 */
 	public function render() {
- 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
- 		// Render field.
- 		$output .= ( new Text(
- 			array_merge(
- 				$this->args,
- 				[
- 					'display_type' => 'text',
- 					'default'      => $this->value,
+		// Render field.
+		$output .= ( new Text(
+			array_merge(
+				$this->args,
+				[
+					'display_type' => 'text',
+					'default'      => $this->value,
 
- 					'attributes'   => [
- 						'data-input' => '',
- 					],
- 				]
- 			)
- 		) )->render();
+					'attributes'   => [
+						'data-input' => '',
+					],
+				]
+			)
+		) )->render();
 
- 		// Render clear button.
- 		$output .= '<a title="' . esc_attr__( 'Clear', 'hivepress' ) . '" data-clear><i class="hp-icon fas fa-times"></i></a>';
+		// Render clear button.
+		$output .= '<a title="' . esc_attr__( 'Clear', 'hivepress' ) . '" data-clear><i class="hp-icon fas fa-times"></i></a>';
 
- 		$output .= '</div>';
+		$output .= '</div>';
 
- 		return $output;
- 	}
+		return $output;
+	}
 }
