@@ -1317,7 +1317,10 @@ final class Admin extends Component {
 
 		$output = '';
 
-		// Get notices.
+		// Get installation time.
+		$installed_time = absint( get_option( 'hp_installed_time' ) );
+
+		// Add default notices.
 		$notices = [];
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
@@ -1332,7 +1335,7 @@ final class Admin extends Component {
 			];
 		}
 
-		if ( absint( get_option( 'hp_installed_time' ) ) < time() - WEEK_IN_SECONDS * 2 ) {
+		if ( $installed_time < time() - WEEK_IN_SECONDS * 2 ) {
 			$notices['review_request'] = [
 				'type'        => 'info',
 				'dismissible' => true,
@@ -1340,6 +1343,17 @@ final class Admin extends Component {
 					/* translators: %s: link URL. */
 					hp\sanitize_html( __( 'It\'s been more than 2 weeks since you installed HivePress, that\'s awesome! If you find it useful, please leave a review on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word.', 'hivepress' ) ),
 					'https://wordpress.org/support/plugin/hivepress/reviews/'
+				),
+			];
+		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 && get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
+			$notices['upgrade_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
 				),
 			];
 		}
