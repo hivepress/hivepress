@@ -181,6 +181,7 @@ var hivepress = {
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
+				settings['altInputClass'] = '';
 			}
 
 			if (field.data('format')) {
@@ -340,6 +341,7 @@ var hivepress = {
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
+				settings['altInputClass'] = '';
 			}
 
 			if (field.data('display-format')) {
