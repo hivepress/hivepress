@@ -1480,8 +1480,6 @@ final class Attribute extends Component {
 
 						unset( $field_filter['type'] );
 
-						$field_filter['include_children'] = false;
-
 						// Add taxonomy clause.
 						$tax_query[] = $field_filter;
 					} else {
