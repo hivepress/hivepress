@@ -168,12 +168,20 @@ var hivepress = {
 					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
+
+						$(instance.element).find('[data-clear]').show();
 					},
 					onClose: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
+
+						$(instance.element).find('[data-clear]').hide();
 					}
 				};
+
+			if (field.is('div')) {
+				settings['wrap'] = true;
+			}
 
 			if (field.data('format')) {
 				settings['dateFormat'] = field.data('format');
@@ -319,12 +327,20 @@ var hivepress = {
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
+
+						$(instance.element).find('[data-clear]').show();
 					},
 					onClose: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
+
+						$(instance.element).find('[data-clear]').hide();
 					}
 				};
+
+			if (field.is('div')) {
+				settings['wrap'] = true;
+			}
 
 			if (field.data('display-format')) {
 				settings['altFormat'] = field.data('display-format');

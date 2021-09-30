@@ -53,9 +53,8 @@ class Time extends Number {
 		$args = hp\merge_arrays(
 			$args,
 			[
-				'display_type' => 'number',
-				'min_value'    => 0,
-				'max_value'    => DAY_IN_SECONDS - 1,
+				'min_value' => 0,
+				'max_value' => DAY_IN_SECONDS - 1,
 			]
 		);
 
@@ -82,4 +81,35 @@ class Time extends Number {
 
 		Field::boot();
 	}
+
+	/**
+	 * Renders field HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+ 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
+
+ 		// Render field.
+ 		$output .= ( new Text(
+ 			array_merge(
+ 				$this->args,
+ 				[
+ 					'display_type' => 'text',
+ 					'default'      => $this->value,
+
+ 					'attributes'   => [
+ 						'data-input' => '',
+ 					],
+ 				]
+ 			)
+ 		) )->render();
+
+ 		// Render clear button.
+ 		$output .= '<a title="' . esc_attr__( 'Clear', 'hivepress' ) . '" data-clear><i class="hp-icon fas fa-times"></i></a>';
+
+ 		$output .= '</div>';
+
+ 		return $output;
+ 	}
 }
