@@ -192,15 +192,15 @@ var hivepress = {
 			}
 
 			if (field.data('disabled-dates')) {
-				settings['disable'].concat(field.data('disabled-dates'));
+				settings['disable'] = field.data('disabled-dates');
 			}
 
 			if (field.data('disabled-days')) {
-				var disabledDates = field.data('disabled-days');
+				var disabledDays = field.data('disabled-days');
 
-				if (disabledDates.length) {
+				if (disabledDays.length) {
 					function disableDates(date) {
-						return disabledDates.indexOf(date.getDay()) !== -1;
+						return disabledDays.indexOf(date.getDay()) !== -1;
 					}
 
 					settings['disable'].push(disableDates);
