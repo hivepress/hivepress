@@ -34,9 +34,15 @@ class Time extends Number {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => null,
+				'label'      => esc_html__( 'Time', 'hivepress' ),
 				'filterable' => false,
 				'sortable'   => false,
+
+				'settings'   => [
+					'decimals'  => null,
+					'min_value' => null,
+					'max_value' => null,
+				],
 			],
 			$meta
 		);
@@ -80,6 +86,17 @@ class Time extends Number {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		Field::boot();
+	}
+
+	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return date_i18n( get_option( 'time_format' ), $this->value );
+		}
 	}
 
 	/**
