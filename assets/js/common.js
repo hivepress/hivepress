@@ -151,7 +151,7 @@ var hivepress = {
 					daysShort: dateSettings.weekdays.shorthand,
 					months: dateSettings.months.longhand,
 					monthsShort: dateSettings.months.shorthand,
-					meridiem: dateSettings.amPM,
+					meridiem: dateSettings.hasOwnProperty('amPM') ? dateSettings.amPM : ['AM', 'PM'],
 				},
 			});
 		}
