@@ -408,6 +408,10 @@ final class Attribute extends Component {
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $args ) {
+					if ( ! isset( $args['label'] ) && isset( $args['edit_field']['label'] ) ) {
+						$args['label'] = $args['edit_field']['label'];
+					}
+
 					return array_merge(
 						[
 							'id'             => null,
