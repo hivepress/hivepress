@@ -35,7 +35,7 @@ class User_Account extends Menu {
 
 					'user_logout'        => [
 						'label'  => esc_html__( 'Sign Out', 'hivepress' ),
-						'url'    => wp_logout_url( home_url() ),
+						'url'    => hivepress()->router->get_url( 'user_logout_page' ),
 						'_order' => 1000,
 					],
 				],

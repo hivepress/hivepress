@@ -140,6 +140,12 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_login_page' ],
 					],
 
+					'user_logout_page'             => [
+						'base'     => 'user_account_page',
+						'path'     => '/logout',
+						'redirect' => [ $this, 'redirect_user_logout_page' ],
+					],
+
 					'user_password_reset_page'     => [
 						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
 						'base'     => 'user_account_page',
@@ -711,6 +717,19 @@ final class User extends Controller {
 				'template' => 'user_login_page',
 			]
 		) )->render();
+	}
+
+	/**
+	 * Redirects user logout page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_logout_page() {
+		if ( is_user_logged_in() ) {
+			wp_logout();
+		}
+
+		return true;
 	}
 
 	/**
