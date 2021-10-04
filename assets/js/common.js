@@ -115,7 +115,7 @@ var hivepress = {
 				});
 
 				if (field.data('parent')) {
-					var parentField = $(':input[name="' + field.data('parent') + '"]');
+					var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
 
 					if (parentField.length) {
 						parentField.on('change', function() {
