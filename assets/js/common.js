@@ -176,12 +176,22 @@ var hivepress = {
 						$(instance.altInput).blur();
 
 						$(instance.element).find('[data-clear]').hide();
+
+						if ($(instance.element).data('reset')) {
+							instance.clear();
+
+							$(instance.element).data('reset', false);
+						}
 					}
 				};
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
 				settings['altInputClass'] = '';
+
+				field.find('[data-clear]').on('click', function() {
+					field.data('reset', true);
+				});
 			}
 
 			if (field.data('format')) {
@@ -336,12 +346,22 @@ var hivepress = {
 						$(instance.altInput).blur();
 
 						$(instance.element).find('[data-clear]').hide();
+
+						if ($(instance.element).data('reset')) {
+							instance.clear();
+
+							$(instance.element).data('reset', false);
+						}
 					}
 				};
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
 				settings['altInputClass'] = '';
+
+				field.find('[data-clear]').on('click', function() {
+					field.data('reset', true);
+				});
 			}
 
 			if (field.data('display-format')) {
