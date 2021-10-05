@@ -527,15 +527,33 @@ abstract class Field {
 	 * @return string
 	 */
 	public function display() {
-		return hp\replace_tokens(
+
+		// Check shortcodes.
+		$shortcode = hp\has_shortcode( $this->display_template );
+
+		// Get value.
+		$value = $this->get_display_value();
+
+		if ( $shortcode ) {
+			$value = strip_shortcodes( $value );
+		}
+
+		// Render output.
+		$output = hp\replace_tokens(
 			array_merge(
 				$this->context,
 				[
 					'label' => '<strong>' . $this->label . '</strong>',
-					'value' => $this->get_display_value(),
+					'value' => $value,
 				]
 			),
 			$this->display_template
 		);
+
+		if ( $shortcode ) {
+			$output = do_shortcode( $output );
+		}
+
+		return $output;
 	}
 }

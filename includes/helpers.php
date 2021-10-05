@@ -528,3 +528,13 @@ function get_column_width( $number ) {
 
 	return $width;
 }
+
+/**
+ * Checks shortcodes in text.
+ *
+ * @param string $text Text to be checked.
+ * @return bool
+ */
+function has_shortcode( $text ) {
+	return strpos( $text, '[' ) !== false && preg_match( '/\[[a-z0-9_-]+(\]| )/i', $text );
+}

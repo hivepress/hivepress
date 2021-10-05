@@ -276,7 +276,6 @@ Mixins
 			display: none;
 		}
 
-		&--date,
 		&--email,
 		&--number,
 		&--password,
@@ -340,6 +339,30 @@ Mixins
 		&--checkbox {
 			span {
 				cursor: pointer;
+			}
+		}
+
+		&--date,
+		&--time {
+			display: flex;
+			align-items: center;
+
+			input[type=text] {
+				flex: 1;
+				padding-right: 2.5rem;
+			}
+
+			a {
+				display: none;
+				flex: 0 0 2.5rem;
+				margin-left: -2.5rem;
+				text-decoration: none;
+				text-align: center;
+				cursor: pointer;
+			}
+
+			i {
+				color: #888;
 			}
 		}
 

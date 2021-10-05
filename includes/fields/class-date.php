@@ -150,6 +150,11 @@ class Date extends Field {
 	protected function boot() {
 		$attributes = [];
 
+		// Set display type.
+		if ( 'hidden' !== $this->display_type ) {
+			$this->display_type = 'date';
+		}
+
 		// Set placeholder.
 		if ( ! is_null( $this->placeholder ) ) {
 			$attributes['placeholder'] = $this->placeholder;
@@ -312,10 +317,28 @@ class Date extends Field {
 	 * @return string
 	 */
 	public function render() {
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
-		// Get display type.
-		$display_type = 'hidden' === $this->display_type ? 'hidden' : 'text';
+		// Render field.
+		$output .= ( new Text(
+			array_merge(
+				$this->args,
+				[
+					'display_type' => 'text',
+					'default'      => $this->value,
 
-		return '<input type="' . esc_attr( $display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+					'attributes'   => [
+						'data-input' => '',
+					],
+				]
+			)
+		) )->render();
+
+		// Render clear button.
+		$output .= '<a title="' . esc_attr__( 'Clear', 'hivepress' ) . '" data-clear><i class="hp-icon fas fa-times"></i></a>';
+
+		$output .= '</div>';
+
+		return $output;
 	}
 }

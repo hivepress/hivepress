@@ -408,6 +408,10 @@ final class Attribute extends Component {
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $args ) {
+					if ( ! isset( $args['label'] ) && isset( $args['edit_field']['label'] ) ) {
+						$args['label'] = $args['edit_field']['label'];
+					}
+
 					return array_merge(
 						[
 							'id'             => null,
@@ -1479,8 +1483,6 @@ final class Attribute extends Component {
 						);
 
 						unset( $field_filter['type'] );
-
-						$field_filter['include_children'] = false;
 
 						// Add taxonomy clause.
 						$tax_query[] = $field_filter;

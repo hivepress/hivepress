@@ -199,8 +199,32 @@
 			}
 		}
 
-		&--date[readonly] {
-			background-color: #fff;
+		&--time,
+		&--date {
+			input[type=text] {
+				padding-right: 27px;
+
+				&[readonly] {
+					background-color: #fff;
+				}
+			}
+
+			a {
+				display: none;
+				margin-left: -21px;
+				vertical-align: middle;
+				cursor: pointer;
+
+				&:focus {
+					box-shadow: none;
+					outline: none;
+				}
+
+				i {
+					font-size: 14px;
+					color: #888;
+				}
+			}
 		}
 	}
 	/*--------------------------------------------------------------

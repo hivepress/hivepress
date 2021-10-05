@@ -34,9 +34,15 @@ class Time extends Number {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => null,
+				'label'      => esc_html__( 'Time', 'hivepress' ),
 				'filterable' => false,
 				'sortable'   => false,
+
+				'settings'   => [
+					'decimals'  => null,
+					'min_value' => null,
+					'max_value' => null,
+				],
 			],
 			$meta
 		);
@@ -53,9 +59,8 @@ class Time extends Number {
 		$args = hp\merge_arrays(
 			$args,
 			[
-				'display_type' => 'number',
-				'min_value'    => 0,
-				'max_value'    => DAY_IN_SECONDS - 1,
+				'min_value' => 0,
+				'max_value' => DAY_IN_SECONDS - 1,
 			]
 		);
 
@@ -81,5 +86,47 @@ class Time extends Number {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		Field::boot();
+	}
+
+	/**
+	 * Gets field display value.
+	 *
+	 * @return mixed
+	 */
+	public function get_display_value() {
+		if ( ! is_null( $this->value ) ) {
+			return date_i18n( get_option( 'time_format' ), $this->value );
+		}
+	}
+
+	/**
+	 * Renders field HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Render field.
+		$output .= ( new Text(
+			array_merge(
+				$this->args,
+				[
+					'display_type' => 'text',
+					'default'      => $this->value,
+
+					'attributes'   => [
+						'data-input' => '',
+					],
+				]
+			)
+		) )->render();
+
+		// Render clear button.
+		$output .= '<a title="' . esc_attr__( 'Clear', 'hivepress' ) . '" data-clear><i class="hp-icon fas fa-times"></i></a>';
+
+		$output .= '</div>';
+
+		return $output;
 	}
 }

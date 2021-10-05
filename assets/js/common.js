@@ -115,7 +115,7 @@ var hivepress = {
 				});
 
 				if (field.data('parent')) {
-					var parentField = $(':input[name="' + field.data('parent') + '"]');
+					var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
 
 					if (parentField.length) {
 						parentField.on('change', function() {
@@ -151,7 +151,7 @@ var hivepress = {
 					daysShort: dateSettings.weekdays.shorthand,
 					months: dateSettings.months.longhand,
 					monthsShort: dateSettings.months.shorthand,
-					meridiem: dateSettings.amPM,
+					meridiem: dateSettings.hasOwnProperty('amPM') ? dateSettings.amPM : ['AM', 'PM'],
 				},
 			});
 		}
@@ -168,12 +168,31 @@ var hivepress = {
 					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
+
+						$(instance.element).find('[data-clear]').show();
 					},
 					onClose: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
+
+						$(instance.element).find('[data-clear]').hide();
+
+						if ($(instance.element).data('reset')) {
+							instance.clear();
+
+							$(instance.element).data('reset', false);
+						}
 					}
 				};
+
+			if (field.is('div')) {
+				settings['wrap'] = true;
+				settings['altInputClass'] = '';
+
+				field.find('[data-clear]').on('click', function() {
+					field.data('reset', true);
+				});
+			}
 
 			if (field.data('format')) {
 				settings['dateFormat'] = field.data('format');
@@ -192,15 +211,15 @@ var hivepress = {
 			}
 
 			if (field.data('disabled-dates')) {
-				settings['disable'].concat(field.data('disabled-dates'));
+				settings['disable'] = field.data('disabled-dates');
 			}
 
 			if (field.data('disabled-days')) {
-				var disabledDates = field.data('disabled-days');
+				var disabledDays = field.data('disabled-days');
 
-				if (disabledDates.length) {
+				if (disabledDays.length) {
 					function disableDates(date) {
-						return disabledDates.indexOf(date.getDay()) !== -1;
+						return disabledDays.indexOf(date.getDay()) !== -1;
 					}
 
 					settings['disable'].push(disableDates);
@@ -319,12 +338,31 @@ var hivepress = {
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
+
+						$(instance.element).find('[data-clear]').show();
 					},
 					onClose: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
+
+						$(instance.element).find('[data-clear]').hide();
+
+						if ($(instance.element).data('reset')) {
+							instance.clear();
+
+							$(instance.element).data('reset', false);
+						}
 					}
 				};
+
+			if (field.is('div')) {
+				settings['wrap'] = true;
+				settings['altInputClass'] = '';
+
+				field.find('[data-clear]').on('click', function() {
+					field.data('reset', true);
+				});
+			}
 
 			if (field.data('display-format')) {
 				settings['altFormat'] = field.data('display-format');
