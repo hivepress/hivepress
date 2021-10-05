@@ -65,7 +65,7 @@ class URL extends Text {
 	 * @param string $display_template Display template.
 	 */
 	protected function set_display_template( $display_template ) {
-		if ( strpos( $display_template, '<a ' ) === false ) {
+		if ( strpos( $display_template, '<a ' ) === false && ! hp\has_shortcode( $display_template ) ) {
 			$display_template = str_replace( '%value%', '<a href="%value%">%value%</a>', $display_template );
 		}
 
