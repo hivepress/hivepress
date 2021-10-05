@@ -150,6 +150,11 @@ class Date extends Field {
 	protected function boot() {
 		$attributes = [];
 
+		// Set display type.
+		if ( 'hidden' !== $this->display_type ) {
+			$this->display_type = 'date';
+		}
+
 		// Set placeholder.
 		if ( ! is_null( $this->placeholder ) ) {
 			$attributes['placeholder'] = $this->placeholder;
