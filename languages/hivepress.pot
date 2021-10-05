@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-18 22:51+0000\n"
+"POT-Creation-Date: 2021-10-05 19:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Domain: hivepress"
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:279
+#: includes/fields/class-date.php:296
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr ""
@@ -29,7 +29,7 @@ msgid "\"%1$s\" can't be greater than %2$s."
 msgstr ""
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:288
+#: includes/fields/class-date.php:305
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 #: includes/configs/strings.php:77
 #: includes/fields/class-attachment-select.php:72
 #: includes/fields/class-attachment-upload.php:266
-#: includes/fields/class-date.php:272 includes/fields/class-email.php:90
+#: includes/fields/class-date.php:289 includes/fields/class-email.php:90
 #: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
 #, php-format
 msgid "\"%s\" field contains an invalid value."
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Added on %s"
 msgstr ""
 
-#: includes/components/class-attribute.php:942
+#: includes/components/class-attribute.php:946
 #: includes/forms/class-listing-search.php:59
 msgid "All Categories"
 msgstr ""
@@ -167,7 +167,7 @@ msgstr ""
 msgid "Allow file attachments"
 msgstr ""
 
-#: includes/components/class-attribute.php:1118
+#: includes/components/class-attribute.php:1122
 msgid "Allow front-end editing"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Allow reporting listings"
 msgstr ""
 
-#: includes/fields/class-date.php:128
+#: includes/fields/class-date.php:135
 msgid "Allow setting time"
 msgstr ""
 
@@ -215,19 +215,19 @@ msgstr ""
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1181
-#: includes/components/class-attribute.php:1183
+#: includes/components/class-attribute.php:1185
+#: includes/components/class-attribute.php:1187
 msgctxt "area"
 msgid "primary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1182
-#: includes/components/class-attribute.php:1184
+#: includes/components/class-attribute.php:1186
+#: includes/components/class-attribute.php:1188
 msgctxt "area"
 msgid "secondary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1174
+#: includes/components/class-attribute.php:1178
 msgid "Areas"
 msgstr ""
 
@@ -254,37 +254,37 @@ msgctxt "attribute"
 msgid "Add New"
 msgstr ""
 
-#: includes/components/class-attribute.php:1117
+#: includes/components/class-attribute.php:1121
 msgctxt "attribute"
 msgid "Editable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1139
+#: includes/components/class-attribute.php:1143
 msgctxt "attribute"
 msgid "Filterable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1146
+#: includes/components/class-attribute.php:1150
 msgctxt "attribute"
 msgid "Indexable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1242
+#: includes/components/class-attribute.php:1246
 msgctxt "attribute"
 msgid "Moderated"
 msgstr ""
 
-#: includes/components/class-attribute.php:535
+#: includes/components/class-attribute.php:539
 msgctxt "attribute"
 msgid "Searchable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1153
+#: includes/components/class-attribute.php:1157
 msgctxt "attribute"
 msgid "Sortable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1108
+#: includes/components/class-attribute.php:1112
 #: includes/configs/strings.php:172
 msgid "Attributes"
 msgstr ""
@@ -293,8 +293,8 @@ msgstr ""
 msgid "Authorization"
 msgstr ""
 
-#: includes/components/class-attribute.php:1181
-#: includes/components/class-attribute.php:1182
+#: includes/components/class-attribute.php:1185
+#: includes/components/class-attribute.php:1186
 msgid "Block"
 msgstr ""
 
@@ -358,8 +358,12 @@ msgid ""
 "listing."
 msgstr ""
 
-#: includes/components/class-attribute.php:1175
+#: includes/components/class-attribute.php:1179
 msgid "Choose the template areas where you want to display this attribute."
+msgstr ""
+
+#: includes/fields/class-date.php:338 includes/fields/class-time.php:126
+msgid "Clear"
 msgstr ""
 
 #: includes/fields/class-text.php:142
@@ -383,11 +387,11 @@ msgstr ""
 msgid "Current Password"
 msgstr ""
 
-#: includes/controllers/class-user.php:591
+#: includes/controllers/class-user.php:602
 msgid "Current password is incorrect."
 msgstr ""
 
-#: includes/controllers/class-user.php:587
+#: includes/controllers/class-user.php:598
 msgid "Current password is required."
 msgstr ""
 
@@ -395,7 +399,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/fields/class-date.php:119
+#: includes/fields/class-date.php:126
 msgid "Date Offset"
 msgstr ""
 
@@ -430,7 +434,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: includes/components/class-attribute.php:1154
+#: includes/components/class-attribute.php:1158
 msgid "Display as a sorting option"
 msgstr ""
 
@@ -438,11 +442,11 @@ msgstr ""
 msgid "Display categories"
 msgstr ""
 
-#: includes/components/class-attribute.php:1140
+#: includes/components/class-attribute.php:1144
 msgid "Display in the filter form"
 msgstr ""
 
-#: includes/components/class-attribute.php:536
+#: includes/components/class-attribute.php:540
 msgid "Display in the search form"
 msgstr ""
 
@@ -498,7 +502,7 @@ msgstr ""
 msgid "Edit Option"
 msgstr ""
 
-#: includes/components/class-attribute.php:486
+#: includes/components/class-attribute.php:490
 msgid "Edit Options"
 msgstr ""
 
@@ -529,7 +533,7 @@ msgstr ""
 msgid "Email Verification"
 msgstr ""
 
-#: includes/controllers/class-user.php:152
+#: includes/controllers/class-user.php:158
 msgid "Email Verified"
 msgstr ""
 
@@ -598,7 +602,7 @@ msgctxt "field"
 msgid "Required"
 msgstr ""
 
-#: includes/components/class-attribute.php:718
+#: includes/components/class-attribute.php:722
 msgctxt "field"
 msgid "requires review"
 msgstr ""
@@ -608,8 +612,8 @@ msgctxt "field"
 msgid "Select"
 msgstr ""
 
-#: includes/components/class-attribute.php:1124
-#: includes/components/class-attribute.php:1160
+#: includes/components/class-attribute.php:1128
+#: includes/components/class-attribute.php:1164
 msgid "Field Type"
 msgstr ""
 
@@ -629,7 +633,7 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1197
+#: includes/components/class-attribute.php:1201
 msgid "Format"
 msgstr ""
 
@@ -651,6 +655,15 @@ msgstr ""
 
 #: includes/fields/class-google-oauth-button.php:38
 msgid "Grant Access"
+msgstr ""
+
+#. %s: link URL.
+#: includes/components/class-admin.php:1354
+#, php-format
+msgid ""
+"Great start with HivePress! Check out our <a href=\"%1$s\">premium themes</a>"
+" and <a href=\"%2$s\">extensions</a> for more tailored design and "
+"functionality."
 msgstr ""
 
 #: includes/fields/class-image-size.php:81
@@ -713,7 +726,7 @@ msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-attribute.php:1189
+#: includes/components/class-attribute.php:1193
 msgid "Icon"
 msgstr ""
 
@@ -741,7 +754,7 @@ msgctxt "imperative"
 msgid "Select Category"
 msgstr ""
 
-#: includes/components/class-attribute.php:1147
+#: includes/components/class-attribute.php:1151
 msgid "Include in keyword search"
 msgstr ""
 
@@ -754,7 +767,7 @@ msgid "Integrations"
 msgstr ""
 
 #. %s: link URL.
-#: includes/components/class-admin.php:1341
+#: includes/components/class-admin.php:1344
 #, php-format
 msgid ""
 "It's been more than 2 weeks since you installed HivePress, that's awesome! "
@@ -903,7 +916,7 @@ msgstr ""
 msgid "Make this listing featured"
 msgstr ""
 
-#: includes/components/class-attribute.php:1243
+#: includes/components/class-attribute.php:1247
 msgid "Manually approve changes"
 msgstr ""
 
@@ -923,7 +936,7 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: includes/fields/class-date.php:113
+#: includes/fields/class-date.php:120
 msgid "Maximum Date"
 msgstr ""
 
@@ -950,7 +963,7 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: includes/fields/class-date.php:107
+#: includes/fields/class-date.php:114
 msgid "Minimum Date"
 msgstr ""
 
@@ -1067,8 +1080,8 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: includes/components/class-attribute.php:1183
-#: includes/components/class-attribute.php:1184
+#: includes/components/class-attribute.php:1187
+#: includes/components/class-attribute.php:1188
 msgid "Page"
 msgstr ""
 
@@ -1084,7 +1097,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: includes/controllers/class-user.php:644
+#: includes/controllers/class-user.php:655
 msgid "Password is incorrect."
 msgstr ""
 
@@ -1097,7 +1110,7 @@ msgstr ""
 msgid "Password reset email has been sent."
 msgstr ""
 
-#: includes/controllers/class-user.php:515
+#: includes/controllers/class-user.php:526
 msgid "Password reset key is expired or invalid."
 msgstr ""
 
@@ -1105,13 +1118,14 @@ msgstr ""
 msgid "Password reset link is expired or invalid."
 msgstr ""
 
-#: includes/fields/class-date.php:100 includes/fields/class-number.php:65
+#: includes/fields/class-date.php:107 includes/fields/class-number.php:65
 #: includes/fields/class-select.php:77 includes/fields/class-text.php:78
 msgid "Placeholder"
 msgstr ""
 
 #: includes/components/class-user.php:94 includes/components/class-user.php:149
-#: includes/controllers/class-user.php:394
+#: includes/controllers/class-user.php:400
+#: includes/controllers/class-user.php:472
 msgid "Please check your email to activate your account."
 msgstr ""
 
@@ -1263,8 +1277,8 @@ msgstr ""
 msgid "Require email address verification"
 msgstr ""
 
-#: includes/components/class-user.php:275
-#: includes/controllers/class-user.php:144
+#: includes/components/class-user.php:276
+#: includes/controllers/class-user.php:150
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:73
 #: templates/user/password-reset/user-password-reset-message.php:6
@@ -1361,11 +1375,11 @@ msgstr ""
 msgid "Set a date on which the listing will lose featured status."
 msgstr ""
 
-#: includes/components/class-attribute.php:1198
+#: includes/components/class-attribute.php:1202
 msgid "Set the attribute display format."
 msgstr ""
 
-#: includes/fields/class-date.php:120
+#: includes/fields/class-date.php:127
 msgid "Set the number of days after today to define the minimum date."
 msgstr ""
 
@@ -1391,7 +1405,7 @@ msgstr ""
 msgid "Showing %1$s-%2$s of %3$s results"
 msgstr ""
 
-#: includes/components/class-user.php:251
+#: includes/components/class-user.php:250
 #: includes/controllers/class-user.php:136
 #: includes/forms/class-user-login.php:77
 #: templates/user/login/user-login-link.php:17
@@ -1462,7 +1476,7 @@ msgctxt "sort order"
 msgid "Title"
 msgstr ""
 
-#: includes/components/class-attribute.php:1214
+#: includes/components/class-attribute.php:1218
 #: includes/configs/meta-boxes.php:132
 msgctxt "sort priority"
 msgid "Order"
@@ -1550,7 +1564,7 @@ msgid ""
 msgstr ""
 
 #. %s: themes URL.
-#: includes/components/class-admin.php:1329
+#: includes/components/class-admin.php:1332
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you notice any "
@@ -1577,7 +1591,7 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: includes/controllers/class-user.php:254
+#: includes/controllers/class-user.php:260
 msgid "This email is already registered."
 msgstr ""
 
@@ -1605,11 +1619,11 @@ msgstr ""
 msgid "This email is sent to users when listing is rejected."
 msgstr ""
 
-#: includes/controllers/class-user.php:248
+#: includes/controllers/class-user.php:254
 msgid "This username is already in use."
 msgstr ""
 
-#: includes/fields/class-date.php:127
+#: includes/fields/class-date.php:134 includes/fields/class-time.php:37
 msgid "Time"
 msgstr ""
 
@@ -1661,11 +1675,11 @@ msgstr ""
 msgid "User Registration Form"
 msgstr ""
 
-#: includes/controllers/class-user.php:456
+#: includes/controllers/class-user.php:462
 msgid "User with this email doesn't exist."
 msgstr ""
 
-#: includes/controllers/class-user.php:458
+#: includes/controllers/class-user.php:464
 msgid "User with this username doesn't exist."
 msgstr ""
 
@@ -1674,7 +1688,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: includes/controllers/class-user.php:246
+#: includes/controllers/class-user.php:252
 msgid "Username contains invalid characters."
 msgstr ""
 
@@ -1683,8 +1697,8 @@ msgstr ""
 msgid "Username or Email"
 msgstr ""
 
-#: includes/controllers/class-user.php:382
-#: includes/controllers/class-user.php:389
+#: includes/controllers/class-user.php:388
+#: includes/controllers/class-user.php:395
 msgid "Username or password is incorrect."
 msgstr ""
 
