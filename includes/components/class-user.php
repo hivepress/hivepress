@@ -239,60 +239,59 @@ final class User extends Component {
 	 * @return array
 	 */
 	public function alter_site_footer_block( $template ) {
-		if ( ! is_user_logged_in() ) {
-			$template = hp\merge_trees(
-				$template,
-				[
-					'blocks' => [
-						'modals' => [
-							'blocks' => [
-								'user_login_modal'    => [
-									'type'   => 'modal',
-									'title'  => esc_html__( 'Sign In', 'hivepress' ),
+		return hp\merge_trees(
+			$template,
+			[
+				'blocks' => [
+					'modals' => [
+						'blocks' => [
+							'user_login_modal'            => [
+								'type'        => 'modal',
+								'title'       => esc_html__( 'Sign In', 'hivepress' ),
+								'_capability' => 'login',
 
-									'blocks' => [
-										'user_login_form' => [
-											'type'   => 'user_login_form',
-											'_order' => 10,
-										],
+								'blocks'      => [
+									'user_login_form' => [
+										'type'   => 'user_login_form',
+										'_order' => 10,
 									],
 								],
+							],
 
-								'user_register_modal' => [
-									'type'   => 'modal',
-									'title'  => esc_html__( 'Register', 'hivepress' ),
+							'user_register_modal'         => [
+								'type'        => 'modal',
+								'title'       => esc_html__( 'Register', 'hivepress' ),
+								'_capability' => 'login',
 
-									'blocks' => [
-										'user_register_form' => [
-											'type'   => 'user_register_form',
-											'_order' => 10,
-										],
+								'blocks'      => [
+									'user_register_form' => [
+										'type'   => 'user_register_form',
+										'_order' => 10,
 									],
 								],
+							],
 
-								'user_password_request_modal' => [
-									'type'   => 'modal',
-									'title'  => esc_html__( 'Reset Password', 'hivepress' ),
+							'user_password_request_modal' => [
+								'type'        => 'modal',
+								'title'       => esc_html__( 'Reset Password', 'hivepress' ),
+								'_capability' => 'login',
 
-									'blocks' => [
-										'user_password_request_form' => [
-											'type'       => 'form',
-											'form'       => 'user_password_request',
-											'_order'     => 10,
+								'blocks'      => [
+									'user_password_request_form' => [
+										'type'       => 'form',
+										'form'       => 'user_password_request',
+										'_order'     => 10,
 
-											'attributes' => [
-												'class' => [ 'hp-form--narrow' ],
-											],
+										'attributes' => [
+											'class' => [ 'hp-form--narrow' ],
 										],
 									],
 								],
 							],
 						],
 					],
-				]
-			);
-		}
-
-		return $template;
+				],
+			]
+		);
 	}
 }

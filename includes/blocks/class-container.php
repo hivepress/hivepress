@@ -70,25 +70,27 @@ class Container extends Block {
 		$this->blocks = [];
 
 		foreach ( hp\sort_array( $blocks ) as $name => $args ) {
+			if ( ! isset( $args['_capability'] ) || ( is_user_logged_in() && current_user_can( $args['_capability'] ) ) || ( ! is_user_logged_in() && 'login' === $args['_capability'] ) ) {
 
-			// Create block.
-			$block = hp\create_class_instance(
-				'\HivePress\Blocks\\' . $args['type'],
-				[
-					hp\merge_arrays(
-						[
-							'context' => $this->context,
-						],
-						$args,
-						[
-							'name' => $name,
-						]
-					),
-				]
-			);
+				// Create block.
+				$block = hp\create_class_instance(
+					'\HivePress\Blocks\\' . $args['type'],
+					[
+						hp\merge_arrays(
+							[
+								'context' => $this->context,
+							],
+							$args,
+							[
+								'name' => $name,
+							]
+						),
+					]
+				);
 
-			if ( $block ) {
-				$this->blocks[ $name ] = $block;
+				if ( $block ) {
+					$this->blocks[ $name ] = $block;
+				}
 			}
 		}
 	}
