@@ -90,7 +90,7 @@ class Toggle extends Block {
 			$attributes['class'] = [ 'hp-link' ];
 		}
 
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() || ! $this->url ) {
 			$attributes['href'] = '#';
 
 			$attributes['data-component'] = 'toggle';

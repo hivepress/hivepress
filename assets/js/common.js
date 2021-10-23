@@ -275,6 +275,9 @@ var hivepress = {
 
 								fields.eq(0).val(formattedDates[0]);
 								fields.eq(1).val(formattedDates[1]);
+							} else {
+								fields.eq(0).val('');
+								fields.eq(1).val('');
 							}
 						},
 					});

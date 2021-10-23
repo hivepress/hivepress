@@ -47,7 +47,7 @@ final class Model extends Component {
 		// Get class.
 		$class = '\HivePress\Models\\' . $model;
 
-		if ( class_exists( $class ) ) {
+		if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
 
 			// Get query.
 			$query = call_user_func( [ $class, 'query' ] );

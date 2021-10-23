@@ -139,7 +139,7 @@ return [
 
 			'display_subcategories' => [
 				'label'   => hivepress()->translator->get_string( 'display_noun' ),
-				'caption' => esc_html__( 'Display subcategories', 'hivepress' ),
+				'caption' => esc_html__( 'Display subcategories instead of listings', 'hivepress' ),
 				'type'    => 'checkbox',
 				'_order'  => 30,
 			],
