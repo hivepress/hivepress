@@ -41,7 +41,7 @@ final class Upgrade extends Component {
 		// Upgrade attributes.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
 
-		// Ugrade emails.
+		// Upgrade emails.
 		add_action( 'hivepress/v1/activate', [ $this, 'upgrade_emails' ] );
 
 		parent::__construct( $args );
