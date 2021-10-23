@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 19:32+0000\n"
+"POT-Creation-Date: 2021-10-23 14:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Domain: hivepress"
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:296
+#: includes/fields/class-date.php:281
 #, php-format
 msgid "\"%1$s\" can't be earlier than %2$s."
 msgstr ""
@@ -29,7 +29,7 @@ msgid "\"%1$s\" can't be greater than %2$s."
 msgstr ""
 
 #. 1: field label, 2: date.
-#: includes/fields/class-date.php:305
+#: includes/fields/class-date.php:290
 #, php-format
 msgid "\"%1$s\" can't be later than %2$s."
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 #: includes/configs/strings.php:77
 #: includes/fields/class-attachment-select.php:72
 #: includes/fields/class-attachment-upload.php:266
-#: includes/fields/class-date.php:289 includes/fields/class-email.php:90
+#: includes/fields/class-date.php:274 includes/fields/class-email.php:90
 #: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
 #, php-format
 msgid "\"%s\" field contains an invalid value."
@@ -362,7 +362,7 @@ msgstr ""
 msgid "Choose the template areas where you want to display this attribute."
 msgstr ""
 
-#: includes/fields/class-date.php:338 includes/fields/class-time.php:126
+#: includes/fields/class-date.php:323 includes/fields/class-time.php:126
 msgid "Clear"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgid "Display as a sorting option"
 msgstr ""
 
 #: includes/configs/settings.php:35
-msgid "Display categories"
+msgid "Display categories instead of listings"
 msgstr ""
 
 #: includes/components/class-attribute.php:1144
@@ -463,7 +463,7 @@ msgid "Display only verified vendors"
 msgstr ""
 
 #: includes/configs/meta-boxes.php:142
-msgid "Display subcategories"
+msgid "Display subcategories instead of listings"
 msgstr ""
 
 #: includes/configs/strings.php:155
