@@ -155,21 +155,6 @@ class Date extends Field {
 			$this->display_type = 'date';
 		}
 
-		// Set placeholder.
-		if ( ! is_null( $this->placeholder ) ) {
-			$attributes['placeholder'] = $this->placeholder;
-		}
-
-		// Set disabled flag.
-		if ( $this->disabled ) {
-			$attributes['disabled'] = true;
-		}
-
-		// Set required flag.
-		if ( $this->required ) {
-			$attributes['required'] = true;
-		}
-
 		// Set format.
 		if ( is_null( $this->format ) ) {
 			$this->format = 'Y-m-d';
