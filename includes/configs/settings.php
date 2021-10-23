@@ -32,7 +32,7 @@ return [
 
 					'page_listings_display_categories' => [
 						'label'   => hivepress()->translator->get_string( 'listings_page_display' ),
-						'caption' => esc_html__( 'Display categories', 'hivepress' ),
+						'caption' => esc_html__( 'Display categories instead of listings', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 20,
 					],
