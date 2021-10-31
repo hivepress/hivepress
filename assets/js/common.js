@@ -489,5 +489,32 @@ var hivepress = {
 				},
 			});
 		});
+
+		// Repeater
+		hivepress.getComponent('repeater').each(function() {
+			var container = $(this),
+				itemContainer = container.find('tbody'),
+				firstItem = container.find('tr:first');
+
+			itemContainer.sortable({
+				handle: '[data-sort]',
+			});
+
+			if (firstItem.length) {
+				container.find('[data-add]').on('click', function() {
+					var newItem = firstItem.clone();
+
+					newItem.find(':input').val('');
+
+					newItem.appendTo(itemContainer);
+				});
+			}
+
+			container.on('click', '[data-remove]', function() {
+				if (container.find('tr').length > 1) {
+					$(this).closest('tr').remove();
+				}
+			});
+		});
 	});
 })(jQuery);

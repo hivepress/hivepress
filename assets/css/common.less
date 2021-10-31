@@ -35,6 +35,30 @@ Mixins
 
 .hp {
 	/*--------------------------------------------------------------
+	Icons
+	--------------------------------------------------------------*/
+	&-icon {
+		font-size: 16px;
+	}
+	/*--------------------------------------------------------------
+	Links
+	--------------------------------------------------------------*/
+	&-link {
+		display: inline-flex;
+		align-items: center;
+		cursor: pointer;
+
+		&:not(:hover) {
+			color: inherit;
+		}
+
+		i {
+			&:first-child {
+				margin-right: 0.5rem;
+			}
+		}
+	}
+	/*--------------------------------------------------------------
 	Statuses
 	--------------------------------------------------------------*/
 	&-status {
@@ -217,6 +241,38 @@ Mixins
 					> div:only-child {
 						a {
 							display: none;
+						}
+					}
+				}
+			}
+		}
+
+		&--repeater {
+			table {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+
+				td {
+					vertical-align: middle;
+					color: #888;
+
+					&:first-child {
+						&,
+						* {
+							cursor: move;
+						}
+					}
+
+					&:first-child,
+					&:last-child {
+						width: 1px;
+						white-space: nowrap;
+						padding-left: 0;
+						padding-right: 0;
+
+						i {
+							margin: 0;
 						}
 					}
 				}
