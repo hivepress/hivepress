@@ -66,6 +66,7 @@ class Page extends Container {
 				break;
 
 			case 'twentynineteen':
+			case 'popularfx':
 				$content = '<div class="entry"><div class="entry-content">' . $content . '</div></div>';
 
 				break;

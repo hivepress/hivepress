@@ -393,6 +393,10 @@ Mixins
 			&:not(:last-child) {
 				margin-bottom: 1rem;
 			}
+
+			&:first-child {
+				margin-top: 0;
+			}
 		}
 	}
 
@@ -628,6 +632,10 @@ Mixins
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
+
+			&:first-child {
+				margin-top: 0;
+			}
 		}
 	}
 
@@ -635,6 +643,10 @@ Mixins
 		&__title {
 			&:not(:last-child) {
 				margin-bottom: 1rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
 			}
 		}
 	}
@@ -1165,6 +1177,10 @@ Mixins
 	&-theme--twentynineteen .entry-content > &-page {
 		max-width: 100%;
 		margin: 0 0 3rem;
+	}
+
+	&-theme--popularfx .entry-content > &-page {
+		padding-top: 2rem;
 	}
 
 	&-theme--storefront &-menu--site-header {
