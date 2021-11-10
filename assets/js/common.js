@@ -516,5 +516,33 @@ var hivepress = {
 				}
 			});
 		});
+
+		// Chart
+		hivepress.getComponent('chart').each(function() {
+			var canvas = $(this),
+				chart = new Chart(canvas, {
+					type: 'line',
+					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									beginAtZero: true,
+								},
+							}],
+							xAxes: [{
+								type: 'time',
+								time: {
+									tooltipFormat: 'll',
+									unit: 'week',
+								},
+							}],
+						},
+					},
+					data: {
+						labels: canvas.data('labels'),
+						datasets: canvas.data('datasets'),
+					},
+				});
+		});
 	});
 })(jQuery);

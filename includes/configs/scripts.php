@@ -70,6 +70,13 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
+	'chartjs'               => [
+		'handle' => 'chartjs',
+		'src'    => hivepress()->get_url() . '/assets/js/chart.min.js',
+		'deps'   => [ 'moment' ],
+		'scope'  => [ 'backend' ],
+	],
+
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
