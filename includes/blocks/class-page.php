@@ -70,6 +70,11 @@ class Page extends Container {
 
 				break;
 
+			case 'astra':
+				$content = '<div id="primary" class="content-area primary">' . $content . '</div>';
+
+				break;
+
 			default:
 				$content = '<div class="content-area">' . $content . '</div>';
 

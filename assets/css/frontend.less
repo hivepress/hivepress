@@ -40,6 +40,7 @@ Mixins
 	&-button {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		white-space: nowrap;
 
 		&--wide {
@@ -387,6 +388,12 @@ Mixins
 				width: auto;
 			}
 		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
 	}
 
 	&-modal &-form {
@@ -596,6 +603,11 @@ Mixins
 			justify-content: space-between;
 			align-items: center;
 
+			@media only screen and (max-width: 47.99em) {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
 			&:not(:last-child) {
 				margin-bottom: 2rem;
 			}
@@ -610,6 +622,20 @@ Mixins
 				&:not(:last-child) {
 					border-bottom-width: 1px;
 				}
+			}
+		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+		}
+	}
+
+	&-section {
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
 			}
 		}
 	}
@@ -1121,6 +1147,12 @@ Mixins
 				width: 100%;
 				margin-right: 0;
 				margin-left: 0;
+			}
+		}
+
+		&--astra {
+			#primary {
+				width: 100%;
 			}
 		}
 	}
