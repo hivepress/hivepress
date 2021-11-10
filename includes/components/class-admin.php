@@ -500,6 +500,20 @@ final class Admin extends Component {
 		if ( is_null( $themes ) ) {
 			$themes = [];
 
+			// Get paid themes.
+			$paid_themes = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get( 'https://store.hivepress.io/api/v1/products?type=theme' )
+				),
+				true
+			);
+
+			if ( is_array( $paid_themes ) && isset( $paid_themes['data'] ) ) {
+
+				// Add themes.
+				$themes = array_merge( $themes, $paid_themes['data'] );
+			}
+
 			// Get free themes.
 			$free_themes = themes_api(
 				'query_themes',
@@ -528,20 +542,6 @@ final class Admin extends Component {
 						$free_themes->themes
 					)
 				);
-			}
-
-			// Get paid themes.
-			$paid_themes = json_decode(
-				wp_remote_retrieve_body(
-					wp_remote_get( 'https://store.hivepress.io/api/v1/products?type=theme' )
-				),
-				true
-			);
-
-			if ( is_array( $paid_themes ) && isset( $paid_themes['data'] ) ) {
-
-				// Add themes.
-				$themes = array_merge( $themes, $paid_themes['data'] );
 			}
 
 			// Set theme URLs.
