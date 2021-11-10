@@ -82,6 +82,11 @@ class Page extends Container {
 
 				break;
 
+			case 'kadence':
+				$content = '<div id="primary" class="content-area"><div class="content-container site-container">' . $content . '</div></div>';
+
+				break;
+
 			default:
 				$content = '<div class="content-area">' . $content . '</div>';
 
