@@ -77,7 +77,8 @@ class Page extends Container {
 				break;
 
 			case 'oceanwp':
-				$content = '<div id="content-wrap" class="container clr">' . $content . '</div>';
+			case 'neve':
+				$content = '<div id="content-wrap" class="container single-page-container clr">' . $content . '</div>';
 
 				break;
 
