@@ -380,7 +380,7 @@ Mixins
 	--------------------------------------------------------------*/
 	&-modal {
 		display: none;
-		width: 24.33rem;
+		width: 380px;
 
 		&--mobile {
 			@media only screen and (min-width:48em) {
@@ -602,7 +602,6 @@ Mixins
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-
 			@media only screen and (max-width: 47.99em) {
 				flex-direction: column;
 				align-items: flex-start;
@@ -828,8 +827,8 @@ Mixins
 			top: 1rem;
 			background-color: rgba(0,0,0,.5);
 			border-radius: 50%;
-			width: 2rem;
-			height: 2rem;
+			width: 32px;
+			height: 32px;
 			color: #fff;
 		}
 
@@ -1154,6 +1153,12 @@ Mixins
 			#primary {
 				width: 100%;
 			}
+		}
+	}
+
+	&-theme--oceanwp &-form {
+		input[type="number"] {
+			max-width: none;
 		}
 	}
 

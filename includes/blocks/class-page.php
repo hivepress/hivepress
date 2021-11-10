@@ -75,6 +75,11 @@ class Page extends Container {
 
 				break;
 
+			case 'oceanwp':
+				$content = '<div id="content-wrap" class="container clr">' . $content . '</div>';
+
+				break;
+
 			default:
 				$content = '<div class="content-area">' . $content . '</div>';
 
