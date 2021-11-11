@@ -35,34 +35,12 @@ Mixins
 
 .hp {
 	/*--------------------------------------------------------------
-	Icons
-	--------------------------------------------------------------*/
-	&-icon {
-		font-size: 16px;
-	}
-	/*--------------------------------------------------------------
-	Links
-	--------------------------------------------------------------*/
-	&-link {
-		display: inline-flex;
-		align-items: center;
-
-		&:not(:hover) {
-			color: inherit;
-		}
-
-		i {
-			&:first-child {
-				margin-right: 0.5rem;
-			}
-		}
-	}
-	/*--------------------------------------------------------------
 	Buttons
 	--------------------------------------------------------------*/
 	&-button {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		white-space: nowrap;
 
 		&--wide {
@@ -350,6 +328,7 @@ Mixins
 			input[type=text] {
 				flex: 1;
 				padding-right: 2.5rem;
+				min-width: 0;
 			}
 
 			a {
@@ -402,12 +381,22 @@ Mixins
 	--------------------------------------------------------------*/
 	&-modal {
 		display: none;
-		width: 24.33rem;
+		width: 380px;
 
 		&--mobile {
 			@media only screen and (min-width:48em) {
 				display: block;
 				width: auto;
+			}
+		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
 			}
 		}
 	}
@@ -428,6 +417,7 @@ Mixins
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				text-decoration: none;
 			}
 		}
 
@@ -618,6 +608,10 @@ Mixins
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			@media only screen and (max-width: 47.99em) {
+				flex-direction: column;
+				align-items: flex-start;
+			}
 
 			&:not(:last-child) {
 				margin-bottom: 2rem;
@@ -633,6 +627,28 @@ Mixins
 				&:not(:last-child) {
 					border-bottom-width: 1px;
 				}
+			}
+		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+
+	&-section {
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
 			}
 		}
 	}
@@ -766,8 +782,8 @@ Mixins
 					z-index: 1;
 					top: 50%;
 					display: block;
-					width: 2rem;
-					height: 2rem;
+					width: 32px;
+					height: 32px;
 					margin-top: -1rem;
 					text-align: center;
 					line-height: 2rem;
@@ -825,8 +841,8 @@ Mixins
 			top: 1rem;
 			background-color: rgba(0,0,0,.5);
 			border-radius: 50%;
-			width: 2rem;
-			height: 2rem;
+			width: 32px;
+			height: 32px;
 			color: #fff;
 		}
 
@@ -1146,11 +1162,45 @@ Mixins
 				margin-left: 0;
 			}
 		}
+
+		&--astra {
+			#primary {
+				width: 100%;
+			}
+		}
 	}
 
-	&-theme--twentynineteen .entry-content > &-page {
+	&-theme--oceanwp &-form {
+		input[type="number"] {
+			max-width: none;
+		}
+	}
+
+	&-theme--twentynineteen &-page {
 		max-width: 100%;
 		margin: 0 0 3rem;
+	}
+
+	&-theme--neve &-page,
+	&-theme--popularfx &-page {
+		padding-top: 2rem;
+	}
+
+	&-theme--neve &-page {
+		padding-bottom: 2rem;
+	}
+
+	&-theme--generatepress #content &-page {
+		margin-right: 0;
+		padding: 40px;
+		@media only screen and (max-width:768px) {
+			padding: 30px;
+		}
+	}
+
+	&-theme--zakra .content-area,
+	&-theme--generatepress #content &-page {
+		flex: 1;
 	}
 
 	&-theme--storefront &-menu--site-header {

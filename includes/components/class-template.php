@@ -53,6 +53,7 @@ final class Template extends Component {
 
 			// Remove theme header.
 			add_filter( 'twentynineteen_can_show_post_thumbnail', [ $this, 'remove_theme_header' ] );
+			add_filter( 'ocean_display_page_header', [ $this, 'remove_theme_header' ] );
 		}
 
 		parent::__construct( $args );
@@ -188,7 +189,7 @@ final class Template extends Component {
 	 * @return bool
 	 */
 	public function remove_theme_header( $display ) {
-		if ( is_singular( hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
+		if ( hivepress()->router->get_current_route_name() ) {
 			$display = false;
 		}
 

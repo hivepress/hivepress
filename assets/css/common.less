@@ -35,6 +35,31 @@ Mixins
 
 .hp {
 	/*--------------------------------------------------------------
+	Icons
+	--------------------------------------------------------------*/
+	&-icon {
+		font-size: 16px;
+	}
+	/*--------------------------------------------------------------
+	Links
+	--------------------------------------------------------------*/
+	&-link {
+		display: inline-flex;
+		align-items: center;
+		cursor: pointer;
+		text-decoration: none;
+
+		&:not(:hover) {
+			color: inherit;
+		}
+
+		i {
+			&:first-child {
+				margin-right: 0.5rem;
+			}
+		}
+	}
+	/*--------------------------------------------------------------
 	Statuses
 	--------------------------------------------------------------*/
 	&-status {
@@ -202,8 +227,8 @@ Mixins
 						position: absolute;
 						top: 0.5rem;
 						right: 1.5rem;
-						width: 2rem;
-						height: 2rem;
+						width: 32px;
+						height: 32px;
 						border-radius: 50%;
 						text-decoration: none;
 						color: #fff;
@@ -218,6 +243,44 @@ Mixins
 						a {
 							display: none;
 						}
+					}
+				}
+			}
+		}
+
+		&--repeater {
+			table {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+
+				td {
+					vertical-align: middle;
+
+					&:first-child {
+						&,
+						* {
+							cursor: move;
+						}
+					}
+
+					&:first-child,
+					&:last-child {
+						width: 1px;
+						white-space: nowrap;
+						padding-left: 0;
+						padding-right: 0;
+						color: #888;
+
+						i {
+							margin: 0;
+						}
+					}
+				}
+
+				tr:only-child td {
+					&:last-child a {
+						pointer-events: none;
 					}
 				}
 			}

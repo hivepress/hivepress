@@ -66,8 +66,35 @@ class Page extends Container {
 				break;
 
 			case 'twentynineteen':
+			case 'popularfx':
+			case 'go':
 				$content = '<div class="entry"><div class="entry-content">' . $content . '</div></div>';
 
+				break;
+
+			case 'astra':
+			case 'inspiro':
+				$content = '<div id="primary" class="content-area primary">' . $content . '</div>';
+
+				break;
+
+			case 'oceanwp':
+			case 'neve':
+				$content = '<div id="content-wrap" class="container single-page-container clr">' . $content . '</div>';
+
+				break;
+
+			case 'kadence':
+				$content = '<div id="primary" class="content-area"><div class="content-container site-container">' . $content . '</div></div>';
+
+				break;
+
+			case 'blocksy':
+				$content = '<div class="ct-container" data-vertical-spacing="top:bottom">' . $content . '</div>';
+
+				break;
+
+			case 'generatepress':
 				break;
 
 			default:

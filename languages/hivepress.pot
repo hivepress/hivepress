@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-23 14:37+0000\n"
+"POT-Creation-Date: 2021-11-11 20:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -122,6 +122,10 @@ msgstr ""
 
 #: includes/configs/post-types.php:24 includes/configs/post-types.php:26
 msgid "Add Email"
+msgstr ""
+
+#: includes/fields/class-repeater.php:175
+msgid "Add Item"
 msgstr ""
 
 #: includes/configs/strings.php:101
@@ -1261,6 +1265,10 @@ msgstr ""
 msgid "Related Listings per Page"
 msgstr ""
 
+#: includes/fields/class-repeater.php:165
+msgid "Remove"
+msgstr ""
+
 #: includes/configs/strings.php:100
 msgid "Renew Listing"
 msgstr ""
@@ -1519,7 +1527,7 @@ msgstr ""
 msgid "Submit Listing"
 msgstr ""
 
-#: includes/components/class-template.php:102
+#: includes/components/class-template.php:103
 #: includes/configs/meta-boxes.php:21 includes/configs/post-types.php:43
 msgid "Template"
 msgstr ""
