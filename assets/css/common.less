@@ -256,7 +256,6 @@ Mixins
 
 				td {
 					vertical-align: middle;
-					color: #888;
 
 					&:first-child {
 						&,
@@ -271,10 +270,17 @@ Mixins
 						white-space: nowrap;
 						padding-left: 0;
 						padding-right: 0;
+						color: #888;
 
 						i {
 							margin: 0;
 						}
+					}
+				}
+
+				tr:only-child td {
+					&:last-child a {
+						pointer-events: none;
 					}
 				}
 			}
