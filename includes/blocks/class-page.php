@@ -67,11 +67,13 @@ class Page extends Container {
 
 			case 'twentynineteen':
 			case 'popularfx':
+			case 'go':
 				$content = '<div class="entry"><div class="entry-content">' . $content . '</div></div>';
 
 				break;
 
 			case 'astra':
+			case 'inspiro':
 				$content = '<div id="primary" class="content-area primary">' . $content . '</div>';
 
 				break;
@@ -85,6 +87,14 @@ class Page extends Container {
 			case 'kadence':
 				$content = '<div id="primary" class="content-area"><div class="content-container site-container">' . $content . '</div></div>';
 
+				break;
+
+			case 'blocksy':
+				$content = '<div class="ct-container" data-vertical-spacing="top:bottom">' . $content . '</div>';
+
+				break;
+
+			case 'generatepress':
 				break;
 
 			default:
