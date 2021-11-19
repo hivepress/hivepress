@@ -15,7 +15,7 @@ An extensible, highly customizable, easy-to-use plugin that allows you to build 
 
 HivePress is an extensible, highly customizable, easy-to-use plugin that allows you to build any type of directory and listing websites.
 
-[Demo](https://demo.hivepress.io/) | [Docs](https://hivepress.io/docs/?utm_medium=referral&utm_source=wordpress.org) | [Support](https://hivepress.io/support/?utm_medium=referral&utm_source=wordpress.org)
+[Demo](https://listinghive.hivepress.io/) | [Docs](https://hivepress.io/docs/?utm_medium=referral&utm_source=wordpress.org) | [Support](https://hivepress.io/support/?utm_medium=referral&utm_source=wordpress.org)
 
 Whether it's a business directory, job board, real estate, classifieds or basically any listing website — HivePress is a great choice for it.
 

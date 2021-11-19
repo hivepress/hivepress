@@ -549,13 +549,8 @@ final class Admin extends Component {
 				function( $theme ) {
 					$slug = sanitize_key( $theme['slug'] );
 
-					if ( 'listinghive' === $slug ) {
-						$theme['preview_url'] = 'https://demo.hivepress.io/';
-					} else {
-						$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
-					}
-
-					$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
+					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
+					$theme['buy_url']     = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
 
 					return $theme;
 				},
@@ -673,7 +668,7 @@ final class Admin extends Component {
 							$free_extensions->plugins
 						),
 						function( $extension ) {
-							return 'hivepress' !== $extension['slug'];
+							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication' ], true );
 						}
 					)
 				);
