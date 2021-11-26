@@ -502,11 +502,25 @@ var hivepress = {
 
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
-					var newItem = firstItem.clone();
+					var newItem = firstItem.clone(),
+						index = Math.random().toString(36).slice(2);
 
-					newItem.find(':input').val('');
+					if (index) {
+						newItem.find(':input').each(function() {
+							var field = $(this),
+								name = field.attr('name'),
+								pattern = /\[([^\]]+)\]/,
+								match = name.match(pattern);
 
-					newItem.appendTo(itemContainer);
+							if (match) {
+								field.attr('name', name.replace(match[1], index));
+							}
+
+							field.val('');
+						});
+
+						newItem.appendTo(itemContainer);
+					}
 				});
 			}
 

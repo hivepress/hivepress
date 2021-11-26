@@ -43,7 +43,7 @@ class Repeater extends Field {
 			if ( isset( $args['type'] ) ) {
 
 				// Set name.
-				$args['name'] = $this->name . '[][' . $name . ']';
+				$args['name'] = $this->name . '[%index%][' . $name . ']';
 
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ $args ] );
@@ -97,7 +97,7 @@ class Repeater extends Field {
 
 		// Set value.
 		if ( $items ) {
-			$this->value = $items;
+			$this->value = array_values( $items );
 		} else {
 			$this->value = null;
 		}
@@ -155,10 +155,12 @@ class Repeater extends Field {
 			$output .= '<td><a class="hp-link" data-sort><i class="hp-icon fas fa-bars"></i></a></td>';
 
 			// Render fields.
+			$index = uniqid();
+
 			foreach ( $this->fields as $name => $field ) {
 				$field->set_value( hp\get_array_value( $item, $name ) );
 
-				$output .= '<td>' . $field->render() . '</td>';
+				$output .= '<td>' . str_replace( '%index%', $index, $field->render() ) . '</td>';
 			}
 
 			// Render remove button.
