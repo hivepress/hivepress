@@ -700,6 +700,13 @@ final class Admin extends Component {
 		// Set extension statuses.
 		foreach ( $extensions as $extension_index => $extension ) {
 
+			// Set bundle status.
+			if ( 'bundle' === $extension['slug'] ) {
+				$extensions[ $extension_index ]['status'] = 'install';
+
+				continue;
+			}
+
 			// Get path and status.
 			$extension_path   = $extension['slug'] . '/' . $extension['slug'] . '.php';
 			$extension_status = install_plugin_install_status( $extension );
