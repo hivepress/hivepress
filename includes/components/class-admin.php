@@ -74,6 +74,9 @@ final class Admin extends Component {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Check access.
+			add_action( 'admin_init', [ $this, 'check_access' ] );
+
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -549,13 +552,8 @@ final class Admin extends Component {
 				function( $theme ) {
 					$slug = sanitize_key( $theme['slug'] );
 
-					if ( 'listinghive' === $slug ) {
-						$theme['preview_url'] = 'https://demo.hivepress.io/';
-					} else {
-						$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
-					}
-
-					$theme['buy_url'] = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
+					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
+					$theme['buy_url']     = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
 
 					return $theme;
 				},
@@ -673,7 +671,7 @@ final class Admin extends Component {
 							$free_extensions->plugins
 						),
 						function( $extension ) {
-							return 'hivepress' !== $extension['slug'];
+							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication' ], true );
 						}
 					)
 				);
@@ -704,6 +702,13 @@ final class Admin extends Component {
 
 		// Set extension statuses.
 		foreach ( $extensions as $extension_index => $extension ) {
+
+			// Set bundle status.
+			if ( 'bundle' === $extension['slug'] ) {
+				$extensions[ $extension_index ]['status'] = 'install';
+
+				continue;
+			}
 
 			// Get path and status.
 			$extension_path   = $extension['slug'] . '/' . $extension['slug'] . '.php';
@@ -1296,6 +1301,17 @@ final class Admin extends Component {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Checks user access.
+	 */
+	public function check_access() {
+		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
+			wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
+
+			exit;
+		}
 	}
 
 	/**

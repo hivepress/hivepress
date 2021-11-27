@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-11-27 18:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -35,7 +35,7 @@ msgid "\"%1$s\" can't be later than %2$s."
 msgstr ""
 
 #. 1: field label, 2: length.
-#: includes/fields/class-text.php:207
+#: includes/fields/class-text.php:208
 #, php-format
 msgid "\"%1$s\" can't be longer than %2$s characters."
 msgstr ""
@@ -47,7 +47,7 @@ msgid "\"%1$s\" can't be lower than %2$s."
 msgstr ""
 
 #. 1: field label, 2: length.
-#: includes/fields/class-text.php:202
+#: includes/fields/class-text.php:203
 #, php-format
 msgid "\"%1$s\" should be at least %2$s characters long."
 msgstr ""
@@ -57,7 +57,7 @@ msgstr ""
 #: includes/fields/class-attachment-select.php:72
 #: includes/fields/class-attachment-upload.php:266
 #: includes/fields/class-date.php:274 includes/fields/class-email.php:90
-#: includes/fields/class-regex.php:75 includes/fields/class-text.php:212
+#: includes/fields/class-regex.php:75 includes/fields/class-text.php:213
 #, php-format
 msgid "\"%s\" field contains an invalid value."
 msgstr ""
@@ -80,6 +80,12 @@ msgstr ""
 msgid ""
 "%s extension is incompatible with the current HivePress version, please "
 "update HivePress or deactivate it."
+msgstr ""
+
+#. %s: extensions number.
+#: templates/admin/extensions.php:78
+#, php-format
+msgid "%s Extensions"
 msgstr ""
 
 #. %s: Listings number.
@@ -124,7 +130,7 @@ msgstr ""
 msgid "Add Email"
 msgstr ""
 
-#: includes/fields/class-repeater.php:175
+#: includes/fields/class-repeater.php:177
 msgid "Add Item"
 msgstr ""
 
@@ -336,6 +342,11 @@ msgstr ""
 msgid "Changes have been saved."
 msgstr ""
 
+#: includes/configs/settings.php:329
+msgid ""
+"Check this option to block the WordPress back-end access for regular users."
+msgstr ""
+
 #: includes/fields/class-checkbox.php:44
 msgid "Checkbox"
 msgstr ""
@@ -370,7 +381,7 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: includes/fields/class-text.php:142
+#: includes/fields/class-text.php:141
 msgid "Click to copy"
 msgstr ""
 
@@ -474,7 +485,7 @@ msgstr ""
 msgid "Display vendors on the front-end"
 msgstr ""
 
-#: templates/admin/extensions.php:57
+#: templates/admin/extensions.php:65
 msgid "Docs"
 msgstr ""
 
@@ -571,7 +582,7 @@ msgctxt "extension"
 msgid "Active"
 msgstr ""
 
-#: includes/components/class-admin.php:121 templates/admin/extensions.php:6
+#: includes/components/class-admin.php:124 templates/admin/extensions.php:6
 msgid "Extensions"
 msgstr ""
 
@@ -662,7 +673,7 @@ msgid "Grant Access"
 msgstr ""
 
 #. %s: link URL.
-#: includes/components/class-admin.php:1354
+#: includes/components/class-admin.php:1370
 #, php-format
 msgid ""
 "Great start with HivePress! Check out our <a href=\"%1$s\">premium themes</a>"
@@ -766,12 +777,12 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: includes/configs/settings.php:332
+#: includes/configs/settings.php:341
 msgid "Integrations"
 msgstr ""
 
 #. %s: link URL.
-#: includes/components/class-admin.php:1344
+#: includes/components/class-admin.php:1360
 #, php-format
 msgid ""
 "It's been more than 2 weeks since you installed HivePress, that's awesome! "
@@ -1051,7 +1062,7 @@ msgctxt "noun"
 msgid "Search"
 msgstr ""
 
-#: templates/admin/extensions.php:59
+#: templates/admin/extensions.php:67
 msgctxt "noun"
 msgid "Support"
 msgstr ""
@@ -1157,12 +1168,12 @@ msgstr ""
 msgid "Please set Google Client ID and Secret to proceed."
 msgstr ""
 
-#: includes/components/class-admin.php:765
+#: includes/components/class-admin.php:770
 msgctxt "plural"
 msgid "All"
 msgstr ""
 
-#: includes/components/class-admin.php:770
+#: includes/components/class-admin.php:775
 msgctxt "plural"
 msgid "Installed"
 msgstr ""
@@ -1187,7 +1198,7 @@ msgstr ""
 msgid "Protect files from direct access"
 msgstr ""
 
-#: includes/configs/settings.php:342
+#: includes/configs/settings.php:351
 msgid "Protected Forms"
 msgstr ""
 
@@ -1265,7 +1276,7 @@ msgstr ""
 msgid "Related Listings per Page"
 msgstr ""
 
-#: includes/fields/class-repeater.php:165
+#: includes/fields/class-repeater.php:167
 msgid "Remove"
 msgstr ""
 
@@ -1293,6 +1304,10 @@ msgstr ""
 msgid "Reset Password"
 msgstr ""
 
+#: includes/configs/settings.php:330
+msgid "Restrict access to the WordPress back-end"
+msgstr ""
+
 #: includes/configs/strings.php:50
 msgid "Return to My Account"
 msgstr ""
@@ -1303,6 +1318,12 @@ msgstr ""
 
 #: includes/fields/class-image-size.php:95
 msgid "Right"
+msgstr ""
+
+#. %s: Discount percentage.
+#: templates/admin/extensions.php:61
+#, php-format
+msgid "Save %s"
 msgstr ""
 
 #: includes/configs/strings.php:51
@@ -1345,8 +1366,12 @@ msgstr ""
 msgid "Search Vendors"
 msgstr ""
 
-#: includes/configs/settings.php:358
+#: includes/configs/settings.php:367
 msgid "Secret Key"
+msgstr ""
+
+#: includes/configs/settings.php:328
+msgid "Security"
 msgstr ""
 
 #: includes/fields/class-attachment-select.php:38
@@ -1425,7 +1450,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: includes/configs/settings.php:350
+#: includes/configs/settings.php:359
 msgid "Site Key"
 msgstr ""
 
@@ -1572,7 +1597,7 @@ msgid ""
 msgstr ""
 
 #. %s: themes URL.
-#: includes/components/class-admin.php:1332
+#: includes/components/class-admin.php:1348
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you notice any "
@@ -1595,7 +1620,7 @@ msgstr ""
 msgid "Theme Details"
 msgstr ""
 
-#: includes/components/class-admin.php:120 templates/admin/themes.php:6
+#: includes/components/class-admin.php:123 templates/admin/themes.php:6
 msgid "Themes"
 msgstr ""
 
@@ -1753,8 +1778,8 @@ msgstr ""
 msgid "Vendors per Page"
 msgstr ""
 
-#. %s: version.
-#: templates/admin/extensions.php:67
+#. %s: version number.
+#: templates/admin/extensions.php:82
 #, php-format
 msgid "Version %s"
 msgstr ""

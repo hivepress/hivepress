@@ -47,7 +47,7 @@ class User_Account_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets' => [
 								'type'   => 'widgets',
 								'area'   => 'hp_user_account_sidebar',
-								'_order' => 20,
+								'_order' => 100,
 							],
 						],
 					],

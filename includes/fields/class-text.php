@@ -138,8 +138,9 @@ class Text extends Field {
 		// Set readonly flag.
 		if ( $this->readonly ) {
 			$attributes['readonly'] = true;
+			$attributes['title']    = esc_html__( 'Click to copy', 'hivepress' );
 
-			$attributes['title'] = esc_html__( 'Click to copy', 'hivepress' );
+			$this->statuses['optional'] = null;
 		}
 
 		// Set disabled flag.

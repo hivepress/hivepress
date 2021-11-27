@@ -54,21 +54,52 @@ defined( 'ABSPATH' ) || exit;
 					<div class="desc column-description">
 						<p><?php echo esc_html( $extension['description'] ); ?></p>
 						<p class="hp-extension__menu">
-							<a href="<?php echo esc_url( $extension['docs_url'] ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'hivepress' ); ?></a>
-							<span>&nbsp;|&nbsp;</span>
-							<a href="<?php echo esc_url( $extension['support_url'] ); ?>" target="_blank"><?php echo esc_html_x( 'Support', 'noun', 'hivepress' ); ?></a>
+							<?php if ( 'bundle' === $extension['slug'] ) : ?>
+								<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank">
+									<?php
+									/* translators: %s: Discount percentage. */
+									echo esc_html( sprintf( __( 'Save %s', 'hivepress' ), hivepress()->helper->get_array_value( $extension, 'sale_discount' ) . '%' ) );
+									?>
+								</a>
+							<?php else : ?>
+								<a href="<?php echo esc_url( $extension['docs_url'] ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'hivepress' ); ?></a>
+								<span>&nbsp;|&nbsp;</span>
+								<a href="<?php echo esc_url( $extension['support_url'] ); ?>" target="_blank"><?php echo esc_html_x( 'Support', 'noun', 'hivepress' ); ?></a>
+							<?php endif; ?>
 						</p>
 					</div>
 				</div>
 				<div class="plugin-card-bottom">
 					<div class="column-downloaded">
 						<?php
-						/* translators: %s: version. */
-						printf( esc_html__( 'Version %s', 'hivepress' ), $extension['version'] );
+						if ( 'bundle' === $extension['slug'] ) :
+
+							/* translators: %s: extensions number. */
+							echo esc_html( sprintf( __( '%s Extensions', 'hivepress' ), count( $extensions ) - 1 ) );
+						else :
+
+							/* translators: %s: version number. */
+							echo esc_html( sprintf( __( 'Version %s', 'hivepress' ), $extension['version'] ) );
+						endif;
 						?>
 					</div>
 					<div class="column-compatibility">
-						<strong class="hp-extension__price"><?php echo esc_html( hivepress()->helper->get_array_value( $extension, 'price', hivepress()->translator->get_string( 'free' ) ) ); ?></strong>
+						<strong class="hp-extension__price">
+							<?php
+							if ( isset( $extension['price'] ) ) :
+								if ( isset( $extension['sale_price'] ) ) :
+									?>
+									<del><?php echo esc_html( $extension['price'] ); ?></del>
+									<span><?php echo esc_html( $extension['sale_price'] ); ?></span>
+									<?php
+								else :
+									echo esc_html( $extension['price'] );
+								endif;
+							else :
+								echo esc_html( hivepress()->translator->get_string( 'free' ) );
+							endif;
+							?>
+						</strong>
 					</div>
 				</div>
 			</div>
