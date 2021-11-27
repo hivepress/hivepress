@@ -1308,7 +1308,7 @@ final class Admin extends Component {
 	 */
 	public function check_access() {
 		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
-			wp_safe_redirect( home_url() );
+			wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
 
 			exit;
 		}
