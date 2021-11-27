@@ -74,6 +74,9 @@ final class Admin extends Component {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Check access.
+			add_action( 'admin_init', [ $this, 'check_access' ] );
+
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
@@ -1298,6 +1301,17 @@ final class Admin extends Component {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * Checks user access.
+	 */
+	public function check_access() {
+		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
+			wp_safe_redirect( home_url() );
+
+			exit;
+		}
 	}
 
 	/**

@@ -323,6 +323,15 @@ return [
 						'_parent' => 'user_enable_registration',
 						'_order'  => 40,
 					],
+
+					'user_disable_backend'         => [
+						'label'       => esc_html__( 'Security', 'hivepress' ),
+						'description' => esc_html__( 'Check this option to block the WordPress back-end access for regular users.', 'hivepress' ),
+						'caption'     => esc_html__( 'Restrict access to the WordPress back-end', 'hivepress' ),
+						'type'        => 'checkbox',
+						'_parent'     => 'user_enable_registration',
+						'_order'      => 50,
+					],
 				],
 			],
 		],
