@@ -302,9 +302,13 @@
 			} else if ($(window).width() >= 768) {
 				container.wrapInner('<div />');
 
-				container.children('div').stickySidebar({
+				var sidebar = container.children('div').stickySidebar({
 					topSpacing: spacing,
 					bottomSpacing: spacing,
+				});
+
+				$(window).on('load resize', function() {
+					sidebar.stickySidebar('updateSticky');
 				});
 			}
 		});
