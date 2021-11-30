@@ -781,7 +781,7 @@ final class Admin extends Component {
 		$extensions = $this->get_extensions();
 
 		// Set tab counts.
-		$tabs['all']['count'] = count( $extensions );
+		$tabs['all']['count'] = count( $extensions ) - 1;
 
 		$tabs['installed']['count'] = count(
 			array_filter(
