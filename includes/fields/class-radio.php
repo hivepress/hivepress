@@ -114,16 +114,31 @@ class Radio extends Select {
 			foreach ( $options as $value => $label ) {
 				$output .= '<li>';
 
-				// Get label.
+				// Get description.
+				$description = null;
+
 				if ( is_array( $label ) ) {
+					$description = hp\get_array_value( $label, 'description' );
+
+					// Get label.
 					$label = hp\get_array_value( $label, 'label' );
+				}
+
+				$label = esc_html( $label );
+
+				if ( $description ) {
+					$label = '<strong>' . $label . '</strong>';
 				}
 
 				// Get ID.
 				$id = $this->name . '_' . uniqid();
 
 				// Render option.
-				$output .= '<label for="' . esc_attr( $id ) . '"><input type="radio" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+				$output .= '<label for="' . esc_attr( $id ) . '"><input type="radio" name="' . esc_attr( $this->name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" ' . checked( $this->value, $value, false ) . '><span>' . $label . '</span></label>';
+
+				if ( $description ) {
+					$output .= '<p>' . esc_html( $description ) . '</p>';
+				}
 
 				// Render child options.
 				$output .= $this->render_options( $value, $level + 1 );
