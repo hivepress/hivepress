@@ -27,7 +27,6 @@ HivePress comes with a free [ListingHive](https://hivepress.io/themes/listinghiv
 = Free Extensions =
 There's a bunch of [free extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) that can be installed with 1 click directly from the WordPress dashboard.
 
-- [Authentication](https://hivepress.io/docs/extensions/authentication/?utm_medium=referral&utm_source=wordpress.org) — Allow users to sign in via third-party services.
 - [Favorites](https://hivepress.io/docs/extensions/favorites/?utm_medium=referral&utm_source=wordpress.org) — Allow users to keep a list of favorite listings.
 - [Messages](https://hivepress.io/docs/extensions/messages/?utm_medium=referral&utm_source=wordpress.org) — Allow users to send private messages.
 - [Geolocation](https://hivepress.io/docs/extensions/geolocation/?utm_medium=referral&utm_source=wordpress.org) — Allow users to search listings by location.
