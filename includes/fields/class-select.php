@@ -350,7 +350,7 @@ class Select extends Field {
 
 			// Get label.
 			if ( is_array( $label ) ) {
-				$label = hp\get_array_value( $label, 'label' );
+				$label = hp\get_array_value( $label, 'label', $value );
 			}
 
 			// Render option.
