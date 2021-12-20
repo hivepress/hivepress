@@ -321,7 +321,7 @@ final class User extends Component {
 		if( $column_name == 'verified' ){
 
 			if(get_the_author_meta( 'hp_email_verify_key', $user_id )){
-				return '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
+				$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
 			}
 
 		}
