@@ -48,8 +48,11 @@ final class User extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}else{
-			// Alter users columns.
-			add_filter( 'manage_users_custom_column', [$this, 'modify_user_column'], 10, 3);
+			// Add "Users" columns.
+			add_action('manage_users_columns', [ $this, 'add_columns_users' ]);
+
+			// Alter "Users" columns.
+			add_filter( 'manage_users_custom_column', [ $this,'alter_columns_users' ], 10, 3);
 		}
 
 		parent::__construct( $args );
@@ -298,8 +301,30 @@ final class User extends Component {
 		);
 	}
 
-	public function modify_user_column( $output, $column_name, $user_id ) {
-		error_log('123');
+	/**
+	* Add "Users" columns.
+	*/
+	public function add_columns_users( $columns ) {
+		return array_merge(
+			array_slice( $columns, 0, 5, true ),
+			[
+				'verified' => '',
+			],
+			array_slice( $columns, 5, null, true )
+		);
+	}
+
+	/**
+	* Alter "Users" columns.
+	*/
+	public function alter_columns_users( $output, $column_name, $user_id ) {
+		if( $column_name == 'verified' ){
+
+			if(get_the_author_meta( 'hp_email_verify_key', $user_id )){
+				return '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
+			}
+
+		}
 		return $output;
 	}
 }
