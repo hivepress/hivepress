@@ -48,6 +48,8 @@ final class Admin extends Component {
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
 		if ( is_admin() ) {
+			// Add plugin links.
+			add_filter( 'plugin_action_links_hivepress/hivepress.php', [$this, 'plugin_action_links'], 1 );
 
 			// Add admin pages.
 			add_action( 'admin_menu', [ $this, 'add_admin_pages' ] );
@@ -85,6 +87,7 @@ final class Admin extends Component {
 
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
+
 		}
 
 		parent::__construct( $args );
@@ -959,7 +962,7 @@ final class Admin extends Component {
 		if(!array_key_exists( hp\unprefix($post_type).'_images', hivepress()->get_config('meta_boxes'))){
 			return;
 		}
-		
+
 		remove_meta_box( 'postimagediv', $post_type, 'side' );
 	}
 
@@ -1503,5 +1506,18 @@ final class Admin extends Component {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Show action links on the plugin screen.
+	 *
+	 * @param mixed $links Plugin Action links.
+	 *
+	 * @return array
+	 */
+	public function plugin_action_links( $links ) {
+		$links['settings'] = '<a href="' . esc_url(admin_url( 'admin.php?page=hp_settings' )) . '">' . esc_html__( 'Settings', 'hivepress' ) . '</a>';
+
+		return $links ;
 	}
 }
