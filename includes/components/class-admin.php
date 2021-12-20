@@ -52,6 +52,9 @@ final class Admin extends Component {
 			// Add admin pages.
 			add_action( 'admin_menu', [ $this, 'add_admin_pages' ] );
 
+			// Remove metaboxes.
+			add_action('do_meta_boxes', [$this, 'remove_metaboxes']);
+
 			// Order admin pages.
 			add_filter( 'custom_menu_order', '__return_true' );
 			add_filter( 'menu_order', [ $this, 'order_admin_pages' ] );
@@ -939,6 +942,25 @@ final class Admin extends Component {
 				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
 		}
+	}
+
+	/**
+	 * Remove metaboxes.
+	 */
+	public function remove_metaboxes() {
+		$post_type = get_post_type();
+
+		// Check post type.
+		if(strpos($post_type, 'hp_') !== 0){
+			return;
+		}
+
+		// Check meta box.
+		if(!array_key_exists( hp\unprefix($post_type).'_images', hivepress()->get_config('meta_boxes'))){
+			return;
+		}
+		
+		remove_meta_box( 'postimagediv', $post_type, 'side' );
 	}
 
 	/**
