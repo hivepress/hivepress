@@ -47,6 +47,9 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+		}else{
+			// Alter users columns.
+			add_filter( 'manage_users_custom_column', [$this, 'modify_user_column'], 10, 3);
 		}
 
 		parent::__construct( $args );
@@ -293,5 +296,10 @@ final class User extends Component {
 				],
 			]
 		);
+	}
+
+	public function modify_user_column( $output, $column_name, $user_id ) {
+		error_log('123');
+		return $output;
 	}
 }
