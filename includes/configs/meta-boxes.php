@@ -157,6 +157,15 @@ return [
 				'type'    => 'checkbox',
 				'_order'  => 10,
 			],
+			
+			'vendor'        => [
+				'label'    => esc_html__( 'Vendor', 'hivepress' ),
+				'type'     => 'select',
+				'options'  => 'users',
+				'required' => true,
+				'_alias'   => 'post_author',
+				'_order'   => 20,
+			],
 		],
 	],
 ];

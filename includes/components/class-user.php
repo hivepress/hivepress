@@ -313,13 +313,20 @@ final class User extends Component {
 	* Add "Users" columns.
 	*/
 	public function add_columns_users( $columns ) {
-		unset($columns['role']);
+		/*unset($columns['role']);
 		return array_merge(
 			array_slice( $columns, 0, 4, true ),
 			[
 				'hp_role' => 'Role',
 			],
 			array_slice( $columns, 4, null, true )
+		);*/
+		return array_merge(
+			array_slice( $columns, 0, 5, true ),
+			[
+				'hp_verified' => '',
+			],
+			array_slice( $columns, 5, null, true )
 		);
 	}
 
@@ -327,30 +334,38 @@ final class User extends Component {
 	* Alter "Users" columns.
 	*/
 	public function alter_columns_users( $output, $column_name, $user_id ) {
-		if( $column_name == 'hp_role' ){
-			if(!get_the_author_meta( 'hp_email_verify_key', $user_id )){
+		if( $column_name == 'hp_verified' ){
+
+			if(get_user_meta( $user_id , 'hp_email_verify_key')){
+				$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
+			}
+
+		}
+		return $output;
+		/*if( $column_name == 'hp_role' ){
+			if(!get_user_meta( $user_id, 'hp_email_verify_key' )){
 				$output = '<div><span>'.ucfirst(get_userdata($user_id)->roles[0]).' </span><i title="User is verified" class="fas fa-check"></i></div>';
 			}else{
 				$output = '<div><span>'.ucfirst(get_userdata($user_id)->roles[0]).' </span><i title="User is not verified" class="fas fa-times"></i></div>';
 			}
 
 		}
-		return $output;
+		return $output;*/
 	}
 
 	/**
 	* Add "Verified" field to profile.
 	*/
 	public function add_profile_fields( $user ) {
-		if($user->hp_email_verify_key){
-			$output = '<h3>'.__('Extra Profile Information', 'hivepress').'</h3>';
+		if($user->hp_email_verify_key && current_user_can( 'edit_users', $user->id )){
+			$output = '<h3>'.esc_html__('Extra Profile Information', 'hivepress').'</h3>';
 			$output .= '<table class="form-table">
 			<tr>
 				<th>
-					<label for="verified_user">'.__('Verified user', 'hivepress').'
+					<label for="hp_verified_user">'.esc_html__('Verified user', 'hivepress').'
 				</label></th>
 				<td>
-					<input type="checkbox" name="verified_user" id="verified_user" value="" class="regular-text" />
+					<input type="checkbox" name="hp_verified_user" id="hp_verified_user" value="" class="regular-text" />
 				</td>
 			</tr>
 			</table>';
@@ -363,11 +378,12 @@ final class User extends Component {
 	*/
 	public function save_profile_fields( $user_id ) {
 
-		if ( !current_user_can( 'edit_user', $user_id ) )
-		return FALSE;
+		if ( !current_user_can( 'edit_users', $user_id ) ){
+			return FALSE;
+		}
 
-		if(isset($_POST['verified_user']) && get_user_meta( $user_id, 'hp_email_verify_key', true )){
-			update_usermeta( $user_id, 'hp_email_verify_key', '');
+		if(isset($_POST['hp_verified_user']) && get_user_meta( $user_id, 'hp_email_verify_key', true )){
+			delete_user_meta($user_id, 'hp_email_verify_key');
 		}
 	}
 }
