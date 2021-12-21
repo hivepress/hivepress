@@ -47,6 +47,10 @@ final class Vendor extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+		}else{
+
+			// Alter vendor metaboxes.
+			add_filter( 'hivepress/v1/meta_boxes/vendor_settings', [ $this, 'alter_vendor_settings' ] );
 		}
 
 		parent::__construct( $args );
@@ -283,5 +287,26 @@ final class Vendor extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	* Alter vendor metaboxes.
+	*/
+	public function alter_vendor_settings( $meta_box ){
+		return hp\merge_trees(
+			$meta_box,
+			[
+				'fields' => [
+					'vendor'        => [
+						'label'    => esc_html__( 'Vendor', 'hivepress' ),
+						'type'     => 'select',
+						'options'  => 'users',
+						'required' => true,
+						'_alias'   => 'post_author',
+						'_order'   => 20,
+					],
+				],
+			]
+		);
 	}
 }
