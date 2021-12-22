@@ -334,7 +334,7 @@ final class User extends Component {
 	* Alter "Users" columns.
 	*/
 	public function alter_columns_users( $output, $column_name, $user_id ) {
-		if( $column_name == 'hp_verified' ){
+		if( 'hp_verified' === $column_name ){
 
 			if(get_user_meta( $user_id , 'hp_email_verify_key')){
 				$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
@@ -357,7 +357,7 @@ final class User extends Component {
 	* Add "Verified" field to profile.
 	*/
 	public function add_profile_fields( $user ) {
-		if($user->hp_email_verify_key && current_user_can( 'edit_users', $user->id )){
+		if($user->hp_email_verify_key && current_user_can( 'edit_users' )){
 			$output = '<h3>'.esc_html__('Extra Profile Information', 'hivepress').'</h3>';
 			$output .= '<table class="form-table">
 			<tr>
@@ -378,11 +378,11 @@ final class User extends Component {
 	*/
 	public function save_profile_fields( $user_id ) {
 
-		if ( !current_user_can( 'edit_users', $user_id ) ){
-			return FALSE;
+		if ( !current_user_can( 'edit_users' ) ){
+			return;
 		}
 
-		if(isset($_POST['hp_verified_user']) && get_user_meta( $user_id, 'hp_email_verify_key', true )){
+		if(hp\get_array_value($_POST, 'hp_verified_user') && get_user_meta( $user_id, 'hp_email_verify_key', true )){
 			delete_user_meta($user_id, 'hp_email_verify_key');
 		}
 	}
