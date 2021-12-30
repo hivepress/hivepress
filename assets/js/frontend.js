@@ -46,7 +46,9 @@
 					$.ajax({
 						url: form.data('action'),
 						method: form.data('method') ? form.data('method') : form.attr('method'),
-						data: form.serializeJSON(),
+						data: new FormData(form.get(0)),
+						contentType: false,
+						processData: false,
 						beforeSend: function(xhr) {
 							if ($('body').hasClass('logged-in')) {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);

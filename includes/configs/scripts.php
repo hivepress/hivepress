@@ -11,11 +11,6 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
-	'serializejson'         => [
-		'handle' => 'serializejson',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.serializejson.min.js',
-	],
-
 	'jquery_ui_touch_punch' => [
 		'handle' => 'jquery-ui-touch-punch',
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.ui.touch-punch.min.js',
@@ -93,7 +88,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'serializejson', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'fancybox', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [
