@@ -548,6 +548,9 @@ var hivepress = {
 								time: {
 									tooltipFormat: 'll',
 									unit: 'week',
+									displayFormats: {
+                            			'week': 'YYYY-MM-DD',
+                        			},
 								},
 							}],
 						},
