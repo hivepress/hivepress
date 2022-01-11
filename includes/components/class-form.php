@@ -425,41 +425,31 @@ final class Form extends Component {
 	 * @return array
 	 */
 
-	 protected function get_timezones ( $locale = null ) {
+	 protected function get_timezones ( ) {
 
-		static $mo_loaded = false, $locale_loaded = null;
-
-		// Load translations for continents and cities.
-		if ( ! $mo_loaded || $locale !== $locale_loaded ) {
-			$locale_loaded = $locale ? $locale : get_locale();
-			$mofile        = WP_LANG_DIR . '/continents-cities-' . $locale_loaded . '.mo';
-			unload_textdomain( 'continents-cities' );
-			load_textdomain( 'continents-cities', $mofile );
-			$mo_loaded = true;
-		}
+		$mofile = WP_LANG_DIR . '/continents-cities-' . get_locale() . '.mo';
+		unload_textdomain( 'continents-cities' );
+		load_textdomain( 'continents-cities', $mofile );
 
 		$timezones = [];
 
-	 	foreach ( timezone_identifiers_list() as $timezone_list_item ) {
-	 		$timezone_list_item = explode( '/', $timezone_list_item );
+	 	foreach ( timezone_identifiers_list() as $timezone_item ) {
 
 			$timezone = '';
 
-			for($x = 0; $x < count($timezone_list_item); $x++){
-
-				if( ! $x ){
-					$timezone .= translate( str_replace( '_', ' ', $timezone_list_item[$x] ), 'continents-cities' );
-				}else{
-					$timezone .= '/'.translate( str_replace( '_', ' ', $timezone_list_item[$x] ), 'continents-cities' );
-				}
-
+			foreach (explode('/', $timezone_item) as $timezone_item_part){
+				$timezone .= '/'.translate( str_replace( '_', ' ', $timezone_item_part ), 'continents-cities' );
 			}
 
-	 		$timezones[] = $timezone;
+			$timezone = rtrim($timezone, '/');
+
+	 		$timezones[ str_replace( ' ', '_', $timezone ) ] = $timezone;
 
 	 	}
 
- 		return sort( $timezones );
+		asort( $timezones );
+
+ 		return $timezones;
  	}
 
 	/**
