@@ -429,8 +429,6 @@ final class Form extends Component {
 
 		static $mo_loaded = false, $locale_loaded = null;
 
-		$continents = array( 'Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic', 'Australia', 'Europe', 'Indian', 'Pacific' );
-
 		// Load translations for continents and cities.
 		if ( ! $mo_loaded || $locale !== $locale_loaded ) {
 			$locale_loaded = $locale ? $locale : get_locale();
@@ -440,60 +438,28 @@ final class Form extends Component {
 			$mo_loaded = true;
 		}
 
-		$zonen = array();
-	 	foreach ( timezone_identifiers_list() as $zone ) {
-	 		$zone = explode( '/', $zone );
-	 		if ( ! in_array( $zone[0], $continents, true ) ) {
-	 			continue;
-	 		}
+		$timezones = [];
 
-	 		// This determines what gets set and translated - we don't translate Etc/* strings here, they are done later.
-	 		$exists    = array(
-	 			0 => ( isset( $zone[0] ) && $zone[0] ),
-	 			1 => ( isset( $zone[1] ) && $zone[1] ),
-	 			2 => ( isset( $zone[2] ) && $zone[2] ),
-	 		);
-	 		$exists[3] = ( $exists[0] && 'Etc' !== $zone[0] );
-	 		$exists[4] = ( $exists[1] && $exists[3] );
-	 		$exists[5] = ( $exists[2] && $exists[3] );
+	 	foreach ( timezone_identifiers_list() as $timezone_list_item ) {
+	 		$timezone_list_item = explode( '/', $zone );
 
-	 		// phpcs:disable WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText
-	 		$zonen[] = array(
-	 			'continent'   => ( $exists[0] ? $zone[0] : '' ),
-	 			'city'        => ( $exists[1] ? $zone[1] : '' ),
-	 			'subcity'     => ( $exists[2] ? $zone[2] : '' ),
-	 			't_continent' => ( $exists[3] ? translate( str_replace( '_', ' ', $zone[0] ), 'continents-cities' ) : '' ),
-	 			't_city'      => ( $exists[4] ? translate( str_replace( '_', ' ', $zone[1] ), 'continents-cities' ) : '' ),
-	 			't_subcity'   => ( $exists[5] ? translate( str_replace( '_', ' ', $zone[2] ), 'continents-cities' ) : '' ),
-	 		);
-	 		// phpcs:enable
-	 	}
-	 	usort( $zonen, '_wp_timezone_choice_usort_callback' );
+			$timezone = '';
 
-		$timezones_hp = [];
+			for($x = 0; $x < count($zone); $x++){
 
-		foreach ( $zonen as $key => $zone ) {
-			// Build value in an array to join later.
-			$value = array( $zone['t_continent'] );
-
-			if ( !empty( $zone['t_city'] ) ) {
-				// It's inside a continent group.
-
-				// Add the city to the value.
-				$value[] = $zone['t_city'];
-
-				if ( ! empty( $zone['t_subcity'] ) ) {
-					// Add the subcity to the value.
-					$value[]  = $zone['t_subcity'];
+				if( ! $x ){
+					$timezone .= translate( str_replace( '_', ' ', $timezone_list_item[$x] ), 'continents-cities' );
+				}else{
+					$timezone .= '/'.translate( str_replace( '_', ' ', $timezone_list_item[$x] ), 'continents-cities' );
 				}
+
 			}
 
-			// Build the value.
-			$value    = implode( '/', $value );
-			$timezones_hp[] = esc_attr( $value );
-		}
+	 		$timezones[] = $timezone;
 
- 		return $timezones_hp;
+	 	}
+
+ 		return sort( $timezones );
  	}
 
 	/**
