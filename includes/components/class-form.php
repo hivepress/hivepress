@@ -441,11 +441,11 @@ final class Form extends Component {
 		$timezones = [];
 
 	 	foreach ( timezone_identifiers_list() as $timezone_list_item ) {
-	 		$timezone_list_item = explode( '/', $zone );
+	 		$timezone_list_item = explode( '/', $timezone_list_item );
 
 			$timezone = '';
 
-			for($x = 0; $x < count($zone); $x++){
+			for($x = 0; $x < count($timezone_list_item); $x++){
 
 				if( ! $x ){
 					$timezone .= translate( str_replace( '_', ' ', $timezone_list_item[$x] ), 'continents-cities' );
