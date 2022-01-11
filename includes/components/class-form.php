@@ -420,6 +420,16 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets timezones.
+	 *
+	 * @return array
+	 */
+
+	 protected function get_timezones ( ) {
+ 		return timezone_identifiers_list();
+ 	}
+
+	/**
 	 * Checks captcha status.
 	 *
 	 * @return bool
