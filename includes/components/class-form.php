@@ -425,9 +425,20 @@ final class Form extends Component {
 	 * @return array
 	 */
 
-	 protected function get_timezones ( ) {
+	 protected function get_timezones ( $locale = null ) {
+
+		static $mo_loaded = false, $locale_loaded = null;
 
 		$continents = array( 'Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic', 'Australia', 'Europe', 'Indian', 'Pacific' );
+
+		// Load translations for continents and cities.
+		if ( ! $mo_loaded || $locale !== $locale_loaded ) {
+			$locale_loaded = $locale ? $locale : get_locale();
+			$mofile        = WP_LANG_DIR . '/continents-cities-' . $locale_loaded . '.mo';
+			unload_textdomain( 'continents-cities' );
+			load_textdomain( 'continents-cities', $mofile );
+			$mo_loaded = true;
+		}
 
 		$zonen = array();
 	 	foreach ( timezone_identifiers_list() as $zone ) {
@@ -463,17 +474,17 @@ final class Form extends Component {
 
 		foreach ( $zonen as $key => $zone ) {
 			// Build value in an array to join later.
-			$value = array( $zone['continent'] );
+			$value = array( $zone['t_continent'] );
 
-			if ( !empty( $zone['city'] ) ) {
+			if ( !empty( $zone['t_city'] ) ) {
 				// It's inside a continent group.
 
 				// Add the city to the value.
-				$value[] = $zone['city'];
+				$value[] = $zone['t_city'];
 
-				if ( ! empty( $zone['subcity'] ) ) {
+				if ( ! empty( $zone['t_subcity'] ) ) {
 					// Add the subcity to the value.
-					$value[]  = $zone['subcity'];
+					$value[]  = $zone['t_subcity'];
 				}
 			}
 
