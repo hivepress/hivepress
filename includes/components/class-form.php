@@ -427,6 +427,8 @@ final class Form extends Component {
 
 	 protected function get_timezones ( ) {
 
+		$continents = array( 'Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic', 'Australia', 'Europe', 'Indian', 'Pacific' );
+
 		$zonen = array();
 	 	foreach ( timezone_identifiers_list() as $zone ) {
 	 		$zone = explode( '/', $zone );
@@ -457,7 +459,30 @@ final class Form extends Component {
 	 	}
 	 	usort( $zonen, '_wp_timezone_choice_usort_callback' );
 
- 		return timezone_identifiers_list();
+		$timezones_hp = [];
+
+		foreach ( $zonen as $key => $zone ) {
+			// Build value in an array to join later.
+			$value = array( $zone['continent'] );
+
+			if ( !empty( $zone['city'] ) ) {
+				// It's inside a continent group.
+
+				// Add the city to the value.
+				$value[] = $zone['city'];
+
+				if ( ! empty( $zone['subcity'] ) ) {
+					// Add the subcity to the value.
+					$value[]  = $zone['subcity'];
+				}
+			}
+
+			// Build the value.
+			$value    = implode( '/', $value );
+			$timezones_hp[] = esc_attr( $value );
+		}
+
+ 		return $timezones_hp;
  	}
 
 	/**
