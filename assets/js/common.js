@@ -549,7 +549,7 @@ var hivepress = {
 									tooltipFormat: 'll',
 									unit: 'week',
 									displayFormats: {
-                            			'week': 'YYYY-MM-DD',
+										'week': 'YYYY-MM-DD',
                         			},
 								},
 							}],
@@ -560,6 +560,21 @@ var hivepress = {
 						datasets: canvas.data('datasets'),
 					},
 				});
+		});
+
+		// Modal
+		hivepress.getComponent('modal').each(function() {
+			var url = '#' + $(this).attr('id');
+
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
+				$.fancybox.close();
+				$.fancybox.open({
+					src: url,
+					touch: false,
+				});
+
+				e.preventDefault();
+			});
 		});
 	});
 })(jQuery);

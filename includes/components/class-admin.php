@@ -87,7 +87,6 @@ final class Admin extends Component {
 
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
-
 		}
 
 		parent::__construct( $args );

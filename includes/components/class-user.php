@@ -313,14 +313,6 @@ final class User extends Component {
 	* Add "Users" columns.
 	*/
 	public function add_columns_users( $columns ) {
-		/*unset($columns['role']);
-		return array_merge(
-			array_slice( $columns, 0, 4, true ),
-			[
-				'hp_role' => 'Role',
-			],
-			array_slice( $columns, 4, null, true )
-		);*/
 		return array_merge(
 			array_slice( $columns, 0, 5, true ),
 			[
@@ -334,6 +326,7 @@ final class User extends Component {
 	* Alter "Users" columns.
 	*/
 	public function alter_columns_users( $output, $column_name, $user_id ) {
+
 		if( 'hp_verified' === $column_name ){
 
 			if(get_user_meta( $user_id , 'hp_email_verify_key')){
@@ -341,22 +334,15 @@ final class User extends Component {
 			}
 
 		}
-		return $output;
-		/*if( $column_name == 'hp_role' ){
-			if(!get_user_meta( $user_id, 'hp_email_verify_key' )){
-				$output = '<div><span>'.ucfirst(get_userdata($user_id)->roles[0]).' </span><i title="User is verified" class="fas fa-check"></i></div>';
-			}else{
-				$output = '<div><span>'.ucfirst(get_userdata($user_id)->roles[0]).' </span><i title="User is not verified" class="fas fa-times"></i></div>';
-			}
 
-		}
-		return $output;*/
+		return $output;
 	}
 
 	/**
 	* Add "Verified" field to profile.
 	*/
 	public function add_profile_fields( $user ) {
+
 		if($user->hp_email_verify_key && current_user_can( 'edit_users' )){
 			$output = '<h3>'.esc_html__('Extra Profile Information', 'hivepress').'</h3>';
 			$output .= '<table class="form-table">
@@ -371,6 +357,7 @@ final class User extends Component {
 			</table>';
 			echo $output;
 		}
+
 	}
 
 	/**

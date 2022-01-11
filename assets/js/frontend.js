@@ -3,21 +3,6 @@
 
 	$(document).ready(function() {
 
-		// Modal
-		hivepress.getComponent('modal').each(function() {
-			var url = '#' + $(this).attr('id');
-
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
-				$.fancybox.close();
-				$.fancybox.open({
-					src: url,
-					touch: false,
-				});
-
-				e.preventDefault();
-			});
-		});
-
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
