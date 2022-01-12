@@ -437,13 +437,13 @@ final class Form extends Component {
 
 			$timezone = '';
 
-			foreach (explode('/', $timezone_item) as $timezone_item_part){
-				$timezone .= '/'.translate( str_replace( '_', ' ', $timezone_item_part ), 'continents-cities' );
+			foreach ( explode('/', str_replace( '_', ' ', $timezone_item ) ) as $timezone_item_part ){
+				$timezone .= '/'.translate( $timezone_item_part, 'continents-cities' );
 			}
 
-			$timezone = rtrim($timezone, '/');
+			$timezone = ltrim($timezone, '/');
 
-	 		$timezones[ str_replace( ' ', '_', $timezone ) ] = $timezone;
+	 		$timezones[ $timezone ] = $timezone;
 
 	 	}
 
