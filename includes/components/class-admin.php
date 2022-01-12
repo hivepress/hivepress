@@ -125,6 +125,7 @@ final class Admin extends Component {
 		// Add pages.
 		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo-light.svg' );
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
+		add_submenu_page( 'hp_settings', esc_html__( 'Tools', 'hivepress' ) . $title, esc_html__( 'Tools', 'hivepress' ), 'edit_pages', 'hp_tools', [ $this, 'render_tools' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
@@ -190,6 +191,10 @@ final class Admin extends Component {
 					$extensions  = $this->get_extensions( $current_tab );
 				} elseif ( 'themes' === $template_name ) {
 					$themes = $this->get_themes();
+				} elseif ( 'tools' === $template_name ) {
+					$tabs        = $this->get_tools_tabs();
+					$current_tab = $this->get_tools_tab();
+					$system_info_items = $this->get_tools_system_info();
 				}
 
 				include $template_path;
@@ -828,6 +833,66 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
+	}
+
+	/**
+	 * Gets settings tabs.
+	 *
+	 * @return array
+	 */
+	protected function get_tools_tabs() {
+		return array_map(
+			function( $tab ) {
+				return hp\get_array_value( $tab, 'title' );
+			},
+			hp\sort_array( hivepress()->get_config( 'tools' ) )
+		);
+	}
+
+	/**
+	 * Gets current settings tab.
+	 *
+	 * @return mixed
+	 */
+	protected function get_tools_tab() {
+		$current_tab = null;
+
+		// Get all tabs.
+		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'tools' ) ) );
+
+		$first_tab   = hp\get_first_array_value( $tabs );
+		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
+
+		// Set the default tab.
+		if ( ! in_array( $current_tab, $tabs, true ) ) {
+			$current_tab = $first_tab;
+		}
+
+		return $current_tab;
+	}
+
+	/**
+	* Get system info for Tools settings.
+	*/
+	protected function get_tools_system_info(){
+
+		// Get cached extensions.
+		$system_info_items = hivepress()->cache->get_cache( 'system_info_items' );
+
+		if ( is_null( $system_info_items ) ) {
+			$system_info_items = [];
+
+			$system_info_items = [
+				'PHP Version' => phpversion(),
+				'WordPress Version' => get_bloginfo('version'),
+				'Plugin Version' => get_option( 'hp_core_version' ),
+			];
+
+			hivepress()->cache->set_cache( 'system_item', null, $system_info_items, DAY_IN_SECONDS );
+		}
+
+		return $system_info_items;
+
 	}
 
 	/**
