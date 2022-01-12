@@ -427,9 +427,13 @@ final class Form extends Component {
 
 	 protected function get_timezones ( ) {
 
-		$mofile = WP_LANG_DIR . '/continents-cities-' . get_locale() . '.mo';
-		unload_textdomain( 'continents-cities' );
-		load_textdomain( 'continents-cities', $mofile );
+		 static $mo_loaded = false;
+
+		// Load translations for continents and cities.
+		if ( ! $mo_loaded ) {
+			load_textdomain( 'continents-cities', WP_LANG_DIR . '/continents-cities-' . get_locale() . '.mo' );
+			$mo_loaded = true;
+		}
 
 		$timezones = [];
 
