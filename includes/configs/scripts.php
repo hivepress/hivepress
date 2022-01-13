@@ -34,6 +34,7 @@ return [
 	'fancybox'              => [
 		'handle' => 'fancybox',
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.fancybox.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'slick'                 => [
