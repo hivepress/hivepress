@@ -8,6 +8,10 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
+use HivePress\Forms;
+use HivePress\Blocks;
+use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -49,6 +53,15 @@ final class Admin extends Controller {
 						'method' => 'POST',
 						'action' => [ $this, 'update_admin_notice' ],
 						'rest'   => true,
+					],
+
+					'admin_tools_page' => [
+						'base' => 'admin_base',
+						'path' => '/tools',
+						'match'    => [ $this, 'is_admin_tools_page' ],
+						'redirect' => [ $this, 'redirect_admin_tools_page' ],
+						'action'   => [ $this, 'render_admin_tools_page' ],
+
 					],
 				],
 			],
@@ -96,5 +109,38 @@ final class Admin extends Controller {
 				'name' => $notice_name,
 			]
 		);
+	}
+
+	/**
+	 * Matches admin tools page URL.
+	 *
+	 * @return bool
+	 */
+	public function is_admin_tools_page() {
+		global $pagenow;
+		error_log(hivepress()->router->get_current_route_name());
+		return true;
+	}
+
+	/**
+	 * Redirects admin tools page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_admin_tools_page() {
+		return false;
+	}
+
+	/**
+	 * Renders admin tools page.
+	 *
+	 * @return string
+	 */
+	public function render_admin_tools_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => hivepress()->router->get_current_route_name(),
+			]
+		) )->render();
 	}
 }

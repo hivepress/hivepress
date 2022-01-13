@@ -28,9 +28,17 @@ class Admin_Tools_Page extends Admin_Page {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'tools_container' => [
+					'page_container' => [
 						'type'       => 'container',
 						'_order'     => 10,
+
+						'blocks' => [
+							'status' => [
+								'type' => 'part',
+								'path' => 'admin/tools/status',
+								'_order' => 10,
+							],
+						],
 					],
 				],
 			],

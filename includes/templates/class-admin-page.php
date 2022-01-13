@@ -28,10 +28,7 @@ class Admin_Page extends Template {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'admin_container' => [
-						'type'       => 'container',
-						'_order'     => 10,
-					],
+					'page_container' => [], 
 				],
 			],
 			$args
