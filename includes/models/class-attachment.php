@@ -196,4 +196,21 @@ class Attachment extends Post {
 
 		return $name;
 	}
+
+	/**
+	 * Gets attachment path.
+	 *
+	 * @return mixed
+	 */
+	final public function get_path() {
+		$path = false;
+
+		if ( $this->id ) {
+			$path = get_attached_file( $this->id );
+		}
+
+		return $path;
+	}
+
+
 }

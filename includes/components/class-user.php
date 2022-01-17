@@ -327,11 +327,9 @@ final class User extends Component {
 	*/
 	public function alter_columns_users( $output, $column_name, $user_id ) {
 
-		if( 'hp_verified' === $column_name ){
+		if( 'hp_verified' === $column_name && get_user_meta ( $user_id , 'hp_email_verify_key' ) ) {
 
-			if(get_user_meta( $user_id , 'hp_email_verify_key')){
-				$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
-			}
+			$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
 
 		}
 
@@ -365,10 +363,12 @@ final class User extends Component {
 	*/
 	public function save_profile_fields( $user_id ) {
 
+		// Check permissions.
 		if ( !current_user_can( 'edit_users' ) ){
 			return;
 		}
 
+		// Delete verification key.
 		if(hp\get_array_value($_POST, 'hp_verified_user') && get_user_meta( $user_id, 'hp_email_verify_key', true )){
 			delete_user_meta($user_id, 'hp_email_verify_key');
 		}

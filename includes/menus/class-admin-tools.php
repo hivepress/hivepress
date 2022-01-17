@@ -27,7 +27,12 @@ class Admin_Tools extends Menu {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'items' => [],
+				'items' => [
+					'admin_tools_page' => [
+						'route'  => 'admin_tools_page',
+						'_order' => 0,
+					],
+				],
 			],
 			$args
 		);

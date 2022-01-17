@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @class Admin_Page
  */
-class Admin_Page extends Template {
+abstract class Admin_Page extends Template {
 
 	/**
 	 * Class constructor.
@@ -28,7 +28,7 @@ class Admin_Page extends Template {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_container' => [], 
+					'page_container' => [],
 				],
 			],
 			$args

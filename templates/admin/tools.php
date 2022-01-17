@@ -20,12 +20,12 @@ defined( 'ABSPATH' ) || exit;
 					<th scope="row">
 						<div>
 							<label class="hp-field__label">
-								<span><?php esc_html($system_info_item); ?></span>
+								<span><?php esc_html_e($system_info_item); ?></span>
 							</label>
 						</div>
 					</th>
 					<td>
-						<p class="hp-field"><?php esc_html($system_info_item_value); ?></p>
+						<p class="hp-field"><?php esc_html_e($system_info_item_value); ?></p>
 					</td>
 				</tr>
 				<?php
