@@ -262,6 +262,8 @@ final class Attribute extends Component {
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
+						// todo.
+						'schema_property' => $attribute_object->hp_schema_property,
 					];
 
 					// Set icon.
@@ -1527,10 +1529,10 @@ final class Attribute extends Component {
 					'tax_query'      => $tax_query,
 					'meta_query'     => $meta_query,
 					'meta_key'       => 'hp_featured',
-					'meta_value'     => '1',
 					'posts_per_page' => $featured_count,
 					'orderby'        => 'rand',
 					'fields'         => 'ids',
+					'suppress_filters' => false,
 				]
 			);
 
