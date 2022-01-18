@@ -204,16 +204,15 @@ class Attachment extends Post {
 	 */
 	final public function get_path() {
 		$path = null;
-		$name = 'path';
 
 		if ( $this->id ) {
 
-			if ( ! isset( $this->values[ $name ] ) ) {
-				$this->values[ $name ] = get_attached_file( $this->id );
+			if ( ! isset( $this->values['path'] ) ) {
+				$this->values['path'] = get_attached_file( $this->id );
 			}
 
-			if ( $this->values[ $name ] ) {
-				$path = $this->values[ $name ];
+			if ( $this->values['path'] ) {
+				$path = $this->values['path'];
 			}
 		}
 

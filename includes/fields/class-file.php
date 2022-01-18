@@ -80,7 +80,7 @@ class File extends Field {
 	 */
 	public function validate() {
 
-		if ( parent::validate() && ! is_null( $this->value ) ) {
+		if ( parent::validate() && is_null( $this->value ) ) {
 			// Check file format.
 			if ( $this->formats ) {
 				$file_type    = wp_check_filetype_and_ext( $this->value['tmp_name'], $this->value['name'] );
