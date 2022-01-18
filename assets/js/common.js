@@ -31,6 +31,21 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// Modal
+		hivepress.getComponent('modal').each(function() {
+			var url = '#' + $(this).attr('id');
+
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
+				$.fancybox.close();
+				$.fancybox.open({
+					src: url,
+					touch: false,
+				});
+
+				e.preventDefault();
+			});
+		});
+
 		// Select
 		hivepress.getComponent('select').each(function() {
 			var field = $(this),
@@ -546,8 +561,11 @@ var hivepress = {
 							xAxes: [{
 								type: 'time',
 								time: {
-									tooltipFormat: 'll',
+									tooltipFormat: 'MMM D, YYYY',
 									unit: 'week',
+									displayFormats: {
+										'week': 'MMM D, YYYY',
+									},
 								},
 							}],
 						},
