@@ -34,6 +34,7 @@ return [
 	'fancybox'              => [
 		'handle' => 'fancybox',
 		'src'    => hivepress()->get_url() . '/assets/js/jquery.fancybox.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'slick'                 => [
@@ -75,7 +76,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload', 'fancybox' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
@@ -88,7 +89,7 @@ return [
 	'core_frontend'         => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'fancybox', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'          => [

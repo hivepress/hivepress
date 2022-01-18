@@ -420,6 +420,43 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets timezones.
+	 *
+	 * @return array
+	 */
+
+	 protected function get_timezones ( ) {
+
+		 static $mo_loaded = false;
+
+		// Load translations for continents and cities.
+		if ( ! $mo_loaded ) {
+			load_textdomain( 'continents-cities', WP_LANG_DIR . '/continents-cities-' . get_locale() . '.mo' );
+			$mo_loaded = true;
+		}
+
+		$timezones = [];
+
+	 	foreach ( timezone_identifiers_list() as $timezone_item ) {
+
+			$timezone = '';
+
+			foreach ( explode('/', str_replace( '_', ' ', $timezone_item ) ) as $timezone_item_part ){
+				$timezone .= '/'.translate( $timezone_item_part, 'continents-cities' );
+			}
+
+			$timezone = ltrim($timezone, '/');
+
+	 		$timezones[ $timezone ] = $timezone;
+
+	 	}
+
+		asort( $timezones );
+
+ 		return $timezones;
+ 	}
+
+	/**
 	 * Checks captcha status.
 	 *
 	 * @return bool
