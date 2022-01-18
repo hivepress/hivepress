@@ -69,6 +69,7 @@ final class Admin extends Component {
 
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
 			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
@@ -941,6 +942,24 @@ final class Admin extends Component {
 			if ( $args['fields'] || $args['blocks'] ) {
 				add_meta_box( hp\prefix( $name ), $args['title'], [ $this, 'render_meta_box' ], hp\prefix( $args['screen'] ), $args['context'], $args['priority'] );
 			}
+		}
+	}
+
+	/**
+	 * Removes meta boxes.
+	 */
+	public function remove_meta_boxes() {
+
+		// Check post type.
+		$post_type = get_post_type();
+
+		if ( strpos( $post_type, 'hp_' ) !== 0 ) {
+			return;
+		}
+
+		// Remove meta box.
+		if ( array_key_exists( hp\unprefix( $post_type . '_images' ), hivepress()->get_config( 'meta_boxes' ) ) ) {
+			remove_meta_box( 'postimagediv', $post_type, 'side' );
 		}
 	}
 
