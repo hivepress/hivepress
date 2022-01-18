@@ -301,4 +301,32 @@ Mixins
 			}
 		}
 	}
+	/*--------------------------------------------------------------
+	Modals
+	--------------------------------------------------------------*/
+	&-modal {
+		display: none;
+		width: 380px;
+
+		&--mobile {
+			@media only screen and (min-width:48em) {
+				display: block;
+				width: auto;
+			}
+		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+
+	&-modal &-form {
+		margin-bottom: 0;
+	}
 }

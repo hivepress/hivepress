@@ -1521,16 +1521,16 @@ final class Attribute extends Component {
 			// Get featured IDs.
 			$featured_ids = get_posts(
 				[
-					'post_type'      => hp\prefix( $model ),
-					'post_status'    => 'publish',
-					's'              => $query->get( 's' ),
-					'tax_query'      => $tax_query,
-					'meta_query'     => $meta_query,
-					'meta_key'       => 'hp_featured',
-					'meta_value'     => '1',
-					'posts_per_page' => $featured_count,
-					'orderby'        => 'rand',
-					'fields'         => 'ids',
+					'post_type'        => hp\prefix( $model ),
+					'post_status'      => 'publish',
+					's'                => $query->get( 's' ),
+					'tax_query'        => $tax_query,
+					'meta_query'       => $meta_query,
+					'meta_key'         => 'hp_featured',
+					'posts_per_page'   => $featured_count,
+					'orderby'          => 'rand',
+					'fields'           => 'ids',
+					'suppress_filters' => false,
 				]
 			);
 

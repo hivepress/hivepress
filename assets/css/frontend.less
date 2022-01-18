@@ -377,34 +377,6 @@ Mixins
 		display: none;
 	}
 	/*--------------------------------------------------------------
-	Modals
-	--------------------------------------------------------------*/
-	&-modal {
-		display: none;
-		width: 380px;
-
-		&--mobile {
-			@media only screen and (min-width:48em) {
-				display: block;
-				width: auto;
-			}
-		}
-
-		&__title {
-			&:not(:last-child) {
-				margin-bottom: 1rem;
-			}
-
-			&:first-child {
-				margin-top: 0;
-			}
-		}
-	}
-
-	&-modal &-form {
-		margin-bottom: 0;
-	}
-	/*--------------------------------------------------------------
 	Menus
 	--------------------------------------------------------------*/
 	&-menu {
@@ -1211,41 +1183,6 @@ Mixins
 			clear: both;
 			margin: 0;
 			padding: 1.5rem 0;
-		}
-	}
-
-	&-theme--listinghive &-form--primary,
-	&-theme--taskhive &-form--primary {
-		.select2-container--default .select2-selection {
-			border: none;
-
-			&__rendered {
-				padding-top: 0;
-				padding-bottom: 0;
-				font-size: 1.125rem;
-				line-height: 3rem;
-				height: 3rem;
-			}
-
-			&__arrow {
-				top: 0.75rem;
-			}
-		}
-	}
-
-	&-theme--jobhive &-form--primary {
-		.select2-container--default .select2-selection {
-			margin-top: -2px;
-
-			&__rendered {
-				font-size: 1.125rem;
-				line-height: 3.125rem;
-				height: 4rem;
-			}
-
-			&__arrow {
-				top: 1.125rem;
-			}
 		}
 	}
 }

@@ -69,6 +69,7 @@ final class Admin extends Component {
 
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
 			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
@@ -79,6 +80,9 @@ final class Admin extends Component {
 
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+			// Render links.
+			add_filter( 'plugin_action_links_hivepress/hivepress.php', [ $this, 'render_links' ] );
 
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
@@ -942,6 +946,24 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Removes meta boxes.
+	 */
+	public function remove_meta_boxes() {
+
+		// Check post type.
+		$post_type = get_post_type();
+
+		if ( strpos( $post_type, 'hp_' ) !== 0 ) {
+			return;
+		}
+
+		// Remove meta box.
+		if ( array_key_exists( hp\unprefix( $post_type . '_images' ), hivepress()->get_config( 'meta_boxes' ) ) ) {
+			remove_meta_box( 'postimagediv', $post_type, 'side' );
+		}
+	}
+
+	/**
 	 * Updates meta box values.
 	 *
 	 * @param int $post_id Post ID.
@@ -1323,6 +1345,21 @@ final class Admin extends Component {
 		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			wp_enqueue_media();
 		}
+	}
+
+	/**
+	 * Renders links.
+	 *
+	 * @param array $links Links.
+	 * @return array
+	 */
+	public function render_links( $links ) {
+		return array_merge(
+			[
+				'settings' => '<a href="' . esc_url( admin_url( 'admin.php?page=hp_settings' ) ) . '">' . esc_html__( 'Settings', 'hivepress' ) . '</a>',
+			],
+			$links
+		);
 	}
 
 	/**

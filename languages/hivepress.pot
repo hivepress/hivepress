@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-27 18:33+0000\n"
+"POT-Creation-Date: 2022-01-18 23:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: includes/components/class-form.php:495
+#: includes/components/class-form.php:530
 msgid "Captcha is invalid."
 msgstr ""
 
@@ -582,7 +582,7 @@ msgctxt "extension"
 msgid "Active"
 msgstr ""
 
-#: includes/components/class-admin.php:124 templates/admin/extensions.php:6
+#: includes/components/class-admin.php:128 templates/admin/extensions.php:6
 msgid "Extensions"
 msgstr ""
 
@@ -673,7 +673,7 @@ msgid "Grant Access"
 msgstr ""
 
 #. %s: link URL.
-#: includes/components/class-admin.php:1370
+#: includes/components/class-admin.php:1407
 #, php-format
 msgid ""
 "Great start with HivePress! Check out our <a href=\"%1$s\">premium themes</a>"
@@ -777,12 +777,12 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: includes/configs/settings.php:341
+#: includes/configs/settings.php:342
 msgid "Integrations"
 msgstr ""
 
 #. %s: link URL.
-#: includes/components/class-admin.php:1360
+#: includes/components/class-admin.php:1397
 #, php-format
 msgid ""
 "It's been more than 2 weeks since you installed HivePress, that's awesome! "
@@ -943,6 +943,10 @@ msgstr ""
 msgid "Mark this listing as verified"
 msgstr ""
 
+#: includes/components/class-user.php:308
+msgid "Mark this user as verified"
+msgstr ""
+
 #: includes/configs/strings.php:157
 msgid "Mark this vendor as verified"
 msgstr ""
@@ -1077,6 +1081,7 @@ msgstr ""
 
 #. %s: file extensions.
 #: includes/controllers/class-attachment.php:179
+#: includes/fields/class-file.php:86
 #, php-format
 msgid "Only %s files are allowed."
 msgstr ""
@@ -1138,7 +1143,8 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
-#: includes/components/class-user.php:94 includes/components/class-user.php:149
+#: includes/components/class-user.php:109
+#: includes/components/class-user.php:164
 #: includes/controllers/class-user.php:400
 #: includes/controllers/class-user.php:472
 msgid "Please check your email to activate your account."
@@ -1168,12 +1174,12 @@ msgstr ""
 msgid "Please set Google Client ID and Secret to proceed."
 msgstr ""
 
-#: includes/components/class-admin.php:770
+#: includes/components/class-admin.php:774
 msgctxt "plural"
 msgid "All"
 msgstr ""
 
-#: includes/components/class-admin.php:775
+#: includes/components/class-admin.php:779
 msgctxt "plural"
 msgid "Installed"
 msgstr ""
@@ -1198,7 +1204,7 @@ msgstr ""
 msgid "Protect files from direct access"
 msgstr ""
 
-#: includes/configs/settings.php:351
+#: includes/configs/settings.php:352
 msgid "Protected Forms"
 msgstr ""
 
@@ -1237,7 +1243,7 @@ msgstr ""
 msgid "Regex Pattern"
 msgstr ""
 
-#: includes/components/class-user.php:263
+#: includes/components/class-user.php:363
 #: includes/forms/class-user-register.php:71
 #: templates/user/login/user-register-link.php:7
 msgid "Register"
@@ -1296,7 +1302,7 @@ msgstr ""
 msgid "Require email address verification"
 msgstr ""
 
-#: includes/components/class-user.php:276
+#: includes/components/class-user.php:376
 #: includes/controllers/class-user.php:150
 #: includes/forms/class-user-password-request.php:30
 #: includes/forms/class-user-password-reset.php:73
@@ -1366,7 +1372,7 @@ msgstr ""
 msgid "Search Vendors"
 msgstr ""
 
-#: includes/configs/settings.php:367
+#: includes/configs/settings.php:368
 msgid "Secret Key"
 msgstr ""
 
@@ -1428,7 +1434,8 @@ msgstr ""
 msgid "Set the title display format to generate titles based on attributes."
 msgstr ""
 
-#: includes/configs/strings.php:16 templates/admin/settings.php:6
+#: includes/components/class-admin.php:1359 includes/configs/strings.php:16
+#: templates/admin/settings.php:6
 msgid "Settings"
 msgstr ""
 
@@ -1438,7 +1445,7 @@ msgstr ""
 msgid "Showing %1$s-%2$s of %3$s results"
 msgstr ""
 
-#: includes/components/class-user.php:250
+#: includes/components/class-user.php:350
 #: includes/controllers/class-user.php:136
 #: includes/forms/class-user-login.php:77
 #: templates/user/login/user-login-link.php:17
@@ -1450,7 +1457,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: includes/configs/settings.php:359
+#: includes/configs/settings.php:360
 msgid "Site Key"
 msgstr ""
 
@@ -1597,7 +1604,7 @@ msgid ""
 msgstr ""
 
 #. %s: themes URL.
-#: includes/components/class-admin.php:1348
+#: includes/components/class-admin.php:1385
 #, php-format
 msgid ""
 "The current theme doesn't declare HivePress support, if you notice any "
@@ -1620,7 +1627,7 @@ msgstr ""
 msgid "Theme Details"
 msgstr ""
 
-#: includes/components/class-admin.php:123 templates/admin/themes.php:6
+#: includes/components/class-admin.php:127 templates/admin/themes.php:6
 msgid "Themes"
 msgstr ""
 
@@ -1692,6 +1699,11 @@ msgstr ""
 msgid "User"
 msgstr ""
 
+#: includes/components/class-user.php:275
+msgctxt "user"
+msgid "Unverified"
+msgstr ""
+
 #: includes/blocks/class-user-login-form.php:30
 msgid "User Login Form"
 msgstr ""
@@ -1716,7 +1728,7 @@ msgstr ""
 msgid "User with this username doesn't exist."
 msgstr ""
 
-#: includes/components/class-user.php:164 includes/configs/settings.php:278
+#: includes/components/class-user.php:179 includes/configs/settings.php:278
 #: includes/configs/settings.php:311 includes/models/class-user.php:48
 msgid "Username"
 msgstr ""
@@ -1743,12 +1755,12 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: includes/configs/post-types.php:91
+#: includes/configs/post-types.php:92
 msgctxt "vendor"
 msgid "Add New"
 msgstr ""
 
-#: includes/configs/meta-boxes.php:155
+#: includes/configs/meta-boxes.php:165
 #: templates/vendor/view/vendor-verified-badge.php:7
 msgctxt "vendor"
 msgid "Verified"

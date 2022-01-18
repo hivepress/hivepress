@@ -3,21 +3,6 @@
 
 	$(document).ready(function() {
 
-		// Modal
-		hivepress.getComponent('modal').each(function() {
-			var url = '#' + $(this).attr('id');
-
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
-				$.fancybox.close();
-				$.fancybox.open({
-					src: url,
-					touch: false,
-				});
-
-				e.preventDefault();
-			});
-		});
-
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
@@ -46,7 +31,9 @@
 					$.ajax({
 						url: form.data('action'),
 						method: form.data('method') ? form.data('method') : form.attr('method'),
-						data: form.serializeJSON(),
+						data: new FormData(form.get(0)),
+						contentType: false,
+						processData: false,
 						beforeSend: function(xhr) {
 							if ($('body').hasClass('logged-in')) {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
