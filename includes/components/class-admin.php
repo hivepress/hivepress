@@ -80,6 +80,9 @@ final class Admin extends Component {
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
+			// Render links.
+			add_filter( 'plugin_action_links_hivepress/hivepress.php', [ $this, 'render_links' ] );
+
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
 		}
@@ -1323,6 +1326,21 @@ final class Admin extends Component {
 		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			wp_enqueue_media();
 		}
+	}
+
+	/**
+	 * Renders links.
+	 *
+	 * @param array $links Links.
+	 * @return array
+	 */
+	public function render_links( $links ) {
+		return array_merge(
+			[
+				'settings' => '<a href="' . esc_url( admin_url( 'admin.php?page=hp_settings' ) ) . '">' . esc_html__( 'Settings', 'hivepress' ) . '</a>',
+			],
+			$links
+		);
 	}
 
 	/**
