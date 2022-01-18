@@ -10,6 +10,7 @@ namespace HivePress\Components;
 use HivePress\Helpers as hp;
 use HivePress\Models;
 use HivePress\Emails;
+use HivePress\Fields;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -43,7 +44,21 @@ final class User extends Component {
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
 
-		if ( ! is_admin() ) {
+		if ( is_admin() ) {
+
+			// Manage admin columns.
+			if ( get_option( 'hp_user_verify_email' ) ) {
+				add_filter( 'manage_users_columns', [ $this, 'add_admin_columns' ] );
+				add_filter( 'manage_users_custom_column', [ $this, 'render_admin_columns' ], 10, 3 );
+			}
+
+			// Manage profile fields.
+			add_action( 'show_user_profile', [ $this, 'add_profile_fields' ] );
+			add_action( 'edit_user_profile', [ $this, 'add_profile_fields' ] );
+
+			add_action( 'personal_options_update', [ $this, 'update_profile_fields' ] );
+			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ] );
+		} else {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
@@ -230,6 +245,91 @@ final class User extends Component {
 		}
 
 		return $image;
+	}
+
+	/**
+	 * Adds admin columns.
+	 *
+	 * @param array $columns Columns.
+	 * @return array
+	 */
+	public function add_admin_columns( $columns ) {
+		return array_merge(
+			array_slice( $columns, 0, 5, true ),
+			[
+				'verified' => '',
+			],
+			array_slice( $columns, 5, null, true )
+		);
+	}
+
+	/**
+	 * Renders admin columns.
+	 *
+	 * @param string $output Output.
+	 * @param string $column Column name.
+	 * @param int    $user_id User ID.
+	 */
+	public function render_admin_columns( $output, $column, $user_id ) {
+		if ( 'verified' === $column && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+			$output = '<div class="hp-status hp-status--draft"><span>' . esc_html_x( 'Unverified', 'user', 'hivepress' ) . '</span></div>';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Adds profile fields.
+	 *
+	 * @param WP_User $user User object.
+	 */
+	public function add_profile_fields( $user ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		// Check verification key.
+		if ( ! $user->hp_email_verify_key ) {
+			return;
+		}
+
+		$output  = '<h2>' . esc_html( hivepress()->translator->get_string( 'settings' ) ) . '</h2>';
+		$output .= '<table class="form-table hp-form"><tr>';
+
+		// Render label.
+		$output .= '<th>' . esc_html( hivepress()->translator->get_string( 'status' ) ) . '</th>';
+
+		// Render field.
+		$output .= '<td>' . ( new Fields\Checkbox(
+			[
+				'name'    => 'hp_verified',
+				'caption' => esc_html__( 'Mark this user as verified', 'hivepress' ),
+			]
+		) )->render() . '</td>';
+
+		$output .= '</tr></table>';
+
+		echo $output;
+	}
+
+	/**
+	 * Updates profile fields.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function update_profile_fields( $user_id ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		// Delete verification key.
+		if ( hp\get_array_value( $_POST, 'hp_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+			delete_user_meta( $user_id, 'hp_email_verify_key' );
+		}
 	}
 
 	/**
