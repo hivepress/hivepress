@@ -3,111 +3,6 @@
 
 	$(document).ready(function() {
 
-		// Form
-		hivepress.getComponent('form').each(function() {
-			var form = $(this),
-				messageContainer = form.find(hivepress.getSelector('messages')).first(),
-				messageClass = messageContainer.attr('class').split(' ')[0],
-				captcha = form.find('.g-recaptcha'),
-				captchaId = $('.g-recaptcha').index(captcha.get(0)),
-				submitButton = form.find(':submit');
-
-			if (form.data('autosubmit') === true) {
-				form.on('change', function() {
-					form.submit();
-				});
-			}
-
-			form.on('submit', function(e) {
-				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
-				submitButton.prop('disabled', true);
-				submitButton.attr('data-state', 'loading');
-
-				if (typeof tinyMCE !== 'undefined') {
-					tinyMCE.triggerSave();
-				}
-
-				if (form.data('action')) {
-					$.ajax({
-						url: form.data('action'),
-						method: form.data('method') ? form.data('method') : form.attr('method'),
-						data: new FormData(form.get(0)),
-						contentType: false,
-						processData: false,
-						beforeSend: function(xhr) {
-							if ($('body').hasClass('logged-in')) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							}
-						},
-						complete: function(xhr) {
-							var response = xhr.responseJSON,
-								redirect = form.data('redirect');
-
-							submitButton.prop('disabled', false);
-							submitButton.attr('data-state', '');
-
-							if (typeof grecaptcha !== 'undefined' && captcha.length) {
-								grecaptcha.reset(captchaId);
-							}
-
-							if (response == null || response.hasOwnProperty('data')) {
-								if (form.data('message') && xhr.status !== 307) {
-									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
-								}
-
-								if (redirect || xhr.status === 307) {
-									if (typeof redirect === 'string') {
-										window.location.replace(redirect);
-									} else {
-										window.location.reload(true);
-									}
-								} else if (form.data('reset') || !form.is('[data-id]')) {
-									form.trigger('reset');
-
-									form.find(hivepress.getSelector('file-upload')).each(function() {
-										var field = $(this),
-											selectLabel = field.closest('label'),
-											responseContainer = selectLabel.parent().children('div').first();
-
-										responseContainer.html('');
-									});
-								}
-							} else if (response.hasOwnProperty('error')) {
-								if (response.error.hasOwnProperty('errors')) {
-									$.each(response.error.errors, function(index, error) {
-										messageContainer.append('<div>' + error.message + '</div>');
-									});
-								} else if (response.error.hasOwnProperty('message')) {
-									messageContainer.html('<div>' + response.error.message + '</div>');
-								}
-
-								if (!messageContainer.is(':empty')) {
-									messageContainer.addClass(messageClass + '--error').show();
-								}
-							}
-
-							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
-								$('html, body').animate({
-									scrollTop: form.offset().top,
-								}, 500);
-							}
-						},
-					});
-
-					e.preventDefault();
-				}
-			});
-		});
-
-		$(window).on('pageshow', function(e) {
-			if (e.originalEvent.persisted) {
-				var buttons = $('input[type=submit], button[type=submit]');
-
-				buttons.prop('disabled', false);
-				buttons.attr('data-state', '');
-			}
-		});
-
 		// Toggle
 		hivepress.getComponent('toggle').each(function() {
 			var button = $(this);
@@ -272,7 +167,7 @@
 			}
 		});
 	});
-	
+
 	var sidebar = '';
 
 	$('body').imagesLoaded(function() {
