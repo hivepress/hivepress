@@ -80,6 +80,9 @@ final class Attribute extends Component {
 
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
+
+			// Disable Jetpack search.
+			add_filter( 'jetpack_search_should_handle_query', [ $this, 'remove_jetpack_search' ] );
 		}
 	}
 
@@ -1547,5 +1550,19 @@ final class Attribute extends Component {
 		// Set meta and taxonomy queries.
 		$query->set( 'meta_query', $meta_query );
 		$query->set( 'tax_query', $tax_query );
+	}
+
+	/**
+	 * Disable Jetpack search.
+	 *
+	 * @return bool
+	 */
+	public function remove_jetpack_search() {
+		// Check post type.
+		if ( is_post_type_archive( hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }
