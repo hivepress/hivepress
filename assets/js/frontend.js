@@ -272,6 +272,8 @@
 			}
 		});
 	});
+	
+	var sidebar = '';
 
 	$('body').imagesLoaded(function() {
 
@@ -289,7 +291,7 @@
 			} else if ($(window).width() >= 768) {
 				container.wrapInner('<div />');
 
-				var sidebar = container.children('div').stickySidebar({
+				sidebar = container.children('div').stickySidebar({
 					topSpacing: spacing,
 					bottomSpacing: spacing,
 				});
@@ -300,4 +302,11 @@
 			}
 		});
 	});
+
+	if(sidebar){
+		$(window).on('load resize', function() {
+			sidebar.stickySidebar('updateSticky');
+		});
+	}
+
 })(jQuery);
