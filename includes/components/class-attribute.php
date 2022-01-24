@@ -1108,7 +1108,6 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_meta_boxes( $meta_boxes ) {
-
 		// Set defaults.
 		$meta_box_args = [
 			'attributes'        => [
@@ -1120,11 +1119,21 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'editing' ),
 
 				'fields' => [
+					'edit_name'       => [
+						'label'       => esc_html__( 'Edit attribute name', 'hivepress' ),
+						'description' => esc_html__( 'Change attribute name', 'hivepress' ),
+						'type'        => 'text',
+						'required'    => true,
+						'regex'       => '^[A-Za-z0-9_]*$',
+						'_alias'      => 'post_name',
+						'_order'      => 1,
+					],
+
 					'editable'        => [
 						'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
 						'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 1,
+						'_order'  => 2,
 					],
 
 					'edit_field_type' => [
