@@ -1568,8 +1568,10 @@ final class Attribute extends Component {
 	 */
 	public function remove_jetpack_search() {
 		// Check post type.
-		if ( is_post_type_archive( hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
-			return false;
+		if ( $query->is_main_query() && $query->is_search() ) {
+			if ( in_array( $query->get( 'post_type' ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
+				return false;
+			}
 		}
 
 		return true;
