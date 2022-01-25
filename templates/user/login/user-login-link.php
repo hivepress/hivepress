@@ -6,7 +6,7 @@ if ( is_user_logged_in() ) :
 	?>
 	<a href="<?php echo esc_url( hivepress()->router->get_url( 'user_account_page' ) ); ?>" class="hp-menu__item hp-menu__item--user-account hp-link">
 		<i class="hp-icon fas fa-user"></i>
-		<span><?php esc_html_e( 'My Account', 'hivepress' ); ?></span>
+		<span><?php echo esc_html( wp_get_current_user()->user_login ); ?></span>
 		<?php if ( hivepress()->request->get_context( 'notice_count' ) ) : ?>
 			<small><?php echo esc_html( hivepress()->request->get_context( 'notice_count' ) ); ?></small>
 		<?php endif; ?>
