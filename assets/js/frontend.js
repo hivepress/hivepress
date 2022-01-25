@@ -174,7 +174,7 @@
 		hivepress.getComponent('sticky').each(function() {
 			var container = $(this),
 				spacing = 32;
-				console.log(container.children('div'));
+				
 			if ($('#wpadminbar').length) {
 				spacing = spacing + $('#wpadminbar').height();
 			}
@@ -188,7 +188,7 @@
 					topSpacing: spacing,
 					bottomSpacing: spacing,
 				});
-				new ResizeObserver(function(){sidebar.stickySidebar('updateSticky');}).observe(document.querySelector('.hp-page__sidebar'));
+				new ResizeObserver(function(){sidebar.stickySidebar('updateSticky');}).observe(document.querySelector('.' + $(container).attr('class').split(" ")[0]));
 			}
 		});
 	});

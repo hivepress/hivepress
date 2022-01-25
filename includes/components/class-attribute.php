@@ -1108,6 +1108,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_meta_boxes( $meta_boxes ) {
+
 		// Set defaults.
 		$meta_box_args = [
 			'attributes'        => [
@@ -1119,12 +1120,12 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'editing' ),
 
 				'fields' => [
-					'edit_name'       => [
+					'name'            => [
 						'label'       => esc_html__( 'Edit attribute name', 'hivepress' ),
 						'description' => esc_html__( 'Change attribute name', 'hivepress' ),
 						'type'        => 'text',
+						'pattern'     => '^[a-z]+[a-z0-9_]*',
 						'required'    => true,
-						'regex'       => '^[A-Za-z0-9_]*$',
 						'_alias'      => 'post_name',
 						'_order'      => 1,
 					],
@@ -1564,16 +1565,17 @@ final class Attribute extends Component {
 	/**
 	 * Disable Jetpack search.
 	 *
+	 * @param mixed $enabled Jetpack argument.
 	 * @return bool
 	 */
-	public function remove_jetpack_search() {
+	public function remove_jetpack_search( $enabled ) {
 		// Check post type.
 		if ( $query->is_main_query() && $query->is_search() ) {
 			if ( in_array( $query->get( 'post_type' ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
-				return false;
+				$enabled = false;
 			}
 		}
 
-		return true;
+		return $enabled;
 	}
 }
