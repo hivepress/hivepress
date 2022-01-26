@@ -77,10 +77,8 @@ final class Attribute extends Component {
 			// Remove term boxes.
 			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
 
-			// Todo not work.
-
 			// Remove meta boxes.
-			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ], 99 );
+			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 99 );
 
 		} else {
 
@@ -1583,7 +1581,6 @@ final class Attribute extends Component {
 
 		return $enabled;
 	}
-	// Todo not work.
 
 	/**
 	 * Removes meta boxes.
