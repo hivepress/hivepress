@@ -59,10 +59,10 @@ return [
 			'vendor'        => [
 				'label'       => hivepress()->translator->get_string( 'vendor' ),
 				'type'        => 'select',
-				'options'     => 'posts',
+				'options'     => 'users',
 				'option_args' => [ 'post_type' => 'hp_vendor' ],
 				'source'      => hivepress()->router->get_url( 'vendors_resource' ),
-				'_alias'      => 'post_parent',
+				'_alias'      => 'post_author',
 				'_order'      => 10,
 			],
 
