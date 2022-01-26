@@ -76,6 +76,12 @@ final class Attribute extends Component {
 
 			// Remove term boxes.
 			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
+
+			// Todo not work.
+
+			// Remove meta boxes.
+			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ], 99 );
+
 		} else {
 
 			// Set search query.
@@ -1120,8 +1126,8 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'editing' ),
 
 				'fields' => [
-					'name'            => [
-						'label'       => esc_html__( 'Edit attribute name', 'hivepress' ),
+					'edit_name'       => [
+						'label'       => esc_html__( 'Name', 'hivepress' ),
 						'description' => esc_html__( 'Change attribute name', 'hivepress' ),
 						'type'        => 'text',
 						'pattern'     => '^[a-z]+[a-z0-9_]*',
@@ -1569,13 +1575,22 @@ final class Attribute extends Component {
 	 * @return bool
 	 */
 	public function remove_jetpack_search( $enabled ) {
+
 		// Check post type.
-		if ( $query->is_main_query() && $query->is_search() ) {
-			if ( in_array( $query->get( 'post_type' ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
-				$enabled = false;
-			}
+		if ( $query->is_main_query() && $query->is_search() && in_array( $query->get( 'post_type' ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
+			$enabled = false;
 		}
 
 		return $enabled;
+	}
+	// Todo not work.
+
+	/**
+	 * Removes meta boxes.
+	 */
+	public function remove_meta_boxes() {
+		foreach ( $this->models as $model_name ) {
+			remove_meta_box( 'slugdiv', 'hp_' . $model_name . '_attribute', 'normal' );
+		}
 	}
 }
