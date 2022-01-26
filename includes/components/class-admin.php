@@ -933,7 +933,7 @@ final class Admin extends Component {
 	public function add_meta_boxes( $post_type ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_published_posts' ) ) {
 			return;
 		}
 
@@ -971,7 +971,7 @@ final class Admin extends Component {
 	public function update_meta_box( $post_id ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_published_posts' ) ) {
 			return;
 		}
 
