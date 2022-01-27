@@ -831,7 +831,7 @@ final class Listing extends Controller {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => get_current_user_id(),
 			]
 		)->get_first();
@@ -841,17 +841,21 @@ final class Listing extends Controller {
 			// Get user.
 			$user = hivepress()->request->get_context( 'user' );
 
+			$vendor_args = [
+				'name'        => $user->get_display_name(),
+				'description' => $user->get_description(),
+				'slug'        => $user->get_username(),
+				'status'      => 'auto-draft',
+				'image'       => $user->get_image__id(),
+				'user'        => $user->get_id(),
+			];
+
+			if ( get_option( 'hp_listing_enable_moderation' ) ) {
+				$vendor_args['status'] = 'draft';
+			}
+
 			// Add vendor.
-			$vendor = ( new Models\Vendor() )->fill(
-				[
-					'name'        => $user->get_display_name(),
-					'description' => $user->get_description(),
-					'slug'        => $user->get_username(),
-					'status'      => 'auto-draft',
-					'image'       => $user->get_image__id(),
-					'user'        => $user->get_id(),
-				]
-			);
+			$vendor = ( new Models\Vendor() )->fill( $vendor_args );
 
 			if ( ! $vendor->save(
 				[

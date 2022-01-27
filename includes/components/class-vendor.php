@@ -90,7 +90,7 @@ final class Vendor extends Component {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => $user_id,
 			]
 		)->get_first();
@@ -159,7 +159,7 @@ final class Vendor extends Component {
 			// Get vendor.
 			$vendor = Models\Vendor::query()->filter(
 				[
-					'status' => [ 'auto-draft', 'publish' ],
+					'status' => [ 'auto-draft', 'draft', 'publish' ],
 					'user'   => $user->get_id(),
 				]
 			)->get_first();
@@ -212,7 +212,7 @@ final class Vendor extends Component {
 				// Get vendor.
 				$vendor = Models\Vendor::query()->filter(
 					[
-						'status' => [ 'auto-draft', 'publish' ],
+						'status' => [ 'auto-draft', 'draft', 'publish' ],
 						'user'   => $user->get_id(),
 					]
 				)->get_first();
