@@ -199,7 +199,7 @@
 					bottomSpacing: spacing,
 				});
 
-				new ResizeObserver(function() {
+				var observer = new ResizeObserver(function() {
 					sidebar.stickySidebar('updateSticky');
 				}).observe(container.get(0));
 			}
