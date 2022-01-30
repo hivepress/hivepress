@@ -73,14 +73,14 @@ final class Attribute extends Component {
 
 			// Manage meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
-			add_action( 'admin_notices', [ $this, 'remove_meta_boxes' ] );
+			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 		} else {
 
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
 
 			// Disable Jetpack search.
-			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ] );
+			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 		}
 	}
 
@@ -1427,7 +1427,7 @@ final class Attribute extends Component {
 		}
 
 		// Filter results.
-		if ( $query->is_search ) {
+		if ( $query->is_search() ) {
 
 			// Get attribute fields.
 			$attribute_fields = [];
@@ -1571,11 +1571,12 @@ final class Attribute extends Component {
 	/**
 	 * Disables Jetpack search.
 	 *
-	 * @param mixed $enabled Search flag.
+	 * @param mixed    $enabled Search flag.
+	 * @param WP_Query $query Search query.
 	 * @return bool
 	 */
-	public function disable_jetpack_search( $enabled ) {
-		if ( $query->is_main_query() && $query->is_search && strpos( $query->get( 'post_type' ), 'hp_' ) === 0 ) {
+	public function disable_jetpack_search( $enabled, $query ) {
+		if ( $query->is_main_query() && $query->is_search() && strpos( $query->get( 'post_type' ), 'hp_' ) === 0 ) {
 			$enabled = false;
 		}
 
