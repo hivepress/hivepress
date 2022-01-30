@@ -841,21 +841,17 @@ final class Listing extends Controller {
 			// Get user.
 			$user = hivepress()->request->get_context( 'user' );
 
-			$vendor_args = [
-				'name'        => $user->get_display_name(),
-				'description' => $user->get_description(),
-				'slug'        => $user->get_username(),
-				'status'      => 'auto-draft',
-				'image'       => $user->get_image__id(),
-				'user'        => $user->get_id(),
-			];
-
-			if ( get_option( 'hp_listing_enable_moderation' ) ) {
-				$vendor_args['status'] = 'draft';
-			}
-
 			// Add vendor.
-			$vendor = ( new Models\Vendor() )->fill( $vendor_args );
+			$vendor = ( new Models\Vendor() )->fill(
+				[
+					'name'        => $user->get_display_name(),
+					'description' => $user->get_description(),
+					'slug'        => $user->get_username(),
+					'status'      => get_option( 'hp_listing_enable_moderation' ) ? 'draft' : 'auto-draft',
+					'image'       => $user->get_image__id(),
+					'user'        => $user->get_id(),
+				]
+			);
 
 			if ( ! $vendor->save(
 				[
