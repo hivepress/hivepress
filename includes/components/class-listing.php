@@ -163,7 +163,7 @@ final class Listing extends Component {
 				) ) {
 					return;
 				}
-			} elseif ( $vendor->get_status() === 'auto-draft' || 'draft' === $vendor->get_status() ) {
+			} elseif ( in_array( $vendor->get_status(), [ 'auto-draft', 'draft' ], true ) ) {
 
 				// Update vendor status.
 				$vendor->set_status( 'publish' )->save_status();
