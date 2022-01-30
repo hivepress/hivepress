@@ -166,6 +166,16 @@
 				});
 			}
 		});
+
+		// Buttons
+		$(window).on('pageshow', function(e) {
+			if (e.originalEvent.persisted) {
+				var buttons = $('input[type=submit], button[type=submit]');
+
+				buttons.prop('disabled', false);
+				buttons.attr('data-state', '');
+			}
+		});
 	});
 
 	$(window).on('load', function() {
@@ -188,13 +198,11 @@
 					topSpacing: spacing,
 					bottomSpacing: spacing,
 				});
-				new ResizeObserver(
-					function() {
-						sidebar.stickySidebar('updateSticky');
-					}
-				).observe(document.querySelector('.' + $(container).attr('class').split(" ")[0]));
+
+				new ResizeObserver(function() {
+					sidebar.stickySidebar('updateSticky');
+				}).observe(container.get(0));
 			}
 		});
 	});
-
 })(jQuery);

@@ -672,14 +672,5 @@ var hivepress = {
 				}
 			});
 		});
-
-		$(window).on('pageshow', function(e) {
-			if (e.originalEvent.persisted) {
-				var buttons = $('input[type=submit], button[type=submit]');
-
-				buttons.prop('disabled', false);
-				buttons.attr('data-state', '');
-			}
-		});
 	});
 })(jQuery);
