@@ -71,22 +71,16 @@ final class Attribute extends Component {
 
 		if ( is_admin() ) {
 
-			// Add meta boxes.
+			// Manage meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
-
-			// Remove term boxes.
-			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
-
-			// Remove meta boxes.
-			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 99 );
-
+			add_action( 'admin_notices', [ $this, 'remove_meta_boxes' ] );
 		} else {
 
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
 
 			// Disable Jetpack search.
-			add_filter( 'jetpack_search_should_handle_query', [ $this, 'remove_jetpack_search' ] );
+			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ] );
 		}
 	}
 
@@ -1124,21 +1118,21 @@ final class Attribute extends Component {
 				'title'  => hivepress()->translator->get_string( 'editing' ),
 
 				'fields' => [
-					'edit_name'       => [
-						'label'       => esc_html__( 'Name', 'hivepress' ),
-						'description' => esc_html__( 'Change attribute name', 'hivepress' ),
-						'type'        => 'text',
-						'pattern'     => '^[a-z]+[a-z0-9_]*',
-						'required'    => true,
-						'_alias'      => 'post_name',
-						'_order'      => 1,
-					],
-
 					'editable'        => [
 						'label'   => esc_html_x( 'Editable', 'attribute', 'hivepress' ),
 						'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 2,
+						'_order'  => 1,
+					],
+
+					'name'            => [
+						'label'       => esc_html__( 'Field Name', 'hivepress' ),
+						'description' => esc_html__( 'Use lowercase letters, numbers and underscores only.', 'hivepress' ),
+						'type'        => 'text',
+						'pattern'     => '^[a-z]+[a-z0-9_]*',
+						'required'    => true,
+						'_alias'      => 'post_name',
+						'_order'      => 99,
 					],
 
 					'edit_field_type' => [
@@ -1291,26 +1285,34 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Removes term boxes.
+	 * Removes meta boxes.
 	 */
-	public function remove_term_boxes() {
+	public function remove_meta_boxes() {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) && in_array( get_post_type(), hp\prefix( $this->models ), true ) ) {
+		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 
-			// Get model.
-			$model = hp\unprefix( get_post_type() );
+			// Get post type.
+			$post_type = get_post_type();
 
-			// Get category IDs.
-			$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+			if ( in_array( $post_type, hp\prefix( $this->models ), true ) ) {
 
-			// Get attributes.
-			$attributes = $this->get_attributes( $model, $category_ids );
+				// Get model.
+				$model = hp\unprefix( $post_type );
 
-			foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-				if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
-					remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
+				// Get category IDs.
+				$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+
+				// Get attributes.
+				$attributes = $this->get_attributes( $model, $category_ids );
+
+				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
+						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
+					}
 				}
+			} elseif ( preg_match( '/^hp_[a-z]+_attribute$/', $post_type ) ) {
+				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
@@ -1567,27 +1569,16 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Disable Jetpack search.
+	 * Disables Jetpack search.
 	 *
-	 * @param mixed $enabled Jetpack argument.
+	 * @param mixed $enabled Search flag.
 	 * @return bool
 	 */
-	public function remove_jetpack_search( $enabled ) {
-
-		// Check post type.
-		if ( $query->is_main_query() && $query->is_search() && in_array( $query->get( 'post_type' ), hp\prefix( array_keys( hivepress()->get_config( 'post_types' ) ) ) ) ) {
+	public function disable_jetpack_search( $enabled ) {
+		if ( $query->is_main_query() && $query->is_search && strpos( $query->get( 'post_type' ), 'hp_' ) === 0 ) {
 			$enabled = false;
 		}
 
 		return $enabled;
-	}
-
-	/**
-	 * Removes meta boxes.
-	 */
-	public function remove_meta_boxes() {
-		foreach ( $this->models as $model_name ) {
-			remove_meta_box( 'slugdiv', 'hp_' . $model_name . '_attribute', 'normal' );
-		}
 	}
 }
