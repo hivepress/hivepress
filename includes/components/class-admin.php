@@ -68,7 +68,7 @@ final class Admin extends Component {
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 
 			// Manage meta boxes.
-			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
 			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
@@ -928,12 +928,13 @@ final class Admin extends Component {
 	/**
 	 * Adds meta boxes.
 	 *
-	 * @param string $post_type Post type.
+	 * @param string  $post_type Post type.
+	 * @param WP_Post $post Post object.
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type, $post ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
@@ -971,7 +972,7 @@ final class Admin extends Component {
 	public function update_meta_box( $post_id ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 

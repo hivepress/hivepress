@@ -831,7 +831,7 @@ final class Listing extends Controller {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => get_current_user_id(),
 			]
 		)->get_first();
@@ -847,7 +847,7 @@ final class Listing extends Controller {
 					'name'        => $user->get_display_name(),
 					'description' => $user->get_description(),
 					'slug'        => $user->get_username(),
-					'status'      => 'auto-draft',
+					'status'      => get_option( 'hp_listing_enable_moderation' ) ? 'draft' : 'auto-draft',
 					'image'       => $user->get_image__id(),
 					'user'        => $user->get_id(),
 				]

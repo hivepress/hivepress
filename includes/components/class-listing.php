@@ -128,7 +128,7 @@ final class Listing extends Component {
 		// Get user vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => $listing->get_user__id(),
 			]
 		)->get_first();
@@ -163,7 +163,7 @@ final class Listing extends Component {
 				) ) {
 					return;
 				}
-			} elseif ( $vendor->get_status() === 'auto-draft' ) {
+			} elseif ( in_array( $vendor->get_status(), [ 'auto-draft', 'draft' ], true ) ) {
 
 				// Update vendor status.
 				$vendor->set_status( 'publish' )->save_status();

@@ -150,6 +150,7 @@ return [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'vendor',
 		'model'  => 'vendor',
+
 		'fields' => [
 			'user'     => [
 				'label'    => hivepress()->translator->get_string( 'user' ),

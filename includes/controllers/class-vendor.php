@@ -318,7 +318,7 @@ final class Vendor extends Controller {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => get_current_user_id(),
 			]
 		)->get_first();
