@@ -48,6 +48,7 @@ return [
 	'app_id'                                    => esc_html__( 'App ID', 'hivepress' ),
 	'authorization'                             => esc_html__( 'Authorization', 'hivepress' ),
 	'return_to_my_account'                      => esc_html__( 'Return to My Account', 'hivepress' ),
+	'my_account'                                => esc_html__( 'My Account', 'hivepress' ),
 	'save_changes'                              => esc_html__( 'Save Changes', 'hivepress' ),
 	'changes_have_been_saved'                   => esc_html__( 'Changes have been saved.', 'hivepress' ),
 	'user'                                      => esc_html__( 'User', 'hivepress' ),
