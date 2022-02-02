@@ -600,6 +600,7 @@ var hivepress = {
                 if (typeof tinyMCE !== 'undefined') {
                     tinyMCE.triggerSave();
                 }
+                // Update here. Delete this comment after checking.
                 var formMethod = form.data('method') ? form.data('method') : form.attr('method');
                 if (form.data('action')) {
                     $.ajax({
