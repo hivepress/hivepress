@@ -1130,7 +1130,7 @@ final class Attribute extends Component {
 						'description' => esc_html__( 'Use lowercase letters, numbers and underscores only.', 'hivepress' ),
 						'type'        => 'text',
 						'max_length'  => 32,
-						'pattern'     => '^[a-z]+[a-z0-9_]*',
+						'pattern'     => '^[a-z]+[a-z0-9_-]*',
 						'required'    => true,
 						'_alias'      => 'post_name',
 						'_order'      => 99,
