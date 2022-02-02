@@ -870,7 +870,7 @@ final class Listing extends Controller {
 		// Check vendor.
 		if ( $vendor->validate() ) {
 
-			if ( get_option( 'hp_listing_enable_moderation' ) ) {
+			if ( get_option( 'hp_listing_enable_moderation' ) && 'auto-draft' === $vendor->get_status() ) {
 				$vendor->fill(
 					[
 						'status' => 'draft',
