@@ -847,7 +847,7 @@ final class Listing extends Controller {
 					'name'        => $user->get_display_name(),
 					'description' => $user->get_description(),
 					'slug'        => $user->get_username(),
-					'status'      => get_option( 'hp_listing_enable_moderation' ) ? 'draft' : 'auto-draft',
+					'status'      => 'auto-draft',
 					'image'       => $user->get_image__id(),
 					'user'        => $user->get_id(),
 				]
@@ -867,11 +867,20 @@ final class Listing extends Controller {
 			}
 		}
 
-		// Set request context.
-		hivepress()->request->set_context( 'vendor', $vendor );
-
 		// Check vendor.
 		if ( $vendor->validate() ) {
+
+			if ( get_option( 'hp_listing_enable_moderation' ) ) {
+				$vendor->fill(
+					[
+						'status' => 'draft',
+					]
+				)->save();
+			}
+
+			// Set request context.
+			hivepress()->request->set_context( 'vendor', $vendor );
+
 			return true;
 		}
 
