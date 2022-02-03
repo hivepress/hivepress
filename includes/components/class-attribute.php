@@ -1453,44 +1453,6 @@ final class Attribute extends Component {
 						// Set field value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-						if ( 'listing' === $model && 'number_range' === $field->get_display_type() && ! $attribute['edit_field']['required'] ) {
-
-							// Set query arguments.
-							$query_args = [
-								'post_type'      => 'hp_listing',
-								'post_status'    => 'publish',
-								'meta_key'       => $field->get_name(),
-								'orderby'        => 'meta_value_num',
-								'posts_per_page' => 1,
-								'fields'         => 'ids',
-							];
-
-							$range = [
-								floor(
-									floatval(
-										get_post_meta(
-											hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
-											$field->get_name(),
-											true
-										)
-									)
-								),
-								ceil(
-									floatval(
-										get_post_meta(
-											hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
-											$field->get_name(),
-											true
-										)
-									)
-								),
-							];
-
-							if ( (int) hp\get_first_array_value( $range ) === (int) hp\get_first_array_value( $field->get_value() ) && (int) hp\get_last_array_value( $range ) === (int) hp\get_last_array_value( $field->get_value() ) ) {
-								continue;
-							}
-						}
-
 						// Add field.
 						if ( $field->validate() ) {
 							$attribute_fields[ $attribute_name ] = $field;
