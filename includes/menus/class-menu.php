@@ -242,10 +242,10 @@ abstract class Menu {
 			foreach ( hp\sort_array( $items ) as $name => $args ) {
 
 				// Get current class.
-				$class = '';
+				$class = 'hp-menu__item--' . hp\sanitize_slug( $name );
 
 				if ( $args['url'] === $url || hp\get_array_value( $args, 'route', false ) === $route ) {
-					$class = 'hp-menu__item--current current-menu-item';
+					$class .= ' hp-menu__item--current current-menu-item';
 				}
 
 				// Render menu item.
