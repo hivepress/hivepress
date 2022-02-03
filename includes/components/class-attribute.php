@@ -1453,7 +1453,7 @@ final class Attribute extends Component {
 						// Set field value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-						if ( 'number_range' === $field->get_display_type() && ! $attribute['edit_field']['required'] ) {
+						if ( 'listing' === $model && 'number_range' === $field->get_display_type() && ! $attribute['edit_field']['required'] ) {
 
 							// Set query arguments.
 							$query_args = [
