@@ -563,7 +563,9 @@ final class Listing extends Component {
 	 * @return array
 	 */
 	public function alter_listing_settings_meta_box( $meta_box ) {
-		if ( ! get_post_field( 'post_parent' ) && in_array( get_post_status(), [ 'draft', 'pending' ], true ) ) {
+		$vendor = Models\Vendor::query()->get_by_id( get_post_field( 'post_parent' ) );
+
+		if ( $vendor && in_array( $vendor->get_status(), [ 'draft', 'auto-draft' ], true ) && in_array( get_post_status(), [ 'draft', 'pending' ], true ) ) {
 			$meta_box['fields']['vendor'] = array_merge(
 				$meta_box['fields']['vendor'],
 				[
