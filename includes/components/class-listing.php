@@ -567,7 +567,7 @@ final class Listing extends Component {
 		// Get vendor ID.
 		$vendor_id = absint( get_post_field( 'post_parent' ) );
 
-		if ( ! $vendor_id || in_array( get_post_status( $vendor_id ), [ 'draft', 'auto-draft' ], true ) ) {
+		if ( ! $vendor_id || get_post_status( $vendor_id ) !== 'publish' ) {
 
 			// Change vendor field.
 			$meta_box['fields']['vendor'] = array_merge(
