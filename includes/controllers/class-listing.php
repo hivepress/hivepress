@@ -853,10 +853,6 @@ final class Listing extends Controller {
 				]
 			);
 
-			if ( get_option( 'hp_listing_enable_moderation' ) && ! $vendor->validate() ) {
-				$vendor->set_status( 'draft' );
-			}
-
 			if ( ! $vendor->save(
 				[
 					'name',
@@ -868,6 +864,10 @@ final class Listing extends Controller {
 				]
 			) ) {
 				return home_url();
+			}
+
+			if ( get_option( 'hp_listing_enable_moderation' ) && ! $vendor->validate() ) {
+				$vendor->set_status( 'draft' )->save_status();
 			}
 		}
 
