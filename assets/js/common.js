@@ -604,11 +604,17 @@ var hivepress = {
 				if (form.data('action')) {
 					$.ajax({
 						url: form.data('action'),
-						method: form.data('method') ? form.data('method') : form.attr('method'),
+						method: 'POST',
 						data: new FormData(form.get(0)),
 						contentType: false,
 						processData: false,
 						beforeSend: function(xhr) {
+							var method = form.data('method') ? form.data('method') : form.attr('method');
+
+							if (method !== 'POST') {
+								xhr.setRequestHeader('X-HTTP-Method-Override', method);
+							}
+
 							if ($('body').hasClass('logged-in')) {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 							}

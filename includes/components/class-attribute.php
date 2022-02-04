@@ -1125,17 +1125,6 @@ final class Attribute extends Component {
 						'_order'  => 1,
 					],
 
-					'name'            => [
-						'label'       => esc_html__( 'Field Name', 'hivepress' ),
-						'description' => esc_html__( 'Use lowercase letters, numbers and underscores only.', 'hivepress' ),
-						'type'        => 'text',
-						'max_length'  => 32,
-						'pattern'     => '^[a-z]+[a-z0-9_]*',
-						'required'    => true,
-						'_alias'      => 'post_name',
-						'_order'      => 99,
-					],
-
 					'edit_field_type' => [
 						'label'       => esc_html__( 'Field Type', 'hivepress' ),
 						'type'        => 'select',
@@ -1312,8 +1301,6 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
-			} elseif ( preg_match( '/^hp_[a-z]+_attribute$/', $post_type ) ) {
-				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
