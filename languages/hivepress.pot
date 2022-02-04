@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HivePress\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-31 22:58+0000\n"
+"POT-Creation-Date: 2022-02-04 01:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -225,19 +225,19 @@ msgstr ""
 msgid "Are you sure you want to permanently delete this listing?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1197
-#: includes/components/class-attribute.php:1199
+#: includes/components/class-attribute.php:1186
+#: includes/components/class-attribute.php:1188
 msgctxt "area"
 msgid "primary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1198
-#: includes/components/class-attribute.php:1200
+#: includes/components/class-attribute.php:1187
+#: includes/components/class-attribute.php:1189
 msgctxt "area"
 msgid "secondary"
 msgstr ""
 
-#: includes/components/class-attribute.php:1190
+#: includes/components/class-attribute.php:1179
 msgid "Areas"
 msgstr ""
 
@@ -269,17 +269,17 @@ msgctxt "attribute"
 msgid "Editable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1155
+#: includes/components/class-attribute.php:1144
 msgctxt "attribute"
 msgid "Filterable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1162
+#: includes/components/class-attribute.php:1151
 msgctxt "attribute"
 msgid "Indexable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1258
+#: includes/components/class-attribute.php:1247
 msgctxt "attribute"
 msgid "Moderated"
 msgstr ""
@@ -289,7 +289,7 @@ msgctxt "attribute"
 msgid "Searchable"
 msgstr ""
 
-#: includes/components/class-attribute.php:1169
+#: includes/components/class-attribute.php:1158
 msgctxt "attribute"
 msgid "Sortable"
 msgstr ""
@@ -303,8 +303,8 @@ msgstr ""
 msgid "Authorization"
 msgstr ""
 
-#: includes/components/class-attribute.php:1197
-#: includes/components/class-attribute.php:1198
+#: includes/components/class-attribute.php:1186
+#: includes/components/class-attribute.php:1187
 msgid "Block"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgid ""
 "listing."
 msgstr ""
 
-#: includes/components/class-attribute.php:1191
+#: includes/components/class-attribute.php:1180
 msgid "Choose the template areas where you want to display this attribute."
 msgstr ""
 
@@ -449,7 +449,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: includes/components/class-attribute.php:1170
+#: includes/components/class-attribute.php:1159
 msgid "Display as a sorting option"
 msgstr ""
 
@@ -457,7 +457,7 @@ msgstr ""
 msgid "Display categories instead of listings"
 msgstr ""
 
-#: includes/components/class-attribute.php:1156
+#: includes/components/class-attribute.php:1145
 msgid "Display in the filter form"
 msgstr ""
 
@@ -493,7 +493,7 @@ msgstr ""
 msgid "Don't have an account yet?"
 msgstr ""
 
-#: includes/components/class-listing.php:675
+#: includes/components/class-listing.php:681
 msgid "Edit"
 msgstr ""
 
@@ -628,11 +628,7 @@ msgid "Select"
 msgstr ""
 
 #: includes/components/class-attribute.php:1129
-msgid "Field Name"
-msgstr ""
-
-#: includes/components/class-attribute.php:1140
-#: includes/components/class-attribute.php:1176
+#: includes/components/class-attribute.php:1165
 msgid "Field Type"
 msgstr ""
 
@@ -652,7 +648,7 @@ msgstr ""
 msgid "Forgot password?"
 msgstr ""
 
-#: includes/components/class-attribute.php:1213
+#: includes/components/class-attribute.php:1202
 msgid "Format"
 msgstr ""
 
@@ -745,7 +741,7 @@ msgid ""
 "I agree to the <a href=\"%s\" target=\"_blank\">terms and conditions</a>"
 msgstr ""
 
-#: includes/components/class-attribute.php:1205
+#: includes/components/class-attribute.php:1194
 msgid "Icon"
 msgstr ""
 
@@ -773,7 +769,7 @@ msgctxt "imperative"
 msgid "Select Category"
 msgstr ""
 
-#: includes/components/class-attribute.php:1163
+#: includes/components/class-attribute.php:1152
 msgid "Include in keyword search"
 msgstr ""
 
@@ -935,7 +931,7 @@ msgstr ""
 msgid "Make this listing featured"
 msgstr ""
 
-#: includes/components/class-attribute.php:1259
+#: includes/components/class-attribute.php:1248
 msgid "Manually approve changes"
 msgstr ""
 
@@ -1104,8 +1100,8 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: includes/components/class-attribute.php:1199
-#: includes/components/class-attribute.php:1200
+#: includes/components/class-attribute.php:1188
+#: includes/components/class-attribute.php:1189
 msgid "Page"
 msgstr ""
 
@@ -1418,7 +1414,7 @@ msgstr ""
 msgid "Set a date on which the listing will lose featured status."
 msgstr ""
 
-#: includes/components/class-attribute.php:1214
+#: includes/components/class-attribute.php:1203
 msgid "Set the attribute display format."
 msgstr ""
 
@@ -1520,7 +1516,7 @@ msgctxt "sort order"
 msgid "Title"
 msgstr ""
 
-#: includes/components/class-attribute.php:1230
+#: includes/components/class-attribute.php:1219
 #: includes/configs/meta-boxes.php:132
 msgctxt "sort priority"
 msgid "Order"
@@ -1697,10 +1693,6 @@ msgstr ""
 
 #: includes/fields/class-url.php:30
 msgid "URL"
-msgstr ""
-
-#: includes/components/class-attribute.php:1130
-msgid "Use lowercase letters, numbers and underscores only."
 msgstr ""
 
 #: includes/configs/strings.php:54
