@@ -569,7 +569,7 @@ final class Listing extends Component {
 
 		if ( ! $vendor_id || get_post_status( $vendor_id ) !== 'publish' ) {
 
-			// Change vendor field.
+			// Disable vendor field.
 			$meta_box['fields']['vendor'] = array_merge(
 				$meta_box['fields']['vendor'],
 				[
