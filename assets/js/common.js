@@ -241,6 +241,31 @@ var hivepress = {
 				}
 			}
 
+			if (field.data('ranges')) {
+				var ranges = field.data('ranges');
+
+				settings['onDayCreate'] = function(dObj, dStr, fp, dayElem) {
+					if (dayElem.className.includes('disabled')) {
+						return;
+					}
+
+					var time = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
+
+					$.each(ranges, function(index, range) {
+						if (range.start <= time && time < range.end) {
+							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
+							dayElem.className += ' flatpickr-status';
+
+							if (range.hasOwnProperty('status')) {
+								dayElem.className += ' flatpickr-status--' + range.status;
+							}
+
+							return false;
+						}
+					});
+				};
+			}
+
 			if (field.is('[data-offset]')) {
 				settings['minDate'] = new Date().fp_incr(field.data('offset'));
 			}
