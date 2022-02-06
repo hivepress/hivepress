@@ -48,6 +48,13 @@ class Date_Range extends Date {
 	protected $max_length;
 
 	/**
+	 * Date ranges.
+	 *
+	 * @var array
+	 */
+	protected $ranges = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Field meta.
@@ -174,6 +181,10 @@ class Date_Range extends Date {
 
 		if ( ! is_null( $this->max_length ) ) {
 			$field_args['attributes']['data-max-length'] = $this->max_length;
+		}
+
+		if ( $this->ranges ) {
+			$field_args['attributes']['data-ranges'] = hp\esc_json( wp_json_encode( $this->ranges ) );
 		}
 
 		// Render date field.
