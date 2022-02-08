@@ -95,5 +95,10 @@
 			this.select();
 			document.execCommand('copy');
 		});
+
+		// Detect modal.
+        $('form').each(function() {
+            $(this).find('[data-component="modal"]').detach().insertAfter(this);
+        });
 	});
 })(jQuery);
