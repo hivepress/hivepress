@@ -62,7 +62,33 @@ class File extends Field {
 	/**
 	 * Sanitizes field value.
 	 */
-	protected function sanitize() {}
+	protected function sanitize() {
+		if ( ! is_array( $this->value ) || ! isset( $this->value['tmp_name'], $this->value['name'] ) ) {
+			$this->value = null;
+		}
+	}
+
+	/**
+	 * Validates field value.
+	 *
+	 * @return bool
+	 */
+	public function validate() {
+		if ( parent::validate() && ! is_null( $this->value ) && $this->formats ) {
+
+			// Check file format.
+			$file_type    = wp_check_filetype_and_ext( $this->value['tmp_name'], $this->value['name'] );
+			$file_formats = array_map( 'strtoupper', $this->formats );
+
+			if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+
+				/* translators: %s: file extensions. */
+				$this->add_errors( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
+			}
+		}
+
+		return ! $this->errors;
+	}
 
 	/**
 	 * Renders field HTML.

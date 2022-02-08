@@ -128,7 +128,7 @@ final class Listing extends Component {
 		// Get user vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => $listing->get_user__id(),
 			]
 		)->get_first();
@@ -163,7 +163,7 @@ final class Listing extends Component {
 				) ) {
 					return;
 				}
-			} elseif ( $vendor->get_status() === 'auto-draft' ) {
+			} elseif ( in_array( $vendor->get_status(), [ 'auto-draft', 'draft' ], true ) ) {
 
 				// Update vendor status.
 				$vendor->set_status( 'publish' )->save_status();
@@ -563,7 +563,13 @@ final class Listing extends Component {
 	 * @return array
 	 */
 	public function alter_listing_settings_meta_box( $meta_box ) {
-		if ( ! get_post_field( 'post_parent' ) && in_array( get_post_status(), [ 'draft', 'pending' ], true ) ) {
+
+		// Get vendor ID.
+		$vendor_id = absint( get_post_field( 'post_parent' ) );
+
+		if ( ! $vendor_id || get_post_status( $vendor_id ) !== 'publish' ) {
+
+			// Disable vendor field.
 			$meta_box['fields']['vendor'] = array_merge(
 				$meta_box['fields']['vendor'],
 				[

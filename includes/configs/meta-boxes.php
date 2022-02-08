@@ -150,12 +150,23 @@ return [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
 		'screen' => 'vendor',
 		'model'  => 'vendor',
+
 		'fields' => [
+			'user'     => [
+				'label'    => hivepress()->translator->get_string( 'user' ),
+				'type'     => 'select',
+				'options'  => 'users',
+				'source'   => hivepress()->router->get_url( 'users_resource' ),
+				'required' => true,
+				'_alias'   => 'post_author',
+				'_order'   => 10,
+			],
+
 			'verified' => [
 				'label'   => esc_html_x( 'Verified', 'vendor', 'hivepress' ),
 				'caption' => hivepress()->translator->get_string( 'mark_vendor_as_verified' ),
 				'type'    => 'checkbox',
-				'_order'  => 10,
+				'_order'  => 20,
 			],
 
 			'user'        => [

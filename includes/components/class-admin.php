@@ -48,14 +48,9 @@ final class Admin extends Component {
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
 		if ( is_admin() ) {
-			// Add plugin links.
-			add_filter( 'plugin_action_links_hivepress/hivepress.php', [ $this, 'plugin_action_links' ], 1 );
 
 			// Add admin pages.
 			add_action( 'admin_menu', [ $this, 'add_admin_pages' ] );
-
-			// Remove metaboxes.
-			add_action( 'do_meta_boxes', [ $this, 'remove_metaboxes' ] );
 
 			// Order admin pages.
 			add_filter( 'custom_menu_order', '__return_true' );
@@ -73,7 +68,8 @@ final class Admin extends Component {
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
 
 			// Manage meta boxes.
-			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
+			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
+			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
 			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
@@ -84,6 +80,9 @@ final class Admin extends Component {
 
 			// Enqueue scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+			// Render links.
+			add_filter( 'plugin_action_links_hivepress/hivepress.php', [ $this, 'render_links' ] );
 
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
@@ -125,7 +124,6 @@ final class Admin extends Component {
 		// Add pages.
 		add_menu_page( hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->get_name(), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], hivepress()->get_url() . '/assets/images/logo-light.svg' );
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
-		add_submenu_page( 'hp_settings', esc_html__( 'Tools', 'hivepress' ) . $title, esc_html__( 'Tools', 'hivepress' ), 'manage_options', 'hp_tools', [ $this, 'render_tools' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
 	}
@@ -191,10 +189,6 @@ final class Admin extends Component {
 					$extensions  = $this->get_extensions( $current_tab );
 				} elseif ( 'themes' === $template_name ) {
 					$themes = $this->get_themes();
-				} elseif ( 'tools' === $template_name ) {
-					$tabs              = $this->get_tools_tabs();
-					$current_tab       = $this->get_tools_tab();
-					$system_info_items = $this->get_tools_system_info();
 				}
 
 				include $template_path;
@@ -836,55 +830,6 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets settings tabs.
-	 *
-	 * @return array
-	 */
-	protected function get_tools_tabs() {
-		return array_map(
-			function( $tab ) {
-				return hp\get_array_value( $tab, 'title' );
-			},
-			hp\sort_array( hivepress()->get_config( 'tools' ) )
-		);
-	}
-
-	/**
-	 * Gets current settings tab.
-	 *
-	 * @return mixed
-	 */
-	protected function get_tools_tab() {
-		$current_tab = null;
-
-		// Get all tabs.
-		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'tools' ) ) );
-
-		$first_tab   = hp\get_first_array_value( $tabs );
-		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
-
-		// Set the default tab.
-		if ( ! in_array( $current_tab, $tabs, true ) ) {
-			$current_tab = $first_tab;
-		}
-
-		return $current_tab;
-	}
-
-	/**
-	 * Get system info for Tools settings.
-	 */
-	protected function get_tools_system_info() {
-
-		return $system_info_items = [
-			'PHP Version'       => phpversion(),
-			'WordPress Version' => get_bloginfo( 'version' ),
-			'Plugin Version'    => hivepress()->get_version(),
-		];
-
-	}
-
-	/**
 	 * Registers post states.
 	 */
 	public function register_post_states() {
@@ -983,12 +928,13 @@ final class Admin extends Component {
 	/**
 	 * Adds meta boxes.
 	 *
-	 * @param string $post_type Post type.
+	 * @param string  $post_type Post type.
+	 * @param WP_Post $post Post object.
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function add_meta_boxes( $post_type, $post ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
@@ -1001,22 +947,21 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Remove metaboxes.
+	 * Removes meta boxes.
 	 */
-	public function remove_metaboxes() {
-		$post_type = get_post_type();
+	public function remove_meta_boxes() {
 
 		// Check post type.
+		$post_type = get_post_type();
+
 		if ( strpos( $post_type, 'hp_' ) !== 0 ) {
 			return;
 		}
 
-		// Check meta box.
-		if ( ! array_key_exists( hp\unprefix( $post_type ) . '_images', hivepress()->get_config( 'meta_boxes' ) ) ) {
-			return;
+		// Remove meta box.
+		if ( array_key_exists( hp\unprefix( $post_type . '_images' ), hivepress()->get_config( 'meta_boxes' ) ) ) {
+			remove_meta_box( 'postimagediv', $post_type, 'side' );
 		}
-
-		remove_meta_box( 'postimagediv', $post_type, 'side' );
 	}
 
 	/**
@@ -1027,7 +972,7 @@ final class Admin extends Component {
 	public function update_meta_box( $post_id ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 
@@ -1404,6 +1349,21 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Renders links.
+	 *
+	 * @param array $links Links.
+	 * @return array
+	 */
+	public function render_links( $links ) {
+		return array_merge(
+			[
+				'settings' => '<a href="' . esc_url( admin_url( 'admin.php?page=hp_settings' ) ) . '">' . esc_html__( 'Settings', 'hivepress' ) . '</a>',
+			],
+			$links
+		);
+	}
+
+	/**
 	 * Renders notices.
 	 */
 	public function render_notices() {
@@ -1559,18 +1519,5 @@ final class Admin extends Component {
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Show action links on the plugin screen.
-	 *
-	 * @param mixed $links Plugin Action links.
-	 *
-	 * @return array
-	 */
-	public function plugin_action_links( $links ) {
-		$links['settings'] = '<a href="' . esc_url( admin_url( 'admin.php?page=hp_settings' ) ) . '">' . esc_html__( 'Settings', 'hivepress' ) . '</a>';
-
-		return $links;
 	}
 }

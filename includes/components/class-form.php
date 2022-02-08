@@ -399,6 +399,41 @@ final class Form extends Component {
 	}
 
 	/**
+	 * Gets timezones.
+	 *
+	 * @return array
+	 */
+	protected function get_timezones() {
+
+		// Load textdomain.
+		if ( ! is_textdomain_loaded( 'continents-cities' ) ) {
+			load_textdomain( 'continents-cities', WP_LANG_DIR . '/continents-cities-' . get_locale() . '.mo' );
+		}
+
+		// Get timezones.
+		$timezones = [];
+
+		foreach ( timezone_identifiers_list() as $name ) {
+			$labels = [];
+
+			foreach ( explode( '/', str_replace( '_', ' ', $name ) ) as $label ) {
+				$labels[] = translate( $label, 'continents-cities' );
+			}
+
+			if ( count( $labels ) > 1 ) {
+				array_shift( $labels );
+			}
+
+			$timezones[ $name ] = implode( ' - ', $labels );
+		}
+
+		// Sort timezones.
+		asort( $timezones );
+
+		return $timezones;
+	}
+
+	/**
 	 * Gets emails.
 	 *
 	 * @param array $args Email arguments.

@@ -31,6 +31,21 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// Modal
+		hivepress.getComponent('modal').each(function() {
+			var url = '#' + $(this).attr('id');
+
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
+				$.fancybox.close();
+				$.fancybox.open({
+					src: url,
+					touch: false,
+				});
+
+				e.preventDefault();
+			});
+		});
+
 		// Select
 		hivepress.getComponent('select').each(function() {
 			var field = $(this),
@@ -224,6 +239,31 @@ var hivepress = {
 
 					settings['disable'].push(disableDates);
 				}
+			}
+
+			if (field.data('ranges')) {
+				var ranges = field.data('ranges');
+
+				settings['onDayCreate'] = function(dObj, dStr, fp, dayElem) {
+					if (dayElem.className.includes('disabled')) {
+						return;
+					}
+
+					var time = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
+
+					$.each(ranges, function(index, range) {
+						if (range.start <= time && time < range.end) {
+							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
+							dayElem.className += ' flatpickr-status';
+
+							if (range.hasOwnProperty('status')) {
+								dayElem.className += ' flatpickr-status--' + range.status;
+							}
+
+							return false;
+						}
+					});
+				};
 			}
 
 			if (field.is('[data-offset]')) {
@@ -546,11 +586,11 @@ var hivepress = {
 							xAxes: [{
 								type: 'time',
 								time: {
-									tooltipFormat: 'll',
+									tooltipFormat: 'MMM D, YYYY',
 									unit: 'week',
 									displayFormats: {
-										'week': 'YYYY-MM-DD',
-                        			},
+										'week': 'MMM D, YYYY',
+									},
 								},
 							}],
 						},
@@ -562,18 +602,105 @@ var hivepress = {
 				});
 		});
 
-		// Modal
-		hivepress.getComponent('modal').each(function() {
-			var url = '#' + $(this).attr('id');
+		// Form
+		hivepress.getComponent('form').each(function() {
+			var form = $(this),
+				messageContainer = form.find(hivepress.getSelector('messages')).first(),
+				messageClass = messageContainer.attr('class').split(' ')[0],
+				captcha = form.find('.g-recaptcha'),
+				captchaId = $('.g-recaptcha').index(captcha.get(0)),
+				submitButton = form.find(':submit');
 
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
-				$.fancybox.close();
-				$.fancybox.open({
-					src: url,
-					touch: false,
+			if (form.data('autosubmit') === true) {
+				form.on('change', function() {
+					form.submit();
 				});
+			}
 
-				e.preventDefault();
+			form.on('submit', function(e) {
+				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
+				submitButton.prop('disabled', true);
+				submitButton.attr('data-state', 'loading');
+
+				if (typeof tinyMCE !== 'undefined') {
+					tinyMCE.triggerSave();
+				}
+
+				if (form.data('action')) {
+					$.ajax({
+						url: form.data('action'),
+						method: 'POST',
+						data: new FormData(form.get(0)),
+						contentType: false,
+						processData: false,
+						beforeSend: function(xhr) {
+							var method = form.data('method') ? form.data('method') : form.attr('method');
+
+							if (method !== 'POST') {
+								xhr.setRequestHeader('X-HTTP-Method-Override', method);
+							}
+
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
+						},
+						complete: function(xhr) {
+							var response = xhr.responseJSON,
+								redirect = form.data('redirect');
+
+							submitButton.prop('disabled', false);
+							submitButton.attr('data-state', '');
+
+							if (typeof grecaptcha !== 'undefined' && captcha.length) {
+								grecaptcha.reset(captchaId);
+							}
+
+							if (response == null || response.hasOwnProperty('data')) {
+								if (form.data('message') && xhr.status !== 307) {
+									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
+								}
+
+								if (redirect || xhr.status === 307) {
+									if (typeof redirect === 'string') {
+										window.location.replace(redirect);
+									} else {
+										window.location.reload(true);
+									}
+								} else if (form.data('reset') || !form.is('[data-id]')) {
+									form.trigger('reset');
+
+									form.find(hivepress.getSelector('file-upload')).each(function() {
+										var field = $(this),
+											selectLabel = field.closest('label'),
+											responseContainer = selectLabel.parent().children('div').first();
+
+										responseContainer.html('');
+									});
+								}
+							} else if (response.hasOwnProperty('error')) {
+								if (response.error.hasOwnProperty('errors')) {
+									$.each(response.error.errors, function(index, error) {
+										messageContainer.append('<div>' + error.message + '</div>');
+									});
+								} else if (response.error.hasOwnProperty('message')) {
+									messageContainer.html('<div>' + response.error.message + '</div>');
+								}
+
+								if (!messageContainer.is(':empty')) {
+									messageContainer.addClass(messageClass + '--error').show();
+								}
+							}
+
+							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
+								$('html, body').animate({
+									scrollTop: form.offset().top,
+								}, 500);
+							}
+						},
+					});
+
+					e.preventDefault();
+				}
 			});
 		});
 	});

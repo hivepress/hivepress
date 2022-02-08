@@ -71,15 +71,16 @@ final class Attribute extends Component {
 
 		if ( is_admin() ) {
 
-			// Add meta boxes.
+			// Manage meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
-
-			// Remove term boxes.
-			add_action( 'admin_notices', [ $this, 'remove_term_boxes' ] );
+			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 		} else {
 
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
+
+			// Disable Jetpack search.
+			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 		}
 	}
 
@@ -262,8 +263,6 @@ final class Attribute extends Component {
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
-						// todo.
-						'schema_property' => $attribute_object->hp_schema_property,
 					];
 
 					// Set icon.
@@ -1276,25 +1275,31 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Removes term boxes.
+	 * Removes meta boxes.
 	 */
-	public function remove_term_boxes() {
+	public function remove_meta_boxes() {
 		global $pagenow;
 
-		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) && in_array( get_post_type(), hp\prefix( $this->models ), true ) ) {
+		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 
-			// Get model.
-			$model = hp\unprefix( get_post_type() );
+			// Get post type.
+			$post_type = get_post_type();
 
-			// Get category IDs.
-			$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+			if ( in_array( $post_type, hp\prefix( $this->models ), true ) ) {
 
-			// Get attributes.
-			$attributes = $this->get_attributes( $model, $category_ids );
+				// Get model.
+				$model = hp\unprefix( $post_type );
 
-			foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-				if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
-					remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
+				// Get category IDs.
+				$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
+
+				// Get attributes.
+				$attributes = $this->get_attributes( $model, $category_ids );
+
+				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
+					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
+						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
+					}
 				}
 			}
 		}
@@ -1410,7 +1415,7 @@ final class Attribute extends Component {
 		}
 
 		// Filter results.
-		if ( $query->is_search ) {
+		if ( $query->is_search() ) {
 
 			// Get attribute fields.
 			$attribute_fields = [];
@@ -1523,15 +1528,15 @@ final class Attribute extends Component {
 			// Get featured IDs.
 			$featured_ids = get_posts(
 				[
-					'post_type'      => hp\prefix( $model ),
-					'post_status'    => 'publish',
-					's'              => $query->get( 's' ),
-					'tax_query'      => $tax_query,
-					'meta_query'     => $meta_query,
-					'meta_key'       => 'hp_featured',
-					'posts_per_page' => $featured_count,
-					'orderby'        => 'rand',
-					'fields'         => 'ids',
+					'post_type'        => hp\prefix( $model ),
+					'post_status'      => 'publish',
+					's'                => $query->get( 's' ),
+					'tax_query'        => $tax_query,
+					'meta_query'       => $meta_query,
+					'meta_key'         => 'hp_featured',
+					'posts_per_page'   => $featured_count,
+					'orderby'          => 'rand',
+					'fields'           => 'ids',
 					'suppress_filters' => false,
 				]
 			);
@@ -1549,5 +1554,20 @@ final class Attribute extends Component {
 		// Set meta and taxonomy queries.
 		$query->set( 'meta_query', $meta_query );
 		$query->set( 'tax_query', $tax_query );
+	}
+
+	/**
+	 * Disables Jetpack search.
+	 *
+	 * @param mixed    $enabled Search flag.
+	 * @param WP_Query $query Search query.
+	 * @return bool
+	 */
+	public function disable_jetpack_search( $enabled, $query ) {
+		if ( $query->is_main_query() && $query->is_search() && strpos( $query->get( 'post_type' ), 'hp_' ) === 0 ) {
+			$enabled = false;
+		}
+
+		return $enabled;
 	}
 }

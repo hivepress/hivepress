@@ -831,7 +831,7 @@ final class Listing extends Controller {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
 			[
-				'status' => [ 'auto-draft', 'publish' ],
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
 				'user'   => get_current_user_id(),
 			]
 		)->get_first();
@@ -864,6 +864,10 @@ final class Listing extends Controller {
 				]
 			) ) {
 				return home_url();
+			}
+
+			if ( get_option( 'hp_listing_enable_moderation' ) && ! $vendor->validate() ) {
+				$vendor->set_status( 'draft' )->save_status();
 			}
 		}
 

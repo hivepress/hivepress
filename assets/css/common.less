@@ -301,4 +301,93 @@ Mixins
 			}
 		}
 	}
+	/*--------------------------------------------------------------
+	Modals
+	--------------------------------------------------------------*/
+	&-modal {
+		display: none;
+		width: 380px;
+
+		&--mobile {
+			@media only screen and (min-width:48em) {
+				display: block;
+				width: auto;
+			}
+		}
+
+		&__title {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+
+	&-modal &-form {
+		&:not(:last-child) {
+			margin-bottom: 0;
+		}
+	}
+}
+/*--------------------------------------------------------------
+Flatpickr
+--------------------------------------------------------------*/
+.flatpickr {
+	&-status {
+		&::after {
+			content: '';
+			display: block;
+			position: absolute;
+			bottom: 2px;
+			left: calc(50% - 2px);
+			width: 4px;
+			height: 4px;
+			border-radius: 50%;
+			background-color: #ffb900;
+		}
+
+		&--success::after {
+			background-color: #46b450;
+		}
+
+		&--error::after {
+			background-color: #dc3232;
+		}
+	}
+
+	&-day {
+		&-label {
+			display: none;
+			position: absolute;
+			z-index: 1000;
+			left: calc(50% - 27px);
+			bottom: 40px;
+			padding: 0.25rem;
+			font-size: 0.625rem;
+			line-height: 1.5;
+			text-align: center;
+			background: rgba(0,0,0,0.75);
+			color: #fff;
+			font-weight: normal;
+			border-radius: 2px;
+			width: 54px;
+
+			&::after {
+				content: '';
+				display: block;
+				border: 4px solid transparent;
+				border-top-color: rgba(0,0,0,0.75);
+				position: absolute;
+				left: calc(50% - 4px);
+				bottom: -8px;
+			}
+		}
+
+		&:hover &-label {
+			display: block;
+		}
+	}
 }
