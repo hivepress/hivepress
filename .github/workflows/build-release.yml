@@ -1,0 +1,38 @@
+name: Build release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate POT
+        uses: hivepress/action-generate-pot@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: |
+          composer install -o --no-dev
+
+      - name: Pack release
+        run: |
+          rm -rf .git* composer.* phpcs.xml README.md
+          cd ..
+          zip -r release.zip ${{ github.event.repository.name }}
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ../release.zip
+          asset_name: ${{ github.event.repository.name }}.zip
+          asset_content_type: application/zip

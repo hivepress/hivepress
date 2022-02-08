@@ -1,0 +1,29 @@
+name: Compile assets
+
+on:
+  push:
+    branches: [ develop ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Compile LESS
+        uses: hivepress/action-compile-assets/less@v1.1.0
+        with:
+          target: 'assets/css/*.less'
+
+      - name: Minify assets
+        uses: hivepress/action-minify-assets@v2.1
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'HivePress'
+          git config --global user.email 'hivepress@users.noreply.github.com'
+          git diff --quiet HEAD || (git commit -am "Compile assets" && git push)
