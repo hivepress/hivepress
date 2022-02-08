@@ -8,10 +8,6 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
-use HivePress\Models;
-use HivePress\Forms;
-use HivePress\Blocks;
-use HivePress\Emails;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -53,14 +49,6 @@ final class Admin extends Controller {
 						'method' => 'POST',
 						'action' => [ $this, 'update_admin_notice' ],
 						'rest'   => true,
-					],
-
-					'admin_tools_page' => [
-						'url' => [ $this, 'get_admin_tools_url' ],
-						'match'    => [ $this, 'is_admin_tools_page' ],
-						'redirect' => [ $this, 'redirect_admin_tools_page' ],
-						'action'   => [ $this, 'render_admin_tools_page' ],
-						'rest' => true,
 					],
 				],
 			],
@@ -108,59 +96,5 @@ final class Admin extends Controller {
 				'name' => $notice_name,
 			]
 		);
-	}
-
-	/**
-	 * Matches admin tools page URL.
-	 *
-	 * @return bool
-	 */
-	public function is_admin_tools_page() {
-		return false;
-	}
-
-	/**
-	 * Redirects admin tools page.
-	 *
-	 * @return mixed
-	 */
-	public function redirect_admin_tools_page() {
-		global $pagenow;
-		error_log($pagenow);
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return hivepress()->router->get_return_url( 'user_login_page' );
-		}
-
-		// Check permissions.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return hp\rest_error( 403 );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Renders admin tools page.
-	 *
-	 * @return string
-	 */
-	public function render_admin_tools_page() {
-		return ( new Blocks\Template(
-			[
-				'template' => hivepress()->router->get_current_route_name(),
-			]
-		) )->render();
-	}
-
-	/**
-	 * Gets listing category view URL.
-	 *
-	 * @param array $params URL parameters.
-	 * @return string
-	 */
-	public function get_admin_tools_url() {
-		return 'Test text';
 	}
 }

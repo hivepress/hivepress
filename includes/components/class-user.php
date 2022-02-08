@@ -62,20 +62,6 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
-		}else{
-			// Add "Users" columns.
-			add_action('manage_users_columns', [ $this, 'add_columns_users' ]);
-
-			// Alter "Users" columns.
-			add_filter( 'manage_users_custom_column', [ $this,'alter_columns_users' ], 10, 3);
-
-			// Add "Verified" field to profile.
-			add_action( 'show_user_profile', [$this, 'add_profile_fields'] );
-			add_action( 'edit_user_profile', [$this, 'add_profile_fields'] );
-
-			// Change user meta data.
-			add_action( 'personal_options_update', [$this, 'save_profile_fields'] );
-			add_action( 'edit_user_profile_update', [$this, 'save_profile_fields'] );
 		}
 
 		parent::__construct( $args );
@@ -407,70 +393,5 @@ final class User extends Component {
 				],
 			]
 		);
-	}
-
-	/**
-	* Add "Users" columns.
-	*/
-	public function add_columns_users( $columns ) {
-		return array_merge(
-			array_slice( $columns, 0, 5, true ),
-			[
-				'hp_verified' => '',
-			],
-			array_slice( $columns, 5, null, true )
-		);
-	}
-
-	/**
-	* Alter "Users" columns.
-	*/
-	public function alter_columns_users( $output, $column_name, $user_id ) {
-
-		if( 'hp_verified' === $column_name && get_user_meta ( $user_id , 'hp_email_verify_key' ) ) {
-
-			$output = '<div class="hp-status hp-status--draft"><span>'.esc_html_x('Not Verfied', 'user' ,'hivepress').'</span></div>';
-
-		}
-
-		return $output;
-	}
-
-	/**
-	* Add "Verified" field to profile.
-	*/
-	public function add_profile_fields( $user ) {
-
-		if($user->hp_email_verify_key && current_user_can( 'edit_users' )){
-			$output = '<h3>'.esc_html__('Extra Profile Information', 'hivepress').'</h3>';
-			$output .= '<table class="form-table">
-			<tr>
-				<th>
-					<label for="hp_verified_user">'.esc_html__('Verified user', 'hivepress').'
-				</label></th>
-				<td>
-					<input type="checkbox" name="hp_verified_user" id="hp_verified_user" value="" class="regular-text" />
-				</td>
-			</tr>
-			</table>';
-			echo $output;
-		}
-
-	}
-
-	/**
-	* Change user meta data.
-	*/
-	public function save_profile_fields( $user_id ) {
-
-		// Check permissions.
-		if ( !current_user_can( 'edit_users' ) ){
-			return;
-		}
-
-		// Delete verification key.
-		if(hp\get_array_value($_POST, 'hp_verified_user') && get_user_meta( $user_id, 'hp_email_verify_key', true )){
-			delete_user_meta($user_id, 'hp_email_verify_key');
-		}
 	}
 }

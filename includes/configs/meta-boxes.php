@@ -168,15 +168,6 @@ return [
 				'type'    => 'checkbox',
 				'_order'  => 20,
 			],
-
-			'user'        => [
-				'label'    => esc_html__( 'User', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'users',
-				'required' => true,
-				'_alias'   => 'post_author',
-				'_order'   => 20,
-			],
 		],
 	],
 ];

@@ -279,6 +279,7 @@ abstract class Field {
 				}
 			}
 		}
+
 		static::_set_meta( $meta );
 	}
 
