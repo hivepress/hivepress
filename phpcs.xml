@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="HivePress">
+	<description>HivePress coding standards.</description>
+
+	<exclude-pattern>vendor/*</exclude-pattern>
+
+	<rule ref="WordPress"/>
+
+	<config name="testVersion" value="7.0-"/>
+	<rule ref="PHPCompatibility"/>
+
+	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+		<severity>0</severity>
+	</rule>
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
+</ruleset>
