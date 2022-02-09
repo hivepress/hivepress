@@ -36,3 +36,17 @@ jobs:
           asset_path: ../release.zip
           asset_name: ${{ github.event.repository.name }}.zip
           asset_content_type: application/zip
+
+  update-code-reference:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build code reference
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: Build code reference
+          repo: hivepress/code-reference
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          ref: refs/heads/main
+          inputs: '{ "version": "${{ github.event.release.tag_name }}" }'
