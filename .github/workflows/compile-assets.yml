@@ -24,6 +24,6 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --global user.name 'HivePress'
-          git config --global user.email 'hivepress@users.noreply.github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git diff --quiet HEAD || (git commit -am "Compile assets" && git push)
