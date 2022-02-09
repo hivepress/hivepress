@@ -16,7 +16,7 @@ jobs:
       - name: Build code reference
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
-          workflow: build-code-reference
+          workflow: Build code reference
           repo: hivepress/code-reference
           token: ${{ secrets.PERSONAL_TOKEN }}
           ref: refs/heads/main
