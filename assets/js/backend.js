@@ -95,5 +95,8 @@
 			this.select();
 			document.execCommand('copy');
 		});
+
+		// Detect modal.
+        $('form#post, form#edittag').find('[data-component="modal"]').detach().insertAfter('form#post, form#edittag');
 	});
 })(jQuery);
