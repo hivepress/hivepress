@@ -1,0 +1,21 @@
+name: Update code reference
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build code reference
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: build-code-reference
+          repo: hivepress/code-reference
+          token: ${{ secrets.CUSTOM_GH_TOKEN }}
+          ref: refs/heads/master
+          inputs: '{ "version": "${{ github.event.release.tag_name }}" }'
