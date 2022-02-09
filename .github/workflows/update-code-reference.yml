@@ -20,4 +20,4 @@ jobs:
           repo: hivepress/code-reference
           token: ${{ secrets.PERSONAL_TOKEN }}
           ref: refs/heads/main
-          inputs: '{ "version": "1.5.13" }'
+          inputs: '{ "version": "${{ github.event.release.tag_name }}" }'
