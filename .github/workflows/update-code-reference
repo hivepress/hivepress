@@ -1,0 +1,23 @@
+name: Update code reference
+
+on:
+  workflow_run:
+    workflows: ["Build release"]
+    types:
+      - completed
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build code reference
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: build-code-reference
+          repo: hivepress/code-reference
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          ref: refs/heads/main
+          inputs: '{ "version": "1.5.13" }'
