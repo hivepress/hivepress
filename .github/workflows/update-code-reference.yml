@@ -1,8 +1,10 @@
 name: Update code reference
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Build release"]
+    types:
+      - completed
 
   workflow_dispatch:
 
@@ -16,6 +18,6 @@ jobs:
         with:
           workflow: build-code-reference
           repo: hivepress/code-reference
-          token: ${{ secrets.CUSTOM_GH_TOKEN }}
-          ref: refs/heads/master
-          inputs: '{ "version": "${{ github.event.release.tag_name }}" }'
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          ref: refs/heads/main
+          inputs: '{ "version": "1.5.13" }'
