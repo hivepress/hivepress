@@ -1,4 +1,4 @@
-name: Check standards
+name: Check coding standards
 
 on:
   push:
