@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Hook component class.
- *
- * @class Hook
+ * Implements integration with WordPress hooks.
  */
 final class Hook extends Component {
 

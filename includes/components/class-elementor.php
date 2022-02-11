@@ -14,9 +14,7 @@ use HivePress\Integrations;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Elementor component class.
- *
- * @class Elementor
+ * Implements integration with Elementor.
  */
 final class Elementor extends Component {
 

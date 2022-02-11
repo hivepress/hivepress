@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Translator component class.
- *
- * @class Translator
+ * Handles translations.
  */
 final class Translator extends Component {
 

@@ -27,7 +27,7 @@ class Section extends Container {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Property values.
+	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(

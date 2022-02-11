@@ -16,9 +16,7 @@ use HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User component class.
- *
- * @class User
+ * Handles users.
  */
 final class User extends Component {
 

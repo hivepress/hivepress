@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Form component class.
- *
- * @class Form
+ * Handles forms.
  */
 final class Form extends Component {
 

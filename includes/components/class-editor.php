@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Editor component class.
- *
- * @class Editor
+ * Implements integration with Gutenberg.
  */
 final class Editor extends Component {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Email component class.
- *
- * @class Email
+ * Handles emails.
  */
 final class Email extends Component {
 

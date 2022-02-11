@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Router component class.
- *
- * @class Router
+ * Handles URL routing.
  */
 final class Router extends Component {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Cache component class.
- *
- * @class Cache
+ * Handles caching.
  */
 final class Cache extends Component {
 

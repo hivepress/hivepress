@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WooCommerce component class.
- *
- * @class WooCommerce
+ * Implements integration with WooCommerce.
  */
 final class WooCommerce extends Component {
 

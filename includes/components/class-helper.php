@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Helper component class.
- *
- * @class Helper
+ * Implements a facade for HivePress helpers.
  */
 final class Helper extends Component {
 

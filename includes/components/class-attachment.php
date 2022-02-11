@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment component class.
- *
- * @class Attachment
+ * Handles file attachments.
  */
 final class Attachment extends Component {
 

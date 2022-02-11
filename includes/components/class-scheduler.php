@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Scheduler component class.
- *
- * @class Scheduler
+ * Handles event scheduling.
  */
 final class Scheduler extends Component {
 

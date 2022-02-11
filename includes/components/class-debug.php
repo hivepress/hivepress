@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Debug component class.
- *
- * @class Debug
+ * Implements integration with developer tools.
  */
 final class Debug extends Component {
 

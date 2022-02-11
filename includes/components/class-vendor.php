@@ -15,9 +15,7 @@ use HivePress\Forms;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor component class.
- *
- * @class Vendor
+ * Handles vendors.
  */
 final class Vendor extends Component {
 

@@ -66,7 +66,7 @@ abstract class Block {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Property values.
+	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
 
@@ -79,7 +79,7 @@ abstract class Block {
 			 * @filter /blocks/{$type}
 			 * @description Filters block arguments.
 			 * @param string $type Block type.
-			 * @param array $args Property values.
+			 * @param array $args Block arguments.
 			 * @param object $object Block object.
 			 */
 			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );

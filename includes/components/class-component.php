@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract component class.
- *
- * @class Component
  */
 abstract class Component {
 	use Traits\Mutator;

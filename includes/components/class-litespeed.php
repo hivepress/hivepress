@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LiteSpeed component class.
- *
- * @class LiteSpeed
+ * Implements integration with LiteSpeed Cache.
  */
 final class LiteSpeed extends Component {
 

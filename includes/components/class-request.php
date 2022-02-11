@@ -15,9 +15,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Request component class.
- *
- * @class Request
+ * Handles the request context.
  */
 final class Request extends Component {
 	use Traits\Context;

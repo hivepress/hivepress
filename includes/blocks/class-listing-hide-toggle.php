@@ -20,7 +20,7 @@ class Listing_Hide_Toggle extends Toggle {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Property values.
+	 * @param array $args Block arguments.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(

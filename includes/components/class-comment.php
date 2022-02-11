@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Comment component class.
- *
- * @class Comment
+ * Handles comments.
  */
 final class Comment extends Component {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Model component class.
- *
- * @class Model
+ * Handles models.
  */
 final class Model extends Component {
 
