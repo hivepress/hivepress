@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Context trait.
- *
- * @trait Context
+ * Implements object context.
  */
 trait Context {
 

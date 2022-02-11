@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Meta trait.
- *
- * @trait Meta
+ * Implements class meta.
  */
 trait Meta {
 

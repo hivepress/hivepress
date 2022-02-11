@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Mutator trait.
- *
- * @trait Mutator
+ * Implements property mutation.
  */
 trait Mutator {
 
