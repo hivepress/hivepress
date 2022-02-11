@@ -83,7 +83,7 @@ final class Hook extends Component {
 	}
 
 	/**
-	 * Checks import status.
+	 * Checks if import started.
 	 *
 	 * @return bool
 	 */

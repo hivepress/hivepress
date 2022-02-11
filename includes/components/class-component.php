@@ -41,7 +41,7 @@ abstract class Component {
 	protected function boot() {}
 
 	/**
-	 * Sets callbacks.
+	 * Sets the action and filter callbacks.
 	 *
 	 * @param array $callbacks Callback arguments.
 	 */

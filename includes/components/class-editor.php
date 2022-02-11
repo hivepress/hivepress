@@ -20,7 +20,7 @@ final class Editor extends Component {
 	/**
 	 * Registered blocks.
 	 *
-	 * @var mixed
+	 * @var array
 	 */
 	protected $blocks;
 
@@ -47,7 +47,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Checks preview mode.
+	 * Checks if preview mode is enabled.
 	 *
 	 * @return bool
 	 */
@@ -205,7 +205,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Enqueues styles.
+	 * Enqueues editor styles.
 	 */
 	public function enqueue_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {

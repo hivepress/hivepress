@@ -57,7 +57,7 @@ final class Cache extends Component {
 	}
 
 	/**
-	 * Checks cache status.
+	 * Checks if cache is enabled.
 	 *
 	 * @return bool
 	 */
@@ -168,7 +168,7 @@ final class Cache extends Component {
 	 * @param mixed  $key Cache key.
 	 * @param string $group Cache group.
 	 * @param mixed  $value Cache value.
-	 * @param int    $expiration Expiration period.
+	 * @param int    $expiration Expiration period in seconds.
 	 */
 	public function set_cache( $key, $group, $value, $expiration = 0 ) {
 
@@ -200,7 +200,7 @@ final class Cache extends Component {
 	 * @param mixed  $key Cache key.
 	 * @param string $group Cache group.
 	 * @param mixed  $value Cache value.
-	 * @param int    $expiration Expiration period.
+	 * @param int    $expiration Expiration period in seconds.
 	 */
 	protected function set_meta_cache( $type, $id, $key, $group, $value, $expiration = DAY_IN_SECONDS ) {
 
@@ -426,7 +426,7 @@ final class Cache extends Component {
 	}
 
 	/**
-	 * Sorts cache key.
+	 * Sorts cache key contents.
 	 *
 	 * @param mixed $key Cache key.
 	 * @return mixed
@@ -552,7 +552,7 @@ final class Cache extends Component {
 	 *
 	 * @param int    $post_id Post ID.
 	 * @param string $post_type Post type.
-	 * @param string $taxonomy Taxonomy.
+	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function clear_post_term_cache( $post_id, $post_type, $taxonomy ) {
 
@@ -569,7 +569,7 @@ final class Cache extends Component {
 	 * Clears term cache.
 	 *
 	 * @param int    $term_id Term ID.
-	 * @param string $taxonomy Taxonomy.
+	 * @param string $taxonomy Taxonomy name.
 	 */
 	public function clear_term_cache( $term_id, $taxonomy ) {
 

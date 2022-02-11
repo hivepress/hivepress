@@ -277,7 +277,7 @@ final class User extends Component {
 	}
 
 	/**
-	 * Adds profile fields.
+	 * Adds admin profile fields.
 	 *
 	 * @param WP_User $user User object.
 	 */
@@ -313,7 +313,7 @@ final class User extends Component {
 	}
 
 	/**
-	 * Updates profile fields.
+	 * Updates admin profile fields.
 	 *
 	 * @param int $user_id User ID.
 	 */

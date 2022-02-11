@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 final class WooCommerce extends Component {
 
 	/**
-	 * Array of WooCommerce objects.
+	 * WooCommerce objects.
 	 *
 	 * @var array
 	 */
@@ -75,11 +75,11 @@ final class WooCommerce extends Component {
 	/**
 	 * Gets WooCommerce configuration.
 	 *
-	 * @param string $type Configuration type.
+	 * @param string $name Configuration name.
 	 * @return array
 	 */
-	public function get_config( $type ) {
-		return hp\get_array_value( hivepress()->get_config( 'woocommerce' ), $type, [] );
+	public function get_config( $name ) {
+		return hp\get_array_value( hivepress()->get_config( 'woocommerce' ), $name, [] );
 	}
 
 	/**
@@ -325,9 +325,9 @@ final class WooCommerce extends Component {
 	}
 
 	/**
-	 * Sets account template.
+	 * Sets account page template.
 	 *
-	 * @param string $path Template path.
+	 * @param string $path Template filepath.
 	 * @param string $name Template name.
 	 * @return string
 	 */

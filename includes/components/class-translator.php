@@ -43,7 +43,7 @@ final class Translator extends Component {
 	 * Gets translation string.
 	 *
 	 * @param string $key String key.
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_string( $key ) {
 		return hp\get_array_value( hivepress()->get_config( 'strings' ), $key );

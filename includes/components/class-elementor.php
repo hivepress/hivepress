@@ -46,7 +46,7 @@ final class Elementor extends Component {
 	}
 
 	/**
-	 * Registers categories.
+	 * Registers widget categories.
 	 *
 	 * @param object $manager Category manager.
 	 */

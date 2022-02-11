@@ -44,7 +44,7 @@ final class Debug extends Component {
 	}
 
 	/**
-	 * Checks debug status.
+	 * Checks if debug is enabled.
 	 *
 	 * @return bool
 	 */

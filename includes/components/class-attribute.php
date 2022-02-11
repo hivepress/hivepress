@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
 final class Attribute extends Component {
 
 	/**
-	 * Array of models.
+	 * Model names.
 	 *
 	 * @var array
 	 */
 	protected $models = [];
 
 	/**
-	 * Array of attributes.
+	 * Model attributes.
 	 *
 	 * @var array
 	 */
@@ -655,7 +655,7 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Updates model snippet.
+	 * Updates model search snippet.
 	 *
 	 * @param int    $model_id Model ID.
 	 * @param object $model Model object.
@@ -984,7 +984,7 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Sets category value.
+	 * Sets category field value.
 	 *
 	 * @param array  $form_args Form arguments.
 	 * @param object $form Form object.
@@ -1011,7 +1011,7 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Sets range values.
+	 * Sets number range field values.
 	 *
 	 * @param array  $form_args Form arguments.
 	 * @param object $form Form object.
@@ -1304,7 +1304,7 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Sets search query.
+	 * Sets WP search query.
 	 *
 	 * @param WP_Query $query Search query.
 	 */

@@ -124,7 +124,7 @@ final class Email extends Component {
 	}
 
 	/**
-	 * Disables editor settings.
+	 * Disables email editor settings.
 	 *
 	 * @param array  $settings Settings.
 	 * @param string $editor Editor ID.
@@ -144,7 +144,7 @@ final class Email extends Component {
 	}
 
 	/**
-	 * Renders email details.
+	 * Renders email details for admins.
 	 *
 	 * @param array $meta_box Meta box arguments.
 	 * @return array
