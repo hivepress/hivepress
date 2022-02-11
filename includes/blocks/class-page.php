@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Page block class.
- *
- * @class Page
+ * Renders a page.
  */
 class Page extends Container {
 

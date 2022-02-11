@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Widgets block class.
- *
- * @class Widgets
+ * Renders a widget area.
  */
 class Widgets extends Block {
 

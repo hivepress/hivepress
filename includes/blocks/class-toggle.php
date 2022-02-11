@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Toggle block class.
- *
- * @class Toggle
+ * Renders a toggle link.
  */
 class Toggle extends Block {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing search form block class.
- *
- * @class Listing_Search_Form
+ * Renders the listing search form.
  */
 class Listing_Search_Form extends Form {
 

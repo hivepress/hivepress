@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendors block class.
- *
- * @class Vendors
+ * Renders vendors.
  */
 class Vendors extends Block {
 

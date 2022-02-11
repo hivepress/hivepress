@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor search form block class.
- *
- * @class Vendor_Search_Form
+ * Renders the vendor search form.
  */
 class Vendor_Search_Form extends Form {
 

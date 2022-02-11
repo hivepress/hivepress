@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Part block class.
- *
- * @class Part
+ * Renders a template part.
  */
 class Part extends Block {
 

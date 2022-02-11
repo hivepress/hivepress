@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User register form block class.
- *
- * @class User_Register_Form
+ * Renders the user registration form.
  */
 class User_Register_Form extends Form {
 

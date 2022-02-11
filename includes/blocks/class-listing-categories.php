@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing categories block class.
- *
- * @class Listing_Categories
+ * Renders listing categories.
  */
 class Listing_Categories extends Block {
 

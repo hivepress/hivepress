@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User password reset form block class.
- *
- * @class User_Password_Reset_Form
+ * Renders the password reset form.
  */
 class User_Password_Reset_Form extends Form {
 

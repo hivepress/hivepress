@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Results block class.
- *
- * @class Results
+ * Wraps and renders query results.
  */
 class Results extends Container {
 

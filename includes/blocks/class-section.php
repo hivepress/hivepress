@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Section block class.
- *
- * @class Section
+ * Renders a section of blocks.
  */
 class Section extends Container {
 

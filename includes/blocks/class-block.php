@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract block class.
- *
- * @class Block
  */
 abstract class Block {
 	use Traits\Mutator;

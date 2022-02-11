@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Form block class.
- *
- * @class Form
+ * Renders a form.
  */
 class Form extends Block {
 
