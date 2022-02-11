@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing hide toggle block class.
- *
- * @class Listing_Hide_Toggle
+ * Renders the listing hide toggle.
  */
 class Listing_Hide_Toggle extends Toggle {
 

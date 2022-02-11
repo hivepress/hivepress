@@ -2,8 +2,6 @@
 /**
  * Vendor view block template.
  *
- * @template vendor_view_block
- * @description Vendor block in view context.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor view block template class.
- *
- * @class Vendor_View_Block
+ * Vendor block in view context.
  */
 class Vendor_View_Block extends Template {
 

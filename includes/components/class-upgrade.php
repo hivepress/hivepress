@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Upgrade component class.
- *
- * @class Upgrade
+ * Handles the database upgrades.
  */
 final class Upgrade extends Component {
 

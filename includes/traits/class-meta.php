@@ -13,21 +13,19 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Meta trait.
- *
- * @trait Meta
+ * Implements class meta.
  */
 trait Meta {
 
 	/**
-	 * Meta values.
+	 * Class meta values.
 	 *
 	 * @var array
 	 */
 	protected static $meta = [];
 
 	/**
-	 * Sets meta values.
+	 * Sets class meta values.
 	 *
 	 * @param array $meta Meta values.
 	 */
@@ -36,7 +34,7 @@ trait Meta {
 	}
 
 	/**
-	 * Gets meta values.
+	 * Gets class meta values.
 	 *
 	 * @param string $name Meta name.
 	 * @return mixed

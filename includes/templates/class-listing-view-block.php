@@ -2,8 +2,6 @@
 /**
  * Listing view block template.
  *
- * @template listing_view_block
- * @description Listing block in view context.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing view block template class.
- *
- * @class Listing_View_Block
+ * Listing block in view context.
  */
 class Listing_View_Block extends Template {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit page template class.
- *
- * @class Listing_Submit_Page
+ * Base listing submission page.
  */
 abstract class Listing_Submit_Page extends Page_Wide {
 

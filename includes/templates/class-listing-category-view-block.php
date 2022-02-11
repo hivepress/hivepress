@@ -2,8 +2,6 @@
 /**
  * Listing category view block template.
  *
- * @template listing_category_view_block
- * @description Listing category block in view context.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing category view block template class.
- *
- * @class Listing_Category_View_Block
+ * Listing category block in view context.
  */
 class Listing_Category_View_Block extends Template {
 

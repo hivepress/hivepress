@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit email class.
- *
- * @class Listing_Submit
+ * Sent to admins when a new listing is submitted.
  */
 class Listing_Submit extends Email {
 

@@ -14,9 +14,7 @@ use HivePress\Blocks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Template component class.
- *
- * @class Template
+ * Handles template rendering.
  */
 final class Template extends Component {
 

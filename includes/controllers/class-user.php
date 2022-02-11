@@ -18,9 +18,7 @@ use HivePress\Emails;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User controller class.
- *
- * @class User
+ * Manages users.
  */
 final class User extends Controller {
 

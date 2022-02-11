@@ -16,9 +16,7 @@ use HivePress\Blocks;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor controller class.
- *
- * @class Vendor
+ * Manages vendors.
  */
 final class Vendor extends Controller {
 

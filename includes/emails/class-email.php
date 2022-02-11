@@ -16,8 +16,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract email class.
- *
- * @class Email
  */
 abstract class Email {
 	use Traits\Mutator;
@@ -62,7 +60,7 @@ abstract class Email {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Email meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

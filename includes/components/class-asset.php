@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Asset component class.
- *
- * @class Asset
+ * Handles static assets.
  */
 final class Asset extends Component {
 

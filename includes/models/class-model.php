@@ -162,7 +162,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Routes static methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
@@ -180,7 +180,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.

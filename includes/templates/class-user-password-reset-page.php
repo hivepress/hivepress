@@ -2,8 +2,6 @@
 /**
  * User password reset page template.
  *
- * @template user_password_reset_page
- * @description User password reset page.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User password reset page template class.
- *
- * @class User_Password_Reset_Page
+ * Password reset page.
  */
 class User_Password_Reset_Page extends Page_Narrow {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Router component class.
- *
- * @class Router
+ * Handles URL routing.
  */
 final class Router extends Component {
 
@@ -29,7 +27,7 @@ final class Router extends Component {
 	/**
 	 * The current route.
 	 *
-	 * @var mixed
+	 * @var array
 	 */
 	protected $route;
 
@@ -99,7 +97,7 @@ final class Router extends Component {
 	 * Gets route.
 	 *
 	 * @param string $name Route name.
-	 * @return mixed
+	 * @return array
 	 */
 	public function get_route( $name ) {
 		return hp\get_array_value( $this->get_routes(), $name );
@@ -108,7 +106,7 @@ final class Router extends Component {
 	/**
 	 * Gets the current route.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function get_current_route() {
 		if ( ! isset( $this->route ) ) {
@@ -144,7 +142,7 @@ final class Router extends Component {
 	/**
 	 * Gets the current route name.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_current_route_name() {
 		return hp\get_array_value( $this->get_current_route(), 'name' );
@@ -498,7 +496,7 @@ final class Router extends Component {
 	/**
 	 * Sets page template.
 	 *
-	 * @param array $template Template file.
+	 * @param array $template Template filepath.
 	 * @return string
 	 */
 	public function set_page_template( $template ) {

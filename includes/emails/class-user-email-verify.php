@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User email verify email class.
- *
- * @class User_Email_Verify
+ * Sent to users if email verification is required.
  */
 class User_Email_Verify extends Email {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

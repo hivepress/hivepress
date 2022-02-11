@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User account page template class.
- *
- * @class User_Account_Page
+ * Base user account page.
  */
 class User_Account_Page extends Page_Sidebar_Left {
 

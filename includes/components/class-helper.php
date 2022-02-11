@@ -13,14 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Helper component class.
- *
- * @class Helper
+ * Implements a facade for HivePress helpers.
  */
 final class Helper extends Component {
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.

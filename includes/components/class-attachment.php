@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment component class.
- *
- * @class Attachment
+ * Handles file attachments.
  */
 final class Attachment extends Component {
 
@@ -46,7 +44,7 @@ final class Attachment extends Component {
 	}
 
 	/**
-	 * Sets parent ID.
+	 * Sets the attachment parent ID.
 	 *
 	 * @param array $attachment Attachment arguments.
 	 * @param array $args Query arguments.
@@ -121,7 +119,7 @@ final class Attachment extends Component {
 	}
 
 	/**
-	 * Generates unique filename.
+	 * Generates a unique filename.
 	 *
 	 * @param string $filename Filename.
 	 * @param string $ext Extension.

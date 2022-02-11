@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Model component class.
- *
- * @class Model
+ * Handles models.
  */
 final class Model extends Component {
 
@@ -24,7 +22,7 @@ final class Model extends Component {
 	 *
 	 * @param string $type Model type.
 	 * @param string $alias Model alias.
-	 * @return mixed
+	 * @return string
 	 */
 	public function get_model_name( $type, $alias ) {
 		foreach ( hivepress()->get_classes( 'models' ) as $model ) {
@@ -39,7 +37,7 @@ final class Model extends Component {
 	 *
 	 * @param string $model Model name.
 	 * @param int    $id Object ID.
-	 * @return mixed
+	 * @return object
 	 */
 	public function get_model_object( $model, $id ) {
 		$object = null;

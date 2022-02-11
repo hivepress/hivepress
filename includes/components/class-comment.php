@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Comment component class.
- *
- * @class Comment
+ * Handles comments.
  */
 final class Comment extends Component {
 
@@ -64,7 +62,7 @@ final class Comment extends Component {
 	}
 
 	/**
-	 * Filters comment query.
+	 * Filters comment WP query.
 	 *
 	 * @param WP_Comment_Query $query Comment query.
 	 */
@@ -96,7 +94,7 @@ final class Comment extends Component {
 	}
 
 	/**
-	 * Filters comment feed.
+	 * Filters comment RSS feed.
 	 *
 	 * @param string $where Where clause.
 	 * @return string
@@ -225,7 +223,7 @@ final class Comment extends Component {
 	}
 
 	/**
-	 * Disables notifications.
+	 * Disables email notifications.
 	 *
 	 * @param bool $notify Notification flag.
 	 * @param int  $comment_id Comment ID.

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Narrow page template class.
- *
- * @class Page_Narrow
+ * Base narrow page.
  */
 abstract class Page_Narrow extends Page {
 

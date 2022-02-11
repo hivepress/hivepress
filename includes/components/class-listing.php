@@ -15,9 +15,7 @@ use HivePress\Emails;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing component class.
- *
- * @class Listing
+ * Handles listings.
  */
 final class Listing extends Component {
 

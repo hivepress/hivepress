@@ -15,9 +15,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Request component class.
- *
- * @class Request
+ * Handles the request context.
  */
 final class Request extends Component {
 	use Traits\Context;
@@ -39,7 +37,7 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Gets parameter values.
+	 * Gets query parameters.
 	 *
 	 * @return array
 	 */
@@ -64,7 +62,7 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Gets parameter value.
+	 * Gets query parameter.
 	 *
 	 * @param string $name Parameter name.
 	 * @return mixed
@@ -74,7 +72,7 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Sets context value.
+	 * Sets object context value.
 	 *
 	 * @param string $name Context name.
 	 * @param mixed  $value Context value.
@@ -94,6 +92,8 @@ final class Request extends Component {
 
 	/**
 	 * Gets the current user.
+	 *
+	 * @return object
 	 */
 	public function get_user() {
 		return $this->get_context( 'user' );
@@ -101,6 +101,8 @@ final class Request extends Component {
 
 	/**
 	 * Gets the current page number.
+	 *
+	 * @return int
 	 */
 	public function get_page_number() {
 		if ( ! $this->get_context( 'page_number' ) ) {
@@ -114,7 +116,7 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Sets request context.
+	 * Sets the current request context.
 	 */
 	public function set_request_context() {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Menu block class.
- *
- * @class Menu
+ * Renders a menu.
  */
 class Menu extends Block {
 
@@ -27,7 +25,7 @@ class Menu extends Block {
 	protected $menu;
 
 	/**
-	 * Menu attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */

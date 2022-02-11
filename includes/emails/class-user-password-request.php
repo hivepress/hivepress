@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User password request email class.
- *
- * @class User_Password_Request
+ * Sent to users for resetting password.
  */
 class User_Password_Request extends Email {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

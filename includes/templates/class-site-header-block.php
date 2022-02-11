@@ -2,8 +2,6 @@
 /**
  * Site header block template.
  *
- * @template site_header_block
- * @description Site header block.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Site header block template class.
- *
- * @class Site_Header_Block
+ * Site header block (for menus).
  */
 class Site_Header_Block extends Template {
 

@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing categories block class.
- *
- * @class Listing_Categories
+ * Renders listing categories.
  */
 class Listing_Categories extends Block {
 
@@ -42,7 +40,7 @@ class Listing_Categories extends Block {
 	protected $number;
 
 	/**
-	 * Listing category parent.
+	 * Listing category parent ID.
 	 *
 	 * @var int
 	 */
@@ -58,7 +56,7 @@ class Listing_Categories extends Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

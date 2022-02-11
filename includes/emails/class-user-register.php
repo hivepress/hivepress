@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User register email class.
- *
- * @class User_Register
+ * Sent to users on account registration.
  */
 class User_Register extends Email {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

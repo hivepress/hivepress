@@ -2,8 +2,6 @@
 /**
  * Listing edit page template.
  *
- * @template listing_edit_page
- * @description Listing page in edit context.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing edit page template class.
- *
- * @class Listing_Edit_Page
+ * Listing page in edit context.
  */
 class Listing_Edit_Page extends Listing_Manage_Page {
 

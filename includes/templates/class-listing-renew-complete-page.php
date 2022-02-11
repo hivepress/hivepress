@@ -2,8 +2,6 @@
 /**
  * Listing renew complete page template.
  *
- * @template listing_renew_complete_page
- * @description Listing renewal page (completed).
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing renew complete page template class.
- *
- * @class Listing_Renew_Complete_Page
+ * Listing renewal page (completion step).
  */
 class Listing_Renew_Complete_Page extends Listing_Renew_Page {
 

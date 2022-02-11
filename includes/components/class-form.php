@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Form component class.
- *
- * @class Form
+ * Handles forms.
  */
 final class Form extends Component {
 
@@ -109,7 +107,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets user options.
+	 * Gets user objects.
 	 *
 	 * @param array $args User arguments.
 	 * @param mixed $value Current value.
@@ -137,7 +135,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets post options.
+	 * Gets post objects.
 	 *
 	 * @param array $args Post arguments.
 	 * @param mixed $value Current value.
@@ -191,7 +189,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets term options.
+	 * Gets term objects.
 	 *
 	 * @param array $args Term arguments.
 	 * @param mixed $value Current value.
@@ -301,7 +299,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets form options.
+	 * Gets form names.
 	 *
 	 * @param array $args Form arguments.
 	 * @param mixed $value Current value.
@@ -322,7 +320,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets field options.
+	 * Gets field names.
 	 *
 	 * @param array $args Field arguments.
 	 * @param mixed $value Current value.
@@ -343,7 +341,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets MIME type options.
+	 * Gets MIME types.
 	 *
 	 * @param array $args MIME type arguments.
 	 * @param mixed $value Current value.
@@ -354,7 +352,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets templates.
+	 * Gets template names.
 	 *
 	 * @param array $args Template arguments.
 	 * @param mixed $value Current value.
@@ -375,7 +373,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets days.
+	 * Gets days of the week.
 	 *
 	 * @param array $args Day arguments.
 	 * @param mixed $value Current value.
@@ -399,7 +397,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets timezones.
+	 * Gets time zones.
 	 *
 	 * @return array
 	 */
@@ -434,7 +432,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Gets emails.
+	 * Gets email names.
 	 *
 	 * @param array $args Email arguments.
 	 * @param mixed $value Current value.
@@ -455,7 +453,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Checks captcha status.
+	 * Checks if captcha is enabled.
 	 *
 	 * @return bool
 	 */
@@ -464,9 +462,9 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Sets captcha.
+	 * Sets captcha flag.
 	 *
-	 * @param string $meta Form meta.
+	 * @param string $meta Class meta.
 	 * @return array
 	 */
 	public function set_captcha( $meta ) {
@@ -480,7 +478,7 @@ final class Form extends Component {
 	}
 
 	/**
-	 * Adds captcha.
+	 * Adds captcha field.
 	 *
 	 * @param array  $args Form arguments.
 	 * @param object $form Form object.

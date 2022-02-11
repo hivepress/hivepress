@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing approve email class.
- *
- * @class Listing_Approve
+ * Sent to users when a listing is approved.
  */
 class Listing_Approve extends Email {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

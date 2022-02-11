@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Editor component class.
- *
- * @class Editor
+ * Implements integration with Gutenberg.
  */
 final class Editor extends Component {
 
 	/**
 	 * Registered blocks.
 	 *
-	 * @var mixed
+	 * @var array
 	 */
 	protected $blocks;
 
@@ -49,7 +47,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Checks preview mode.
+	 * Checks if preview mode is enabled.
 	 *
 	 * @return bool
 	 */
@@ -177,7 +175,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
@@ -207,7 +205,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Enqueues styles.
+	 * Enqueues editor styles.
 	 */
 	public function enqueue_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {

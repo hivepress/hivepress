@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract template class.
- *
- * @class Template
  */
 abstract class Template {
 	use Traits\Mutator;
@@ -123,7 +121,7 @@ abstract class Template {
 	}
 
 	/**
-	 * Sets context value.
+	 * Sets object context value.
 	 *
 	 * @param string $name Context name.
 	 * @param mixed  $value Context value.

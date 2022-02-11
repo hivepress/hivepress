@@ -14,21 +14,19 @@ use HivePress\Fields;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin component class.
- *
- * @class Admin
+ * Implements integration with WordPress admin.
  */
 final class Admin extends Component {
 
 	/**
-	 * Array of meta boxes.
+	 * Meta boxes.
 	 *
 	 * @var array
 	 */
 	protected $meta_boxes = [];
 
 	/**
-	 * Array of post states.
+	 * Post states.
 	 *
 	 * @var array
 	 */
@@ -165,7 +163,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
@@ -459,7 +457,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets settings tabs.
+	 * Gets settings page tabs.
 	 *
 	 * @return array
 	 */
@@ -473,9 +471,9 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets current settings tab.
+	 * Gets current settings page tab.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	protected function get_settings_tab() {
 		$current_tab = null;
@@ -495,7 +493,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets themes.
+	 * Gets HivePress themes.
 	 *
 	 * @return array
 	 */
@@ -614,7 +612,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets extensions.
+	 * Gets HivePress extensions.
 	 *
 	 * @param string $status Extensions status.
 	 * @return array
@@ -762,7 +760,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets extensions tabs.
+	 * Gets extensions page tabs.
 	 *
 	 * @return array
 	 */
@@ -808,9 +806,9 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets current extensions tab.
+	 * Gets current extensions page tab.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	protected function get_extensions_tab() {
 		$current_tab = null;
@@ -1349,9 +1347,9 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Renders links.
+	 * Renders plugin links.
 	 *
-	 * @param array $links Links.
+	 * @param array $links Plugin links.
 	 * @return array
 	 */
 	public function render_links( $links ) {

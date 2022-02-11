@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Form block class.
- *
- * @class Form
+ * Renders a form.
  */
 class Form extends Block {
 
@@ -27,35 +25,35 @@ class Form extends Block {
 	protected $form;
 
 	/**
-	 * Form redirect.
+	 * Redirect URL.
 	 *
 	 * @var mixed
 	 */
 	protected $redirect;
 
 	/**
-	 * Form values.
+	 * Field values.
 	 *
 	 * @var array
 	 */
 	protected $values = [];
 
 	/**
-	 * Form attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
 	protected $attributes = [];
 
 	/**
-	 * Form header.
+	 * Header blocks.
 	 *
 	 * @var array
 	 */
 	protected $header = [];
 
 	/**
-	 * Form footer.
+	 * Footer blocks.
 	 *
 	 * @var array
 	 */

@@ -15,9 +15,7 @@ use League\OAuth2\Client\Grant;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Google component class.
- *
- * @class Google
+ * Implements integration with Google APIs.
  */
 final class Google extends Component {
 

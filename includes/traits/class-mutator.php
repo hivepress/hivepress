@@ -13,14 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Mutator trait.
- *
- * @trait Mutator
+ * Implements property mutation.
  */
 trait Mutator {
 
 	/**
-	 * Sets property.
+	 * Sets a property value.
 	 *
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.

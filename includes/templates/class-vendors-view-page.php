@@ -2,8 +2,6 @@
 /**
  * Vendors view page template.
  *
- * @template vendors_view_page
- * @description Vendors page in view context.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendors view page template class.
- *
- * @class Vendors_View_Page
+ * Vendors page in view context.
  */
 class Vendors_View_Page extends Page_Sidebar_Left {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Callback block class.
- *
- * @class Callback
+ * Renders the callback result.
  */
 class Callback extends Block {
 

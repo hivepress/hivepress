@@ -23,7 +23,7 @@ if ( ! defined( 'HP_FILE' ) ) {
 require_once __DIR__ . '/includes/class-core.php';
 
 /**
- * Returns the core instance.
+ * Returns HivePress core instance.
  *
  * @return HivePress\Core
  */

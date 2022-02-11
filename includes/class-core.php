@@ -14,53 +14,51 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * HivePress core class.
- *
- * @class Core
  */
 final class Core {
 
 	/**
-	 * The single instance of the class.
+	 * The single class instance.
 	 *
 	 * @var Core
 	 */
 	protected static $instance;
 
 	/**
-	 * Array of HivePress extensions.
+	 * HivePress extensions.
 	 *
 	 * @var array
 	 */
 	protected $extensions = [];
 
 	/**
-	 * Array of HivePress configurations.
+	 * HivePress configurations.
 	 *
 	 * @var array
 	 */
 	protected $configs = [];
 
 	/**
-	 * Array of HivePress objects.
+	 * HivePress objects.
 	 *
 	 * @var array
 	 */
 	protected $objects = [];
 
 	/**
-	 * Array of HivePress classes.
+	 * HivePress classes.
 	 *
 	 * @var array
 	 */
 	protected $classes = [];
 
 	/**
-	 * Forbid cloning instance.
+	 * Forbid cloning instances.
 	 */
 	protected function __clone() {}
 
 	/**
-	 * Forbid unserializing instance.
+	 * Forbids unserializing instances.
 	 *
 	 * @throws \BadMethodCallException Invalid method.
 	 */
@@ -90,7 +88,7 @@ final class Core {
 	}
 
 	/**
-	 * Ensures only one instance is loaded.
+	 * Returns the single class instance.
 	 *
 	 * @see hivepress()
 	 * @return Core
@@ -104,7 +102,7 @@ final class Core {
 	}
 
 	/**
-	 * Autoloads classes.
+	 * Autoloads HivePress classes.
 	 *
 	 * @param string $class Class name.
 	 */
@@ -134,7 +132,7 @@ final class Core {
 	}
 
 	/**
-	 * Activates HivePress.
+	 * Activates HivePress plugin.
 	 */
 	public static function activate() {
 
@@ -143,7 +141,7 @@ final class Core {
 	}
 
 	/**
-	 * Deactivates HivePress.
+	 * Deactivates HivePress plugin.
 	 */
 	public static function deactivate() {
 
@@ -157,7 +155,7 @@ final class Core {
 	}
 
 	/**
-	 * Installs HivePress.
+	 * Installs HivePress plugin.
 	 */
 	public function install() {
 		if ( get_option( 'hp_core_activated' ) || count( $this->extensions ) !== absint( get_option( 'hp_extensions_number' ) ) ) {
@@ -206,7 +204,7 @@ final class Core {
 	}
 
 	/**
-	 * Setups HivePress.
+	 * Setups HivePress plugin.
 	 */
 	public function setup() {
 
@@ -235,7 +233,7 @@ final class Core {
 	}
 
 	/**
-	 * Setups extensions.
+	 * Setups HivePress extensions.
 	 */
 	protected function setup_extensions() {
 
@@ -290,7 +288,7 @@ final class Core {
 	}
 
 	/**
-	 * Loads textdomains.
+	 * Loads text domains.
 	 */
 	protected function load_textdomains() {
 		foreach ( $this->get_paths() as $dir ) {
@@ -302,7 +300,7 @@ final class Core {
 	}
 
 	/**
-	 * Loads packages.
+	 * Loads Composer packages.
 	 */
 	protected function load_packages() {
 		foreach ( $this->get_paths() as $dir ) {
@@ -315,12 +313,12 @@ final class Core {
 	}
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
 	 * @throws \BadMethodCallException Invalid method.
-	 * @return array
+	 * @return mixed
 	 */
 	public function __call( $name, $args ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
@@ -377,17 +375,17 @@ final class Core {
 	}
 
 	/**
-	 * Routes properties.
+	 * Catches getting undefined properties.
 	 *
 	 * @param string $name Property name.
-	 * @return object
+	 * @return mixed
 	 */
 	public function __get( $name ) {
 		return hp\get_array_value( $this->get_components(), $name );
 	}
 
 	/**
-	 * Gets HivePress paths.
+	 * Gets HivePress filepaths.
 	 *
 	 * @return array
 	 */
@@ -398,18 +396,18 @@ final class Core {
 	/**
 	 * Gets HivePress configuration.
 	 *
-	 * @param string $type Configuration type.
+	 * @param string $name Configuration name.
 	 * @return array
 	 */
-	public function get_config( $type ) {
-		if ( ! isset( $this->configs[ $type ] ) ) {
-			$this->configs[ $type ] = [];
+	public function get_config( $name ) {
+		if ( ! isset( $this->configs[ $name ] ) ) {
+			$this->configs[ $name ] = [];
 
 			foreach ( $this->get_paths() as $dir ) {
-				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $type ) . '.php';
+				$filepath = $dir . '/includes/configs/' . hp\sanitize_slug( $name ) . '.php';
 
 				if ( file_exists( $filepath ) ) {
-					$this->configs[ $type ] = hp\merge_arrays( $this->configs[ $type ], include $filepath );
+					$this->configs[ $name ] = hp\merge_arrays( $this->configs[ $name ], include $filepath );
 				}
 			}
 
@@ -421,38 +419,38 @@ final class Core {
 			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies", "strings".
 			 * @param array $args Configuration arguments.
 			 */
-			$this->configs[ $type ] = apply_filters( 'hivepress/v1/' . $type, $this->configs[ $type ] );
+			$this->configs[ $name ] = apply_filters( 'hivepress/v1/' . $name, $this->configs[ $name ] );
 		}
 
-		return $this->configs[ $type ];
+		return $this->configs[ $name ];
 	}
 
 	/**
 	 * Gets HivePress classes.
 	 *
-	 * @param string $type Class type.
+	 * @param string $namespace Class namespace.
 	 * @return array
 	 */
-	public function get_classes( $type ) {
-		if ( ! isset( $this->classes[ $type ] ) ) {
-			$this->classes[ $type ] = [];
+	public function get_classes( $namespace ) {
+		if ( ! isset( $this->classes[ $namespace ] ) ) {
+			$this->classes[ $namespace ] = [];
 
 			foreach ( $this->get_paths() as $dir ) {
-				foreach ( glob( $dir . '/includes/' . $type . '/*.php' ) as $filepath ) {
+				foreach ( glob( $dir . '/includes/' . $namespace . '/*.php' ) as $filepath ) {
 
 					// Get name.
 					$name = str_replace( '-', '_', preg_replace( '/^class-/', '', basename( $filepath, '.php' ) ) );
 
 					// Get class.
-					$class = '\HivePress\\' . $type . '\\' . $name;
+					$class = '\HivePress\\' . $namespace . '\\' . $name;
 
 					if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
-						$this->classes[ $type ][ $name ] = $class;
+						$this->classes[ $namespace ][ $name ] = $class;
 					}
 				}
 			}
 		}
 
-		return $this->classes[ $type ];
+		return $this->classes[ $namespace ];
 	}
 }

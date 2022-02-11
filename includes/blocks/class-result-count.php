@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Result count block class.
- *
- * @class Result_Count
+ * Renders the query result count.
  */
 class Result_Count extends Block {
 

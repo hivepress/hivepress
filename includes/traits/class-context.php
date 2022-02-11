@@ -13,21 +13,19 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Context trait.
- *
- * @trait Context
+ * Implements object context.
  */
 trait Context {
 
 	/**
-	 * Context values.
+	 * Object context values.
 	 *
 	 * @var array
 	 */
 	protected $context = [];
 
 	/**
-	 * Gets context values.
+	 * Gets object context values.
 	 *
 	 * @param string $name Context name.
 	 * @param mixed  $default Default value.

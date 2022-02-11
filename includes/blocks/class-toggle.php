@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Toggle block class.
- *
- * @class Toggle
+ * Renders a toggle link.
  */
 class Toggle extends Block {
 
@@ -27,14 +25,14 @@ class Toggle extends Block {
 	protected $view = 'link';
 
 	/**
-	 * Toggle icon.
+	 * Icon name.
 	 *
 	 * @var string
 	 */
 	protected $icon;
 
 	/**
-	 * Toggle URL.
+	 * Request URL.
 	 *
 	 * @var string
 	 */
@@ -55,14 +53,14 @@ class Toggle extends Block {
 	protected $states = [];
 
 	/**
-	 * Toggle attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
 	protected $attributes = [];
 
 	/**
-	 * Active flag.
+	 * Is toggle active?
 	 *
 	 * @var bool
 	 */

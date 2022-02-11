@@ -2,8 +2,6 @@
 /**
  * User edit settings page template.
  *
- * @template user_edit_settings_page
- * @description User page in edit context (settings).
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User edit settings page template class.
- *
- * @class User_Edit_Settings_Page
+ * User account settings page.
  */
 class User_Edit_Settings_Page extends User_Account_Page {
 

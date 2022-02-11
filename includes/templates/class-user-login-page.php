@@ -2,8 +2,6 @@
 /**
  * User login page template.
  *
- * @template user_login_page
- * @description User login page.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User login page template class.
- *
- * @class User_Login_Page
+ * User login page.
  */
 class User_Login_Page extends Page_Narrow {
 

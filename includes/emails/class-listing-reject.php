@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing reject email class.
- *
- * @class Listing_Reject
+ * Sent to users when a listing is rejected.
  */
 class Listing_Reject extends Email {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

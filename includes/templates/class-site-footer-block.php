@@ -2,8 +2,6 @@
 /**
  * Site footer block template.
  *
- * @template site_footer_block
- * @description Site footer block.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Site footer block template class.
- *
- * @class Site_Footer_Block
+ * Site footer block (for modals).
  */
 class Site_Footer_Block extends Template {
 

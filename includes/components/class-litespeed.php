@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * LiteSpeed component class.
- *
- * @class LiteSpeed
+ * Implements integration with LiteSpeed Cache.
  */
 final class LiteSpeed extends Component {
 
@@ -38,7 +36,7 @@ final class LiteSpeed extends Component {
 	}
 
 	/**
-	 * Disables login cache.
+	 * Disables user login cache.
 	 */
 	public function disable_login_cache() {
 		add_filter( 'litespeed_can_change_vary', '__return_true' );

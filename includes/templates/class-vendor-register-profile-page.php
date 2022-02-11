@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor register profile page template class.
- *
- * @class Vendor_Register_Profile_Page
+ * Vendor registration page (profile details step).
  */
 class Vendor_Register_Profile_Page extends Vendor_Register_Page {
 

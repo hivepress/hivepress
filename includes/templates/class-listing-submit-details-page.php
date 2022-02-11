@@ -2,8 +2,6 @@
 /**
  * Listing submit details page template.
  *
- * @template listing_submit_details_page
- * @description Listing submission page (details).
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit details page template class.
- *
- * @class Listing_Submit_Details_Page
+ * Listing submission page (listing details step).
  */
 class Listing_Submit_Details_Page extends Listing_Submit_Page {
 

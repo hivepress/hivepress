@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User register form block class.
- *
- * @class User_Register_Form
+ * Renders the user registration form.
  */
 class User_Register_Form extends Form {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

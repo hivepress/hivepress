@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract component class.
- *
- * @class Component
  */
 abstract class Component {
 	use Traits\Mutator;
@@ -43,7 +41,7 @@ abstract class Component {
 	protected function boot() {}
 
 	/**
-	 * Sets callbacks.
+	 * Sets the action and filter callbacks.
 	 *
 	 * @param array $callbacks Callback arguments.
 	 */

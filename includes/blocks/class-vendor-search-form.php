@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor search form block class.
- *
- * @class Vendor_Search_Form
+ * Renders the vendor search form.
  */
 class Vendor_Search_Form extends Form {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

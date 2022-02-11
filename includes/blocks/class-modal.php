@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Modal block class.
- *
- * @class Modal
+ * Renders a modal window.
  */
 class Modal extends Container {
 

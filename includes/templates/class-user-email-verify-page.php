@@ -2,8 +2,6 @@
 /**
  * User email verify page template.
  *
- * @template user_email_verify_page
- * @description User email verify page.
  * @package HivePress\Templates
  */
 
@@ -15,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User email verify page template class.
- *
- * @class User_Email_Verify_Page
+ * Email verification page.
  */
 class User_Email_Verify_Page extends Page_Narrow {
 
