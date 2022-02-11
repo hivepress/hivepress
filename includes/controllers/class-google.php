@@ -38,13 +38,13 @@ final class Google extends Controller {
 					'google_oauth_grant_access_action'  => [
 						'base'     => 'google_oauth_base',
 						'path'     => '/grant-access',
-						'redirect' => [ $this, 'google_oauth_grant_access' ],
+						'redirect' => [ $this, 'grant_access' ],
 					],
 
 					'google_oauth_revoke_access_action' => [
 						'base'     => 'google_oauth_base',
 						'path'     => '/revoke-access',
-						'redirect' => [ $this, 'google_oauth_revoke_access' ],
+						'redirect' => [ $this, 'revoke_access' ],
 					],
 				],
 			],
@@ -59,7 +59,7 @@ final class Google extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function google_oauth_grant_access() {
+	public function grant_access() {
 
 		// Check authorization.
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -126,7 +126,7 @@ final class Google extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function google_oauth_revoke_access() {
+	public function revoke_access() {
 
 		// Check authorization.
 		if ( ! current_user_can( 'manage_options' ) ) {

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User register email class.
- *
- * @class User_Register
+ * Sent to users on account registration.
  */
 class User_Register extends Email {
 

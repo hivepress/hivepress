@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing reject email class.
- *
- * @class Listing_Reject
+ * Sent to users when a listing is rejected.
  */
 class Listing_Reject extends Email {
 

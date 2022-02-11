@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor register email class.
- *
- * @class Vendor_Register
+ * Sent to admins when a new vendor is registered.
  */
 class Vendor_Register extends Email {
 

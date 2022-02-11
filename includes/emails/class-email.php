@@ -16,8 +16,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract email class.
- *
- * @class Email
  */
 abstract class Email {
 	use Traits\Mutator;

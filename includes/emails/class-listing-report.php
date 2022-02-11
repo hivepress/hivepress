@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing report email class.
- *
- * @class Listing_Report
+ * Sent to admins when a listing is reported.
  */
 class Listing_Report extends Email {
 

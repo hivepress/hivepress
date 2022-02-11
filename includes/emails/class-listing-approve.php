@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing approve email class.
- *
- * @class Listing_Approve
+ * Sent to users when a listing is approved.
  */
 class Listing_Approve extends Email {
 

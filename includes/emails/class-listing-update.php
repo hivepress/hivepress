@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing update email class.
- *
- * @class Listing_Update
+ * Sent to admins when moderated listing details are changed.
  */
 class Listing_Update extends Email {
 
