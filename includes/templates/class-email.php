@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Email template class.
- *
- * @class Email
+ * Base email template.
  */
 class Email extends Template {
 

@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Site header block template class.
- *
- * @class Site_Header_Block
+ * Site header block (for menus).
  */
 class Site_Header_Block extends Template {
 

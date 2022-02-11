@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing categories view page template class.
- *
- * @class Listing_Categories_View_Page
+ * Listing categories page in view context.
  */
 class Listing_Categories_View_Page extends Page_Wide {
 

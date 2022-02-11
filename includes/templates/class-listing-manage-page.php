@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing manage page template class.
- *
- * @class Listing_Manage_Page
+ * Base listing page.
  */
 abstract class Listing_Manage_Page extends Page_Wide {
 

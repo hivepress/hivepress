@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing renew page template class.
- *
- * @class Listing_Renew_Page
+ * Base listing renewal page.
  */
 abstract class Listing_Renew_Page extends Page_Wide {
 

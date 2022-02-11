@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendors view page template class.
- *
- * @class Vendors_View_Page
+ * Vendors page in view context.
  */
 class Vendors_View_Page extends Page_Sidebar_Left {
 

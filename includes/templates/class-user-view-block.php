@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User view block template class.
- *
- * @class User_View_Block
+ * User block in view context.
  */
 class User_View_Block extends Template {
 

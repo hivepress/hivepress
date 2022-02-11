@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Wide page template class.
- *
- * @class Page_Wide
+ * Base wide page.
  */
 abstract class Page_Wide extends Page {
 

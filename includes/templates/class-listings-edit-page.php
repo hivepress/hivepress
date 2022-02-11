@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listings edit page template class.
- *
- * @class Listings_Edit_Page
+ * Listings page in edit context.
  */
 class Listings_Edit_Page extends User_Account_Page {
 

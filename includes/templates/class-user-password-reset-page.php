@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User password reset page template class.
- *
- * @class User_Password_Reset_Page
+ * Password reset page.
  */
 class User_Password_Reset_Page extends Page_Narrow {
 

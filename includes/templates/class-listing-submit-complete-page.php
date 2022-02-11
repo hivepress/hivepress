@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit complete page template class.
- *
- * @class Listing_Submit_Complete_Page
+ * Listing submission page (completion step).
  */
 class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 

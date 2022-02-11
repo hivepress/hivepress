@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listings view page template class.
- *
- * @class Listings_View_Page
+ * Listings page in view context.
  */
 class Listings_View_Page extends Page_Sidebar_Left {
 

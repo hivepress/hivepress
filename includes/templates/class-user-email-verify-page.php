@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User email verify page template class.
- *
- * @class User_Email_Verify_Page
+ * Email verification page.
  */
 class User_Email_Verify_Page extends Page_Narrow {
 

@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract template class.
- *
- * @class Template
  */
 abstract class Template {
 	use Traits\Mutator;

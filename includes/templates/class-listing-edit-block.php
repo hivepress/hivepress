@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing edit block template class.
- *
- * @class Listing_Edit_Block
+ * Listing block in edit context.
  */
 class Listing_Edit_Block extends Template {
 

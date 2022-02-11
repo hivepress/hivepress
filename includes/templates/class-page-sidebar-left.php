@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Left sidebar page template class.
- *
- * @class Page_Sidebar_Left
+ * Base page with left sidebar.
  */
 abstract class Page_Sidebar_Left extends Page {
 

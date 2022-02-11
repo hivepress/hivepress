@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit category page template class.
- *
- * @class Listing_Submit_Category_Page
+ * Listing submission page (category selection step).
  */
 class Listing_Submit_Category_Page extends Listing_Submit_Page {
 

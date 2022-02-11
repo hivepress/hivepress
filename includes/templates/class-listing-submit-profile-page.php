@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit profile page template class.
- *
- * @class Listing_Submit_Profile_Page
+ * Listing submission page (profile details step).
  */
 class Listing_Submit_Profile_Page extends Listing_Submit_Page {
 

@@ -15,9 +15,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Site footer block template class.
- *
- * @class Site_Footer_Block
+ * Site footer block (for modals).
  */
 class Site_Footer_Block extends Template {
 
