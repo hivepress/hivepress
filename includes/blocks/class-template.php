@@ -25,7 +25,7 @@ class Template extends Block {
 	protected $template;
 
 	/**
-	 * Template blocks.
+	 * Custom blocks.
 	 *
 	 * @var array
 	 */

@@ -25,7 +25,7 @@ class Menu extends Block {
 	protected $menu;
 
 	/**
-	 * Menu attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */

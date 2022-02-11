@@ -25,35 +25,35 @@ class Form extends Block {
 	protected $form;
 
 	/**
-	 * Form redirect.
+	 * Redirect URL.
 	 *
 	 * @var mixed
 	 */
 	protected $redirect;
 
 	/**
-	 * Form values.
+	 * Field values.
 	 *
 	 * @var array
 	 */
 	protected $values = [];
 
 	/**
-	 * Form attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
 	protected $attributes = [];
 
 	/**
-	 * Form header.
+	 * Header blocks.
 	 *
 	 * @var array
 	 */
 	protected $header = [];
 
 	/**
-	 * Form footer.
+	 * Footer blocks.
 	 *
 	 * @var array
 	 */

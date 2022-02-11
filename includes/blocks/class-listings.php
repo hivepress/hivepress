@@ -40,7 +40,7 @@ class Listings extends Block {
 	protected $number;
 
 	/**
-	 * Listings category.
+	 * Listing category ID.
 	 *
 	 * @var int
 	 */
@@ -54,21 +54,21 @@ class Listings extends Block {
 	protected $order;
 
 	/**
-	 * Featured flag.
+	 * Show featured only?
 	 *
 	 * @var bool
 	 */
 	protected $featured;
 
 	/**
-	 * Verified flag.
+	 * Show verified only?
 	 *
 	 * @var bool
 	 */
 	protected $verified;
 
 	/**
-	 * Container attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
@@ -77,7 +77,7 @@ class Listings extends Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -152,7 +152,7 @@ class Listings extends Block {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $args Property values.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(

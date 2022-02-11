@@ -34,7 +34,7 @@ abstract class Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -54,7 +54,7 @@ abstract class Block {
 			 * @filter /blocks/{$type}/meta
 			 * @description Filters block meta.
 			 * @param string $type Block type.
-			 * @param array $meta Block meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -66,7 +66,7 @@ abstract class Block {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $args Property values.
 	 */
 	public function __construct( $args = [] ) {
 
@@ -79,7 +79,7 @@ abstract class Block {
 			 * @filter /blocks/{$type}
 			 * @description Filters block arguments.
 			 * @param string $type Block type.
-			 * @param array $args Block arguments.
+			 * @param array $args Property values.
 			 * @param object $object Block object.
 			 */
 			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
@@ -100,7 +100,7 @@ abstract class Block {
 	protected function boot() {}
 
 	/**
-	 * Sets meta values.
+	 * Sets class meta values.
 	 *
 	 * @param array $meta Meta values.
 	 */
@@ -128,7 +128,7 @@ abstract class Block {
 	}
 
 	/**
-	 * Sets context value.
+	 * Sets object context value.
 	 *
 	 * @param string $name Context name.
 	 * @param mixed  $value Context value.

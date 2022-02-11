@@ -123,7 +123,7 @@ abstract class Template {
 	}
 
 	/**
-	 * Sets context value.
+	 * Sets object context value.
 	 *
 	 * @param string $name Context name.
 	 * @param mixed  $value Context value.

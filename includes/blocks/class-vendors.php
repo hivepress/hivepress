@@ -40,14 +40,14 @@ class Vendors extends Block {
 	protected $order;
 
 	/**
-	 * Verified flag.
+	 * Show verified only?
 	 *
 	 * @var bool
 	 */
 	protected $verified;
 
 	/**
-	 * Container attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
@@ -56,7 +56,7 @@ class Vendors extends Block {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -117,7 +117,7 @@ class Vendors extends Block {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $args Property values.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(

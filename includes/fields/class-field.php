@@ -256,7 +256,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets meta values.
+	 * Sets class meta values.
 	 *
 	 * @param array $meta Meta values.
 	 */

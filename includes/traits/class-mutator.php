@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 trait Mutator {
 
 	/**
-	 * Sets property.
+	 * Sets a property value.
 	 *
 	 * @param string $name Property name.
 	 * @param mixed  $value Property value.

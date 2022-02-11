@@ -20,7 +20,7 @@ class User_Register_Form extends Form {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Block meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -44,7 +44,7 @@ class User_Register_Form extends Form {
 	/**
 	 * Class constructor.
 	 *
-	 * @param array $args Block arguments.
+	 * @param array $args Property values.
 	 */
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(

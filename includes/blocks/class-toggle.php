@@ -25,14 +25,14 @@ class Toggle extends Block {
 	protected $view = 'link';
 
 	/**
-	 * Toggle icon.
+	 * Icon name.
 	 *
 	 * @var string
 	 */
 	protected $icon;
 
 	/**
-	 * Toggle URL.
+	 * Request URL.
 	 *
 	 * @var string
 	 */
@@ -53,14 +53,14 @@ class Toggle extends Block {
 	protected $states = [];
 
 	/**
-	 * Toggle attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
 	protected $attributes = [];
 
 	/**
-	 * Active flag.
+	 * Is toggle active?
 	 *
 	 * @var bool
 	 */

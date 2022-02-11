@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class Widgets extends Block {
 
 	/**
-	 * Widget area.
+	 * Widget area name.
 	 *
 	 * @var string
 	 */

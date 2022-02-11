@@ -18,21 +18,21 @@ defined( 'ABSPATH' ) || exit;
 class Container extends Block {
 
 	/**
-	 * Container tag.
+	 * HTML tag.
 	 *
 	 * @var string
 	 */
 	protected $tag = 'div';
 
 	/**
-	 * Optional flag.
+	 * Render only if not empty?
 	 *
 	 * @var bool
 	 */
 	protected $optional = false;
 
 	/**
-	 * Container attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
@@ -46,14 +46,14 @@ class Container extends Block {
 	protected $blocks = [];
 
 	/**
-	 * Container header.
+	 * Header blocks.
 	 *
 	 * @var array
 	 */
 	protected $header = [];
 
 	/**
-	 * Container footer.
+	 * Footer blocks.
 	 *
 	 * @var array
 	 */

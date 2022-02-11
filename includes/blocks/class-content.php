@@ -13,12 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Renders the provided content.
+ * Renders HTML content.
  */
 class Content extends Block {
 
 	/**
-	 * Block content.
+	 * HTML content.
 	 *
 	 * @var string
 	 */
