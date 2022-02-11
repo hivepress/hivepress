@@ -68,7 +68,7 @@ final class Cache extends Component {
 	}
 
 	/**
-	 * Routes methods.
+	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
