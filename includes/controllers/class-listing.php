@@ -17,9 +17,7 @@ use HivePress\Emails;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing controller class.
- *
- * @class Listing
+ * Manages listings.
  */
 final class Listing extends Controller {
 

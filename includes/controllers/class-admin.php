@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin controller class.
- *
- * @class Admin
+ * Manages WP admin.
  */
 final class Admin extends Controller {
 

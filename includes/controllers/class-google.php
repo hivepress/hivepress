@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Google controller class.
- *
- * @class Google
+ * Manages Google APIs.
  */
 final class Google extends Controller {
 

@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract controller class.
- *
- * @class Controller
  */
 abstract class Controller {
 	use Traits\Mutator;

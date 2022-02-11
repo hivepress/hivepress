@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment controller class.
- *
- * @class Attachment
+ * Manages file attachments.
  */
 final class Attachment extends Controller {
 
