@@ -2,8 +2,6 @@
 /**
  * Vendors view page template.
  *
- * @template vendors_view_page
- * @description Vendors page in view context.
  * @package HivePress\Templates
  */
 

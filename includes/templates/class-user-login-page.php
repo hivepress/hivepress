@@ -2,8 +2,6 @@
 /**
  * User login page template.
  *
- * @template user_login_page
- * @description User login page.
  * @package HivePress\Templates
  */
 

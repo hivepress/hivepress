@@ -2,8 +2,6 @@
 /**
  * Listing renew complete page template.
  *
- * @template listing_renew_complete_page
- * @description Listing renewal page (completed).
  * @package HivePress\Templates
  */
 

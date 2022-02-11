@@ -2,8 +2,6 @@
 /**
  * User email verify page template.
  *
- * @template user_email_verify_page
- * @description User email verify page.
  * @package HivePress\Templates
  */
 

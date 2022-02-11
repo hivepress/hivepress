@@ -2,8 +2,6 @@
 /**
  * Listing view block template.
  *
- * @template listing_view_block
- * @description Listing block in view context.
  * @package HivePress\Templates
  */
 

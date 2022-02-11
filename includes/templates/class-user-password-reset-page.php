@@ -2,8 +2,6 @@
 /**
  * User password reset page template.
  *
- * @template user_password_reset_page
- * @description User password reset page.
  * @package HivePress\Templates
  */
 

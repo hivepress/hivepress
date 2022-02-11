@@ -2,8 +2,6 @@
 /**
  * Site footer block template.
  *
- * @template site_footer_block
- * @description Site footer block.
  * @package HivePress\Templates
  */
 

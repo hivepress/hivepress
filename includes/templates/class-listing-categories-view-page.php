@@ -2,8 +2,6 @@
 /**
  * Listing categories view page template.
  *
- * @template listing_categories_view_page
- * @description Listing catrgories page in view context.
  * @package HivePress\Templates
  */
 
