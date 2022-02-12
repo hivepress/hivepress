@@ -22,7 +22,7 @@ abstract class Comment extends Model {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Model meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
