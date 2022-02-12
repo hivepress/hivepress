@@ -125,7 +125,7 @@ abstract class Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -162,12 +162,12 @@ abstract class Field {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters field meta.
+			 * Filters Class meta values.
 			 *
 			 * @filter /fields/{$type}/meta
-			 * @description Filters field meta.
+			 * @description Filters Class meta values.
 			 * @param string $type Field type.
-			 * @param array $meta Field meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
