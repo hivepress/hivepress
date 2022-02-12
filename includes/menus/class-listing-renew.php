@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing renew menu class.
- *
- * @class Listing_Renew
+ * Listing renewal steps.
  */
 class Listing_Renew extends Menu {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Menu meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

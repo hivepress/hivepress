@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing submit menu class.
- *
- * @class Listing_Submit
+ * Listing submission steps.
  */
 class Listing_Submit extends Menu {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Menu meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
