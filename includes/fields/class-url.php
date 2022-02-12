@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * URL field class.
- *
- * @class URL
+ * URL.
  */
 class URL extends Text {
 

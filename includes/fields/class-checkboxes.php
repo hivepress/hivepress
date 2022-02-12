@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Checkboxes field class.
- *
- * @class Checkboxes
+ * Multiple checkboxes.
  */
 class Checkboxes extends Select {
 

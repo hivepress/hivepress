@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Text field class.
- *
- * @class Text
+ * Text.
  */
 class Text extends Field {
 

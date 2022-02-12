@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment select field class.
- *
- * @class Attachment_Select
+ * Attachment selection (Media Library).
  */
 class Attachment_Select extends Field {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Number range field class.
- *
- * @class Number_Range
+ * Number range.
  */
 class Number_Range extends Number {
 

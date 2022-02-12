@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Textarea field class.
- *
- * @class Textarea
+ * Multi-line text.
  */
 class Textarea extends Text {
 

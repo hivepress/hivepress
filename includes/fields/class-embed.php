@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Embed field class.
- *
- * @class Embed
+ * Embedded content.
  */
 class Embed extends URL {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Date field class.
- *
- * @class Date
+ * Date and time.
  */
 class Date extends Field {
 

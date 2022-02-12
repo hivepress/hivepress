@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Email field class.
- *
- * @class Email
+ * Email address.
  */
 class Email extends Text {
 

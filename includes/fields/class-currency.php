@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Currency field class.
- *
- * @class Currency
+ * Number with a currency symbol (WooCommerce).
  */
 class Currency extends Number {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Select field class.
- *
- * @class Select
+ * Drop-down list.
  */
 class Select extends Field {
 

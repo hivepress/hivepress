@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Image size field class.
- *
- * @class Image_Size
+ * Image size settings.
  */
 class Image_Size extends Field {
 

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Regex field class.
- *
- * @class Regex
+ * Regex pattern.
  */
 class Regex extends Text {
 

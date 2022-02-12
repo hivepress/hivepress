@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Button field class.
- *
- * @class Button
+ * Button.
  */
 class Button extends Field {
 

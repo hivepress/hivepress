@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Password field class.
- *
- * @class Password
+ * Password.
  */
 class Password extends Text {
 

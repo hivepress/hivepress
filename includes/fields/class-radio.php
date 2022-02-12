@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Radio field class.
- *
- * @class Radio
+ * Radio button.
  */
 class Radio extends Select {
 

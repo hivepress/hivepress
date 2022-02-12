@@ -14,9 +14,7 @@ use HivePress\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment upload field class.
- *
- * @class Attachment_Upload
+ * Attachment upload.
  */
 class Attachment_Upload extends Field {
 

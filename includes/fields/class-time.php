@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Time field class.
- *
- * @class Time
+ * Time in seconds.
  */
 class Time extends Number {
 

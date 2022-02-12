@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * File field class.
- *
- * @class File
+ * File selection.
  */
 class File extends Field {
 

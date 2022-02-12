@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * ID field class.
- *
- * @class ID
+ * Numeric ID.
  */
 class ID extends Number {
 

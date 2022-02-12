@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract field class.
- *
- * @class Field
  */
 abstract class Field {
 	use Traits\Mutator;
