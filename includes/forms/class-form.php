@@ -29,35 +29,35 @@ abstract class Form {
 	protected $description;
 
 	/**
-	 * Form message.
+	 * Success message.
 	 *
 	 * @var string
 	 */
 	protected $message;
 
 	/**
-	 * Form action.
+	 * Action URL.
 	 *
 	 * @var string
 	 */
 	protected $action;
 
 	/**
-	 * Form method.
+	 * HTTP method.
 	 *
 	 * @var string
 	 */
 	protected $method = 'POST';
 
 	/**
-	 * Form redirect.
+	 * Redirect on success?
 	 *
 	 * @var mixed
 	 */
 	protected $redirect;
 
 	/**
-	 * Form reset.
+	 * Reset on success?
 	 *
 	 * @var bool
 	 */
@@ -85,21 +85,21 @@ abstract class Form {
 	protected $errors = [];
 
 	/**
-	 * Form attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
 	protected $attributes = [];
 
 	/**
-	 * Form header.
+	 * Header HTML.
 	 *
 	 * @var string
 	 */
 	protected $header;
 
 	/**
-	 * Form footer.
+	 * Footer HTML.
 	 *
 	 * @var string
 	 */
@@ -108,7 +108,7 @@ abstract class Form {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Form meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -127,7 +127,7 @@ abstract class Form {
 			 * @filter /forms/{$name}/meta
 			 * @description Filters form meta.
 			 * @param string $name Form name.
-			 * @param array $meta Form meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -231,7 +231,7 @@ abstract class Form {
 	}
 
 	/**
-	 * Gets form method.
+	 * Gets HTTP method.
 	 *
 	 * @return string
 	 */
@@ -303,13 +303,13 @@ abstract class Form {
 	 * Sets field values.
 	 *
 	 * @param array $values Field values.
-	 * @param bool  $provided Provided flag.
+	 * @param bool  $override Override only passed values?
 	 * @return object
 	 */
-	public function set_values( $values, $provided = false ) {
+	public function set_values( $values, $override = false ) {
 		$names = [];
 
-		if ( $provided ) {
+		if ( $override ) {
 			$names = array_keys( $values );
 		} else {
 			$names = array_keys( $this->fields );
