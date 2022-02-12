@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Term model class.
- *
- * @class Term
+ * Taxonomy term.
  */
 abstract class Term extends Model {
 

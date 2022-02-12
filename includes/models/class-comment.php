@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Comment model class.
- *
- * @class Comment
+ * Comment.
  */
 abstract class Comment extends Model {
 

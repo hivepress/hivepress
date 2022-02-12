@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor model class.
- *
- * @class Vendor
+ * Vendor.
  */
 class Vendor extends Post {
 

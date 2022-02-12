@@ -151,7 +151,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Gets model fields.
+	 * Gets object fields.
 	 *
 	 * @return array
 	 */
@@ -291,7 +291,7 @@ abstract class Model {
 	 *
 	 * @param string $name Field name.
 	 * @param array  $args Field arguments.
-	 * @param bool   $display Display flag.
+	 * @param bool   $display Format value for display?
 	 * @return mixed
 	 */
 	final protected function _get_value( $name, $args = [], $display = false ) {
