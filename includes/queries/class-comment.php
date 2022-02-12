@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Comment query class.
- *
- * @class Comment
+ * Queries comments.
  */
 class Comment extends Query {
 
@@ -67,7 +65,7 @@ class Comment extends Query {
 	}
 
 	/**
-	 * Sets object filters.
+	 * Sets query filters.
 	 *
 	 * @param array $criteria Filter criteria.
 	 * @return object

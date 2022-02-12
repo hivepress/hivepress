@@ -15,21 +15,19 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract query class.
- *
- * @class Query
  */
 abstract class Query extends \ArrayObject {
 	use Traits\Mutator;
 
 	/**
-	 * Query aliases.
+	 * Parameter aliases.
 	 *
 	 * @var array
 	 */
 	protected $aliases = [];
 
 	/**
-	 * Query arguments.
+	 * WP query arguments.
 	 *
 	 * @var array
 	 */
@@ -43,7 +41,7 @@ abstract class Query extends \ArrayObject {
 	protected $model;
 
 	/**
-	 * Executed flag.
+	 * Is query already executed?
 	 *
 	 * @var bool
 	 */
@@ -106,10 +104,10 @@ abstract class Query extends \ArrayObject {
 	protected function boot() {}
 
 	/**
-	 * Gets query alias.
+	 * Gets parameter alias.
 	 *
 	 * @param string $path Alias path.
-	 * @return mixed
+	 * @return string
 	 */
 	final protected function get_alias( $path ) {
 		$alias = [ 'aliases' => $this->aliases ];
@@ -158,7 +156,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Sets query arguments.
+	 * Sets WP query arguments.
 	 *
 	 * @param array $args Query arguments.
 	 * @return object
@@ -170,7 +168,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Gets query arguments.
+	 * Gets WP query arguments.
 	 *
 	 * @return array
 	 */
@@ -179,7 +177,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Sets object filters.
+	 * Sets query filters.
 	 *
 	 * @param array $criteria Filter criteria.
 	 * @return object
@@ -267,7 +265,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Sets object order.
+	 * Sets query order.
 	 *
 	 * @param array $criteria Order criteria.
 	 * @return object
@@ -327,7 +325,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Searches objects by query string.
+	 * Sets search filter.
 	 *
 	 * @param string $query Search query.
 	 * @return object
@@ -339,7 +337,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Limits the number of objects.
+	 * Limits the number of results.
 	 *
 	 * @param int $number Objects number.
 	 * @return object
@@ -351,7 +349,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Offsets the number of objects.
+	 * Skips the number of results.
 	 *
 	 * @param int $number Objects number.
 	 * @return object
@@ -363,7 +361,7 @@ abstract class Query extends \ArrayObject {
 	}
 
 	/**
-	 * Offsets the number of pages.
+	 * Skips the number of pages.
 	 *
 	 * @param int $number Page number.
 	 * @return object
@@ -439,7 +437,7 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets the first object.
 	 *
-	 * @return mixed
+	 * @return object
 	 */
 	final public function get_first() {
 		$object = null;
@@ -458,7 +456,7 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets the first object ID.
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	final public function get_first_id() {
 		$id = null;
@@ -478,6 +476,7 @@ abstract class Query extends \ArrayObject {
 	 * Gets object by ID.
 	 *
 	 * @param int $id Object ID.
+	 * @return object
 	 */
 	final public function get_by_id( $id ) {
 		return $this->model->get( $id );

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Term query class.
- *
- * @class Term
+ * Queries taxonomy terms.
  */
 class Term extends Query {
 
@@ -68,7 +66,7 @@ class Term extends Query {
 	}
 
 	/**
-	 * Sets object filters.
+	 * Sets query filters.
 	 *
 	 * @param array $criteria Filter criteria.
 	 * @return object
@@ -103,7 +101,7 @@ class Term extends Query {
 	}
 
 	/**
-	 * Sets object order.
+	 * Sets query order.
 	 *
 	 * @param array $criteria Order criteria.
 	 * @return object
@@ -122,7 +120,7 @@ class Term extends Query {
 	}
 
 	/**
-	 * Offsets the number of pages.
+	 * Skips the number of pages.
 	 *
 	 * @param int $number Page number.
 	 * @return object
