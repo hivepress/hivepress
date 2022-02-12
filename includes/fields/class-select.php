@@ -25,35 +25,35 @@ class Select extends Field {
 	protected $placeholder;
 
 	/**
-	 * Field options.
+	 * Selectable options.
 	 *
 	 * @var array
 	 */
 	protected $options = [];
 
 	/**
-	 * Multiple flag.
+	 * Allow selecting multiple options?
 	 *
 	 * @var bool
 	 */
 	protected $multiple = false;
 
 	/**
-	 * Maximum values.
+	 * Maximum number of selected options.
 	 *
 	 * @var int
 	 */
 	protected $max_values;
 
 	/**
-	 * Field filter operator.
+	 * SQL query operator.
 	 *
 	 * @var mixed
 	 */
 	protected $filter_operator;
 
 	/**
-	 * Field options source.
+	 * Options source URL.
 	 *
 	 * @var string
 	 */
@@ -189,7 +189,7 @@ class Select extends Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -216,7 +216,7 @@ class Select extends Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();
@@ -324,7 +324,7 @@ class Select extends Field {
 	}
 
 	/**
-	 * Renders field options.
+	 * Renders selectable options.
 	 *
 	 * @param mixed $current Current value.
 	 * @param int   $level Nesting level.

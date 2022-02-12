@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class Textarea extends Text {
 
 	/**
-	 * Editor flag.
+	 * Enable TinyMCE editor?
 	 *
 	 * @var mixed
 	 */
@@ -90,7 +90,7 @@ class Textarea extends Text {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

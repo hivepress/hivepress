@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
 class File extends Field {
 
 	/**
-	 * File formats.
+	 * Allowed file formats.
 	 *
 	 * @var array
 	 */
 	protected $formats = [];
 
 	/**
-	 * Multiple flag.
+	 * Allow multiple files?
 	 *
 	 * @var bool
 	 */

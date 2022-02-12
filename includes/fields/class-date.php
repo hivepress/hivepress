@@ -25,28 +25,28 @@ class Date extends Field {
 	protected $placeholder;
 
 	/**
-	 * Date format.
+	 * Stored date format.
 	 *
 	 * @var string
 	 */
 	protected $format;
 
 	/**
-	 * Date display format.
+	 * Displayed date format.
 	 *
 	 * @var string
 	 */
 	protected $display_format;
 
 	/**
-	 * Minimum date.
+	 * Minimum available date.
 	 *
 	 * @var string
 	 */
 	protected $min_date;
 
 	/**
-	 * Maximum date.
+	 * Maximum available date.
 	 *
 	 * @var string
 	 */
@@ -60,28 +60,28 @@ class Date extends Field {
 	protected $disabled_dates = [];
 
 	/**
-	 * Disabled days.
+	 * Disabled days of the week.
 	 *
 	 * @var array
 	 */
 	protected $disabled_days = [];
 
 	/**
-	 * Date offset.
+	 * The number of days unavailable from today.
 	 *
 	 * @var int
 	 */
 	protected $offset;
 
 	/**
-	 * Date window.
+	 * The number of days available from today.
 	 *
 	 * @var int
 	 */
 	protected $window;
 
 	/**
-	 * Time flag.
+	 * Allow selecting time?
 	 *
 	 * @var bool
 	 */
@@ -226,7 +226,7 @@ class Date extends Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

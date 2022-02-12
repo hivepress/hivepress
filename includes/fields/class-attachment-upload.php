@@ -26,30 +26,30 @@ class Attachment_Upload extends Field {
 	protected $caption;
 
 	/**
-	 * File formats.
+	 * Allowed file formats.
 	 *
 	 * @var array
 	 */
 	protected $formats = [];
 
 	/**
-	 * Multiple flag.
+	 * Allow multiple files?
 	 *
 	 * @var bool
 	 */
 	protected $multiple = false;
 
 	/**
-	 * Maximum files.
+	 * Maximum number of files.
 	 *
 	 * @var int
 	 */
 	protected $max_files = 1;
 
 	/**
-	 * Protected flag.
+	 * Prevent direct URL access?
 	 *
-	 * @var mixed
+	 * @var bool
 	 */
 	protected $protected = false;
 
@@ -134,7 +134,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -162,7 +162,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Sets file formats.
+	 * Sets allowed file formats.
 	 *
 	 * @param array $formats File formats.
 	 */
@@ -175,7 +175,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Gets file formats.
+	 * Gets allowed file formats.
 	 *
 	 * @return array
 	 */
@@ -184,7 +184,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Checks multiple flag.
+	 * Checks if multiple files are allowed.
 	 *
 	 * @return bool
 	 */
@@ -193,7 +193,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Gets maximum files.
+	 * Gets the maximum allowed number of files.
 	 *
 	 * @return int
 	 */
@@ -202,7 +202,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Checks protected flag.
+	 * Checks if attachment is protected.
 	 *
 	 * @return bool
 	 */
@@ -336,7 +336,7 @@ class Attachment_Upload extends Field {
 	}
 
 	/**
-	 * Renders attachment HTML.
+	 * Renders attachment preview.
 	 *
 	 * @param object $attachment Attachment object.
 	 * @return string

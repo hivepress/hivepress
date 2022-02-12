@@ -88,7 +88,7 @@ abstract class Field {
 	protected $parent_value;
 
 	/**
-	 * WP query filter.
+	 * SQL filter.
 	 *
 	 * @var mixed
 	 */
@@ -310,7 +310,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets display template.
+	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.
 	 */
@@ -396,7 +396,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -417,7 +417,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		$this->filter = [
@@ -429,7 +429,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets field filter.
+	 * Gets SQL filter.
 	 *
 	 * @return mixed
 	 */
@@ -438,7 +438,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Updates field filter.
+	 * Updates SQL filter.
 	 */
 	final public function update_filter() {
 		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {

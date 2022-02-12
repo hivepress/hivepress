@@ -25,14 +25,14 @@ class Text extends Field {
 	protected $placeholder;
 
 	/**
-	 * Minimum length.
+	 * Minimum text length.
 	 *
 	 * @var int
 	 */
 	protected $min_length;
 
 	/**
-	 * Maximum length.
+	 * Maximum text length.
 	 *
 	 * @var int
 	 */
@@ -46,14 +46,14 @@ class Text extends Field {
 	protected $pattern;
 
 	/**
-	 * HTML flag.
+	 * Allow HTML?
 	 *
 	 * @var mixed
 	 */
 	protected $html = false;
 
 	/**
-	 * Read-only flag.
+	 * Make text read-only?
 	 *
 	 * @var bool
 	 */
@@ -157,7 +157,7 @@ class Text extends Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();

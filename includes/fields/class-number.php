@@ -34,14 +34,14 @@ class Number extends Field {
 	/**
 	 * Minimum value.
 	 *
-	 * @var int
+	 * @var float
 	 */
 	protected $min_value;
 
 	/**
 	 * Maximum value.
 	 *
-	 * @var int
+	 * @var float
 	 */
 	protected $max_value;
 
@@ -137,7 +137,7 @@ class Number extends Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

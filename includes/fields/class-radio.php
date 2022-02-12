@@ -86,7 +86,7 @@ class Radio extends Select {
 	}
 
 	/**
-	 * Renders field options.
+	 * Renders radio buttons.
 	 *
 	 * @param mixed $current Current value.
 	 * @param int   $level Nesting level.

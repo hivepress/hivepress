@@ -50,7 +50,7 @@ class Embed extends URL {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -65,7 +65,7 @@ class Embed extends URL {
 	}
 
 	/**
-	 * Sets display template.
+	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.
 	 */

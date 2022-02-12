@@ -84,7 +84,7 @@ class Checkboxes extends Select {
 	}
 
 	/**
-	 * Renders field options.
+	 * Renders checkboxes.
 	 *
 	 * @param mixed $current Current value.
 	 * @param int   $level Nesting level.

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class Google_OAuth_Button extends Button {
 
 	/**
-	 * OAuth scope.
+	 * OAuth scopes.
 	 *
 	 * @var array
 	 */

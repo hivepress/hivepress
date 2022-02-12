@@ -51,7 +51,7 @@ class Currency extends Number {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

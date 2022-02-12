@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class Time extends Number {
 
 	/**
-	 * Time display format.
+	 * Displayed time format.
 	 *
 	 * @var string
 	 */
@@ -87,7 +87,7 @@ class Time extends Number {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
