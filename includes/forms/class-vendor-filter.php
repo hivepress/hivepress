@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor filter form class.
- *
- * @class Vendor_Filter
+ * Filters vendors.
  */
 class Vendor_Filter extends Form {
 

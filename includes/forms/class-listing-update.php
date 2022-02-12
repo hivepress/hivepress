@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing update form class.
- *
- * @class Listing_Update
+ * Updates listing.
  */
 class Listing_Update extends Model_Form {
 

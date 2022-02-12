@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User update profile form class.
- *
- * @class User_Update_Profile
+ * Updates user profile.
  */
 class User_Update_Profile extends User_Update {
 

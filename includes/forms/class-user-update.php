@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User register form class.
- *
- * @class User_Update
+ * Updates user.
  */
 class User_Update extends Model_Form {
 

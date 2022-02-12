@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing sort form class.
- *
- * @class Listing_Sort
+ * Sorts listings.
  */
 class Listing_Sort extends Form {
 

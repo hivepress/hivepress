@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing filter form class.
- *
- * @class Listing_Filter
+ * Filters listings.
  */
 class Listing_Filter extends Form {
 

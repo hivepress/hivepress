@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User delete form class.
- *
- * @class User_Delete
+ * Deletes user.
  */
 class User_Delete extends Model_Form {
 

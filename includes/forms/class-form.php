@@ -16,8 +16,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract form class.
- *
- * @class Form
  */
 abstract class Form {
 	use Traits\Mutator;

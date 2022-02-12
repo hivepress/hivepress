@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor sort form class.
- *
- * @class Vendor_Sort
+ * Sorts vendors.
  */
 class Vendor_Sort extends Form {
 

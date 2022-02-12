@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor update form class.
- *
- * @class Vendor_Update
+ * Updates vendor.
  */
 class Vendor_Update extends Model_Form {
 
