@@ -14,15 +14,13 @@ use HivePress\Traits;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Elementor widget class.
- *
- * @class Elementor_Widget
+ * Base Elementor widget.
  */
 final class Elementor_Widget extends \Elementor\Widget_Base {
 	use Traits\Context;
 
 	/**
-	 * Widget constructor.
+	 * Class constructor.
 	 *
 	 * @param array $data Widget data.
 	 * @param array $args Widget arguments.
