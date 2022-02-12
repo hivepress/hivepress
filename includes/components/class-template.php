@@ -183,7 +183,7 @@ final class Template extends Component {
 	/**
 	 * Removes theme header.
 	 *
-	 * @param bool $display Display flag.
+	 * @param bool $display Display theme header?
 	 * @return bool
 	 */
 	public function remove_theme_header( $display ) {

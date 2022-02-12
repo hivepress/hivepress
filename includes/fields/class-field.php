@@ -447,7 +447,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Checks disabled flag.
+	 * Checks if field is disabled.
 	 *
 	 * @return bool
 	 */
@@ -456,7 +456,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Checks required flag.
+	 * Checks if field is required.
 	 *
 	 * @return bool
 	 */

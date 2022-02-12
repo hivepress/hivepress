@@ -195,7 +195,7 @@ final class Router extends Component {
 	 *
 	 * @param string $name Route name.
 	 * @param array  $query URL query.
-	 * @param bool   $filter Filter flag.
+	 * @param bool   $filter Remove custom query parameters?
 	 * @return string
 	 */
 	public function get_url( $name, $query = [], $filter = false ) {

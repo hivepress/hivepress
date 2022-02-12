@@ -31,7 +31,7 @@ abstract class Template {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Template meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
