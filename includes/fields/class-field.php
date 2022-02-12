@@ -32,14 +32,14 @@ abstract class Field {
 	protected $args = [];
 
 	/**
-	 * Field display type.
+	 * Display type.
 	 *
 	 * @var string
 	 */
 	protected $display_type;
 
 	/**
-	 * Field display template.
+	 * Display template.
 	 *
 	 * @var string
 	 */
@@ -88,21 +88,21 @@ abstract class Field {
 	protected $parent_value;
 
 	/**
-	 * Field filter.
+	 * WP query filter.
 	 *
 	 * @var mixed
 	 */
 	protected $filter;
 
 	/**
-	 * Disabled flag.
+	 * Disable this field?
 	 *
 	 * @var bool
 	 */
 	protected $disabled = false;
 
 	/**
-	 * Required flag.
+	 * Is value required?
 	 *
 	 * @var bool
 	 */
@@ -116,7 +116,7 @@ abstract class Field {
 	protected $errors = [];
 
 	/**
-	 * Field attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
