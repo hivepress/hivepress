@@ -208,7 +208,7 @@ function merge_trees( $parent_tree, $child_tree, $tree_key = null, $node_key = n
 }
 
 /**
- * Sorts array by custom order.
+ * Sorts array by a custom order.
  *
  * @param array $array Source array.
  * @return array
@@ -230,7 +230,7 @@ function sort_array( $array ) {
 }
 
 /**
- * Gets class name.
+ * Gets a short class name.
  *
  * @param string $class Class name.
  * @return string
@@ -240,7 +240,7 @@ function get_class_name( $class ) {
 }
 
 /**
- * Gets class parents.
+ * Gets parent classes including a child.
  *
  * @param string $class Class name.
  * @return array
@@ -250,7 +250,7 @@ function get_class_parents( $class ) {
 }
 
 /**
- * Checks object class.
+ * Checks if object is a class instance.
  *
  * @param object $object Class object.
  * @param string $class Class name.
@@ -261,11 +261,11 @@ function is_class_instance( $object, $class ) {
 }
 
 /**
- * Creates class instance.
+ * Creates a class instance.
  *
  * @param string $class Class name.
  * @param array  $args Instance arguments.
- * @return mixed
+ * @return object
  */
 function create_class_instance( $class, $args = [] ) {
 	if ( class_exists( $class ) && ! ( new \ReflectionClass( $class ) )->isAbstract() ) {
@@ -282,7 +282,7 @@ function create_class_instance( $class, $args = [] ) {
 }
 
 /**
- * Calls class method.
+ * Calls a class method.
  *
  * @param string $class Class name.
  * @param string $method Method name.
@@ -352,7 +352,7 @@ function html_attributes( $attributes ) {
  * Escapes JSON.
  *
  * @param string $json JSON string.
- * @param bool   $html HTML flag.
+ * @param bool   $html Contains HTML?
  * @return string
  */
 function esc_json( $json, $html = false ) {
@@ -451,7 +451,7 @@ function is_plugin_active( $name ) {
 }
 
 /**
- * Checks REST request.
+ * Checks if the current request is REST.
  *
  * @return bool
  */
@@ -460,7 +460,7 @@ function is_rest() {
 }
 
 /**
- * Gets REST API response.
+ * Creates a REST API response.
  *
  * @param int   $code Error code.
  * @param array $data Response data.
@@ -482,10 +482,10 @@ function rest_response( $code, $data = null ) {
 }
 
 /**
- * Gets REST API error.
+ * Creates a REST API error.
  *
  * @param int   $code Error code.
- * @param array $errors Additional errors.
+ * @param array $errors Error messages.
  * @return WP_Rest_Response
  */
 function rest_error( $code, $errors = [] ) {
@@ -513,7 +513,7 @@ function rest_error( $code, $errors = [] ) {
 }
 
 /**
- * Gets column width.
+ * Gets the number of columns out of 12.
  *
  * @param int $number Columns number.
  * @return int
@@ -530,7 +530,7 @@ function get_column_width( $number ) {
 }
 
 /**
- * Checks shortcodes in text.
+ * Checks if text contains shortcodes.
  *
  * @param string $text Text to be checked.
  * @return bool
