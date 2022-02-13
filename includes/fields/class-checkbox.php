@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Checkbox field class.
- *
- * @class Checkbox
+ * Checkbox.
  */
 class Checkbox extends Field {
 
@@ -27,7 +25,7 @@ class Checkbox extends Field {
 	protected $caption;
 
 	/**
-	 * Check value.
+	 * Checked value.
 	 *
 	 * @var mixed
 	 */
@@ -36,7 +34,7 @@ class Checkbox extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -91,7 +89,7 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -100,7 +98,7 @@ class Checkbox extends Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();

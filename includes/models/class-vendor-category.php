@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor category model class.
- *
- * @class Vendor_Category
+ * Vendor category.
  */
 class Vendor_Category extends Term {
 

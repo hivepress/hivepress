@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Hidden field class.
- *
- * @class Hidden
+ * Hidden value.
  */
 class Hidden extends Text {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

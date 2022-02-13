@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract model class.
- *
- * @class Model
  */
 abstract class Model {
 	use Traits\Mutator {
@@ -59,7 +57,7 @@ abstract class Model {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Model meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -73,12 +71,12 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model meta.
+			 * Filters Class meta values.
 			 *
 			 * @filter /models/{$name}/meta
-			 * @description Filters model meta.
+			 * @description Filters Class meta values.
 			 * @param string $name Model name.
-			 * @param array $meta Model meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -153,7 +151,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Gets model fields.
+	 * Gets object fields.
 	 *
 	 * @return array
 	 */
@@ -162,7 +160,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Catches calls to undefined methods.
+	 * Catches calls to undefined static methods.
 	 *
 	 * @param string $name Method name.
 	 * @param array  $args Method arguments.
@@ -293,7 +291,7 @@ abstract class Model {
 	 *
 	 * @param string $name Field name.
 	 * @param array  $args Field arguments.
-	 * @param bool   $display Display flag.
+	 * @param bool   $display Format value for display?
 	 * @return mixed
 	 */
 	final protected function _get_value( $name, $args = [], $display = false ) {

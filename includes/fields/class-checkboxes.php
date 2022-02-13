@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Checkboxes field class.
- *
- * @class Checkboxes
+ * Multiple checkboxes.
  */
 class Checkboxes extends Select {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -86,7 +84,7 @@ class Checkboxes extends Select {
 	}
 
 	/**
-	 * Renders field options.
+	 * Renders checkboxes.
 	 *
 	 * @param mixed $current Current value.
 	 * @param int   $level Nesting level.

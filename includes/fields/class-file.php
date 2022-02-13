@@ -13,21 +13,19 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * File field class.
- *
- * @class File
+ * File selection.
  */
 class File extends Field {
 
 	/**
-	 * File formats.
+	 * Allowed file formats.
 	 *
 	 * @var array
 	 */
 	protected $formats = [];
 
 	/**
-	 * Multiple flag.
+	 * Allow multiple files?
 	 *
 	 * @var bool
 	 */

@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Attachment model class.
- *
- * @class Attachment
+ * File attachment.
  */
 class Attachment extends Post {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Model meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -95,7 +93,7 @@ class Attachment extends Post {
 	/**
 	 * Gets parent object ID.
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	final public function get_parent__id() {
 		$id = $this->fields['parent']->get_value();
@@ -110,7 +108,7 @@ class Attachment extends Post {
 	/**
 	 * Gets parent object.
 	 *
-	 * @return mixed
+	 * @return object
 	 */
 	final public function get_parent() {
 
@@ -137,9 +135,9 @@ class Attachment extends Post {
 	}
 
 	/**
-	 * Gets attachment path.
+	 * Gets attachment filepath.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	final public function get_path() {
 		$path = null;
@@ -161,7 +159,7 @@ class Attachment extends Post {
 	 * Gets attachment URL.
 	 *
 	 * @param string $size Image size.
-	 * @return mixed
+	 * @return string
 	 */
 	final public function get_url( $size = 'full' ) {
 		$url  = null;
@@ -205,7 +203,7 @@ class Attachment extends Post {
 	/**
 	 * Gets attachment name.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	final public function get_name() {
 		$name = null;

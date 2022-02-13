@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Mailchimp integration class.
- *
- * @class Mailchimp
+ * MC4WP plugin integration.
  */
 final class Mailchimp extends \MC4WP_Integration {
 
@@ -27,7 +25,7 @@ final class Mailchimp extends \MC4WP_Integration {
 	public $name = 'HivePress';
 
 	/**
-	 * Adds hooks.
+	 * Adds integration hooks.
 	 */
 	public function add_hooks() {
 
@@ -39,7 +37,7 @@ final class Mailchimp extends \MC4WP_Integration {
 	}
 
 	/**
-	 * Checks installation status.
+	 * Checks if integration is enabled.
 	 *
 	 * @return bool
 	 */
@@ -57,7 +55,7 @@ final class Mailchimp extends \MC4WP_Integration {
 	}
 
 	/**
-	 * Adds checkbox.
+	 * Adds subscription checkbox.
 	 *
 	 * @param array $form Form arguments.
 	 * @return array

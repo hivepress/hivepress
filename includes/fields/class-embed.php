@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Embed field class.
- *
- * @class Embed
+ * Embedded content.
  */
 class Embed extends URL {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -52,7 +50,7 @@ class Embed extends URL {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -67,7 +65,7 @@ class Embed extends URL {
 	}
 
 	/**
-	 * Sets display template.
+	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.
 	 */

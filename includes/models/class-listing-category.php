@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing category model class.
- *
- * @class Listing_Category
+ * Listing category.
  */
 class Listing_Category extends Term {
 
@@ -124,7 +122,7 @@ class Listing_Category extends Term {
 	/**
 	 * Gets image ID.
 	 *
-	 * @return mixed
+	 * @return int
 	 * @deprecated Since version 1.3.0
 	 */
 	final public function get_image_id() {
@@ -134,7 +132,7 @@ class Listing_Category extends Term {
 	/**
 	 * Gets URL.
 	 *
-	 * @return mixed
+	 * @return string
 	 * @deprecated Since version 1.3.0
 	 */
 	final public function get_url() {

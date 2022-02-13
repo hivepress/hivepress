@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Captcha field class.
- *
- * @class Captcha
+ * Google reCaptcha embed.
  */
 class Captcha extends Field {
 

@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract field class.
- *
- * @class Field
  */
 abstract class Field {
 	use Traits\Mutator;
@@ -34,14 +32,14 @@ abstract class Field {
 	protected $args = [];
 
 	/**
-	 * Field display type.
+	 * Display type.
 	 *
 	 * @var string
 	 */
 	protected $display_type;
 
 	/**
-	 * Field display template.
+	 * Display template.
 	 *
 	 * @var string
 	 */
@@ -90,21 +88,21 @@ abstract class Field {
 	protected $parent_value;
 
 	/**
-	 * Field filter.
+	 * SQL filter.
 	 *
 	 * @var mixed
 	 */
 	protected $filter;
 
 	/**
-	 * Disabled flag.
+	 * Disable this field?
 	 *
 	 * @var bool
 	 */
 	protected $disabled = false;
 
 	/**
-	 * Required flag.
+	 * Is value required?
 	 *
 	 * @var bool
 	 */
@@ -118,7 +116,7 @@ abstract class Field {
 	protected $errors = [];
 
 	/**
-	 * Field attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
@@ -127,7 +125,7 @@ abstract class Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -164,12 +162,12 @@ abstract class Field {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters field meta.
+			 * Filters Class meta values.
 			 *
 			 * @filter /fields/{$type}/meta
-			 * @description Filters field meta.
+			 * @description Filters Class meta values.
 			 * @param string $type Field type.
-			 * @param array $meta Field meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -312,7 +310,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Sets display template.
+	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.
 	 */
@@ -398,7 +396,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -419,7 +417,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		$this->filter = [
@@ -431,7 +429,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Gets field filter.
+	 * Gets SQL filter.
 	 *
 	 * @return mixed
 	 */
@@ -440,7 +438,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Updates field filter.
+	 * Updates SQL filter.
 	 */
 	final public function update_filter() {
 		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
@@ -449,7 +447,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Checks disabled flag.
+	 * Checks if field is disabled.
 	 *
 	 * @return bool
 	 */
@@ -458,7 +456,7 @@ abstract class Field {
 	}
 
 	/**
-	 * Checks required flag.
+	 * Checks if field is required.
 	 *
 	 * @return bool
 	 */

@@ -13,14 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Textarea field class.
- *
- * @class Textarea
+ * Multi-line text.
  */
 class Textarea extends Text {
 
 	/**
-	 * Editor flag.
+	 * Enable TinyMCE editor?
 	 *
 	 * @var mixed
 	 */
@@ -29,7 +27,7 @@ class Textarea extends Text {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -92,7 +90,7 @@ class Textarea extends Text {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

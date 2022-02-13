@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Listing manage menu class.
- *
- * @class Listing_Manage
+ * Listing management pages.
  */
 class Listing_Manage extends Menu {
 

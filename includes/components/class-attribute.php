@@ -1557,7 +1557,7 @@ final class Attribute extends Component {
 	/**
 	 * Disables Jetpack search.
 	 *
-	 * @param mixed    $enabled Search flag.
+	 * @param mixed    $enabled Is search enabled?
 	 * @param WP_Query $query Search query.
 	 * @return bool
 	 */

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Number range field class.
- *
- * @class Number_Range
+ * Number range.
  */
 class Number_Range extends Number {
 
@@ -36,7 +34,7 @@ class Number_Range extends Number {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -99,7 +97,7 @@ class Number_Range extends Number {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -110,7 +108,7 @@ class Number_Range extends Number {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();

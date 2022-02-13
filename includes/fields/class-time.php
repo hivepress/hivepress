@@ -13,14 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Time field class.
- *
- * @class Time
+ * Time in seconds.
  */
 class Time extends Number {
 
 	/**
-	 * Time display format.
+	 * Displayed time format.
 	 *
 	 * @var string
 	 */
@@ -29,7 +27,7 @@ class Time extends Number {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -89,7 +87,7 @@ class Time extends Number {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */

@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Repeater field class.
- *
- * @class Repeater
+ * Repeatable fields.
  */
 class Repeater extends Field {
 

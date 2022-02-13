@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Post query class.
- *
- * @class Post
+ * Queries posts.
  */
 class Post extends Query {
 
@@ -74,7 +72,7 @@ class Post extends Query {
 	}
 
 	/**
-	 * Sets object filters.
+	 * Sets query filters.
 	 *
 	 * @param array $criteria Filter criteria.
 	 * @return object

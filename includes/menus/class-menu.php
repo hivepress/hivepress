@@ -15,8 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract menu class.
- *
- * @class Menu
  */
 abstract class Menu {
 	use Traits\Mutator;
@@ -31,7 +29,7 @@ abstract class Menu {
 	protected $items = [];
 
 	/**
-	 * Menu attributes.
+	 * HTML attributes.
 	 *
 	 * @var array
 	 */
@@ -40,7 +38,7 @@ abstract class Menu {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Menu meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -60,7 +58,7 @@ abstract class Menu {
 			 * @filter /menus/{$name}/meta
 			 * @description Filters menu meta.
 			 * @param string $name Menu name.
-			 * @param array $meta Menu meta.
+			 * @param array $meta Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -212,7 +210,7 @@ abstract class Menu {
 	/**
 	 * Renders menu items.
 	 *
-	 * @param mixed $current Current item.
+	 * @param mixed $current Current item name.
 	 * @return string
 	 */
 	protected function render_items( $current = null ) {

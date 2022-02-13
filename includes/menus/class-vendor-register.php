@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor register menu class.
- *
- * @class Vendor_Register
+ * Vendor registration steps.
  */
 class Vendor_Register extends Menu {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Menu meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

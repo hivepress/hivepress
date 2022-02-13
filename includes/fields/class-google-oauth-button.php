@@ -13,14 +13,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Google OAuth button field class.
- *
- * @class Google_OAuth_Button
+ * Google OAuth button.
  */
 class Google_OAuth_Button extends Button {
 
 	/**
-	 * OAuth scope.
+	 * OAuth scopes.
 	 *
 	 * @var array
 	 */

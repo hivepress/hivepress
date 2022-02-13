@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Text field class.
- *
- * @class Text
+ * Text.
  */
 class Text extends Field {
 
@@ -27,14 +25,14 @@ class Text extends Field {
 	protected $placeholder;
 
 	/**
-	 * Minimum length.
+	 * Minimum text length.
 	 *
 	 * @var int
 	 */
 	protected $min_length;
 
 	/**
-	 * Maximum length.
+	 * Maximum text length.
 	 *
 	 * @var int
 	 */
@@ -48,14 +46,14 @@ class Text extends Field {
 	protected $pattern;
 
 	/**
-	 * HTML flag.
+	 * Allow HTML?
 	 *
 	 * @var mixed
 	 */
 	protected $html = false;
 
 	/**
-	 * Read-only flag.
+	 * Make text read-only?
 	 *
 	 * @var bool
 	 */
@@ -64,7 +62,7 @@ class Text extends Field {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -159,7 +157,7 @@ class Text extends Field {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();

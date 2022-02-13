@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Date range field class.
- *
- * @class Date_Range
+ * Date range.
  */
 class Date_Range extends Date {
 
@@ -34,21 +32,21 @@ class Date_Range extends Date {
 	protected $max_field;
 
 	/**
-	 * Minimum length.
+	 * Minimum number of days.
 	 *
 	 * @var int
 	 */
 	protected $min_length;
 
 	/**
-	 * Maximum length.
+	 * Maximum number of days.
 	 *
 	 * @var int
 	 */
 	protected $max_length;
 
 	/**
-	 * Date ranges.
+	 * Marked date ranges.
 	 *
 	 * @var array
 	 */
@@ -57,7 +55,7 @@ class Date_Range extends Date {
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -85,7 +83,7 @@ class Date_Range extends Date {
 	}
 
 	/**
-	 * Gets field display value.
+	 * Gets field value for display.
 	 *
 	 * @return mixed
 	 */
@@ -96,7 +94,7 @@ class Date_Range extends Date {
 	}
 
 	/**
-	 * Adds field filter.
+	 * Adds SQL filter.
 	 */
 	protected function add_filter() {
 		parent::add_filter();

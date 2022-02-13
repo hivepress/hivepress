@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User account menu class.
- *
- * @class User_Account
+ * User account pages.
  */
 class User_Account extends Menu {
 

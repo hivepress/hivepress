@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Term model class.
- *
- * @class Term
+ * Taxonomy term.
  */
 abstract class Term extends Model {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Model meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(

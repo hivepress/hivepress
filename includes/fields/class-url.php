@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * URL field class.
- *
- * @class URL
+ * URL.
  */
 class URL extends Text {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -60,7 +58,7 @@ class URL extends Text {
 	}
 
 	/**
-	 * Sets display template.
+	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.
 	 */

@@ -13,16 +13,14 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Radio field class.
- *
- * @class Radio
+ * Radio button.
  */
 class Radio extends Select {
 
 	/**
 	 * Class initializer.
 	 *
-	 * @param array $meta Field meta.
+	 * @param array $meta Class meta values.
 	 */
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
@@ -88,7 +86,7 @@ class Radio extends Select {
 	}
 
 	/**
-	 * Renders field options.
+	 * Renders radio buttons.
 	 *
 	 * @param mixed $current Current value.
 	 * @param int   $level Nesting level.

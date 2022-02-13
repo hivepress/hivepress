@@ -160,7 +160,7 @@ final class Hook extends Component {
 	 *
 	 * @param int   $post_id Post ID.
 	 * @param mixed $post Post object.
-	 * @param bool  $update Update flag.
+	 * @param bool  $update Is post updated?
 	 */
 	public function update_post( $post_id, $post = null, $update = false ) {
 

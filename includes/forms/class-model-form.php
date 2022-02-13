@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Model form class.
- *
- * @class Model_Form
+ * Abstract model form class.
  */
 abstract class Model_Form extends Form {
 

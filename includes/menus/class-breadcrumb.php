@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Breadcrumb menu class.
- *
- * @class Breadcrumb
+ * Page breadcrumbs.
  */
 class Breadcrumb extends Menu {
 

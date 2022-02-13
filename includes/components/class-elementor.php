@@ -80,7 +80,7 @@ final class Elementor extends Component {
 	/**
 	 * Sets preview mode.
 	 *
-	 * @param bool $preview Preview flag.
+	 * @param bool $preview Is preview mode?
 	 * @return bool
 	 */
 	public function set_preview_mode( $preview ) {

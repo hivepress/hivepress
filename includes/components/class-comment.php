@@ -225,7 +225,7 @@ final class Comment extends Component {
 	/**
 	 * Disables email notifications.
 	 *
-	 * @param bool $notify Notification flag.
+	 * @param bool $notify Notify comment author?
 	 * @param int  $comment_id Comment ID.
 	 * @return bool
 	 */
