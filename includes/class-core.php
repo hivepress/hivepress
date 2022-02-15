@@ -408,7 +408,7 @@ final class Core {
 			}
 
 			/**
-			 * Filters HivePress configuration (e.g. `post_types`, `taxonomies`, `meta_boxes`). You can find the available configurations in the `configs` directory of HivePress, where each file represents a separate configuration array.
+			 * Filters HivePress configuration (e.g. `post_types`, `taxonomies`, `meta_boxes`). You can check the available configurations in the `includes/configs` directory of HivePress, where each file represents a separate configuration array.
 			 *
 			 * @hook hivepress/v1/{config_name}
 			 * @param {array} $config Configuration array.
