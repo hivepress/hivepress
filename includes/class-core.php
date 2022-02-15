@@ -146,10 +146,9 @@ final class Core {
 	public static function deactivate() {
 
 		/**
-		 * Fires on HivePress deactivation.
+		 * Fires when HivePress plugin is deactivated.
 		 *
-		 * @action /deactivate
-		 * @description Fires on HivePress deactivation.
+		 * @hook hivepress/v1/deactivate
 		 */
 		do_action( 'hivepress/v1/deactivate' );
 	}
@@ -161,10 +160,9 @@ final class Core {
 		if ( get_option( 'hp_core_activated' ) || count( $this->extensions ) !== absint( get_option( 'hp_extensions_number' ) ) ) {
 
 			/**
-			 * Fires on HivePress activation.
+			 * Fires when HivePress plugin is activated.
 			 *
-			 * @action /activate
-			 * @description Fires on HivePress activation.
+			 * @hook hivepress/v1/activate
 			 */
 			do_action( 'hivepress/v1/activate' );
 
@@ -189,11 +187,10 @@ final class Core {
 			if ( get_option( 'hp_core_version' ) ) {
 
 				/**
-				 * Fires on HivePress update.
+				 * Fires when HivePress plugin is updated.
 				 *
-				 * @action /update
-				 * @description Fires on HivePress update.
-				 * @param string $version Old version.
+				 * @hook hivepress/v1/update
+				 * @param {string} $version Previous version.
 				 */
 				do_action( 'hivepress/v1/update', get_option( 'hp_core_version' ) );
 			}
@@ -224,10 +221,9 @@ final class Core {
 		$this->get_components();
 
 		/**
-		 * Fires on HivePress setup.
+		 * Fires when HivePress plugin is set up.
 		 *
-		 * @action /setup
-		 * @description Fires on HivePress setup.
+		 * @hook hivepress/v1/setup
 		 */
 		do_action( 'hivepress/v1/setup' );
 	}
@@ -238,11 +234,11 @@ final class Core {
 	protected function setup_extensions() {
 
 		/**
-		 * Filters HivePress extensions.
+		 * Filters directory paths of HivePress extensions. You can register a new extension by adding its directory path to the filtered array.
 		 *
-		 * @filter /extensions
-		 * @description Filters HivePress extensions.
-		 * @param array $extensions Extension paths or arguments. If you add a new directory path HivePress will treat it like an extension.
+		 * @hook hivepress/v1/extensions
+		 * @param {array} $paths Directory paths.
+		 * @return {array} Directory paths.
 		 */
 		$extensions = apply_filters( 'hivepress/v1/extensions', [ dirname( HP_FILE ) ] );
 
@@ -412,12 +408,11 @@ final class Core {
 			}
 
 			/**
-			 * Filters HivePress configuration.
+			 * Filters HivePress configuration (e.g. `post_types`, `taxonomies`, `meta_boxes`). You can check the available configurations in the `includes/configs` directory of HivePress, where each file represents a separate configuration array.
 			 *
-			 * @filter /{$config}
-			 * @description Filters HivePress configuration.
-			 * @param string $config Configuration type. Possible values: "image_sizes", "meta_boxes", "post_types", "scripts", "settings", "styles", "taxonomies", "strings".
-			 * @param array $args Configuration arguments.
+			 * @hook hivepress/v1/{config_name}
+			 * @param {array} $config Configuration array.
+			 * @return {array} Configuration array.
 			 */
 			$this->configs[ $name ] = apply_filters( 'hivepress/v1/' . $name, $this->configs[ $name ] );
 		}
