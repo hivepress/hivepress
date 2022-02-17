@@ -1,4 +1,4 @@
-form<?php
+<?php
 /**
  * Abstract form.
  *
