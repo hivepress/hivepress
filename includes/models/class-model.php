@@ -71,12 +71,11 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters Class meta values.
+			 * Filters the model class meta. The class meta stores properties related to the model type rather than a specific model instance. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
 			 *
-			 * @filter /models/{$name}/meta
-			 * @description Filters Class meta values.
-			 * @param string $name Model name.
-			 * @param array $meta Class meta values.
+			 * @hook hivepress/v1/models/{model_name}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -96,13 +95,12 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model arguments.
+			 * Filters the model properties. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
 			 *
-			 * @filter /models/{$name}
-			 * @description Filters model arguments.
-			 * @param string $name Model name.
-			 * @param array $args Model arguments.
-			 * @param object $object Model object.
+			 * @hook hivepress/v1/models/{model_name}
+			 * @param {array} $props Model properties.
+			 * @param {object} $model Model object.
+			 * @return {array} Model properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -392,13 +390,12 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model fields.
+			 * Filters model fields. At the time of this hook the model object ID is already available.
 			 *
-			 * @filter /models/{$name}/fields
-			 * @description Filters model fields.
-			 * @param string $name Model name.
-			 * @param array $fields Model fields.
-			 * @param object $object Model object.
+			 * @hook hivepress/v1/models/{model_name}/fields
+			 * @param {array} $fields Model fields.
+			 * @param {object} $model Model object.
+			 * @return {array} Model fields.
 			 */
 			$fields = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/fields', $fields, $this );
 		}
@@ -517,13 +514,12 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model errors.
+			 * Filters model validation errors. With this hook, you can implement custom validation checks and add a new error message to the filtered array. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
 			 *
-			 * @filter /models/{$name}/errors
-			 * @description Filters model errors.
-			 * @param string $name Model name.
-			 * @param array $errors Model errors.
-			 * @param object $object Model object.
+			 * @hook hivepress/v1/models/{model_name}/errors
+			 * @param {array} $errors Model errors.
+			 * @param {object} $model Model object.
+			 * @return {array} Model errors.
 			 */
 			$this->errors = apply_filters( 'hivepress/v1/models/' . hp\get_class_name( $class ) . '/errors', $this->errors, $this );
 		}

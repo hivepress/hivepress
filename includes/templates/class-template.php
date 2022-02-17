@@ -45,12 +45,11 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters template meta.
+			 * Filters the template class meta. The class meta stores properties related to the template type rather than a specific template instance. The dynamic part of the hook refers to the template name. You can check the available templates in the `includes/templates` directory of HivePress.
 			 *
-			 * @filter /templates/{$name}/meta
-			 * @description Filters template meta.
-			 * @param string $name Template name.
-			 * @param array $meta Template meta.
+			 * @hook hivepress/v1/templates/{template_name}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -70,13 +69,12 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters template arguments.
+			 * Filters the template properties. The dynamic part of the hook refers to the template name. You can check the available templates in the `includes/templates` directory of HivePress.
 			 *
-			 * @filter /templates/{$name}
-			 * @description Filters template arguments.
-			 * @param string $name Template name.
-			 * @param array $args Template arguments.
-			 * @param object $object Template object.
+			 * @hook hivepress/v1/templates/{template_name}
+			 * @param {array} $props Template properties.
+			 * @param {object} $template Template object.
+			 * @return {array} Template properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -99,13 +97,12 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters template blocks.
+			 * Filters template blocks. At the time of this hook the template context is already available.
 			 *
-			 * @filter /templates/{$name}/blocks
-			 * @description Filters template blocks.
-			 * @param string $name Template name.
-			 * @param array $blocks Template blocks.
-			 * @param object $object Template object.
+			 * @hook hivepress/v1/templates/{template_name}/blocks
+			 * @param {array} $blocks Template blocks.
+			 * @param {object} $template Template object.
+			 * @return {array} Template blocks.
 			 */
 			$this->blocks = apply_filters( 'hivepress/v1/templates/' . hp\get_class_name( $class ) . '/blocks', $this->blocks, $this );
 		}

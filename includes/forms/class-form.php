@@ -122,12 +122,11 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters form meta.
+			 * Filters the form class meta. The class meta stores properties related to the form type rather than a specific form instance. For example, it stores the form captcha settings. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
-			 * @filter /forms/{$name}/meta
-			 * @description Filters form meta.
-			 * @param string $name Form name.
-			 * @param array $meta Class meta values.
+			 * @hook hivepress/v1/forms/{form_name}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -160,13 +159,12 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters form arguments.
+			 * Filters the form properties. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
-			 * @filter /forms/{$name}
-			 * @description Filters form arguments.
-			 * @param string $name Form name.
-			 * @param array $args Form arguments.
-			 * @param object $object Form object.
+			 * @hook hivepress/v1/forms/{form_name}
+			 * @param {array} $props Form properties.
+			 * @param {object} $form Form object.
+			 * @return {array} Form properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -387,13 +385,12 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters form errors.
+			 * Filters form validation errors. With this hook, you can implement custom validation checks and add a new error message to the filtered array. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
-			 * @filter /forms/{$name}/errors
-			 * @description Filters form errors.
-			 * @param string $name Form name.
-			 * @param array $errors Form errors.
-			 * @param object $object Form object.
+			 * @hook hivepress/v1/forms/{form_name}/errors
+			 * @param {array} $errors Form errors.
+			 * @param {object} $form Form object.
+			 * @return {array} Form errors.
 			 */
 			$this->errors = apply_filters( 'hivepress/v1/forms/' . hp\get_class_name( $class ) . '/errors', $this->errors, $this );
 		}

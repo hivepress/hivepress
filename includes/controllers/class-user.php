@@ -401,7 +401,7 @@ final class User extends Controller {
 		if ( ! is_user_logged_in() ) {
 
 			/**
-			 * Fires when the user is being authenticated.
+			 * Fires when a user is being authenticated.
 			 *
 			 * @hook hivepress/v1/models/user/login
 			 */

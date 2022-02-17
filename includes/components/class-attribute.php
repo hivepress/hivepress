@@ -142,7 +142,13 @@ final class Attribute extends Component {
 	 */
 	public function register_models() {
 
-		// Filter models.
+		/**
+		 * Filters the attribute-enabled models. If you add a new model name to the filtered array, HivePress will register all the required callbacks for handling the model attributes (e.g. custom fields, search filters, sorting options).
+		 *
+		 * @hook hivepress/v1/components/attribute/models
+		 * @param {array} $models Model names.
+		 * @return {array} Model names.
+		 */
 		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
 
 		foreach ( $this->models as $model ) {
@@ -395,12 +401,11 @@ final class Attribute extends Component {
 			}
 
 			/**
-			 * Filters model attributes.
+			 * Filters model attributes. By adding a new attribute to the filtered array, you can add a new field to the model forms and meta boxes, enable the search filter and a sorting option for it.
 			 *
-			 * @filter /models/{$name}/attributes
-			 * @description Filters model attributes.
-			 * @param string $name Model name.
-			 * @param array $attributes Model attributes.
+			 * @hook hivepress/v1/models/{model_name}/attributes
+			 * @param {array} $attributes Attribute configurations.
+			 * @return {array} Attribute configurations.
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 

@@ -162,12 +162,11 @@ abstract class Field {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters Class meta values.
+			 * Filters the field class meta. The class meta stores properties related to the field type rather than a specific field instance. For example, it stores the field settings displayed for an attribute. The dynamic part of the hook refers to the field type. You can check the available field types in the `includes/fields` directory of HivePress.
 			 *
-			 * @filter /fields/{$type}/meta
-			 * @description Filters Class meta values.
-			 * @param string $type Field type.
-			 * @param array $meta Class meta values.
+			 * @hook hivepress/v1/fields/{field_type}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -194,13 +193,12 @@ abstract class Field {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters field arguments.
+			 * Filters the field properties. The dynamic part of the hook refers to the field type. You can check the available field types in the `includes/fields` directory of HivePress.
 			 *
-			 * @filter /fields/{$type}
-			 * @description Filters field arguments.
-			 * @param string $type Field type.
-			 * @param array $args Field arguments.
-			 * @param object $object Field object.
+			 * @hook hivepress/v1/fields/{field_type}
+			 * @param {array} $props Field properties.
+			 * @param {object} $field Field object.
+			 * @return {array} Field properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ), $args, $this );
 		}

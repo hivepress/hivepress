@@ -125,7 +125,13 @@ final class Request extends Component {
 			return;
 		}
 
-		// Filter request context.
+		/**
+		 * Filters the current request context. You can use this hook to store some request-specific values and retrieve them anywhere in the code with the `hivepress()->request->get_context()` method.
+		 *
+		 * @hook hivepress/v1/components/request/context
+		 * @param {array} $context Context values.
+		 * @return {array} Context values.
+		 */
 		$this->context = apply_filters( 'hivepress/v1/components/request/context', $this->context );
 	}
 }

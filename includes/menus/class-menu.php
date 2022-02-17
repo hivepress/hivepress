@@ -53,12 +53,11 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters menu meta.
+			 * Filters the menu class meta. The class meta stores properties related to the menu type rather than a specific menu instance. The dynamic part of the hook refers to the menu name. You can check the available menus in the `includes/menus` directory of HivePress.
 			 *
-			 * @filter /menus/{$name}/meta
-			 * @description Filters menu meta.
-			 * @param string $name Menu name.
-			 * @param array $meta Class meta values.
+			 * @hook hivepress/v1/menus/{menu_name}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -78,13 +77,12 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters menu arguments.
+			 * Filters the menu properties. The dynamic part of the hook refers to the menu name. You can check the available menus in the `includes/menus` directory of HivePress.
 			 *
-			 * @filter /menus/{$name}
-			 * @description Filters menu arguments.
-			 * @param string $name Menu name.
-			 * @param array $args Menu arguments.
-			 * @param object $object Menu object.
+			 * @hook hivepress/v1/menus/{menu_name}
+			 * @param {array} $props Menu properties.
+			 * @param {object} $menu Menu object.
+			 * @return {array} Menu properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ), $args, $this );
 		}
@@ -110,13 +108,12 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters menu items.
+			 * Filters menu items. At the time of this hook the menu context is already available.
 			 *
-			 * @filter /menus/{$name}/items
-			 * @description Filters menu items.
-			 * @param string $name Menu name.
-			 * @param array $items Menu items.
-			 * @param object $object Menu object.
+			 * @hook hivepress/v1/menus/{menu_name}/items
+			 * @param {array} $items Menu items.
+			 * @param {object} $menu Menu object.
+			 * @return {array} Menu items.
 			 */
 			$items = apply_filters( 'hivepress/v1/menus/' . hp\get_class_name( $class ) . '/items', $items, $this );
 		}

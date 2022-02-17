@@ -879,12 +879,11 @@ final class Admin extends Component {
 				if ( in_array( $screen, (array) hp\prefix( $args['screen'] ), true ) ) {
 
 					/**
-					 * Filters meta box arguments.
+					 * Filters meta box properties. The dynamic part of the hook refers to the meta box name. You can find the available meta boxes in the `includes/configs/meta-boxes.php` file of HivePress.
 					 *
-					 * @filter /meta_boxes/{$name}
-					 * @description Filters meta box arguments.
-					 * @param string $name Meta box name.
-					 * @param array $args Meta box arguments.
+					 * @hook hivepress/v1/meta_boxes/{meta_box_name}
+					 * @param {array} $props Meta box properties.
+					 * @return {array} Meta box properties.
 					 */
 					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
@@ -1411,11 +1410,11 @@ final class Admin extends Component {
 		}
 
 		/**
-		 * Filters admin notices.
+		 * Filters the WordPress admin area notices.
 		 *
-		 * @filter /admin_notices
-		 * @description Filters admin notices.
-		 * @param array $notices Admin notices.
+		 * @hook hivepress/v1/admin_notices
+		 * @param {array} $notices Notice configurations.
+		 * @return {array} Notice configurations.
 		 */
 		$notices = apply_filters( 'hivepress/v1/admin_notices', $notices );
 
