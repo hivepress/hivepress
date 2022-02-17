@@ -122,7 +122,7 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the form class meta. The class meta stores properties related to the form type rather than a specific form instance. For example, it stores the form captcha settings. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
+			 * Filters the form class meta. The class meta stores properties related to the form type rather than a specific form instance. For example, it stores the form captcha settings. The dynamic part of the hook refers to the form name (e.g. `listing_update`). You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/forms/{form_name}/meta
 			 * @param {array} $meta Class meta values.
@@ -159,7 +159,7 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the form properties. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
+			 * Filters the form properties. The dynamic part of the hook refers to the form name (e.g. `listing_update`). You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/forms/{form_name}
 			 * @param {array} $props Form properties.
@@ -385,7 +385,7 @@ abstract class Form {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters form validation errors. With this hook, you can implement custom validation checks and add a new error message to the filtered array. The dynamic part of the hook refers to the form name. You can check the available forms in the `includes/forms` directory of HivePress.
+			 * Filters the form validation errors. With this hook, you can implement custom validation checks and add new error messages to the filtered array. The dynamic part of the hook refers to the form name (e.g. `listing_update`). You can check the available forms in the `includes/forms` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/forms/{form_name}/errors
 			 * @param {array} $errors Form errors.

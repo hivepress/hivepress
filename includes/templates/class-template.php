@@ -45,7 +45,7 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the template class meta. The class meta stores properties related to the template type rather than a specific template instance. The dynamic part of the hook refers to the template name. You can check the available templates in the `includes/templates` directory of HivePress.
+			 * Filters the template class meta. The class meta stores properties related to the template type rather than a specific template instance. The dynamic part of the hook refers to the template name (e.g. `listing_view_page`). You can check the available templates in the `includes/templates` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/templates/{template_name}/meta
 			 * @param {array} $meta Class meta values.
@@ -69,7 +69,7 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the template properties. The dynamic part of the hook refers to the template name. You can check the available templates in the `includes/templates` directory of HivePress.
+			 * Filters the template properties. The dynamic part of the hook refers to the template name (e.g. `listing_view_page`). You can check the available templates in the `includes/templates` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/templates/{template_name}
 			 * @param {array} $props Template properties.
@@ -97,7 +97,7 @@ abstract class Template {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters template blocks. At the time of this hook the template context is already available.
+			 * Filters template blocks. At the time of this hook the template context is already available. The dynamic part of the hook refers to the template name (e.g. `listing_view_page`). You can check the available templates in the `includes/templates` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/templates/{template_name}/blocks
 			 * @param {array} $blocks Template blocks.

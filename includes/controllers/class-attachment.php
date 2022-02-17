@@ -186,7 +186,7 @@ final class Attachment extends Controller {
 				if ( strlen( $filename ) ) {
 
 					/**
-					 * Filters the attachment filename.
+					 * Filters the attachment filename before the uploading.
 					 *
 					 * @hook hivepress/v1/models/attachment/filename
 					 * @param {string} $filename Filename.

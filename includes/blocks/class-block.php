@@ -49,7 +49,7 @@ abstract class Block {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the block class meta. The class meta stores properties related to the block type rather than a specific block instance. For example, it stores the block settings displayed in the editor. The dynamic part of the hook refers to the block type. You can check the available block types in the `includes/blocks` directory of HivePress.
+			 * Filters the block class meta. The class meta stores properties related to the block type rather than a specific block instance. For example, it stores the block settings displayed in the editor. The dynamic part of the hook refers to the block type (e.g. `listings`). You can check the available block types in the `includes/blocks` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/blocks/{block_type}/meta
 			 * @param {array} $meta Class meta values.
@@ -73,7 +73,7 @@ abstract class Block {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the block properties. The dynamic part of the hook refers to the block type. You can check the available block types in the `includes/blocks` directory of HivePress.
+			 * Filters the block properties. The dynamic part of the hook refers to the block type (e.g. `listings`). You can check the available block types in the `includes/blocks` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/blocks/{block_type}
 			 * @param {array} $props Block properties.

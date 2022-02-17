@@ -165,7 +165,7 @@ final class Hook extends Component {
 			}
 
 			/**
-			 * Fires when a specific user field is updated. The dynamic part of the hook refers to the field name. For example, use the `hivepress/v1/models/listing/update_image` hook to  call a custom function each time the listing image is changed.
+			 * Fires when a specific user field is updated. The dynamic part of the hook refers to the field name. For example, use the `hivepress/v1/models/user/update_image` hook to call a custom function each time the user image is changed.
 			 *
 			 * @hook hivepress/v1/models/user/update_{field_name}
 			 * @param {int} $user_id User ID.
@@ -222,7 +222,7 @@ final class Hook extends Component {
 			if ( $model ) {
 
 				/**
-				 * Fires when the model (e.g. `listing` or `vendor`) object is created, updated or deleted. The last part of the hook refers to the action type (`create`, `update` or `delete`). For example, use the `hivepress/v1/models/listing/update` hook to  call a custom function each time a listing is updated.
+				 * Fires when the model (e.g. `listing` or `vendor`) object is created, updated or deleted. The last part of the hook refers to the action type (`create`, `update` or `delete`). For example, use the `hivepress/v1/models/listing/update` hook to call a custom function each time a listing is updated.
 				 *
 				 * @hook hivepress/v1/models/{model_name}/{action_type}
 				 * @param {int} $object_id Object ID.
@@ -255,7 +255,7 @@ final class Hook extends Component {
 			if ( $model ) {
 
 				/**
-				 * Fires when the model object status is updated. The dynamic part of the hook refers to the model name (e.g. `listing` or `vendor`). For example, use the `hivepress/v1/models/listing/update_status` hook to  call a custom function each time the listing status is changed.
+				 * Fires when the model object status is updated. The dynamic part of the hook refers to the model name (e.g. `listing` or `vendor`). For example, use the `hivepress/v1/models/listing/update_status` hook to call a custom function each time the listing status is changed.
 				 *
 				 * @hook hivepress/v1/models/{model_name}/update_status
 				 * @param {int} $object_id Object ID.
@@ -299,7 +299,7 @@ final class Hook extends Component {
 				}
 
 				/**
-				 * Fires when a specific model (e.g. `listing` or `vendor`) object field is updated. The last part of the hook refers to the field name.
+				 * Fires when a specific model (e.g. `listing` or `vendor`) object field is updated. The last part of the hook refers to the field name. For example, use the `hivepress/v1/models/listing/update_image` hook to call a custom function each time the listing image is changed.
 				 *
 				 * @hook hivepress/v1/models/{model_name}/update_{field_name}
 				 * @param {int} $object_id Object ID.
