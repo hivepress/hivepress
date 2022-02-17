@@ -181,7 +181,14 @@ class Select extends Field {
 
 		if ( ! is_null( $this->value ) && $this->source ) {
 
-			// Set field options.
+			/**
+			 * Filters the selectable field options. At the time of this hook the field value is already available.
+			 *
+			 * @hook hivepress/v1/fields/field/options
+			 * @param {array} $options Selectable options.
+			 * @param {object} $field Field object.
+			 * @return {array} Selectable options.
+			 */
 			$this->options = apply_filters( 'hivepress/v1/fields/field/options', $this->options, $this );
 		}
 

@@ -20,7 +20,7 @@ abstract class Block {
 	use Traits\Mutator;
 	use Traits\Context;
 
-	use Traits\Meta {
+	use Traits \Meta {
 		set_meta as _set_meta;
 	}
 
@@ -49,12 +49,11 @@ abstract class Block {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters block meta.
+			 * Filters the block class meta. The class meta stores properties related to the block type rather than a specific block instance. For example, it stores the block settings displayed in the editor. The dynamic part of the hook refers to the block type. You can check the available block types in the `includes/blocks` directory of HivePress.
 			 *
-			 * @filter /blocks/{$type}/meta
-			 * @description Filters block meta.
-			 * @param string $type Block type.
-			 * @param array $meta Class meta values.
+			 * @hook hivepress/v1/blocks/{block_type}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -74,13 +73,12 @@ abstract class Block {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters block arguments.
+			 * Filters the block properties. The dynamic part of the hook refers to the block type. You can check the available block types in the `includes/blocks` directory of HivePress.
 			 *
-			 * @filter /blocks/{$type}
-			 * @description Filters block arguments.
-			 * @param string $type Block type.
-			 * @param array $args Block arguments.
-			 * @param object $object Block object.
+			 * @hook hivepress/v1/blocks/{block_type}
+			 * @param {array} $props Block properties.
+			 * @param {object} $block Block object.
+			 * @return {array} Block properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
 		}

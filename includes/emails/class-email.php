@@ -74,12 +74,11 @@ abstract class Email {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters email meta.
+			 * Filters the email class meta. The class meta stores properties related to the email type rather than a specific email instance. For example, it stores the email description displayed on the email edit page. The dynamic part of the hook refers to the email name. You can check the available emails in the `includes/emails` directory of HivePress.
 			 *
-			 * @filter /emails/{$name}/meta
-			 * @description Filters email meta.
-			 * @param string $name Email name.
-			 * @param array $meta Email meta.
+			 * @hook hivepress/v1/emails/{email_name}/meta
+			 * @param {array} $meta Class meta values.
+			 * @return {array} Class meta values.
 			 */
 			$meta = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
@@ -109,13 +108,12 @@ abstract class Email {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters email arguments.
+			 * Filters the email properties. The dynamic part of the hook refers to the email name. You can check the available emails in the `includes/emails` directory of HivePress.
 			 *
-			 * @filter /emails/{$name}
-			 * @description Filters email arguments.
-			 * @param string $name Email name.
-			 * @param array $args Email arguments.
-			 * @param object $object Email object.
+			 * @hook hivepress/v1/emails/{email_name}
+			 * @param {array} $props Email properties.
+			 * @param {object} $email Email object.
+			 * @return {array} Email properties.
 			 */
 			$args = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ), $args, $this );
 		}

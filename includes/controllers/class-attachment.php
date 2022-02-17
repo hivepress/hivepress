@@ -184,6 +184,16 @@ final class Attachment extends Controller {
 		if ( $parent_field->is_protected() ) {
 			$file_callback = function( $dir, $filename, $ext ) {
 				if ( strlen( $filename ) ) {
+
+					/**
+					 * Filters the attachment filename.
+					 *
+					 * @hook hivepress/v1/models/attachment/filename
+					 * @param {string} $filename Filename.
+					 * @param {string} $ext File extension.
+					 * @param {string} $path Directory path.
+					 * @return {string} Filename.
+					 */
 					$filename = apply_filters( 'hivepress/v1/models/attachment/filename', $filename, $ext, $dir );
 				}
 
