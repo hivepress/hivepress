@@ -290,12 +290,11 @@ final class User extends Controller {
 		}
 
 		/**
-		 * Fires on user registration.
+		 * Fires when a new user is registered.
 		 *
-		 * @action /models/user/register
-		 * @description Fires on user registration.
-		 * @param int $id User ID.
-		 * @param array $values User values.
+		 * @hook hivepress/v1/models/user/register
+		 * @param {int} $user_id User ID.
+		 * @param {array} $values Form values.
 		 */
 		do_action( 'hivepress/v1/models/user/register', $user->get_id(), $form->get_values() );
 
@@ -402,10 +401,9 @@ final class User extends Controller {
 		if ( ! is_user_logged_in() ) {
 
 			/**
-			 * Fires on user authentication.
+			 * Fires when the user is being authenticated.
 			 *
-			 * @action /models/user/login
-			 * @description Fires on user authentication.
+			 * @hook hivepress/v1/models/user/login
 			 */
 			do_action( 'hivepress/v1/models/user/login' );
 
