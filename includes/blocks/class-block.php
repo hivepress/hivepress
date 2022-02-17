@@ -20,7 +20,7 @@ abstract class Block {
 	use Traits\Mutator;
 	use Traits\Context;
 
-	use Traits \Meta {
+	use Traits\Meta {
 		set_meta as _set_meta;
 	}
 
