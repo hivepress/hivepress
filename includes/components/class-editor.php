@@ -52,6 +52,14 @@ final class Editor extends Component {
 	 * @return bool
 	 */
 	public function is_preview() {
+
+		/**
+		 * Filters the editor preview mode status.
+		 *
+		 * @hook hivepress/v1/components/editor/preview
+		 * @param {bool} $enabled Preview status.
+		 * @return {bool} Preview status.
+		 */
 		return apply_filters( 'hivepress/v1/components/editor/preview', hp\is_rest() );
 	}
 
