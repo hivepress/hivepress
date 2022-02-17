@@ -234,7 +234,7 @@ final class Core {
 	protected function setup_extensions() {
 
 		/**
-		 * Filters directory paths of HivePress extensions. You can register a new extension by adding its directory path to the filtered array.
+		 * Filters the directory paths of HivePress extensions. You can register a new extension by adding its directory path to the filtered array.
 		 *
 		 * @hook hivepress/v1/extensions
 		 * @param {array} $paths Directory paths.

@@ -879,7 +879,7 @@ final class Admin extends Component {
 				if ( in_array( $screen, (array) hp\prefix( $args['screen'] ), true ) ) {
 
 					/**
-					 * Filters meta box properties. The dynamic part of the hook refers to the meta box name. You can find the available meta boxes in the `includes/configs/meta-boxes.php` file of HivePress.
+					 * Filters meta box properties. The dynamic part of the hook refers to the meta box name (e.g. `listing_settings`). You can check the available meta boxes in the `includes/configs/meta-boxes.php` file of HivePress.
 					 *
 					 * @hook hivepress/v1/meta_boxes/{meta_box_name}
 					 * @param {array} $props Meta box properties.

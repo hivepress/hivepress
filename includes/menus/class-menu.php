@@ -53,7 +53,7 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the menu class meta. The class meta stores properties related to the menu type rather than a specific menu instance. The dynamic part of the hook refers to the menu name. You can check the available menus in the `includes/menus` directory of HivePress.
+			 * Filters the menu class meta. The class meta stores properties related to the menu type rather than a specific menu instance. The dynamic part of the hook refers to the menu name (e.g. `user_account`). You can check the available menus in the `includes/menus` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/menus/{menu_name}/meta
 			 * @param {array} $meta Class meta values.
@@ -77,7 +77,7 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the menu properties. The dynamic part of the hook refers to the menu name. You can check the available menus in the `includes/menus` directory of HivePress.
+			 * Filters the menu properties. The dynamic part of the hook refers to the menu name (e.g. `user_account`). You can check the available menus in the `includes/menus` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/menus/{menu_name}
 			 * @param {array} $props Menu properties.
@@ -108,7 +108,7 @@ abstract class Menu {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters menu items. At the time of this hook the menu context is already available.
+			 * Filters menu items. At the time of this hook the menu context is already available. The dynamic part of the hook refers to the menu name (e.g. `user_account`). You can check the available menus in the `includes/menus` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/menus/{menu_name}/items
 			 * @param {array} $items Menu items.

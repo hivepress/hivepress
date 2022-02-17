@@ -71,7 +71,7 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the model class meta. The class meta stores properties related to the model type rather than a specific model instance. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
+			 * Filters the model class meta. The class meta stores properties related to the model type rather than a specific model object. The dynamic part of the hook refers to the model name (e.g. `listing`). You can check the available models in the `includes/models` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/models/{model_name}/meta
 			 * @param {array} $meta Class meta values.
@@ -95,7 +95,7 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters the model properties. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
+			 * Filters the model properties. The dynamic part of the hook refers to the model name (e.g. `listing`). You can check the available models in the `includes/models` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/models/{model_name}
 			 * @param {array} $props Model properties.
@@ -390,7 +390,7 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model fields. At the time of this hook the model object ID is already available.
+			 * Filters model fields. At the time of this hook the model object ID is already available. The dynamic part of the hook refers to the model name (e.g. `listing`). You can check the available models in the `includes/models` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/models/{model_name}/fields
 			 * @param {array} $fields Model fields.
@@ -514,7 +514,7 @@ abstract class Model {
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
 			/**
-			 * Filters model validation errors. With this hook, you can implement custom validation checks and add a new error message to the filtered array. The dynamic part of the hook refers to the model name. You can check the available models in the `includes/models` directory of HivePress.
+			 * Filters the model validation errors. With this hook, you can implement custom validation checks and add new error messages to the filtered array. The dynamic part of the hook refers to the model name (e.g. `listing`). You can check the available models in the `includes/models` directory of HivePress.
 			 *
 			 * @hook hivepress/v1/models/{model_name}/errors
 			 * @param {array} $errors Model errors.

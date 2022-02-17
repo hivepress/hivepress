@@ -81,7 +81,7 @@ final class Router extends Component {
 			}
 
 			/**
-			 * Filters URL routes registered by HivePress. If you customize route URLs using this hook, don't forget to refresh permalinks afterwards.
+			 * Filters URL routes registered by HivePress. If you customize the route URLs using this hook, don't forget to refresh permalinks afterwards.
 			 *
 			 * @hook hivepress/v1/routes
 			 * @param {array} $routes Route configurations.
