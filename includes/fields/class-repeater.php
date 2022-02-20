@@ -82,7 +82,7 @@ class Repeater extends Field {
 				$field->set_value( hp\get_array_value( $item, $name ) );
 
 				// Add item.
-				if ( $field->get_value() !== null ) {
+				if ( $field->get_value() !== null || $field::get_meta( 'name' ) === 'select' ) {
 					$items[ $index ][ $name ] = $field->get_value();
 				}
 			}

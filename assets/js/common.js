@@ -542,6 +542,8 @@ var hivepress = {
 
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
+					container.find('select').select2('destroy');
+
 					var newItem = firstItem.clone(),
 						index = Math.random().toString(36).slice(2);
 
@@ -561,6 +563,10 @@ var hivepress = {
 
 						newItem.appendTo(itemContainer);
 					}
+
+					container.find('select').select2({
+						width: '100%',
+					});
 				});
 			}
 
