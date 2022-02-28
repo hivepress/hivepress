@@ -198,17 +198,17 @@ class Text extends Field {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( ! is_null( $this->min_length ) && mb_strlen( $this->value ) < $this->min_length ) {
 				/* translators: 1: field label, 2: length. */
-				$this->add_errors( sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->label, number_format_i18n( $this->min_length ) ) );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ), $this->get_label( true ), number_format_i18n( $this->min_length ) ) );
 			}
 
 			if ( ! is_null( $this->max_length ) && mb_strlen( $this->value ) > $this->max_length ) {
 				/* translators: 1: field label, 2: length. */
-				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->label, number_format_i18n( $this->max_length ) ) );
+				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ), $this->get_label( true ), number_format_i18n( $this->max_length ) ) );
 			}
 
 			if ( ! is_null( $this->pattern ) && ! preg_match( '/^' . $this->pattern . '$/', $this->value ) ) {
 				/* translators: %s: field label. */
-				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 			}
 		}
 

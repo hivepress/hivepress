@@ -337,10 +337,17 @@ abstract class Field {
 	/**
 	 * Gets field label.
 	 *
+	 * @param mixed $default Default label.
 	 * @return string
 	 */
-	final public function get_label() {
-		return $this->label;
+	final public function get_label( $default = null ) {
+		$label = $this->label;
+
+		if ( ! $label && $default ) {
+			$label = true === $default ? $this->name : $default;
+		}
+
+		return $label;
 	}
 
 	/**
@@ -504,7 +511,7 @@ abstract class Field {
 
 		if ( $this->required && is_null( $this->value ) ) {
 			/* translators: %s: field label. */
-			$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->label ) );
+			$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) ) );
 		}
 
 		return empty( $this->errors );

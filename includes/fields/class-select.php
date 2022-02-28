@@ -284,11 +284,11 @@ class Select extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			if ( count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
-				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->label ) );
+				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->get_label( true ) ) );
 			}
 
 			if ( $this->multiple && $this->max_values && count( (array) $this->value ) > $this->max_values ) {
-				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_too_many_values' ), $this->label ) );
+				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_too_many_values' ), $this->get_label( true ) ) );
 			}
 		}
 

@@ -85,7 +85,7 @@ class Email extends Text {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) && ! is_email( $this->value ) ) {
 			/* translators: %s: field label. */
-			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+			$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 		}
 
 		return empty( $this->errors );
