@@ -63,13 +63,7 @@
 	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
-	&-form {
-		&__field {
-			&--hidden {
-				display: none;
-			}
-		}
-
+	&-form--table {
 		th {
 			@media screen and (max-width: 782px) {
 				padding-bottom: 10px;
@@ -110,9 +104,7 @@
 	&-field {
 		&__label {
 			small {
-				font-size: 1em;
 				color: #666;
-				font-weight: normal;
 			}
 		}
 
@@ -121,10 +113,6 @@
 			width: 25em;
 			line-height: 1.4em;
 			margin-top: 0.35em;
-		}
-
-		&--hidden {
-			display: none;
 		}
 
 		&--textarea {

@@ -102,6 +102,10 @@ Mixins
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		&--narrow {
+			width: 100%;
+		}
+
 		&__description,
 		&__messages {
 			&:not(:last-child) {
@@ -143,9 +147,127 @@ Mixins
 				}
 			}
 		}
+
+		&__fields,
+		&__footer {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+		}
+
+		&__header {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+		}
+
+		&__actions,
+		&__footer {
+			display: flex;
+			align-items: center;
+		}
+
+		&__footer {
+			justify-content: space-between;
+		}
+
+		&--narrow &__button {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__button {
+				width: 100%;
+
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
+
+		&--narrow &__actions,
+		&--narrow &__footer {
+			flex-direction: column;
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__actions,
+			&__footer {
+				flex-direction: column;
+			}
+		}
+
+		&__field {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+
+			&--hidden {
+				display: none;
+			}
+		}
+
+		&__action {
+			&:not(:last-child) {
+				margin-right: 1.5rem;
+			}
+		}
+
+		&--narrow &__action {
+			&:not(:last-child) {
+				margin: 0 0 0.5rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__action {
+				&:not(:last-child) {
+					margin: 0 0 0.5rem;
+				}
+			}
+		}
+
+		&--narrow button&__action {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			& button&__action {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
 	}
 
 	&-field {
+		&--hidden {
+			display: none;
+		}
+
+		&--email,
+		&--number,
+		&--password,
+		&--search,
+		&--select,
+		&--text,
+		&--textarea,
+		&--url {
+			width: 100%;
+			min-width: 1px;
+		}
+
+		&--textarea {
+			max-width: 100%;
+			min-height: 8rem;
+		}
+
 		&--attachment-upload {
 			&::after {
 				display: table;
@@ -290,6 +412,22 @@ Mixins
 					}
 				}
 			}
+		}
+
+		&__label {
+			display: block;
+			margin-bottom: 0.5rem;
+
+			small {
+				font-size: 1em;
+				font-weight: normal;
+			}
+		}
+
+		&__description {
+			font-size: 80%;
+			margin-bottom: 0.75rem;
+			opacity: 0.75;
 		}
 	}
 
