@@ -95,12 +95,5 @@
 			this.select();
 			document.execCommand('copy');
 		});
-
-		// Modal
-		$('form').find(hivepress.getSelector('modal')).each(function() {
-			var modal = $(this).detach();
-
-			$('body').append(modal);
-		});
 	});
 })(jQuery);

@@ -84,6 +84,9 @@ final class Admin extends Component {
 
 			// Render notices.
 			add_action( 'admin_notices', [ $this, 'render_notices' ] );
+
+			// Render footer.
+			add_action( 'admin_footer', [ $this, 'render_footer' ] );
 		}
 
 		parent::__construct( $args );
@@ -1516,5 +1519,12 @@ final class Admin extends Component {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Renders footer.
+	 */
+	public function render_footer() {
+		echo hivepress()->request->get_context( 'admin_footer' );
 	}
 }
