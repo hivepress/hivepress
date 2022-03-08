@@ -310,10 +310,18 @@ function replace_tokens( $tokens, $text ) {
 			$fields = get_last_array_value( $matches );
 
 			if ( $fields ) {
-				foreach ( $value->_get_fields() as $field ) {
-					if ( in_array( $field->get_name(), $fields, true ) ) {
-						$text = str_replace( '%' . $name . '.' . $field->get_name() . '%', $field->display(), $text );
+				foreach ( $fields as $field_name ) {
+					$field_value = null;
+
+					$field = hp\get_array_value( $value->_get_fields(), $field_name );
+
+					if ( $field ) {
+						$field_value = $field->display();
+					} elseif ( method_exists( $value, 'display_' . $field_name ) ) {
+						$field_value = call_user_func( [ $value, 'display_' . $field_name ] );
 					}
+
+					$text = str_replace( '%' . $name . '.' . $field_name . '%', $field_value, $text );
 				}
 			}
 		} elseif ( ! is_array( $value ) ) {
