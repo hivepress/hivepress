@@ -127,6 +127,17 @@ final class Admin extends Component {
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
+
+		// Add counts.
+		foreach ( $menu as $item_index => $item_args ) {
+			if ( isset( $item_args[2] ) && strpos( $item_args[2], 'edit.php?post_type=hp_' ) === 0 ) {
+				$item_count = wp_count_posts( hp\get_last_array_value( explode( '=', $item_args[2] ) ) );
+
+				if ( property_exists( $item_count, 'pending' ) && $item_count->pending ) {
+					$menu[ $item_index ][0] .= ' <span class="update-plugins count-' . esc_attr( $item_count->pending ) . '"><span class="plugin-count">' . esc_html( $item_count->pending ) . '</span></span>';
+				}
+			}
+		}
 	}
 
 	/**
