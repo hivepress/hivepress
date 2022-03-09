@@ -347,7 +347,7 @@ final class Attribute extends Component {
 					// Get attribute name.
 					$attribute_name = $this->get_attribute_name( $attribute_object->post_name );
 
-					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
 						$attribute_name = $this->get_attribute_name( $attribute_object->post_name, $model );
 
 						// Set field options.
@@ -369,7 +369,7 @@ final class Attribute extends Component {
 
 			// Register taxonomies.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
-				if ( isset( $attribute_args['edit_field']['options'] ) ) {
+				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
 					$taxonomy = hp\prefix( $model . '_' . $attribute_name );
 
 					if ( ! taxonomy_exists( $taxonomy ) ) {
@@ -568,7 +568,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
@@ -630,7 +630,9 @@ final class Attribute extends Component {
 				}
 
 				// Set field relation.
-				if ( isset( $field_args['options'] ) ) {
+				if ( ! isset( $field_args['options'] ) ) {
+					$field_args['_external'] = true;
+				} elseif ( ! isset( $field_args['_external'] ) ) {
 					$field_args = array_merge(
 						$field_args,
 						[
@@ -639,8 +641,6 @@ final class Attribute extends Component {
 							'_relation' => 'many_to_many',
 						]
 					);
-				} else {
-					$field_args['_external'] = true;
 				}
 
 				// Add field.
@@ -1256,7 +1256,7 @@ final class Attribute extends Component {
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-						if ( isset( $attribute['edit_field']['options'] ) ) {
+						if ( isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
 
 							// Get screen.
 							$screen = $model . '_' . $attribute_name;
@@ -1300,7 +1300,7 @@ final class Attribute extends Component {
 				$attributes = $this->get_attributes( $model, $category_ids );
 
 				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
+					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
@@ -1429,7 +1429,7 @@ final class Attribute extends Component {
 					// Get field arguments.
 					$field_args = $attribute['search_field'];
 
-					if ( isset( $field_args['options'] ) ) {
+					if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
 						$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
 					} else {
 						$field_args['name'] = hp\prefix( $attribute_name );
@@ -1472,7 +1472,7 @@ final class Attribute extends Component {
 				$field_filter = $field->get_filter();
 
 				if ( $field_filter ) {
-					if ( ! is_null( $field->get_arg( 'options' ) ) ) {
+					if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
 
 						// Set taxonomy filter.
 						$field_filter = array_combine(
