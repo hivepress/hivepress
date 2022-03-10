@@ -1,38 +1,3 @@
-/*--------------------------------------------------------------
-Mixins
---------------------------------------------------------------*/
-.image-wrapper {
-	img {
-		display: block;
-		width: 100%;
-		height: auto;
-	}
-}
-
-.center-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.unstyled-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-.icon {
-	font-family: 'Font Awesome 5 Free';
-	font-weight: 900;
-	font-style: normal;
-	font-variant: normal;
-	line-height: 1;
-	display: inline-block;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-font-smoothing: antialiased;
-	text-rendering: auto;
-}
-
 .hp {
 	/*--------------------------------------------------------------
 	Buttons
@@ -159,7 +124,9 @@ Mixins
 			overflow-y: auto;
 
 			ul {
-				.unstyled-list;
+				list-style: none;
+				margin: 0;
+				padding: 0;
 
 				ul {
 					margin: 0.5rem 0 0 1.5rem;
@@ -261,7 +228,9 @@ Mixins
 
 		&__item {
 			small {
-				.center-container;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				min-width: 1.5rem;
 				min-height: 1.5rem;
 				padding: 0 0.5rem;
@@ -296,7 +265,9 @@ Mixins
 
 		&--breadcrumb {
 			ul {
-				.unstyled-list;
+				list-style: none;
+				margin: 0;
+				padding: 0;
 				display: flex;
 				flex-wrap: wrap;
 
@@ -316,7 +287,15 @@ Mixins
 				margin-right: 0.5rem;
 
 				&::after {
-					.icon;
+					font-family: 'Font Awesome 5 Free';
+					font-weight: 900;
+					font-style: normal;
+					font-variant: normal;
+					line-height: 1;
+					display: inline-block;
+					-moz-osx-font-smoothing: grayscale;
+					-webkit-font-smoothing: antialiased;
+					text-rendering: auto;
 					content: '\f105';
 					font-size: 14px;
 					margin-left: 0.5rem;
@@ -335,7 +314,9 @@ Mixins
 			}
 
 			ul {
-				.unstyled-list;
+				list-style: none;
+				margin: 0;
+				padding: 0;
 				display: flex;
 				align-items: center;
 				flex-wrap: wrap;
@@ -401,7 +382,9 @@ Mixins
 	--------------------------------------------------------------*/
 	&-pagination {
 		.nav-links {
-			.center-container;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 
 			.page-numbers {
 				&:not(:last-child) {
@@ -585,7 +568,11 @@ Mixins
 
 		&__image,
 		&__images {
-			.image-wrapper;
+			img {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
 		}
 
 		&__images {
@@ -672,7 +659,9 @@ Mixins
 		}
 
 		&--view-block &__featured-badge {
-			.center-container;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			position: absolute;
 			z-index: 1;
 			left: 1rem;
@@ -776,7 +765,11 @@ Mixins
 		}
 
 		&__image {
-			.image-wrapper;
+			img {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
 		}
 
 		&__name {
@@ -905,9 +898,10 @@ Mixins
 		}
 
 		&__image {
-			.image-wrapper;
-
 			img {
+				display: block;
+				width: 100%;
+				height: auto;
 				border-radius: 50%;
 			}
 		}
