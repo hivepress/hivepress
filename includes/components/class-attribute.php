@@ -514,10 +514,11 @@ final class Attribute extends Component {
 								$field_args = array_merge(
 									$field_args,
 									[
-										'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
-										'type'       => 'button',
+										'caption'      => esc_html__( 'Edit Options', 'hivepress' ),
+										'type'         => 'button',
+										'display_type' => 'button',
 
-										'attributes' => [
+										'attributes'   => [
 											'data-component' => 'link',
 											'data-url' => esc_url(
 												admin_url(
