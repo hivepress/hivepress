@@ -172,6 +172,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_display', [ $this, 'add_field_settings' ], 100 );
 
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
@@ -493,7 +494,7 @@ final class Attribute extends Component {
 		$field_context = hp\get_last_array_value( explode( '_', $meta_box['name'] ) );
 
 		// Get field type.
-		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( ( 'display' === $field_context ? 'edit' : $field_context ) . '_field_type' ), true ) );
 
 		if ( $field_type ) {
 
@@ -566,6 +567,13 @@ final class Attribute extends Component {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
 						'caption' => esc_html__( 'Display in the search form', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
+					];
+				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) ) {
+					$meta_box['fields']['public'] = [
+						'label'   => esc_html__( 'Pages', 'hivepress' ),
+						'caption' => esc_html__( 'Create a page for each attribute option', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 5,
 					];
