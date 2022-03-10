@@ -138,6 +138,22 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets current term ID.
+	 *
+	 * @param string $model Model name.
+	 * @return mixed
+	 */
+	protected function get_term_id( $model ) {
+		$term_id = null;
+
+		if ( is_tax() && strpos( get_queried_object()->taxonomy, hp\prefix( $model . '_' ) ) === 0 ) {
+			$term_id = get_queried_object_id();
+		}
+
+		return $term_id;
+	}
+
+	/**
 	 * Registers models.
 	 */
 	public function register_models() {
@@ -258,6 +274,7 @@ final class Attribute extends Component {
 						'label'          => $attribute_object->post_title,
 						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
+						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
 						'indexable'      => (bool) $attribute_object->hp_indexable,
@@ -370,32 +387,38 @@ final class Attribute extends Component {
 			// Register taxonomies.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
-					$taxonomy = hp\prefix( $model . '_' . $attribute_name );
+					$taxonomy_name = hp\prefix( $model . '_' . $attribute_name );
 
-					if ( ! taxonomy_exists( $taxonomy ) ) {
-						register_taxonomy(
-							$taxonomy,
-							hp\prefix( $model ),
-							[
-								'hierarchical'       => true,
-								'public'             => false,
-								'show_ui'            => true,
-								'show_in_quick_edit' => false,
-								'show_in_menu'       => false,
-								'rewrite'            => false,
+					$taxonomy_args = [
+						'hierarchical'       => true,
+						'public'             => false,
+						'show_ui'            => true,
+						'show_in_quick_edit' => false,
+						'show_in_menu'       => false,
+						'rewrite'            => false,
 
-								'labels'             => [
-									'name'          => $attribute_args['label'],
-									'singular_name' => $attribute_args['label'],
-									'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
-									'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
-									'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
-									'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
-									'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
-									'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
-								],
-							]
-						);
+						'labels'             => [
+							'name'          => $attribute_args['label'],
+							'singular_name' => $attribute_args['label'],
+							'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
+							'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
+							'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
+							'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
+							'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
+							'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
+						],
+					];
+
+					if ( hp\get_array_value( $attribute_args, 'public' ) ) {
+						$taxonomy_args['public'] = true;
+
+						$taxonomy_args['rewrite'] = [
+							'slug' => hp\sanitize_slug( $model . '_' . $attribute_name ),
+						];
+					}
+
+					if ( ! taxonomy_exists( $taxonomy_name ) ) {
+						register_taxonomy( $taxonomy_name, hp\prefix( $model ), $taxonomy_args );
 					}
 				}
 			}
@@ -1000,16 +1023,27 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
-		// Get category ID.
-		$category_id = $this->get_category_id( $model );
-
-		if ( empty( $category_id ) ) {
-			$category_id = 0;
+		// Set category ID.
+		if ( isset( $form_args['fields']['_category'] ) ) {
+			$form_args['fields']['_category']['default'] = 0;
 		}
 
-		// Set value.
-		if ( isset( $form_args['fields']['_category'] ) ) {
-			$form_args['fields']['_category']['default'] = $category_id;
+		// Get term ID.
+		$term_id = $this->get_term_id( $model );
+
+		if ( $term_id ) {
+
+			// Get field name.
+			$field_name = substr( get_queried_object()->taxonomy, strlen( hp\prefix( $model . '_' ) ) );
+
+			if ( 'category' === $field_name ) {
+				$field_name = '_' . $field_name;
+			}
+
+			// Set field value.
+			if ( isset( $form_args['fields'][ $field_name ] ) ) {
+				$form_args['fields'][ $field_name ]['default'] = $term_id;
+			}
 		}
 
 		return $form_args;
@@ -1324,7 +1358,7 @@ final class Attribute extends Component {
 		$model = null;
 
 		foreach ( $this->models as $model_name ) {
-			if ( is_post_type_archive( hp\prefix( $model_name ) ) || ( is_tax() && strpos( get_queried_object()->taxonomy, hp\prefix( $model_name . '_' ) ) === 0 ) ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || $this->get_term_id( $model_name ) ) {
 				$model = $model_name;
 
 				break;
