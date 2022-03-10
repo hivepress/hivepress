@@ -1385,14 +1385,28 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		// Set category ID.
 		if ( $category_id ) {
+
+			// Set category ID.
 			$tax_query[] = [
 				[
 					'taxonomy' => hp\prefix( $model . '_category' ),
 					'terms'    => $category_id,
 				],
 			];
+		} else {
+
+			// Set term ID.
+			$term_id = $this->get_term_id( $model );
+
+			if ( $term_id ) {
+				$tax_query[] = [
+					[
+						'taxonomy' => get_queried_object()->taxonomy,
+						'terms'    => $term_id,
+					],
+				];
+			}
 		}
 
 		// Get attributes.
