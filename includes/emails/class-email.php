@@ -165,6 +165,14 @@ abstract class Email {
 	 */
 	final public function send() {
 
+		/**
+		 * Fires when a new email is sent.
+		 *
+		 * @hook hivepress/v1/emails/{email_name}/send
+		 * @param {object} $email Email object.
+		 */
+		do_action( 'hivepress/v1/emails/' . static::get_meta( 'name' ) . '/send', $this );
+
 		// Check content.
 		if ( ! $this->body ) {
 			return false;
