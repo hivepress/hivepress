@@ -63,10 +63,10 @@
 	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
-	&-form {
-		&__field {
-			&--hidden {
-				display: none;
+	&-form--table {
+		tr {
+			&:not(:last-child) {
+				margin-bottom: 0;
 			}
 		}
 
@@ -79,6 +79,10 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+			}
+
+			label {
+				margin-bottom: 0;
 			}
 		}
 
@@ -110,9 +114,7 @@
 	&-field {
 		&__label {
 			small {
-				font-size: 1em;
 				color: #666;
-				font-weight: normal;
 			}
 		}
 
@@ -121,10 +123,6 @@
 			width: 25em;
 			line-height: 1.4em;
 			margin-top: 0.35em;
-		}
-
-		&--hidden {
-			display: none;
 		}
 
 		&--textarea {

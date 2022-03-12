@@ -269,14 +269,14 @@ class Date extends Field {
 
 			if ( false === $date ) {
 				/* translators: %s: field label. */
-				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 			} else {
 				if ( ! is_null( $this->min_date ) ) {
 					$min_date = date_create( $this->min_date );
 
 					if ( $date < $min_date ) {
 						/* translators: 1: field label, 2: date. */
-						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->label, $min_date->format( $this->display_format ) ) );
+						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->get_label( true ), $min_date->format( $this->display_format ) ) );
 					}
 				}
 
@@ -285,7 +285,7 @@ class Date extends Field {
 
 					if ( $date > $max_date ) {
 						/* translators: 1: field label, 2: date. */
-						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->label, $max_date->format( $this->display_format ) ) );
+						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->get_label( true ), $max_date->format( $this->display_format ) ) );
 					}
 				}
 			}

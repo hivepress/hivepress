@@ -85,4 +85,19 @@ class Modal extends Container {
 
 		parent::boot();
 	}
+
+	/**
+	 * Renders block HTML.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		$output = parent::render();
+
+		if ( is_admin() ) {
+			hivepress()->request->set_context( 'admin_footer', hivepress()->request->get_context( 'admin_footer' ) . $output );
+		} else {
+			return $output;
+		}
+	}
 }

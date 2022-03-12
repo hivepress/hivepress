@@ -138,6 +138,9 @@ abstract class Model {
 				}
 			}
 
+			// Set context.
+			$args['context']['model'] = static::_get_meta( 'name' );
+
 			// Create field.
 			$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
 

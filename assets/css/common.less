@@ -1,38 +1,3 @@
-/*--------------------------------------------------------------
-Mixins
---------------------------------------------------------------*/
-.image-wrapper {
-	img {
-		display: block;
-		width: 100%;
-		height: auto;
-	}
-}
-
-.center-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.unstyled-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-.icon {
-	font-family: 'Font Awesome 5 Free';
-	font-weight: 900;
-	font-style: normal;
-	font-variant: normal;
-	line-height: 1;
-	display: inline-block;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-font-smoothing: antialiased;
-	text-rendering: auto;
-}
-
 .hp {
 	/*--------------------------------------------------------------
 	Icons
@@ -102,6 +67,10 @@ Mixins
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		&--narrow {
+			width: 100%;
+		}
+
 		&__description,
 		&__messages {
 			&:not(:last-child) {
@@ -143,9 +112,127 @@ Mixins
 				}
 			}
 		}
+
+		&__fields,
+		&__footer {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+		}
+
+		&__header {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+		}
+
+		&__actions,
+		&__footer {
+			display: flex;
+			align-items: center;
+		}
+
+		&__footer {
+			justify-content: space-between;
+		}
+
+		&--narrow &__button {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__button {
+				width: 100%;
+
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
+
+		&--narrow &__actions,
+		&--narrow &__footer {
+			flex-direction: column;
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__actions,
+			&__footer {
+				flex-direction: column;
+			}
+		}
+
+		&__field {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+
+			&--hidden {
+				display: none;
+			}
+		}
+
+		&__action {
+			&:not(:last-child) {
+				margin-right: 1.5rem;
+			}
+		}
+
+		&--narrow &__action {
+			&:not(:last-child) {
+				margin: 0 0 0.5rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			&__action {
+				&:not(:last-child) {
+					margin: 0 0 0.5rem;
+				}
+			}
+		}
+
+		&--narrow button&__action {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		@media only screen and (max-width:47.99em) {
+			& button&__action {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+			}
+		}
 	}
 
 	&-field {
+		&--hidden {
+			display: none;
+		}
+
+		&--email,
+		&--number,
+		&--password,
+		&--search,
+		&--select,
+		&--text,
+		&--textarea,
+		&--url {
+			width: 100%;
+			min-width: 1px;
+		}
+
+		&--textarea {
+			max-width: 100%;
+			min-height: 8rem;
+		}
+
 		&--attachment-upload {
 			&::after {
 				display: table;
@@ -181,7 +268,12 @@ Mixins
 				> div {
 					position: relative;
 					margin-bottom: 2rem;
-					.image-wrapper;
+
+					img {
+						display: block;
+						width: 100%;
+						height: auto;
+					}
 
 					&:not(:only-child) img {
 						cursor: move;
@@ -193,7 +285,15 @@ Mixins
 						background-color: rgba(0,0,0,0.04);
 
 						&::before {
-							.icon;
+							font-family: 'Font Awesome 5 Free';
+							font-weight: 900;
+							font-style: normal;
+							font-variant: normal;
+							line-height: 1;
+							display: inline-block;
+							-moz-osx-font-smoothing: grayscale;
+							-webkit-font-smoothing: antialiased;
+							text-rendering: auto;
 							position: absolute;
 							left: 50%;
 							top: 50%;
@@ -223,7 +323,9 @@ Mixins
 					}
 
 					a {
-						.center-container;
+						display: flex;
+						justify-content: center;
+						align-items: center;
 						position: absolute;
 						top: 0.5rem;
 						right: 1.5rem;
@@ -290,6 +392,22 @@ Mixins
 					}
 				}
 			}
+		}
+
+		&__label {
+			display: block;
+			margin-bottom: 0.5rem;
+
+			small {
+				font-size: 1em;
+				font-weight: normal;
+			}
+		}
+
+		&__description {
+			font-size: 80%;
+			margin-bottom: 0.75rem;
+			opacity: 0.75;
 		}
 	}
 

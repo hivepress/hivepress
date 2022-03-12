@@ -67,7 +67,7 @@ class Attachment_Select extends Field {
 
 			if ( empty( $attachment_id ) ) {
 				/* translators: %s: field label. */
-				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->label ) );
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 			}
 		}
 

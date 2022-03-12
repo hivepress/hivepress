@@ -566,6 +566,7 @@ var hivepress = {
 
 					container.find('select').select2({
 						width: '100%',
+						minimumResultsForSearch: -1,
 					});
 				});
 			}
@@ -646,7 +647,7 @@ var hivepress = {
 								xhr.setRequestHeader('X-HTTP-Method-Override', method);
 							}
 
-							if ($('body').hasClass('logged-in')) {
+							if ($('body').hasClass('logged-in') || $('body').hasClass('wp-admin')) {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 							}
 						},

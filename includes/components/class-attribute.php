@@ -138,6 +138,22 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets current term ID.
+	 *
+	 * @param string $model Model name.
+	 * @return mixed
+	 */
+	protected function get_term_id( $model ) {
+		$term_id = null;
+
+		if ( is_tax() && strpos( get_queried_object()->taxonomy, hp\prefix( $model . '_' ) ) === 0 ) {
+			$term_id = get_queried_object_id();
+		}
+
+		return $term_id;
+	}
+
+	/**
 	 * Registers models.
 	 */
 	public function register_models() {
@@ -156,6 +172,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_display', [ $this, 'add_field_settings' ], 100 );
 
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
@@ -258,6 +275,7 @@ final class Attribute extends Component {
 						'label'          => $attribute_object->post_title,
 						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
+						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
 						'indexable'      => (bool) $attribute_object->hp_indexable,
@@ -347,7 +365,7 @@ final class Attribute extends Component {
 					// Get attribute name.
 					$attribute_name = $this->get_attribute_name( $attribute_object->post_name );
 
-					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) ) {
+					if ( array_key_exists( 'options', $attribute_args['edit_field'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
 						$attribute_name = $this->get_attribute_name( $attribute_object->post_name, $model );
 
 						// Set field options.
@@ -369,33 +387,39 @@ final class Attribute extends Component {
 
 			// Register taxonomies.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
-				if ( isset( $attribute_args['edit_field']['options'] ) ) {
-					$taxonomy = hp\prefix( $model . '_' . $attribute_name );
+				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
+					$taxonomy_name = hp\prefix( $model . '_' . $attribute_name );
 
-					if ( ! taxonomy_exists( $taxonomy ) ) {
-						register_taxonomy(
-							$taxonomy,
-							hp\prefix( $model ),
-							[
-								'hierarchical'       => true,
-								'public'             => false,
-								'show_ui'            => true,
-								'show_in_quick_edit' => false,
-								'show_in_menu'       => false,
-								'rewrite'            => false,
+					$taxonomy_args = [
+						'hierarchical'       => true,
+						'public'             => false,
+						'show_ui'            => true,
+						'show_in_quick_edit' => false,
+						'show_in_menu'       => false,
+						'rewrite'            => false,
 
-								'labels'             => [
-									'name'          => $attribute_args['label'],
-									'singular_name' => $attribute_args['label'],
-									'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
-									'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
-									'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
-									'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
-									'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
-									'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
-								],
-							]
-						);
+						'labels'             => [
+							'name'          => $attribute_args['label'],
+							'singular_name' => $attribute_args['label'],
+							'add_new_item'  => esc_html__( 'Add Option', 'hivepress' ),
+							'edit_item'     => esc_html__( 'Edit Option', 'hivepress' ),
+							'update_item'   => esc_html__( 'Update Option', 'hivepress' ),
+							'parent_item'   => esc_html__( 'Parent Option', 'hivepress' ),
+							'search_items'  => esc_html__( 'Search Options', 'hivepress' ),
+							'not_found'     => esc_html__( 'No options found.', 'hivepress' ),
+						],
+					];
+
+					if ( hp\get_array_value( $attribute_args, 'public' ) ) {
+						$taxonomy_args['public'] = true;
+
+						$taxonomy_args['rewrite'] = [
+							'slug' => hp\sanitize_slug( $model . '_' . $attribute_name ),
+						];
+					}
+
+					if ( ! taxonomy_exists( $taxonomy_name ) ) {
+						register_taxonomy( $taxonomy_name, hp\prefix( $model ), $taxonomy_args );
 					}
 				}
 			}
@@ -470,7 +494,7 @@ final class Attribute extends Component {
 		$field_context = hp\get_last_array_value( explode( '_', $meta_box['name'] ) );
 
 		// Get field type.
-		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_context . '_field_type' ), true ) );
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( ( 'display' === $field_context ? 'edit' : $field_context ) . '_field_type' ), true ) );
 
 		if ( $field_type ) {
 
@@ -491,10 +515,11 @@ final class Attribute extends Component {
 								$field_args = array_merge(
 									$field_args,
 									[
-										'caption'    => esc_html__( 'Edit Options', 'hivepress' ),
-										'type'       => 'button',
+										'caption'      => esc_html__( 'Edit Options', 'hivepress' ),
+										'type'         => 'button',
+										'display_type' => 'button',
 
-										'attributes' => [
+										'attributes'   => [
 											'data-component' => 'link',
 											'data-url' => esc_url(
 												admin_url(
@@ -545,6 +570,13 @@ final class Attribute extends Component {
 						'type'    => 'checkbox',
 						'_order'  => 5,
 					];
+				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) ) {
+					$meta_box['fields']['public'] = [
+						'label'   => esc_html__( 'Pages', 'hivepress' ),
+						'caption' => esc_html__( 'Create a page for each attribute option', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 5,
+					];
 				}
 			}
 		}
@@ -568,7 +600,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ! isset( $attribute['edit_field']['options'] ) ) {
+			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
@@ -630,7 +662,9 @@ final class Attribute extends Component {
 				}
 
 				// Set field relation.
-				if ( isset( $field_args['options'] ) ) {
+				if ( ! isset( $field_args['options'] ) ) {
+					$field_args['_external'] = true;
+				} elseif ( ! isset( $field_args['_external'] ) ) {
 					$field_args = array_merge(
 						$field_args,
 						[
@@ -639,8 +673,6 @@ final class Attribute extends Component {
 							'_relation' => 'many_to_many',
 						]
 					);
-				} else {
-					$field_args['_external'] = true;
 				}
 
 				// Add field.
@@ -1000,16 +1032,27 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
-		// Get category ID.
-		$category_id = $this->get_category_id( $model );
-
-		if ( empty( $category_id ) ) {
-			$category_id = 0;
+		// Set category ID.
+		if ( isset( $form_args['fields']['_category'] ) ) {
+			$form_args['fields']['_category']['default'] = 0;
 		}
 
-		// Set value.
-		if ( isset( $form_args['fields']['_category'] ) ) {
-			$form_args['fields']['_category']['default'] = $category_id;
+		// Get term ID.
+		$term_id = $this->get_term_id( $model );
+
+		if ( $term_id ) {
+
+			// Get field name.
+			$field_name = substr( get_queried_object()->taxonomy, strlen( hp\prefix( $model . '_' ) ) );
+
+			if ( 'category' === $field_name ) {
+				$field_name = '_' . $field_name;
+			}
+
+			// Set field value.
+			if ( isset( $form_args['fields'][ $field_name ] ) ) {
+				$form_args['fields'][ $field_name ]['default'] = $term_id;
+			}
 		}
 
 		return $form_args;
@@ -1256,7 +1299,7 @@ final class Attribute extends Component {
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-						if ( isset( $attribute['edit_field']['options'] ) ) {
+						if ( isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
 
 							// Get screen.
 							$screen = $model . '_' . $attribute_name;
@@ -1300,7 +1343,7 @@ final class Attribute extends Component {
 				$attributes = $this->get_attributes( $model, $category_ids );
 
 				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
-					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) ) {
+					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
@@ -1324,7 +1367,7 @@ final class Attribute extends Component {
 		$model = null;
 
 		foreach ( $this->models as $model_name ) {
-			if ( is_post_type_archive( hp\prefix( $model_name ) ) || is_tax( hp\prefix( [ $model_name . '_category', $model_name . '_tags' ] ) ) ) {
+			if ( is_post_type_archive( hp\prefix( $model_name ) ) || $this->get_term_id( $model_name ) ) {
 				$model = $model_name;
 
 				break;
@@ -1351,14 +1394,28 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
-		// Set category ID.
 		if ( $category_id ) {
+
+			// Set category ID.
 			$tax_query[] = [
 				[
 					'taxonomy' => hp\prefix( $model . '_category' ),
 					'terms'    => $category_id,
 				],
 			];
+		} else {
+
+			// Set term ID.
+			$term_id = $this->get_term_id( $model );
+
+			if ( $term_id ) {
+				$tax_query[] = [
+					[
+						'taxonomy' => get_queried_object()->taxonomy,
+						'terms'    => $term_id,
+					],
+				];
+			}
 		}
 
 		// Get attributes.
@@ -1429,7 +1486,7 @@ final class Attribute extends Component {
 					// Get field arguments.
 					$field_args = $attribute['search_field'];
 
-					if ( isset( $field_args['options'] ) ) {
+					if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
 						$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
 					} else {
 						$field_args['name'] = hp\prefix( $attribute_name );
@@ -1472,7 +1529,7 @@ final class Attribute extends Component {
 				$field_filter = $field->get_filter();
 
 				if ( $field_filter ) {
-					if ( ! is_null( $field->get_arg( 'options' ) ) ) {
+					if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
 
 						// Set taxonomy filter.
 						$field_filter = array_combine(

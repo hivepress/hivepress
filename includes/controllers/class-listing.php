@@ -506,7 +506,7 @@ final class Listing extends Controller {
 		// Get page ID.
 		$page_id = absint( get_option( 'hp_page_listings' ) );
 
-		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || is_tax( 'hp_listing_category' );
+		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || ( is_tax() && strpos( get_queried_object()->taxonomy, 'hp_listing_' ) === 0 );
 	}
 
 	/**
