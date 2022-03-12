@@ -537,6 +537,18 @@ abstract class Field {
 		// Get value.
 		$value = $this->get_display_value();
 
+		foreach ( hp\get_class_parents( static::class ) as $class ) {
+
+			/**
+			 * Filters the field display value. The dynamic part of the hook refers to the field type (e.g. `textarea`). You can check the available field types in the `includes/fields` directory of HivePress.
+			 *
+			 * @hook hivepress/v1/fields/{field_type}/display_value
+			 * @param {string} $value Display value.
+			 * @return {string} Display value.
+			 */
+			$value = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/display_value', $value, $this );
+		}
+
 		if ( $shortcode ) {
 			$value = strip_shortcodes( $value );
 		}
