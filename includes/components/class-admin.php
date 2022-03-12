@@ -1262,7 +1262,7 @@ final class Admin extends Component {
 
 					// Get field attributes.
 					$attributes = [
-						'class' => 'form-field',
+						'class' => 'form-field hp-form--table',
 					];
 
 					if ( $field->get_arg( '_parent' ) ) {

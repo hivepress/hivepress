@@ -64,6 +64,12 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form--table {
+		tr {
+			&:not(:last-child) {
+				margin-bottom: 0;
+			}
+		}
+
 		th {
 			@media screen and (max-width: 782px) {
 				padding-bottom: 10px;
