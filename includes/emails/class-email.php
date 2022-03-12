@@ -166,7 +166,7 @@ abstract class Email {
 	final public function send() {
 
 		/**
-		 * Fires when a new email is sent.
+		 * Fires when a new email is sent. The dynamic part of the hook refers to the email name (e.g. `listing_expire`). You can check the available emails in the `includes/emails` directory of HivePress.
 		 *
 		 * @hook hivepress/v1/emails/{email_name}/send
 		 * @param {object} $email Email object.
