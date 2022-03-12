@@ -566,6 +566,7 @@ var hivepress = {
 
 					container.find('select').select2({
 						width: '100%',
+						minimumResultsForSearch: -1,
 					});
 				});
 			}
