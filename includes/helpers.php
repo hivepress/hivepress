@@ -313,7 +313,7 @@ function replace_tokens( $tokens, $text ) {
 				foreach ( $fields as $field_name ) {
 					$field_value = null;
 
-					$field = hp\get_array_value( $value->_get_fields(), $field_name );
+					$field = get_array_value( $value->_get_fields(), $field_name );
 
 					if ( $field ) {
 						$field_value = $field->display();
