@@ -34,9 +34,6 @@ final class Template extends Component {
 			add_filter( 'manage_hp_template_posts_columns', [ $this, 'add_admin_columns' ] );
 		} else {
 
-			// Set template content.
-			add_filter( 'hivepress/v1/templates/template', [ $this, 'set_template_content' ], 10, 2 );
-
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
 
@@ -101,42 +98,6 @@ final class Template extends Component {
 		$columns['title'] = esc_html__( 'Template', 'hivepress' );
 
 		return $columns;
-	}
-
-	/**
-	 * Sets template content.
-	 *
-	 * @param array  $args Template arguments.
-	 * @param object $template Template object.
-	 * @return array
-	 */
-	public function set_template_content( $args, $template ) {
-		if ( $template::get_meta( 'label' ) ) {
-
-			// Get content.
-			$content = get_page_by_path( $template::get_meta( 'name' ), OBJECT, 'hp_template' );
-
-			if ( $content && 'publish' === $content->post_status ) {
-
-				// Set blocks.
-				$args['blocks'] = [
-					'page_container' => [
-						'type'   => 'page',
-						'_order' => 10,
-
-						'blocks' => [
-							'page_content' => [
-								'type'    => 'content',
-								'content' => apply_filters( 'the_content', $content->post_content ),
-								'_order'  => 10,
-							],
-						],
-					],
-				];
-			}
-		}
-
-		return $args;
 	}
 
 	/**
