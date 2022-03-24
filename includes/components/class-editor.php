@@ -18,11 +18,18 @@ defined( 'ABSPATH' ) || exit;
 final class Editor extends Component {
 
 	/**
-	 * Registered blocks.
+	 * Template blocks.
 	 *
 	 * @var array
 	 */
-	protected $blocks;
+	protected $blocks = [];
+
+	/**
+	 * Template context.
+	 *
+	 * @var array
+	 */
+	protected $context = [];
 
 	/**
 	 * Class constructor.
@@ -31,16 +38,19 @@ final class Editor extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Register categories.
-		add_filter( 'block_categories_all', [ $this, 'register_categories' ] );
+		// Initialize template editor.
+		add_action( 'rest_api_init', [ $this, 'init_template_editor' ] );
 
-		// Register blocks.
-		add_action( 'init', [ $this, 'register_blocks' ] );
+		// Register block categories.
+		add_filter( 'block_categories_all', [ $this, 'register_block_categories' ] );
+
+		// Register default blocks.
+		add_action( 'init', [ $this, 'register_default_blocks' ] );
 
 		if ( is_admin() ) {
 
-			// Enqueue styles.
-			add_action( 'admin_init', [ $this, 'enqueue_styles' ] );
+			// Enqueue editor styles.
+			add_action( 'admin_init', [ $this, 'enqueue_editor_styles' ] );
 		}
 
 		parent::__construct( $args );
@@ -64,25 +74,24 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Gets blocks.
-	 *
-	 * @param array $container Container arguments.
-	 * @return array
+	 * Initializes template editor.
 	 */
-	protected function get_blocks( $container ) {
-		$blocks = [];
+	public function init_template_editor() {
+		global $wp, $pagenow;
 
-		foreach ( $container['blocks'] as $name => $block ) {
-			if ( is_array( $block ) ) {
-				if ( isset( $block['_label'] ) ) {
-					$blocks[ $name ] = $block;
-				} elseif ( isset( $block['blocks'] ) ) {
-					$blocks = array_merge( $blocks, $this->get_blocks( $block ) );
-				}
-			}
+		// Get template ID.
+		$template_id = null;
+
+		if ( is_admin() && 'post.php' === $pagenow && isset( $_GET['post'] ) ) {
+			$template_id = absint( $_GET['post'] );
+		} elseif ( hp\is_rest() && strpos( $wp->request, '/wp/v2/block-renderer/hivepress/' ) && isset( $_GET['post_id'] ) ) {
+			$template_id = absint( $_GET['post_id'] );
 		}
 
-		return $blocks;
+		// Register template blocks.
+		if ( $template_id && get_post_type( $template_id ) === 'hp_template' ) {
+			$this->register_template_blocks( get_post_field( 'post_name', $template_id ) );
+		}
 	}
 
 	/**
@@ -91,7 +100,7 @@ final class Editor extends Component {
 	 * @param array $categories Block categories.
 	 * @return array
 	 */
-	public function register_categories( $categories ) {
+	public function register_block_categories( $categories ) {
 		$categories[] = [
 			'title' => hivepress()->get_name(),
 			'slug'  => 'hivepress',
@@ -101,9 +110,73 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Registers blocks.
+	 * Gets template blocks.
+	 *
+	 * @param array $template Template arguments.
+	 * @return array
 	 */
-	public function register_blocks() {
+	protected function get_template_blocks( $template ) {
+		$blocks = [];
+
+		foreach ( $template['blocks'] as $name => $block ) {
+			if ( is_array( $block ) ) {
+				if ( isset( $block['_label'] ) ) {
+					$blocks[ $name ] = $block;
+				} elseif ( isset( $block['blocks'] ) ) {
+					$blocks = array_merge( $blocks, $this->get_template_blocks( $block ) );
+				}
+			}
+		}
+
+		return $blocks;
+	}
+
+	/**
+	 * Registers template blocks.
+	 *
+	 * @param string $name Template name.
+	 * @param array  $args Template arguments.
+	 */
+	public function register_template_blocks( $name, $args = [] ) {
+
+		// Create template.
+		$template = hp\create_class_instance( '\HivePress\Templates\\' . $name, [ $args ] );
+
+		if ( ! $template ) {
+			return;
+		}
+
+		// Get blocks.
+		$blocks = [];
+
+		$this->blocks = $this->get_template_blocks( [ 'blocks' => $template->get_blocks() ] );
+
+		foreach ( $this->blocks as $block_type => $block ) {
+
+			// Get slug.
+			$block_slug = hp\sanitize_slug( $block_type );
+
+			// Add block.
+			$blocks[ $block_type ] = [
+				'title'      => $block['_label'],
+				'type'       => 'hivepress/' . $block_slug,
+				'script'     => 'hivepress-block-' . $block_slug,
+				'attributes' => [],
+				'settings'   => [],
+			];
+		}
+
+		// Register blocks.
+		$this->register_blocks( $blocks );
+
+		// Set context.
+		$this->context = $template->get_context();
+	}
+
+	/**
+	 * Registers default blocks.
+	 */
+	public function register_default_blocks() {
 
 		// Get blocks.
 		$blocks = [];
@@ -151,27 +224,8 @@ final class Editor extends Component {
 		}
 
 		// Register blocks.
-		if ( function_exists( 'register_block_type' ) ) {
-			foreach ( $blocks as $block_type => $block ) {
-
-				// Register block script.
-				wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
-				wp_add_inline_script( $block['script'], 'var hivepressBlock = ' . wp_json_encode( $block ) . ';', 'before' );
-
-				// Register block type.
-				register_block_type(
-					$block['type'],
-					[
-						'editor_script'   => $block['script'],
-						'render_callback' => [ $this, 'render_' . $block_type ],
-						'attributes'      => $block['attributes'],
-					]
-				);
-			}
-
-			if ( $blocks ) {
-				wp_localize_script( hp\get_array_value( hp\get_first_array_value( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
-			}
+		if ( $this->register_blocks( $blocks ) ) {
+			wp_localize_script( hp\get_array_value( hp\get_first_array_value( $blocks ), 'script' ), 'hivepressBlocks', $blocks );
 		}
 
 		// Add shortcodes.
@@ -180,6 +234,39 @@ final class Editor extends Component {
 				add_shortcode( 'hivepress_' . $block_type, [ $this, 'render_' . $block_type ] );
 			}
 		}
+	}
+
+	/**
+	 * Registers blocks.
+	 *
+	 * @param array $blocks Block arguments.
+	 * @return bool
+	 */
+	protected function register_blocks( $blocks ) {
+
+		// Check compatibility.
+		if ( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+
+		foreach ( $blocks as $block_type => $block ) {
+
+			// Register block script.
+			wp_register_script( $block['script'], hivepress()->get_url() . '/assets/js/block.min.js', [ 'wp-blocks', 'wp-element', 'wp-components', 'wp-editor' ], hivepress()->get_version(), true );
+			wp_add_inline_script( $block['script'], 'var hivepressBlock = ' . wp_json_encode( $block ) . ';', 'before' );
+
+			// Register block type.
+			register_block_type(
+				$block['type'],
+				[
+					'editor_script'   => $block['script'],
+					'render_callback' => [ $this, 'render_' . $block_type ],
+					'attributes'      => $block['attributes'],
+				]
+			);
+		}
+
+		return ! empty( $blocks );
 	}
 
 	/**
@@ -194,11 +281,22 @@ final class Editor extends Component {
 		if ( strpos( $name, 'render_' ) === 0 ) {
 			$output = ' ';
 
-			// Get block type.
+			// Get block arguments.
 			$block_type = substr( $name, strlen( 'render_' ) );
+			$block_args = (array) hp\get_first_array_value( $args );
+
+			if ( isset( $this->blocks[ $block_type ] ) ) {
+				$block_args = array_merge( $this->blocks[ $block_type ], $block_args );
+				$block_type = hp\get_array_value( $this->blocks[ $block_type ], 'type' );
+			}
+
+			// Set block context.
+			if ( $this->context ) {
+				$block_args['context'] = array_merge( $this->context, hp\get_array_value( $block_args, 'context', [] ) );
+			}
 
 			// Create block.
-			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ (array) hp\get_first_array_value( $args ) ] );
+			$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ $block_args ] );
 
 			if ( $block ) {
 
@@ -215,7 +313,7 @@ final class Editor extends Component {
 	/**
 	 * Enqueues editor styles.
 	 */
-	public function enqueue_styles() {
+	public function enqueue_editor_styles() {
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {
 			if ( in_array( 'editor', (array) hp\get_array_value( $style, 'scope' ), true ) ) {
 				add_editor_style( $style['src'] );
