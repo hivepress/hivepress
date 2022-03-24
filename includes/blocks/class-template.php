@@ -54,8 +54,8 @@ class Template extends Block {
 				hivepress()->editor->register_template_blocks(
 					$this->template,
 					[
-						'blocks'  => $this->blocks,
 						'context' => $this->context,
+						'blocks'  => $this->blocks,
 					]
 				);
 
@@ -84,8 +84,8 @@ class Template extends Block {
 				$class,
 				[
 					[
-						'blocks'  => $this->blocks,
 						'context' => $this->context,
+						'blocks'  => $this->blocks,
 					],
 				]
 			);
@@ -104,8 +104,8 @@ class Template extends Block {
 		return ( new Container(
 			[
 				'tag'     => false,
-				'blocks'  => $blocks,
 				'context' => $context,
+				'blocks'  => $blocks,
 			]
 		) )->render();
 	}
