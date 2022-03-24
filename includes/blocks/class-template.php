@@ -40,64 +40,72 @@ class Template extends Block {
 		$blocks  = [];
 		$context = [];
 
-		// Get class.
+		// Get template class.
 		$class = '\HivePress\Templates\\' . $this->template;
 
-		if ( class_exists( $class ) ) {
-			if ( $class::get_meta( 'label' ) ) {
+		if ( class_exists( $class ) && $class::get_meta( 'label' ) ) {
 
-				// Get content.
-				$content = get_page_by_path( $class::get_meta( 'name' ), OBJECT, 'hp_template' );
+			// Get template content.
+			$content = get_page_by_path( $class::get_meta( 'name' ), OBJECT, 'hp_template' );
 
-				if ( $content && 'publish' === $content->post_status ) {
+			if ( $content && 'publish' === $content->post_status ) {
 
-					// Set blocks.
-					$blocks = [
-						'page_container' => [
-							'type'   => 'page',
-							'_order' => 10,
-
-							'blocks' => [
-								'page_content' => [
-									'type'    => 'content',
-									'content' => apply_filters( 'the_content', $content->post_content ),
-									'_order'  => 10,
-								],
-							],
-						],
-					];
-				}
-			}
-
-			if ( ! $blocks ) {
-
-				// Create template.
-				$template = hp\create_class_instance(
-					$class,
+				// Register blocks.
+				hivepress()->editor->register_template_blocks(
+					$this->template,
 					[
-						[
-							'context' => $this->context,
-							'blocks'  => $this->blocks,
-						],
+						'blocks'  => $this->blocks,
+						'context' => $this->context,
 					]
 				);
 
-				if ( $template ) {
+				// Set blocks.
+				$blocks = [
+					'page_container' => [
+						'type'   => 'page',
+						'_order' => 10,
 
-					// Set blocks.
-					$blocks = $template->get_blocks();
-
-					// Set context.
-					$context = $template->get_context();
-				}
+						'blocks' => [
+							'page_content' => [
+								'type'    => 'content',
+								'content' => apply_filters( 'the_content', $content->post_content ),
+								'_order'  => 10,
+							],
+						],
+					],
+				];
 			}
 		}
 
+		if ( ! $blocks ) {
+
+			// Create template.
+			$template = hp\create_class_instance(
+				$class,
+				[
+					[
+						'blocks'  => $this->blocks,
+						'context' => $this->context,
+					],
+				]
+			);
+
+			if ( $template ) {
+
+				// Set blocks.
+				$blocks = $template->get_blocks();
+
+				// Set context.
+				$context = $template->get_context();
+			}
+		}
+
+		// Render template.
 		return ( new Container(
 			[
 				'tag'     => false,
-				'context' => $context,
 				'blocks'  => $blocks,
+				'context' => $context,
 			]
 		) )->render();
 	}
