@@ -59,6 +59,7 @@ abstract class Page_Narrow extends Page {
 											'page_title'  => [
 												'type'   => 'part',
 												'path'   => 'page/page-title',
+												'_label' => esc_html__( 'Page Title', 'hivepress' ),
 												'_order' => 5,
 											],
 
