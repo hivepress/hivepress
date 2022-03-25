@@ -9,7 +9,7 @@ var registerBlockType = wp.blocks.registerBlockType,
 
 registerBlockType(hivepressBlock.type, {
 	title: hivepressBlock.title,
-	category: 'hivepress',
+	category: hivepressBlock.category,
 	icon: createElement('svg', {
 			width: 24,
 			height: 24

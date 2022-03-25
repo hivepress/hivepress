@@ -57,7 +57,7 @@ final class Editor extends Component {
 	}
 
 	/**
-	 * Checks if preview mode is enabled.
+	 * Checks if editor preview mode is enabled.
 	 *
 	 * @return bool
 	 */
@@ -74,17 +74,28 @@ final class Editor extends Component {
 	}
 
 	/**
+	 * Checks if block preview mode is enabled.
+	 *
+	 * @return bool
+	 */
+	protected function is_block_preview() {
+		global $wp;
+
+		return hp\is_rest() && strpos( $wp->request, '/wp/v2/block-renderer/hivepress/' );
+	}
+
+	/**
 	 * Initializes template editor.
 	 */
 	public function init_template_editor() {
-		global $wp, $pagenow;
+		global $pagenow;
 
 		// Get template ID.
 		$template_id = null;
 
 		if ( is_admin() && 'post.php' === $pagenow && isset( $_GET['post'] ) ) {
 			$template_id = absint( $_GET['post'] );
-		} elseif ( hp\is_rest() && strpos( $wp->request, '/wp/v2/block-renderer/hivepress/' ) && isset( $_GET['post_id'] ) ) {
+		} elseif ( $this->is_block_preview() && isset( $_GET['post_id'] ) ) {
 			$template_id = absint( $_GET['post_id'] );
 		}
 
@@ -101,12 +112,20 @@ final class Editor extends Component {
 	 * @return array
 	 */
 	public function register_block_categories( $categories ) {
-		$categories[] = [
-			'title' => hivepress()->get_name(),
-			'slug'  => 'hivepress',
-		];
+		return array_merge(
+			$categories,
+			[
+				[
+					'title' => hivepress()->get_name(),
+					'slug'  => 'hivepress',
+				],
 
-		return $categories;
+				[
+					'title' => hivepress()->get_name() . ' (' . esc_html__( 'Template', 'hivepress' ) . ')',
+					'slug'  => 'hivepress-template',
+				],
+			]
+		);
 	}
 
 	/**
@@ -122,7 +141,9 @@ final class Editor extends Component {
 			if ( is_array( $block ) ) {
 				if ( isset( $block['_label'] ) ) {
 					$blocks[ $name ] = $block;
-				} elseif ( isset( $block['blocks'] ) ) {
+				}
+
+				if ( isset( $block['blocks'] ) ) {
 					$blocks = array_merge( $blocks, $this->get_template_blocks( $block ) );
 				}
 			}
@@ -161,6 +182,7 @@ final class Editor extends Component {
 				'title'      => $block['_label'],
 				'type'       => 'hivepress/' . $block_slug,
 				'script'     => 'hivepress-block-' . $block_slug,
+				'category'   => 'hivepress-template',
 				'attributes' => [],
 				'settings'   => [],
 			];
@@ -192,6 +214,7 @@ final class Editor extends Component {
 					'title'      => $block::get_meta( 'label' ),
 					'type'       => 'hivepress/' . $block_slug,
 					'script'     => 'hivepress-block-' . $block_slug,
+					'category'   => 'hivepress',
 					'attributes' => [],
 					'settings'   => [],
 				];
@@ -288,11 +311,21 @@ final class Editor extends Component {
 			if ( isset( $this->blocks[ $block_type ] ) ) {
 				$block_args = array_merge( $this->blocks[ $block_type ], $block_args );
 				$block_type = hp\get_array_value( $this->blocks[ $block_type ], 'type' );
+
+				if ( is_admin() || $this->is_block_preview() ) {
+
+					// Render placeholder.
+					return '<div class="hp-block__placeholder"><span>' . esc_html( $block_args['_label'] ) . '</span></div>';
+				}
 			}
 
 			// Set block context.
 			if ( $this->context ) {
-				$block_args['context'] = array_merge( $this->context, hp\get_array_value( $block_args, 'context', [] ) );
+				if ( isset( $block_args['context'] ) ) {
+					$block_args['context'] = array_merge( $this->context, $block_args['context'] );
+				} else {
+					$block_args = array_merge( [ 'context' => $this->context ], $block_args );
+				}
 			}
 
 			// Create block.
