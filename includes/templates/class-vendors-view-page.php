@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Vendors_View_Page extends Page_Sidebar_Left {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'vendors' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -49,6 +65,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						'blocks'     => [
 							'vendor_filter_container' => [
 								'type'       => 'container',
+								'_label'     => esc_html__( 'Filter Form', 'hivepress' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -82,6 +99,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets'    => [
 								'type'   => 'widgets',
 								'area'   => 'hp_vendors_view_sidebar',
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],
@@ -90,16 +108,19 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 					'page_topbar'  => [
 						'type'     => 'results',
 						'optional' => true,
+						'_label'   => esc_html__( 'Toolbar', 'hivepress' ),
 
 						'blocks'   => [
 							'vendor_count'     => [
 								'type'   => 'result_count',
+								'_label' => esc_html__( 'Result Count', 'hivepress' ),
 								'_order' => 10,
 							],
 
 							'vendor_sort_form' => [
 								'type'       => 'form',
 								'form'       => 'vendor_sort',
+								'_label'     => esc_html__( 'Sort Form', 'hivepress' ),
 								'_order'     => 20,
 
 								'attributes' => [
@@ -113,6 +134,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'vendors_container' => [
 								'type'   => 'results',
+								'_label' => esc_html__( 'Results', 'hivepress' ),
 								'_order' => 20,
 
 								'blocks' => [
@@ -125,6 +147,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 									'vendor_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
+										'_label' => esc_html__( 'Pagination', 'hivepress' ),
 										'_order' => 20,
 									],
 								],
