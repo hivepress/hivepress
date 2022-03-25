@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Edit_Page extends Listing_Manage_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'listing' ) . ' (' . hivepress()->translator->get_string( 'editing' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
