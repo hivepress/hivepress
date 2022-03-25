@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Renew_Complete_Page extends Listing_Renew_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'renew_listing' ) . ' (' . hivepress()->translator->get_string( 'completed' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -31,6 +47,7 @@ class Listing_Renew_Complete_Page extends Listing_Renew_Page {
 							'listing_complete_message' => [
 								'type'   => 'part',
 								'path'   => 'listing/renew/listing-complete-message',
+								'_label' => hivepress()->translator->get_string( 'message' ),
 								'_order' => 10,
 							],
 						],

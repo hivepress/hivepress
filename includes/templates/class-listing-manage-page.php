@@ -29,6 +29,8 @@ abstract class Listing_Manage_Page extends Page_Wide {
 					'page_content' => [],
 
 					'page_topbar'  => [
+						'_label'     => hivepress()->translator->get_string( 'toolbar' ),
+
 						'attributes' => [
 							'class' => [ 'hp-page__topbar--separate' ],
 						],
@@ -37,6 +39,7 @@ abstract class Listing_Manage_Page extends Page_Wide {
 							'listing_manage_menu'       => [
 								'type'       => 'menu',
 								'menu'       => 'listing_manage',
+								'_label'     => hivepress()->translator->get_string( 'menu' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -48,6 +51,7 @@ abstract class Listing_Manage_Page extends Page_Wide {
 								'type'       => 'container',
 								'optional'   => true,
 								'blocks'     => [],
+								'_label'     => hivepress()->translator->get_string( 'actions' ),
 								'_order'     => 20,
 
 								'attributes' => [

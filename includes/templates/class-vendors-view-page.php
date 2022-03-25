@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Vendors_View_Page extends Page_Sidebar_Left {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'vendors' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -49,6 +65,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						'blocks'     => [
 							'vendor_filter_container' => [
 								'type'       => 'container',
+								'_label'     => hivepress()->translator->get_string( 'filter_form' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -82,6 +99,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets'    => [
 								'type'   => 'widgets',
 								'area'   => 'hp_vendors_view_sidebar',
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],
@@ -90,16 +108,19 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 					'page_topbar'  => [
 						'type'     => 'results',
 						'optional' => true,
+						'_label'   => hivepress()->translator->get_string( 'toolbar' ),
 
 						'blocks'   => [
 							'vendor_count'     => [
 								'type'   => 'result_count',
+								'_label' => hivepress()->translator->get_string( 'result_count' ),
 								'_order' => 10,
 							],
 
 							'vendor_sort_form' => [
 								'type'       => 'form',
 								'form'       => 'vendor_sort',
+								'_label'     => hivepress()->translator->get_string( 'sort_form' ),
 								'_order'     => 20,
 
 								'attributes' => [
@@ -113,6 +134,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'vendors_container' => [
 								'type'   => 'results',
+								'_label' => hivepress()->translator->get_string( 'results' ),
 								'_order' => 20,
 
 								'blocks' => [
@@ -125,6 +147,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 									'vendor_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
+										'_label' => hivepress()->translator->get_string( 'pagination' ),
 										'_order' => 20,
 									],
 								],

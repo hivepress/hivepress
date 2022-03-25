@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class User_Password_Reset_Page extends Page_Narrow {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => esc_html__( 'Reset Password', 'hivepress' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -30,6 +46,7 @@ class User_Password_Reset_Page extends Page_Narrow {
 						'blocks' => [
 							'user_password_reset_form' => [
 								'type'   => 'user_password_reset_form',
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 							],
 						],

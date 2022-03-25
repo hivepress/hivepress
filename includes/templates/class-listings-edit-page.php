@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listings_Edit_Page extends User_Account_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'editing' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -31,12 +47,14 @@ class Listings_Edit_Page extends User_Account_Page {
 							'listings'           => [
 								'type'   => 'listings',
 								'mode'   => 'edit',
+								'_label' => hivepress()->translator->get_string( 'listings' ),
 								'_order' => 10,
 							],
 
 							'listing_pagination' => [
 								'type'   => 'part',
 								'path'   => 'page/pagination',
+								'_label' => hivepress()->translator->get_string( 'pagination' ),
 								'_order' => 20,
 							],
 						],

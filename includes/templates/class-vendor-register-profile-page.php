@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_Register_Profile_Page extends Vendor_Register_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'add_vendor' ) . ' (' . hivepress()->translator->get_string( 'profile' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -31,6 +47,7 @@ class Vendor_Register_Profile_Page extends Vendor_Register_Page {
 							'user_update_profile_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update_profile',
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 							],
 						],

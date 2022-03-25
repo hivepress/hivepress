@@ -70,6 +70,7 @@ abstract class Page_Sidebar_Left extends Page {
 											'page_title'  => [
 												'type'   => 'part',
 												'path'   => 'page/page-title',
+												'_label' => esc_html__( 'Page Title', 'hivepress' ),
 												'_order' => 5,
 											],
 

@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_View_Page extends Page_Sidebar_Left {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'vendor' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -35,6 +51,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 						'blocks'     => [
 							'vendor_summary'            => [
 								'type'       => 'container',
+								'_label'     => esc_html__( 'Summary', 'hivepress' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -45,12 +62,14 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									'vendor_image'       => [
 										'type'   => 'part',
 										'path'   => 'vendor/view/page/vendor-image',
+										'_label' => hivepress()->translator->get_string( 'image' ),
 										'_order' => 10,
 									],
 
 									'vendor_name'        => [
 										'type'       => 'container',
 										'tag'        => 'h3',
+										'_label'     => hivepress()->translator->get_string( 'name' ),
 										'_order'     => 20,
 
 										'attributes' => [
@@ -75,6 +94,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									'vendor_details_primary' => [
 										'type'       => 'container',
 										'optional'   => true,
+										'_label'     => hivepress()->translator->get_string( 'details' ),
 										'_order'     => 30,
 
 										'attributes' => [
@@ -85,6 +105,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 											'vendor_registered_date' => [
 												'type'   => 'part',
 												'path'   => 'vendor/view/vendor-registered-date',
+												'_label' => hivepress()->translator->get_string( 'date' ),
 												'_order' => 10,
 											],
 										],
@@ -93,12 +114,14 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									'vendor_attributes_secondary' => [
 										'type'   => 'part',
 										'path'   => 'vendor/view/page/vendor-attributes-secondary',
+										'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
 										'_order' => 40,
 									],
 
 									'vendor_description' => [
 										'type'   => 'part',
 										'path'   => 'vendor/view/page/vendor-description',
+										'_label' => hivepress()->translator->get_string( 'description' ),
 										'_order' => 50,
 									],
 								],
@@ -107,12 +130,14 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 							'vendor_attributes_primary' => [
 								'type'   => 'part',
 								'path'   => 'vendor/view/page/vendor-attributes-primary',
+								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
 								'_order' => 20,
 							],
 
 							'vendor_actions_primary'    => [
 								'type'       => 'container',
 								'blocks'     => [],
+								'_label'     => hivepress()->translator->get_string( 'actions' ),
 								'_order'     => 30,
 
 								'attributes' => [
@@ -123,6 +148,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets'      => [
 								'type'   => 'widgets',
 								'area'   => 'hp_vendor_view_sidebar',
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],
@@ -132,6 +158,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
+								'_label' => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'results' ) . ')',
 								'_order' => 20,
 
 								'blocks' => [
@@ -144,6 +171,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									'listing_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
+										'_label' => hivepress()->translator->get_string( 'pagination' ),
 										'_order' => 20,
 									],
 								],

@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit_Category_Page extends Listing_Submit_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'add_listing' ) . ' (' . hivepress()->translator->get_string( 'categories' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -32,6 +48,7 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 								'type'    => 'listing_categories',
 								'mode'    => 'submit',
 								'columns' => 3,
+								'_label'  => hivepress()->translator->get_string( 'categories' ),
 								'_order'  => 10,
 							],
 						],

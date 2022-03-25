@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class User_Email_Verify_Page extends Page_Narrow {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => esc_html__( 'Email Verified', 'hivepress' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -31,6 +47,7 @@ class User_Email_Verify_Page extends Page_Narrow {
 							'user_email_verify_message' => [
 								'type'   => 'part',
 								'path'   => 'user/register/user-email-verify-message',
+								'_label' => hivepress()->translator->get_string( 'message' ),
 								'_order' => 10,
 							],
 						],
