@@ -25,7 +25,7 @@ class User_Edit_Settings_Page extends User_Account_Page {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => esc_html__( 'Account', 'hivepress' ) . ' (' . hivepress()->translator->get_string( 'settings' ) . ')',
+				'label' => hivepress()->translator->get_string( 'user' ) . ' (' . hivepress()->translator->get_string( 'settings' ) . ')',
 			],
 			$meta
 		);
@@ -47,7 +47,7 @@ class User_Edit_Settings_Page extends User_Account_Page {
 							'user_update_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update',
-								'_label' => esc_html__( 'Form', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 
 								'footer' => [

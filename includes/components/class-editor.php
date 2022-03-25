@@ -22,7 +22,7 @@ final class Editor extends Component {
 	 *
 	 * @var array
 	 */
-	protected $blocks = [];
+	protected $blocks;
 
 	/**
 	 * Template context.
@@ -308,14 +308,17 @@ final class Editor extends Component {
 			$block_type = substr( $name, strlen( 'render_' ) );
 			$block_args = (array) hp\get_first_array_value( $args );
 
-			if ( isset( $this->blocks[ $block_type ] ) ) {
-				$block_args = array_merge( $this->blocks[ $block_type ], $block_args );
-				$block_type = hp\get_array_value( $this->blocks[ $block_type ], 'type' );
+			if ( is_array( $this->blocks ) ) {
+				if ( isset( $this->blocks[ $block_type ] ) ) {
+					$block_args = array_merge( $this->blocks[ $block_type ], $block_args );
+					$block_type = hp\get_array_value( $this->blocks[ $block_type ], 'type' );
+				}
 
 				if ( is_admin() || $this->is_block_preview() ) {
+					$block_label = hp\get_array_value( $block_args, '_label', $block_type );
 
 					// Render placeholder.
-					return '<div class="hp-block__placeholder"><span>' . esc_html( $block_args['_label'] ) . '</span></div>';
+					return '<div class="hp-block__placeholder"><span>' . esc_html( $block_label ) . '</span></div>';
 				}
 			}
 

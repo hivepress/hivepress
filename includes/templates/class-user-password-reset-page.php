@@ -46,7 +46,7 @@ class User_Password_Reset_Page extends Page_Narrow {
 						'blocks' => [
 							'user_password_reset_form' => [
 								'type'   => 'user_password_reset_form',
-								'_label' => esc_html__( 'Form', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 							],
 						],

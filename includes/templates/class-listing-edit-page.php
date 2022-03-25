@@ -47,7 +47,7 @@ class Listing_Edit_Page extends Listing_Manage_Page {
 							'listing_update_form' => [
 								'type'   => 'form',
 								'form'   => 'listing_update',
-								'_label' => esc_html__( 'Form', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 
 								// @deprecated since version 1.3.2.

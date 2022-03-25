@@ -158,7 +158,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
-								'_label' => esc_html__( 'Results', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'results' ) . ')',
 								'_order' => 20,
 
 								'blocks' => [
@@ -171,7 +171,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									'listing_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
-										'_label' => esc_html__( 'Pagination', 'hivepress' ),
+										'_label' => hivepress()->translator->get_string( 'pagination' ),
 										'_order' => 20,
 									],
 								],

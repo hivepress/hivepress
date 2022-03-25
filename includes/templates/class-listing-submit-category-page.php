@@ -25,7 +25,7 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => hivepress()->translator->get_string( 'submit_listing' ) . ' (' . hivepress()->translator->get_string( 'category' ) . ')',
+				'label' => hivepress()->translator->get_string( 'add_listing' ) . ' (' . hivepress()->translator->get_string( 'categories' ) . ')',
 			],
 			$meta
 		);

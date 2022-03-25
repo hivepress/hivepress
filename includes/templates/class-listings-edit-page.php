@@ -54,7 +54,7 @@ class Listings_Edit_Page extends User_Account_Page {
 							'listing_pagination' => [
 								'type'   => 'part',
 								'path'   => 'page/pagination',
-								'_label' => esc_html__( 'Pagination', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'pagination' ),
 								'_order' => 20,
 							],
 						],

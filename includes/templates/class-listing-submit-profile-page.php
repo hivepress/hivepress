@@ -25,7 +25,7 @@ class Listing_Submit_Profile_Page extends Listing_Submit_Page {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => hivepress()->translator->get_string( 'submit_listing' ) . ' (' . esc_html__( 'Profile', 'hivepress' ) . ')',
+				'label' => hivepress()->translator->get_string( 'add_listing' ) . ' (' . hivepress()->translator->get_string( 'profile' ) . ')',
 			],
 			$meta
 		);
@@ -47,7 +47,7 @@ class Listing_Submit_Profile_Page extends Listing_Submit_Page {
 							'user_update_profile_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update_profile',
-								'_label' => esc_html__( 'Form', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 							],
 						],

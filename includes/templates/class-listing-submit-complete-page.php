@@ -25,7 +25,7 @@ class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => hivepress()->translator->get_string( 'submit_listing' ) . ' (' . hivepress()->translator->get_string( 'completed' ) . ')',
+				'label' => hivepress()->translator->get_string( 'add_listing' ) . ' (' . hivepress()->translator->get_string( 'completed' ) . ')',
 			],
 			$meta
 		);
@@ -47,7 +47,7 @@ class Listing_Submit_Complete_Page extends Listing_Submit_Page {
 							'listing_complete_message' => [
 								'type'   => 'part',
 								'path'   => 'listing/submit/listing-complete-message',
-								'_label' => esc_html__( 'Message', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'message' ),
 								'_order' => 10,
 							],
 						],

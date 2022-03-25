@@ -25,7 +25,7 @@ class Vendor_Register_Profile_Page extends Vendor_Register_Page {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => hivepress()->translator->get_string( 'add_vendor' ) . ' (' . esc_html__( 'Profile', 'hivepress' ) . ')',
+				'label' => hivepress()->translator->get_string( 'add_vendor' ) . ' (' . hivepress()->translator->get_string( 'profile' ) . ')',
 			],
 			$meta
 		);
@@ -47,7 +47,7 @@ class Vendor_Register_Profile_Page extends Vendor_Register_Page {
 							'user_update_profile_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update_profile',
-								'_label' => esc_html__( 'Form', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
 							],
 						],

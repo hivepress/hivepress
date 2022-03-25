@@ -49,7 +49,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 					],
 
 					'page_topbar'  => [
-						'_label'     => esc_html__( 'Toolbar', 'hivepress' ),
+						'_label'     => hivepress()->translator->get_string( 'toolbar' ),
 						'_order'     => 30,
 
 						'attributes' => [
@@ -60,7 +60,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_manage_menu'       => [
 								'type'       => 'menu',
 								'menu'       => 'listing_manage',
-								'_label'     => esc_html__( 'Menu', 'hivepress' ),
+								'_label'     => hivepress()->translator->get_string( 'menu' ),
 								'_order'     => 10,
 
 								'attributes' => [

@@ -65,7 +65,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						'blocks'     => [
 							'listing_filter_container' => [
 								'type'       => 'container',
-								'_label'     => esc_html__( 'Filter Form', 'hivepress' ),
+								'_label'     => hivepress()->translator->get_string( 'filter_form' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -108,19 +108,19 @@ class Listings_View_Page extends Page_Sidebar_Left {
 					'page_topbar'  => [
 						'type'     => 'results',
 						'optional' => true,
-						'_label'   => esc_html__( 'Toolbar', 'hivepress' ),
+						'_label'   => hivepress()->translator->get_string( 'toolbar' ),
 
 						'blocks'   => [
 							'listing_count'     => [
 								'type'   => 'result_count',
-								'_label' => esc_html__( 'Result Count', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'result_count' ),
 								'_order' => 10,
 							],
 
 							'listing_sort_form' => [
 								'type'       => 'form',
 								'form'       => 'listing_sort',
-								'_label'     => esc_html__( 'Sort Form', 'hivepress' ),
+								'_label'     => hivepress()->translator->get_string( 'sort_form' ),
 								'_order'     => 20,
 
 								'attributes' => [
@@ -134,7 +134,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
-								'_label' => esc_html__( 'Results', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'results' ),
 								'_order' => 20,
 
 								'blocks' => [
@@ -147,7 +147,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 									'listing_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
-										'_label' => esc_html__( 'Pagination', 'hivepress' ),
+										'_label' => hivepress()->translator->get_string( 'pagination' ),
 										'_order' => 20,
 									],
 								],

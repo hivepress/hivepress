@@ -35,7 +35,7 @@ class User_Account_Page extends Page_Sidebar_Left {
 							'user_account_menu'    => [
 								'type'       => 'menu',
 								'menu'       => 'user_account',
-								'_label'     => esc_html__( 'Menu', 'hivepress' ),
+								'_label'     => hivepress()->translator->get_string( 'menu' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -46,7 +46,7 @@ class User_Account_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets' => [
 								'type'   => 'widgets',
 								'area'   => 'hp_user_account_sidebar',
-								'_label' => esc_html__( 'Widgets', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],

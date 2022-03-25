@@ -47,7 +47,7 @@ class Listing_Renew_Complete_Page extends Listing_Renew_Page {
 							'listing_complete_message' => [
 								'type'   => 'part',
 								'path'   => 'listing/renew/listing-complete-message',
-								'_label' => esc_html__( 'Message', 'hivepress' ),
+								'_label' => hivepress()->translator->get_string( 'message' ),
 								'_order' => 10,
 							],
 						],
