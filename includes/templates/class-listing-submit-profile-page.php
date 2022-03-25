@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listing_Submit_Profile_Page extends Listing_Submit_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'submit_listing' ) . ' (' . esc_html__( 'Profile', 'hivepress' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -31,6 +47,7 @@ class Listing_Submit_Profile_Page extends Listing_Submit_Page {
 							'user_update_profile_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update_profile',
+								'_label' => esc_html__( 'Form', 'hivepress' ),
 								'_order' => 10,
 							],
 						],
