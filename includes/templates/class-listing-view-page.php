@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listing_View_Page extends Page_Sidebar_Right {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'listing' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -33,6 +49,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 					],
 
 					'page_topbar'  => [
+						'_label'     => esc_html__( 'Toolbar', 'hivepress' ),
 						'_order'     => 30,
 
 						'attributes' => [
@@ -43,6 +60,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_manage_menu'       => [
 								'type'       => 'menu',
 								'menu'       => 'listing_manage',
+								'_label'     => esc_html__( 'Menu', 'hivepress' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -54,6 +72,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'type'       => 'container',
 								'optional'   => true,
 								'blocks'     => [],
+								'_label'     => hivepress()->translator->get_string( 'actions' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
 								'_order'     => 20,
 
 								'attributes' => [
@@ -68,6 +87,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_title'                => [
 								'type'       => 'container',
 								'tag'        => 'h1',
+								'_label'     => hivepress()->translator->get_string( 'title' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -92,6 +112,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_details_primary'      => [
 								'type'       => 'container',
 								'optional'   => true,
+								'_label'     => hivepress()->translator->get_string( 'details' ),
 								'_order'     => 20,
 
 								'attributes' => [
@@ -102,12 +123,14 @@ class Listing_View_Page extends Page_Sidebar_Right {
 									'listing_category'     => [
 										'type'   => 'part',
 										'path'   => 'listing/view/listing-categories',
+										'_label' => hivepress()->translator->get_string( 'category' ),
 										'_order' => 10,
 									],
 
 									'listing_created_date' => [
 										'type'   => 'part',
 										'path'   => 'listing/view/listing-created-date',
+										'_label' => hivepress()->translator->get_string( 'date' ),
 										'_order' => 20,
 									],
 								],
@@ -116,18 +139,21 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_images'               => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-images',
+								'_label' => hivepress()->translator->get_string( 'images' ),
 								'_order' => 40,
 							],
 
 							'listing_attributes_secondary' => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-attributes-secondary',
+								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
 								'_order' => 50,
 							],
 
 							'listing_description'          => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-description',
+								'_label' => hivepress()->translator->get_string( 'description' ),
 								'_order' => 60,
 							],
 						],
@@ -142,11 +168,13 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_attributes_primary' => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-attributes-primary',
+								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
 								'_order' => 10,
 							],
 
 							'listing_actions_primary'    => [
 								'type'       => 'container',
+								'_label'     => hivepress()->translator->get_string( 'actions' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
 								'_order'     => 20,
 
 								'attributes' => [
@@ -183,12 +211,14 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							'listing_vendor'             => [
 								'type'     => 'template',
 								'template' => 'vendor_view_block',
+								'_label'   => hivepress()->translator->get_string( 'vendor' ),
 								'_order'   => 30,
 							],
 
 							'page_sidebar_widgets'       => [
 								'type'   => 'widgets',
 								'area'   => 'hp_listing_view_sidebar',
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],
@@ -205,6 +235,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 									'related_listings' => [
 										'type'    => 'related_listings',
 										'columns' => 3,
+										'_label'  => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'related_plural' ) . ')',
 										'_order'  => 10,
 									],
 								],
