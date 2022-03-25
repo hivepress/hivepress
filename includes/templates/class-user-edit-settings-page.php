@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class User_Edit_Settings_Page extends User_Account_Page {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => esc_html__( 'Account', 'hivepress' ) . ' (' . hivepress()->translator->get_string( 'settings' ) . ')',
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -28,28 +44,10 @@ class User_Edit_Settings_Page extends User_Account_Page {
 				'blocks' => [
 					'page_content' => [
 						'blocks' => [
-							'user_delete_modal' => [
-								'type'        => 'modal',
-								'title'       => esc_html__( 'Delete Account', 'hivepress' ),
-								'_capability' => 'read',
-								'_order'      => 5,
-
-								'blocks'      => [
-									'user_delete_form' => [
-										'type'       => 'form',
-										'form'       => 'user_delete',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-form--narrow' ],
-										],
-									],
-								],
-							],
-
-							'user_update_form'  => [
+							'user_update_form' => [
 								'type'   => 'form',
 								'form'   => 'user_update',
+								'_label' => esc_html__( 'Form', 'hivepress' ),
 								'_order' => 10,
 
 								'footer' => [
@@ -62,6 +60,25 @@ class User_Edit_Settings_Page extends User_Account_Page {
 										],
 
 										'blocks'     => [
+											'user_delete_modal' => [
+												'type'   => 'modal',
+												'title'  => esc_html__( 'Delete Account', 'hivepress' ),
+												'_capability' => 'read',
+												'_order' => 5,
+
+												'blocks' => [
+													'user_delete_form' => [
+														'type'       => 'form',
+														'form'       => 'user_delete',
+														'_order'     => 10,
+
+														'attributes' => [
+															'class' => [ 'hp-form--narrow' ],
+														],
+													],
+												],
+											],
+
 											'user_delete_link' => [
 												'type'   => 'part',
 												'path'   => 'user/edit/page/user-delete-link',

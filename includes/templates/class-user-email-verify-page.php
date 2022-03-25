@@ -47,6 +47,7 @@ class User_Email_Verify_Page extends Page_Narrow {
 							'user_email_verify_message' => [
 								'type'   => 'part',
 								'path'   => 'user/register/user-email-verify-message',
+								'_label' => esc_html__( 'Message', 'hivepress' ),
 								'_order' => 10,
 							],
 						],
