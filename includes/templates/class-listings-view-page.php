@@ -18,6 +18,22 @@ defined( 'ABSPATH' ) || exit;
 class Listings_View_Page extends Page_Sidebar_Left {
 
 	/**
+	 * Class initializer.
+	 *
+	 * @param array $meta Class meta values.
+	 */
+	public static function init( $meta = [] ) {
+		$meta = hp\merge_arrays(
+			[
+				'label' => hivepress()->translator->get_string( 'listings' ),
+			],
+			$meta
+		);
+
+		parent::init( $meta );
+	}
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Template arguments.
@@ -49,6 +65,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						'blocks'     => [
 							'listing_filter_container' => [
 								'type'       => 'container',
+								'_label'     => esc_html__( 'Filter Form', 'hivepress' ),
 								'_order'     => 10,
 
 								'attributes' => [
@@ -82,6 +99,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 							'page_sidebar_widgets'     => [
 								'type'   => 'widgets',
 								'area'   => 'hp_listings_view_sidebar',
+								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
 						],
@@ -90,16 +108,19 @@ class Listings_View_Page extends Page_Sidebar_Left {
 					'page_topbar'  => [
 						'type'     => 'results',
 						'optional' => true,
+						'_label'   => esc_html__( 'Toolbar', 'hivepress' ),
 
 						'blocks'   => [
 							'listing_count'     => [
 								'type'   => 'result_count',
+								'_label' => esc_html__( 'Result Count', 'hivepress' ),
 								'_order' => 10,
 							],
 
 							'listing_sort_form' => [
 								'type'       => 'form',
 								'form'       => 'listing_sort',
+								'_label'     => esc_html__( 'Sort Form', 'hivepress' ),
 								'_order'     => 20,
 
 								'attributes' => [
@@ -113,6 +134,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
+								'_label' => esc_html__( 'Results', 'hivepress' ),
 								'_order' => 20,
 
 								'blocks' => [
@@ -125,6 +147,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 									'listing_pagination' => [
 										'type'   => 'part',
 										'path'   => 'page/pagination',
+										'_label' => esc_html__( 'Pagination', 'hivepress' ),
 										'_order' => 20,
 									],
 								],
