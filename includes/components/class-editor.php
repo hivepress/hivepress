@@ -121,7 +121,7 @@ final class Editor extends Component {
 				],
 
 				[
-					'title' => hivepress()->get_name() . ' (' . esc_html__( 'Template', 'hivepress' ) . ')',
+					'title' => esc_html__( 'Template', 'hivepress' ),
 					'slug'  => 'hivepress-template',
 				],
 			]
