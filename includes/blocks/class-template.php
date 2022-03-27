@@ -68,9 +68,11 @@ class Template extends Block {
 
 						'blocks'     => [
 							'page_content' => [
-								'type'    => 'content',
-								'content' => apply_filters( 'the_content', $content->post_content ),
-								'_order'  => 10,
+								'type'     => 'callback',
+								'callback' => 'apply_filters',
+								'params'   => [ 'the_content', $content->post_content ],
+								'return'   => true,
+								'_order'   => 10,
 							],
 						],
 					],
