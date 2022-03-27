@@ -29,6 +29,13 @@ abstract class Template {
 	protected $blocks = [];
 
 	/**
+	 * Template attributes.
+	 *
+	 * @var array
+	 */
+	protected $attributes = [];
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -115,6 +122,15 @@ abstract class Template {
 	 */
 	final public function get_blocks() {
 		return $this->blocks;
+	}
+
+	/**
+	 * Gets template attributes.
+	 *
+	 * @return array
+	 */
+	final public function get_attributes() {
+		return $this->attributes;
 	}
 
 	/**
