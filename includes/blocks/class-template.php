@@ -51,7 +51,7 @@ class Template extends Block {
 			if ( $content && 'publish' === $content->post_status ) {
 
 				// Register blocks.
-				hivepress()->editor->register_template_blocks(
+				$template = hivepress()->editor->register_template_blocks(
 					$this->template,
 					[
 						'context' => $this->context,
@@ -62,14 +62,17 @@ class Template extends Block {
 				// Set blocks.
 				$blocks = [
 					'page_container' => [
-						'type'   => 'page',
-						'_order' => 10,
+						'type'       => 'page',
+						'attributes' => $template->get_attributes(),
+						'_order'     => 10,
 
-						'blocks' => [
+						'blocks'     => [
 							'page_content' => [
-								'type'    => 'content',
-								'content' => apply_filters( 'the_content', $content->post_content ),
-								'_order'  => 10,
+								'type'     => 'callback',
+								'callback' => 'apply_filters',
+								'params'   => [ 'the_content', $content->post_content ],
+								'return'   => true,
+								'_order'   => 10,
 							],
 						],
 					],

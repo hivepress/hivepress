@@ -41,7 +41,11 @@ class Listing_View_Page extends Page_Sidebar_Right {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_trees(
 			[
-				'blocks' => [
+				'attributes' => [
+					'class' => [ 'hp-listing', 'hp-listing--view-page' ],
+				],
+
+				'blocks'     => [
 					'page_columns' => [
 						'attributes' => [
 							'class' => [ 'hp-listing', 'hp-listing--view-page' ],

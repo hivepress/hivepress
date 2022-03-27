@@ -32,6 +32,13 @@ class Callback extends Block {
 	protected $params = [];
 
 	/**
+	 * Return the output?
+	 *
+	 * @var bool
+	 */
+	protected $return = false;
+
+	/**
 	 * Renders block HTML.
 	 *
 	 * @return string
@@ -40,12 +47,16 @@ class Callback extends Block {
 		$output = '';
 
 		if ( function_exists( $this->callback ) ) {
-			ob_start();
+			if ( $this->return ) {
+				$output = call_user_func_array( $this->callback, $this->params );
+			} else {
+				ob_start();
 
-			call_user_func_array( $this->callback, $this->params );
-			$output .= ob_get_contents();
+				call_user_func_array( $this->callback, $this->params );
+				$output = ob_get_contents();
 
-			ob_end_clean();
+				ob_end_clean();
+			}
 		}
 
 		return $output;

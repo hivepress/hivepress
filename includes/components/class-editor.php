@@ -157,6 +157,7 @@ final class Editor extends Component {
 	 *
 	 * @param string $name Template name.
 	 * @param array  $args Template arguments.
+	 * @return object
 	 */
 	public function register_template_blocks( $name, $args = [] ) {
 
@@ -193,6 +194,8 @@ final class Editor extends Component {
 
 		// Set context.
 		$this->context = $template->get_context();
+
+		return $template;
 	}
 
 	/**
