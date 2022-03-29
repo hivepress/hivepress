@@ -3,6 +3,30 @@
 
 	$(document).ready(function() {
 
+		// Template
+		if (typeof wp !== 'undefined' && wp.hasOwnProperty('data')) {
+			var isSavedPost = false;
+
+			wp.data.subscribe(function() {
+				var editor = wp.data.select('core/editor');
+
+				if ('hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
+					var field = $('select[name=hp_template]');
+
+					if (field.length && field.val() !== editor.getEditedPostSlug()) {
+						var interval = setInterval(function() {
+							if (!editor.isSavingPost() && !isSavedPost) {
+								window.location.reload();
+
+								isSavedPost = true;
+								clearInterval(interval);
+							}
+						}, 500);
+					}
+				}
+			});
+		}
+
 		// Notice
 		hivepress.getComponent('notice').each(function() {
 			var notice = $(this);
