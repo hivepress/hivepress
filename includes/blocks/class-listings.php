@@ -265,19 +265,23 @@ class Listings extends Block {
 				if ( 'random' !== $this->order && is_null( $listing_ids ) && $regular_query->post_count <= 1000 ) {
 					hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/listing', wp_list_pluck( $regular_query->posts, 'ID' ) );
 				}
-			} elseif ( 'edit' !== $this->mode && hivepress()->request->get_context( 'featured_ids' ) ) {
+			} elseif ( 'edit' !== $this->mode ) {
+				if ( hivepress()->request->get_context( 'featured_ids' ) ) {
 
-				// Query featured listings.
-				$featured_query = new \WP_Query(
-					Models\Listing::query()->filter(
-						[
-							'status' => 'publish',
-							'id__in' => hivepress()->request->get_context( 'featured_ids', [] ),
-						]
-					)->order( 'random' )
-					->limit( get_option( 'hp_listings_featured_per_page' ) )
-					->get_args()
-				);
+					// Query featured listings.
+					$featured_query = new \WP_Query(
+						Models\Listing::query()->filter(
+							[
+								'status' => 'publish',
+								'id__in' => hivepress()->request->get_context( 'featured_ids', [] ),
+							]
+						)->order( 'random' )
+						->limit( get_option( 'hp_listings_featured_per_page' ) )
+						->get_args()
+					);
+				} elseif ( ! $regular_query->have_posts() ) {
+					$output = ( new Part( [ 'path' => 'page/no-results-message' ] ) )->render();
+				}
 			}
 
 			if ( $regular_query->have_posts() || $featured_query ) {
