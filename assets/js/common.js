@@ -558,7 +558,14 @@ var hivepress = {
 								field.attr('name', name.replace(match[1], index));
 							}
 
-							field.val('');
+							if (field.attr('type') === 'checkbox') {
+								var id = 'a' + Math.random().toString(36).slice(2);
+
+								field.attr('id', id);
+								field.closest('label').attr('for', id);
+							} else {
+								field.val('');
+							}
 						});
 
 						newItem.appendTo(itemContainer);
