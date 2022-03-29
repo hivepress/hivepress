@@ -45,11 +45,12 @@ class Listing_Submit_Category_Page extends Listing_Submit_Page {
 					'page_content' => [
 						'blocks' => [
 							'listing_categories' => [
-								'type'    => 'listing_categories',
-								'mode'    => 'submit',
-								'columns' => 3,
-								'_label'  => hivepress()->translator->get_string( 'categories' ),
-								'_order'  => 10,
+								'type'      => 'listing_categories',
+								'mode'      => 'submit',
+								'columns'   => 3,
+								'_label'    => true,
+								'_settings' => [ 'columns', 'order' ],
+								'_order'    => 10,
 							],
 						],
 					],

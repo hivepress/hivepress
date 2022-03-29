@@ -50,9 +50,10 @@ class Listings_View_Page extends Page_Sidebar_Left {
 							],
 
 							'listing_filter_link' => [
-								'type'   => 'part',
-								'path'   => 'listing/view/listing-filter-link',
-								'_order' => 20,
+								'type'    => 'part',
+								'path'    => 'listing/view/listing-filter-link',
+								'_parent' => 'listing_filter_container',
+								'_order'  => 20,
 							],
 						],
 					],
@@ -134,14 +135,15 @@ class Listings_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
-								'_label' => hivepress()->translator->get_string( 'results' ),
 								'_order' => 20,
 
 								'blocks' => [
 									'listings'           => [
-										'type'    => 'listings',
-										'columns' => 2,
-										'_order'  => 10,
+										'type'      => 'listings',
+										'columns'   => 2,
+										'_label'    => true,
+										'_settings' => [ 'columns' ],
+										'_order'    => 10,
 									],
 
 									'listing_pagination' => [

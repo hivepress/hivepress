@@ -50,9 +50,10 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 							],
 
 							'vendor_filter_link' => [
-								'type'   => 'part',
-								'path'   => 'vendor/view/vendor-filter-link',
-								'_order' => 20,
+								'type'    => 'part',
+								'path'    => 'vendor/view/vendor-filter-link',
+								'_parent' => 'vendor_filter_container',
+								'_order'  => 20,
 							],
 						],
 					],
@@ -134,14 +135,15 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'vendors_container' => [
 								'type'   => 'results',
-								'_label' => hivepress()->translator->get_string( 'results' ),
 								'_order' => 20,
 
 								'blocks' => [
 									'vendors'           => [
-										'type'    => 'vendors',
-										'columns' => 2,
-										'_order'  => 10,
+										'type'      => 'vendors',
+										'columns'   => 2,
+										'_label'    => true,
+										'_settings' => [ 'columns' ],
+										'_order'    => 10,
 									],
 
 									'vendor_pagination' => [

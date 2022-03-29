@@ -237,10 +237,11 @@ class Listing_View_Page extends Page_Sidebar_Right {
 
 								'blocks' => [
 									'related_listings' => [
-										'type'    => 'related_listings',
-										'columns' => 3,
-										'_label'  => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'related_plural' ) . ')',
-										'_order'  => 10,
+										'type'      => 'related_listings',
+										'columns'   => 3,
+										'_label'    => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'related_plural' ) . ')',
+										'_settings' => [ 'columns', 'number', 'order' ],
+										'_order'    => 10,
 									],
 								],
 							],

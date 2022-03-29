@@ -162,14 +162,15 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 						'blocks' => [
 							'listings_container' => [
 								'type'   => 'results',
-								'_label' => hivepress()->translator->get_string( 'listings' ) . ' (' . hivepress()->translator->get_string( 'results' ) . ')',
 								'_order' => 20,
 
 								'blocks' => [
 									'listings'           => [
-										'type'    => 'listings',
-										'columns' => 2,
-										'_order'  => 10,
+										'type'      => 'listings',
+										'columns'   => 2,
+										'_label'    => true,
+										'_settings' => [ 'columns' ],
+										'_order'    => 10,
 									],
 
 									'listing_pagination' => [
