@@ -45,10 +45,11 @@ class Listings_Edit_Page extends User_Account_Page {
 					'page_content' => [
 						'blocks' => [
 							'listings'           => [
-								'type'   => 'listings',
-								'mode'   => 'edit',
-								'_label' => hivepress()->translator->get_string( 'listings' ),
-								'_order' => 10,
+								'type'      => 'listings',
+								'mode'      => 'edit',
+								'_label'    => true,
+								'_settings' => [],
+								'_order'    => 10,
 							],
 
 							'listing_pagination' => [

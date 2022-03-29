@@ -43,7 +43,10 @@ class Template extends Block {
 		// Get template class.
 		$class = '\HivePress\Templates\\' . $this->template;
 
-		if ( class_exists( $class ) && $class::get_meta( 'label' ) ) {
+		// Get template count.
+		$count = wp_count_posts( 'hp_template' );
+
+		if ( $count->publish && class_exists( $class ) && $class::get_meta( 'label' ) ) {
 
 			// Get template content.
 			$content = get_page_by_path( $class::get_meta( 'name' ), OBJECT, 'hp_template' );

@@ -54,9 +54,11 @@ class Listing_Categories_View_Page extends Page_Wide {
 					'page_content' => [
 						'blocks' => [
 							'listing_categories' => [
-								'type'    => 'listing_categories',
-								'columns' => 3,
-								'_order'  => 10,
+								'type'      => 'listing_categories',
+								'columns'   => 3,
+								'_label'    => true,
+								'_settings' => [ 'columns', 'order' ],
+								'_order'    => 10,
 							],
 						],
 					],

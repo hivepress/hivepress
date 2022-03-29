@@ -215,6 +215,8 @@ class Vendors extends Block {
 				if ( 'random' !== $this->order && is_null( $vendor_ids ) && $regular_query->post_count <= 1000 ) {
 					hivepress()->cache->set_cache( array_merge( $query->get_args(), [ 'fields' => 'ids' ] ), 'models/vendor', wp_list_pluck( $regular_query->posts, 'ID' ) );
 				}
+			} elseif ( ! $regular_query->have_posts() ) {
+				$output = ( new Part( [ 'path' => 'page/no-results-message' ] ) )->render();
 			}
 
 			if ( $regular_query->have_posts() ) {
