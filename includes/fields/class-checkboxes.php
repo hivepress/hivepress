@@ -110,9 +110,12 @@ class Checkboxes extends Select {
 			foreach ( $options as $value => $label ) {
 				$output .= '<li>';
 
-				// Get label.
+				// Get attributes.
+				$attributes = [];
+
 				if ( is_array( $label ) ) {
-					$label = hp\get_array_value( $label, 'label' );
+					$attributes = hp\get_array_value( $label, 'attributes' );
+					$label      = hp\get_array_value( $label, 'label' );
 				}
 
 				// Get default value.
@@ -129,6 +132,7 @@ class Checkboxes extends Select {
 						'caption'     => $label,
 						'check_value' => $value,
 						'default'     => $default,
+						'attributes'  => $attributes,
 					]
 				) )->render();
 
