@@ -619,8 +619,6 @@ var hivepress = {
 		// Form
 		hivepress.getComponent('form').each(function() {
 			var form = $(this),
-				messageContainer = form.find(hivepress.getSelector('messages')).first(),
-				messageClass = messageContainer.attr('class').split(' ')[0],
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit');
@@ -631,16 +629,19 @@ var hivepress = {
 				});
 			}
 
-			form.on('submit', function(e) {
-				messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
-				submitButton.prop('disabled', true);
-				submitButton.attr('data-state', 'loading');
+			if (form.data('action')) {
+				var messageContainer = form.find(hivepress.getSelector('messages')).first(),
+					messageClass = messageContainer.attr('class').split(' ')[0];
 
-				if (typeof tinyMCE !== 'undefined') {
-					tinyMCE.triggerSave();
-				}
+				form.on('submit', function(e) {
+					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
+					submitButton.prop('disabled', true);
+					submitButton.attr('data-state', 'loading');
 
-				if (form.data('action')) {
+					if (typeof tinyMCE !== 'undefined') {
+						tinyMCE.triggerSave();
+					}
+
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
@@ -714,8 +715,8 @@ var hivepress = {
 					});
 
 					e.preventDefault();
-				}
-			});
+				});
+			}
 		});
 	});
 })(jQuery);
