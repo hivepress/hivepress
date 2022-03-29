@@ -44,7 +44,6 @@ return [
 	'filter_form'                               => esc_html__( 'Filter Form', 'hivepress' ),
 	'sort_form'                                 => esc_html__( 'Sort Form', 'hivepress' ),
 	'result_count'                              => esc_html__( 'Result Count', 'hivepress' ),
-	'results'                                   => esc_html__( 'Results', 'hivepress' ),
 	'toolbar'                                   => esc_html__( 'Toolbar', 'hivepress' ),
 	'menu'                                      => esc_html__( 'Menu', 'hivepress' ),
 	'message'                                   => esc_html__( 'Message', 'hivepress' ),
