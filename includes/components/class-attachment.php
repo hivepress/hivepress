@@ -135,4 +135,26 @@ final class Attachment extends Component {
 
 		return $filename;
 	}
+
+	/**
+	 * Check allowed file extensions.
+	 *
+	 * @param string $filepath File path.
+	 * @param string $path File path.
+	 * @param string $url File url.
+	 * @param array  $types File extensions.
+	 * @return bool
+	 */
+	public function check_filetype( $path, $url, $types ) {
+		$allowed = true;
+
+		$file_type    = wp_check_filetype_and_ext( $path, basename( $url ) );
+		$file_type    = wp_check_filetype_and_ext( $path, $url );
+		$file_formats = array_map( 'strtoupper', $types );
+
+		if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
+			$allowed = false;
+		}
+		return $allowed;
+	}
 }
