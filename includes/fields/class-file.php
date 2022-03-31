@@ -72,17 +72,10 @@ class File extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && $this->formats ) {
+		if ( parent::validate() && ! is_null( $this->value ) && $this->formats && ! hivepress()->attachment->is_valid_file( $this->value['tmp_name'], $this->value['name'], $this->formats ) ) {
 
-			// Check file format.
-			$file_type    = wp_check_filetype_and_ext( $this->value['tmp_name'], $this->value['name'] );
-			$file_formats = array_map( 'strtoupper', $this->formats );
-
-			if ( ! $file_type['ext'] || ! in_array( strtoupper( $file_type['ext'] ), $file_formats, true ) ) {
-
-				/* translators: %s: file extensions. */
-				$this->add_errors( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), implode( ', ', $file_formats ) ) );
-			}
+			/* translators: %s: file extensions. */
+			$this->add_errors( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), strtoupper( implode( ', ', $this->formats ) ) ) );
 		}
 
 		return ! $this->errors;
