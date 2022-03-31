@@ -10,7 +10,7 @@
 			wp.data.subscribe(function() {
 				var editor = wp.data.select('core/editor');
 
-				if ('hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
+				if ( editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
 					var field = $('select[name=hp_template]');
 
 					if (field.length && field.val() !== editor.getEditedPostSlug()) {

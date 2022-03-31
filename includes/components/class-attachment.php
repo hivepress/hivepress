@@ -44,6 +44,24 @@ final class Attachment extends Component {
 	}
 
 	/**
+	 * Checks if the file is valid.
+	 *
+	 * @param string $path File path.
+	 * @param string $name File name.
+	 * @param array  $exts Allowed extensions.
+	 * @return bool
+	 */
+	public function is_valid_file( $path, $name, $exts ) {
+		$type = wp_check_filetype_and_ext( $path, $name );
+
+		if ( ! $type['ext'] || ! in_array( $type['ext'], $exts, true ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Sets the attachment parent ID.
 	 *
 	 * @param array $attachment Attachment arguments.

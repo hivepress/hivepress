@@ -114,7 +114,7 @@ class Checkboxes extends Select {
 				$attributes = [];
 
 				if ( is_array( $label ) ) {
-					$attributes = hp\get_array_value( $label, 'attributes' );
+					$attributes = hp\get_array_value( $label, 'attributes', [] );
 					$label      = hp\get_array_value( $label, 'label' );
 				}
 

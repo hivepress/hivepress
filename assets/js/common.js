@@ -629,14 +629,17 @@ var hivepress = {
 				});
 			}
 
+			form.on('submit', function() {
+				submitButton.prop('disabled', true);
+				submitButton.attr('data-state', 'loading');
+			});
+
 			if (form.data('action')) {
 				var messageContainer = form.find(hivepress.getSelector('messages')).first(),
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
 				form.on('submit', function(e) {
 					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
-					submitButton.prop('disabled', true);
-					submitButton.attr('data-state', 'loading');
 
 					if (typeof tinyMCE !== 'undefined') {
 						tinyMCE.triggerSave();
