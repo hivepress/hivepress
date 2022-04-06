@@ -61,7 +61,7 @@ class File extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		if ( ! is_array( $this->value ) || ! isset( $this->value['tmp_name'], $this->value['name'] ) ) {
+		if ( ! is_array( $this->value ) || ! isset( $this->value['tmp_name'] ) || ! isset( $this->value['name'] ) ) {
 			$this->value = null;
 		}
 	}
@@ -72,10 +72,16 @@ class File extends Field {
 	 * @return bool
 	 */
 	public function validate() {
-		if ( parent::validate() && ! is_null( $this->value ) && $this->formats && ! hivepress()->attachment->is_valid_file( $this->value['tmp_name'], $this->value['name'], $this->formats ) ) {
+		if ( parent::validate() && ! is_null( $this->value ) ) {
+			if ( $this->required && ( ! $this->value['tmp_name'] || ! $this->value['name'] ) ) {
 
-			/* translators: %s: file extensions. */
-			$this->add_errors( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), strtoupper( implode( ', ', $this->formats ) ) ) );
+				/* translators: %s: field label. */
+				$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) ) );
+			} elseif ( $this->formats && ! hivepress()->attachment->is_valid_file( $this->value['tmp_name'], $this->value['name'], $this->formats ) ) {
+
+				/* translators: %s: file extensions. */
+				$this->add_errors( sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), strtoupper( implode( ', ', $this->formats ) ) ) );
+			}
 		}
 
 		return ! $this->errors;
