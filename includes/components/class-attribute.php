@@ -271,20 +271,21 @@ final class Attribute extends Component {
 
 					// Set defaults.
 					$attribute_args = [
-						'id'             => $attribute_object->ID,
-						'label'          => $attribute_object->post_title,
-						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
-						'display_format' => (string) $attribute_object->hp_display_format,
-						'public'         => (bool) $attribute_object->hp_public,
-						'editable'       => (bool) $attribute_object->hp_editable,
-						'moderated'      => (bool) $attribute_object->hp_moderated,
-						'indexable'      => (bool) $attribute_object->hp_indexable,
-						'searchable'     => (bool) $attribute_object->hp_searchable,
-						'filterable'     => (bool) $attribute_object->hp_filterable,
-						'sortable'       => (bool) $attribute_object->hp_sortable,
-						'categories'     => [],
-						'edit_field'     => [],
-						'search_field'   => [],
+						'id'              => $attribute_object->ID,
+						'label'           => $attribute_object->post_title,
+						'display_areas'   => array_filter( (array) $attribute_object->hp_display_areas ),
+						'display_format'  => (string) $attribute_object->hp_display_format,
+						'public'          => (bool) $attribute_object->hp_public,
+						'editable'        => (bool) $attribute_object->hp_editable,
+						'moderated'       => (bool) $attribute_object->hp_moderated,
+						'indexable'       => (bool) $attribute_object->hp_indexable,
+						'searchable'      => (bool) $attribute_object->hp_searchable,
+						'filterable'      => (bool) $attribute_object->hp_filterable,
+						'sortable'        => (bool) $attribute_object->hp_sortable,
+						'schema_property' => $attribute_object->hp_schema_property,
+						'categories'      => [],
+						'edit_field'      => [],
+						'search_field'    => [],
 					];
 
 					// Set icon.
