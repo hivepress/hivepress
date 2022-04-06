@@ -1509,7 +1509,7 @@ final class Attribute extends Component {
 			}
 
 			// Set attribute filters.
-			foreach ( $attribute_fields as $field ) {
+			foreach ( $attribute_fields as $attribute_name => $field ) {
 				if ( $field->get_arg( '_parent' ) ) {
 
 					// Get parent field.
@@ -1552,7 +1552,7 @@ final class Attribute extends Component {
 						unset( $field_filter['type'] );
 
 						// Add taxonomy clause.
-						$tax_query[] = $field_filter;
+						$tax_query[ $attribute_name ] = $field_filter;
 					} else {
 
 						// Set meta filter.
@@ -1574,7 +1574,7 @@ final class Attribute extends Component {
 						);
 
 						// Add meta clause.
-						$meta_query[] = $field_filter;
+						$meta_query[ $attribute_name ] = $field_filter;
 					}
 				}
 			}
