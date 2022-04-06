@@ -71,11 +71,13 @@ class Listing extends Post {
 					],
 
 					'featured'         => [
+						'label'     => esc_html_x( 'Featured', 'listing', 'hivepress' ),
 						'type'      => 'checkbox',
 						'_external' => true,
 					],
 
 					'verified'         => [
+						'label'     => esc_html_x( 'Verified', 'listing', 'hivepress' ),
 						'type'      => 'checkbox',
 						'_external' => true,
 					],
@@ -124,7 +126,7 @@ class Listing extends Post {
 					],
 
 					'categories'       => [
-						'label'       => hivepress()->translator->get_string( 'categories' ),
+						'label'       => hivepress()->translator->get_string( 'category' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
