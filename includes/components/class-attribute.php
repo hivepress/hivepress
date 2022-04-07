@@ -425,7 +425,7 @@ final class Attribute extends Component {
 			}
 
 			/**
-			 * Filters model attributes. By adding a new attribute to the filtered array, you can add a new field to the model forms and meta boxes, enable the search filter and a sorting option for it.
+			 * Filters model attributes. By adding a new attribute to the filtered array, you can add a new field to the model forms and meta boxes, enable the search filter and a sorting option for it. The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
 			 *
 			 * @hook hivepress/v1/models/{model_name}/attributes
 			 * @param {array} $attributes Attribute configurations.
@@ -1509,7 +1509,7 @@ final class Attribute extends Component {
 			}
 
 			// Set attribute filters.
-			foreach ( $attribute_fields as $field ) {
+			foreach ( $attribute_fields as $attribute_name => $field ) {
 				if ( $field->get_arg( '_parent' ) ) {
 
 					// Get parent field.
@@ -1552,7 +1552,7 @@ final class Attribute extends Component {
 						unset( $field_filter['type'] );
 
 						// Add taxonomy clause.
-						$tax_query[] = $field_filter;
+						$tax_query[ $attribute_name ] = $field_filter;
 					} else {
 
 						// Set meta filter.
@@ -1574,10 +1574,26 @@ final class Attribute extends Component {
 						);
 
 						// Add meta clause.
-						$meta_query[] = $field_filter;
+						$meta_query[ $attribute_name ] = $field_filter;
 					}
 				}
 			}
+		}
+
+		// Set meta and taxonomy queries.
+		$query->set( 'meta_query', $meta_query );
+		$query->set( 'tax_query', $tax_query );
+
+		if ( $query->is_search() ) {
+
+			/**
+			 * Fires when models are being searched. The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
+			 *
+			 * @hook hivepress/v1/models/{model_name}/search
+			 * @param {WP_Query} $query Search query.
+			 * @param {array} $fields Search fields.
+			 */
+			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
 		}
 
 		// Get featured results.
@@ -1591,8 +1607,8 @@ final class Attribute extends Component {
 					'post_type'        => hp\prefix( $model ),
 					'post_status'      => 'publish',
 					's'                => $query->get( 's' ),
-					'tax_query'        => $tax_query,
-					'meta_query'       => $meta_query,
+					'tax_query'        => $query->get( 'tax_query' ),
+					'meta_query'       => $query->get( 'meta_query' ),
 					'meta_key'         => 'hp_featured',
 					'posts_per_page'   => $featured_count,
 					'orderby'          => 'rand',
@@ -1610,10 +1626,6 @@ final class Attribute extends Component {
 				hivepress()->request->set_context( 'featured_ids', $featured_ids );
 			}
 		}
-
-		// Set meta and taxonomy queries.
-		$query->set( 'meta_query', $meta_query );
-		$query->set( 'tax_query', $tax_query );
 	}
 
 	/**

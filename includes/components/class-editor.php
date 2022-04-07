@@ -371,6 +371,13 @@ final class Editor extends Component {
 					}
 
 					if ( isset( $this->template[ $block_type ] ) ) {
+
+						// Filter block settings.
+						if ( isset( $this->template[ $block_type ]['_settings'] ) ) {
+							$block_args = array_intersect_key( $block_args, array_flip( $this->template[ $block_type ]['_settings'] ) );
+						}
+
+						// Set block arguments.
 						$block_args = array_merge( $this->template[ $block_type ], $block_args );
 						$block_type = hp\get_array_value( $this->template[ $block_type ], 'type' );
 					}

@@ -74,6 +74,13 @@ abstract class Page_Sidebar_Left extends Page {
 												'_order' => 5,
 											],
 
+											'page_description' => [
+												'type'   => 'part',
+												'path'   => 'page/page-description',
+												'_label' => esc_html__( 'Page Description', 'hivepress' ),
+												'_order' => 7,
+											],
+
 											'page_topbar' => [
 												'type'     => 'container',
 												'blocks'   => [],

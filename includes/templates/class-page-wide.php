@@ -41,20 +41,27 @@ abstract class Page_Wide extends Page {
 								],
 
 								'blocks'     => [
-									'breadcrumb_menu' => [
+									'breadcrumb_menu'  => [
 										'type'   => 'menu',
 										'menu'   => 'breadcrumb',
 										'_order' => 1,
 									],
 
-									'page_title'      => [
+									'page_title'       => [
 										'type'   => 'part',
 										'path'   => 'page/page-title',
 										'_label' => esc_html__( 'Page Title', 'hivepress' ),
 										'_order' => 5,
 									],
 
-									'page_topbar'     => [
+									'page_description' => [
+										'type'   => 'part',
+										'path'   => 'page/page-description',
+										'_label' => esc_html__( 'Page Description', 'hivepress' ),
+										'_order' => 7,
+									],
+
+									'page_topbar'      => [
 										'type'       => 'container',
 										'blocks'     => [],
 										'optional'   => true,
