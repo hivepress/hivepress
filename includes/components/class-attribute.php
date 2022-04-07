@@ -1587,7 +1587,7 @@ final class Attribute extends Component {
 		if ( $query->is_search() ) {
 
 			/**
-			 * Fires when attribute-enabled models are being searched. The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
+			 * Fires models are being searched. The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
 			 *
 			 * @hook hivepress/v1/models/{model_name}/search
 			 * @param {WP_Query} $query Search query.
