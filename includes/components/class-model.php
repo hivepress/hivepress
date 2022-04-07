@@ -87,14 +87,20 @@ final class Model extends Component {
 	 * @param string $model Model name.
 	 * @param string $type Field type.
 	 * @param string $alias Field alias.
+	 * @param int    $id Object ID.
 	 * @return string
 	 */
-	public function get_field_name( $model, $type, $alias ) {
+	public function get_field_name( $model, $type, $alias, $id = null ) {
 
 		// Create model.
 		$model = hp\create_class_instance( '\HivePress\Models\\' . $model );
 
 		if ( $model ) {
+
+			// Set object ID.
+			if ( $id ) {
+				$model->set_id( $id );
+			}
 
 			// Get fields aliases.
 			$aliases = array_map(

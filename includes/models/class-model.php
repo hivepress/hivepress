@@ -373,7 +373,7 @@ abstract class Model {
 	 * @param int $id Object ID.
 	 * @return object
 	 */
-	final protected function set_id( $id ) {
+	final public function set_id( $id ) {
 		$this->id = absint( $id );
 
 		// Get fields.

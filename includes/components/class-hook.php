@@ -155,7 +155,7 @@ final class Hook extends Component {
 		}
 
 		// Get field name.
-		$field = hivepress()->model->get_field_name( 'user', 'meta', $meta_key );
+		$field = hivepress()->model->get_field_name( 'user', 'meta', $meta_key, $user_id );
 
 		if ( $field ) {
 
@@ -289,7 +289,7 @@ final class Hook extends Component {
 		if ( $model ) {
 
 			// Get field name.
-			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key );
+			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key, $post_id );
 
 			if ( $field && 'status' !== $field ) {
 
@@ -365,7 +365,7 @@ final class Hook extends Component {
 					if ( $post_model ) {
 
 						// Get post field name.
-						$post_field = hivepress()->model->get_field_name( $post_model, 'term', $taxonomy );
+						$post_field = hivepress()->model->get_field_name( $post_model, 'term', $taxonomy, $post_id );
 
 						if ( $post_field ) {
 							do_action( 'hivepress/v1/models/' . $post_model . '/update_' . $post_field, $post_id, $term_ids );
@@ -445,7 +445,7 @@ final class Hook extends Component {
 		if ( $model ) {
 
 			// Get field name.
-			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key );
+			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key, $term_id );
 
 			if ( $field ) {
 
@@ -552,7 +552,7 @@ final class Hook extends Component {
 		if ( $model ) {
 
 			// Get field name.
-			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key );
+			$field = hivepress()->model->get_field_name( $model, 'meta', $meta_key, $comment_id );
 
 			if ( $field && 'status' !== $field ) {
 
