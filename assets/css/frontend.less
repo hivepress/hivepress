@@ -44,13 +44,13 @@
 			align-items: center;
 			justify-content: center;
 			text-align: center;
-			padding:2em;
-			background-color:#f0f0f0;
+			padding: 2em;
+			background-color: #f0f0f0;
 			pointer-events: none;
 
 			span {
 				font-size: 14pt;
-    			font-weight: 400;
+				font-weight: 400;
 				color: #1e1e1e;
 			}
 		}
@@ -475,6 +475,16 @@
 			&:first-child {
 				margin-top: 0;
 			}
+		}
+
+		&__description {
+			&:not(:last-child) {
+				margin-bottom: 1.5rem;
+			}
+		}
+
+		&__title+&__description {
+			margin-top: -1rem;
 		}
 	}
 
@@ -1046,8 +1056,8 @@
 		}
 	}
 
-	&-theme--zakra .content-area,
-	&-theme--generatepress #content &-page {
+	&-theme--generatepress #content &-page,
+	&-theme--zakra .content-area {
 		flex: 1;
 	}
 
@@ -1065,6 +1075,7 @@
 /*--------------------------------------------------------------
 Select2
 --------------------------------------------------------------*/
+
 .select2 {
 	&-container {
 		min-width: 4.5rem;

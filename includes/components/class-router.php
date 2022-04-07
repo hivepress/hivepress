@@ -483,12 +483,29 @@ final class Router extends Component {
 	 * @return array
 	 */
 	public function set_page_context( $args ) {
+		$context = [];
+
+		// Get title and description.
+		$context['page_title'] = hp\get_array_value( $this->get_current_route(), 'title' );
+
+		// @todo Remove theme-specific condition once fixed.
+		if ( is_tax() && ( ! function_exists( 'hivetheme' ) || ! is_tax( 'hp_listing_category' ) ) ) {
+			$context['page_title']       = get_queried_object()->name;
+			$context['page_description'] = get_queried_object()->description;
+		} elseif ( is_page() ) {
+			$context['page_title']       = get_queried_object()->post_title;
+			$context['page_description'] = get_queried_object()->post_content;
+		}
+
+		// Format description.
+		if ( isset( $context['page_description'] ) ) {
+			$context['page_description'] = apply_filters( 'the_content', $context['page_description'] );
+		}
+
 		return hp\merge_arrays(
 			$args,
 			[
-				'context' => [
-					'page_title' => hp\get_array_value( $this->get_current_route(), 'title' ),
-				],
+				'context' => $context,
 			]
 		);
 	}
