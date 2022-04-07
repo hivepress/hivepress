@@ -282,6 +282,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'schema_property' => $attribute_object->hp_schema_property,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
