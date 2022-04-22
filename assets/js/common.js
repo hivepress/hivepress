@@ -673,6 +673,47 @@ var hivepress = {
 								grecaptcha.reset(captchaId);
 							}
 
+							var disposition = xhr.getResponseHeader('Content-Disposition');
+							if (disposition && disposition.indexOf('attachment') !== -1 && disposition.indexOf('.csv') !== -1) {
+								var fileData = xhr.responseText.slice(1, -1).replaceAll('\\', '').split('|').join('\r\n'),
+									blob = new Blob([fileData], {
+										type: 'text/csv;encoding:utf-8'
+									}),
+									filename = '',
+									filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/,
+									matches = filenameRegex.exec(disposition);
+
+								if (matches != null && matches[1]) {
+									filename = matches[1].replace(/['"]/g, '');
+								}
+
+								if (typeof window.navigator.msSaveBlob !== 'undefined') {
+									window.navigator.msSaveBlob(blob, filename);
+								} else {
+									var URL = window.URL || window.webkitURL;
+									var downloadUrl = URL.createObjectURL(blob);
+
+									if (filename) {
+										var a = document.createElement("a");
+
+										if (typeof a.download === 'undefined') {
+											window.location.href = downloadUrl;
+										} else {
+											a.href = downloadUrl;
+											a.download = filename;
+											document.body.appendChild(a);
+											a.click();
+										}
+									} else {
+										window.location.href = downloadUrl;
+									}
+
+									setTimeout(function() {
+										URL.revokeObjectURL(downloadUrl);
+									}, 100);
+								}
+							}
+
 							if (response == null || response.hasOwnProperty('data')) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
