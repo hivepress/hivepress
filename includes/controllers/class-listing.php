@@ -59,7 +59,7 @@ final class Listing extends Controller {
 					 *     tags={"Listings"},
 					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
 					 *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Listing")),
-					 *     @OA\Response(response="200", description="OK")
+					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
 					'listing_update_action'        => [
@@ -75,7 +75,7 @@ final class Listing extends Controller {
 					 *     summary="Hide or unhide a listing",
 					 *     tags={"Listings"},
 					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
-					 *     @OA\Response(response="200", description="OK")
+					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
 					'listing_hide_action'          => [
