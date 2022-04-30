@@ -22,10 +22,11 @@ jobs:
           coverage: none
           tools: composer
 
+      - name: Install Swagger
+        run: composer require zircote/swagger-php
+
       - name: Generate OpenAPI
-        run: |
-          composer require zircote/swagger-php
-          vendor/bin/openapi . -e vendor -o openapi.yaml -l
+        run: vendor/bin/openapi . -e vendor -o openapi.yaml -l
 
       - uses: bump-sh/github-action@v1
         with:
