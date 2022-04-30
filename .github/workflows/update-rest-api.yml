@@ -17,7 +17,7 @@ jobs:
 
       - name: Generate OpenAPI
         run: |
-          composer require zircote/swagger-php
+          composer global require zircote/swagger-php
           openapi . -e vendor -o openapi.yaml -l
 
       - uses: bump-sh/github-action@v1
