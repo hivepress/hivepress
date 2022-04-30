@@ -26,13 +26,10 @@ jobs:
         run: composer require zircote/swagger-php
 
       - name: Generate OpenAPI
-        run: |
-          vendor/bin/openapi . -e vendor -o openapi.yaml -l
-          ls
-          cat openapi.yaml
+        run: vendor/bin/openapi . -e vendor -o openapi.yaml -l
 
-
-      - uses: bump-sh/github-action@v1
+      - name: Deploy documentation
+        uses: bump-sh/github-action@v1
         with:
           doc: rest-api
           token: ${{ secrets.BUMP_TOKEN }}

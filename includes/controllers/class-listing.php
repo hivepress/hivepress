@@ -30,13 +30,6 @@ final class Listing extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-
-					/**
-					 * Listings API route.
-					 *
-					 * @resource Listings
-					 * @description The listings API allows you to update and delete listings.
-					 */
 					'listings_resource'            => [
 						'path'   => '/listings',
 						'method' => 'GET',
@@ -44,6 +37,15 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					* @OA\Parameter(
+					*     name="listing_id",
+					*     description="Listing ID.",
+					*     in="path",
+					*     required=true,
+					*     @OA\Schema(type="integer"),
+					* ),
+					*/
 					'listing_resource'             => [
 						'base' => 'listings_resource',
 						'path' => '/(?P<listing_id>\d+)',
@@ -53,11 +55,11 @@ final class Listing extends Controller {
 					/**
 					 * @OA\Post(
 					 *     path="/listings/{listing_id}",
-					 *     @OA\Response(
-					 *          response="200",
-					 *          description="Updates listing",
-					 *          @OA\JsonContent(ref="#/components/schemas/Listing")
-					 *      )
+					 *     summary="Update a listing",
+					 *     tags={"Listings"},
+					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
+					 *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Listing")),
+					 *     @OA\Response(response="200", description="OK")
 					 * )
 					 */
 					'listing_update_action'        => [
@@ -70,7 +72,10 @@ final class Listing extends Controller {
 					/**
 					 * @OA\Post(
 					 *     path="/listings/{listing_id}/hide",
-					 *     @OA\Response(response="200", description="Hide listing")
+					 *     summary="Hide or unhide a listing",
+					 *     tags={"Listings"},
+					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
+					 *     @OA\Response(response="200", description="OK")
 					 * )
 					 */
 					'listing_hide_action'          => [

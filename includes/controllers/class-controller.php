@@ -2,7 +2,6 @@
 /**
  * Abstract controller.
  *
- * @OA\Info(title="My First API", version="1.0")
  * @package HivePress\Controllers
  */
 
@@ -16,6 +15,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract controller class.
+ *
+ * @OA\Info(title="HivePress REST API Test123", version="1.0")
+ * @OA\Server(url="/wp-json/hivepress/v1", description="")
  */
 abstract class Controller {
 	use Traits\Mutator;
