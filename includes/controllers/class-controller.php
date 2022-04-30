@@ -16,8 +16,12 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract controller class.
  *
- * @OA\Info(title="HivePress REST API", version="1.0", description="This is a reference of all the endpoints available in HivePress REST API.")
  * @OA\Server(url="/wp-json/hivepress/v1", description="")
+ * @OA\Info(
+ *   title="HivePress REST API",
+ *   version="1.0",
+ *   description="This is a reference of all the endpoints available in HivePress REST API. Since it's based on WordPress REST API, you can refer to the [WordPress documentation](https://developer.wordpress.org/rest-api/) for the available authentication methods and more details."
+ * )
  */
 abstract class Controller {
 	use Traits\Mutator;
