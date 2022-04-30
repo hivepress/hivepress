@@ -9,3 +9,8 @@ paths:
       responses:
         '200':
           description: 'Updates listing'
+  '/listings/{listing_id}/hide':
+    post:
+      responses:
+        '200':
+          description: 'Hide listing'
