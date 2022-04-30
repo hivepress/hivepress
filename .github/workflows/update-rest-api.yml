@@ -1,6 +1,10 @@
 name: Update REST API
 
 on:
+  push:
+    branches:
+      - develop
+
   workflow_dispatch:
 
 jobs:
