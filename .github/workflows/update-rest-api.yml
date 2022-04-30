@@ -12,7 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate OpenAPI
+        run: |
+          composer require zircote/swagger-php
+          openapi . -e vendor -o openapi.yaml -l
+
       - uses: bump-sh/github-action@v1
         with:
           doc: rest-api
