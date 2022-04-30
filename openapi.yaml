@@ -9,8 +9,21 @@ paths:
       responses:
         '200':
           description: 'Updates listing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Listing'
   '/listings/{listing_id}/hide':
     post:
       responses:
         '200':
           description: 'Hide listing'
+components:
+  schemas:
+    Listing:
+      description: Listing.
+      properties:
+        '':
+          description: 'The product name,'
+          type: string
+      type: object

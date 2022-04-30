@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Listing.
+ *
+ * @OA\Schema()
  */
 class Listing extends Post {
 
@@ -26,6 +28,12 @@ class Listing extends Post {
 		$args = hp\merge_arrays(
 			[
 				'fields' => [
+
+					/**
+				     * The product name,
+				     * @var string
+				     * @OA\Property()
+				     */
 					'title'            => [
 						'label'      => hivepress()->translator->get_string( 'title' ),
 						'type'       => 'text',

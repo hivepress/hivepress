@@ -53,7 +53,11 @@ final class Listing extends Controller {
 					/**
 					 * @OA\Post(
 					 *     path="/listings/{listing_id}",
-					 *     @OA\Response(response="200", description="Updates listing")
+					 *     @OA\Response(
+					 *          response="200",
+					 *          description="Updates listing",
+					 *          @OA\JsonContent(ref="#/components/schemas/Listing")
+					 *      )
 					 * )
 					 */
 					'listing_update_action'        => [
