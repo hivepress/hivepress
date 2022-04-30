@@ -51,13 +51,10 @@ final class Listing extends Controller {
 					],
 
 					/**
-					 * Updates listing.
-					 *
-					 * @endpoint Update listing
-					 * @route /listings/<id>
-					 * @method POST
-					 * @param string $title Title.
-					 * @param string $description Description.
+					 * @OA\Post(
+					 *     path="/listings/{listing_id}",
+					 *     @OA\Response(response="200", description="Updates listing")
+					 * )
 					 */
 					'listing_update_action'        => [
 						'base'   => 'listing_resource',

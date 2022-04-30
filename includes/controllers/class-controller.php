@@ -2,6 +2,7 @@
 /**
  * Abstract controller.
  *
+ * @OA\Info(title="My First API", version="1.0")
  * @package HivePress\Controllers
  */
 

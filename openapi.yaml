@@ -1,0 +1,11 @@
+openapi: 3.0.0
+info:
+  title: 'My First API'
+  description: 'Abstract controller.'
+  version: '1.0'
+paths:
+  '/listings/{listing_id}':
+    post:
+      responses:
+        '200':
+          description: 'Updates listing'
