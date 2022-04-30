@@ -17,4 +17,4 @@ jobs:
         with:
           doc: rest-api
           token: ${{ secrets.BUMP_TOKEN }}
-          file: ./openapi.yml
+          file: openapi.yaml
