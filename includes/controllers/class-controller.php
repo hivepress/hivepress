@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract controller class.
  *
- * @OA\Info(title="HivePress REST API", version="1.0", description="todo")
+ * @OA\Info(title="HivePress REST API", version="1.0", description="This is a reference of all the endpoints available in HivePress REST API.")
  * @OA\Server(url="/wp-json/hivepress/v1", description="")
  */
 abstract class Controller {
