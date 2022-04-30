@@ -63,6 +63,12 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					 * @OA\Post(
+					 *     path="/listings/{listing_id}/hide",
+					 *     @OA\Response(response="200", description="Hide listing")
+					 * )
+					 */
 					'listing_hide_action'          => [
 						'base'   => 'listing_resource',
 						'path'   => '/hide',
