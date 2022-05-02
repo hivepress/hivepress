@@ -52,7 +52,7 @@ final class Router extends Component {
 		if ( ! is_admin() ) {
 
 			// Set page title.
-			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
+			add_filter( 'pre_get_document_title', [ $this, 'set_page_title' ], 1000 );
 
 			// Set page context.
 			add_filter( 'hivepress/v1/templates/page', [ $this, 'set_page_context' ] );
@@ -457,23 +457,17 @@ final class Router extends Component {
 	 * @param array $parts Title parts.
 	 * @return array
 	 */
-	public function set_page_title( $parts ) {
+	public function set_page_title( $title ) {
 
 		// Get the current route.
 		$route = $this->get_current_route();
 
 		if ( $route && isset( $route['title'] ) ) {
 
-			// Remove query title.
-			if ( count( $parts ) > 1 ) {
-				array_shift( $parts );
-			}
-
-			// Add route title.
-			array_unshift( $parts, $route['title'] );
+			$title = $route['title'] . ' - ' . get_bloginfo( 'name' );
 		}
 
-		return $parts;
+		return $title;
 	}
 
 	/**
