@@ -56,6 +56,7 @@ final class Listing extends Controller {
 					 * @OA\Post(
 					 *     path="/listings/{listing_id}",
 					 *     summary="Update a listing",
+					 *     description="In addition to the default listing fields, you can also update custom fields added via the listing attributes or HivePress extensions.",
 					 *     tags={"Listings"},
 					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
 					 *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Listing")),
@@ -72,7 +73,8 @@ final class Listing extends Controller {
 					/**
 					 * @OA\Post(
 					 *     path="/listings/{listing_id}/hide",
-					 *     summary="Hide or unhide a listing",
+					 *     summary="Hide a listing",
+					 *     description="Each new request hides or unhides a listing.",
 					 *     tags={"Listings"},
 					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
 					 *     @OA\Response(response="200", description="")
@@ -86,6 +88,21 @@ final class Listing extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					 * @OA\Post(
+					 *     path="/listings/{listing_id}/report",
+					 *     summary="Report a listing",
+					 *     description="Sends an email to the site administrator.",
+					 *     tags={"Listings"},
+					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="details", type="string", description="Report details.")
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="200", description="")
+					 * )
+					 */
 					'listing_report_action'        => [
 						'base'   => 'listing_resource',
 						'path'   => '/report',
@@ -95,11 +112,13 @@ final class Listing extends Controller {
 					],
 
 					/**
-					 * Deletes listing.
-					 *
-					 * @endpoint Delete listing
-					 * @route /listings/<id>
-					 * @method DELETE
+					 * @OA\Delete(
+					 *     path="/listings/{listing_id}",
+					 *     summary="Delete a listing",
+					 *     tags={"Listings"},
+					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
+					 *     @OA\Response(response="204", description="")
+					 * )
 					 */
 					'listing_delete_action'        => [
 						'base'   => 'listing_resource',

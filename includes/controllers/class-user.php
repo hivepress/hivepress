@@ -31,13 +31,6 @@ final class User extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-
-					/**
-					 * Users API route.
-					 *
-					 * @resource Users
-					 * @description The users API allows you to register, update and delete users.
-					 */
 					'users_resource'               => [
 						'path'   => '/users',
 						'method' => 'GET',
@@ -45,6 +38,15 @@ final class User extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					* @OA\Parameter(
+					*     name="user_id",
+					*     description="User ID.",
+					*     in="path",
+					*     required=true,
+					*     @OA\Schema(type="integer"),
+					* ),
+					*/
 					'user_resource'                => [
 						'base' => 'users_resource',
 						'path' => '/(?P<user_id>\d+)',
@@ -52,14 +54,19 @@ final class User extends Controller {
 					],
 
 					/**
-					 * Registers user.
-					 *
-					 * @endpoint Register user
-					 * @route /users
-					 * @method POST
-					 * @param string $username Username.
-					 * @param string $email Email address.
-					 * @param string $password Password.
+					 * @OA\Post(
+					 *     path="/users",
+					 *     summary="Register a user",
+					 *     tags={"Users"},
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="username", type="string", description="Username."),
+					 *         @OA\Property(property="email", type="string", description="Email address."),
+					 *         @OA\Property(property="password", type="string", description="Password.")
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="201", description="")
+					 * )
 					 */
 					'user_register_action'         => [
 						'base'   => 'users_resource',
@@ -68,6 +75,20 @@ final class User extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					 * @OA\Post(
+					 *     path="/users/login",
+					 *     summary="Login a user",
+					 *     tags={"Users"},
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="username_or_email", type="string", description="Username or email address."),
+					 *         @OA\Property(property="password", type="string", description="Password.")
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="200", description="")
+					 * )
+					 */
 					'user_login_action'            => [
 						'base'   => 'users_resource',
 						'path'   => '/login',
@@ -76,6 +97,19 @@ final class User extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					 * @OA\Post(
+					 *     path="/users/request-password",
+					 *     summary="Request a password reset",
+					 *     tags={"Users"},
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="username_or_email", type="string", description="Username or email address.")
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="200", description="")
+					 * )
+					 */
 					'user_password_request_action' => [
 						'base'   => 'users_resource',
 						'path'   => '/request-password',
@@ -84,6 +118,21 @@ final class User extends Controller {
 						'rest'   => true,
 					],
 
+					/**
+					 * @OA\Post(
+					 *     path="/users/reset-password",
+					 *     summary="Reset a password",
+					 *     tags={"Users"},
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="username", type="string", description="Username."),
+					 *         @OA\Property(property="password", type="string", description="New password."),
+					 *         @OA\Property(property="password_reset_key", type="string", description="Password reset key.")
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="200", description="")
+					 * )
+					 */
 					'user_password_reset_action'   => [
 						'base'   => 'users_resource',
 						'path'   => '/reset-password',
@@ -93,16 +142,15 @@ final class User extends Controller {
 					],
 
 					/**
-					 * Updates user.
-					 *
-					 * @endpoint Update user
-					 * @route /users/<id>
-					 * @method POST
-					 * @param string $first_name First name.
-					 * @param string $last_name Last name.
-					 * @param string $description Description.
-					 * @param string $email Email address.
-					 * @param string $password Password.
+					 * @OA\Post(
+					 *     path="/users/{user_id}",
+					 *     summary="Update a user",
+					 *     description="In addition to the default user fields, you can also update custom fields added via the vendor attributes or HivePress extensions.",
+					 *     tags={"Users"},
+					 *     @OA\Parameter(ref="#/components/parameters/user_id"),
+					 *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/User")),
+					 *     @OA\Response(response="200", description="")
+					 * )
 					 */
 					'user_update_action'           => [
 						'base'   => 'user_resource',
@@ -112,11 +160,13 @@ final class User extends Controller {
 					],
 
 					/**
-					 * Deletes user.
-					 *
-					 * @endpoint Delete user
-					 * @route /users/<id>
-					 * @method DELETE
+					 * @OA\Delete(
+					 *     path="/users/{user_id}",
+					 *     summary="Delete a user",
+					 *     tags={"Users"},
+					 *     @OA\Parameter(ref="#/components/parameters/user_id"),
+					 *     @OA\Response(response="204", description="")
+					 * )
 					 */
 					'user_delete_action'           => [
 						'base'   => 'user_resource',

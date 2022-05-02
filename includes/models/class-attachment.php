@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * File attachment.
+ *
+ * @OA\Schema(description="")
  */
 class Attachment extends Post {
 
@@ -48,6 +50,13 @@ class Attachment extends Post {
 						'_alias'     => 'post_mime_type',
 					],
 
+					/**
+					* @OA\Property(
+					*   property="sort_order",
+					*   type="integer",
+					*   description="Sort order.",
+					* )
+					 */
 					'sort_order'   => [
 						'type'      => 'number',
 						'min_value' => 0,
