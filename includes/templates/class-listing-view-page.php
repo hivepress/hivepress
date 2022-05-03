@@ -148,8 +148,9 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							],
 
 							'listing_attributes_secondary' => [
-								'type'   => 'part',
-								'path'   => 'listing/view/page/listing-attributes-secondary',
+								'type'   => 'attributes',
+								'model'  => 'listing',
+								'area'   => 'view_page_secondary',
 								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
 								'_order' => 50,
 							],
@@ -170,8 +171,9 @@ class Listing_View_Page extends Page_Sidebar_Right {
 
 						'blocks'     => [
 							'listing_attributes_primary' => [
-								'type'   => 'part',
-								'path'   => 'listing/view/page/listing-attributes-primary',
+								'type'   => 'attributes',
+								'model'  => 'listing',
+								'area'   => 'view_page_primary',
 								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
 								'_order' => 10,
 							],
