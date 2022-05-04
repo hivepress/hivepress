@@ -96,7 +96,21 @@ final class Admin extends Component {
 	 * Registers post types.
 	 */
 	public function register_post_types() {
+
+		// Get permalinks.
+		$permalinks = get_option( 'hp_permalinks' );
+
 		foreach ( hivepress()->get_config( 'post_types' ) as $type => $args ) {
+
+			// Get post type slug.
+			$slug = hp\get_array_value( $permalinks, $type . '_slug' );
+
+			if ( $slug ) {
+
+				// Change post type slug.
+				$args = array_merge( $args, [ 'rewrite' => [ 'slug' => $slug ] ] );
+			}
+
 			register_post_type( hp\prefix( $type ), $args );
 		}
 	}
@@ -105,7 +119,21 @@ final class Admin extends Component {
 	 * Registers taxonomies.
 	 */
 	public function register_taxonomies() {
+
+		// Get permalinks.
+		$permalinks = get_option( 'hp_permalinks' );
+
 		foreach ( hivepress()->get_config( 'taxonomies' ) as $taxonomy => $args ) {
+
+			// Get taxonomy slug.
+			$slug = hp\get_array_value( $permalinks, $taxonomy . '_slug' );
+
+			if ( $slug ) {
+
+				// Change taxonomy slug.
+				$args = array_merge( $args, [ 'rewrite' => [ 'slug' => $slug ] ] );
+			}
+
 			register_taxonomy( hp\prefix( $taxonomy ), hp\prefix( $args['post_type'] ), $args );
 		}
 	}
@@ -240,6 +268,38 @@ final class Admin extends Component {
 	 */
 	public function register_settings() {
 		global $pagenow;
+
+		if ( 'options-permalink.php' === $pagenow ) {
+
+			// Get permalinks.
+			$permalinks = get_option( 'hp_permalinks', [] );
+
+			foreach ( array_merge( hivepress()->get_config( 'post_types' ), hivepress()->get_config( 'taxonomies' ) ) as $type => $args ) {
+
+				if ( hp\get_array_value( $args, 'rewrite' ) ) {
+					if ( isset( $_POST[ 'hp_' . $type . '_slug' ] ) ) {
+						$permalinks[ $type . '_slug' ] = esc_url( wp_unslash( $_POST[ 'hp_' . $type . '_slug' ] ) );
+					} elseif ( ! isset( $_POST[ 'hp_' . $type . '_slug' ] ) && ! hp\get_array_value( $permalinks, $type . '_slug' ) ) {
+						$permalinks[ $type . '_slug' ] = esc_url( wp_unslash( hp\get_first_array_value( $args['rewrite'] ) ) );
+					}
+
+					$slug = hp\get_array_value( $permalinks, $type . '_slug' );
+
+					add_settings_field(
+						'hp_' . $type . '_slug',
+						/* translators: 1: taxonomy/post type name. */
+						sprintf( esc_html__( '%s base', 'hivepress' ), ucfirst( implode( ' ', explode( '_', $type ) ) ) ),
+						function() use ( $type, $slug ) {
+							echo '<input name="hp_' . esc_attr( $type ) . '_slug" type="text" class="regular-text code" value="' . esc_attr( $slug ) . '" />';
+						},
+						'permalink',
+						'optional'
+					);
+				}
+			}
+
+			update_option( 'hp_permalinks', $permalinks );
+		}
 
 		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) ) {
 
