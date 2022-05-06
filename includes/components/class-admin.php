@@ -278,9 +278,9 @@ final class Admin extends Component {
 
 				if ( hp\get_array_value( $args, 'rewrite' ) ) {
 					if ( isset( $_POST[ 'hp_' . $type . '_slug' ] ) ) {
-						$permalinks[ $type . '_slug' ] = esc_url( wp_unslash( $_POST[ 'hp_' . $type . '_slug' ] ) );
+						$permalinks[ $type . '_slug' ] = wp_unslash( esc_html( $_POST[ 'hp_' . $type . '_slug' ] ) );
 					} elseif ( ! isset( $_POST[ 'hp_' . $type . '_slug' ] ) && ! hp\get_array_value( $permalinks, $type . '_slug' ) ) {
-						$permalinks[ $type . '_slug' ] = esc_url( wp_unslash( hp\get_first_array_value( $args['rewrite'] ) ) );
+						$permalinks[ $type . '_slug' ] = wp_unslash( esc_html( hp\get_first_array_value( $args['rewrite'] ) ) );
 					}
 
 					$slug = hp\get_array_value( $permalinks, $type . '_slug' );
