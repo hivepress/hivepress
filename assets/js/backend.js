@@ -3,11 +3,10 @@
 
 	$(document).ready(function() {
 
-		// Admin button.
+		// Admin deactivation survey.
 		$("#plugin_deactivate_modal .hp-form__actions a").attr('href', $('tr[data-slug="hivepress"] a#deactivate-hivepress').attr('href'));
 		$('tr[data-slug="hivepress"] a#deactivate-hivepress').attr('href', 'javascript: void(0)');
 		$('tr[data-slug="hivepress"] a#deactivate-hivepress').on('click', function() {
-			console.log('test');
 			$.fancybox.close();
 			$.fancybox.open({
 				src: '#plugin_deactivate_modal',
