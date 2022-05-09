@@ -8,6 +8,7 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
+use HivePress\Forms;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -34,6 +35,14 @@ final class Admin extends Controller {
 						'base' => 'admin_base',
 						'path' => '/notices',
 						'rest' => true,
+					],
+
+					'plugin_deactivate_action'   => [
+						'base'   => 'admin_base',
+						'path'   => '/plugin-deactivate',
+						'method' => 'POST',
+						'action' => [ $this, 'deactivate_plugin' ],
+						'rest'   => true,
 					],
 
 					'admin_notice_resource'      => [
@@ -92,6 +101,40 @@ final class Admin extends Controller {
 			200,
 			[
 				'name' => $notice_name,
+			]
+		);
+	}
+
+	/**
+	 * Deactivate plugin.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function deactivate_plugin( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Validate form.
+		$form = ( new Forms\Plugin_Deactivate() )->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp\rest_error( 400, esc_html__( 'Please choose deactivation reason', 'hivepress' ) );
+		}
+
+		// Get form values.
+		$values = $form->get_values();
+
+		// Deactivate plugin.
+		deactivate_plugins( 'hivepress/hivepress.php' );
+
+		return hp\rest_response(
+			200,
+			[
+				'Plugin has been succesfully deactivate',
 			]
 		);
 	}

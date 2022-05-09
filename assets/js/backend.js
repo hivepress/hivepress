@@ -3,6 +3,17 @@
 
 	$(document).ready(function() {
 
+		// Admin deactivation survey.
+		$("#plugin_deactivate_modal .hp-form__actions a").attr('href', $('tr[data-slug="hivepress"] a#deactivate-hivepress').attr('href'));
+		$('tr[data-slug="hivepress"] a#deactivate-hivepress').attr('href', 'javascript: void(0)');
+		$('tr[data-slug="hivepress"] a#deactivate-hivepress').on('click', function() {
+			$.fancybox.close();
+			$.fancybox.open({
+				src: '#plugin_deactivate_modal',
+				touch: false,
+			});
+		});
+
 		// Template
 		if (typeof wp !== 'undefined' && wp.hasOwnProperty('data')) {
 			var isSavedPost = false;
@@ -10,7 +21,7 @@
 			wp.data.subscribe(function() {
 				var editor = wp.data.select('core/editor');
 
-				if ( editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
+				if (editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
 					var field = $('select[name=hp_template]');
 
 					if (field.length && field.val() !== editor.getEditedPostSlug()) {
