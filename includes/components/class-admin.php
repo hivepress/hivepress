@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Fields;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -1596,6 +1597,44 @@ final class Admin extends Component {
 	 * Renders footer.
 	 */
 	public function render_footer() {
+		echo ( new Blocks\Modal(
+			[
+				'name'   => 'plugin_deactivate_modal',
+				'title'  => esc_html__( 'Deactivate plugin', 'hivepress' ),
+
+				'blocks' => [
+					'plugin_deactivate_form' => [
+						'type'       => 'form',
+						'form'       => 'plugin_deactivate',
+						'_order'     => 10,
+
+						'attributes' => [
+							'class' => [ 'hp-form--narrow' ],
+						],
+
+						'footer'     => [
+							'form_actions' => [
+								'type'       => 'container',
+								'_order'     => 10,
+
+								'attributes' => [
+									'class' => [ 'hp-form__actions' ],
+								],
+
+								'blocks'     => [
+									'plugin_deactivate_link' => [
+										'type'   => 'part',
+										'path'   => 'admin/plugin/view/plugin-deactivate-link',
+										'_order' => 10,
+									],
+								],
+							],
+						],
+					],
+				],
+			]
+		) )->render();
+
 		echo hivepress()->request->get_context( 'admin_footer' );
 	}
 }
