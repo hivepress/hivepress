@@ -764,7 +764,7 @@ final class Admin extends Component {
 						[
 							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
 							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
-							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $path,
+							'support_url' => 'https://community.hivepress.io/?utm_medium=referral&utm_source=dashboard',
 						]
 					);
 				},
