@@ -1611,25 +1611,6 @@ final class Admin extends Component {
 						'attributes' => [
 							'class' => [ 'hp-form--narrow' ],
 						],
-
-						'footer'     => [
-							'form_actions' => [
-								'type'       => 'container',
-								'_order'     => 10,
-
-								'attributes' => [
-									'class' => [ 'hp-form__actions' ],
-								],
-
-								'blocks'     => [
-									'plugin_deactivate_link' => [
-										'type'   => 'part',
-										'path'   => 'admin/plugin/view/plugin-deactivate-link',
-										'_order' => 10,
-									],
-								],
-							],
-						],
 					],
 				],
 			]

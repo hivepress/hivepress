@@ -13,9 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Plugin deactivate form class.
- *
- * @class Plugin_Deactivate
+ * Deactivates HivePress plugin.
  */
 class Plugin_Deactivate extends Form {
 
@@ -27,27 +25,31 @@ class Plugin_Deactivate extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'description' => esc_html__( 'Please share why you want to deactivate plugin', 'hivepress' ),
+				'description' => esc_html__( 'If you have a moment, please help us improve by sharing the deactivation reason. Select "Other" to proceed without sharing.', 'hivepress' ),
 				'action'      => hivepress()->router->get_url( 'plugin_deactivate_action' ),
 				'redirect'    => true,
 
 				'fields'      => [
-					'options' => [
-						'type'     => 'radio',
-						'options'  => [
-							'I could not get the plugin to work' => esc_html__( 'I could not get the plugin to work.', 'hivepress' ),
-							'It is a temporary deactivation. I am just debugging an issue.' => esc_html__( 'It is a temporary deactivation. I am just debugging an issue.', 'hivepress' ),
-							'I no longer need the plugin' => esc_html__( 'I no longer need the plugin.', 'hivepress' ),
-							'I found a better plugin'     => esc_html__( 'I found a better plugin.', 'hivepress' ),
+					'reason' => [
+						'type'    => 'radio',
+						'_order'  => 10,
+
+						'options' => [
+							'features'  => esc_html__( 'It lacks the required features', 'hivepress' ),
+							'themes'    => esc_html__( 'The layout is too basic or broken', 'hivepress' ),
+							'elementor' => esc_html__( 'Poor integration with Elementor', 'hivepress' ),
+							'plugins'   => esc_html__( 'It conflicts with other plugins', 'hivepress' ),
+							'docs'      => esc_html__( 'The docs are not helpful', 'hivepress' ),
+							''          => esc_html__( 'Other', 'hivepress' ),
 						],
-						'required' => true,
-						'_order'   => 10,
 					],
 				],
 
 				'button'      => [
 					'label' => esc_html__( 'Submit & Deactivate', 'hivepress' ),
 				],
+
+				'footer'      => '<small>' . esc_html__( 'We don\'t collect any info about your website.', 'hivepress' ) . '</small>',
 			],
 			$args
 		);
