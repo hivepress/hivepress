@@ -147,7 +147,7 @@ final class Admin extends Controller {
 		// Deactivate plugin.
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		deactivate_plugins( 'hivepress/hivepress.php' );
+		deactivate_plugins( HP_FILE );
 
 		return hp\rest_response( 200, [] );
 	}

@@ -1597,25 +1597,34 @@ final class Admin extends Component {
 	 * Renders footer.
 	 */
 	public function render_footer() {
-		echo ( new Blocks\Modal(
-			[
-				'name'   => 'plugin_deactivate_modal',
-				'title'  => esc_html__( 'Deactivate plugin', 'hivepress' ),
+		global $pagenow;
 
-				'blocks' => [
-					'plugin_deactivate_form' => [
-						'type'       => 'form',
-						'form'       => 'plugin_deactivate',
-						'_order'     => 10,
+		$output = '';
 
-						'attributes' => [
-							'class' => [ 'hp-form--narrow' ],
+		if ( 'plugins.php' === $pagenow ) {
+			$output .= ( new Blocks\Modal(
+				[
+					/* translators: %s: plugin name. */
+					'title'  => sprintf( esc_html__( 'Deactivate %s', 'hivepress' ), hivepress()->get_name() ),
+					'name'   => 'hivepress_deactivate_modal',
+
+					'blocks' => [
+						'plugin_deactivate_form' => [
+							'type'       => 'form',
+							'form'       => 'plugin_deactivate',
+							'_order'     => 10,
+
+							'attributes' => [
+								'class' => [ 'hp-form--narrow' ],
+							],
 						],
 					],
-				],
-			]
-		) )->render();
+				]
+			) )->render();
+		}
 
-		echo hivepress()->request->get_context( 'admin_footer' );
+		$output .= hivepress()->request->get_context( 'admin_footer' );
+
+		echo $output;
 	}
 }
