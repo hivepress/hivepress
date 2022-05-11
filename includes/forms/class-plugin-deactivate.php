@@ -29,6 +29,10 @@ class Plugin_Deactivate extends Form {
 				'action'      => hivepress()->router->get_url( 'plugin_deactivate_action' ),
 				'redirect'    => true,
 
+				'attributes'  => [
+					'class' => [ 'hp-form--narrow' ],
+				],
+
 				'fields'      => [
 					'reason' => [
 						'type'    => 'radio',
@@ -46,7 +50,11 @@ class Plugin_Deactivate extends Form {
 				],
 
 				'button'      => [
-					'label' => esc_html__( 'Submit & Deactivate', 'hivepress' ),
+					'label'      => esc_html__( 'Submit & Deactivate', 'hivepress' ),
+
+					'attributes' => [
+						'class' => [ 'button-large' ],
+					],
 				],
 
 				'footer'      => '<small>' . esc_html__( 'We don\'t collect any info about your website.', 'hivepress' ) . '</small>',

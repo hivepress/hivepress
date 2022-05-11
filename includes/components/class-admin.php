@@ -1610,13 +1610,9 @@ final class Admin extends Component {
 
 					'blocks' => [
 						'plugin_deactivate_form' => [
-							'type'       => 'form',
-							'form'       => 'plugin_deactivate',
-							'_order'     => 10,
-
-							'attributes' => [
-								'class' => [ 'hp-form--narrow' ],
-							],
+							'type'   => 'form',
+							'form'   => 'plugin_deactivate',
+							'_order' => 10,
 						],
 					],
 				]
