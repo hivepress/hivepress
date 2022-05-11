@@ -25,7 +25,7 @@ class Plugin_Deactivate extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'description' => esc_html__( 'If you have a moment, please help us improve by sharing the deactivation reason. Select "Other" to proceed without sharing.', 'hivepress' ),
+				'description' => esc_html__( 'Please help us improve by sharing the deactivation reason. Select "Other" to proceed without sharing.', 'hivepress' ),
 				'action'      => hivepress()->router->get_url( 'plugin_deactivate_action' ),
 				'redirect'    => true,
 
