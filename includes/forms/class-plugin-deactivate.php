@@ -56,8 +56,6 @@ class Plugin_Deactivate extends Form {
 						'class' => [ 'button-large' ],
 					],
 				],
-
-				'footer'      => '<small>' . esc_html__( 'We don\'t collect any info about your website.', 'hivepress' ) . '</small>',
 			],
 			$args
 		);
