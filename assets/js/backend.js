@@ -10,7 +10,7 @@
 			wp.data.subscribe(function() {
 				var editor = wp.data.select('core/editor');
 
-				if ( editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
+				if (editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
 					var field = $('select[name=hp_template]');
 
 					if (field.length && field.val() !== editor.getEditedPostSlug()) {
@@ -118,6 +118,17 @@
 		hivepress.getComponent('form').find('input[readonly], textarea[readonly]').on('click', function() {
 			this.select();
 			document.execCommand('copy');
+		});
+
+		// Plugin deactivate
+		$('a#deactivate-hivepress').on('click', function(e) {
+			$.fancybox.close();
+			$.fancybox.open({
+				src: '#hivepress_deactivate_modal',
+				touch: false,
+			});
+
+			e.preventDefault();
 		});
 	});
 })(jQuery);

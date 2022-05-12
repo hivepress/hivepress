@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * User.
+ *
+ * @OA\Schema(description="")
  */
 class User extends Model {
 
@@ -64,6 +66,13 @@ class User extends Model {
 						'_alias'     => 'user_pass',
 					],
 
+					/**
+					* @OA\Property(
+					*   property="first_name",
+					*   type="string",
+					*   description="First name.",
+					* )
+					 */
 					'first_name'      => [
 						'label'      => esc_html__( 'First Name', 'hivepress' ),
 						'type'       => 'text',
@@ -72,6 +81,13 @@ class User extends Model {
 						'_external'  => true,
 					],
 
+					/**
+					* @OA\Property(
+					*   property="last_name",
+					*   type="string",
+					*   description="Last name.",
+					* )
+					 */
 					'last_name'       => [
 						'label'      => esc_html__( 'Last Name', 'hivepress' ),
 						'type'       => 'text',
@@ -86,6 +102,13 @@ class User extends Model {
 						'_alias'     => 'display_name',
 					],
 
+					/**
+					* @OA\Property(
+					*   property="description",
+					*   type="string",
+					*   description="Profile description.",
+					* )
+					 */
 					'description'     => [
 						'label'      => esc_html__( 'Profile Info', 'hivepress' ),
 						'type'       => 'textarea',

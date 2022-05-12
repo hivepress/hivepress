@@ -106,9 +106,11 @@ class Vendor_View_Block extends Template {
 									],
 
 									'vendor_attributes_secondary' => [
-										'type'   => 'part',
-										'path'   => 'vendor/view/block/vendor-attributes-secondary',
-										'_order' => 30,
+										'type'    => 'attributes',
+										'model'   => 'vendor',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
 									],
 								],
 							],
@@ -124,8 +126,9 @@ class Vendor_View_Block extends Template {
 
 								'blocks'     => [
 									'vendor_attributes_primary' => [
-										'type'   => 'part',
-										'path'   => 'vendor/view/block/vendor-attributes-primary',
+										'type'   => 'attributes',
+										'model'  => 'vendor',
+										'area'   => 'view_block_primary',
 										'_order' => 10,
 									],
 

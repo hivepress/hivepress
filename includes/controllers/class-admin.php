@@ -8,6 +8,7 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
+use HivePress\Forms;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -46,6 +47,14 @@ final class Admin extends Controller {
 						'base'   => 'admin_notice_resource',
 						'method' => 'POST',
 						'action' => [ $this, 'update_admin_notice' ],
+						'rest'   => true,
+					],
+
+					'plugin_deactivate_action'   => [
+						'base'   => 'admin_base',
+						'path'   => '/deactivate-plugin',
+						'method' => 'POST',
+						'action' => [ $this, 'deactivate_plugin' ],
 						'rest'   => true,
 					],
 				],
@@ -94,5 +103,52 @@ final class Admin extends Controller {
 				'name' => $notice_name,
 			]
 		);
+	}
+
+	/**
+	 * Deactivates HivePress plugin.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function deactivate_plugin( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Validate form.
+		$form = ( new Forms\Plugin_Deactivate() )->set_values( $request->get_params() );
+
+		if ( ! $form->validate() ) {
+			return hp\rest_error( 400, $form->get_errors() );
+		}
+
+		if ( $form->get_value( 'reason' ) ) {
+
+			// Send feedback.
+			wp_remote_post(
+				'https://hivepress.io/api/v1/feedback',
+				[
+					'body' => [
+						'action' => 'deactivate_plugin',
+						'reason' => $form->get_value( 'reason' ),
+					],
+				]
+			);
+		}
+
+		// Deactivate plugin.
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		deactivate_plugins( HP_FILE );
+
+		return hp\rest_response( 200, [] );
 	}
 }

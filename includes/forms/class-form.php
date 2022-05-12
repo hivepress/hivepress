@@ -148,7 +148,7 @@ abstract class Form {
 					'display_type' => 'submit',
 
 					'attributes'   => [
-						'class' => [ 'hp-form__button', 'button', 'alt' ],
+						'class' => [ 'hp-form__button', 'button-primary', 'alt' ],
 					],
 				],
 			],

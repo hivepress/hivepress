@@ -54,7 +54,7 @@ final class Attachment extends Component {
 	public function is_valid_file( $path, $name, $exts ) {
 		$type = wp_check_filetype_and_ext( $path, $name );
 
-		if ( ! $type['ext'] || ! in_array( $type['ext'], $exts, true ) ) {
+		if ( ! $type['ext'] || ! in_array( strtoupper( $type['ext'] ), array_map( 'strtoupper', $exts ), true ) ) {
 			return false;
 		}
 

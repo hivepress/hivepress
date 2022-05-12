@@ -379,6 +379,21 @@ return [
 				'fields' => [],
 				'_order' => 20,
 			],
+
+			'hivepress' => [
+				'title'  => esc_html__( 'HivePress Store', 'hivepress' ),
+				'_order' => 1000,
+
+				'fields' => [
+					'hivepress_license_key' => [
+						'label'       => esc_html__( 'License Keys', 'hivepress' ),
+						'description' => esc_html__( 'Please enter the license keys for purchased themes and extensions, each key on a new line.', 'hivepress' ),
+						'type'        => 'textarea',
+						'max_length'  => 2048,
+						'_order'      => 10,
+					],
+				],
+			],
 		],
 	],
 ];

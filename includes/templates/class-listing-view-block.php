@@ -118,9 +118,11 @@ class Listing_View_Block extends Template {
 									],
 
 									'listing_attributes_secondary' => [
-										'type'   => 'part',
-										'path'   => 'listing/view/block/listing-attributes-secondary',
-										'_order' => 30,
+										'type'    => 'attributes',
+										'model'   => 'listing',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
 									],
 								],
 							],
@@ -136,8 +138,9 @@ class Listing_View_Block extends Template {
 
 								'blocks'     => [
 									'listing_attributes_primary' => [
-										'type'   => 'part',
-										'path'   => 'listing/view/block/listing-attributes-primary',
+										'type'   => 'attributes',
+										'model'  => 'listing',
+										'area'   => 'view_block_primary',
 										'_order' => 10,
 									],
 

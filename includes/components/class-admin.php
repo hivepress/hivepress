@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Fields;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -703,7 +704,7 @@ final class Admin extends Component {
 						[
 							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
 							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
-							'support_url' => 'https://hivepress.io/support/forum/extensions/' . $path,
+							'support_url' => 'https://community.hivepress.io/?utm_medium=referral&utm_source=dashboard',
 						]
 					);
 				},
@@ -1536,6 +1537,30 @@ final class Admin extends Component {
 	 * Renders footer.
 	 */
 	public function render_footer() {
-		echo hivepress()->request->get_context( 'admin_footer' );
+		global $pagenow;
+
+		$output = '';
+
+		if ( 'plugins.php' === $pagenow ) {
+			$output .= ( new Blocks\Modal(
+				[
+					/* translators: %s: plugin name. */
+					'title'  => sprintf( esc_html__( 'Deactivate %s', 'hivepress' ), hivepress()->get_name() ),
+					'name'   => 'hivepress_deactivate_modal',
+
+					'blocks' => [
+						'plugin_deactivate_form' => [
+							'type'   => 'form',
+							'form'   => 'plugin_deactivate',
+							'_order' => 10,
+						],
+					],
+				]
+			) )->render();
+		}
+
+		$output .= hivepress()->request->get_context( 'admin_footer' );
+
+		echo $output;
 	}
 }

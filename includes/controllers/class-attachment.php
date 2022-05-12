@@ -27,18 +27,20 @@ final class Attachment extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-
-					/**
-					 * Attachments API route.
-					 *
-					 * @resource Attachments
-					 * @description The attachments API allows you to upload, update and delete attachments.
-					 */
 					'attachments_resource'     => [
 						'path' => '/attachments',
 						'rest' => true,
 					],
 
+					/**
+					* @OA\Parameter(
+					*     name="attachment_id",
+					*     description="Attachment ID.",
+					*     in="path",
+					*     required=true,
+					*     @OA\Schema(type="integer"),
+					* ),
+					*/
 					'attachment_resource'      => [
 						'base' => 'attachments_resource',
 						'path' => '/(?P<attachment_id>\d+)',
@@ -46,14 +48,20 @@ final class Attachment extends Controller {
 					],
 
 					/**
-					 * Uploads attachment.
-					 *
-					 * @endpoint Upload attachment
-					 * @route /attachments
-					 * @method POST
-					 * @param string $parent_model Parent model.
-					 * @param string $parent_field Parent field.
-					 * @param int $parent Parent ID.
+					 * @OA\Post(
+					 *     path="/attachments",
+					 *     summary="Upload an attachment",
+					 *     tags={"Attachments"},
+					 *     @OA\RequestBody(
+					 *       @OA\JsonContent(
+					 *         @OA\Property(property="parent", type="integer", description="Parent object ID."),
+					 *         @OA\Property(property="parent_model", type="string", description="Parent model name (e.g. `user`)."),
+					 *         @OA\Property(property="parent_field", type="string", description="Parent model field (e.g. `image`)."),
+					 *         @OA\Property(property="file", type="string", format="file", description="File contents."),
+					 *       ),
+					 *     ),
+					 *     @OA\Response(response="201", description="")
+					 * )
 					 */
 					'attachment_upload_action' => [
 						'base'   => 'attachments_resource',
@@ -63,12 +71,14 @@ final class Attachment extends Controller {
 					],
 
 					/**
-					 * Updates attachment.
-					 *
-					 * @endpoint Update attachment
-					 * @route /attachments/<id>
-					 * @method POST
-					 * @param int $sort_order Sorting order.
+					 * @OA\Post(
+					 *     path="/attachments/{attachment_id}",
+					 *     summary="Update an attachment",
+					 *     tags={"Attachments"},
+					 *     @OA\Parameter(ref="#/components/parameters/attachment_id"),
+					 *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Attachment")),
+					 *     @OA\Response(response="200", description="")
+					 * )
 					 */
 					'attachment_update_action' => [
 						'base'   => 'attachment_resource',
@@ -78,11 +88,13 @@ final class Attachment extends Controller {
 					],
 
 					/**
-					 * Deletes atachment.
-					 *
-					 * @endpoint Delete attachment
-					 * @route /attachments/<id>
-					 * @method DELETE
+					 * @OA\Delete(
+					 *     path="/attachments/{attachment_id}",
+					 *     summary="Delete an attachment",
+					 *     tags={"Attachments"},
+					 *     @OA\Parameter(ref="#/components/parameters/attachment_id"),
+					 *     @OA\Response(response="204", description="")
+					 * )
 					 */
 					'attachment_delete_action' => [
 						'base'   => 'attachment_resource',

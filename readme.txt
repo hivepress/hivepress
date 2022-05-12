@@ -5,7 +5,7 @@ Tags: directory, business directory, classifieds, classified ads, listing, listi
 Requires at least: 5.0
 Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,7 +15,7 @@ An extensible, highly customizable, easy-to-use plugin that allows you to build 
 
 HivePress is an extensible, highly customizable, easy-to-use plugin that allows you to build any type of directory and listing websites.
 
-[Demo](https://listinghive.hivepress.io/) | [Docs](https://help.hivepress.io/) | [Support](https://hivepress.io/support/?utm_medium=referral&utm_source=wordpress.org)
+[Demo](https://listinghive.hivepress.io/) | [Docs](https://help.hivepress.io/) | [Support](https://community.hivepress.io/?utm_medium=referral&utm_source=wordpress.org)
 
 Whether it's a business directory, job board, real estate, classifieds or basically any listing website — HivePress is a great choice for it.
 
@@ -35,7 +35,7 @@ There's a bunch of [free extensions](https://hivepress.io/extensions/?utm_medium
 - [Paid Listings](https://help.hivepress.io/category/42-paid-listings) — Charge users for adding listings.
 
 = Free Support =
-We provide free support that includes fixing reported bugs and answering questions about HivePress. Join our [community forum](https://hivepress.io/support/?utm_medium=referral&utm_source=wordpress.org) to share your suggestions and help us keep HivePress awesome!
+We provide free support that includes fixing reported bugs and answering questions about HivePress. Join our [community forum](https://community.hivepress.io/?utm_medium=referral&utm_source=wordpress.org) to share your suggestions and help us keep HivePress awesome!
 
 == Changelog ==
 
