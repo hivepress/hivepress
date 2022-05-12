@@ -41,7 +41,7 @@ class Plugin_Deactivate extends Form {
 						'options' => [
 							'features'  => esc_html__( 'It lacks the required features', 'hivepress' ),
 							'themes'    => esc_html__( 'The layout is too basic or broken', 'hivepress' ),
-							'elementor' => esc_html__( 'Poor integration with Elementor', 'hivepress' ),
+							'elementor' => esc_html__( 'Poor integration with page builders', 'hivepress' ),
 							'plugins'   => esc_html__( 'It conflicts with other plugins', 'hivepress' ),
 							'docs'      => esc_html__( 'The docs are not helpful', 'hivepress' ),
 							''          => esc_html__( 'Other', 'hivepress' ),
