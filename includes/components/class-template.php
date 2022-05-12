@@ -28,8 +28,8 @@ final class Template extends Component {
 		// Set template title.
 		add_action( 'hivepress/v1/models/post/update', [ $this, 'set_template_title' ], 10, 2 );
 
-		// Create site header shortcode.
-		add_shortcode( 'hivepress_links', [ $this, 'set_site_header_shortcode' ] );
+		// Add menu shortcode.
+		add_shortcode( 'hivepress_menu', [ $this, 'render_menu' ] );
 
 		if ( is_admin() ) {
 
@@ -131,10 +131,17 @@ final class Template extends Component {
 	}
 
 	/**
+	 * Renders HivePress menu.
+	 */
+	public function render_menu() {
+		return ( new Blocks\Template( [ 'template' => 'site_header_block' ] ) )->render();
+	}
+
+	/**
 	 * Renders site header.
 	 */
 	public function render_site_header() {
-		echo ( new Blocks\Template( [ 'template' => 'site_header_block' ] ) )->render();
+		echo $this->render_menu();
 	}
 
 	/**
@@ -156,12 +163,5 @@ final class Template extends Component {
 		}
 
 		return $display;
-	}
-
-	/**
-	 * Create site header shortcode.
-	 */
-	public function set_site_header_shortcode() {
-		return ( new Blocks\Template( [ 'template' => 'site_header_block' ] ) )->render();
 	}
 }
