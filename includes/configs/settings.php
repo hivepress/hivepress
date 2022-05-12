@@ -381,13 +381,13 @@ return [
 			],
 
 			'hivepress' => [
-				'title'  => esc_html__( 'HivePress Store', 'hivepress-updates' ),
+				'title'  => esc_html__( 'HivePress Store', 'hivepress' ),
 				'_order' => 1000,
 
 				'fields' => [
 					'hivepress_license_key' => [
-						'label'       => esc_html__( 'License Keys', 'hivepress-updates' ),
-						'description' => esc_html__( 'Please enter the license keys for purchased themes and extensions, each key on a new line.', 'hivepress-updates' ),
+						'label'       => esc_html__( 'License Keys', 'hivepress' ),
+						'description' => esc_html__( 'Please enter the license keys for purchased themes and extensions, each key on a new line.', 'hivepress' ),
 						'type'        => 'textarea',
 						'max_length'  => 2048,
 						'_order'      => 10,
