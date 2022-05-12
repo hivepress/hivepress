@@ -148,11 +148,12 @@ class Listing_View_Page extends Page_Sidebar_Right {
 							],
 
 							'listing_attributes_secondary' => [
-								'type'   => 'attributes',
-								'model'  => 'listing',
-								'area'   => 'view_page_secondary',
-								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
-								'_order' => 50,
+								'type'    => 'attributes',
+								'model'   => 'listing',
+								'area'    => 'view_page_secondary',
+								'columns' => 2,
+								'_label'  => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
+								'_order'  => 50,
 							],
 
 							'listing_description'          => [

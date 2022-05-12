@@ -106,10 +106,11 @@ class Vendor_View_Block extends Template {
 									],
 
 									'vendor_attributes_secondary' => [
-										'type'   => 'attributes',
-										'model'  => 'vendor',
-										'area'   => 'view_block_secondary',
-										'_order' => 30,
+										'type'    => 'attributes',
+										'model'   => 'vendor',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
 									],
 								],
 							],

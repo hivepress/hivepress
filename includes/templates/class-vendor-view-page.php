@@ -116,11 +116,12 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									],
 
 									'vendor_attributes_secondary' => [
-										'type'   => 'attributes',
-										'model'  => 'vendor',
-										'area'   => 'view_page_secondary',
-										'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
-										'_order' => 40,
+										'type'    => 'attributes',
+										'model'   => 'vendor',
+										'area'    => 'view_page_secondary',
+										'columns' => 2,
+										'_label'  => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
+										'_order'  => 40,
 									],
 
 									'vendor_description' => [

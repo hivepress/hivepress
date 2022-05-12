@@ -118,10 +118,11 @@ class Listing_View_Block extends Template {
 									],
 
 									'listing_attributes_secondary' => [
-										'type'   => 'attributes',
-										'model'  => 'listing',
-										'area'   => 'view_block_secondary',
-										'_order' => 30,
+										'type'    => 'attributes',
+										'model'   => 'listing',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
 									],
 								],
 							],
