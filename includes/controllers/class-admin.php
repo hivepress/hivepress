@@ -137,8 +137,9 @@ final class Admin extends Controller {
 				'https://hivepress.io/api/v1/feedback',
 				[
 					'body' => [
-						'action' => 'deactivate_plugin',
-						'reason' => $form->get_value( 'reason' ),
+						'action'  => 'deactivate_plugin',
+						'reason'  => $form->get_value( 'reason' ),
+						'details' => $form->get_value( 'details' ),
 					],
 				]
 			);

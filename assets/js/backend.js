@@ -50,19 +50,21 @@
 			var field = $(this);
 
 			if (field.data('parent')) {
-				var parentField = $(':input[name="' + field.data('parent') + '"]');
+				var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
 
 				if (field.parent().is('td')) {
 					field = field.closest('tr');
+				} else if (field.is(':input')) {
+					field = field.closest('div');
 				}
 
 				if (parentField.length) {
-					if (!parentField.val() || (parentField.is(':checkbox') && !parentField.prop('checked'))) {
+					if (!parentField.val() || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
 						field.hide();
 					}
 
 					parentField.on('change', function() {
-						if (!parentField.val() || (parentField.is(':checkbox') && !parentField.prop('checked'))) {
+						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
 							field.hide();
 						} else {
 							field.show();

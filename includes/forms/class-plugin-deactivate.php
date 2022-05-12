@@ -34,7 +34,7 @@ class Plugin_Deactivate extends Form {
 				],
 
 				'fields'      => [
-					'reason' => [
+					'reason'  => [
 						'type'    => 'radio',
 						'_order'  => 10,
 
@@ -45,6 +45,19 @@ class Plugin_Deactivate extends Form {
 							'plugins'   => esc_html__( 'It conflicts with other plugins', 'hivepress' ),
 							'docs'      => esc_html__( 'The docs are not helpful', 'hivepress' ),
 							''          => esc_html__( 'Other', 'hivepress' ),
+						],
+					],
+
+					'details' => [
+						'type'        => 'textarea',
+						'placeholder' => esc_html__( 'Extra details, e.g. conflicting themes, plugins, missing features or docs.', 'hivepress' ),
+						'max_length'  => 512,
+						'_order'      => 20,
+
+						// @todo Remove once parent fields are fully implemented.
+						'attributes'  => [
+							'data-component' => 'field',
+							'data-parent'    => 'reason',
 						],
 					],
 				],
