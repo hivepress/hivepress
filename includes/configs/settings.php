@@ -66,7 +66,7 @@ return [
 
 					'listing_title_format'             => [
 						'label'       => hivepress()->translator->get_string( 'title' ),
-						'description' => hivepress()->translator->get_string( 'set_title_format_based_on_attributes' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%listing%' ),
+						'description' => hivepress()->translator->get_string( 'set_title_format_based_on_attributes' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%listing%, %vendor%' ),
 						'type'        => 'text',
 						'max_length'  => 256,
 						'_order'      => 60,
