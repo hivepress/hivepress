@@ -53,7 +53,6 @@ abstract class Page_Sidebar_Left extends Page {
 
 									'page_content' => [
 										'type'       => 'container',
-										'tag'        => 'main',
 										'_order'     => 20,
 
 										'attributes' => [

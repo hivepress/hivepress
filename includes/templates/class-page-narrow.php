@@ -42,7 +42,6 @@ abstract class Page_Narrow extends Page {
 								'blocks'     => [
 									'page_content' => [
 										'type'       => 'container',
-										'tag'        => 'main',
 										'_order'     => 10,
 
 										'attributes' => [
