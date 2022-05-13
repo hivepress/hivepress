@@ -339,6 +339,73 @@ final class Admin extends Component {
 				}
 			}
 		}
+
+		if ( 'options-permalink.php' === $pagenow ) {
+
+			// Get permalinks.
+			$permalinks     = (array) get_option( 'hp_permalinks', [] );
+			$new_permalinks = $permalinks;
+
+			foreach ( array_merge(
+				hivepress()->get_config( 'post_types' ),
+				hivepress()->get_config( 'taxonomies' )
+			) as $type_name => $type_args ) {
+
+				// Check permissions.
+				if ( ! hp\get_array_value( $type_args, 'public', true ) ) {
+					continue;
+				}
+
+				// Get field name.
+				$option_name = $type_name . '_slug';
+				$field_name  = hp\prefix( $option_name );
+
+				// Get field label.
+				$field_label = hp\get_array_value( $type_args['labels'], 'singular_name' );
+
+				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
+					$field_label = hivepress()->translator->get_string( $type_name );
+				}
+
+				// Add field.
+				add_settings_field(
+					$field_name,
+					$field_label,
+					[ $this, 'render_settings_field' ],
+					'permalink',
+					'optional',
+					[
+						'name'       => $field_name,
+						'type'       => 'text',
+						'max_length' => 64,
+						'default'    => hp\get_array_value( $permalinks, $option_name ),
+
+						'attributes' => [
+							'class' => [ 'regular-text', 'code' ],
+						],
+					]
+				);
+
+				if ( isset( $_POST[ $field_name ] ) ) {
+
+					// Get field value.
+					$field_value = sanitize_title( wp_unslash( $_POST[ $field_name ] ) );
+
+					if ( $field_value ) {
+
+						// Set permalink.
+						$new_permalinks[ $option_name ] = urldecode( $field_value );
+					} else {
+						unset( $new_permalinks[ $option_name ] );
+					}
+				}
+			}
+
+			// Update permalinks.
+			if ( $new_permalinks !== $permalinks ) {
+				update_option( 'hp_permalinks', $new_permalinks );
+			}
+		}
 	}
 
 	/**
@@ -462,6 +529,19 @@ final class Admin extends Component {
 
 		// Create field.
 		$field = new Fields\Image_Size();
+
+		// Validate field.
+		$field->set_value( $value );
+
+		if ( $field->validate() ) {
+			return $field->get_value();
+		}
+	}
+
+	public function validate_todo_field( $value ) {
+
+		// Create field.
+		$field = new Fields\Text();
 
 		// Validate field.
 		$field->set_value( $value );

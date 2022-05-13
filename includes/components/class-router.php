@@ -44,6 +44,10 @@ final class Router extends Component {
 		// Add rewrite rules.
 		add_action( 'init', [ $this, 'add_rewrite_rules' ] );
 
+		// Set rewrite slugs.
+		add_filter( 'hivepress/v1/post_types', [ $this, 'set_rewrite_slugs' ] );
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_rewrite_slugs' ] );
+
 		// Flush rewrite rules.
 		add_action( 'hivepress/v1/activate', [ $this, 'flush_rewrite_rules' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'flush_rewrite_rules' ] );
@@ -441,6 +445,28 @@ final class Router extends Component {
 		foreach ( array_unique( $tags ) as $tag ) {
 			add_rewrite_tag( '%' . hp\prefix( $tag ) . '%', '([^&]+)' );
 		}
+	}
+
+	/**
+	 * Sets rewrite slugs.
+	 *
+	 * @param array $types Post types or taxonomies.
+	 * @return array
+	 */
+	public function set_rewrite_slugs( $types ) {
+
+		// Get permalinks.
+		$permalinks = (array) get_option( 'hp_permalinks' );
+
+		foreach ( $types as $name => $args ) {
+			if ( isset( $permalinks[ $name . '_slug' ] ) && hp\get_array_value( $args, 'public', true ) ) {
+
+				// Set rewrite slug.
+				$types[ $name ]['rewrite']['slug'] = $permalinks[ $name . '_slug' ];
+			}
+		}
+
+		return $types;
 	}
 
 	/**
