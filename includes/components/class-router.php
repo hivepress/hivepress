@@ -456,13 +456,15 @@ final class Router extends Component {
 	public function set_rewrite_slugs( $types ) {
 
 		// Get permalinks.
-		$permalinks = (array) get_option( 'hp_permalinks' );
+		$permalinks = (array) get_option( 'hp_permalinks', [] );
 
-		foreach ( $types as $name => $args ) {
-			if ( isset( $permalinks[ $name . '_slug' ] ) && hp\get_array_value( $args, 'public', true ) ) {
+		if ( $permalinks ) {
+			foreach ( $types as $name => $args ) {
+				if ( isset( $permalinks[ $name . '_slug' ] ) && hp\get_array_value( $args, 'public', true ) ) {
 
-				// Set rewrite slug.
-				$types[ $name ]['rewrite']['slug'] = $permalinks[ $name . '_slug' ];
+					// Set rewrite slug.
+					$types[ $name ]['rewrite']['slug'] = $permalinks[ $name . '_slug' ];
+				}
 			}
 		}
 
