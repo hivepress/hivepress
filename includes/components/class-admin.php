@@ -538,19 +538,6 @@ final class Admin extends Component {
 		}
 	}
 
-	public function validate_todo_field( $value ) {
-
-		// Create field.
-		$field = new Fields\Text();
-
-		// Validate field.
-		$field->set_value( $value );
-
-		if ( $field->validate() ) {
-			return $field->get_value();
-		}
-	}
-
 	/**
 	 * Gets settings page tabs.
 	 *
