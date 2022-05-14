@@ -116,12 +116,13 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 									],
 
 									'vendor_attributes_secondary' => [
-										'type'    => 'attributes',
-										'model'   => 'vendor',
-										'area'    => 'view_page_secondary',
-										'columns' => 2,
-										'_label'  => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
-										'_order'  => 40,
+										'type'      => 'attributes',
+										'model'     => 'vendor',
+										'area'      => 'view_page_secondary',
+										'columns'   => 2,
+										'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
+										'_settings' => [ 'columns' ],
+										'_order'    => 40,
 									],
 
 									'vendor_description' => [
@@ -134,11 +135,12 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 							],
 
 							'vendor_attributes_primary' => [
-								'type'   => 'attributes',
-								'model'  => 'vendor',
-								'area'   => 'view_page_primary',
-								'_label' => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
-								'_order' => 20,
+								'type'      => 'attributes',
+								'model'     => 'vendor',
+								'area'      => 'view_page_primary',
+								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
+								'_settings' => [ 'columns' ],
+								'_order'    => 20,
 							],
 
 							'vendor_actions_primary'    => [

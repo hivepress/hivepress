@@ -57,7 +57,7 @@ class Related_Listings extends Listings {
 	protected function boot() {
 
 		// Set query.
-		$listing_query = Models\Listing::query()->filter(
+		$query = Models\Listing::query()->filter(
 			[
 				'status' => 'publish',
 			]
@@ -70,16 +70,25 @@ class Related_Listings extends Listings {
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
 			// Exclude listing.
-			$listing_query->filter( [ 'id__not_in' => [ $listing->get_id() ] ] );
+			$query->filter( [ 'id__not_in' => [ $listing->get_id() ] ] );
 
 			// Set categories.
 			if ( $listing->get_categories__id() ) {
-				$listing_query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
+				$query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
 			}
+
+			/**
+			 * Fires when related models are being queried. The dynamic part of the hook refers to the model name (e.g. `listing`).
+			 *
+			 * @hook hivepress/v1/models/{model_name}/relate
+			 * @param object $query Related query.
+			 * @param object $object Model object.
+			 */
+			do_action( 'hivepress/v1/models/listing/relate', $query, $listing );
 		}
 
 		// Set context.
-		$this->context['listing_query'] = $listing_query;
+		$this->context['listing_query'] = $query;
 
 		parent::boot();
 	}

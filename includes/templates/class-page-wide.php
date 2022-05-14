@@ -33,7 +33,6 @@ abstract class Page_Wide extends Page {
 						'blocks' => [
 							'page_content' => [
 								'type'       => 'container',
-								'tag'        => 'main',
 								'_order'     => 10,
 
 								'attributes' => [

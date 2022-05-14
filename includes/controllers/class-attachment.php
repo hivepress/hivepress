@@ -117,9 +117,6 @@ final class Attachment extends Controller {
 	 * @return WP_Rest_Response
 	 */
 	public function upload_attachment( $request ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -217,6 +214,10 @@ final class Attachment extends Controller {
 		}
 
 		// Upload attachment.
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+
 		$attachment_id = media_handle_upload(
 			'file',
 			$parent_id,

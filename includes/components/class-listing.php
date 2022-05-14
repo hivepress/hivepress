@@ -89,18 +89,6 @@ final class Listing extends Component {
 		// Remove action.
 		remove_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ] );
 
-		// Get title.
-		$title = get_option( 'hp_listing_title_format' );
-
-		if ( $title ) {
-			$title = hp\replace_tokens( [ 'listing' => $listing ], $title );
-
-			// Update title.
-			if ( $listing->get_title() !== $title ) {
-				$listing->set_title( $title )->save_title();
-			}
-		}
-
 		// Check user.
 		if ( ! $listing->get_user__id() ) {
 			return;
@@ -113,10 +101,27 @@ final class Listing extends Component {
 			$vendor = $listing->get_vendor();
 		}
 
+		// Get title.
+		$title = get_option( 'hp_listing_title_format' );
+
+		if ( $title ) {
+			$title = hp\replace_tokens(
+				[
+					'listing' => $listing,
+					'vendor'  => $vendor,
+				],
+				$title
+			);
+
+			// Update title.
+			if ( $listing->get_title() !== $title ) {
+				$listing->set_title( $title )->save_title();
+			}
+		}
+
+		// Update listing user.
 		if ( $vendor && $vendor->get_status() === 'publish' ) {
 			if ( $vendor->get_user__id() !== $listing->get_user__id() ) {
-
-				// Update listing user.
 				$listing->set_user( $vendor->get_user__id() )->save_user();
 			}
 
