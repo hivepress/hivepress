@@ -160,15 +160,15 @@ class Attributes extends Block {
 			);
 		}
 
-		if ( file_exists( get_stylesheet_directory() . '/' . $path . '.php' ) ) {
+		// Render template part.
+		$output .= ( new Part(
+			[
+				'context' => $this->context,
+				'path'    => $path,
+			]
+		) )->render();
 
-			// Render template part.
-			$output .= ( new Part(
-				[
-					'path' => $path,
-				]
-			) )->render();
-		} elseif ( $model->_get_fields( $this->area ) ) {
+		if ( ! $output && $model->_get_fields( $this->area ) ) {
 
 			// Get column width.
 			$column_width = hp\get_column_width( $this->columns );
