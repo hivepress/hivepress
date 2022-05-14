@@ -103,7 +103,7 @@ class Attributes extends Block {
 			if ( $this->area ) {
 
 				// Get area.
-				$area = hp\get_array_value( explode( '_', $this->area ), 2 );
+				$area = hp\get_last_array_value( explode( '_', $this->area ) );
 
 				if ( $area ) {
 					$attributes['class'][] = $class . '--' . hp\sanitize_slug( $area );
@@ -154,7 +154,7 @@ class Attributes extends Block {
 					],
 					array_slice( $parts, 0, 2 ),
 					[
-						$this->model . '-attributes-' . hp\get_array_value( $parts, 2 ),
+						$this->model . '-attributes-' . hp\get_last_array_value( $parts ),
 					]
 				)
 			);
@@ -183,7 +183,7 @@ class Attributes extends Block {
 			foreach ( $model->_get_fields( $this->area ) as $field ) {
 				if ( ! is_null( $field->get_value() ) ) {
 					$output .= '<div class="hp-col-lg-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
-					$output .= '<div class="' . $field_class . ' ' . $field_class . '--' . esc_attr( $field->get_slug() ) . '">' . $field->display() . '</div>';
+					$output .= '<div class="' . esc_attr( $field_class . ' ' . $field_class . '--' . $field->get_slug() ) . '">' . $field->display() . '</div>';
 					$output .= '</div>';
 				}
 			}
