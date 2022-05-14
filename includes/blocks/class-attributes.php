@@ -178,17 +178,29 @@ class Attributes extends Block {
 
 			// Render attributes.
 			$output .= '<div ' . hp\html_attributes( $this->attributes ) . '>';
-			$output .= '<div class="hp-row">';
+
+			if ( $this->columns > 1 ) {
+				$output .= '<div class="hp-row">';
+			}
 
 			foreach ( $model->_get_fields( $this->area ) as $field ) {
 				if ( ! is_null( $field->get_value() ) ) {
-					$output .= '<div class="hp-col-lg-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+					if ( $this->columns > 1 ) {
+						$output .= '<div class="hp-col-lg-' . esc_attr( $column_width ) . ' hp-col-xs-12">';
+					}
+
 					$output .= '<div class="' . esc_attr( $field_class . ' ' . $field_class . '--' . $field->get_slug() ) . '">' . $field->display() . '</div>';
-					$output .= '</div>';
+
+					if ( $this->columns > 1 ) {
+						$output .= '</div>';
+					}
 				}
 			}
 
-			$output .= '</div>';
+			if ( $this->columns > 1 ) {
+				$output .= '</div>';
+			}
+
 			$output .= '</div>';
 		}
 
