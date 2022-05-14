@@ -3,7 +3,7 @@ Contributors: hivepress
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7785WBVGMNB44&source=url
 Tags: directory, business directory, classifieds, classified ads, listing, listings, real estate, job board
 Requires at least: 5.0
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 7.0
 Stable tag: 1.6.3
 License: GPLv3
