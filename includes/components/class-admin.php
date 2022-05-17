@@ -1146,15 +1146,20 @@ final class Admin extends Component {
 
 				foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
+					// Get field name.
+					$field_name = hp\prefix( $field_name );
+
 					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => $field_name ] ) ] );
 
 					if ( $field ) {
 
 						// Get field value.
 						$value = '';
 
-						if ( $field->get_arg( '_external' ) ) {
+						if ( isset( $args['defaults'] ) ) {
+							$value = hp\get_array_value( $args['defaults'], $field_name, '' );
+						} elseif ( $field->get_arg( '_external' ) ) {
 							$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
 						} else {
 							$value = get_post_field( $field->get_arg( '_alias' ), $post );
@@ -1209,6 +1214,11 @@ final class Admin extends Component {
 
 				$output .= '</table>';
 			}
+		}
+
+		// Return output.
+		if ( ! hp\get_array_value( $args, 'echo', true ) ) {
+			return $output;
 		}
 
 		echo $output;
