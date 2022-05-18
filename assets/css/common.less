@@ -67,6 +67,22 @@
 	Forms
 	--------------------------------------------------------------*/
 	&-form {
+		&[data-state=loading] {
+			position: relative;
+			opacity: 0.5;
+
+			&::after {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				z-index: 1000;
+			}
+		}
+
 		&--narrow {
 			width: 100%;
 		}
@@ -354,6 +370,7 @@
 
 				tr {
 					background-color: #fff;
+
 					&.ui-sortable-helper {
 						display: table;
 					}

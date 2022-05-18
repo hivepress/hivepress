@@ -45,35 +45,6 @@
 			});
 		});
 
-		// Field
-		hivepress.getComponent('field').each(function() {
-			var field = $(this);
-
-			if (field.data('parent')) {
-				var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
-
-				if (field.parent().is('td')) {
-					field = field.closest('tr');
-				} else if (field.is(':input')) {
-					field = field.closest('div');
-				}
-
-				if (parentField.length) {
-					if (!parentField.val() || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
-						field.hide();
-					}
-
-					parentField.on('change', function() {
-						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
-							field.hide();
-						} else {
-							field.show();
-						}
-					});
-				}
-			}
-		});
-
 		// File select
 		hivepress.getComponent('file-select').on('click', function(e) {
 			var button = $(this),
@@ -114,12 +85,6 @@
 			container.find('input[type="hidden"]').val('');
 
 			e.preventDefault();
-		});
-
-		// Read-only field
-		hivepress.getComponent('form').find('input[readonly], textarea[readonly]').on('click', function() {
-			this.select();
-			document.execCommand('copy');
 		});
 
 		// Plugin deactivate

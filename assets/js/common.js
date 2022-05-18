@@ -18,10 +18,10 @@ var hivepress = {
 (function($) {
 	'use strict';
 
-	$(document).ready(function() {
+	hivepress.initUI = function(container) {
 
 		// Link
-		hivepress.getComponent('link').on('click', function(e) {
+		container.find(hivepress.getSelector('link')).on('click', function(e) {
 			var url = $(this).data('url');
 
 			if (url.indexOf('#') !== 0) {
@@ -32,7 +32,7 @@ var hivepress = {
 		});
 
 		// Modal
-		hivepress.getComponent('modal').each(function() {
+		container.find(hivepress.getSelector('modal')).each(function() {
 			var url = '#' + $(this).attr('id');
 
 			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
@@ -47,7 +47,7 @@ var hivepress = {
 		});
 
 		// Select
-		hivepress.getComponent('select').each(function() {
+		container.find(hivepress.getSelector('select')).each(function() {
 			var field = $(this),
 				settings = {
 					width: '100%',
@@ -149,29 +149,46 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('render')) {
+				field.on('change', function() {
+					var container = $(this).closest('[data-model]'),
+						data = new FormData($(this).closest('form').get(0));
+
+					data.append('_id', container.data('id'));
+					data.append('_model', container.data('model'));
+					data.delete('_wpnonce');
+
+					container.attr('data-state', 'loading');
+
+					$.ajax({
+						url: $(this).data('render'),
+						method: 'POST',
+						data: data,
+						contentType: false,
+						processData: false,
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+						},
+						complete: function(xhr) {
+							var response = xhr.responseJSON;
+
+							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+								var newContainer = $(response.data.html);
+
+								container.replaceWith(newContainer);
+
+								hivepress.initUI(newContainer);
+							}
+						},
+					});
+				});
+			}
+
 			field.select2(settings);
 		});
 
 		// Date
-		var dateFormatter = new DateFormatter();
-
-		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
-			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
-
-			flatpickr.localize(dateSettings);
-
-			dateFormatter = new DateFormatter({
-				dateSettings: {
-					days: dateSettings.weekdays.longhand,
-					daysShort: dateSettings.weekdays.shorthand,
-					months: dateSettings.months.longhand,
-					monthsShort: dateSettings.months.shorthand,
-					meridiem: dateSettings.hasOwnProperty('amPM') ? dateSettings.amPM : ['AM', 'PM'],
-				},
-			});
-		}
-
-		hivepress.getComponent('date').each(function() {
+		container.find(hivepress.getSelector('date')).each(function() {
 			var field = $(this),
 				settings = {
 					allowInput: true,
@@ -310,7 +327,7 @@ var hivepress = {
 								}
 
 								var formattedDates = selectedDates.map(function(date) {
-									return dateFormatter.formatDate(date, settings['dateFormat']);
+									return hivepress.dateFormatter.formatDate(date, settings['dateFormat']);
 								});
 
 								fields.eq(0).val(formattedDates[0]);
@@ -327,7 +344,7 @@ var hivepress = {
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
 				parseDate: function(date) {
-					var parsedDate = dateFormatter.parseDate(date, settings['dateFormat']);
+					var parsedDate = hivepress.dateFormatter.parseDate(date, settings['dateFormat']);
 
 					if (settings['dateFormat'] === 'U') {
 						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
@@ -338,7 +355,7 @@ var hivepress = {
 					return parsedDate;
 				},
 				formatDate: function(date, format) {
-					var formattedDate = dateFormatter.formatDate(date, format);
+					var formattedDate = hivepress.dateFormatter.formatDate(date, format);
 
 					if (format === 'U') {
 						formattedDate = parseInt(formattedDate) - date.getTimezoneOffset() * 60;
@@ -352,7 +369,7 @@ var hivepress = {
 		});
 
 		// Time
-		hivepress.getComponent('time').each(function() {
+		container.find(hivepress.getSelector('time')).each(function() {
 			var field = $(this),
 				settings = {
 					allowInput: true,
@@ -377,7 +394,7 @@ var hivepress = {
 							return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 						}
 
-						return dateFormatter.formatDate(date, format);
+						return hivepress.dateFormatter.formatDate(date, format);
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -419,7 +436,7 @@ var hivepress = {
 		});
 
 		// File upload
-		hivepress.getComponent('file-upload').each(function() {
+		container.find(hivepress.getSelector('file-upload')).each(function() {
 			var field = $(this),
 				container = field.parents('[data-model]:first'),
 				submitButton = field.closest('form').find(':submit'),
@@ -489,25 +506,8 @@ var hivepress = {
 			});
 		});
 
-		// File delete
-		$(document).on('click', hivepress.getSelector('file-delete'), function(e) {
-			var container = $(this).parent();
-
-			$.ajax({
-				url: $(this).data('url'),
-				method: 'DELETE',
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-				},
-			});
-
-			container.remove();
-
-			e.preventDefault();
-		});
-
 		// Sortable
-		hivepress.getComponent('sortable').each(function() {
+		container.find(hivepress.getSelector('sortable')).each(function() {
 			var container = $(this);
 
 			container.sortable({
@@ -531,7 +531,7 @@ var hivepress = {
 		});
 
 		// Repeater
-		hivepress.getComponent('repeater').each(function() {
+		container.find(hivepress.getSelector('repeater')).each(function() {
 			var container = $(this),
 				itemContainer = container.find('tbody'),
 				firstItem = container.find('tr:first');
@@ -542,8 +542,6 @@ var hivepress = {
 
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
-					container.find('select').select2('destroy');
-
 					var newItem = firstItem.clone(),
 						index = Math.random().toString(36).slice(2);
 
@@ -571,10 +569,7 @@ var hivepress = {
 						newItem.appendTo(itemContainer);
 					}
 
-					container.find('select').select2({
-						width: '100%',
-						minimumResultsForSearch: -1,
-					});
+					hivepress.initUI(newItem);
 				});
 			}
 
@@ -586,7 +581,7 @@ var hivepress = {
 		});
 
 		// Chart
-		hivepress.getComponent('chart').each(function() {
+		container.find(hivepress.getSelector('chart')).each(function() {
 			var canvas = $(this),
 				chart = new Chart(canvas, {
 					type: 'line',
@@ -617,7 +612,13 @@ var hivepress = {
 		});
 
 		// Form
-		hivepress.getComponent('form').each(function() {
+		var forms = container.find(hivepress.getSelector('form'));
+
+		if (container.is('form')) {
+			forms = container;
+		}
+
+		forms.each(function() {
 			var form = $(this),
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
@@ -720,6 +721,82 @@ var hivepress = {
 					e.preventDefault();
 				});
 			}
+
+			form.find('input[readonly], textarea[readonly]').on('click', function() {
+				this.select();
+				document.execCommand('copy');
+			});
 		});
+
+		// Field
+		container.find(hivepress.getSelector('field')).each(function() {
+			var field = $(this);
+
+			if (field.data('parent')) {
+				var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
+
+				if (field.parent().is('td')) {
+					field = field.closest('tr');
+				} else if (field.is(':input')) {
+					field = field.closest('div');
+				}
+
+				if (parentField.length) {
+					if (!parentField.val() || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
+						field.hide();
+					}
+
+					parentField.on('change', function() {
+						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
+							field.hide();
+						} else {
+							field.show();
+						}
+					});
+				}
+			}
+		});
+	}
+
+	$(document).ready(function() {
+
+		// Date formatter
+		hivepress.dateFormatter = new DateFormatter();
+
+		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
+			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
+
+			flatpickr.localize(dateSettings);
+
+			hivepress.dateFormatter = new DateFormatter({
+				dateSettings: {
+					days: dateSettings.weekdays.longhand,
+					daysShort: dateSettings.weekdays.shorthand,
+					months: dateSettings.months.longhand,
+					monthsShort: dateSettings.months.shorthand,
+					meridiem: dateSettings.hasOwnProperty('amPM') ? dateSettings.amPM : ['AM', 'PM'],
+				},
+			});
+		}
+
+		// File delete
+		$(document).on('click', hivepress.getSelector('file-delete'), function(e) {
+			var container = $(this).parent();
+
+			$.ajax({
+				url: $(this).data('url'),
+				method: 'DELETE',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+				},
+			});
+
+			container.remove();
+
+			e.preventDefault();
+		});
+
+		// Initialize UI
+		hivepress.initUI($('body'));
 	});
 })(jQuery);

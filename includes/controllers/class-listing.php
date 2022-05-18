@@ -932,9 +932,15 @@ final class Listing extends Controller {
 	/**
 	 * Redirects listing submit category page.
 	 *
+	 * @deprecated since version 1.6.4.
 	 * @return mixed
 	 */
 	public function redirect_listing_submit_category_page() {
+
+		// Redirect page.
+		if ( ! has_filter( 'hivepress/v1/templates/listing_submit_category_page' ) && ! has_filter( 'hivepress/v1/templates/listing_submit_category_page/blocks' ) ) {
+			return true;
+		}
 
 		// Check categories.
 		if ( ! Models\Listing_Category::query()->get_first_id() ) {
@@ -976,6 +982,7 @@ final class Listing extends Controller {
 	/**
 	 * Renders listing submit category page.
 	 *
+	 * @deprecated since version 1.6.4.
 	 * @return string
 	 */
 	public function render_listing_submit_category_page() {

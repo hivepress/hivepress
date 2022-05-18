@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Listing submission page (category selection step).
+ *
+ * @deprecated since version 1.6.4.
  */
 class Listing_Submit_Category_Page extends Listing_Submit_Page {
 

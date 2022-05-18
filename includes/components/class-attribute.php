@@ -67,12 +67,11 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
-		if ( is_admin() ) {
+		// Manage meta boxes.
+		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
+		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
-			// Manage meta boxes.
-			add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
-			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
-		} else {
+		if ( ! is_admin() ) {
 
 			// Set search query.
 			add_action( 'pre_get_posts', [ $this, 'set_search_query' ] );
@@ -117,6 +116,15 @@ final class Attribute extends Component {
 		}
 
 		return $attributes;
+	}
+
+	/**
+	 * Gets model names.
+	 *
+	 * @return array
+	 */
+	public function get_models() {
+		return $this->models;
 	}
 
 	/**
@@ -186,6 +194,7 @@ final class Attribute extends Component {
 
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
+			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_submit_fields' ], 100, 2 );
 
 			// Add search fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 100, 2 );
@@ -581,6 +590,34 @@ final class Attribute extends Component {
 			}
 		}
 
+		if ( 'edit' === $field_context ) {
+
+			// Get field name.
+			$field_name = get_post_field( 'post_name' );
+
+			if ( ! $field_name || preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', $field_name ) ) {
+
+				// Set field arguments.
+				$field_args = [
+					'label'       => esc_html__( 'Field Name', 'hivepress' ),
+					'description' => esc_html__( 'Set the field name used for storing the attribute values.', 'hivepress' ) . ' ' . esc_html__( 'Use lowercase letters, numbers, and underscores only.', 'hivepress' ),
+					'type'        => 'text',
+					'pattern'     => '[a-z]{1}[a-z0-9_]*',
+					'max_length'  => 64,
+					'required'    => true,
+					'_alias'      => 'post_name',
+					'_order'      => 99,
+				];
+
+				if ( get_post_status() === 'publish' ) {
+					$field_args['readonly'] = true;
+				}
+
+				// Add field.
+				$meta_box['fields']['edit_field_name'] = $field_args;
+			}
+		}
+
 		return $meta_box;
 	}
 
@@ -764,6 +801,42 @@ final class Attribute extends Component {
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $field_args;
 			}
+		}
+
+		return $form_args;
+	}
+
+	/**
+	 * Adds submit fields.
+	 *
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function add_submit_fields( $form_args, $form ) {
+
+		// Get taxonomy.
+		$taxonomy = hp\prefix( $form::get_meta( 'model' ) . '_category' );
+
+		if ( taxonomy_exists( $taxonomy ) && get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'number'     => 1,
+				'fields'     => 'ids',
+				'hide_empty' => false,
+			]
+		) ) {
+
+			// Add field.
+			$form_args['fields']['categories'] = [
+				'multiple'   => false,
+				'required'   => true,
+				'_order'     => 5,
+
+				'attributes' => [
+					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
+				],
+			];
 		}
 
 		return $form_args;
@@ -1285,6 +1358,14 @@ final class Attribute extends Component {
 						$meta_box['screen'] = $model;
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
+
+						foreach ( [ 'edit', 'search' ] as $field_context ) {
+							if ( isset( $meta_box['fields'][ $field_context . '_field_type' ] ) ) {
+								$meta_box['fields'][ $field_context . '_field_type' ]['attributes'] = [
+									'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
+								];
+							}
+						}
 					}
 
 					// @todo replace temporary fix.
