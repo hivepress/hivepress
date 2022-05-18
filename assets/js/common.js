@@ -172,7 +172,7 @@ var hivepress = {
 						complete: function(xhr) {
 							var response = xhr.responseJSON;
 
-							if (response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
 								var newContainer = $(response.data.html);
 
 								container.replaceWith(newContainer);
@@ -327,7 +327,7 @@ var hivepress = {
 								}
 
 								var formattedDates = selectedDates.map(function(date) {
-									return hivepress.dateformatter.formatDate(date, settings['dateFormat']);
+									return hivepress.dateFormatter.formatDate(date, settings['dateFormat']);
 								});
 
 								fields.eq(0).val(formattedDates[0]);
@@ -344,7 +344,7 @@ var hivepress = {
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
 				parseDate: function(date) {
-					var parsedDate = hivepress.dateformatter.parseDate(date, settings['dateFormat']);
+					var parsedDate = hivepress.dateFormatter.parseDate(date, settings['dateFormat']);
 
 					if (settings['dateFormat'] === 'U') {
 						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
@@ -355,7 +355,7 @@ var hivepress = {
 					return parsedDate;
 				},
 				formatDate: function(date, format) {
-					var formattedDate = hivepress.dateformatter.formatDate(date, format);
+					var formattedDate = hivepress.dateFormatter.formatDate(date, format);
 
 					if (format === 'U') {
 						formattedDate = parseInt(formattedDate) - date.getTimezoneOffset() * 60;
@@ -394,7 +394,7 @@ var hivepress = {
 							return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 						}
 
-						return hivepress.dateformatter.formatDate(date, format);
+						return hivepress.dateFormatter.formatDate(date, format);
 					},
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -761,14 +761,14 @@ var hivepress = {
 	$(document).ready(function() {
 
 		// Date formatter
-		hivepress.dateformatter = new DateFormatter();
+		hivepress.dateFormatter = new DateFormatter();
 
 		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
 			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
 
 			flatpickr.localize(dateSettings);
 
-			hivepress.dateformatter = new DateFormatter({
+			hivepress.dateFormatter = new DateFormatter({
 				dateSettings: {
 					days: dateSettings.weekdays.longhand,
 					daysShort: dateSettings.weekdays.shorthand,
