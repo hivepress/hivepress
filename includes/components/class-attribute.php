@@ -1216,6 +1216,17 @@ final class Attribute extends Component {
 						'_order'  => 1,
 					],
 
+					'edit_field_name' => [
+						'label'       => esc_html__( 'Field Name', 'hivepress' ),
+						'description' => esc_html__( 'todo', 'hivepress' ),
+						'type'        => 'text',
+						'pattern'     => '[a-z]{1}[a-z0-9_]*',
+						'max_length'  => 64,
+						'required'    => true,
+						'_alias'      => 'post_name',
+						'_order'      => 99,
+					],
+
 					'edit_field_type' => [
 						'label'       => esc_html__( 'Field Type', 'hivepress' ),
 						'type'        => 'select',
