@@ -611,7 +611,6 @@ final class Attribute extends Component {
 
 				if ( get_post_status() === 'publish' ) {
 					$field_args['readonly'] = true;
-					$field_args['default']  = str_replace( '-', '_', $field_name );
 				}
 
 				// Add field.
