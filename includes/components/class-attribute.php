@@ -1360,9 +1360,9 @@ final class Attribute extends Component {
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
 
-						foreach ( [ 'edit', 'search' ] as $context ) {
-							if ( isset( $meta_box['fields'][ $context . '_field_type' ] ) ) {
-								$meta_box['fields'][ $context . '_field_type' ]['attributes'] = [
+						foreach ( [ 'edit', 'search' ] as $field_context ) {
+							if ( isset( $meta_box['fields'][ $field_context . '_field_type' ] ) ) {
+								$meta_box['fields'][ $field_context . '_field_type' ]['attributes'] = [
 									'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
 								];
 							}
