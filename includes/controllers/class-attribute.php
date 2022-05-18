@@ -88,7 +88,7 @@ final class Attribute extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || ! in_array( $model->get_status(), [ 'auto-draft', 'draft', 'publish' ], true ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || $model->get_status() !== 'auto-draft' ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -98,7 +98,7 @@ final class Attribute extends Controller {
 		// Create form.
 		$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model ] ] );
 
-		if ( ! $form || $form::get_meta( 'model' ) !== $model::_get_meta( 'name' ) ) {
+		if ( ! $form || $form::get_meta( 'model' ) !== $model_name ) {
 			return hp\rest_error( 404 );
 		}
 
@@ -156,10 +156,10 @@ final class Attribute extends Controller {
 		}
 
 		// Update field types.
-		foreach ( [ 'edit', 'search' ] as $context ) {
-			$field = hp\prefix( $context . '_field_type' );
+		foreach ( [ 'edit', 'search' ] as $field_context ) {
+			$field_name = hp\prefix( $field_context . '_field_type' );
 
-			update_post_meta( $post->ID, $field, sanitize_key( $request->get_param( $field ) ) );
+			update_post_meta( $post->ID, $field_name, sanitize_key( $request->get_param( $field_name ) ) );
 		}
 
 		// Render meta box.
