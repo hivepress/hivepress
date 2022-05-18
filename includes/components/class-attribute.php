@@ -590,6 +590,35 @@ final class Attribute extends Component {
 			}
 		}
 
+		if ( 'edit' === $field_context ) {
+
+			// Get field name.
+			$field_name = get_post_field( 'post_name' );
+
+			if ( ! $field_name || preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', $field_name ) ) {
+
+				// Set field arguments.
+				$field_args = [
+					'label'       => esc_html__( 'Field Name', 'hivepress' ),
+					'description' => esc_html__( 'Set the field name used for storing the attribute values.', 'hivepress' ) . ' ' . esc_html__( 'Use lowercase letters, numbers, and underscores only.', 'hivepress' ),
+					'type'        => 'text',
+					'pattern'     => '[a-z]{1}[a-z0-9_]*',
+					'max_length'  => 64,
+					'required'    => true,
+					'_alias'      => 'post_name',
+					'_order'      => 99,
+				];
+
+				if ( get_post_status() === 'publish' ) {
+					$field_args['readonly'] = true;
+					$field_args['default']  = str_replace( '-', '_', $field_name );
+				}
+
+				// Add field.
+				$meta_box['fields']['edit_field_name'] = $field_args;
+			}
+		}
+
 		return $meta_box;
 	}
 
@@ -1214,17 +1243,6 @@ final class Attribute extends Component {
 						'caption' => esc_html__( 'Allow front-end editing', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 1,
-					],
-
-					'edit_field_name' => [
-						'label'       => esc_html__( 'Field Name', 'hivepress' ),
-						'description' => esc_html__( 'todo', 'hivepress' ),
-						'type'        => 'text',
-						'pattern'     => '[a-z]{1}[a-z0-9_]*',
-						'max_length'  => 64,
-						'required'    => true,
-						'_alias'      => 'post_name',
-						'_order'      => 99,
 					],
 
 					'edit_field_type' => [
