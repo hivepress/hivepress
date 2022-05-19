@@ -75,6 +75,10 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
+			if (field.find('option[data-level]')) {
+				settings['minimumResultsForSearch'] = -1;
+			}
+
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',

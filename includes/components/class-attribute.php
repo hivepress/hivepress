@@ -829,9 +829,10 @@ final class Attribute extends Component {
 
 			// Add field.
 			$form_args['fields']['categories'] = [
-				'multiple'   => false,
-				'required'   => true,
-				'_order'     => 5,
+				'parent_disabled' => true,
+				'multiple'        => false,
+				'required'        => true,
+				'_order'          => 5,
 
 				'attributes' => [
 					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
