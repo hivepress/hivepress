@@ -32,6 +32,13 @@ class Select extends Field {
 	protected $options = [];
 
 	/**
+	 * Disable parent options?
+	 *
+	 * @var bool
+	 */
+	protected $parent_disabled = false;
+
+	/**
 	 * Allow selecting multiple options?
 	 *
 	 * @var bool
@@ -145,9 +152,23 @@ class Select extends Field {
 			$attributes['data-placeholder'] = $this->placeholder;
 		}
 
-		// Set disabled flag.
+		// Set disabled flags.
 		if ( $this->disabled ) {
 			$attributes['disabled'] = true;
+		}
+
+		if ( $this->parent_disabled ) {
+			foreach ( $this->options as $value => $parent ) {
+				foreach ( $this->options as $child ) {
+					if ( hp\get_array_value( $child, 'parent' ) === $value ) {
+						if ( is_array( $parent ) ) {
+							$this->options[ $value ]['disabled'] = true;
+						}
+
+						break;
+					}
+				}
+			}
 		}
 
 		// Set required flag.
@@ -283,11 +304,20 @@ class Select extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			if ( count( array_intersect( (array) $this->value, array_keys( $this->options ) ) ) !== count( (array) $this->value ) ) {
+			$options = array_intersect_key( $this->options, array_flip( (array) $this->value ) );
+
+			if ( count( $options ) !== count( (array) $this->value ) || array_filter(
+				array_map(
+					function( $option ) {
+						return hp\get_array_value( $option, 'disabled' );
+					},
+					$options
+				)
+			) ) {
 				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->get_label( true ) ) );
 			}
 
-			if ( $this->multiple && $this->max_values && count( (array) $this->value ) > $this->max_values ) {
+			if ( $this->multiple && $this->max_values && count( $options ) > $this->max_values ) {
 				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_too_many_values' ), $this->get_label( true ) ) );
 			}
 		}
@@ -353,13 +383,28 @@ class Select extends Field {
 		// Render options.
 		foreach ( $options as $value => $label ) {
 
+			// Get attributes.
+			$attributes = [
+				'value' => $value,
+			];
+
+			if ( $level ) {
+				$attributes['data-level'] = $level;
+			}
+
+			if ( hp\get_array_value( $label, 'disabled' ) ) {
+				$attributes['disabled'] = true;
+			} elseif ( in_array( $value, (array) $this->value, true ) ) {
+				$attributes['selected'] = true;
+			}
+
 			// Get label.
 			if ( is_array( $label ) ) {
 				$label = hp\get_array_value( $label, 'label', $value );
 			}
 
 			// Render option.
-			$output .= '<option value="' . esc_attr( $value ) . '" data-level=' . esc_attr( $level ) . ' ' . ( in_array( $value, (array) $this->value, true ) ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
+			$output .= '<option ' . hp\html_attributes( $attributes ) . '>' . esc_html( $label ) . '</option>';
 
 			// Render child options.
 			$output .= $this->render_options( $value, $level + 1 );
