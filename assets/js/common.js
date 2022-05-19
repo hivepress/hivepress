@@ -18,7 +18,12 @@ var hivepress = {
 (function($) {
 	'use strict';
 
-	hivepress.initUI = function(container) {
+	hivepress.initUI = function(container = null) {
+		if (container === null) {
+			container = $('body');
+		}
+
+		$(document).trigger('hivepress:init', [container]);
 
 		// Link
 		container.find(hivepress.getSelector('link')).on('click', function(e) {
@@ -797,6 +802,6 @@ var hivepress = {
 		});
 
 		// Initialize UI
-		hivepress.initUI($('body'));
+		hivepress.initUI();
 	});
 })(jQuery);
