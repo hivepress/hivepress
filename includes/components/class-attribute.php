@@ -616,6 +616,18 @@ final class Attribute extends Component {
 				// Add field.
 				$meta_box['fields']['edit_field_name'] = $field_args;
 			}
+
+			if ( get_post_status() === 'publish' ) {
+
+				// Disable changing editing field type.
+				$meta_box['fields']['edit_field_type']['disabled'] = true;
+			}
+		} elseif ( 'search' === $field_context ) {
+			if ( get_post_status() === 'publish' ) {
+
+				// Disable changing search field type.
+				$meta_box['fields']['search_field_type']['disabled'] = true;
+			}
 		}
 
 		return $meta_box;
@@ -834,7 +846,7 @@ final class Attribute extends Component {
 				'required'        => true,
 				'_order'          => 5,
 
-				'attributes' => [
+				'attributes'      => [
 					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
 				],
 			];
