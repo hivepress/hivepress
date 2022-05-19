@@ -18,7 +18,12 @@ var hivepress = {
 (function($) {
 	'use strict';
 
-	hivepress.initUI = function(container) {
+	hivepress.initUI = function(container = null) {
+		if (container === null) {
+			container = $('body');
+		}
+
+		$(document).trigger('hivepress:init', [container]);
 
 		// Link
 		container.find(hivepress.getSelector('link')).on('click', function(e) {
@@ -68,6 +73,10 @@ var hivepress = {
 
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
+			}
+
+			if (field.find('option[data-level]')) {
+				settings['minimumResultsForSearch'] = -1;
 			}
 
 			if (field.data('style') === 'inline') {
@@ -797,6 +806,6 @@ var hivepress = {
 		});
 
 		// Initialize UI
-		hivepress.initUI($('body'));
+		hivepress.initUI();
 	});
 })(jQuery);
