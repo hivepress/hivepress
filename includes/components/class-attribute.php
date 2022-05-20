@@ -1425,6 +1425,14 @@ final class Attribute extends Component {
 			// Get post type.
 			$post_type = get_post_type();
 
+			// Get attributes models names.
+			$attribute_models = array_map(
+				function( $model ) {
+					return $model . '_attribute';
+				},
+				(array) $this->models
+			);
+
 			if ( in_array( $post_type, hp\prefix( $this->models ), true ) ) {
 
 				// Get model.
@@ -1441,6 +1449,8 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
+			} elseif ( in_array( $post_type, hp\prefix( $attribute_models ), true ) ) {
+				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
