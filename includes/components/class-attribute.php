@@ -425,6 +425,9 @@ final class Attribute extends Component {
 						$taxonomy_args['rewrite'] = [
 							'slug' => hp\sanitize_slug( $model . '_' . $attribute_name ),
 						];
+
+						// Refresh permalinks.
+						hivepress()->router->flush_rewrite_rules();
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
