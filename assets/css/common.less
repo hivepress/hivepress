@@ -347,8 +347,24 @@
 						text-decoration: none;
 						color: #fff;
 						background-color: rgba(0,0,0,.5);
+
+						@media only screen and (max-width:23.75em) {
+							& {
+								width: 20px;
+								height: 20px;
+							}
+
+							& .hp-icon{
+								font-size: 12px;
+							}
+						}
 					}
 				}
+			}
+
+			&--download-link{
+				top: unset !important;
+				bottom: 0.5rem;
 			}
 
 			&[data-required=true] {

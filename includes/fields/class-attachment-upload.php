@@ -349,6 +349,8 @@ class Attachment_Upload extends Field {
 			$output .= wp_get_attachment_image( $attachment->get_id(), 'thumbnail' );
 		} else {
 			$output .= '<div><span>' . esc_html( $attachment->get_name() ) . '</span></div>';
+
+			$output .= '<a target="_blank" class="hp-field--attachment-upload--download-link" href="' . esc_url( $attachment->get_url() ) . '" title="' . esc_attr__( 'Download', 'hivepress' ) . '"><i class="hp-icon fas fa-download"></i></a>';
 		}
 
 		// Render delete button.
