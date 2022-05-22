@@ -23,8 +23,6 @@ var hivepress = {
 			container = $('body');
 		}
 
-		$(document).trigger('hivepress:init', [container]);
-
 		// Link
 		container.find(hivepress.getSelector('link')).on('click', function(e) {
 			var url = $(this).data('url');
@@ -765,6 +763,8 @@ var hivepress = {
 				}
 			}
 		});
+
+		$(document).trigger('hivepress:init', [container]);
 	}
 
 	$(document).ready(function() {
