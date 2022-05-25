@@ -58,6 +58,12 @@ final class Router extends Component {
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
 
+			if ( hp\is_plugin_active( 'rankmath' ) ) {
+
+				// Alters RankMath page title.
+				add_filter( 'rank_math/frontend/title', [ $this, 'alter_rank_math_title' ] );
+			}
+
 			// Set page context.
 			add_filter( 'hivepress/v1/templates/page', [ $this, 'set_page_context' ] );
 
@@ -502,6 +508,24 @@ final class Router extends Component {
 		}
 
 		return $parts;
+	}
+
+	/**
+	 * Alters RankMath page title.
+	 *
+	 * @param string $title Page title.
+	 * @return string
+	 */
+	public function alter_rank_math_title( $title ) {
+
+		// Get router path;
+		$path = hp\get_array_value( hivepress()->router->get_current_route(), 'path' );
+
+		if ( $path ) {
+			return false;
+		}
+
+		return $title;
 	}
 
 	/**
