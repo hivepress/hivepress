@@ -64,8 +64,9 @@
 		}
 	}
 	/*--------------------------------------------------------------
-	Forms
+	Blocks
 	--------------------------------------------------------------*/
+	&-block,
 	&-form {
 		&[data-state=loading] {
 			position: relative;
@@ -82,7 +83,11 @@
 				z-index: 1000;
 			}
 		}
-
+	}
+	/*--------------------------------------------------------------
+	Forms
+	--------------------------------------------------------------*/
+	&-form {
 		&--narrow {
 			width: 100%;
 		}
@@ -347,14 +352,13 @@
 						text-decoration: none;
 						color: #fff;
 						background-color: rgba(0,0,0,.5);
-
 						@media only screen and (max-width:23.75em) {
 							& {
 								width: 20px;
 								height: 20px;
 							}
 
-							& .hp-icon{
+							& .hp-icon {
 								font-size: 12px;
 							}
 						}
@@ -362,7 +366,7 @@
 				}
 			}
 
-			&--download-link{
+			&--download-link {
 				top: unset !important;
 				bottom: 0.5rem;
 			}
