@@ -48,6 +48,7 @@ final class Editor extends Component {
 
 		// Initialize template editor.
 		add_action( 'rest_api_init', [ $this, 'init_template_editor' ] );
+		add_action( 'admin_init', [ $this, 'init_template_editor' ] );
 
 		// Register block categories.
 		add_filter( 'block_categories_all', [ $this, 'register_block_categories' ] );
@@ -191,6 +192,11 @@ final class Editor extends Component {
 	 */
 	public function init_template_editor() {
 		global $pagenow;
+
+		// Check template.
+		if ( is_array( $this->template ) ) {
+			return;
+		}
 
 		// Get template ID.
 		$template_id = null;
