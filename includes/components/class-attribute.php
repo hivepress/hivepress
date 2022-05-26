@@ -425,9 +425,6 @@ final class Attribute extends Component {
 						$taxonomy_args['rewrite'] = [
 							'slug' => hp\sanitize_slug( $model . '_' . $attribute_name ),
 						];
-
-						// Refresh permalinks.
-						hivepress()->router->flush_rewrite_rules();
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
@@ -618,18 +615,6 @@ final class Attribute extends Component {
 
 				// Add field.
 				$meta_box['fields']['edit_field_name'] = $field_args;
-			}
-
-			if ( get_post_status() === 'publish' ) {
-
-				// Disable changing editing field type.
-				$meta_box['fields']['edit_field_type']['disabled'] = true;
-			}
-		} elseif ( 'search' === $field_context ) {
-			if ( get_post_status() === 'publish' ) {
-
-				// Disable changing search field type.
-				$meta_box['fields']['search_field_type']['disabled'] = true;
 			}
 		}
 
@@ -1428,14 +1413,6 @@ final class Attribute extends Component {
 			// Get post type.
 			$post_type = get_post_type();
 
-			// Get attributes models names.
-			$attribute_models = array_map(
-				function( $model ) {
-					return $model . '_attribute';
-				},
-				(array) $this->models
-			);
-
 			if ( in_array( $post_type, hp\prefix( $this->models ), true ) ) {
 
 				// Get model.
@@ -1452,8 +1429,6 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
-			} elseif ( in_array( $post_type, hp\prefix( $attribute_models ), true ) ) {
-				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}

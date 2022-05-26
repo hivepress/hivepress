@@ -547,11 +547,6 @@ var hivepress = {
 				handle: '[data-sort]',
 			});
 
-			// Make required fields optional.
-			itemContainer.find('input[required]').each(function() {
-				$(this).prop('required', false);
-			});
-
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
 					var newItem = firstItem.clone(),

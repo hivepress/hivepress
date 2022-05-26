@@ -110,15 +110,21 @@ class Repeater extends Field {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 
 			// Validate fields.
-			foreach ( $this->value as $index => $item ) {
+			$errors = [];
 
+			foreach ( $this->value as $item ) {
 				foreach ( $this->fields as $name => $field ) {
 					$field->set_value( hp\get_array_value( $item, $name ) );
 
 					if ( ! $field->validate() ) {
-						unset( $this->value[ $index ] );
+						$errors = array_merge( $errors, $field->get_errors() );
 					}
 				}
+			}
+
+			// Add errors.
+			if ( $errors ) {
+				$this->add_errors( array_unique( $errors ) );
 			}
 		}
 
