@@ -324,7 +324,7 @@
 							}
 						}
 
-						span {
+						a {
 							display: block;
 							overflow: hidden;
 							position: absolute;
@@ -336,10 +336,12 @@
 							white-space: nowrap;
 							text-overflow: ellipsis;
 							text-align: center;
+							color: inherit;
+							text-decoration: none;
 						}
 					}
 
-					a {
+					> a {
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -352,23 +354,16 @@
 						text-decoration: none;
 						color: #fff;
 						background-color: rgba(0,0,0,.5);
-						@media only screen and (max-width:23.75em) {
-							& {
-								width: 20px;
-								height: 20px;
-							}
+						@media only screen and (max-width:47.99em) {
+							width: 20px;
+							height: 20px;
 
-							& .hp-icon {
+							i {
 								font-size: 12px;
 							}
 						}
 					}
 				}
-			}
-
-			&--download-link {
-				top: unset !important;
-				bottom: 0.5rem;
 			}
 
 			&[data-required=true] {
