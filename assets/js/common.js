@@ -23,8 +23,6 @@ var hivepress = {
 			container = $('body');
 		}
 
-		$(document).trigger('hivepress:init', [container]);
-
 		// Link
 		container.find(hivepress.getSelector('link')).on('click', function(e) {
 			var url = $(this).data('url');
@@ -631,11 +629,52 @@ var hivepress = {
 			var form = $(this),
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
-				submitButton = form.find(':submit');
+				submitButton = form.find(':submit'),
+				renderSettings = form.data('render');
 
 			if (form.data('autosubmit') === true) {
 				form.on('change', function() {
 					form.submit();
+				});
+			}
+
+			if (renderSettings) {
+				form.on('change', function() {
+					var container = $('[data-block=' + renderSettings.block + ']'),
+						data = new FormData(form.get(0));
+
+					if (!container.length) {
+						return;
+					}
+
+					data.append('_render', true);
+					data.delete('_wpnonce');
+
+					container.attr('data-state', 'loading');
+
+					$.ajax({
+						url: renderSettings.url,
+						method: 'POST',
+						data: data,
+						contentType: false,
+						processData: false,
+						beforeSend: function(xhr) {
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
+						},
+						complete: function(xhr) {
+							var response = xhr.responseJSON;
+
+							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+								var newContainer = $(response.data.html);
+
+								container.replaceWith(newContainer);
+
+								hivepress.initUI(newContainer);
+							}
+						},
+					});
 				});
 			}
 
@@ -765,6 +804,8 @@ var hivepress = {
 				}
 			}
 		});
+
+		$(document).trigger('hivepress:init', [container]);
 	}
 
 	$(document).ready(function() {

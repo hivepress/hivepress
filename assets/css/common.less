@@ -64,8 +64,9 @@
 		}
 	}
 	/*--------------------------------------------------------------
-	Forms
+	Blocks
 	--------------------------------------------------------------*/
+	&-block,
 	&-form {
 		&[data-state=loading] {
 			position: relative;
@@ -82,7 +83,11 @@
 				z-index: 1000;
 			}
 		}
-
+	}
+	/*--------------------------------------------------------------
+	Forms
+	--------------------------------------------------------------*/
+	&-form {
 		&--narrow {
 			width: 100%;
 		}
@@ -319,7 +324,7 @@
 							}
 						}
 
-						span {
+						a {
 							display: block;
 							overflow: hidden;
 							position: absolute;
@@ -331,10 +336,12 @@
 							white-space: nowrap;
 							text-overflow: ellipsis;
 							text-align: center;
+							color: inherit;
+							text-decoration: none;
 						}
 					}
 
-					a {
+					> a {
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -347,6 +354,14 @@
 						text-decoration: none;
 						color: #fff;
 						background-color: rgba(0,0,0,.5);
+						@media only screen and (max-width:47.99em) {
+							width: 20px;
+							height: 20px;
+
+							i {
+								font-size: 12px;
+							}
+						}
 					}
 				}
 			}

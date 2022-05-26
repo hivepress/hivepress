@@ -834,7 +834,7 @@ final class Attribute extends Component {
 				'required'        => true,
 				'_order'          => 5,
 
-				'attributes' => [
+				'attributes'      => [
 					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
 				],
 			];

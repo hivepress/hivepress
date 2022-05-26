@@ -348,7 +348,7 @@ class Attachment_Upload extends Field {
 		if ( strpos( $attachment->get_mime_type(), 'image/' ) === 0 ) {
 			$output .= wp_get_attachment_image( $attachment->get_id(), 'thumbnail' );
 		} else {
-			$output .= '<div><span>' . esc_html( $attachment->get_name() ) . '</span></div>';
+			$output .= '<div><a href="' . esc_url( $attachment->get_url() ) . '" target="_blank" title="' . esc_attr__( 'Download', 'hivepress' ) . '">' . esc_html( $attachment->get_name() ) . '</a></div>';
 		}
 
 		// Render delete button.

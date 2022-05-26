@@ -53,6 +53,7 @@ return [
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
+	'secret_key'                                => esc_html__( 'Secret Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
 	'client_secret'                             => esc_html__( 'Client Secret', 'hivepress' ),
 	'redirect_url'                              => esc_html__( 'Redirect URL', 'hivepress' ),

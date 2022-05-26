@@ -365,7 +365,7 @@ return [
 					],
 
 					'recaptcha_secret_key' => [
-						'label'      => esc_html__( 'Secret Key', 'hivepress' ),
+						'label'      => hivepress()->translator->get_string( 'secret_key' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'_parent'    => 'recaptcha_forms[]',

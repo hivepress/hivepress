@@ -91,7 +91,7 @@ class Attributes extends Block {
 		$attributes = [];
 
 		// Set class.
-		$attributes['class'] = [];
+		$attributes['class'] = [ 'hp-block' ];
 
 		if ( $this->model ) {
 
@@ -115,6 +115,9 @@ class Attributes extends Block {
 				}
 			}
 		}
+
+		// @todo remove when implemented globally.
+		$attributes['data-block'] = $this->name;
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
