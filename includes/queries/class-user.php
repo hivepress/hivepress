@@ -62,6 +62,18 @@ class User extends Query {
 	}
 
 	/**
+	 * Sets search filter.
+	 *
+	 * @param string $query Search query.
+	 * @return object
+	 */
+	public function search( $query ) {
+		$query = '*' . $query . '*';
+
+		return parent::search( $query );
+	}
+
+	/**
 	 * Sets query filters.
 	 *
 	 * @param array $criteria Filter criteria.
