@@ -425,6 +425,9 @@ final class Attribute extends Component {
 						$taxonomy_args['rewrite'] = [
 							'slug' => hp\sanitize_slug( $model . '_' . $attribute_name ),
 						];
+
+						// Refresh permalinks.
+						//hivepress()->router->flush_rewrite_rules();
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
@@ -1410,6 +1413,14 @@ final class Attribute extends Component {
 
 		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 
+			// Get attributes models names.
+			$attribute_models = array_map(
+				function( $model ) {
+					return $model . '_attribute';
+				},
+				(array) $this->models
+			);
+
 			// Get post type.
 			$post_type = get_post_type();
 
@@ -1429,6 +1440,8 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
+			} elseif ( in_array( $post_type, hp\prefix( $attribute_models ), true ) ) {
+				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
