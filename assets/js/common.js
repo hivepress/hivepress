@@ -127,7 +127,7 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
-			if (field.find('option[data-level]')) {
+			if (field.find('option[data-level]').length) {
 				settings['minimumResultsForSearch'] = -1;
 			}
 
