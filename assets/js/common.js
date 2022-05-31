@@ -49,6 +49,60 @@ var hivepress = {
 			});
 		});
 
+		// Repeater
+		container.find(hivepress.getSelector('repeater')).each(function() {
+			var container = $(this),
+				itemContainer = container.find('tbody'),
+				firstItem = container.find('tr:first'),
+				firstItemClone = firstItem.clone();
+
+			itemContainer.sortable({
+				handle: '[data-sort]',
+			});
+
+			// Make required fields optional.
+			itemContainer.find(':input[required]').removeProp('required');
+
+			if (firstItem.length) {
+				container.find('[data-add]').on('click', function() {
+					var newItem = firstItemClone.clone(),
+						index = Math.random().toString(36).slice(2);
+
+					if (index) {
+						newItem.find(':input').each(function() {
+							var field = $(this),
+								name = field.attr('name'),
+								pattern = /\[([^\]]+)\]/,
+								match = name.match(pattern);
+
+							if (match) {
+								field.attr('name', name.replace(match[1], index));
+							}
+
+							if (field.attr('type') === 'checkbox') {
+								var id = 'a' + Math.random().toString(36).slice(2);
+
+								field.attr('id', id);
+								field.closest('label').attr('for', id);
+							} else {
+								field.val('');
+							}
+						});
+
+						newItem.appendTo(itemContainer);
+					}
+
+					hivepress.initUI(newItem);
+				});
+			}
+
+			container.on('click', '[data-remove]', function() {
+				if (container.find('tr').length > 1) {
+					$(this).closest('tr').remove();
+				}
+			});
+		});
+
 		// Select
 		container.find(hivepress.getSelector('select')).each(function() {
 			var field = $(this),
@@ -534,59 +588,6 @@ var hivepress = {
 						});
 					}
 				},
-			});
-		});
-
-		// Repeater
-		container.find(hivepress.getSelector('repeater')).each(function() {
-			var container = $(this),
-				itemContainer = container.find('tbody'),
-				firstItem = container.find('tr:first');
-
-			itemContainer.sortable({
-				handle: '[data-sort]',
-			});
-
-			// Make required fields optional.
-			itemContainer.find(':input[required]').removeProp('required');
-
-			if (firstItem.length) {
-				container.find('[data-add]').on('click', function() {
-					var newItem = firstItem.clone(),
-						index = Math.random().toString(36).slice(2);
-
-					if (index) {
-						newItem.find(':input').each(function() {
-							var field = $(this),
-								name = field.attr('name'),
-								pattern = /\[([^\]]+)\]/,
-								match = name.match(pattern);
-
-							if (match) {
-								field.attr('name', name.replace(match[1], index));
-							}
-
-							if (field.attr('type') === 'checkbox') {
-								var id = 'a' + Math.random().toString(36).slice(2);
-
-								field.attr('id', id);
-								field.closest('label').attr('for', id);
-							} else {
-								field.val('');
-							}
-						});
-
-						newItem.appendTo(itemContainer);
-					}
-
-					hivepress.initUI(newItem);
-				});
-			}
-
-			container.on('click', '[data-remove]', function() {
-				if (container.find('tr').length > 1) {
-					$(this).closest('tr').remove();
-				}
 			});
 		});
 
