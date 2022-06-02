@@ -53,13 +53,9 @@ class User_Edit_Settings_Page extends User_Account_Page {
 
 								'blocks'      => [
 									'user_delete_form' => [
-										'type'       => 'form',
-										'form'       => 'user_delete',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-form--narrow' ],
-										],
+										'type'   => 'form',
+										'form'   => 'user_delete',
+										'_order' => 10,
 									],
 								],
 							],
