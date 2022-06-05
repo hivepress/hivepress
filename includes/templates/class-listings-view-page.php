@@ -88,10 +88,6 @@ class Listings_View_Page extends Page_Sidebar_Left {
 												'type'   => 'form',
 												'form'   => 'listing_filter',
 												'_order' => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-form--narrow' ],
-												],
 											],
 										],
 									],

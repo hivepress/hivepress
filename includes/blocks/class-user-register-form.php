@@ -52,7 +52,7 @@ class User_Register_Form extends Form {
 				'form'       => 'user_register',
 
 				'attributes' => [
-					'class' => [ 'hp-form--narrow', 'hp-block' ],
+					'class' => [ 'hp-block' ],
 				],
 
 				'footer'     => [

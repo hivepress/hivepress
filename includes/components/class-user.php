@@ -376,13 +376,9 @@ final class User extends Component {
 
 								'blocks'      => [
 									'user_password_request_form' => [
-										'type'       => 'form',
-										'form'       => 'user_password_request',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-form--narrow' ],
-										],
+										'type'   => 'form',
+										'form'   => 'user_password_request',
+										'_order' => 10,
 									],
 								],
 							],
