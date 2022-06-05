@@ -58,7 +58,7 @@ final class Router extends Component {
 			// Set page title.
 			add_filter( 'document_title_parts', [ $this, 'set_page_title' ] );
 
-			// Alters RankMath page title.
+			// Disable page title.
 			add_filter( 'rank_math/frontend/title', [ $this, 'disable_page_title' ] );
 
 			// Set page context.
@@ -508,13 +508,13 @@ final class Router extends Component {
 	}
 
 	/**
-	 * Alters RankMath page title.
+	 * Disables page title.
 	 *
 	 * @param string $title Page title.
 	 * @return string
 	 */
 	public function disable_page_title( $title ) {
-		if ( hp\get_array_value( hivepress()->router->get_current_route(), 'path' ) ) {
+		if ( hp\get_array_value( hivepress()->router->get_current_route(), 'title' ) ) {
 			return false;
 		}
 
