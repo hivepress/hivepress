@@ -10,6 +10,7 @@
 		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
 		<exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
 		<exclude name="Squiz.Commenting.FileComment.WrongStyle"/>
+		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 	</rule>
 

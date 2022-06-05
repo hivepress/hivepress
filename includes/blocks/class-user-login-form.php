@@ -44,7 +44,7 @@ class User_Login_Form extends Form {
 				'form'       => 'user_login',
 
 				'attributes' => [
-					'class' => [ 'hp-form--narrow' ],
+					'class' => [ 'hp-form--narrow', 'hp-block' ],
 				],
 
 				'footer'     => [

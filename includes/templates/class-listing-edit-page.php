@@ -76,13 +76,9 @@ class Listing_Edit_Page extends Listing_Manage_Page {
 
 								'blocks'      => [
 									'listing_delete_form' => [
-										'type'       => 'form',
-										'form'       => 'listing_delete',
-										'_order'     => 10,
-
-										'attributes' => [
-											'class' => [ 'hp-form--narrow' ],
-										],
+										'type'   => 'form',
+										'form'   => 'listing_delete',
+										'_order' => 10,
 									],
 								],
 							],

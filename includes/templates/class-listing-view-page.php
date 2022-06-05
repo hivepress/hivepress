@@ -26,6 +26,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 		$meta = hp\merge_arrays(
 			[
 				'label' => hivepress()->translator->get_string( 'listing' ),
+				'model' => 'listing',
 			],
 			$meta
 		);
@@ -201,10 +202,6 @@ class Listing_View_Page extends Page_Sidebar_Right {
 												'type'   => 'form',
 												'form'   => 'listing_report',
 												'_order' => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-form--narrow' ],
-												],
 											],
 										],
 									],

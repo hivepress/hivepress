@@ -26,6 +26,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 		$meta = hp\merge_arrays(
 			[
 				'label' => hivepress()->translator->get_string( 'vendors' ),
+				'model' => 'vendor',
 			],
 			$meta
 		);
@@ -87,10 +88,6 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 												'type'   => 'form',
 												'form'   => 'vendor_filter',
 												'_order' => 10,
-
-												'attributes' => [
-													'class' => [ 'hp-form--narrow' ],
-												],
 											],
 										],
 									],
