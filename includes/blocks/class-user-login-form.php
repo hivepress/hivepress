@@ -41,9 +41,13 @@ class User_Login_Form extends Form {
 	public function __construct( $args = [] ) {
 		$args = hp\merge_arrays(
 			[
-				'form'   => 'user_login',
+				'form'       => 'user_login',
 
-				'footer' => [
+				'attributes' => [
+					'class' => [ 'hp-form--narrow', 'hp-block' ],
+				],
+
+				'footer'     => [
 					'form_actions' => [
 						'type'       => 'container',
 						'_order'     => 10,
