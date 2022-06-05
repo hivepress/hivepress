@@ -228,6 +228,39 @@
 		}
 	}
 
+	&-modal &-form {
+		width: 100%;
+
+		&:not(:last-child) {
+			margin-bottom: 0;
+		}
+
+		&__button {
+			width: 100%;
+
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+
+		&__actions,
+		&__footer {
+			flex-direction: column;
+		}
+
+		&__action {
+			&:not(:last-child) {
+				margin: 0 0 0.5rem;
+			}
+		}
+
+		button &__action {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
+		}
+	}
+
 	&-field {
 		&--hidden {
 			display: none;
@@ -504,12 +537,6 @@
 			&:first-child {
 				margin-top: 0;
 			}
-		}
-	}
-
-	&-modal &-form {
-		&:not(:last-child) {
-			margin-bottom: 0;
 		}
 	}
 }

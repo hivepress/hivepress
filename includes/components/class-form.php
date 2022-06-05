@@ -24,9 +24,6 @@ final class Form extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Alter modal block.
-		add_filter( 'hivepress/v1/blocks/modal', [ $this, 'alter_modal_block' ], 200 );
-
 		// Set field arguments.
 		add_filter( 'hivepress/v1/fields/field', [ $this, 'set_field_arguments' ] );
 
@@ -585,22 +582,5 @@ final class Form extends Component {
 				wp_script_add_data( 'recaptcha', 'defer', true );
 			}
 		}
-	}
-
-	/**
-	 * Alter modal block.
-	 *
-	 * @param array $blocks Modal properties.
-	 * @return array
-	 */
-	public function alter_modal_block( $blocks ) {
-		foreach ( $blocks['blocks'] as $name => $args ) {
-			if ( strpos( hp\get_array_value( $args, 'type' ), 'form' ) === false ) {
-				continue;
-			}
-
-			$blocks['blocks'][ $name ]['attributes']['class'] = [ 'hp-form--narrow' ];
-		}
-		return $blocks;
 	}
 }

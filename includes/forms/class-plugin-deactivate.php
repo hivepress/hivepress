@@ -29,10 +29,6 @@ class Plugin_Deactivate extends Form {
 				'action'      => hivepress()->router->get_url( 'plugin_deactivate_action' ),
 				'redirect'    => true,
 
-				'attributes'  => [
-					'class' => [ 'hp-form--narrow' ],
-				],
-
 				'fields'      => [
 					'reason'  => [
 						'type'    => 'radio',
