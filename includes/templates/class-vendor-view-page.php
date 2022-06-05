@@ -26,6 +26,7 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 		$meta = hp\merge_arrays(
 			[
 				'label' => hivepress()->translator->get_string( 'vendor' ),
+				'model' => 'vendor',
 			],
 			$meta
 		);
