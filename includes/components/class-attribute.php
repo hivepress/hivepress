@@ -71,6 +71,12 @@ final class Attribute extends Component {
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
+		foreach ( $this->models as $model ) {
+
+			// Update taxonomy permalinks.
+			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_taxonomy_permalinks' ], 10, 3 );
+		}
+
 		if ( ! is_admin() ) {
 
 			// Set search query.
@@ -1429,6 +1435,19 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
+			} elseif ( in_array(
+				$post_type,
+				hp\prefix(
+					array_map(
+						function( $model ) {
+							return $model . '_attribute';
+						},
+						(array) $this->models
+					)
+				),
+				true
+			) ) {
+				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
@@ -1723,5 +1742,18 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Update taxonomy permalinks.
+	 *
+	 * @param int    $attribute_id Attribute id.
+	 * @param object $attribute Attribute post object.
+	 * @param bool   $update Is update action?
+	 */
+	public function update_taxonomy_permalinks( $attribute_id, $attribute, $update ) {
+
+		// Refresh permalinks.
+		hivepress()->router->flush_rewrite_rules();
 	}
 }
