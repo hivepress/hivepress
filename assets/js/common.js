@@ -54,18 +54,17 @@ var hivepress = {
 			var container = $(this),
 				itemContainer = container.find('tbody'),
 				firstItem = container.find('tr:first'),
-				firstItemClone = firstItem.clone();
+				sampleItem = firstItem.clone();
 
 			itemContainer.sortable({
 				handle: '[data-sort]',
 			});
 
-			// Make required fields optional.
 			itemContainer.find(':input[required]').removeProp('required');
 
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
-					var newItem = firstItemClone.clone(),
+					var newItem = sampleItem.clone(),
 						index = Math.random().toString(36).slice(2);
 
 					if (index) {
