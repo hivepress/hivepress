@@ -82,9 +82,7 @@ class Repeater extends Field {
 				$field->set_value( hp\get_array_value( $item, $name ) );
 
 				// Add item.
-				if ( ! $field->get_value() && $field->is_required() ) {
-					$items[ $index ] = [];
-				} else {
+				if ( ! $field->is_required() || ! is_null( $field->get_value() ) ) {
 					$items[ $index ][ $name ] = $field->get_value();
 				}
 			}
@@ -113,22 +111,20 @@ class Repeater extends Field {
 
 			// Validate fields.
 			$errors = [];
+
 			foreach ( $this->value as $item ) {
+				foreach ( $this->fields as $name => $field ) {
+					$field->set_value( hp\get_array_value( $item, $name ) );
 
-				foreach ( $this->value as $item ) {
-					foreach ( $this->fields as $name => $field ) {
-						$field->set_value( hp\get_array_value( $item, $name ) );
-
-						if ( ! $field->validate() ) {
-							$errors = array_merge( $errors, $field->get_errors() );
-						}
+					if ( ! $field->validate() ) {
+						$errors = array_merge( $errors, $field->get_errors() );
 					}
 				}
+			}
 
-				// Add errors.
-				if ( $errors ) {
-					$this->add_errors( array_unique( $errors ) );
-				}
+			// Add errors.
+			if ( $errors ) {
+				$this->add_errors( array_unique( $errors ) );
 			}
 		}
 
