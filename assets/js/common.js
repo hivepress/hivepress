@@ -52,15 +52,16 @@ var hivepress = {
 		// Repeater
 		container.find(hivepress.getSelector('repeater')).each(function() {
 			var container = $(this),
-				itemContainer = container.find('tbody'),
-				firstItem = container.find('tr:first'),
+				itemContainer = container.find('tbody');
+
+			itemContainer.find(':input[required]').removeAttr('required');
+
+			var firstItem = container.find('tr:first'),
 				sampleItem = firstItem.clone();
 
 			itemContainer.sortable({
 				handle: '[data-sort]',
 			});
-
-			itemContainer.find(':input[required]').removeProp('required');
 
 			if (firstItem.length) {
 				container.find('[data-add]').on('click', function() {
