@@ -2,7 +2,7 @@ name: Check coding standards
 
 on:
   push:
-    branches: [ develop ]
+    branches-ignore: [ main, master ]
 
   workflow_dispatch:
 
