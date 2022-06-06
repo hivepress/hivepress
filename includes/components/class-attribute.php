@@ -1774,6 +1774,6 @@ final class Attribute extends Component {
 		}
 
 		// Refresh permalinks.
-		delete_option( 'rewrite_rules' );
+		hivepress()->router->flush_rewrite_rules();
 	}
 }

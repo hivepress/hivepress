@@ -478,8 +478,13 @@ final class Router extends Component {
 	 * Flushes rewrite rules.
 	 */
 	public function flush_rewrite_rules() {
-		update_option( 'rewrite_rules', false );
-		flush_rewrite_rules();
+
+		// Old version.
+		// update_option( 'rewrite_rules', false );
+		// flush_rewrite_rules();
+
+		// New version.
+		delete_option( 'rewrite_rules' );
 	}
 
 	/**

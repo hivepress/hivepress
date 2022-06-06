@@ -309,7 +309,7 @@ final class Admin extends Component {
 			if ( $_POST ) {
 
 				// Refresh permalinks.
-				delete_option( 'rewrite_rules' );
+				hivepress()->router->flush_rewrite_rules();
 			}
 		}
 
