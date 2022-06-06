@@ -1773,8 +1773,6 @@ final class Attribute extends Component {
 			return;
 		}
 
-		error_log( 'test' );
-
 		// Refresh permalinks.
 		hivepress()->router->flush_rewrite_rules();
 	}
