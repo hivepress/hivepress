@@ -346,9 +346,21 @@ final class Admin extends Component {
 			$permalinks     = (array) get_option( 'hp_permalinks', [] );
 			$new_permalinks = $permalinks;
 
+			// Get taxonomies.
+			$taxonomies = array_filter(
+				array_map(
+					function( $taxonomy ) {
+						if ( strpos( $taxonomy->name, 'hp_' ) !== false ) {
+							return (array) $taxonomy;
+						}
+					},
+					(array) get_taxonomies( [ 'public' => true ], 'objects' )
+				)
+			);
+
 			foreach ( array_merge(
 				hivepress()->get_config( 'post_types' ),
-				hivepress()->get_config( 'taxonomies' )
+				$taxonomies
 			) as $type_name => $type_args ) {
 
 				// Check permissions.
@@ -361,7 +373,7 @@ final class Admin extends Component {
 				$field_name  = hp\prefix( $option_name );
 
 				// Get field label.
-				$field_label = hp\get_array_value( $type_args['labels'], 'singular_name' );
+				$field_label = hp\get_array_value( (array) $type_args['labels'], 'singular_name' );
 
 				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
 					$field_label = hivepress()->translator->get_string( $type_name );
