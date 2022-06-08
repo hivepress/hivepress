@@ -32,13 +32,6 @@ final class Attribute extends Component {
 	protected $attributes = [];
 
 	/**
-	 * Attribute name format.
-	 *
-	 * @var string
-	 */
-	protected $attribute_name_format = '/^[a-z]{1}[a-z0-9_-]*$/';
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -608,7 +601,7 @@ final class Attribute extends Component {
 			// Get field name.
 			$field_name = get_post_field( 'post_name' );
 
-			if ( ! $field_name || preg_match( $this->attribute_name_format, $field_name ) ) {
+			if ( ! $field_name || preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', $field_name ) ) {
 
 				// Set field arguments.
 				$field_args = [
@@ -1453,7 +1446,7 @@ final class Attribute extends Component {
 					)
 				),
 				true
-			) && preg_match( $this->attribute_name_format, $post->post_name ) ) {
+			) && preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', $post->post_name ) ) {
 				remove_meta_box( 'slugdiv', $post->post_type, 'normal' );
 			}
 		}
