@@ -25,6 +25,13 @@ class Attributes extends Block {
 	protected $columns;
 
 	/**
+	 * Alias.
+	 *
+	 * @var string
+	 */
+	protected $alias;
+
+	/**
 	 * Model name.
 	 *
 	 * @var string
@@ -97,6 +104,10 @@ class Attributes extends Block {
 
 			// Get class.
 			$class = 'hp-' . hp\sanitize_slug( $this->model ) . '__attributes';
+
+			if ( $this->alias ) {
+				$class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attributes';
+			}
 
 			$attributes['class'][] = $class;
 
