@@ -32,6 +32,13 @@ final class Attribute extends Component {
 	protected $attributes = [];
 
 	/**
+	 * Attribute name format.
+	 *
+	 * @var string
+	 */
+	protected $attribute_name_format = '/^[a-z]{1}[a-z0-9_-]*$/';
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -601,7 +608,7 @@ final class Attribute extends Component {
 			// Get field name.
 			$field_name = get_post_field( 'post_name' );
 
-			if ( ! $field_name || preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', $field_name ) ) {
+			if ( ! $field_name || preg_match( $this->attribute_name_format, $field_name ) ) {
 
 				// Set field arguments.
 				$field_args = [
@@ -1416,13 +1423,13 @@ final class Attribute extends Component {
 
 		if ( in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 
-			// Get post type.
-			$post_type = get_post_type();
+			// Get post.
+			$post = get_post();
 
-			if ( in_array( $post_type, hp\prefix( $this->models ), true ) ) {
+			if ( in_array( $post->post_type, hp\prefix( $this->models ), true ) ) {
 
 				// Get model.
-				$model = hp\unprefix( $post_type );
+				$model = hp\unprefix( $post->post_type );
 
 				// Get category IDs.
 				$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $model . '_category' ), [ 'fields' => 'ids' ] );
@@ -1436,7 +1443,7 @@ final class Attribute extends Component {
 					}
 				}
 			} elseif ( in_array(
-				$post_type,
+				$post->post_type,
 				hp\prefix(
 					array_map(
 						function( $model ) {
@@ -1446,8 +1453,8 @@ final class Attribute extends Component {
 					)
 				),
 				true
-			) ) {
-				remove_meta_box( 'slugdiv', $post_type, 'normal' );
+			) && preg_match( $this->attribute_name_format, $post->post_name ) ) {
+				remove_meta_box( 'slugdiv', $post->post_type, 'normal' );
 			}
 		}
 	}
