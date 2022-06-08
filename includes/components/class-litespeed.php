@@ -47,9 +47,11 @@ final class LiteSpeed extends Component {
 
 	/**
 	 * Disables cache for logged in users.
+	 *
+	 * @param string $plugin Path to the plugin file.
 	 */
-	public function disable_logged_in_cache() {
-		if ( ! defined( 'LSCWP_DIR' ) ) {
+	public function disable_logged_in_cache( $plugin ) {
+		if ( strpos( $plugin, 'litespeed-cache.php' ) === false ) {
 			return;
 		}
 
