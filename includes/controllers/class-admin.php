@@ -57,6 +57,13 @@ final class Admin extends Controller {
 						'action' => [ $this, 'deactivate_plugin' ],
 						'rest'   => true,
 					],
+
+					'allow_tracking_action'      => [
+						'base'   => 'admin_base',
+						'path'   => '/tracking',
+						'action' => [ $this, 'allow_tracking' ],
+						'rest'   => true,
+					],
 				],
 			],
 			$args
@@ -151,5 +158,47 @@ final class Admin extends Controller {
 		deactivate_plugins( HP_FILE );
 
 		return hp\rest_response( 200, [] );
+	}
+
+	/**
+	 * Allow usage tracking.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function allow_tracking( $request ) {
+
+		// Get user id.
+		$user_id = implode(
+			array_filter(
+				array_map(
+					function ( $cookie ) {
+						if ( strpos( trim( $cookie ), 'wp-settings-time-' ) !== false ) {
+							return hp\get_last_array_value( explode( '-', explode( '=', $cookie )[0] ) );
+						}
+					},
+					(array) explode( ';', $request->get_header( 'cookie' ) )
+				)
+			)
+		);
+
+		// Check permissions.
+		if ( ! user_can( absint( $user_id ), 'manage_options' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		update_option( 'hp_hivepress_share_data', 1 );
+
+		// Get notices.
+		$dismissed_notices = array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) );
+
+		// Dismiss notice.
+		$dismissed_notices[] = 'share_data';
+
+		update_option( 'hp_admin_dismissed_notices', array_unique( $dismissed_notices ) );
+
+		wp_safe_redirect( $_SERVER['HTTP_REFERER'] );
+
+		exit;
 	}
 }

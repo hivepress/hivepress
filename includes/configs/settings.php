@@ -392,6 +392,14 @@ return [
 						'max_length'  => 2048,
 						'_order'      => 10,
 					],
+
+					'hivepress_share_data'  => [
+						'label'       => esc_html__( 'Usage Tracking', 'hivepress' ),
+						'caption'     => esc_html__( 'Enable Tracking.', 'hivepress' ),
+						'description' => esc_html__( 'Allow to gather usage data which allows us to make HivePress better.', 'hivepress' ),
+						'type'        => 'checkbox',
+						'_order'      => 20,
+					],
 				],
 			],
 		],

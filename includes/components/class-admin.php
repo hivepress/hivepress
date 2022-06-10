@@ -1482,7 +1482,17 @@ final class Admin extends Component {
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
-		$notices = [];
+		$notices = [
+			'share_data' => [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Help us improve HivePress by sharing usage. Click to <a href="%s">Allow Sharing</a> or close this notice to forbid sharing.', 'hivepress' ) ),
+					esc_url( hivepress()->router->get_url( 'allow_tracking_action' ) )
+				),
+			],
+		];
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
