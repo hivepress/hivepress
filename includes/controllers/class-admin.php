@@ -164,7 +164,6 @@ final class Admin extends Controller {
 	 * Allow usage tracking.
 	 *
 	 * @param WP_REST_Request $request API request.
-	 * @return WP_Rest_Response
 	 */
 	public function allow_tracking( $request ) {
 
