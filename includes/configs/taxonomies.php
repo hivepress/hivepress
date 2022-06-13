@@ -31,12 +31,12 @@ return [
 	],
 
 	'vendor_category'  => [
-		'public'       => false,
-		'post_type'    => [ 'vendor', 'vendor_attribute' ],
-		'hierarchical' => true,
-		'rewrite'      => [ 'slug' => 'vendor-category' ],
+		'post_type'         => [ 'vendor', 'vendor_attribute' ],
+		'hierarchical'      => true,
+		'show_admin_column' => true,
+		'rewrite'           => [ 'slug' => 'vendor-category' ],
 
-		'labels'       => [
+		'labels'            => [
 			'name'          => hivepress()->translator->get_string( 'categories' ),
 			'singular_name' => hivepress()->translator->get_string( 'category' ),
 			'add_new_item'  => hivepress()->translator->get_string( 'add_category' ),

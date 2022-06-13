@@ -46,9 +46,10 @@ class Vendor_Filter extends Form {
 
 				'fields' => [
 					'_category' => [
-						'type'    => 'radio',
-						'options' => [],
-						'_order'  => 10,
+						'type'        => 'radio',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
+						'_order'      => 10,
 					],
 
 					'_sort'     => [
