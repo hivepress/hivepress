@@ -25,7 +25,7 @@ class Attributes extends Block {
 	protected $columns;
 
 	/**
-	 * Alias.
+	 * Model alias.
 	 *
 	 * @var string
 	 */
@@ -95,6 +95,12 @@ class Attributes extends Block {
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {
+
+		// Set alias.
+		if ( ! $this->alias ) {
+			$this->alias = $this->model;
+		}
+
 		$attributes = [];
 
 		// Set class.
@@ -103,11 +109,7 @@ class Attributes extends Block {
 		if ( $this->model ) {
 
 			// Get class.
-			$class = 'hp-' . hp\sanitize_slug( $this->model ) . '__attributes';
-
-			if ( $this->alias ) {
-				$class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attributes';
-			}
+			$class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attributes';
 
 			$attributes['class'][] = $class;
 

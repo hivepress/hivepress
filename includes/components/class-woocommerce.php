@@ -31,10 +31,16 @@ final class WooCommerce extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Activate extension.
+		add_action( 'activate_woocommerce/woocommerce.php', [ $this, 'activate_extension' ] );
+
 		// Check WooCommerce status.
 		if ( ! hp\is_plugin_active( 'woocommerce' ) ) {
 			return;
 		}
+
+		// Activate extension.
+		add_action( 'hivepress/v1/activate', [ $this, 'activate_extension' ] );
 
 		// Update order status.
 		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
@@ -405,5 +411,14 @@ final class WooCommerce extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Activates extension.
+	 */
+	public function activate_extension() {
+		update_option( 'woocommerce_enable_guest_checkout', 'no' );
+		update_option( 'woocommerce_enable_checkout_login_reminder', 'yes' );
+		update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
 	}
 }

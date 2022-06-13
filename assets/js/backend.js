@@ -43,6 +43,20 @@
 					},
 				});
 			});
+
+			notice.add('[data-name="share_data"]').find('a').on('click', function() {
+				$.ajax({
+					url: notice.data('url'),
+					method: 'POST',
+					data: {
+						'dismissed': true,
+						'action': 'allow_tracking',
+					},
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+					},
+				});
+			});
 		});
 
 		// File select

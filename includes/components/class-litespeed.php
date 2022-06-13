@@ -25,7 +25,8 @@ final class LiteSpeed extends Component {
 	public function __construct( $args = [] ) {
 
 		// Disable cache for logged in users.
-		add_action( 'activated_plugin', [ $this, 'disable_logged_in_cache' ] );
+		add_action( 'activate_litespeed-cache/litespeed-cache.php', [ $this, 'disable_logged_in_cache' ] );
+		add_action( 'hivepress/v1/activate', [ $this, 'disable_logged_in_cache' ] );
 
 		// Check LiteSpeed status.
 		if ( ! defined( 'LSCWP_DIR' ) ) {
@@ -47,14 +48,8 @@ final class LiteSpeed extends Component {
 
 	/**
 	 * Disables cache for logged in users.
-	 *
-	 * @param string $plugin Path to the plugin file.
 	 */
-	public function disable_logged_in_cache( $plugin ) {
-		if ( strpos( $plugin, 'litespeed-cache.php' ) === false ) {
-			return;
-		}
-
+	public function disable_logged_in_cache() {
 		do_action( 'litespeed_conf_force', 'cache-priv', false );
 		do_action( 'litespeed_update_confs', 'cache-priv' );
 	}

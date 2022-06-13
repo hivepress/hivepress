@@ -306,7 +306,7 @@ final class Admin extends Component {
 				}
 			}
 
-			if ( $_POST ) {
+			if ( $_POST && 'hp_settings' === hp\get_array_value( $_POST, 'option_page' ) ) {
 
 				// Refresh permalinks.
 				hivepress()->router->flush_rewrite_rules();
@@ -1486,11 +1486,7 @@ final class Admin extends Component {
 			'share_data' => [
 				'type'        => 'info',
 				'dismissible' => true,
-				'text'        => sprintf(
-					/* translators: %s: link URL. */
-					hp\sanitize_html( __( 'Help us improve HivePress by sharing usage. Click to <a href="%s">Allow Sharing</a> or close this notice to forbid sharing.', 'hivepress' ) ),
-					esc_url( hivepress()->router->get_url( 'allow_tracking_action' ) )
-				),
+				'text'        => hp\sanitize_html( __( 'Help us improve HivePress by sharing usage. Click to <a href="">Allow Sharing</a> or close this notice to forbid sharing.', 'hivepress' ) ),
 			],
 		];
 
