@@ -25,18 +25,18 @@ class Attributes extends Block {
 	protected $columns;
 
 	/**
-	 * Model alias.
-	 *
-	 * @var string
-	 */
-	protected $alias;
-
-	/**
 	 * Model name.
 	 *
 	 * @var string
 	 */
 	protected $model;
+
+	/**
+	 * Model alias.
+	 *
+	 * @var string
+	 */
+	protected $alias;
 
 	/**
 	 * Display area.
@@ -96,17 +96,17 @@ class Attributes extends Block {
 	 */
 	protected function boot() {
 
-		// Set alias.
-		if ( ! $this->alias ) {
-			$this->alias = $this->model;
-		}
-
 		$attributes = [];
 
 		// Set class.
 		$attributes['class'] = [ 'hp-block' ];
 
 		if ( $this->model ) {
+
+			// Get alias.
+			if ( ! $this->alias ) {
+				$this->alias = $this->model;
+			}
 
 			// Get class.
 			$class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attributes';
@@ -190,7 +190,7 @@ class Attributes extends Block {
 			$column_width = hp\get_column_width( $this->columns );
 
 			// Get field class.
-			$field_class = 'hp-' . hp\sanitize_slug( $this->model ) . '__attribute';
+			$field_class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attribute';
 
 			// Render attributes.
 			$output .= '<div ' . hp\html_attributes( $this->attributes ) . '>';
