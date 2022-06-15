@@ -95,7 +95,6 @@ class Attributes extends Block {
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {
-
 		$attributes = [];
 
 		// Set class.
