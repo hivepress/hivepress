@@ -18,15 +18,6 @@ defined( 'ABSPATH' ) || exit;
 class Vendor_Submit extends Vendor_Update {
 
 	/**
-	 * Class initializer.
-	 *
-	 * @param array $meta Class meta values.
-	 */
-	public static function init( $meta = [] ) {
-		parent::init( $meta );
-	}
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Form arguments.
