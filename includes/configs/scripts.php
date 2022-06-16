@@ -18,16 +18,10 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
-	'iframe_transport'      => [
-		'handle' => 'iframe-transport',
-		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.iframe-transport.min.js',
-		'scope'  => [ 'frontend', 'backend' ],
-	],
-
 	'fileupload'            => [
 		'handle' => 'fileupload',
-		'src'    => hivepress()->get_url() . '/assets/js/fileupload/jquery.fileupload.min.js',
-		'deps'   => [ 'jquery-ui-widget', 'iframe-transport' ],
+		'src'    => hivepress()->get_url() . '/assets/js/jquery.fileupload.min.js',
+		'deps'   => [ 'jquery-ui-widget' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
@@ -63,6 +57,12 @@ return [
 	'select2'               => [
 		'handle' => 'select2-full',
 		'src'    => hivepress()->get_url() . '/assets/js/select2/select2.full.min.js',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
+	'intl_tel_input'        => [
+		'handle' => 'intl-tel-input',
+		'src'    => hivepress()->get_url() . '/assets/js/intlTelInput.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 

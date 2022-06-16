@@ -248,6 +248,13 @@ var hivepress = {
 			field.select2(settings);
 		});
 
+		// Phone
+		container.find(hivepress.getSelector('phone')).each(function() {
+			window.intlTelInput($(this).get(0), {
+				separateDialCode: true,
+			});
+		});
+
 		// Date
 		container.find(hivepress.getSelector('date')).each(function() {
 			var field = $(this),
