@@ -250,9 +250,21 @@ var hivepress = {
 
 		// Phone
 		container.find(hivepress.getSelector('phone')).each(function() {
-			window.intlTelInput($(this).get(0), {
-				separateDialCode: true,
-			});
+			var field = $(this),
+				settings = {
+					hiddenInput: field.attr('name'),
+					preferredCountries: [],
+					separateDialCode: true,
+					utilsScript: field.data('utils'),
+				};
+
+			field.removeAttr('name');
+
+			if (field.data('countries')) {
+				settings['onlyCountries'] = field.data('countries');
+			}
+
+			window.intlTelInput(field.get(0), settings);
 		});
 
 		// Date
