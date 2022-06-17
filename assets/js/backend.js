@@ -44,7 +44,7 @@
 					method: 'POST',
 					data: {
 						'dismissed': true,
-						'option' => option,
+						'option': option,
 					},
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
