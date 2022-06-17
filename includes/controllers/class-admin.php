@@ -85,7 +85,7 @@ final class Admin extends Controller {
 
 		if ( 'allow_tracking' === $request->get_param( 'action' ) ) {
 			// Allow tracking usage data.
-			update_option( 'hp_hivepress_share_data', 1 );
+			update_option( 'hp_hivepress_allow_tracking', 1 );
 		}
 
 		// Get notice name.

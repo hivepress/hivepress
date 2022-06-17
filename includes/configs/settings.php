@@ -385,19 +385,20 @@ return [
 				'_order' => 1000,
 
 				'fields' => [
-					'hivepress_license_key' => [
+					'hivepress_allow_tracking' => [
+						'label'       => esc_html__( 'Usage Tracking', 'hivepress' ),
+						'caption'     => esc_html__( 'Allow usage tracking', 'hivepress' ),
+						/* translators: %s: terms URL. */
+						'description' => sprintf( hp\sanitize_html( __( 'Check this option to allow tracking <a href="%s" target="_blank">non-sensitive usage data</a> and help us make HivePress better.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ),
+						'type'        => 'checkbox',
+						'_order'      => 10,
+					],
+
+					'hivepress_license_key'    => [
 						'label'       => esc_html__( 'License Keys', 'hivepress' ),
 						'description' => esc_html__( 'Please enter the license keys for purchased themes and extensions, each key on a new line.', 'hivepress' ),
 						'type'        => 'textarea',
 						'max_length'  => 2048,
-						'_order'      => 10,
-					],
-
-					'hivepress_share_data'  => [
-						'label'       => esc_html__( 'Usage Tracking', 'hivepress' ),
-						'caption'     => esc_html__( 'Enable Tracking.', 'hivepress' ),
-						'description' => esc_html__( 'Allow to gather usage data which allows us to make HivePress better.', 'hivepress' ),
-						'type'        => 'checkbox',
 						'_order'      => 20,
 					],
 				],
