@@ -165,7 +165,7 @@ final class Vendor extends Component {
 			if ( $vendor && ( $vendor->get_status() === 'publish' || $form::get_meta( 'name' ) === 'user_update_profile' ) ) {
 
 				// Get form.
-				$vendor_form = hp\create_class_instance( '\HivePress\Forms\\' . ( 'user_update' === $form::get_meta( 'name' ) ? 'vendor_update' : 'vendor_submit' ), [ [ 'model' => $vendor ] ] );
+				$vendor_form = hp\create_class_instance( '\HivePress\Forms\\' . ( 'user_update_profile' === $form::get_meta( 'name' ) ? 'vendor_submit' : 'vendor_update' ), [ [ 'model' => $vendor ] ] );
 
 				// Add fields.
 				foreach ( $vendor_form->get_fields() as $field_name => $field ) {
