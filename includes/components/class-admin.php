@@ -1483,10 +1483,12 @@ final class Admin extends Component {
 
 		// Add default notices.
 		$notices = [
-			'share_data' => [
+			'usage_tracking' => [
 				'type'        => 'info',
+				'option'      => 'hivepress_allow_tracking',
 				'dismissible' => true,
-				'text'        => hp\sanitize_html( __( 'Help us improve HivePress by sharing usage. Click to <a href="">Allow Sharing</a> or close this notice to forbid sharing.', 'hivepress' ) ),
+				/* translators: %s: terms URL. */
+				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
 			],
 		];
 
@@ -1570,6 +1572,7 @@ final class Admin extends Component {
 				'type'        => 'info',
 				'name'        => '',
 				'text'        => '',
+				'option'      => null,
 				'dismissible' => false,
 				'inline'      => false,
 			],
@@ -1595,6 +1598,10 @@ final class Admin extends Component {
 					'class' => [ 'notice' ],
 				]
 			);
+		}
+
+		if ( $args['option'] ) {
+			$attributes['data-option'] = $args['option'];
 		}
 
 		if ( $args['dismissible'] ) {
