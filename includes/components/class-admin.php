@@ -358,8 +358,8 @@ final class Admin extends Component {
 					get_post_types( [ 'public' => true ], 'objects' ),
 					get_taxonomies( [ 'public' => true ], 'objects' )
 				),
-				function( $type ) {
-					return strpos( $type->name, 'hp_' ) === 0;
+				function( $type_args ) {
+					return strpos( $type_args->name, 'hp_' ) === 0;
 				}
 			);
 
