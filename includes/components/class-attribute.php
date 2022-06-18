@@ -178,7 +178,7 @@ final class Attribute extends Component {
 		foreach ( $this->models as $model ) {
 
 			// Update attribute.
-			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ], 10, 2 );
+			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
