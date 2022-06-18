@@ -67,12 +67,6 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
-		foreach ( $this->models as $model ) {
-
-			// Update attribute.
-			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ], 10, 2 );
-		}
-
 		// Manage meta boxes.
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
@@ -182,6 +176,9 @@ final class Attribute extends Component {
 		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
 
 		foreach ( $this->models as $model ) {
+
+			// Update attribute.
+			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ], 10, 2 );
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
