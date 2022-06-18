@@ -67,15 +67,15 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
+		foreach ( $this->models as $model ) {
+
+			// Update attribute.
+			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ], 10, 2 );
+		}
+
 		// Manage meta boxes.
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
-
-		foreach ( $this->models as $model ) {
-
-			// Update taxonomy permalinks.
-			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_taxonomy_permalinks' ], 10, 3 );
-		}
 
 		if ( ! is_admin() ) {
 
@@ -492,6 +492,37 @@ final class Attribute extends Component {
 		}
 
 		return $term;
+	}
+
+	/**
+	 * Updates attribute.
+	 *
+	 * @param int $attribute_id Attribute ID.
+	 */
+	public function update_attribute( $attribute_id ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_post', $attribute_id ) ) {
+			return;
+		}
+
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
+			return;
+		}
+
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Check post ID.
+		if ( get_the_ID() !== $attribute_id ) {
+			return;
+		}
+
+		// Refresh permalinks.
+		hivepress()->router->flush_rewrite_rules();
 	}
 
 	/**
@@ -1742,38 +1773,5 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
-	}
-
-	/**
-	 * Update taxonomy permalinks.
-	 *
-	 * @param int    $attribute_id Attribute id.
-	 * @param object $attribute Attribute post object.
-	 * @param bool   $update Is update action?
-	 */
-	public function update_taxonomy_permalinks( $attribute_id, $attribute, $update ) {
-
-		// Check permissions.
-		if ( ! current_user_can( 'edit_post', $attribute_id ) ) {
-			return;
-		}
-
-		// Check action.
-		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
-			return;
-		}
-
-		// Check autosave.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		// Check post ID.
-		if ( get_the_ID() !== $attribute_id ) {
-			return;
-		}
-
-		// Refresh permalinks.
-		hivepress()->router->flush_rewrite_rules();
 	}
 }
