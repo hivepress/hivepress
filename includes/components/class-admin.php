@@ -366,6 +366,7 @@ final class Admin extends Component {
 			foreach ( $types as $type_name => $type_args ) {
 
 				// Get field name.
+				$type_name   = hp\unprefix( $type_name );
 				$option_name = $type_name . '_slug';
 				$field_name  = hp\prefix( $option_name );
 
