@@ -73,12 +73,14 @@ class Vendor extends Post {
 					],
 
 					'categories'      => [
+						'label'       => hivepress()->translator->get_string( 'category' ),
 						'type'        => 'select',
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
 						'multiple'    => true,
 						'_model'      => 'vendor_category',
 						'_relation'   => 'many_to_many',
+						'_indexable'  => true,
 					],
 
 					'image'           => [

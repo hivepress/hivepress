@@ -248,6 +248,25 @@ var hivepress = {
 			field.select2(settings);
 		});
 
+		// Phone
+		container.find(hivepress.getSelector('phone')).each(function() {
+			var field = $(this),
+				settings = {
+					hiddenInput: field.attr('name'),
+					preferredCountries: [],
+					separateDialCode: true,
+					utilsScript: field.data('utils'),
+				};
+
+			field.removeAttr('name');
+
+			if (field.data('countries')) {
+				settings['onlyCountries'] = field.data('countries');
+			}
+
+			window.intlTelInput(field.get(0), settings);
+		});
+
 		// Date
 		container.find(hivepress.getSelector('date')).each(function() {
 			var field = $(this),

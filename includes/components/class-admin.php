@@ -305,6 +305,12 @@ final class Admin extends Component {
 					}
 				}
 			}
+
+			if ( 'hp_settings' === hp\get_array_value( $_POST, 'option_page' ) ) {
+
+				// Refresh permalinks.
+				hivepress()->router->flush_rewrite_rules();
+			}
 		}
 
 		if ( in_array( $pagenow, [ 'options.php', 'options-media.php' ], true ) ) {
@@ -346,22 +352,26 @@ final class Admin extends Component {
 			$permalinks     = (array) get_option( 'hp_permalinks', [] );
 			$new_permalinks = $permalinks;
 
-			foreach ( array_merge(
-				hivepress()->get_config( 'post_types' ),
-				hivepress()->get_config( 'taxonomies' )
-			) as $type_name => $type_args ) {
-
-				// Check permissions.
-				if ( ! hp\get_array_value( $type_args, 'public', true ) ) {
-					continue;
+			// Get post types and taxonomies.
+			$types = array_filter(
+				array_merge(
+					get_post_types( [ 'public' => true ], 'objects' ),
+					get_taxonomies( [ 'public' => true ], 'objects' )
+				),
+				function( $type_args ) {
+					return strpos( $type_args->name, 'hp_' ) === 0;
 				}
+			);
+
+			foreach ( $types as $type_name => $type_args ) {
 
 				// Get field name.
+				$type_name   = hp\unprefix( $type_name );
 				$option_name = $type_name . '_slug';
 				$field_name  = hp\prefix( $option_name );
 
 				// Get field label.
-				$field_label = hp\get_array_value( $type_args['labels'], 'singular_name' );
+				$field_label = $type_args->labels->singular_name;
 
 				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
 					$field_label = hivepress()->translator->get_string( $type_name );
@@ -1464,7 +1474,15 @@ final class Admin extends Component {
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
-		$notices = [];
+		$notices = [
+			'usage_tracking' => [
+				'type'        => 'info',
+				'option'      => 'hivepress_allow_tracking',
+				'dismissible' => true,
+				/* translators: %s: terms URL. */
+				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
+			],
+		];
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
@@ -1546,6 +1564,7 @@ final class Admin extends Component {
 				'type'        => 'info',
 				'name'        => '',
 				'text'        => '',
+				'option'      => null,
 				'dismissible' => false,
 				'inline'      => false,
 			],
@@ -1571,6 +1590,10 @@ final class Admin extends Component {
 					'class' => [ 'notice' ],
 				]
 			);
+		}
+
+		if ( $args['option'] ) {
+			$attributes['data-option'] = $args['option'];
 		}
 
 		if ( $args['dismissible'] ) {

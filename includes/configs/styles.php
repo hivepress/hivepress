@@ -46,6 +46,12 @@ return [
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
+	'intl_tel_input'    => [
+		'handle' => 'intl-tel-input',
+		'src'    => hivepress()->get_url() . '/assets/css/intlTelInput.min.css',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
 	'jquery_ui'         => [
 		'handle' => 'jquery-ui',
 		'src'    => hivepress()->get_url() . '/assets/css/jquery-ui.min.css',

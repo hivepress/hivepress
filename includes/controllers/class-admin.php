@@ -88,6 +88,11 @@ final class Admin extends Controller {
 
 		if ( $notice_name && $request->get_param( 'dismissed' ) ) {
 
+			// Update options.
+			if ( 'hivepress_allow_tracking' === $request->get_param( 'option' ) ) {
+				update_option( 'hp_hivepress_allow_tracking', 1 );
+			}
+
 			// Get notices.
 			$dismissed_notices = array_filter( (array) get_option( 'hp_admin_dismissed_notices' ) );
 

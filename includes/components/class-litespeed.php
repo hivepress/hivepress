@@ -24,15 +24,29 @@ final class LiteSpeed extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Update options.
+		add_action( 'activate_litespeed-cache/litespeed-cache.php', [ $this, 'update_options' ] );
+
 		// Check LiteSpeed status.
 		if ( ! defined( 'LSCWP_DIR' ) ) {
 			return;
 		}
 
+		// Update options.
+		add_action( 'hivepress/v1/activate', [ $this, 'update_options' ] );
+
 		// Disable login cache.
 		add_action( 'hivepress/v1/models/user/login', [ $this, 'disable_login_cache' ] );
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Updates options.
+	 */
+	public function update_options() {
+		do_action( 'litespeed_conf_force', 'cache-priv', false );
+		do_action( 'litespeed_update_confs', 'cache-priv' );
 	}
 
 	/**

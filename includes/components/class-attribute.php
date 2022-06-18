@@ -177,6 +177,9 @@ final class Attribute extends Component {
 
 		foreach ( $this->models as $model ) {
 
+			// Update attribute.
+			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
+
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
@@ -486,6 +489,37 @@ final class Attribute extends Component {
 		}
 
 		return $term;
+	}
+
+	/**
+	 * Updates attribute.
+	 *
+	 * @param int $attribute_id Attribute ID.
+	 */
+	public function update_attribute( $attribute_id ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_post', $attribute_id ) ) {
+			return;
+		}
+
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
+			return;
+		}
+
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Check post ID.
+		if ( get_the_ID() !== $attribute_id ) {
+			return;
+		}
+
+		// Refresh permalinks.
+		hivepress()->router->flush_rewrite_rules();
 	}
 
 	/**

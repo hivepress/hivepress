@@ -29,19 +29,36 @@
 
 		// Notice
 		hivepress.getComponent('notice').each(function() {
-			var notice = $(this);
+			var notice = $(this),
+				option = notice.data('option');
 
-			notice.find('button').on('click', function() {
+			notice.find('button, .button').on('click', function(e) {
+				var button = $(this);
+
+				if (!button.is('button') && !option) {
+					return;
+				}
+
 				$.ajax({
 					url: notice.data('url'),
 					method: 'POST',
 					data: {
 						'dismissed': true,
+						'option': option,
 					},
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 					},
+					complete: function(xhr) {
+						if (!button.is('button')) {
+							notice.slideUp();
+						}
+					},
 				});
+
+				if (!button.is('button')) {
+					e.preventDefault();
+				}
 			});
 		});
 

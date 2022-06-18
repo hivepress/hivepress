@@ -386,6 +386,7 @@ function sanitize_html( $html, $tags = [] ) {
 			'a'      => [
 				'href'   => [],
 				'target' => [],
+				'class'  => [],
 			],
 			'i'      => [
 				'class' => [],
