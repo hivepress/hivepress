@@ -306,7 +306,7 @@ final class Admin extends Component {
 				}
 			}
 
-			if ( $_POST && 'hp_settings' === hp\get_array_value( $_POST, 'option_page' ) ) {
+			if ( 'hp_settings' === hp\get_array_value( $_POST, 'option_page' ) ) {
 
 				// Refresh permalinks.
 				hivepress()->router->flush_rewrite_rules();
@@ -352,34 +352,25 @@ final class Admin extends Component {
 			$permalinks     = (array) get_option( 'hp_permalinks', [] );
 			$new_permalinks = $permalinks;
 
-			// Get taxonomies.
-			$taxonomies = array_filter(
-				array_map(
-					function( $taxonomy ) {
-						if ( strpos( $taxonomy->name, 'hp_' ) !== false ) {
-							return (array) $taxonomy;
-						}
-					},
-					(array) get_taxonomies( [ 'public' => true ], 'objects' )
-				)
+			// Get post types and taxonomies.
+			$types = array_filter(
+				array_merge(
+					get_post_types( [ 'public' => true ], 'objects' ),
+					get_taxonomies( [ 'public' => true ], 'objects' )
+				),
+				function( $type ) {
+					return strpos( $type->name, 'hp_' ) === 0;
+				}
 			);
 
-			foreach ( array_merge(
-				hivepress()->get_config( 'post_types' ),
-				$taxonomies
-			) as $type_name => $type_args ) {
-
-				// Check permissions.
-				if ( ! hp\get_array_value( $type_args, 'public', true ) ) {
-					continue;
-				}
+			foreach ( $types as $type_name => $type_args ) {
 
 				// Get field name.
 				$option_name = $type_name . '_slug';
 				$field_name  = hp\prefix( $option_name );
 
 				// Get field label.
-				$field_label = hp\get_array_value( (array) $type_args['labels'], 'singular_name' );
+				$field_label = $type_args->labels->singular_name;
 
 				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
 					$field_label = hivepress()->translator->get_string( $type_name );
