@@ -18,6 +18,14 @@ defined( 'ABSPATH' ) || exit;
 class Attributes extends Block {
 
 	/**
+	 * HTML tag.
+	 *
+	 * @todo Remove after changing block to Container.
+	 * @var string
+	 */
+	protected $tag = 'div';
+
+	/**
 	 * Columns number.
 	 *
 	 * @var int
@@ -192,7 +200,9 @@ class Attributes extends Block {
 			$field_class = 'hp-' . hp\sanitize_slug( $this->alias ) . '__attribute';
 
 			// Render attributes.
-			$output .= '<div ' . hp\html_attributes( $this->attributes ) . '>';
+			if ( $this->tag ) {
+				$output .= '<' . esc_attr( $this->tag ) . ' ' . hp\html_attributes( $this->attributes ) . '>';
+			}
 
 			if ( $this->columns > 1 ) {
 				$output .= '<div class="hp-row">';
@@ -216,7 +226,9 @@ class Attributes extends Block {
 				$output .= '</div>';
 			}
 
-			$output .= '</div>';
+			if ( $this->tag ) {
+				$output .= '</' . esc_attr( $this->tag ) . '>';
+			}
 		}
 
 		return $output;
