@@ -45,8 +45,7 @@ final class LiteSpeed extends Component {
 	 * Updates options.
 	 */
 	public function update_options() {
-		do_action( 'litespeed_conf_force', 'cache-priv', false );
-		do_action( 'litespeed_update_confs', 'cache-priv' );
+		// @todo Add in the next update.
 	}
 
 	/**
