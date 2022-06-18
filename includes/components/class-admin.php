@@ -1101,7 +1101,7 @@ final class Admin extends Component {
 						if ( $field->get_arg( '_external' ) ) {
 							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
 								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
-							} else {
+							} elseif ( ! $field->get_arg( 'readonly' ) ) {
 								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
 							}
 						} else {
@@ -1304,7 +1304,7 @@ final class Admin extends Component {
 						if ( $field->get_arg( '_external' ) ) {
 							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
 								delete_term_meta( $term->term_id, $field->get_arg( '_alias' ) );
-							} else {
+							} elseif ( ! $field->get_arg( 'readonly' ) ) {
 								update_term_meta( $term->term_id, $field->get_arg( '_alias' ), $field->get_value() );
 							}
 						} else {
