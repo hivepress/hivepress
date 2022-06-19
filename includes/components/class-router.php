@@ -45,8 +45,8 @@ final class Router extends Component {
 		add_action( 'init', [ $this, 'add_rewrite_rules' ] );
 
 		// Set rewrite slugs.
-		add_filter( 'hivepress/v1/post_types', [ $this, 'set_rewrite_slugs' ] );
-		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_rewrite_slugs' ] );
+		add_filter( 'register_post_type_args', [ $this, 'set_rewrite_slug' ], 10, 2 );
+		add_filter( 'register_taxonomy_args', [ $this, 'set_rewrite_slug' ], 10, 2 );
 
 		// Flush rewrite rules.
 		add_action( 'hivepress/v1/activate', [ $this, 'flush_rewrite_rules' ] );
@@ -451,27 +451,34 @@ final class Router extends Component {
 	}
 
 	/**
-	 * Sets rewrite slugs.
+	 * Sets rewrite slug.
 	 *
-	 * @param array $types Post types or taxonomies.
+	 * @param array  $args Default arguments.
+	 * @param string $type Post type or taxonomy.
 	 * @return array
 	 */
-	public function set_rewrite_slugs( $types ) {
+	public function set_rewrite_slug( $args, $type ) {
+
+		// Check arguments.
+		if ( strpos( $type, 'hp_' ) !== 0 || ! hp\get_array_value( $args, 'public', true ) ) {
+			return $args;
+		}
 
 		// Get permalinks.
 		$permalinks = (array) get_option( 'hp_permalinks', [] );
 
-		if ( $permalinks ) {
-			foreach ( $types as $name => $args ) {
-				if ( isset( $permalinks[ $name . '_slug' ] ) && hp\get_array_value( $args, 'public', true ) ) {
-
-					// Set rewrite slug.
-					$types[ $name ]['rewrite']['slug'] = $permalinks[ $name . '_slug' ];
-				}
-			}
+		if ( ! $permalinks ) {
+			return $args;
 		}
 
-		return $types;
+		// Set rewrite slug.
+		$slug = hp\get_array_value( $permalinks, hp\unprefix( $type . '_slug' ) );
+
+		if ( $slug ) {
+			$args['rewrite']['slug'] = $slug;
+		}
+
+		return $args;
 	}
 
 	/**
