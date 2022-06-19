@@ -1463,6 +1463,19 @@ final class Attribute extends Component {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
 					}
 				}
+			} elseif ( in_array(
+				$post_type,
+				hp\prefix(
+					array_map(
+						function( $model ) {
+							return $model . '_attribute';
+						},
+						(array) $this->models
+					)
+				),
+				true
+			) && preg_match( '/^[a-z]{1}[a-z0-9_-]*$/', get_post_field( 'post_name' ) ) ) {
+				remove_meta_box( 'slugdiv', $post_type, 'normal' );
 			}
 		}
 	}
