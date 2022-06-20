@@ -41,6 +41,9 @@ final class Vendor extends Component {
 		// Alter post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
 
+		// Alter vendor model fields.
+		add_filter( 'hivepress/v1/models/vendor/fields', [ $this, 'alter_vendor_model_fields' ], 10, 2 );
+
 		if ( ! is_admin() ) {
 
 			// Alter templates.
@@ -281,5 +284,27 @@ final class Vendor extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Alter vendor model fields.
+	 *
+	 * @param array  $fields Vendor fields.
+	 * @param object $vendor Vendor object.
+	 * @return array
+	 */
+	public function alter_vendor_model_fields( $fields, $vendor ) {
+		if ( taxonomy_exists( 'hp_vendor_category' ) && get_terms(
+			[
+				'taxonomy'   => 'hp_vendor_category',
+				'number'     => 1,
+				'fields'     => 'ids',
+				'hide_empty' => false,
+			]
+		) ) {
+			$fields['categories']['required'] = true;
+		}
+
+		return $fields;
 	}
 }
