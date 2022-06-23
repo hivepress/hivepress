@@ -8,6 +8,7 @@
 namespace HivePress\Controllers;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -75,13 +76,19 @@ final class Attribute extends Controller {
 		// Check form model.
 		$form_name  = sanitize_key( $request->get_param( 'form_name' ) );
 		$model_name = sanitize_key( $request->get_param( '_model' ) );
+		$model_id   = absint( $request->get_param( '_id' ) );
+
+		if ( 'vendor_submit' === $form_name && 'user' === $model_name ) {
+			$model_name = 'vendor';
+			$model_id   = Models\Vendor::query()->filter( [ 'user' => $model_id ] )->get_first_id();
+		}
 
 		if ( ! in_array( $model_name, hivepress()->attribute->get_models() ) || $form_name !== $model_name . '_submit' ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get model.
-		$model = hivepress()->model->get_model_object( $model_name, absint( $request->get_param( '_id' ) ) );
+		$model = hivepress()->model->get_model_object( $model_name, $model_id );
 
 		if ( ! $model ) {
 			return hp\rest_error( 404 );
@@ -98,7 +105,11 @@ final class Attribute extends Controller {
 		// Create form.
 		$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model ] ] );
 
-		if ( ! $form || $form::get_meta( 'model' ) !== $model_name ) {
+		if ( 'vendor_submit' === $form_name ) {
+			$form = hp\create_class_instance( '\HivePress\Forms\\user_update_profile', [ [ 'model' => $model->get_user() ] ] );
+		}
+
+		if ( ! $form || ( $form::get_meta( 'model' ) !== $model_name && 'vendor_submit' !== $form_name ) ) {
 			return hp\rest_error( 404 );
 		}
 
