@@ -10,6 +10,7 @@ namespace HivePress\Components;
 use HivePress\Helpers as hp;
 use HivePress\Fields;
 use HivePress\Blocks;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -45,6 +46,9 @@ final class Admin extends Component {
 
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
+
+		// Collect usage data.
+		add_action( 'hivepress/v1/events/weekly', [ $this, 'collect_usage_data' ] );
 
 		if ( is_admin() ) {
 
@@ -1662,5 +1666,101 @@ final class Admin extends Component {
 		$output .= hivepress()->request->get_context( 'admin_footer' );
 
 		echo $output;
+	}
+
+	/**
+	 * Collect usage data.
+	 */
+	public function collect_usage_data() {
+		global $wpdb;
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		// Get theme.
+		$theme = wp_get_theme()->parent() ? wp_get_theme()->parent() : wp_get_theme();
+
+		// Get active plugins.
+		$active_plugins = [];
+
+		foreach ( (array) get_option( 'active_plugins' ) as $plugin ) {
+
+			// Get plugin data.
+			$data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin, false, false );
+
+			$active_plugins[] = [
+				'name'        => hp\get_array_value( $data, 'Name' ),
+				'text_domain' => hp\get_array_value( $data, 'TextDomain' ),
+				'version'     => hp\get_array_value( $data, 'Version' ),
+				'author'      => hp\get_array_value( $data, 'Author' ),
+				'author_url'  => hp\get_array_value( $data, 'AuthorURI' ),
+				'plugin_url'  => hp\get_array_value( $data, 'PluginURI' ),
+			];
+		}
+
+		// Get database extension name.
+		$db_extension = null;
+
+		if ( is_resource( $wpdb->dbh ) ) {
+
+			// Old mysql extension.
+			$db_extension = 'mysql';
+		} elseif ( is_object( $wpdb->dbh ) ) {
+
+			// mysqli or PDO.
+			$db_extension = get_class( $wpdb->dbh );
+		}
+
+		// Get HivePress options.
+		$hp_options = [];
+
+		foreach ( (array) wp_load_alloptions() as $name => $value ) {
+			if ( strpos( $name, 'hp_' ) !== false ) {
+				$hp_options[ $name ] = $value;
+			}
+		}
+
+		// Set usage data array.
+		$usage_data = [
+			'site_url'                      => get_site_url(),
+			'admin_email'                   => get_option( 'admin_email' ),
+			'theme'                         => [
+				'name'       => sanitize_text_field( $theme->get( 'Name' ) ),
+				'slug'       => wp_strip_all_tags( $theme->get( 'TextDomain' ) ),
+				'version'    => wp_strip_all_tags( $theme->get( 'Version' ) ),
+				'author'     => sanitize_text_field( $theme->get( 'Author' ) ),
+				'author_url' => sanitize_url( $theme->get( 'AuthorURI' ) ),
+				'theme_url'  => sanitize_url( $theme->get( 'ThemeURI' ) ),
+			],
+
+			'active_plugins'                => $active_plugins,
+			'php_version'                   => phpversion(),
+			'database_extension'            => $db_extension,
+			'database_version'              => $wpdb->db_version(),
+			'php_time_limit'                => ini_get( 'max_execution_time' ),
+			'php_memory_limit'              => ini_get( 'memory_limit' ),
+			'max_input_time'                => ini_get( 'max_input_time' ),
+			'upload_max_filesize'           => ini_get( 'upload_max_filesize' ),
+			'listing_count'                 => Models\Listing::query()->get_count(),
+			'vendor_count'                  => Models\Vendor::query()->get_count(),
+			'user_count'                    => Models\User::query()->get_count(),
+			'wp_version'                    => get_bloginfo( 'version' ),
+			'site_language'                 => get_locale(),
+			'user_language'                 => get_user_locale(),
+			'wp_timezone'                   => wp_timezone_string(),
+			'permalink_structure'           => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'No permalink structure set',
+			'site_discourage_search_engine' => get_option( 'blog_public' ) ? 'No' : 'Yes',
+			'anyone_can_register'           => get_option( 'users_can_register' ) ? 'Yes' : 'No',
+			'multisite'                     => is_multisite() ? 'Yes' : 'No',
+			'hp_options'                    => $hp_options,
+		];
+
+		// todo: add url.
+		wp_remote_post(
+			'http://dev.local/listing/stylish-remodeled-room/',
+			[
+				'body' => [
+					'usage_data' => wp_json_encode( $usage_data ),
+				],
+			]
+		);
 	}
 }
