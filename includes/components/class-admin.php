@@ -1713,7 +1713,7 @@ final class Admin extends Component {
 		$hp_options = [];
 
 		foreach ( (array) wp_load_alloptions() as $name => $value ) {
-			if ( strpos( $name, 'hp_' ) !== false ) {
+			if ( strpos( $name, 'hp_' ) === 0 ) {
 				$hp_options[ $name ] = $value;
 			}
 		}
