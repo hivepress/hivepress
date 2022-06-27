@@ -29,13 +29,15 @@
 
 		// Notice
 		hivepress.getComponent('notice').each(function() {
-			var notice = $(this),
-				option = notice.data('option');
+			var notice = $(this);
 
 			notice.find('button, .button').on('click', function(e) {
-				var button = $(this);
+				var button = $(this),
+					option = notice.data('option');
 
-				if (!button.is('button') && !option) {
+				if (button.is('button')) {
+					option = null;
+				} else if (!option) {
 					return;
 				}
 
@@ -51,7 +53,7 @@
 					},
 					complete: function(xhr) {
 						if (!button.is('button')) {
-							notice.slideUp();
+							notice.slideUp(100);
 						}
 					},
 				});
