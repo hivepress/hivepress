@@ -84,7 +84,7 @@ final class Core {
 		add_action( 'init', [ $this, 'install' ], 10000 );
 
 		// Setup HivePress.
-		add_action( 'plugins_loaded', [ $this, 'setup' ] );
+		add_action( 'plugins_loaded', [ $this, 'setup' ], -10 );
 	}
 
 	/**

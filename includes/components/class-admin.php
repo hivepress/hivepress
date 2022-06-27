@@ -373,8 +373,12 @@ final class Admin extends Component {
 				// Get field label.
 				$field_label = $type_args->labels->singular_name;
 
-				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
-					$field_label = hivepress()->translator->get_string( $type_name );
+				if ( property_exists( $type_args, 'object_type' ) ) {
+					$type_group = hp\unprefix( hp\get_first_array_value( $type_args->object_type ) );
+
+					if ( hivepress()->translator->get_string( $type_group ) ) {
+						$field_label .= ' (' . hivepress()->translator->get_string( $type_group ) . ')';
+					}
 				}
 
 				// Add field.

@@ -444,9 +444,11 @@ abstract class Field {
 
 	/**
 	 * Updates SQL filter.
+	 *
+	 * @param bool $force Force update?
 	 */
-	final public function update_filter() {
-		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
+	final public function update_filter( $force = false ) {
+		if ( $force || ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) ) {
 			$this->add_filter();
 		}
 	}
@@ -510,8 +512,9 @@ abstract class Field {
 		$this->errors = [];
 
 		if ( $this->required && is_null( $this->value ) ) {
+
 			/* translators: %s: field label. */
-			$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) ) );
+			$this->errors['required'] = sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) );
 		}
 
 		return empty( $this->errors );

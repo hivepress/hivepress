@@ -255,6 +255,7 @@ var hivepress = {
 					hiddenInput: field.attr('name'),
 					preferredCountries: [],
 					separateDialCode: true,
+					formatOnDisplay: false,
 					utilsScript: field.data('utils'),
 				};
 
