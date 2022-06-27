@@ -444,9 +444,11 @@ abstract class Field {
 
 	/**
 	 * Updates SQL filter.
+	 *
+	 * @param bool $force Force update?
 	 */
-	final public function update_filter() {
-		if ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) {
+	final public function update_filter( $force = false ) {
+		if ( $force || ( ! is_null( $this->value ) && static::get_meta( 'filterable' ) ) ) {
 			$this->add_filter();
 		}
 	}

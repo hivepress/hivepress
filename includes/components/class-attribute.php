@@ -1582,16 +1582,19 @@ final class Attribute extends Component {
 
 					if ( $sort_attribute && $sort_attribute['sortable'] ) {
 
-						// Get sort type.
-						$sort_type = hp\call_class_method( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], 'get_meta', [ 'type' ] );
+						// Get sort field.
+						$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
 
-						if ( $sort_type ) {
+						if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
+
+							// Update field filter.
+							$sort_field->update_filter( true );
 
 							// Add meta clause.
 							$meta_query[ $sort_param . '__order' ] = [
 								'key'     => hp\prefix( $sort_param ),
 								'compare' => 'EXISTS',
-								'type'    => $sort_type,
+								'type'    => hp\get_array_value( $sort_field->get_filter(), 'type' ),
 							];
 
 							// Set sort order.
