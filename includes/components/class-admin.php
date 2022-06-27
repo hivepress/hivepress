@@ -1478,15 +1478,7 @@ final class Admin extends Component {
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
-		$notices = [
-			'usage_tracking' => [
-				'type'        => 'info',
-				'option'      => 'hivepress_allow_tracking',
-				'dismissible' => true,
-				/* translators: %s: terms URL. */
-				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
-			],
-		];
+		$notices = [];
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
@@ -1520,6 +1512,16 @@ final class Admin extends Component {
 					esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
 					esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
 				),
+			];
+		}
+
+		if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+			$notices['usage_tracking'] = [
+				'type'        => 'info',
+				'option'      => 'hivepress_allow_tracking',
+				'dismissible' => true,
+				/* translators: %s: terms URL. */
+				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
 			];
 		}
 
