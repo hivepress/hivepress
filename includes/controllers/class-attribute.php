@@ -74,13 +74,19 @@ final class Attribute extends Controller {
 		}
 
 		// Check form model.
-		$form_name  = sanitize_key( $request->get_param( 'form_name' ) );
+		$form_name = sanitize_key( $request->get_param( 'form_name' ) );
+
 		$model_name = sanitize_key( $request->get_param( '_model' ) );
 		$model_id   = absint( $request->get_param( '_id' ) );
 
 		if ( 'vendor_submit' === $form_name && 'user' === $model_name ) {
 			$model_name = 'vendor';
-			$model_id   = Models\Vendor::query()->filter( [ 'user' => $model_id ] )->get_first_id();
+			$model_id   = Models\Vendor::query()->filter(
+				[
+					'status' => [ 'auto-draft', 'draft', 'publish' ],
+					'user'   => $model_id,
+				]
+			)->get_first_id();
 		}
 
 		if ( ! in_array( $model_name, hivepress()->attribute->get_models() ) || $form_name !== $model_name . '_submit' ) {
@@ -95,7 +101,7 @@ final class Attribute extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || $model->get_status() !== 'auto-draft' ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || ! in_array( $model->get_status(), [ 'auto-draft', 'draft', 'publish' ] ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -103,13 +109,15 @@ final class Attribute extends Controller {
 		$model->set_categories( $request->get_param( 'categories' ) )->save_categories();
 
 		// Create form.
-		$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model ] ] );
+		$form = null;
 
 		if ( 'vendor_submit' === $form_name ) {
-			$form = hp\create_class_instance( '\HivePress\Forms\\user_update_profile', [ [ 'model' => $model->get_user() ] ] );
+			$form = hp\create_class_instance( '\HivePress\Forms\User_Update_Profile', [ [ 'model' => $model->get_user() ] ] );
+		} else {
+			$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model ] ] );
 		}
 
-		if ( ! $form || ( $form::get_meta( 'model' ) !== $model_name && 'vendor_submit' !== $form_name ) ) {
+		if ( ! $form || ! in_array( $form::get_meta( 'model' ), [ $model_name, 'user' ] ) ) {
 			return hp\rest_error( 404 );
 		}
 
