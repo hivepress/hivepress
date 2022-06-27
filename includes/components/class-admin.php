@@ -1676,25 +1676,27 @@ final class Admin extends Component {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 		// Get theme.
-		$theme = wp_get_theme()->parent() ? wp_get_theme()->parent() : wp_get_theme();
+		$theme = is_child_theme() ? wp_get_theme()->parent() : wp_get_theme();
 
 		// Get active plugins.
-		$active_plugins = [];
-
-		foreach ( (array) get_option( 'active_plugins' ) as $plugin ) {
-
-			// Get plugin data.
-			$data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin, false, false );
-
-			$active_plugins[] = [
-				'name'        => hp\get_array_value( $data, 'Name' ),
-				'text_domain' => hp\get_array_value( $data, 'TextDomain' ),
-				'version'     => hp\get_array_value( $data, 'Version' ),
-				'author'      => hp\get_array_value( $data, 'Author' ),
-				'author_url'  => hp\get_array_value( $data, 'AuthorURI' ),
-				'plugin_url'  => hp\get_array_value( $data, 'PluginURI' ),
-			];
-		}
+		$active_plugins = array_filter(
+			array_map(
+				function ( $plugin ) {
+					return get_file_data(
+						WP_PLUGIN_DIR . '/' . $plugin,
+						[
+							'name'        => 'Plugin Name',
+							'version'     => 'Version',
+							'text_domain' => 'Text Domain',
+							'author'      => 'Author',
+							'author_url'  => 'Author URI',
+							'plugin_url'  => 'Plugin URI',
+						]
+					);
+				},
+				(array) get_option( 'active_plugins' )
+			)
+		);
 
 		// Get database extension name.
 		$db_extension = null;
@@ -1710,19 +1712,59 @@ final class Admin extends Component {
 		}
 
 		// Get HivePress options.
-		$hp_options = [];
+		$hp_options = array_filter(
+			(array) wp_load_alloptions(),
+			function ( $name ) {
+				return strpos( $name, 'hp_' ) === 0;
+			},
+			ARRAY_FILTER_USE_KEY
+		);
 
-		foreach ( (array) wp_load_alloptions() as $name => $value ) {
-			if ( strpos( $name, 'hp_' ) === 0 ) {
-				$hp_options[ $name ] = $value;
-			}
+		// Set server options names.
+		$server_option_names = [
+			'php_time_limit'      => 'max_execution_time',
+			'php_memory_limit'    => 'memory_limit',
+			'max_input_time'      => 'max_input_time',
+			'upload_max_filesize' => 'upload_max_filesize',
+		];
+
+		// Get server options.
+		$server_options = [
+			'php_version'        => phpversion(),
+			'database_extension' => $db_extension,
+			'database_version'   => $wpdb->db_version(),
+			'table_prefix'       => $wpdb->prefix,
+		];
+
+		foreach ( $server_option_names as $name => $option_name ) {
+			$server_options[ $name ] = ini_get( $option_name );
+		}
+
+		// Set WordPress options names.
+		$wp_option_names = [
+			'permalink_structure'           => 'permalink_structure',
+			'site_discourage_search_engine' => 'blog_public',
+			'anyone_can_register'           => 'users_can_register',
+		];
+
+		// Get WordPress options.
+		$wp_options = [
+			'wp_version'    => get_bloginfo( 'version' ),
+			'site_language' => get_locale(),
+			'user_language' => get_user_locale(),
+			'wp_timezone'   => wp_timezone_string(),
+			'multisite'     => is_multisite(),
+		];
+
+		foreach ( $wp_option_names as $name => $option_name ) {
+			$wp_options[ $name ] = get_option( $option_name );
 		}
 
 		// Set usage data array.
 		$usage_data = [
-			'site_url'                      => get_site_url(),
-			'admin_email'                   => get_option( 'admin_email' ),
-			'theme'                         => [
+			'site_url'       => get_site_url(),
+			'admin_email'    => get_option( 'admin_email' ),
+			'theme'          => [
 				'name'       => sanitize_text_field( $theme->get( 'Name' ) ),
 				'slug'       => wp_strip_all_tags( $theme->get( 'TextDomain' ) ),
 				'version'    => wp_strip_all_tags( $theme->get( 'Version' ) ),
@@ -1730,27 +1772,15 @@ final class Admin extends Component {
 				'author_url' => sanitize_url( $theme->get( 'AuthorURI' ) ),
 				'theme_url'  => sanitize_url( $theme->get( 'ThemeURI' ) ),
 			],
-
-			'active_plugins'                => $active_plugins,
-			'php_version'                   => phpversion(),
-			'database_extension'            => $db_extension,
-			'database_version'              => $wpdb->db_version(),
-			'php_time_limit'                => ini_get( 'max_execution_time' ),
-			'php_memory_limit'              => ini_get( 'memory_limit' ),
-			'max_input_time'                => ini_get( 'max_input_time' ),
-			'upload_max_filesize'           => ini_get( 'upload_max_filesize' ),
-			'listing_count'                 => Models\Listing::query()->get_count(),
-			'vendor_count'                  => Models\Vendor::query()->get_count(),
-			'user_count'                    => Models\User::query()->get_count(),
-			'wp_version'                    => get_bloginfo( 'version' ),
-			'site_language'                 => get_locale(),
-			'user_language'                 => get_user_locale(),
-			'wp_timezone'                   => wp_timezone_string(),
-			'permalink_structure'           => get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'No permalink structure set',
-			'site_discourage_search_engine' => get_option( 'blog_public' ) ? 'No' : 'Yes',
-			'anyone_can_register'           => get_option( 'users_can_register' ) ? 'Yes' : 'No',
-			'multisite'                     => is_multisite() ? 'Yes' : 'No',
-			'hp_options'                    => $hp_options,
+			'active_plugins' => $active_plugins,
+			'server_info'    => $server_options,
+			'hp_stats'       => [
+				'listing_count' => (array) wp_count_posts( 'hp_listing' ),
+				'vendor_count'  => (array) wp_count_posts( 'hp_vendor' ),
+				'user_count'    => hp\get_array_value( count_users(), 'total_users' ),
+			],
+			'wp_options'     => $wp_options,
+			'hp_options'     => $hp_options,
 		];
 
 		// todo: add url.
