@@ -33,6 +33,13 @@ class Vendors extends Block {
 	protected $number;
 
 	/**
+	 * Vendor category ID.
+	 *
+	 * @var int
+	 */
+	protected $category;
+
+	/**
 	 * Vendors order.
 	 *
 	 * @var string
@@ -88,11 +95,19 @@ class Vendors extends Block {
 						'_order'    => 20,
 					],
 
+					'category' => [
+						'label'       => hivepress()->translator->get_string( 'category' ),
+						'type'        => 'select',
+						'options'     => 'terms',
+						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
+						'_order'      => 30,
+					],
+
 					'order'    => [
 						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
-						'_order'   => 30,
+						'_order'   => 40,
 
 						'options'  => [
 							'registered_date' => hivepress()->translator->get_string( 'by_date_registered' ),
@@ -104,7 +119,7 @@ class Vendors extends Block {
 					'verified' => [
 						'label'  => hivepress()->translator->get_string( 'display_only_verified_vendors' ),
 						'type'   => 'checkbox',
-						'_order' => 40,
+						'_order' => 50,
 					],
 				],
 			],
@@ -175,6 +190,11 @@ class Vendors extends Block {
 							'status' => 'publish',
 						]
 					)->limit( $this->number );
+
+					// Set category.
+					if ( $this->category ) {
+						$query->filter( [ 'categories__in' => $this->category ] );
+					}
 
 					// Set order.
 					if ( 'name' === $this->order ) {
