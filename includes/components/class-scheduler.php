@@ -31,6 +31,9 @@ final class Scheduler extends Component {
 		// Unschedule events.
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
+		// Include Action Scheduler.
+		require_once hivepress()->get_path() . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
 		parent::__construct( $args );
 	}
 
@@ -38,7 +41,7 @@ final class Scheduler extends Component {
 	 * Schedules events.
 	 */
 	public function schedule_events() {
-		$periods = [ 'hourly', 'twicedaily', 'daily' ];
+		$periods = [ 'hourly', 'twicedaily', 'daily', 'weekly' ];
 
 		foreach ( $periods as $period ) {
 			if ( ! wp_next_scheduled( 'hivepress/v1/events/' . $period ) ) {
@@ -51,7 +54,7 @@ final class Scheduler extends Component {
 	 * Unschedules events.
 	 */
 	public function unschedule_events() {
-		$periods = [ 'hourly', 'twicedaily', 'daily' ];
+		$periods = [ 'hourly', 'twicedaily', 'daily', 'weekly' ];
 
 		foreach ( $periods as $period ) {
 			$timestamp = wp_next_scheduled( 'hivepress/v1/events/' . $period );
