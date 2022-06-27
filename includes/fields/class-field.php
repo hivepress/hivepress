@@ -512,8 +512,9 @@ abstract class Field {
 		$this->errors = [];
 
 		if ( $this->required && is_null( $this->value ) ) {
+
 			/* translators: %s: field label. */
-			$this->add_errors( sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) ) );
+			$this->errors['required'] = sprintf( esc_html__( '"%s" field is required.', 'hivepress' ), $this->get_label( true ) );
 		}
 
 		return empty( $this->errors );
