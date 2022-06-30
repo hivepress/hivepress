@@ -406,11 +406,8 @@ final class User extends Component {
 			return $form_args;
 		}
 
-		// Get user.
-		$user = $form->get_model();
-
 		// Get changed user email.
-		$new_email = get_user_meta( $user->get_id(), 'hp_email', true );
+		$new_email = get_user_meta( $form->get_model()->get_id(), 'hp_email', true );
 
 		if ( $new_email ) {
 			/* translators: %s: changed user email. */
