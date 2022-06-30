@@ -60,6 +60,9 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+
+			// Alter forms.
+			add_filter( 'hivepress/v1/forms/user_update', [ $this, 'alter_user_update_form' ], 100, 2 );
 		}
 
 		parent::__construct( $args );
@@ -387,5 +390,33 @@ final class User extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Alter user update form.
+	 *
+	 * @param array  $form_args Form arguments.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function alter_user_update_form( $form_args, $form ) {
+
+		// Check option.
+		if ( ! get_option( 'hp_user_verify_email' ) ) {
+			return $form_args;
+		}
+
+		// Get user.
+		$user = $form->get_model();
+
+		// Get changed user email.
+		$new_email = get_user_meta( $user->get_id(), 'hp_email', true );
+
+		if ( $new_email ) {
+			/* translators: %s: changed user email. */
+			$form_args['fields']['email']['description'] = sprintf( esc_html__( 'Please verify email: %s', 'hivepress' ), sanitize_email( $new_email ) );
+		}
+
+		return $form_args;
 	}
 }

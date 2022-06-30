@@ -649,6 +649,37 @@ final class User extends Controller {
 			}
 		}
 
+		if ( get_option( 'hp_user_verify_email' ) && $form->get_value( 'email' ) !== $user->get_email() ) {
+			update_user_meta( $user->get_id(), 'hp_email', $form->get_value( 'email' ) );
+
+			// Set email key.
+			$email_key = md5( $form->get_value( 'email' ) . time() . wp_rand() );
+
+			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+
+			// Send email.
+			( new Emails\User_Email_Change(
+				[
+					'recipient' => $form->get_value( 'email' ),
+
+					'tokens'    => [
+						'user'             => $user,
+						'user_name'        => $user->get_username(),
+						'email_verify_url' => hivepress()->router->get_url(
+							'user_email_verify_page',
+							[
+								'username'         => $user->get_username(),
+								'email_verify_key' => $email_key,
+								'new_email'        => $form->get_value( 'email' ),
+							]
+						),
+					],
+				]
+			) )->send();
+
+			$form->set_value( 'email', $user->get_email() );
+		}
+
 		// Update user.
 		$user->fill( $form->get_values() );
 
@@ -831,13 +862,31 @@ final class User extends Controller {
 		// Get user.
 		$user = get_user_by( 'login', $username );
 
+		// Get new email.
+		$new_email = sanitize_email( hp\get_array_value( $_GET, 'new_email' ) );
+
 		// Check email key.
-		if ( ! $user || $user->hp_email_verify_key !== $email_key ) {
+		if ( ! $user || $user->hp_email_verify_key !== $email_key || ( $new_email && $user->hp_email !== $new_email ) ) {
 			return true;
 		}
 
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
+
+		// Delete new email.
+		delete_user_meta( $user->ID, 'hp_email' );
+
+		if ( $new_email ) {
+
+			// Get user.
+			$user = Models\User::query()->get_by_id( $user->ID );
+
+			if ( $user ) {
+
+				// Change user email.
+				$user->set_email( $new_email )->save_email();
+			}
+		}
 
 		// Check authentication.
 		if ( is_user_logged_in() ) {
