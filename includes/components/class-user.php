@@ -130,8 +130,26 @@ final class User extends Component {
 
 				break;
 
+			case 'first_name_extra':
+				$display_name = $user->get_first_name();
+
+				if ( $user->get_last_name() ) {
+					$display_name .= ' ' . mb_substr( $user->get_last_name(), 0, 1 ) . '.';
+				}
+
+				break;
+
 			case 'last_name':
 				$display_name = $user->get_last_name();
+
+				break;
+
+			case 'last_name_extra':
+				if ( $user->get_first_name() ) {
+					$display_name = mb_substr( $user->get_first_name(), 0, 1 ) . '. ';
+				}
+
+				$display_name .= $user->get_last_name();
 
 				break;
 

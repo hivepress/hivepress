@@ -275,10 +275,12 @@ return [
 						'_order'   => 10,
 
 						'options'  => [
-							'username'   => esc_html__( 'Username', 'hivepress' ),
-							'first_name' => esc_html__( 'First Name', 'hivepress' ),
-							'last_name'  => esc_html__( 'Last Name', 'hivepress' ),
-							'full_name'  => esc_html__( 'Full Name', 'hivepress' ),
+							'username'         => esc_html__( 'Username', 'hivepress' ),
+							'first_name'       => esc_html__( 'First Name', 'hivepress' ),
+							'first_name_extra' => esc_html__( 'First Name and First Letter of Last Name', 'hivepress' ),
+							'last_name'        => esc_html__( 'Last Name', 'hivepress' ),
+							'last_name_extra'  => esc_html__( 'Last Name and First Letter of First Name', 'hivepress' ),
+							'full_name'        => esc_html__( 'Full Name', 'hivepress' ),
 						],
 					],
 				],
