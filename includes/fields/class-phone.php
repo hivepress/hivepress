@@ -67,7 +67,7 @@ class Phone extends Text {
 			$args,
 			[
 				'display_type' => 'tel',
-				'pattern'      => '\+?[0-9]+',
+				'pattern'      => '\+?[0-9\s]+',
 				'max_length'   => 24,
 			]
 		);
@@ -95,5 +95,14 @@ class Phone extends Text {
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();
+	}
+
+	/**
+	 * Sanitizes field value.
+	 */
+	protected function sanitize() {
+		parent::sanitize();
+
+		$this->value = preg_replace( '/\s+/', '', $this->value );
 	}
 }
