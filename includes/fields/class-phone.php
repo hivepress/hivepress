@@ -103,6 +103,6 @@ class Phone extends Text {
 	protected function sanitize() {
 		parent::sanitize();
 
-		$this->value = preg_replace( '/\s/', '', $this->value );
+		$this->value = preg_replace( '/\s+/', '', $this->value );
 	}
 }
