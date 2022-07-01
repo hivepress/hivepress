@@ -67,7 +67,7 @@ class Phone extends Text {
 			$args,
 			[
 				'display_type' => 'tel',
-				'pattern'      => '\+?[0-9 ]+',
+				'pattern'      => '\+?[0-9\s]+',
 				'max_length'   => 24,
 			]
 		);

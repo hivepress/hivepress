@@ -1502,17 +1502,20 @@ final class Admin extends Component {
 					'https://wordpress.org/support/plugin/hivepress/reviews/'
 				),
 			];
-		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 && get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
-			$notices['upgrade_request'] = [
-				'type'        => 'info',
-				'dismissible' => true,
-				'text'        => sprintf(
-					/* translators: %s: link URL. */
-					hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
-				),
-			];
+		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+
+			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
+				$notices['upgrade_request'] = [
+					'type'        => 'info',
+					'dismissible' => true,
+					'text'        => sprintf(
+						/* translators: %s: link URL. */
+						hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
+					),
+				];
+			}
 
 			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
 				$notices['usage_tracking'] = [
