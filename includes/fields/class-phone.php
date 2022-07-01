@@ -101,10 +101,8 @@ class Phone extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-
 		parent::sanitize();
 
-		// Set value.
 		$this->value = preg_replace( '/\s/', '', $this->value );
 	}
 }
