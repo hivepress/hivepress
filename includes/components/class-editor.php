@@ -331,7 +331,7 @@ final class Editor extends Component {
 		global $pagenow;
 
 		// Check request.
-		if ( is_admin() && ! in_array( $pagenow, [ 'post.php', 'post-new.php' ] ) ) {
+		if ( isset( $_GET['doing_wp_cron'] ) || ( is_admin() && ! in_array( $pagenow, [ 'post.php', 'post-new.php' ] ) ) ) {
 			return;
 		}
 
