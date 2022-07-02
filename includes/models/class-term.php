@@ -154,8 +154,8 @@ abstract class Term extends Model {
 			if ( empty( $term ) ) {
 
 				// Fire actions.
-				do_action( 'hivepress/v1/models/term/update', $this->id, static::_get_meta( 'alias' ) );
 				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id, $this );
+				do_action( 'hivepress/v1/models/term/update', $this->id, static::_get_meta( 'alias' ) );
 			} else {
 				return ! is_wp_error( wp_update_term( $this->id, static::_get_meta( 'alias' ), $term ) );
 			}

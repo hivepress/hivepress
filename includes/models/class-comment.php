@@ -156,8 +156,8 @@ abstract class Comment extends Model {
 			if ( empty( $comment ) ) {
 
 				// Fire actions.
-				do_action( 'hivepress/v1/models/comment/update', $this->id, static::_get_meta( 'alias' ) );
 				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id, $this );
+				do_action( 'hivepress/v1/models/comment/update', $this->id, static::_get_meta( 'alias' ) );
 			} else {
 				return (bool) wp_update_comment( array_merge( $comment, [ 'comment_ID' => $this->id ] ) );
 			}
