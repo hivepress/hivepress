@@ -66,15 +66,6 @@ final class Cache extends Component {
 	}
 
 	/**
-	 * Disables cache.
-	 */
-	protected function disable() {
-		if ( ! defined( 'HP_CACHE' ) ) {
-			define( 'HP_CACHE', false );
-		}
-	}
-
-	/**
 	 * Catches calls to undefined methods.
 	 *
 	 * @param string $name Method name.
@@ -258,9 +249,6 @@ final class Cache extends Component {
 			// Delete value.
 			delete_transient( $this->get_cache_name( $key, $group ) );
 		}
-
-		// Disable cache.
-		$this->disable();
 	}
 
 	/**
@@ -298,9 +286,6 @@ final class Cache extends Component {
 				call_user_func_array( $callback, [ $id, '_transient_timeout_' . $name ] );
 			}
 		}
-
-		// Disable cache.
-		$this->disable();
 	}
 
 	/**
