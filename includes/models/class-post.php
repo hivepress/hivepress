@@ -185,8 +185,8 @@ abstract class Post extends Model {
 			if ( empty( $post ) ) {
 
 				// Fire actions.
-				do_action( 'hivepress/v1/models/post/update', $this->id, static::_get_meta( 'alias' ) );
 				do_action( 'hivepress/v1/models/' . static::_get_meta( 'name' ) . '/update', $this->id, $this );
+				do_action( 'hivepress/v1/models/post/update', $this->id, static::_get_meta( 'alias' ) );
 			} else {
 				return (bool) wp_update_post( array_merge( $post, [ 'ID' => $this->id ] ) );
 			}

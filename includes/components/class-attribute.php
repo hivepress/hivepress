@@ -895,6 +895,10 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = $this->get_category_id( $model );
 
+		if ( ! empty( $form_args['values']['_category'] ) ) {
+			$category_id = absint( $form_args['values']['_category'] );
+		}
+
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, (array) $category_id );
 
