@@ -39,6 +39,9 @@ final class Upgrade extends Component {
 		// Upgrade attributes.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
 
+		// Upgrade HivePress updates in extensions.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_updates' ], 60 );
+
 		// Upgrade emails.
 		add_action( 'hivepress/v1/activate', [ $this, 'upgrade_emails' ] );
 
@@ -205,6 +208,23 @@ final class Upgrade extends Component {
 							'ID' => $attribute->ID,
 						]
 					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Upgrade HivePress updates in extensions.
+	 *
+	 * @param string $version Old version.
+	 * @deprecated Since version 1.3.13
+	 */
+	public function upgrade_updates( $version ) {
+		if ( version_compare( $version, '1.3.13', '<' ) ) {
+			foreach ( (array) get_option( 'active_plugins' ) as $file ) {
+				if ( file_exists( WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php' ) ) {
+					require_once WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php';
+					break;
 				}
 			}
 		}
