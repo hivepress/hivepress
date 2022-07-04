@@ -221,8 +221,8 @@ final class Upgrade extends Component {
 	 */
 	public function upgrade_updates( $version ) {
 		if ( version_compare( $version, '1.3.13', '<' ) ) {
-			foreach ( (array) get_option( 'active_plugins' ) as $file ) {
-				if ( file_exists( WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php' ) ) {
+			foreach ( (array) get_plugins() as $file => $args ) {
+				if ( strpos( $file, 'hivepress' ) === 0 && file_exists( WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php' ) ) {
 					require_once WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php';
 					break;
 				}
