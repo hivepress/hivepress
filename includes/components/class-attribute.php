@@ -1012,10 +1012,9 @@ final class Attribute extends Component {
 
 		// Set query arguments.
 		$query_args = [
-			'taxonomy'   => hp\prefix( $model . '_category' ),
-			'parent'     => $category_id,
-			'fields'     => 'ids',
-			'hide_empty' => false,
+			'taxonomy' => hp\prefix( $model . '_category' ),
+			'parent'   => $category_id,
+			'fields'   => 'ids',
 		];
 
 		// Get cached options.
