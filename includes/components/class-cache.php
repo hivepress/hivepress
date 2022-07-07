@@ -24,11 +24,14 @@ final class Cache extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Add scheduled actions.
+		add_action( 'init', [ $this, 'add_scheduled_actions' ] );
+
 		// Clear transient cache.
 		add_action( 'import_end', [ $this, 'clear_transient_cache' ] );
 
 		// Clear meta cache.
-		add_action( 'hivepress/v1/events/hourly', [ $this, 'clear_meta_cache' ] );
+		add_action( 'hivepress/v1/components/cache/clear', [ $this, 'clear_meta_cache' ] );
 
 		// Clear user cache.
 		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ], 1000 );
@@ -612,5 +615,12 @@ final class Cache extends Component {
 		if ( $comment->comment_post_ID ) {
 			$this->delete_post_cache( $comment->comment_post_ID, null, $group );
 		}
+	}
+
+	/**
+	 * Add scheduled actions.
+	 */
+	public function add_scheduled_actions() {
+		hivepress()->scheduler->add_action( 'hivepress/v1/components/cache/clear', [], null, HOUR_IN_SECONDS );
 	}
 }
