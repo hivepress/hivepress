@@ -82,6 +82,84 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets field range values.
+	 *
+	 * @param string $model Model name.
+	 * @param string $field_name Field name.
+	 * @param string $field_type Field type.
+	 * @return array
+	 */
+	protected function get_range_values( $model, $field_name, $field_type ) {
+		$range = [];
+
+		if ( ! $model || ! $field_name || 'number_range' !== $field_type ) {
+			return $range;
+		}
+
+		// Set query arguments.
+		$query_args = [
+			'post_type'      => hp\prefix( $model ),
+			'post_status'    => 'publish',
+			'meta_key'       => hp\prefix( $field_name ),
+			'orderby'        => 'meta_value_num',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		];
+
+		// Get cached range.
+		$range = hivepress()->cache->get_cache(
+			array_merge(
+				$query_args,
+				[
+					'fields' => 'meta_values',
+					'format' => 'range',
+				]
+			),
+			'models/' . $model
+		);
+
+		if ( is_null( $range ) ) {
+
+			// Get range.
+			$range = [
+				floor(
+					floatval(
+						get_post_meta(
+							hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
+							hp\prefix( $field_name ),
+							true
+						)
+					)
+				),
+				ceil(
+					floatval(
+						get_post_meta(
+							hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
+							hp\prefix( $field_name ),
+							true
+						)
+					)
+				),
+			];
+
+			// Cache range.
+			hivepress()->cache->set_cache(
+				array_merge(
+					$query_args,
+					[
+						'fields' => 'meta_values',
+						'format' => 'range',
+					]
+				),
+				'models/' . $model,
+				$range
+			);
+		}
+
+		return $range;
+	}
+
+	/**
 	 * Gets attribute name.
 	 *
 	 * @param string $slug Attribute slug.
@@ -1183,73 +1261,14 @@ final class Attribute extends Component {
 
 		// Filter fields.
 		foreach ( $form_args['fields'] as $field_name => $field_args ) {
-			if ( 'number_range' === $field_args['type'] ) {
 
-				// Set query arguments.
-				$query_args = [
-					'post_type'      => hp\prefix( $model ),
-					'post_status'    => 'publish',
-					'meta_key'       => hp\prefix( $field_name ),
-					'orderby'        => 'meta_value_num',
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				];
+			// Get cached range.
+			$range = $this->get_range_values( $model, $field_name, $field_args['type'] );
 
-				// Get cached range.
-				$range = hivepress()->cache->get_cache(
-					array_merge(
-						$query_args,
-						[
-							'fields' => 'meta_values',
-							'format' => 'range',
-						]
-					),
-					'models/' . $model
-				);
-
-				if ( is_null( $range ) ) {
-
-					// Get range.
-					$range = [
-						floor(
-							floatval(
-								get_post_meta(
-									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
-									hp\prefix( $field_name ),
-									true
-								)
-							)
-						),
-						ceil(
-							floatval(
-								get_post_meta(
-									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
-									hp\prefix( $field_name ),
-									true
-								)
-							)
-						),
-					];
-
-					// Cache range.
-					hivepress()->cache->set_cache(
-						array_merge(
-							$query_args,
-							[
-								'fields' => 'meta_values',
-								'format' => 'range',
-							]
-						),
-						'models/' . $model,
-						$range
-					);
-				}
-
-				// Set range values.
-				if ( hp\get_first_array_value( $range ) !== hp\get_last_array_value( $range ) ) {
-					$form_args['fields'][ $field_name ]['min_value'] = hp\get_first_array_value( $range );
-					$form_args['fields'][ $field_name ]['max_value'] = hp\get_last_array_value( $range );
-				}
+			// Set range values.
+			if ( hp\get_first_array_value( $range ) !== hp\get_last_array_value( $range ) ) {
+				$form_args['fields'][ $field_name ]['min_value'] = hp\get_first_array_value( $range );
+				$form_args['fields'][ $field_name ]['max_value'] = hp\get_last_array_value( $range );
 			}
 		}
 
@@ -1604,6 +1623,11 @@ final class Attribute extends Component {
 
 			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['searchable'] || $attribute['filterable'] ) {
+
+					// Check range.
+					if ( ! array_diff( hp\get_array_value( $_GET, $attribute_name ), $this->get_range_values( $model, $attribute_name, $attribute['search_field']['type'] ) ) ) {
+						continue;
+					}
 
 					// Get field arguments.
 					$field_args = $attribute['search_field'];
