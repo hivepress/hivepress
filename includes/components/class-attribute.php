@@ -1624,8 +1624,10 @@ final class Attribute extends Component {
 			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['searchable'] || $attribute['filterable'] ) {
 
-					// Check range.
-					if ( ! array_diff( hp\get_array_value( $_GET, $attribute_name ), $this->get_range_values( $model, $attribute_name, $attribute['search_field']['type'] ) ) ) {
+					// Get cached range.
+					$range = $this->get_range_values( $model, $attribute_name, $attribute['search_field']['type'] );
+
+					if ( $range && ! array_diff( (array) hp\get_array_value( $_GET, $attribute_name ), $range ) ) {
 						continue;
 					}
 
