@@ -67,7 +67,7 @@ class Phone extends Text {
 			$args,
 			[
 				'display_type' => 'tel',
-				'pattern'      => '\+?[0-9\s]+',
+				'pattern'      => '\+?[0-9\-\s]+',
 				'max_length'   => 24,
 			]
 		);
@@ -103,6 +103,6 @@ class Phone extends Text {
 	protected function sanitize() {
 		parent::sanitize();
 
-		$this->value = preg_replace( '/\s+/', '', $this->value );
+		$this->value = preg_replace( [ '/\s+/', '/\-+/' ], '', $this->value );
 	}
 }
