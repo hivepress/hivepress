@@ -710,6 +710,38 @@ final class User extends Controller {
 			return hp\rest_error( 400 );
 		}
 
+		// Get models names.
+		$model_names = array_map(
+			function( $model_name ) {
+				return hp\prefix( hp\get_last_array_value( explode( '\\', $model_name ) ) );
+			},
+			array_values( (array) hivepress()->get_classes( 'models' ) )
+		);
+
+		// Get parent comments ids.
+		$comment_ids = get_comments(
+			[
+				'user_id'  => $user->get_id(),
+				'type__in' => $model_names,
+				'fields'   => 'ids',
+			]
+		);
+
+		// Get children comments ids.
+		$comment_children_ids = get_comments(
+			[
+				'parent__in' => $comment_ids,
+				'type__in'   => $model_names,
+				'fields'     => 'ids',
+			]
+		);
+
+		foreach ( array_merge( $comment_ids, $comment_children_ids ) as $comment_id ) {
+
+			// Delete user comments.
+			wp_delete_comment( $comment_id, true );
+		}
+
 		return hp\rest_response( 204 );
 	}
 
