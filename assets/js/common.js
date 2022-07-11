@@ -261,7 +261,15 @@ var hivepress = {
 			field.removeAttr('name');
 
 			if (field.data('countries')) {
+
+				// Set countries restriction.
 				settings['onlyCountries'] = field.data('countries');
+			}
+
+			if (field.data('default-country')) {
+
+				// Set default country.
+				settings['initialCountry'] = field.data('default-country');
 			}
 
 			window.intlTelInput(field.get(0), settings);
