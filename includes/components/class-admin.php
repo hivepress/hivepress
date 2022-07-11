@@ -1101,12 +1101,23 @@ final class Admin extends Component {
 
 					if ( $field->validate() ) {
 
+						// Get taxonomy.
+						$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
+
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
 							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
 								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+
+								if ( $taxonomy ) {
+									wp_remove_object_terms( $post_id, $field->get_value(), $taxonomy );
+								}
 							} elseif ( ! $field->get_arg( 'readonly' ) ) {
 								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+
+								if ( $taxonomy ) {
+									wp_set_object_terms( $post_id, $field->get_value(), $taxonomy );
+								}
 							}
 						} else {
 							wp_update_post(
