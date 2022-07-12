@@ -669,46 +669,6 @@ var hivepress = {
 				});
 			}
 
-			if (renderSettings) {
-				form.on('change', function() {
-					var container = $('[data-block=' + renderSettings.block + ']'),
-						data = new FormData(form.get(0));
-
-					if (!container.length) {
-						return;
-					}
-
-					data.append('_render', true);
-					data.delete('_wpnonce');
-
-					container.attr('data-state', 'loading');
-
-					$.ajax({
-						url: renderSettings.url,
-						method: 'POST',
-						data: data,
-						contentType: false,
-						processData: false,
-						beforeSend: function(xhr) {
-							if ($('body').hasClass('logged-in')) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							}
-						},
-						complete: function(xhr) {
-							var response = xhr.responseJSON;
-
-							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
-								var newContainer = $(response.data.html);
-
-								container.replaceWith(newContainer);
-
-								hivepress.initUI(newContainer);
-							}
-						},
-					});
-				});
-			}
-
 			form.on('submit', function() {
 				submitButton.prop('disabled', true);
 				submitButton.attr('data-state', 'loading');
@@ -725,10 +685,16 @@ var hivepress = {
 						tinyMCE.triggerSave();
 					}
 
+					var data = new FormData(form.get(0));
+
+					if (renderSettings) {
+						data.append('_render', true);
+					}
+
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
-						data: new FormData(form.get(0)),
+						data: data,
 						contentType: false,
 						processData: false,
 						beforeSend: function(xhr) {
@@ -756,6 +722,19 @@ var hivepress = {
 							if (response == null || response.hasOwnProperty('data')) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
+								}
+
+								if (response.data.hasOwnProperty('html') && renderSettings) {
+									var container = $('[data-block=' + renderSettings.block + ']');
+									var newContainer = $(response.data.html);
+
+									if (response.data.type === 'append') {
+										newContainer.html(container.html() + $(response.data.html).html());
+									}
+
+									container.replaceWith(newContainer);
+
+									hivepress.initUI(newContainer);
 								}
 
 								if (redirect || xhr.status === 307) {
