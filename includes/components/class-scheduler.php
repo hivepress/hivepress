@@ -18,13 +18,6 @@ defined( 'ABSPATH' ) || exit;
 final class Scheduler extends Component {
 
 	/**
-	 * Scheduler group.
-	 *
-	 * @var array
-	 */
-	protected static $group = 'hivepress';
-
-	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -54,7 +47,7 @@ final class Scheduler extends Component {
 	 */
 	public function add_action( $hook, $args = [], $time = null, $interval = null ) {
 
-		if ( ! $hook || false !== as_has_scheduled_action( $hook ) ) {
+		if ( as_has_scheduled_action( $hook ) ) {
 			return false;
 		}
 
@@ -63,12 +56,12 @@ final class Scheduler extends Component {
 
 		if ( $time ) {
 			if ( $interval ) {
-				as_schedule_recurring_action( $time, $interval, $hook, $args, self::$group );
+				as_schedule_recurring_action( $time, $interval, $hook, $args, 'hivepress' );
 			} else {
-				as_schedule_single_action( $time, $hook, $args, self::$group );
+				as_schedule_single_action( $time, $hook, $args, 'hivepress' );
 			}
 		} else {
-			as_enqueue_async_action( $hook, $args, self::$group );
+			as_enqueue_async_action( $hook, $args, 'hivepress' );
 		}
 	}
 
@@ -79,14 +72,14 @@ final class Scheduler extends Component {
 	 * @param array  $args Arguments to callback.
 	 */
 	public function remove_action( $hook, $args = [] ) {
-		if ( ! $hook || false === as_has_scheduled_action( $hook ) ) {
+		if ( ! as_has_scheduled_action( $hook ) ) {
 			return false;
 		}
 
 		if ( $args ) {
-			as_unschedule_action( $hook, $args, self::$group );
+			as_unschedule_action( $hook, $args, 'hivepress' );
 		} else {
-			as_unschedule_all_actions( $hook, $args, self::$group );
+			as_unschedule_all_actions( $hook, $args, 'hivepress' );
 		}
 	}
 

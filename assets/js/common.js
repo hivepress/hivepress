@@ -266,10 +266,10 @@ var hivepress = {
 				settings['onlyCountries'] = field.data('countries');
 			}
 
-			if (field.data('default-country')) {
+			if (field.data('country')) {
 
 				// Set default country.
-				settings['initialCountry'] = field.data('default-country');
+				settings['initialCountry'] = field.data('country');
 			}
 
 			window.intlTelInput(field.get(0), settings);

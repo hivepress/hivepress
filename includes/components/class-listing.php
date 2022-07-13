@@ -26,9 +26,6 @@ final class Listing extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Add scheduled actions.
-		add_action( 'init', [ $this, 'add_scheduled_actions' ] );
-
 		// Update listing.
 		add_action( 'hivepress/v1/models/listing/create', [ $this, 'update_listing' ], 10, 2 );
 		add_action( 'hivepress/v1/models/listing/update', [ $this, 'update_listing' ], 10, 2 );
@@ -40,7 +37,7 @@ final class Listing extends Component {
 		add_action( 'hivepress/v1/models/listing/update_status', [ $this, 'update_status' ], 10, 4 );
 
 		// Expire listings.
-		add_action( 'hivepress/v1/components/listing/expire', [ $this, 'expire_listings' ] );
+		add_action( 'hivepress/v1/events/hourly', [ $this, 'expire_listings' ] );
 
 		// Set category count callback.
 		add_filter( 'hivepress/v1/taxonomies', [ $this, 'set_category_count_callback' ] );
@@ -737,12 +734,5 @@ final class Listing extends Component {
 		}
 
 		return $blocks;
-	}
-
-	/**
-	 * Add scheduled actions.
-	 */
-	public function add_scheduled_actions() {
-		hivepress()->scheduler->add_action( 'hivepress/v1/components/listing/expire', [], null, HOUR_IN_SECONDS );
 	}
 }

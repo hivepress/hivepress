@@ -29,7 +29,7 @@ class Phone extends Text {
 	 *
 	 * @var string
 	 */
-	protected $default_country = '';
+	protected $country = '';
 
 	/**
 	 * Class initializer.
@@ -44,11 +44,11 @@ class Phone extends Text {
 				'sortable'   => false,
 
 				'settings'   => [
-					'min_length'      => null,
-					'max_length'      => null,
-					'pattern'         => null,
+					'min_length' => null,
+					'max_length' => null,
+					'pattern'    => null,
 
-					'countries'       => [
+					'countries'  => [
 						'label'       => esc_html__( 'Countries', 'hivepress' ),
 						'description' => esc_html__( 'Select countries to restrict the available calling codes.', 'hivepress' ),
 						'type'        => 'select',
@@ -57,7 +57,7 @@ class Phone extends Text {
 						'_order'      => 110,
 					],
 
-					'default_country' => [
+					'country'    => [
 						'label'       => esc_html__( 'Default Country', 'hivepress' ),
 						'description' => esc_html__( 'Select default country code.', 'hivepress' ),
 						'type'        => 'select',
@@ -102,8 +102,8 @@ class Phone extends Text {
 		}
 
 		// Set default country.
-		if ( $this->default_country ) {
-			$attributes['data-default-country'] = sanitize_text_field( $this->default_country );
+		if ( $this->country ) {
+			$attributes['data-country'] = $this->country;
 		}
 
 		// Set utils URL.
@@ -123,6 +123,6 @@ class Phone extends Text {
 	protected function sanitize() {
 		parent::sanitize();
 
-		$this->value = preg_replace( [ '/\s+/', '/\-+/' ], '', $this->value );
+		$this->value = preg_replace( '[\s\-]+', '', $this->value );
 	}
 }

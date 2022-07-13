@@ -40,7 +40,7 @@ final class Upgrade extends Component {
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
 
 		// Upgrade HivePress updates in extensions.
-		add_action( 'hivepress/v1/update', [ $this, 'upgrade_updates' ], 60 );
+		add_action( 'init', [ $this, 'upgrade_updates' ], 60 );
 
 		// Upgrade emails.
 		add_action( 'hivepress/v1/activate', [ $this, 'upgrade_emails' ] );
@@ -221,6 +221,7 @@ final class Upgrade extends Component {
 	 */
 	public function upgrade_updates( $version ) {
 		if ( version_compare( $version, '1.3.13', '<' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			foreach ( (array) get_plugins() as $file => $args ) {
 				if ( strpos( $file, 'hivepress' ) === 0 && file_exists( WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php' ) ) {
 					require_once WP_PLUGIN_DIR . '/' . plugin_dir_path( $file ) . 'vendor/hivepress/hivepress-updates/hivepress-updates.php';

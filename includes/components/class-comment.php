@@ -40,6 +40,8 @@ final class Comment extends Component {
 		// Disable notifications.
 		add_filter( 'notify_post_author', [ $this, 'disable_notifications' ], 10, 2 );
 
+		add_action( 'hivepress/v1/models/user/delete', [ $this, 'delete_user_comments' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -235,5 +237,49 @@ final class Comment extends Component {
 		}
 
 		return $notify;
+	}
+
+	/**
+	 * Deletes user comments.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function delete_user_comments( $user_id ) {
+
+		// Get comments types.
+		$comment_types = hp\prefix(
+			array_keys(
+				array_filter(
+					hivepress()->get_config( 'comment_types' ),
+					function( $args, $key ) {
+						return hp\get_array_value( $args, 'public', true ) && 'message' !== $key;
+					},
+					ARRAY_FILTER_USE_BOTH
+				)
+			)
+		);
+
+		// Get parent comments ids.
+		$comment_ids = get_comments(
+			[
+				'user_id'  => $user_id,
+				'type__in' => $comment_types,
+				'fields'   => 'ids',
+			]
+		);
+
+		// Get children comments ids.
+		$comment_children_ids = get_comments(
+			[
+				'parent__in' => $comment_ids,
+				'type__in'   => $comment_types,
+				'fields'     => 'ids',
+			]
+		);
+
+		foreach ( array_merge( $comment_ids, $comment_children_ids ) as $comment_id ) {
+			wp_trash_comment( $comment_id );
+			wp_delete_comment( $comment_id, true );
+		}
 	}
 }
