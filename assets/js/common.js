@@ -724,7 +724,7 @@ var hivepress = {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
 
-								if (response.data.hasOwnProperty('html') && renderSettings) {
+								if (renderSettings && response.data.hasOwnProperty('html')) {
 									var container = $('[data-block=' + renderSettings.block + ']');
 									var newContainer = $(response.data.html);
 
