@@ -235,7 +235,8 @@ return [
 						'_order'   => 10,
 
 						'options'  => [
-							'keyword' => hivepress()->translator->get_string( 'keywords' ),
+							'keyword'  => hivepress()->translator->get_string( 'keywords' ),
+							'category' => hivepress()->translator->get_string( 'categories' ),
 						],
 					],
 				],
