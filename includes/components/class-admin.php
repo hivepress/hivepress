@@ -783,7 +783,7 @@ final class Admin extends Component {
 					return array_merge(
 						$extension,
 						[
-							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
+							'buy_url'     => 'https://hivepress.io/extensions/' . $path . '&ref=' . hp\get_first_array_value( get_file_data( get_template_directory() . '/style.css', [ 'HivePress Affiliate' ] ) ),
 							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
 							'support_url' => 'https://community.hivepress.io/?utm_medium=referral&utm_source=dashboard',
 						]
