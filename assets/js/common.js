@@ -366,7 +366,7 @@ var hivepress = {
 							}
 
 							return false;
-						} else if (range.start <= time && time <= range.end && 'check-out' === range.label && range.title) {
+						} else if (time == range.start && range.end == time && 'check-out' === range.label && range.title) {
 							dayElem.className += ' flatpickr-status flatpickr-status--check-out';
 							dayElem.setAttribute('title', range.title);
 
