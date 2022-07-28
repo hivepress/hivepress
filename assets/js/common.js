@@ -366,6 +366,11 @@ var hivepress = {
 							}
 
 							return false;
+						} else if (range.start <= time && time <= range.end && 'check-out' === range.label && range.title) {
+							dayElem.className += ' flatpickr-status flatpickr-status--' + range.status;
+							dayElem.setAttribute('title', range.title);
+
+							return false;
 						}
 					});
 				};
