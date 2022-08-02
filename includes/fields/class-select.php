@@ -322,6 +322,10 @@ class Select extends Field {
 			}
 		}
 
+		if ( isset( $this->errors['required'] ) && ! $this->options ) {
+			unset( $this->errors['required'] );
+		}
+
 		return empty( $this->errors );
 	}
 

@@ -377,8 +377,12 @@ final class Admin extends Component {
 				// Get field label.
 				$field_label = $type_args->labels->singular_name;
 
-				if ( hivepress()->translator->get_string( 'category' ) === $field_label && hivepress()->translator->get_string( $type_name ) ) {
-					$field_label = hivepress()->translator->get_string( $type_name );
+				if ( property_exists( $type_args, 'object_type' ) ) {
+					$type_group = hp\unprefix( hp\get_first_array_value( $type_args->object_type ) );
+
+					if ( hivepress()->translator->get_string( $type_group ) ) {
+						$field_label .= ' (' . hivepress()->translator->get_string( $type_group ) . ')';
+					}
 				}
 
 				// Add field.
@@ -1478,15 +1482,7 @@ final class Admin extends Component {
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
-		$notices = [
-			'usage_tracking' => [
-				'type'        => 'info',
-				'option'      => 'hivepress_allow_tracking',
-				'dismissible' => true,
-				/* translators: %s: terms URL. */
-				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
-			],
-		];
+		$notices = [];
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
@@ -1510,17 +1506,29 @@ final class Admin extends Component {
 					'https://wordpress.org/support/plugin/hivepress/reviews/'
 				),
 			];
-		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 && get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
-			$notices['upgrade_request'] = [
-				'type'        => 'info',
-				'dismissible' => true,
-				'text'        => sprintf(
-					/* translators: %s: link URL. */
-					hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
-				),
-			];
+		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
+				$notices['upgrade_request'] = [
+					'type'        => 'info',
+					'dismissible' => true,
+					'text'        => sprintf(
+						/* translators: %s: link URL. */
+						hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
+					),
+				];
+			}
+
+			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+				$notices['usage_tracking'] = [
+					'type'        => 'info',
+					'option'      => 'hivepress_allow_tracking',
+					'dismissible' => true,
+					/* translators: %s: terms URL. */
+					'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
+				];
+			}
 		}
 
 		/**

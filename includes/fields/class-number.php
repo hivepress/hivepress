@@ -148,6 +148,17 @@ class Number extends Field {
 	}
 
 	/**
+	 * Adds SQL filter.
+	 */
+	protected function add_filter() {
+		parent::add_filter();
+
+		if ( $this->decimals ) {
+			$this->filter['type'] .= '(10,' . $this->decimals . ')';
+		}
+	}
+
+	/**
 	 * Normalizes field value.
 	 */
 	protected function normalize() {

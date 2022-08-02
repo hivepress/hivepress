@@ -31,8 +31,8 @@ final class Scheduler extends Component {
 		// Unschedule events.
 		add_action( 'hivepress/v1/deactivate', [ $this, 'unschedule_events' ] );
 
-		// Add schedule events.
-		add_filter( 'cron_schedules', [ $this, 'add_schedule_events' ] );
+		// Include Action Scheduler.
+		require_once hivepress()->get_path() . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
 		parent::__construct( $args );
 	}
@@ -63,22 +63,5 @@ final class Scheduler extends Component {
 				wp_unschedule_event( $timestamp, 'hivepress/v1/events/' . $period );
 			}
 		}
-	}
-
-	/**
-	 * Add schedule events.
-	 *
-	 * @param array $schedules An array of non-default cron schedules.
-	 * @return array
-	 */
-	public function add_schedule_events( $schedules ) {
-
-		// Add weekly schedule event.
-		$schedules['weekly'] = array(
-			'interval' => 604800,
-			'display'  => __( 'Once Weekly' ),
-		);
-
-		return $schedules;
 	}
 }

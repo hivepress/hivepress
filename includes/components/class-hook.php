@@ -124,19 +124,19 @@ final class Hook extends Component {
 		/**
 		 * Fires when a user is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
 		 *
-		 * @hook hivepress/v1/models/user/{action_type}
-		 * @param {int} $user_id User ID.
-		 */
-		do_action( 'hivepress/v1/models/user/' . $action, $user_id, 'user' );
-
-		/**
-		 * Fires when a user is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
-		 *
 		 * @hook hivepress/v2/models/user/{action_type}
 		 * @param {int} $user_id User ID.
 		 * @param {object} $user User object.
 		 */
 		do_action( 'hivepress/v2/models/user/' . $action, $user_id, hivepress()->model->get_model_object( 'user', $user_id ) );
+
+		/**
+		 * Fires when a user is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
+		 *
+		 * @hook hivepress/v1/models/user/{action_type}
+		 * @param {int} $user_id User ID.
+		 */
+		do_action( 'hivepress/v1/models/user/' . $action, $user_id, 'user' );
 	}
 
 	/**
@@ -210,15 +210,6 @@ final class Hook extends Component {
 				$action = 'delete';
 			}
 
-			/**
-			 * Fires when a post is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
-			 *
-			 * @hook hivepress/v1/models/post/{action_type}
-			 * @param {int} $post_id Post ID.
-			 * @param {string} $post_type Post type.
-			 */
-			do_action( 'hivepress/v1/models/post/' . $action, $post_id, $post_type );
-
 			if ( $model ) {
 
 				/**
@@ -230,6 +221,15 @@ final class Hook extends Component {
 				 */
 				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $post_id, hivepress()->model->get_model_object( $model, $post_id ) );
 			}
+
+			/**
+			 * Fires when a post is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
+			 *
+			 * @hook hivepress/v1/models/post/{action_type}
+			 * @param {int} $post_id Post ID.
+			 * @param {string} $post_type Post type.
+			 */
+			do_action( 'hivepress/v1/models/post/' . $action, $post_id, $post_type );
 		}
 	}
 
@@ -409,6 +409,10 @@ final class Hook extends Component {
 				$action = 'delete';
 			}
 
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $term_id, hivepress()->model->get_model_object( $model, $term_id ) );
+			}
+
 			/**
 			 * Fires when a taxonomy term is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
 			 *
@@ -417,10 +421,6 @@ final class Hook extends Component {
 			 * @param {string} $taxonomy Taxonomy name.
 			 */
 			do_action( 'hivepress/v1/models/term/' . $action, $term_id, $taxonomy );
-
-			if ( $model ) {
-				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $term_id, hivepress()->model->get_model_object( $model, $term_id ) );
-			}
 		}
 	}
 
@@ -489,6 +489,10 @@ final class Hook extends Component {
 				$action = 'update';
 			}
 
+			if ( $model ) {
+				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $comment_id, hivepress()->model->get_model_object( $model, $comment_id ) );
+			}
+
 			/**
 			 * Fires when a comment is created, updated or deleted. The dynamic part of the hook refers to the action type (`create`, `update` or `delete`).
 			 *
@@ -497,10 +501,6 @@ final class Hook extends Component {
 			 * @param {string} $comment_type Comment type.
 			 */
 			do_action( 'hivepress/v1/models/comment/' . $action, $comment_id, $comment_type );
-
-			if ( $model ) {
-				do_action( 'hivepress/v1/models/' . $model . '/' . $action, $comment_id, hivepress()->model->get_model_object( $model, $comment_id ) );
-			}
 		}
 	}
 

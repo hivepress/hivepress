@@ -33,7 +33,6 @@ return [
 	'vendor_category'  => [
 		'post_type'         => [ 'vendor', 'vendor_attribute' ],
 		'hierarchical'      => true,
-		'public'            => false,
 		'show_admin_column' => true,
 		'rewrite'           => [ 'slug' => 'vendor-category' ],
 

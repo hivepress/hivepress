@@ -272,8 +272,8 @@ class User extends Model {
 			if ( empty( $user ) ) {
 
 				// Fire actions.
-				do_action( 'hivepress/v1/models/user/update', $this->id, 'user' );
 				do_action( 'hivepress/v2/models/user/update', $this->id, $this );
+				do_action( 'hivepress/v1/models/user/update', $this->id, 'user' );
 			} else {
 				return ! is_wp_error( wp_update_user( array_merge( $user, [ 'ID' => $this->id ] ) ) );
 			}
