@@ -722,7 +722,7 @@ final class Admin extends Component {
 		// Get cached extensions.
 		$extensions = hivepress()->cache->get_cache( 'all_extensions' );
 
-		if ( is_null( $extensions ) || true ) {
+		if ( is_null( $extensions ) ) {
 			$extensions = [];
 
 			// Get paid extensions.
