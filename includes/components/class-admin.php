@@ -722,7 +722,7 @@ final class Admin extends Component {
 		// Get cached extensions.
 		$extensions = hivepress()->cache->get_cache( 'all_extensions' );
 
-		if ( is_null( $extensions ) ) {
+		if ( is_null( $extensions ) || true ) {
 			$extensions = [];
 
 			// Get paid extensions.
@@ -778,15 +778,28 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get referral ID.
+			$referral = null;
+
+			$stylesheet = get_template_directory() . '/style.css';
+
+			if ( file_exists( $stylesheet ) ) {
+				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
+			}
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) {
+				function( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
+
+					if ( $referral ) {
+						$path .= '&ref=' . $referral;
+					}
 
 					return array_merge(
 						$extension,
 						[
-							'buy_url'     => 'https://hivepress.io/extensions/' . $path . '&ref=' . hp\get_first_array_value( get_file_data( get_template_directory() . '/style.css', [ 'HivePress Affiliate' ] ) ),
+							'buy_url'     => 'https://hivepress.io/extensions/' . $path,
 							'docs_url'    => 'https://hivepress.io/docs/extensions/' . $path,
 							'support_url' => 'https://community.hivepress.io/?utm_medium=referral&utm_source=dashboard',
 						]
