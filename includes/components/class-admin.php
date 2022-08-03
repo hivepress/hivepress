@@ -1680,6 +1680,11 @@ final class Admin extends Component {
 	 */
 	public function share_usage_data() {
 
+		// Check settings.
+		if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+			return;
+		}
+
 		// Set defaults.
 		$data = [
 			'url'       => home_url(),
