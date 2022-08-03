@@ -10,7 +10,6 @@ namespace HivePress\Components;
 use HivePress\Helpers as hp;
 use HivePress\Fields;
 use HivePress\Blocks;
-use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
