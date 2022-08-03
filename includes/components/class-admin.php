@@ -47,8 +47,8 @@ final class Admin extends Component {
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
-		// Collect usage data.
-		add_action( 'hivepress/v1/events/weekly', [ $this, 'collect_usage_data' ] );
+		// Share usage data.
+		add_action( 'hivepress/v1/events/weekly', [ $this, 'share_usage_data' ] );
 
 		if ( is_admin() ) {
 
@@ -1677,126 +1677,153 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Collect usage data.
+	 * Shares usage data.
 	 */
-	public function collect_usage_data() {
-		global $wpdb;
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	public function share_usage_data() {
+
+		// Set defaults.
+		$data = [
+			'url'       => home_url(),
+			'date'      => gmdate( 'Y-m-d' ),
+			'email'     => get_bloginfo( 'admin_email' ),
+			'language'  => get_locale(),
+			'timezone'  => wp_timezone_string(),
+			'version'   => get_bloginfo( 'version' ),
+			'multisite' => is_multisite(),
+		];
+
+		// Get stats.
+		$data['stats'] = [
+			'listings' => wp_count_posts( 'hp_listing' )->publish,
+			'vendors'  => wp_count_posts( 'hp_vendor' )->publish,
+			'users'    => get_user_count(),
+		];
 
 		// Get theme.
-		$theme = is_child_theme() ? wp_get_theme()->parent() : wp_get_theme();
+		$theme = wp_get_theme( get_template() );
 
-		// Get active plugins.
-		$active_plugins = array_filter(
+		$data['theme'] = [
+			'slug' => get_template(),
+		];
+
+		if ( $theme->exists() ) {
+			$data['theme'] = array_merge(
+				$data['theme'],
+				array_filter(
+					array_combine(
+						[
+							'name',
+							'version',
+							'url',
+							'author',
+							'author_url',
+						],
+						array_map(
+							function( $header ) use ( $theme ) {
+								return $theme->get( $header );
+							},
+							[
+								'Name',
+								'Version',
+								'ThemeURI',
+								'Author',
+								'AuthorURI',
+							]
+						)
+					)
+				)
+			);
+		}
+
+		// Get plugins.
+		$data['plugins'] = array_filter(
 			array_map(
 				function ( $plugin ) {
-					return get_file_data(
-						WP_PLUGIN_DIR . '/' . $plugin,
-						[
-							'name'        => 'Plugin Name',
-							'version'     => 'Version',
-							'text_domain' => 'Text Domain',
-							'author'      => 'Author',
-							'author_url'  => 'Author URI',
-							'plugin_url'  => 'Plugin URI',
-						]
-					);
+					$file = WP_PLUGIN_DIR . '/' . $plugin;
+
+					if ( file_exists( $file ) ) {
+						$headers = array_filter(
+							get_file_data(
+								$file,
+								[
+									'name'       => 'Plugin Name',
+									'version'    => 'Version',
+									'url'        => 'Plugin URI',
+									'author'     => 'Author',
+									'author_url' => 'Author URI',
+								]
+							)
+						);
+
+						$headers['slug'] = basename( $plugin, '.php' );
+
+						return $headers;
+					}
 				},
 				(array) get_option( 'active_plugins' )
 			)
 		);
 
-		// Get database extension name.
-		$db_extension = null;
+		// Get settings.
+		$settings = hivepress()->get_config( 'settings' );
 
-		if ( is_resource( $wpdb->dbh ) ) {
+		unset( $settings['integrations'] );
 
-			// Old mysql extension.
-			$db_extension = 'mysql';
-		} elseif ( is_object( $wpdb->dbh ) ) {
+		// Get options.
+		$options = [
+			'users_can_register',
+			'default_role',
+			'date_format',
+			'time_format',
+			'start_of_week',
+			'show_on_front',
+			'blog_public',
+			'permalink_structure',
+		];
 
-			// mysqli or PDO.
-			$db_extension = get_class( $wpdb->dbh );
+		foreach ( $settings as $tab ) {
+			foreach ( hp\get_array_value( $tab, 'sections', [] ) as $section ) {
+				foreach ( array_keys( hp\get_array_value( $section, 'fields', [] ) ) as $field ) {
+					$options[] = hp\prefix( $field );
+				}
+			}
 		}
 
-		// Get HivePress options.
-		$hp_options = array_filter(
-			(array) wp_load_alloptions(),
-			function ( $name ) {
-				return strpos( $name, 'hp_' ) === 0;
+		$data['options'] = array_filter(
+			wp_load_alloptions(),
+			function( $value, $option ) use ( $options ) {
+				return in_array( $option, $options ) && strlen( $value );
 			},
-			ARRAY_FILTER_USE_KEY
+			ARRAY_FILTER_USE_BOTH
 		);
 
-		// Set server options names.
-		$server_option_names = [
-			'php_time_limit'      => 'max_execution_time',
-			'php_memory_limit'    => 'memory_limit',
-			'max_input_time'      => 'max_input_time',
-			'upload_max_filesize' => 'upload_max_filesize',
+		// Get PHP info.
+		$configs = [
+			'max_execution_time',
+			'max_input_time',
+			'memory_limit',
+			'upload_max_filesize',
 		];
 
-		// Get server options.
-		$server_options = [
-			'php_version'        => phpversion(),
-			'database_extension' => $db_extension,
-			'database_version'   => $wpdb->db_version(),
-			'table_prefix'       => $wpdb->prefix,
-		];
+		$data['php'] = array_combine(
+			$configs,
+			array_map(
+				function( $config ) {
+					return ini_get( $config );
+				},
+				$configs
+			)
+		);
 
-		foreach ( $server_option_names as $name => $option_name ) {
-			$server_options[ $name ] = ini_get( $option_name );
-		}
+		$data['php']['version'] = phpversion();
 
-		// Set WordPress options names.
-		$wp_option_names = [
-			'permalink_structure'           => 'permalink_structure',
-			'site_discourage_search_engine' => 'blog_public',
-			'anyone_can_register'           => 'users_can_register',
-		];
-
-		// Get WordPress options.
-		$wp_options = [
-			'wp_version'    => get_bloginfo( 'version' ),
-			'site_language' => get_locale(),
-			'user_language' => get_user_locale(),
-			'wp_timezone'   => wp_timezone_string(),
-			'multisite'     => is_multisite(),
-		];
-
-		foreach ( $wp_option_names as $name => $option_name ) {
-			$wp_options[ $name ] = get_option( $option_name );
-		}
-
-		// Set usage data array.
-		$usage_data = [
-			'site_url'       => get_site_url(),
-			'admin_email'    => get_option( 'admin_email' ),
-			'theme'          => [
-				'name'       => sanitize_text_field( $theme->get( 'Name' ) ),
-				'slug'       => wp_strip_all_tags( $theme->get( 'TextDomain' ) ),
-				'version'    => wp_strip_all_tags( $theme->get( 'Version' ) ),
-				'author'     => sanitize_text_field( $theme->get( 'Author' ) ),
-				'author_url' => sanitize_url( $theme->get( 'AuthorURI' ) ),
-				'theme_url'  => sanitize_url( $theme->get( 'ThemeURI' ) ),
-			],
-			'active_plugins' => $active_plugins,
-			'server_info'    => $server_options,
-			'hp_stats'       => [
-				'listing_count' => (array) wp_count_posts( 'hp_listing' ),
-				'vendor_count'  => (array) wp_count_posts( 'hp_vendor' ),
-				'user_count'    => hp\get_array_value( count_users(), 'total_users' ),
-			],
-			'wp_options'     => $wp_options,
-			'hp_options'     => $hp_options,
-		];
-
-		// todo: add url.
+		// Send usage data.
 		wp_remote_post(
-			'http://dev.local/listing/stylish-remodeled-room/',
+			'https://hivepress.io/api/v1/feedback',
 			[
 				'body' => [
-					'usage_data' => wp_json_encode( $usage_data ),
+					'action' => 'share_usage_data',
+					'data'   => wp_json_encode( $data ),
 				],
 			]
 		);
