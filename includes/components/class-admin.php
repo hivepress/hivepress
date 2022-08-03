@@ -46,6 +46,9 @@ final class Admin extends Component {
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
+		// Share usage data.
+		add_action( 'hivepress/v1/events/weekly', [ $this, 'share_usage_data' ] );
+
 		if ( is_admin() ) {
 
 			// Add admin pages.
@@ -775,10 +778,23 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get referral ID.
+			$referral = null;
+
+			$stylesheet = get_template_directory() . '/style.css';
+
+			if ( file_exists( $stylesheet ) ) {
+				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
+			}
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) {
+				function( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
+
+					if ( $referral ) {
+						$path .= '&ref=' . $referral;
+					}
 
 					return array_merge(
 						$extension,
@@ -1683,5 +1699,163 @@ final class Admin extends Component {
 		$output .= hivepress()->request->get_context( 'admin_footer' );
 
 		echo $output;
+	}
+
+	/**
+	 * Shares usage data.
+	 */
+	public function share_usage_data() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+			return;
+		}
+
+		// Set defaults.
+		$data = [
+			'url'       => home_url(),
+			'date'      => gmdate( 'Y-m-d' ),
+			'email'     => get_bloginfo( 'admin_email' ),
+			'language'  => get_locale(),
+			'timezone'  => wp_timezone_string(),
+			'version'   => get_bloginfo( 'version' ),
+			'multisite' => is_multisite(),
+		];
+
+		// Get stats.
+		$data['stats'] = [
+			'listings' => wp_count_posts( 'hp_listing' )->publish,
+			'vendors'  => wp_count_posts( 'hp_vendor' )->publish,
+			'users'    => get_user_count(),
+		];
+
+		// Get theme.
+		$theme = wp_get_theme( get_template() );
+
+		$data['theme'] = [
+			'slug' => get_template(),
+		];
+
+		if ( $theme->exists() ) {
+			$data['theme'] = array_merge(
+				$data['theme'],
+				array_filter(
+					array_combine(
+						[
+							'name',
+							'version',
+							'url',
+							'author',
+							'author_url',
+						],
+						array_map(
+							function( $header ) use ( $theme ) {
+								return $theme->get( $header );
+							},
+							[
+								'Name',
+								'Version',
+								'ThemeURI',
+								'Author',
+								'AuthorURI',
+							]
+						)
+					)
+				)
+			);
+		}
+
+		// Get plugins.
+		$data['plugins'] = array_filter(
+			array_map(
+				function ( $plugin ) {
+					$file = WP_PLUGIN_DIR . '/' . $plugin;
+
+					if ( file_exists( $file ) ) {
+						$headers = array_filter(
+							get_file_data(
+								$file,
+								[
+									'name'       => 'Plugin Name',
+									'version'    => 'Version',
+									'url'        => 'Plugin URI',
+									'author'     => 'Author',
+									'author_url' => 'Author URI',
+								]
+							)
+						);
+
+						$headers['slug'] = basename( $plugin, '.php' );
+
+						return $headers;
+					}
+				},
+				(array) get_option( 'active_plugins' )
+			)
+		);
+
+		// Get settings.
+		$settings = hivepress()->get_config( 'settings' );
+
+		unset( $settings['integrations'] );
+
+		// Get options.
+		$options = [
+			'users_can_register',
+			'default_role',
+			'date_format',
+			'time_format',
+			'start_of_week',
+			'show_on_front',
+			'blog_public',
+			'permalink_structure',
+		];
+
+		foreach ( $settings as $tab ) {
+			foreach ( hp\get_array_value( $tab, 'sections', [] ) as $section ) {
+				foreach ( array_keys( hp\get_array_value( $section, 'fields', [] ) ) as $field ) {
+					$options[] = hp\prefix( $field );
+				}
+			}
+		}
+
+		$data['options'] = array_filter(
+			wp_load_alloptions(),
+			function( $value, $option ) use ( $options ) {
+				return in_array( $option, $options ) && strlen( $value );
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		// Get PHP info.
+		$configs = [
+			'max_execution_time',
+			'max_input_time',
+			'memory_limit',
+			'upload_max_filesize',
+		];
+
+		$data['php'] = array_combine(
+			$configs,
+			array_map(
+				function( $config ) {
+					return ini_get( $config );
+				},
+				$configs
+			)
+		);
+
+		$data['php']['version'] = phpversion();
+
+		// Send usage data.
+		wp_remote_post(
+			'https://hivepress.io/api/v1/feedback',
+			[
+				'body' => [
+					'action' => 'share_usage_data',
+					'data'   => wp_json_encode( $data ),
+				],
+			]
+		);
 	}
 }
