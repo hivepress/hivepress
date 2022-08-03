@@ -778,10 +778,23 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get referral ID.
+			$referral = null;
+
+			$stylesheet = get_template_directory() . '/style.css';
+
+			if ( file_exists( $stylesheet ) ) {
+				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
+			}
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) {
+				function( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
+
+					if ( $referral ) {
+						$path .= '&ref=' . $referral;
+					}
 
 					return array_merge(
 						$extension,
