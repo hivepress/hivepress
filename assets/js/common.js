@@ -264,6 +264,10 @@ var hivepress = {
 				settings['onlyCountries'] = field.data('countries');
 			}
 
+			if (field.data('country')) {
+				settings['initialCountry'] = field.data('country');
+			}
+
 			window.intlTelInput(field.get(0), settings);
 		});
 

@@ -25,6 +25,13 @@ class Phone extends Text {
 	protected $countries = [];
 
 	/**
+	 * Country code.
+	 *
+	 * @var string
+	 */
+	protected $country;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -49,6 +56,14 @@ class Phone extends Text {
 						'multiple'    => true,
 						'_order'      => 110,
 					],
+
+					'country'    => [
+						'label'       => esc_html__( 'Default Country', 'hivepress' ),
+						'description' => esc_html__( 'Select the country calling code displayed by default.', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'countries',
+						'_order'      => 120,
+					],
 				],
 			],
 			$meta
@@ -67,7 +82,7 @@ class Phone extends Text {
 			$args,
 			[
 				'display_type' => 'tel',
-				'pattern'      => '\+?[0-9\s]+',
+				'pattern'      => '\+?[0-9\-\s]+',
 				'max_length'   => 24,
 			]
 		);
@@ -84,6 +99,10 @@ class Phone extends Text {
 		// Set countries.
 		if ( $this->countries ) {
 			$attributes['data-countries'] = wp_json_encode( $this->countries );
+		}
+
+		if ( $this->country ) {
+			$attributes['data-country'] = $this->country;
 		}
 
 		// Set utils URL.
@@ -103,6 +122,6 @@ class Phone extends Text {
 	protected function sanitize() {
 		parent::sanitize();
 
-		$this->value = preg_replace( '/\s+/', '', $this->value );
+		$this->value = preg_replace( '/[\-\s]+/', '', $this->value );
 	}
 }
