@@ -179,6 +179,7 @@ return [
 	// Categories.
 	'category'                                  => esc_html__( 'Category', 'hivepress' ),
 	'categories'                                => esc_html__( 'Categories', 'hivepress' ),
+	'all_categories'                            => esc_html__( 'All Categories', 'hivepress' ),
 	'parent_category'                           => esc_html__( 'Parent Category', 'hivepress' ),
 	'add_category'                              => esc_html__( 'Add Category', 'hivepress' ),
 	'edit_category'                             => esc_html__( 'Edit Category', 'hivepress' ),
