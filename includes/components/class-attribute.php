@@ -1172,6 +1172,78 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets number range field values.
+	 *
+	 * @param string $model Model name.
+	 * @param string $field Field name.
+	 * @return array
+	 */
+	protected function get_range_values( $model, $field ) {
+
+		// Set query arguments.
+		$query_args = [
+			'post_type'      => hp\prefix( $model ),
+			'post_status'    => 'publish',
+			'meta_key'       => hp\prefix( $field ),
+			'orderby'        => 'meta_value_num',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		];
+
+		// Get cached range.
+		$range = hivepress()->cache->get_cache(
+			array_merge(
+				$query_args,
+				[
+					'fields' => 'meta_values',
+					'format' => 'range',
+				]
+			),
+			'models/' . $model
+		);
+
+		if ( is_null( $range ) ) {
+
+			// Get range.
+			$range = [
+				floor(
+					floatval(
+						get_post_meta(
+							hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
+							hp\prefix( $field ),
+							true
+						)
+					)
+				),
+				ceil(
+					floatval(
+						get_post_meta(
+							hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
+							hp\prefix( $field ),
+							true
+						)
+					)
+				),
+			];
+
+			// Cache range.
+			hivepress()->cache->set_cache(
+				array_merge(
+					$query_args,
+					[
+						'fields' => 'meta_values',
+						'format' => 'range',
+					]
+				),
+				'models/' . $model,
+				$range
+			);
+		}
+
+		return $range;
+	}
+
+	/**
 	 * Sets number range field values.
 	 *
 	 * @param array  $form_args Form arguments.
@@ -1187,65 +1259,8 @@ final class Attribute extends Component {
 		foreach ( $form_args['fields'] as $field_name => $field_args ) {
 			if ( 'number_range' === $field_args['type'] ) {
 
-				// Set query arguments.
-				$query_args = [
-					'post_type'      => hp\prefix( $model ),
-					'post_status'    => 'publish',
-					'meta_key'       => hp\prefix( $field_name ),
-					'orderby'        => 'meta_value_num',
-					'posts_per_page' => 1,
-					'fields'         => 'ids',
-				];
-
-				// Get cached range.
-				$range = hivepress()->cache->get_cache(
-					array_merge(
-						$query_args,
-						[
-							'fields' => 'meta_values',
-							'format' => 'range',
-						]
-					),
-					'models/' . $model
-				);
-
-				if ( is_null( $range ) ) {
-
-					// Get range.
-					$range = [
-						floor(
-							floatval(
-								get_post_meta(
-									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'ASC' ] ) ) ),
-									hp\prefix( $field_name ),
-									true
-								)
-							)
-						),
-						ceil(
-							floatval(
-								get_post_meta(
-									hp\get_first_array_value( get_posts( array_merge( $query_args, [ 'order' => 'DESC' ] ) ) ),
-									hp\prefix( $field_name ),
-									true
-								)
-							)
-						),
-					];
-
-					// Cache range.
-					hivepress()->cache->set_cache(
-						array_merge(
-							$query_args,
-							[
-								'fields' => 'meta_values',
-								'format' => 'range',
-							]
-						),
-						'models/' . $model,
-						$range
-					);
-				}
+				// Get range values.
+				$range = $this->get_range_values( $model, $field_name );
 
 				// Set range values.
 				if ( hp\get_first_array_value( $range ) !== hp\get_last_array_value( $range ) ) {
@@ -1624,8 +1639,14 @@ final class Attribute extends Component {
 						// Set field value.
 						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
 
-						// Add field.
 						if ( $field->validate() ) {
+
+							// Check range values.
+							if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+								continue;
+							}
+
+							// Add field.
 							$attribute_fields[ $attribute_name ] = $field;
 						}
 					}
