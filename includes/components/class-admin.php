@@ -1119,10 +1119,20 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
+							$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
+
 							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
-								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+								if ( $taxonomy ) {
+									wp_set_post_terms( $post_id, [], $taxonomy );
+								} else {
+									delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+								}
 							} elseif ( ! $field->get_arg( 'readonly' ) ) {
-								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+								if ( $taxonomy ) {
+									wp_set_post_terms( $post_id, (array) $field->get_value(), $taxonomy );
+								} else {
+									update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+								}
 							}
 						} else {
 							wp_update_post(
@@ -1190,7 +1200,13 @@ final class Admin extends Component {
 						if ( isset( $args['defaults'] ) ) {
 							$value = hp\get_array_value( $args['defaults'], $field_name, '' );
 						} elseif ( $field->get_arg( '_external' ) ) {
-							$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+							$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
+
+							if ( $taxonomy ) {
+								$value = wp_get_post_terms( $post->ID, $taxonomy, [ 'fields' => 'ids' ] );
+							} else {
+								$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+							}
 						} else {
 							$value = get_post_field( $field->get_arg( '_alias' ), $post );
 						}

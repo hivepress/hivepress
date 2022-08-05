@@ -242,6 +242,20 @@ final class Core {
 		 */
 		$extensions = apply_filters( 'hivepress/v1/extensions', [ dirname( HP_FILE ) ] );
 
+		// Add updater if available.
+		if ( ! isset( $extensions['updates'] ) ) {
+			$path = '/vendor/hivepress/hivepress-updates';
+
+			foreach ( $extensions as $dir ) {
+				if ( file_exists( $dir . $path . '/hivepress-updates.php' ) ) {
+					$extensions['updates'] = $dir . $path;
+
+					break;
+				}
+			}
+		}
+
+		// Add extension details.
 		foreach ( $extensions as $name => $dir ) {
 			if ( is_array( $dir ) ) {
 
