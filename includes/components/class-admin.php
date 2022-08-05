@@ -1518,7 +1518,9 @@ final class Admin extends Component {
 					'https://wordpress.org/support/plugin/hivepress/reviews/'
 				),
 			];
-		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+		}
+
+		if ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
 			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
 				$notices['upgrade_request'] = [
 					'type'        => 'info',

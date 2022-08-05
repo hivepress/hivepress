@@ -1091,7 +1091,7 @@ final class Attribute extends Component {
 
 				// Add options.
 				$options[0] = [
-					'label'  => esc_html__( 'All Categories', 'hivepress' ),
+					'label'  => hivepress()->translator->get_string( 'all_categories' ),
 					'parent' => null,
 				];
 
