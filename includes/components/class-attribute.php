@@ -406,6 +406,7 @@ final class Attribute extends Component {
 						'hierarchical'       => true,
 						'public'             => false,
 						'show_ui'            => true,
+						'meta_box_cb'        => false,
 						'show_in_quick_edit' => false,
 						'show_in_menu'       => false,
 						'rewrite'            => false,
@@ -671,7 +672,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) && ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) ) {
+			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
