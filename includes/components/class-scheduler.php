@@ -38,6 +38,45 @@ final class Scheduler extends Component {
 	}
 
 	/**
+	 * Schedules an action.
+	 *
+	 * @param string $hook Hook name.
+	 * @param array  $args Hook arguments.
+	 * @param int    $time Time to execute.
+	 * @param int    $interval Recurring interval.
+	 */
+	public function add_action( $hook, $args = [], $time = null, $interval = null ) {
+
+		// Check if scheduled.
+		if ( as_has_scheduled_action( $hook, $args, 'hivepress' ) ) {
+			return;
+		}
+
+		// Schedule an action.
+		if ( $interval ) {
+			if ( ! $time ) {
+				$time = time();
+			}
+
+			as_schedule_recurring_action( $time, $interval, $hook, $args, 'hivepress' );
+		} elseif ( $time ) {
+			as_schedule_single_action( $time, $hook, $args, 'hivepress' );
+		} else {
+			as_enqueue_async_action( $hook, $args, 'hivepress' );
+		}
+	}
+
+	/**
+	 * Unschedules an action.
+	 *
+	 * @param string $hook Hook name.
+	 * @param array  $args Hook arguments.
+	 */
+	public function remove_action( $hook, $args = [] ) {
+		as_unschedule_all_actions( $hook, $args, 'hivepress' );
+	}
+
+	/**
 	 * Schedules events.
 	 */
 	public function schedule_events() {
