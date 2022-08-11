@@ -400,6 +400,8 @@ class Select extends Field {
 				$attributes['disabled'] = true;
 			} elseif ( in_array( $value, (array) $this->value, true ) ) {
 				$attributes['selected'] = true;
+			} elseif ( !hp\is_rest() && isset($this->args['default']) && $this->args['default'] === $value){
+				$attributes['selected'] = true;
 			}
 
 			// Get label.
