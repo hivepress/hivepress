@@ -114,6 +114,7 @@ final class Attribute extends Component {
 				}
 			);
 		}
+		$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/get_attributes', $attributes );
 
 		return $attributes;
 	}
