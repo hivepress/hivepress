@@ -299,7 +299,8 @@ var hivepress = {
 							$(instance.element).data('reset', false);
 						}
 					}
-				};
+				},
+				ranges = field.data('ranges');
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -342,9 +343,7 @@ var hivepress = {
 				}
 			}
 
-			if (field.data('ranges')) {
-				var ranges = field.data('ranges');
-
+			if (ranges) {
 				settings['onDayCreate'] = function(dObj, dStr, fp, dayElem) {
 					if (dayElem.className.includes('disabled')) {
 						return;
@@ -378,6 +377,12 @@ var hivepress = {
 			if (field.data('time')) {
 				settings['enableTime'] = true;
 			}
+
+			// Set default min and max dates.
+			var defaultMinMaxDates = {
+				min: '',
+				max: '',
+			};
 
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
@@ -414,9 +419,44 @@ var hivepress = {
 									return hivepress.dateFormatter.formatDate(date, settings['dateFormat']);
 								});
 
+								if (ranges) {
+									flatpickrField.set('minDate', defaultMinMaxDates.min);
+									flatpickrField.set('maxDate', defaultMinMaxDates.max);
+								}
+
 								fields.eq(0).val(formattedDates[0]);
 								fields.eq(1).val(formattedDates[1]);
 							} else {
+								var unixDate = (new Date(dateStr).getTime()) / 1000;
+
+								$.each(ranges, function(index, range) {
+									if ('error' !== range.status) {
+										return true;
+									}
+
+									// Get minDate or maxDate setting.
+									var flatpickrOption = null;
+
+									if (range.start >= unixDate) {
+										flatpickrOption = 'maxDate';
+									} else if (range.start < unixDate) {
+										flatpickrOption = 'minDate';
+									}
+
+									if (flatpickrOption) {
+
+										// Get check-out only date.
+										var checkOutDate = new Date(range.start * 1000);
+
+										if ('minDate' === flatpickrOption) {
+											checkOutDate.setDate(checkOutDate.getDate() + 1);
+										}
+
+										flatpickrField.set(flatpickrOption, checkOutDate.toISOString());
+										return false;
+									}
+								});
+
 								fields.eq(0).val('');
 								fields.eq(1).val('');
 							}
@@ -449,7 +489,12 @@ var hivepress = {
 				},
 			});
 
-			field.flatpickr(settings);
+			var flatpickrField = field.flatpickr(settings);
+
+			if (ranges) {
+				defaultMinMaxDates.min = flatpickrField.config.minDate;
+				defaultMinMaxDates.max = flatpickrField.config.maxDate;
+			}
 		});
 
 		// Time
