@@ -162,6 +162,12 @@ var hivepress = {
 			}
 
 			if (field.data('source')) {
+
+				// Clean options on close.
+				$(field).on('select2:closing', function(e) {
+					$('body').find('.select2-results__options').empty();
+				});
+
 				$.extend(settings, {
 					ajax: {
 						url: field.data('source'),
