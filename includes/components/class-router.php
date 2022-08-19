@@ -681,4 +681,13 @@ final class Router extends Component {
 
 		return $url;
 	}
+
+	/**
+	 * Gets referer URL.
+	 *
+	 * @return string
+	 */
+	public function get_referer_url() {
+		return wp_validate_redirect( hp\get_array_value( $_SERVER, 'HTTP_REFERER' ) );
+	}
 }
