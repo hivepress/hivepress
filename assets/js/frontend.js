@@ -53,6 +53,7 @@
 				fields = $(this).find('input[type="number"]'),
 				minField = fields.first(),
 				maxField = fields.last(),
+				step = 1,
 				slider = null;
 
 			if (!minField.val()) {
@@ -63,11 +64,16 @@
 				maxField.val(maxField.attr('max'));
 			}
 
+			if (minField.attr('step')) {
+				step = minField.attr('step');
+			}
+
 			slider = $('<div />').appendTo(container).slider({
 				range: true,
 				min: Number(minField.attr('min')),
 				max: Number(maxField.attr('max')),
 				values: [Number(minField.val()), Number(maxField.val())],
+				step: Number(step),
 				slide: function(e, ui) {
 					minField.val(ui.values[0]);
 					maxField.val(ui.values[1]);
