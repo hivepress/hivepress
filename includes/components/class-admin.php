@@ -1814,6 +1814,7 @@ final class Admin extends Component {
 			'show_on_front',
 			'blog_public',
 			'permalink_structure',
+			'hp_installed_time',
 		];
 
 		foreach ( $settings as $tab ) {
