@@ -900,6 +900,19 @@ final class User extends Controller {
 
 		do_action( 'wp_login', $user->user_login, $user );
 
+		// Send successful registration email.
+		( new Emails\User_Register(
+			[
+				'recipient' => $user->user_email,
+
+				'tokens'    => [
+					'user'          => Models\User::query()->get_by_id( $user->ID ),
+					'user_name'     => $user->display_name,
+					'user_password' => '********',
+				],
+			]
+		) )->send();
+
 		// Redirect user.
 		$redirect = $user->hp_email_verify_redirect;
 

@@ -85,6 +85,11 @@ final class User extends Component {
 		// Send emails.
 		wp_new_user_notification( $user_id );
 
+		if ( get_option( 'hp_user_verify_email' ) ) {
+			return;
+		}
+
+		// Send successful registration email.
 		( new Emails\User_Register(
 			[
 				'recipient' => $user->get_email(),
