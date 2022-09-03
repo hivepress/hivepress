@@ -41,9 +41,7 @@ final class Email extends Component {
 		}
 
 		// Register Mailchimp integration.
-		if ( hp\is_plugin_active( 'mc4wp' ) ) {
-			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
-		}
+		add_action( 'init', [ $this, 'register_mailchimp' ] );
 
 		parent::__construct( $args );
 	}
@@ -175,5 +173,14 @@ final class Email extends Component {
 		}
 
 		return $meta_box;
+	}
+
+	/**
+	 * Register Mailchimp integration.
+	 */
+	public function register_mailchimp() {
+		if ( hp\is_plugin_active( 'mc4wp' ) ) {
+			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
+		}
 	}
 }
