@@ -285,6 +285,10 @@ var hivepress = {
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 
+						if (selectedDates.length < 2) {
+							instance.clear();
+						}
+
 						$(instance.element).find('[data-clear]').show();
 					},
 					onClose: function(selectedDates, dateStr, instance) {
