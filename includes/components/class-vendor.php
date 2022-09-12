@@ -234,7 +234,9 @@ final class Vendor extends Component {
 					);
 
 					// Update vendor.
-					$vendor->fill( $vendor_values )->save();
+					if ( ! $vendor->fill( $vendor_values )->save( $vendor_fields ) ) {
+						$errors = array_merge( $errors, $vendor->_get_errors() );
+					}
 				}
 			}
 		}
