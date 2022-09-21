@@ -22,6 +22,7 @@
   "homepage": "https://github.com/hivepress/hivepress#readme",
   "dependencies": {
     "flatpickr": "^4.6.13",
-    "intl-tel-input": "^17.0.19"
+    "intl-tel-input": "^17.0.19",
+    "select2": "^4.1.0-rc.0"
   }
 }
