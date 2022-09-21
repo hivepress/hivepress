@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'jquery_ui_touch_punch' => [
 		'handle' => 'jquery-ui-touch-punch',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.ui.touch-punch.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
 		'deps'   => [ 'jquery-ui-mouse' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
