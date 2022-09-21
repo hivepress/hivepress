@@ -27,7 +27,7 @@ return [
 
 	'fancybox'              => [
 		'handle' => 'fancybox',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.fancybox.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
