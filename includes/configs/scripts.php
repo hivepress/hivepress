@@ -49,7 +49,7 @@ return [
 
 	'flatpickr'             => [
 		'handle' => 'flatpickr',
-		'src'    => hivepress()->get_url() . '/assets/js/flatpickr/flatpickr.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/flatpickr/dist/flatpickr.min.js',
 		'deps'   => [ 'php-date-formatter' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],

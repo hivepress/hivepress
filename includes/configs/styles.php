@@ -36,7 +36,7 @@ return [
 
 	'flatpickr'         => [
 		'handle' => 'flatpickr',
-		'src'    => hivepress()->get_url() . '/assets/css/flatpickr.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/flatpickr/dist/flatpickr.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
