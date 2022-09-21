@@ -1,0 +1,23 @@
+{
+  "name": "hivepress",
+  "version": "1.0.0",
+  "description": "HivePress dependencies",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hivepress/hivepress.git"
+  },
+  "keywords": [
+    "hivepress",
+    "wordpress",
+    "wordpress-plugin"
+  ],
+  "author": "HivePress",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/hivepress/hivepress/issues"
+  },
+  "homepage": "https://github.com/hivepress/hivepress#readme"
+}
