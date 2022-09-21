@@ -42,7 +42,7 @@ return [
 
 	'select2'           => [
 		'handle' => 'select2',
-		'src'    => hivepress()->get_url() . '/assets/css/select2.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/select2/dist/css/select2.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
