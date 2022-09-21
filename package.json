@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/hivepress/hivepress#readme",
   "dependencies": {
+    "blueimp-file-upload": "^10.32.0",
     "flatpickr": "^4.6.13",
     "intl-tel-input": "^17.0.19",
     "php-date-formatter": "^1.3.6",
