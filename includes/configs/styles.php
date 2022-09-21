@@ -48,7 +48,7 @@ return [
 
 	'intl_tel_input'    => [
 		'handle' => 'intl-tel-input',
-		'src'    => hivepress()->get_url() . '/assets/css/intlTelInput.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/css/intlTelInput.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 

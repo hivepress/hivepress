@@ -62,7 +62,7 @@ return [
 
 	'intl_tel_input'        => [
 		'handle' => 'intl-tel-input',
-		'src'    => hivepress()->get_url() . '/assets/js/intl-tel-input/intlTelInput.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/intlTelInput.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
