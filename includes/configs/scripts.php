@@ -33,7 +33,7 @@ return [
 
 	'slick'                 => [
 		'handle' => 'slick',
-		'src'    => hivepress()->get_url() . '/assets/js/slick.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/slick-carousel/slick/slick.min.js',
 	],
 
 	'sticky_sidebar'        => [

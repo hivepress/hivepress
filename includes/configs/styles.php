@@ -31,7 +31,7 @@ return [
 
 	'slick'             => [
 		'handle' => 'slick',
-		'src'    => hivepress()->get_url() . '/assets/css/slick.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/slick-carousel/slick/slick.css',
 	],
 
 	'flatpickr'         => [
