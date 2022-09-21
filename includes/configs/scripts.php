@@ -43,7 +43,7 @@ return [
 
 	'php_date_formatter'    => [
 		'handle' => 'php-date-formatter',
-		'src'    => hivepress()->get_url() . '/assets/js/php-date-formatter.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/php-date-formatter/js/php-date-formatter.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
