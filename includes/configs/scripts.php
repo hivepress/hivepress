@@ -20,7 +20,7 @@ return [
 
 	'fileupload'            => [
 		'handle' => 'fileupload',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.fileupload.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/blueimp-file-upload/js/jquery.fileupload.js',
 		'deps'   => [ 'jquery-ui-widget' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
