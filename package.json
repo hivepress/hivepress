@@ -19,5 +19,8 @@
     "bugs": {
         "url": "https://github.com/hivepress/hivepress/issues"
     },
-    "homepage": "https://github.com/hivepress/hivepress#readme"
+    "homepage": "https://github.com/hivepress/hivepress#readme",
+    "dependencies": {
+        "flatpickr": "^4.6.13"
+    }
 }
