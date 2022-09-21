@@ -68,7 +68,7 @@ return [
 
 	'chartjs'               => [
 		'handle' => 'chartjs',
-		'src'    => hivepress()->get_url() . '/assets/js/chart.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/chart.js/dist/chart.min.js',
 		'deps'   => [ 'moment' ],
 		'scope'  => [ 'backend' ],
 	],
