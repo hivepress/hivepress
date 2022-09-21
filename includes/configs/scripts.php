@@ -38,7 +38,7 @@ return [
 
 	'sticky_sidebar'        => [
 		'handle' => 'sticky-sidebar',
-		'src'    => hivepress()->get_url() . '/assets/js/jquery.sticky-sidebar.min.js',
+		'src'    => hivepress()->get_url() . '/node_modules/sticky-sidebar/dist/jquery.sticky-sidebar.min.js',
 	],
 
 	'php_date_formatter'    => [
