@@ -27,6 +27,9 @@ final class Email extends Component {
 		// Set email content.
 		add_filter( 'hivepress/v1/emails/email', [ $this, 'set_email_content' ], 10, 2 );
 
+		// Register integrations.
+		add_filter( 'init', [ $this, 'register_integrations' ] );
+
 		if ( is_admin() ) {
 
 			// Manage admin columns.
@@ -38,11 +41,6 @@ final class Email extends Component {
 
 			// Render email details.
 			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
-		}
-
-		// Register Mailchimp integration.
-		if ( hp\is_plugin_active( 'mc4wp' ) ) {
-			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
 		}
 
 		parent::__construct( $args );
@@ -74,6 +72,15 @@ final class Email extends Component {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Registers integrations.
+	 */
+	public function register_integrations() {
+		if ( hp\is_plugin_active( 'mc4wp' ) ) {
+			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
+		}
 	}
 
 	/**
