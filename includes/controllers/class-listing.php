@@ -87,6 +87,24 @@ final class Listing extends Controller {
 						'action' => [ $this, 'hide_listing' ],
 						'rest'   => true,
 					],
+					
+					/**
+					 * @OA\Post(
+					 *     path="/listings/{listing_id}/highlight",
+					 *     summary="Highlight a listing",
+					 *     description="Each new request marks or unmarks a listing as featured.",
+					 *     tags={"Listings"},
+					 *     @OA\Parameter(ref="#/components/parameters/listing_id"),
+					 *     @OA\Response(response="200", description="")
+					 * )
+					 */
+					'listing_highlight_action'          => [
+						'base'   => 'listing_resource',
+						'path'   => '/highlight',
+						'method' => 'POST',
+						'action' => [ $this, 'highlight_listing' ],
+						'rest'   => true,
+					],
 
 					/**
 					 * @OA\Post(
@@ -421,6 +439,51 @@ final class Listing extends Controller {
 
 		$listing->save_status();
 
+		return hp\rest_response(
+			200,
+			[
+				'id' => $listing->get_id(),
+			]
+		);
+	}
+	
+	/**
+	 * Highlight listing.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function highlight_listing( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $request->get_param( 'listing_id' ) );
+
+		if ( empty( $listing ) ) {
+			return hp\rest_error( 404 );
+		}
+			
+		// Update featured.		
+		if ( $listing->get_featured() === true) {
+			
+			$listing->fill(
+			[
+				'featured' => false
+			])->save( [ 'featured' ] );
+			
+		} else {			
+			
+			$listing->fill(
+			[
+				'featured' => true
+			])->save( [ 'featured' ] );
+			
+		}
+										
 		return hp\rest_response(
 			200,
 			[
