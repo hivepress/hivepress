@@ -58,6 +58,60 @@ final class Template extends Component {
 	}
 
 	/**
+	 * Fetches template block.
+	 *
+	 * @param array  $template Template blocks.
+	 * @param string $name Block name.
+	 * @param bool   $remove Remove block?
+	 * @return array
+	 */
+	public function fetch_block( &$template, $name, $remove = true ) {
+		return hp\get_first_array_value( $this->fetch_blocks( $template, [ $name ], $remove ) );
+	}
+
+	/**
+	 * Fetches template blocks.
+	 *
+	 * @param array $template Template blocks.
+	 * @param array $names Block names.
+	 * @param bool  $remove Remove block?
+	 * @return array
+	 */
+	public function fetch_blocks( &$template, $names, $remove = true ) {
+		return $this->_fetch_blocks( $template, $names, $remove );
+	}
+
+	protected function _fetch_blocks( &$template, &$names, $remove ) {
+		$blocks = [];
+
+		if ( isset( $template['blocks'] ) ) {
+			return $this->_fetch_blocks( $template['blocks'], $names, $remove );
+		}
+
+		foreach ( $template as $name => $block ) {
+			if ( ! $names ) {
+				break;
+			}
+
+			$index = array_search( $name, $names );
+
+			if ( false !== $index ) {
+				$blocks[ $name ] = $block;
+
+				if ( $remove ) {
+					unset( $template[ $name ] );
+				}
+
+				unset( $names[ $index ] );
+			} elseif ( isset( $block['blocks'] ) ) {
+				$blocks += $this->_fetch_blocks( $template[ $name ]['blocks'], $names, $remove );
+			}
+		}
+
+		return $blocks;
+	}
+
+	/**
 	 * Sets template title.
 	 *
 	 * @param int    $post_id Post ID.
