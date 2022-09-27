@@ -78,15 +78,15 @@ final class Template extends Component {
 	 * @return array
 	 */
 	public function fetch_blocks( &$template, $names, $remove = true ) {
+		if ( isset( $template['blocks'] ) ) {
+			return $this->_fetch_blocks( $template['blocks'], $names, $remove );
+		}
+
 		return $this->_fetch_blocks( $template, $names, $remove );
 	}
 
 	protected function _fetch_blocks( &$template, &$names, $remove ) {
 		$blocks = [];
-
-		if ( isset( $template['blocks'] ) ) {
-			return $this->_fetch_blocks( $template['blocks'], $names, $remove );
-		}
 
 		foreach ( $template as $name => $block ) {
 			if ( ! $names ) {
@@ -109,6 +109,46 @@ final class Template extends Component {
 		}
 
 		return $blocks;
+	}
+
+	/**
+	 * Merges template blocks.
+	 *
+	 * @param array $template Template blocks.
+	 * @param array $blocks Blocks to merge.
+	 * @return array
+	 */
+	public function merge_blocks( &$template, $blocks ) {
+		if ( isset( $template['blocks'] ) ) {
+			$template['blocks'] = $this->_merge_blocks( $template['blocks'], $blocks );
+		} else {
+			$template = $this->_merge_blocks( $template, $blocks );
+		}
+
+		return $template;
+	}
+
+	protected function _merge_blocks( &$template, &$blocks ) {
+		$names = array_keys( $blocks );
+
+		foreach ( $template as $name => $block ) {
+			if ( ! $names ) {
+				break;
+			}
+
+			$index = array_search( $name, $names );
+
+			if ( false !== $index ) {
+				$template[ $name ] = hp\merge_arrays( $template[ $name ], $blocks[ $name ] );
+
+				unset( $blocks[ $name ] );
+				unset( $names[ $index ] );
+			} elseif ( isset( $block['blocks'] ) ) {
+				$template[ $name ]['blocks'] = $this->_merge_blocks( $template[ $name ]['blocks'], $blocks );
+			}
+		}
+
+		return $template;
 	}
 
 	/**
