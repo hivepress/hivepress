@@ -273,16 +273,7 @@ final class Vendor extends Component {
 		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
 
 			// Hide vendor.
-			$template = hp\merge_trees(
-				$template,
-				[
-					'blocks' => [
-						'listing_vendor' => [
-							'type' => 'content',
-						],
-					],
-				]
-			);
+			hivepress()->template->fetch_block( $template, 'listing_vendor' );
 		}
 
 		return $template;
