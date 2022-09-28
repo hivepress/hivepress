@@ -220,21 +220,26 @@ final class Vendor extends Component {
 					// Get fields.
 					$vendor_fields = array_keys( ( new Forms\Vendor_Update( [ 'model' => $vendor ] ) )->get_fields() );
 
-					// Get values.
-					$vendor_values = array_map(
-						function( $field ) {
-							return $field->get_value();
-						},
-						array_filter(
-							$form->get_fields(),
-							function( $field ) use ( $vendor_fields ) {
-								return ! $field->is_disabled() && in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
-							}
-						)
-					);
+					if ( $vendor_fields ) {
 
-					// Update vendor.
-					$vendor->fill( $vendor_values )->save();
+						// Get values.
+						$vendor_values = array_map(
+							function( $field ) {
+								return $field->get_value();
+							},
+							array_filter(
+								$form->get_fields(),
+								function( $field ) use ( $vendor_fields ) {
+									return ! $field->is_disabled() && in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
+								}
+							)
+						);
+
+						// Update vendor.
+						if ( ! $vendor->fill( $vendor_values )->save( $vendor_fields ) ) {
+							$errors = array_merge( $errors, $vendor->_get_errors() );
+						}
+					}
 				}
 			}
 		}
@@ -268,16 +273,7 @@ final class Vendor extends Component {
 		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
 
 			// Hide vendor.
-			$template = hp\merge_trees(
-				$template,
-				[
-					'blocks' => [
-						'listing_vendor' => [
-							'type' => 'content',
-						],
-					],
-				]
-			);
+			hivepress()->template->fetch_block( $template, 'listing_vendor' );
 		}
 
 		return $template;

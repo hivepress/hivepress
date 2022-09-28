@@ -67,6 +67,7 @@
 				range: true,
 				min: Number(minField.attr('min')),
 				max: Number(maxField.attr('max')),
+				step: Number(minField.attr('step')),
 				values: [Number(minField.val()), Number(maxField.val())],
 				slide: function(e, ui) {
 					minField.val(ui.values[0]);
