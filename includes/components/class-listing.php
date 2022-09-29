@@ -247,6 +247,14 @@ final class Listing extends Component {
 							],
 						]
 					) )->send();
+
+					// Get vendor.
+					$vendor = $listing->get_vendor();
+
+					// Delete vendor.
+					if ( $vendor && $vendor->get_status() === 'draft' ) {
+						$vendor->trash();
+					}
 				}
 			}
 		}
