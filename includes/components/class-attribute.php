@@ -61,6 +61,9 @@ final class Attribute extends Component {
 		// Register post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'register_post_types' ], 1 );
 
+		// Register taxonomies.
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'register_taxonomies' ], 1 );
+
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
@@ -269,6 +272,24 @@ final class Attribute extends Component {
 		}
 
 		return $post_types;
+	}
+
+	/**
+	 * Registers taxonomies.
+	 *
+	 * @param array $taxonomies Taxonomies.
+	 * @return array
+	 */
+	public function register_taxonomies( $taxonomies ) {
+		foreach ( $this->get_models() as $model ) {
+			$taxonomy = $this->get_category_model( $model );
+
+			if ( isset( $taxonomies[ $taxonomy ] ) ) {
+				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+			}
+		}
+
+		return $taxonomies;
 	}
 
 	/**
