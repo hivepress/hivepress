@@ -134,7 +134,7 @@ final class Attribute extends Component {
 	 * @return string
 	 */
 	protected function get_category_model( $model ) {
-		return isset( $this->models[ $model ]['category_model'] ) ? $this->models[ $model ]['category_model'] : $model;
+		return ( isset( $this->models[ $model ]['category_model'] ) ? $this->models[ $model ]['category_model'] : $model ) . '_category';
 	}
 
 	/**
@@ -830,8 +830,15 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
+		// Get model object.
+		$object = $form->get_model();
+
+		if ( $object && isset( $this->models[ $model ]['category_model'] ) ) {
+			$object = call_user_func( [ $object, 'get_' . $this->models[ $model ]['category_model'] ] );
+		}
+
 		// Get category IDs.
-		$category_ids = $form->get_model()->get_categories__id();
+		$category_ids = $object ? $object->get_categories__id() : [];
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, (array) $category_ids );
