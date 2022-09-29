@@ -185,14 +185,16 @@ final class Attribute extends Component {
 		 */
 		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
 
-		foreach ( $this->models as $name => $args ) {
-			if ( is_string( $args ) ) {
-				unset( $this->models[ $name ] );
-				$this->models[ $args ] = [];
+		// Convert for compatibility.
+		foreach ( $this->models as $index => $model ) {
+			if ( is_string( $model ) ) {
+				unset( $this->models[ $index ] );
+
+				$this->models[ $model ] = [];
 			}
 		}
 
-		foreach ( array_keys( $this->models ) as $model ) {
+		foreach ( $this->get_models() as $model ) {
 
 			// Update attribute.
 			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
@@ -244,7 +246,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function register_post_types( $post_types ) {
-		foreach ( array_keys( $this->models ) as $model ) {
+		foreach ( $this->get_models() as $model ) {
 			$post_types[ $model . '_attribute' ] = [
 				'public'       => false,
 				'show_ui'      => true,
@@ -273,7 +275,7 @@ final class Attribute extends Component {
 	 * Registers attributes.
 	 */
 	public function register_attributes() {
-		foreach ( array_keys( $this->models ) as $model ) {
+		foreach ( $this->get_models() as $model ) {
 
 			// Set query arguments.
 			$query_args = [
@@ -503,7 +505,7 @@ final class Attribute extends Component {
 	 */
 	public function import_attribute( $term ) {
 		if ( strpos( $term['taxonomy'], 'hp_' ) === 0 && ! taxonomy_exists( $term['taxonomy'] ) ) {
-			register_taxonomy( $term['taxonomy'], hp\prefix( array_keys( $this->models ) ) );
+			register_taxonomy( $term['taxonomy'], hp\prefix( $this->get_models() ) );
 		}
 
 		return $term;
@@ -1419,7 +1421,7 @@ final class Attribute extends Component {
 		];
 
 		// Add meta boxes.
-		foreach ( array_keys( $this->models ) as $model ) {
+		foreach ( $this->get_models() as $model ) {
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
 
 				// Set screen and model.
@@ -1484,7 +1486,7 @@ final class Attribute extends Component {
 			// Get post type.
 			$post_type = get_post_type();
 
-			if ( in_array( $post_type, hp\prefix( array_keys( $this->models ) ), true ) ) {
+			if ( in_array( $post_type, hp\prefix( $this->get_models() ), true ) ) {
 
 				// Get model.
 				$model = hp\unprefix( $post_type );
@@ -1519,7 +1521,7 @@ final class Attribute extends Component {
 		// Get model.
 		$model = null;
 
-		foreach ( array_keys( $this->models ) as $model_name ) {
+		foreach ( $this->get_models() as $model_name ) {
 			if ( is_post_type_archive( hp\prefix( $model_name ) ) || $this->get_term_id( $model_name ) ) {
 				$model = $model_name;
 
