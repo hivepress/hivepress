@@ -148,10 +148,10 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	protected function get_category_ids( $model, $object = null ) {
-		$category_ids = [];
 
+		// Check object.
 		if ( ! $object ) {
-			return $category_ids;
+			return;
 		}
 
 		// Get object ID.
@@ -164,7 +164,7 @@ final class Attribute extends Component {
 		}
 
 		if ( ! $id ) {
-			return $category_ids;
+			return;
 		}
 
 		// Get category IDs.
@@ -888,7 +888,7 @@ final class Attribute extends Component {
 		$category_ids = $this->get_category_ids( $model, $form->get_model() );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, (array) $category_ids );
+		$attributes = $this->get_attributes( $model, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
