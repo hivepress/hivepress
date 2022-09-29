@@ -134,7 +134,7 @@ final class Attribute extends Component {
 	 * @return string
 	 */
 	protected function get_category_model( $model ) {
-		return hp\get_array_value( $this->models[ $model ], 'category', $model ) . '_category';
+		return isset( $this->models[ $model ]['category_model'] ) ? $this->models[ $model ]['category_model'] : $model;
 	}
 
 	/**
