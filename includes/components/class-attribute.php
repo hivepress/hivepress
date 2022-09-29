@@ -1133,7 +1133,7 @@ final class Attribute extends Component {
 							'format' => 'tree',
 						]
 					),
-					'models/' . $this->get_category_model( $model )
+					'models/' . $this->get_category_model( $model ),
 					$options
 				);
 			}
