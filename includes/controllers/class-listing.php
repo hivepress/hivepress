@@ -1056,7 +1056,7 @@ final class Listing extends Controller {
 		$vendor = hivepress()->request->get_context( 'vendor' );
 
 		// Update vendor.
-		if ( 'pending' === $status ) {
+		if ( 'pending' === $status && $vendor->get_status() === 'auto-draft' ) {
 			$vendor->set_status( 'draft' )->save_status();
 		}
 
