@@ -61,6 +61,9 @@ final class Attribute extends Component {
 		// Register post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'register_post_types' ], 1 );
 
+		// Register taxonomies.
+		add_filter( 'hivepress/v1/taxonomies', [ $this, 'register_taxonomies' ], 1 );
+
 		// Register attributes.
 		add_action( 'init', [ $this, 'register_attributes' ], 100 );
 
@@ -134,7 +137,7 @@ final class Attribute extends Component {
 	 * @return string
 	 */
 	protected function get_category_model( $model ) {
-		return hp\get_array_value( $this->models[ $model ], 'category', $model ) . '_category';
+		return ( isset( $this->models[ $model ]['category_model'] ) ? $this->models[ $model ]['category_model'] : $model ) . '_category';
 	}
 
 	/**
@@ -269,6 +272,24 @@ final class Attribute extends Component {
 		}
 
 		return $post_types;
+	}
+
+	/**
+	 * Registers taxonomies.
+	 *
+	 * @param array $taxonomies Taxonomies.
+	 * @return array
+	 */
+	public function register_taxonomies( $taxonomies ) {
+		foreach ( $this->get_models() as $model ) {
+			$taxonomy = $this->get_category_model( $model );
+
+			if ( isset( $taxonomies[ $taxonomy ] ) ) {
+				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+			}
+		}
+
+		return $taxonomies;
 	}
 
 	/**
@@ -830,8 +851,15 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
+		// Get model object.
+		$object = $form->get_model();
+
+		if ( $object && isset( $this->models[ $model ]['category_model'] ) ) {
+			$object = call_user_func( [ $object, 'get_' . $this->models[ $model ]['category_model'] ] );
+		}
+
 		// Get category IDs.
-		$category_ids = $form->get_model()->get_categories__id();
+		$category_ids = $object ? $object->get_categories__id() : [];
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, (array) $category_ids );
