@@ -894,10 +894,6 @@ final class Listing extends Controller {
 			) ) {
 				return home_url();
 			}
-
-			if ( get_option( 'hp_listing_enable_moderation' ) && ! $vendor->validate() ) {
-				$vendor->set_status( 'draft' )->save_status();
-			}
 		}
 
 		// Set request context.
@@ -1055,6 +1051,14 @@ final class Listing extends Controller {
 				'drafted' => null,
 			]
 		)->save( [ 'status', 'drafted' ] );
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		// Update vendor.
+		if ( 'pending' === $status ) {
+			$vendor->set_status( 'draft' )->save_status();
+		}
 
 		// Send email.
 		( new Emails\Listing_Submit(
