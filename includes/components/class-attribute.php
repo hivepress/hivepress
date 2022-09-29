@@ -141,6 +141,39 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets category model IDs.
+	 *
+	 * @param string $model Model name.
+	 * @param object $object Model object.
+	 * @return array
+	 */
+	protected function get_category_ids( $model, $object = null ) {
+		$category_ids = [];
+
+		if ( ! $object ) {
+			return $category_ids;
+		}
+
+		// Get object ID.
+		$id = is_object( $object ) ? $object->get_id() : $object;
+
+		if ( isset( $this->models[ $model ]['category_model'] ) ) {
+
+			// @todo remove temporary solution, check model fields instead.
+			$id = absint( get_post_field( 'post_parent', $id ) );
+		}
+
+		if ( ! $id ) {
+			return $category_ids;
+		}
+
+		// Get category IDs.
+		$category_ids = wp_get_post_terms( $id, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
+
+		return $category_ids;
+	}
+
+	/**
 	 * Gets current category ID.
 	 *
 	 * @param string $model Model name.
@@ -708,7 +741,7 @@ final class Attribute extends Component {
 		$model = $meta_box['model'];
 
 		// Get category IDs.
-		$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
+		$category_ids = $this->get_category_ids( $model, get_the_ID() );
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
@@ -736,7 +769,7 @@ final class Attribute extends Component {
 		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
 
 		if ( is_null( $category_ids ) ) {
-			$category_ids = wp_get_post_terms( $object->get_id(), hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
+			$category_ids = $this->get_category_ids( $model, $object->get_id() );
 
 			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
 				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
@@ -851,15 +884,8 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
-		// Get model object.
-		$object = $form->get_model();
-
-		if ( $object && isset( $this->models[ $model ]['category_model'] ) ) {
-			$object = call_user_func( [ $object, 'get_' . $this->models[ $model ]['category_model'] ] );
-		}
-
 		// Get category IDs.
-		$category_ids = $object ? $object->get_categories__id() : [];
+		$category_ids = $this->get_category_ids( $model, $form->get_model() );
 
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, (array) $category_ids );
@@ -1520,7 +1546,7 @@ final class Attribute extends Component {
 				$model = hp\unprefix( $post_type );
 
 				// Get category IDs.
-				$category_ids = wp_get_post_terms( get_the_ID(), hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
+				$category_ids = $this->get_category_ids( $model, get_the_ID() );
 
 				// Get attributes.
 				$attributes = $this->get_attributes( $model, $category_ids );
