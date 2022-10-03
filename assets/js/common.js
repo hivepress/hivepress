@@ -725,8 +725,7 @@ var hivepress = {
 
 					data.append('_render', true);
 					data.delete('_wpnonce');
-
-					container.attr('data-state', 'loading');
+					$('.flatpickr-calendar').add(form).add(container).attr('data-state', 'loading');
 
 					$.ajax({
 						url: renderSettings.url,
@@ -748,6 +747,8 @@ var hivepress = {
 								container.replaceWith(newContainer);
 
 								hivepress.initUI(newContainer);
+
+								$('.flatpickr-calendar').add(form).removeAttr('data-state', 'loading');
 							}
 						},
 					});
