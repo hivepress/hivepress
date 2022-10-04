@@ -1007,7 +1007,8 @@ final class Listing extends Controller {
 		$listing->get_images__id();
 
 		// Check listing.
-		if ( $listing->validate() ) {
+		// todo: change $_SERVER on router helper.
+		if ( $listing->validate() && ! strpos( hp\get_array_value( $_SERVER, 'HTTP_REFERER' ), 'package' ) ) {
 			return true;
 		}
 
