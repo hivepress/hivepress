@@ -1006,9 +1006,16 @@ final class Listing extends Controller {
 		// @todo replace temporary fix.
 		$listing->get_images__id();
 
+		// Check redirect.
+		// @todo remove temporary fix.
+		if ( isset( $_GET['redirect'] ) ) {
+			wp_set_post_terms( $listing->get_id(), [], 'hp_listing_category' );
+
+			return hivepress()->router->get_url( 'listing_submit_details_page' );
+		}
+
 		// Check listing.
-		// todo: change $_SERVER on router helper.
-		if ( $listing->validate() && ! strpos( hp\get_array_value( $_SERVER, 'HTTP_REFERER' ), 'package' ) ) {
+		if ( $listing->validate() ) {
 			return true;
 		}
 
