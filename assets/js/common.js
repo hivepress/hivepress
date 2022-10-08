@@ -299,7 +299,9 @@ var hivepress = {
 							$(instance.element).data('reset', false);
 						}
 					}
-				};
+				},
+				minDate = new Date(),
+				maxDate = new Date();
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -319,10 +321,12 @@ var hivepress = {
 			}
 
 			if (field.data('min-date')) {
+				minDate = new Date(Date.parse(field.data('min-date')));
 				settings['minDate'] = field.data('min-date');
 			}
 
 			if (field.data('max-date')) {
+				maxDate = new Date(Date.parse(field.data('max-date')));
 				settings['maxDate'] = field.data('max-date');
 			}
 
@@ -365,14 +369,6 @@ var hivepress = {
 						}
 					});
 				};
-			}
-
-			if (field.is('[data-offset]')) {
-				settings['minDate'] = new Date().fp_incr(field.data('offset'));
-			}
-
-			if (field.is('[data-window]')) {
-				settings['maxDate'] = new Date().fp_incr(field.data('window'));
 			}
 
 			if (field.data('time')) {
@@ -449,7 +445,15 @@ var hivepress = {
 				},
 			});
 
-			field.flatpickr(settings);
+			var flatpickrField = field.flatpickr(settings);
+
+			if (field.is('[data-offset]')) {
+				flatpickrField.set('minDate', minDate.fp_incr(field.data('offset')));
+			}
+
+			if (field.is('[data-window]')) {
+				flatpickrField.set('maxDate', maxDate.fp_incr(field.data('window')));
+			}
 		});
 
 		// Time
