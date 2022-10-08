@@ -247,6 +247,14 @@ final class Listing extends Component {
 							],
 						]
 					) )->send();
+
+					// Get vendor.
+					$vendor = $listing->get_vendor();
+
+					// Delete vendor.
+					if ( $vendor && $vendor->get_status() === 'draft' ) {
+						$vendor->trash();
+					}
 				}
 			}
 		}
@@ -718,18 +726,16 @@ final class Listing extends Component {
 
 			// Add classes.
 			if ( $classes ) {
-				$blocks = hp\merge_trees(
-					[ 'blocks' => $blocks ],
+				$blocks = hivepress()->template->merge_blocks(
+					$blocks,
 					[
-						'blocks' => [
-							'listing_container' => [
-								'attributes' => [
-									'class' => $classes,
-								],
+						'listing_container' => [
+							'attributes' => [
+								'class' => $classes,
 							],
 						],
 					]
-				)['blocks'];
+				);
 			}
 		}
 

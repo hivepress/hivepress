@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'listing_category' => [
-		'post_type'         => [ 'listing', 'listing_attribute' ],
+		'post_type'         => [ 'listing' ],
 		'hierarchical'      => true,
 		'show_admin_column' => true,
 		'rewrite'           => [ 'slug' => 'listing-category' ],
@@ -31,7 +31,7 @@ return [
 	],
 
 	'vendor_category'  => [
-		'post_type'         => [ 'vendor', 'vendor_attribute' ],
+		'post_type'         => [ 'vendor' ],
 		'hierarchical'      => true,
 		'show_admin_column' => true,
 		'rewrite'           => [ 'slug' => 'vendor-category' ],

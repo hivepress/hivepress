@@ -1727,6 +1727,10 @@ final class Admin extends Component {
 			'multisite' => is_multisite(),
 		];
 
+		if ( get_option( 'hp_installed_time' ) ) {
+			$data['lifetime'] = ceil( ( time() - absint( get_option( 'hp_installed_time' ) ) ) / DAY_IN_SECONDS );
+		}
+
 		// Get stats.
 		$data['stats'] = [
 			'listings' => wp_count_posts( 'hp_listing' )->publish,
