@@ -280,8 +280,8 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
-					disable: [],
 					enable: [],
+					disable: [],
 					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -327,14 +327,12 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
-			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
+			if (field.data('enabled-dates')) {
+				settings['enable'] = field.data('enabled-dates');
 			}
 
-			if (field.data('enabled-dates')) {
-				$.each(field.data('enabled-dates').split(','), function() {
-					settings['enable'].push(new Date(this));
-				});
+			if (field.data('disabled-dates')) {
+				settings['disable'] = field.data('disabled-dates');
 			}
 
 			if (field.data('disabled-days')) {
@@ -428,12 +426,6 @@ var hivepress = {
 								fields.eq(1).val('');
 							}
 						},
-					});
-				}
-
-				if (field.data('mode') === 'multiple') {
-					$.extend(settings, {
-						mode: 'multiple',
 					});
 				}
 			}
