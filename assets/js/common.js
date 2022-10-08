@@ -280,6 +280,7 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					enable: [],
 					disable: [],
 					disableMobile: true,
 					onOpen: function(selectedDates, dateStr, instance) {
@@ -324,6 +325,10 @@ var hivepress = {
 
 			if (field.data('max-date')) {
 				settings['maxDate'] = field.data('max-date');
+			}
+
+			if (field.data('enabled-dates')) {
+				settings['enable'] = field.data('enabled-dates');
 			}
 
 			if (field.data('disabled-dates')) {
