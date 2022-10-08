@@ -273,11 +273,8 @@ class Date extends Field {
 			$date = date_create_from_format( $this->format, $this->value );
 
 			if ( false === $date ) {
-
-				if ( 'multiple' !== hp\get_array_value( $this->attributes, 'data-mode' ) ) {
-					/* translators: %s: field label. */
-					$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
-				}
+				/* translators: %s: field label. */
+				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 			} else {
 				if ( ! is_null( $this->min_date ) ) {
 					$min_date = date_create( $this->min_date );
