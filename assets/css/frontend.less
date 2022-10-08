@@ -185,6 +185,15 @@
 			}
 		}
 
+		&--checkbox&--readonly {
+			pointer-events: none;
+
+			input[type=checkbox]:checked + span::before {
+				background-color: #ccc;
+				border-color: #ccc;
+			}
+		}
+
 		&--date,
 		&--time {
 			display: flex;
