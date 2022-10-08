@@ -53,6 +53,13 @@ class Date extends Field {
 	protected $max_date;
 
 	/**
+	 * Enabled dates.
+	 *
+	 * @var array
+	 */
+	protected $enabled_dates = [];
+
+	/**
 	 * Disabled dates.
 	 *
 	 * @var array
@@ -65,13 +72,6 @@ class Date extends Field {
 	 * @var array
 	 */
 	protected $disabled_days = [];
-
-	/**
-	 * Enabled dates.
-	 *
-	 * @var array
-	 */
-	protected $enabled_dates = [];
 
 	/**
 	 * The number of days unavailable from today.
@@ -192,26 +192,19 @@ class Date extends Field {
 			$attributes['data-max-date'] = $this->max_date;
 		}
 
+		// Set enabled dates.
+		if ( $this->enabled_dates ) {
+			$attributes['data-enabled-dates'] = wp_json_encode( $this->get_ranges( $this->enabled_dates ) );
+		}
+
 		// Set disabled dates.
 		if ( $this->disabled_dates ) {
-			$attributes['data-disabled-dates'] = wp_json_encode(
-				array_map(
-					function( $date ) {
-						return is_array( $date ) ? array_combine( [ 'from', 'to' ], $date ) : $date;
-					},
-					$this->disabled_dates
-				)
-			);
+			$attributes['data-disabled-dates'] = wp_json_encode( $this->get_ranges( $this->disabled_dates ) );
 		}
 
 		// Set disabled days.
 		if ( $this->disabled_days ) {
 			$attributes['data-disabled-days'] = '[' . implode( ',', $this->disabled_days ) . ']';
-		}
-
-		// Set enabled dates.
-		if ( $this->enabled_dates ) {
-			$attributes['data-enabled-dates'] = $this->enabled_dates;
 		}
 
 		// Set offset.
@@ -338,5 +331,20 @@ class Date extends Field {
 		$output .= '</div>';
 
 		return $output;
+	}
+
+	/**
+	 * Gets date ranges.
+	 *
+	 * @param array $dates Dates or ranges.
+	 * @return array
+	 */
+	protected function get_ranges( $dates ) {
+		return array_map(
+			function( $date ) {
+				return is_array( $date ) ? array_combine( [ 'from', 'to' ], $date ) : $date;
+			},
+			$dates
+		);
 	}
 }
