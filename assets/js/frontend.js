@@ -3,6 +3,51 @@
 
 	$(document).ready(function() {
 
+		// Account menu
+		hivepress.getComponent('account-menu').each(function() {
+			var items = $(this);
+
+			items.add(items.find('li')).each(function() {
+				var item = $(this),
+					childMenu = item.find('> nav > ul, > ul');
+
+				if (childMenu.length) {
+					item.addClass('parent');
+
+					item.hoverIntent(
+						function() {
+							if (item.parent('ul').parent('li').hasClass('parent')) {
+								var parentMenu = item.parent(),
+									offset = parentMenu.offset().left + parentMenu.outerWidth() * 2;
+
+								childMenu.removeClass('left').removeClass('right');
+
+								if (offset > $(window).width()) {
+									childMenu.addClass('left').css('left', -parentMenu.outerWidth());
+								} else {
+									childMenu.addClass('right');
+								}
+							}
+
+							item.addClass('active');
+							childMenu.slideDown(150);
+						},
+						function() {
+							childMenu.slideUp(150, function() {
+								item.removeClass('active');
+							});
+						}
+					);
+				}
+
+				item.children('a').on('click', function(e) {
+					if ($(this).attr('href') === '#') {
+						e.preventDefault();
+					}
+				});
+			});
+		});
+
 		// Toggle
 		hivepress.getComponent('toggle').each(function() {
 			var button = $(this);
