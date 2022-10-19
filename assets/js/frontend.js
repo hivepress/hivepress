@@ -4,8 +4,7 @@
 	$(document).ready(function() {
 
 		// Menu
-		hivepress.getComponent('header_account_menu').each(function() {
-
+		hivepress.getComponent('account-menu').each(function() {
 			var item = $(this);
 
 			if ($(window).width() >= 768) {
