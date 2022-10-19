@@ -1174,3 +1174,20 @@ body.admin-bar {
 		top: -46px;
 	}
 }
+
+.menu-item-hp-account {
+	@media screen and (max-width: 47.99em) {
+		&:last-child {
+			display: none !important;
+		}
+
+		&:first-child {
+			margin-top: 10px;
+		}
+	}
+	@media screen and (min-width: 48em) {
+		&:first-child {
+			display: none;
+		}
+	}
+}

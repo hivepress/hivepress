@@ -40,6 +40,12 @@ final class Menu extends Component {
 	 */
 	public function add_account_menu_item( $items, $args ) {
 		if ( 'header' === $args->theme_location ) {
+			$items = ( new Blocks\Part(
+				[
+					'path' => 'user/login/user-login-link',
+				]
+			) )->render() . $items;
+
 			$items .= ( new Blocks\Part(
 				[
 					'path' => 'user/login/user-login-link',
