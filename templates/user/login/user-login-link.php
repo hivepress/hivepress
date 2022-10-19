@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( is_user_logged_in() ) :
 	?>
-	<li class="menu-item menu-item-has-children menu-item-hp-account">
+	<li class="menu-item menu-item-has-children hp-menu__item hp-menu__item--user-account">
 		<a href="#">
 			<i class="hp-icon fas fa-user"></i>
 			<span><?php echo esc_html( hivepress()->request->get_user()->get_username() ); ?></span>
