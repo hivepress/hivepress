@@ -287,6 +287,68 @@
 					margin-right: 1.5rem;
 				}
 			}
+
+			&--user-account {
+				position: relative;
+
+				> a {
+					white-space: nowrap;
+				}
+
+				> a,
+				li {
+					&:focus-within {
+						> ul,
+						& + nav > ul {
+							display: block;
+						}
+					}
+				}
+
+				ul {
+					display: none;
+					position: absolute;
+					z-index: 1000;
+					top: 100%;
+					left: 0;
+					min-width: 14rem;
+					align-self: stretch;
+					padding: 1rem 0;
+					background-color: #fff;
+					border: 1px solid rgba(7, 36, 86, .075);
+					border-radius: 3px;
+					box-shadow: 0 2px 4px 0 rgba(7, 36, 86, .075);
+					margin: 0;
+					list-style: none;
+
+					li {
+						position: relative;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						padding: 0.25rem 1.5rem;
+						margin: 0;
+
+						a {
+							color: inherit;
+
+							&:hover {
+								color: #ffc107;
+							}
+
+							span {
+								display: inline!important;
+							}
+						}
+
+						ul {
+							left: 100%;
+							top: -1rem;
+							margin-top: -1px;
+						}
+					}
+				}
+			}
 		}
 
 		&--breadcrumb {
@@ -1093,7 +1155,6 @@
 /*--------------------------------------------------------------
 Select2
 --------------------------------------------------------------*/
-
 .select2 {
 	&-container {
 		min-width: 4.5rem;
@@ -1111,95 +1172,5 @@ body.admin-bar {
 #wpadminbar {
 	@media screen and (max-width: 600px) {
 		top: -46px;
-	}
-}
-
-.header-account__menu {
-	display: inline-block;
-	position: relative;
-
-	ul{
-		list-style: none;
-		margin-left: 0;
-	}
-
-	> a{
-		white-space: nowrap;
-	}
-
-	nav {
-		display: none;
-		position: absolute;
-		z-index: 1000;
-		top: 100%;
-		left: 0;
-		min-width: 14rem;
-		align-self: stretch;
-		padding: 1rem 0;
-		background-color: #fff;
-		border: 1px solid rgba(7, 36, 86, .075);
-		box-shadow: 0 2px 4px 0 rgba(7, 36, 86, .075);
-
-		@media screen and (max-width: 47.99em){
-			& {
-				position: fixed;
-				z-index: 10000;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				overflow-x: hidden;
-				overflow-y: auto;
-				background-color: #fff;
-				padding: 1.5rem 2rem;
-
-				&::before {
-					font-family: 'Font Awesome 5 Free';
-    				font-weight: 900;
-    				font-style: normal;
-    				font-variant: normal;
-    				line-height: 1;
-    				display: inline-block;
-    				-moz-osx-font-smoothing: grayscale;
-    				-webkit-font-smoothing: antialiased;
-    				text-rendering: auto;
-					font-size: 18px;
-					position: absolute;
-					top: 0.75rem;
-					right: 0.75rem;
-					width: 18px;
-					height: 18px;
-					text-align: center;
-					display: block;
-					content: '\f00d';
-					color: rgba(7, 36, 86,0.25);
-
-					&:hover {
-						color: rgba(7, 36, 86,0.35);
-					}
-				}
-			}
-		}
-
-		ul {
-			padding: 0.25rem 1.5rem;
-
-			li {
-				left: 100%;
-				top: -1rem;
-				margin-top: -1px;
-
-				a {
-					color: inherit;
-
-					&:hover{
-						color: #ffc107;
-					}
-
-					span{
-						display: inline !important;
-					}
-				}
-			}
-		}
 	}
 }
