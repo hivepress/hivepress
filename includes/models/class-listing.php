@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @OA\Schema(description="")
  */
-class Listing extends Post {
+class Listing extends Entity {
 
 	/**
 	 * Class constructor.
@@ -44,31 +44,8 @@ class Listing extends Post {
 						'_alias'     => 'post_title',
 					],
 
-					'slug'             => [
-						'type'       => 'text',
-						'max_length' => 256,
-						'_alias'     => 'post_name',
-					],
-
-					/**
-					* @OA\Property(
-					*   property="description",
-					*   type="string",
-					*   description="Listing description.",
-					* )
-					 */
-					'description'      => [
-						'label'      => hivepress()->translator->get_string( 'description' ),
-						'type'       => 'textarea',
-						'max_length' => 10240,
-						'html'       => true,
-						'required'   => true,
-						'_alias'     => 'post_content',
-					],
-
 					'status'           => [
 						'type'    => 'select',
-						'_alias'  => 'post_status',
 
 						'options' => [
 							'publish'    => '',
@@ -129,13 +106,6 @@ class Listing extends Post {
 						'_external' => true,
 					],
 
-					'user'             => [
-						'type'     => 'id',
-						'required' => true,
-						'_alias'   => 'post_author',
-						'_model'   => 'user',
-					],
-
 					'vendor'           => [
 						'type'   => 'id',
 						'_alias' => 'post_parent',
@@ -143,15 +113,8 @@ class Listing extends Post {
 					],
 
 					'categories'       => [
-						'label'       => hivepress()->translator->get_string( 'category' ),
-						'type'        => 'select',
-						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
-						'multiple'    => true,
-						'required'    => true,
-						'_indexable'  => true,
 						'_model'      => 'listing_category',
-						'_relation'   => 'many_to_many',
 					],
 
 					'image'            => [
@@ -177,21 +140,6 @@ class Listing extends Post {
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Gets model fields.
-	 *
-	 * @param string $area Display area.
-	 * @return array
-	 */
-	final public function _get_fields( $area = null ) {
-		return array_filter(
-			$this->fields,
-			function( $field ) use ( $area ) {
-				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_display_areas' ), true );
-			}
-		);
 	}
 
 	/**

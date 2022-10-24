@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Vendor.
  */
-class Vendor extends Post {
+class Vendor extends Entity {
 
 	/**
 	 * Class constructor.
@@ -34,24 +34,12 @@ class Vendor extends Post {
 						'_alias'     => 'post_title',
 					],
 
-					'slug'            => [
-						'type'       => 'text',
-						'max_length' => 256,
-						'_alias'     => 'post_name',
-					],
-
 					'description'     => [
-						'label'      => hivepress()->translator->get_string( 'description' ),
-						'type'       => 'textarea',
-						'max_length' => 10240,
-						'html'       => true,
-						'_alias'     => 'post_content',
+						'required' => false,
 					],
 
 					'status'          => [
-						'type'       => 'text',
 						'max_length' => 128,
-						'_alias'     => 'post_status',
 					],
 
 					'verified'        => [
@@ -65,23 +53,9 @@ class Vendor extends Post {
 						'_alias' => 'post_date',
 					],
 
-					'user'            => [
-						'type'     => 'id',
-						'required' => true,
-						'_alias'   => 'post_author',
-						'_model'   => 'user',
-					],
-
 					'categories'      => [
-						'label'       => hivepress()->translator->get_string( 'category' ),
-						'type'        => 'select',
-						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_vendor_category' ],
-						'multiple'    => true,
-						'required'    => true,
-						'_indexable'  => true,
 						'_model'      => 'vendor_category',
-						'_relation'   => 'many_to_many',
 					],
 
 					'image'           => [
@@ -96,20 +70,5 @@ class Vendor extends Post {
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Gets model fields.
-	 *
-	 * @param string $area Display area.
-	 * @return array
-	 */
-	final public function _get_fields( $area = null ) {
-		return array_filter(
-			$this->fields,
-			function( $field ) use ( $area ) {
-				return empty( $area ) || in_array( $area, (array) $field->get_arg( '_display_areas' ), true );
-			}
-		);
 	}
 }
