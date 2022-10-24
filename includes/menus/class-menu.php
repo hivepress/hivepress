@@ -36,6 +36,13 @@ abstract class Menu {
 	protected $attributes = [];
 
 	/**
+	 * Add wrapper?
+	 *
+	 * @var bool
+	 */
+	protected $wrap = true;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -193,12 +200,16 @@ abstract class Menu {
 		$output = '';
 
 		if ( $this->items ) {
-			$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
+			if ( $this->wrap ) {
+				$output .= '<nav ' . hp\html_attributes( $this->attributes ) . '>';
+			}
 
 			// Render items.
 			$output .= $this->render_items();
 
-			$output .= '</nav>';
+			if ( $this->wrap ) {
+				$output .= '</nav>';
+			}
 		}
 
 		return $output;
@@ -232,7 +243,11 @@ abstract class Menu {
 			$route = hivepress()->router->get_current_route_name();
 
 			// Render items.
-			$output .= '<ul>';
+			if ( ! $this->wrap && is_null( $current ) ) {
+				$output .= '<ul ' . hp\html_attributes( $this->attributes ) . '>';
+			} else {
+				$output .= '<ul ' . ( $current ? 'class="sub-menu"' : '' ) . '>';
+			}
 
 			foreach ( hp\sort_array( $items ) as $name => $args ) {
 
@@ -243,8 +258,15 @@ abstract class Menu {
 					$class .= ' hp-menu__item--current current-menu-item';
 				}
 
+				// Get child items.
+				$child_items = $this->render_items( $name );
+
+				if ( $child_items ) {
+					$class .= ' menu-item-has-children';
+				}
+
 				// Render menu item.
-				$output .= '<li class="hp-menu__item ' . esc_attr( $class ) . '">';
+				$output .= '<li class="menu-item hp-menu__item ' . esc_attr( $class ) . '">';
 				$output .= '<a href="' . esc_url( $args['url'] ) . '">';
 
 				// Render label.
@@ -258,7 +280,7 @@ abstract class Menu {
 				$output .= '</a>';
 
 				// Render child items.
-				$output .= $this->render_items( $name );
+				$output .= $child_items;
 
 				$output .= '</li>';
 			}

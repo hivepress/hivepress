@@ -36,16 +36,10 @@ class Site_Header_Block extends Template {
 						],
 
 						'blocks'     => [
-							'user_account_link'   => [
-								'type'   => 'part',
-								'path'   => 'user/login/user-login-link',
-								'_order' => 10,
-							],
-
 							'listing_submit_link' => [
 								'type'   => 'part',
 								'path'   => 'listing/submit/listing-submit-link',
-								'_order' => 20,
+								'_order' => 10,
 							],
 						],
 					],
