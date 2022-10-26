@@ -154,7 +154,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'area'      => 'view_page_secondary',
 								'columns'   => 2,
 								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
-								'_settings' => [ 'columns' ],
+								'_settings' => [ 'columns', 'areas' ],
 								'_order'    => 50,
 							],
 
@@ -178,7 +178,7 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'model'     => 'listing',
 								'area'      => 'view_page_primary',
 								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
-								'_settings' => [ 'columns' ],
+								'_settings' => [ 'columns', 'areas' ],
 								'_order'    => 10,
 							],
 
