@@ -314,13 +314,35 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function register_taxonomies( $taxonomies ) {
+
+		$post_types = [];
+
 		foreach ( $this->get_models() as $model ) {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
 				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+				array_push( $post_types, $model, $model . '_attribute' );
 			}
 		}
+
+		$taxonomies['areas'] = [
+			'post_type'   => $post_types,
+			'show_ui'     => true,
+			'public'      => false,
+			'meta_box_cb' => false,
+
+			'labels'      => [
+				'name'          => esc_html__( 'Areas', 'hivepress' ),
+				'singular_name' => esc_html__( 'Area', 'hivepress' ),
+				'add_new_item'  => esc_html__( 'Add area', 'hivepress' ),
+				'edit_item'     => esc_html__( 'Edit area', 'hivepress' ),
+				'update_item'   => esc_html__( 'Update area', 'hivepress' ),
+				'view_item'     => esc_html__( 'View area', 'hivepress' ),
+				'search_items'  => esc_html__( 'Search area', 'hivepress' ),
+				'not_found'     => esc_html__( 'Not found area', 'hivepress' ),
+			],
+		];
 
 		return $taxonomies;
 	}
@@ -1429,12 +1451,7 @@ final class Attribute extends Component {
 						'multiple'    => true,
 						'_order'      => 10,
 
-						'options'     => [
-							'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
-							'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
-							'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
-							'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
-						],
+						'options'     => hivepress()->get_config( 'areas' ),
 					],
 
 					'icon'           => [

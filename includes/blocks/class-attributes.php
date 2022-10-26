@@ -91,6 +91,14 @@ class Attributes extends Block {
 							4 => '4',
 						],
 					],
+
+					'area'    => [
+						'label'   => esc_html__( 'Areas', 'hivepress' ),
+						'type'    => 'select',
+						'_order'  => 20,
+
+						'options' => hivepress()->get_config( 'areas' ),
+					],
 				],
 			],
 			$meta
