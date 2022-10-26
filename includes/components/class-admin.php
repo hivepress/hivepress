@@ -1556,6 +1556,15 @@ final class Admin extends Component {
 			}
 		}
 
+		if ( ! get_option( 'hp_hivepress_license_key' ) && hivepress()->get_version('updates') ) {
+			$notices['license_key'] = [
+				'type'        => 'warning',
+				'option'      => 'hivepress_license_key',
+				'dismissible' => false,
+				'text'        => hp\sanitize_html( __( 'Please enter the license key in <strong>HivePress > Settings > Integrations > HivePress Store</strong> to enable automatic updates', 'hivepress' ) ),
+			];
+		}
+
 		/**
 		 * Filters the WordPress admin area notices.
 		 *
