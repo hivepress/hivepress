@@ -331,9 +331,17 @@ final class Attribute extends Component {
 	public function register_attributes() {
 		foreach ( $this->get_models() as $model ) {
 
+			// Get post types.
+			$post_types = [ hp\prefix( $model . '_attribute' ) ];
+
+			if ( 'listing' === $model ) {
+				// todo: make improvements in future updates
+				$post_types[] = hp\prefix( 'vendor_attribute' );
+			}
+
 			// Set query arguments.
 			$query_args = [
-				'post_type'      => hp\prefix( $model . '_attribute' ),
+				'post_type'      => $post_types,
 				'post_status'    => 'publish',
 				'posts_per_page' => -1,
 				'orderby'        => 'menu_order',
@@ -354,6 +362,18 @@ final class Attribute extends Component {
 
 				foreach ( $attribute_objects as $attribute_object ) {
 
+					// Is sync attribute.
+					// todo: make improvements in future updates
+					$is_sync = (bool) $attribute_object->hp_sync;
+
+					if ( 'listing' === $model && hp\prefix( 'vendor_attribute' ) === $attribute_object->post_type ) {
+						if ( ! $is_sync ) {
+							continue;
+						} else {
+							$attribute_object->hp_editable = false;
+						}
+					}
+
 					// Set defaults.
 					$attribute_args = [
 						'id'             => $attribute_object->ID,
@@ -367,6 +387,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'sync'           => $is_sync,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -539,6 +560,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'sync'           => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -1497,14 +1519,23 @@ final class Attribute extends Component {
 					}
 
 					// @todo replace temporary fix.
-					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
-						$meta_box['fields']['moderated'] = [
-							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
-							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_parent' => 'editable',
-							'_order'  => 20,
-						];
+					if ( 'attribute_edit' === $meta_box_name ) {
+						if ( 'listing' === $model ) {
+							$meta_box['fields']['moderated'] = [
+								'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+								'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+								'type'    => 'checkbox',
+								'_parent' => 'editable',
+								'_order'  => 20,
+							];
+						} elseif ( 'vendor' === $model ) {
+							$meta_box['fields']['sync'] = [
+								'label'   => esc_html__( 'Sync', 'hivepress' ),
+								'caption' => esc_html__( 'Sync value for listings', 'hivepress' ),
+								'type'    => 'checkbox',
+								'_order'  => 30,
+							];
+						}
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
