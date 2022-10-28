@@ -714,9 +714,10 @@ final class User extends Controller {
 		( new Emails\User_Delete(
 			[
 				'recipient' => $user->get_email(),
+
 				'tokens'    => [
-					'user'               => $user,
-					'user_name'          => $user->get_display_name(),
+					'user'      => $user,
+					'user_name' => $user->get_display_name(),
 				],
 			]
 		) )->send();

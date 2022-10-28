@@ -45,7 +45,7 @@ class User_Delete extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Delete account complete', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( "Hi, %user_name%! Your account and personal data were deleted. Thank you for using our services.", 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your account and personal data were deleted. Thank you for using our services.', 'hivepress' ) ),
 			],
 			$args
 		);
