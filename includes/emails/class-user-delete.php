@@ -1,6 +1,6 @@
 <?php
 /**
- * User register email.
+ * User delete email.
  *
  * @package HivePress\Emails
  */
@@ -13,7 +13,7 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Sent to users on account registration.
+ * Sent to the user when he deleted his account.
  */
 class User_Delete extends Email {
 
