@@ -27,12 +27,12 @@ final class Attribute extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'forms_resource'      => [
+					'forms_resource'            => [
 						'path' => '/forms',
 						'rest' => true,
 					],
 
-					'form_resource'       => [
+					'form_resource'             => [
 						'base'   => 'forms_resource',
 						'path'   => '/(?P<form_name>[a-z0-9_]+)',
 						'method' => 'POST',
@@ -40,12 +40,20 @@ final class Attribute extends Controller {
 						'rest'   => true,
 					],
 
-					'meta_boxes_resource' => [
+					'model_categories_resource' => [
+						'base'   => 'forms_resource',
+						'path'   => '/categories',
+						'method' => 'GET',
+						'action' => [ $this, 'get_model_categories' ],
+						'rest'   => true,
+					],
+
+					'meta_boxes_resource'       => [
 						'path' => '/meta-boxes',
 						'rest' => true,
 					],
 
-					'meta_box_resource'   => [
+					'meta_box_resource'         => [
 						'base'   => 'meta_boxes_resource',
 						'path'   => '/(?P<meta_box_name>[a-z0-9_]+)',
 						'method' => 'POST',
@@ -130,6 +138,149 @@ final class Attribute extends Controller {
 				'html' => $output,
 			]
 		);
+	}
+
+	/**
+	 * Gets model categories.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function get_model_categories( $request ) {
+
+		// Get taxonomy.
+		$taxonomy = $request->get_param( 'taxonomy' );
+
+		if ( ! $taxonomy ) {
+			return hp\rest_error( 400 );
+		}
+
+		$terms_args = [
+			'taxonomy'   => $taxonomy,
+			'parent'     => 0,
+			'fields'     => 'id=>name',
+			'hide_empty' => false,
+		];
+
+		// Set results.
+		$results = null;
+
+		// Set parent categories.
+		$parent_categories = [];
+
+		$children_categories = [];
+
+		// Get categories.
+		$categories_id = $request->get_param( 'categories_id' );
+
+		if ( $categories_id ) {
+
+			// Get children categories.
+			$children_categories = explode( ', ', $categories_id );
+
+			// Get current category.
+			$current_category = (array) array_shift( $children_categories );
+
+			// Get parent categories.
+			$parent_categories = get_ancestors( $current_category[0], $taxonomy, 'taxonomy' );
+
+			// Merge all categories.
+			$categories_id = array_merge( $children_categories, $parent_categories, $current_category );
+
+			if ( $parent_categories || $children_categories ) {
+				$results[] = [
+					'id'   => 0,
+					'text' => hivepress()->translator->get_string( 'all_categories' ),
+				];
+
+				$terms_args['include'] = implode( ', ', $categories_id );
+				$terms_args['orderby'] = 'id';
+
+				unset( $terms_args['parent'] );
+			}
+		}
+
+		// Get terms.
+		$terms = get_terms( $terms_args );
+
+		if ( ! $terms ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Set children options.
+		$children = [];
+
+		// Set option groups.
+		$groups = [];
+
+		foreach ( $terms as $term_id => $term_name ) {
+			if ( in_array( $term_id, $parent_categories ) || ( in_array( $term_id, $current_category ) && $children_categories ) ) {
+
+				// Add group.
+				$groups[] = [
+					'option' => [
+						'id'   => $term_id,
+						'text' => $term_name,
+					],
+					'group'  => [
+						'children' => [],
+					],
+				];
+			} else {
+
+				// Add children option.
+				$children[] = [
+					'id'   => $term_id,
+					'text' => $term_name,
+				];
+			}
+		}
+
+		if ( $children ) {
+
+			// Add group with children.
+			$groups[] = [
+				'group' => [
+					'children' => $children,
+				],
+			];
+		}
+
+		for ( $i = count( $groups ) - 1; $i >= 0; $i-- ) {
+			if ( count( $groups ) - 1 === $i ) {
+				if ( ! $groups[ $i ]['group']['children'] ) {
+
+					// Add option to group children.
+					array_unshift( $children, $groups[ $i ]['option'] );
+					$groups[ $i ]['group']['children'] = $children;
+				}
+
+				// Add group to results.
+				$results[ $i + 1 ] = $groups[ $i ]['group'];
+			} else {
+
+				// Get copy group.
+				$child_group = [ $results[ $i + 2 ] ];
+
+				// Add option to copy group.
+				array_unshift( $child_group, $groups[ $i ]['option'] );
+
+				// Remove copy group from results.
+				unset( $results[ $i + 2 ] );
+
+				// Add copy group to parent group.
+				$groups[ $i ]['group']['children'] = $child_group;
+
+				// Add parent group to results.
+				$results[ $i + 1 ] = $groups[ $i ]['group'];
+			}
+		}
+
+		if ( ! $parent_categories && ! $children_categories ) {
+			$results = $children;
+		}
+
+		return hp\rest_response( 200, $results );
 	}
 
 	/**

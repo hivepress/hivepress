@@ -935,15 +935,33 @@ final class Attribute extends Component {
 			]
 		) ) {
 
+			// Get terms.
+			$terms = [];
+
+			foreach ( (array) get_terms(
+				[
+					'taxonomy'   => $taxonomy,
+					'fields'     => 'id=>parent',
+					'hide_empty' => false,
+				]
+			) as $term_id => $term_parent_id ) {
+				$terms[] = [
+					'id'     => $term_id,
+					'parent' => $term_parent_id,
+				];
+			}
+
 			// Add field.
 			$form_args['fields']['categories'] = [
-				'parent_disabled' => true,
-				'multiple'        => false,
-				'required'        => true,
-				'_order'          => 5,
+				'multiple'   => false,
+				'required'   => true,
+				'_order'     => 5,
 
-				'attributes'      => [
-					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
+				'attributes' => [
+					'data-render'     => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
+					'data-source'     => hivepress()->router->get_url( 'model_categories_resource', [ 'taxonomy' => $taxonomy ] ),
+					'data-parent'     => 'categories',
+					'data-categories' => wp_json_encode( $terms ),
 				],
 			];
 		}

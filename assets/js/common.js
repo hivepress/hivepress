@@ -106,6 +106,7 @@ var hivepress = {
 		// Select
 		container.find(hivepress.getSelector('select')).each(function() {
 			var field = $(this),
+				categories = field.data('categories'),
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
@@ -169,7 +170,26 @@ var hivepress = {
 						delay: 250,
 						cache: true,
 						data: function(params) {
+							var categories_id = [];
+
+							if (categories && field.val()) {
+								var currentCategory = categories.filter(obj => {
+									return obj.id === parseInt(field.val())
+								});
+
+								categories_id.push(currentCategory[0].id);
+
+								var childrenCategories = categories.filter(obj => {
+									return obj.parent === parseInt(field.val())
+								});
+
+								$.each(childrenCategories, function(index, component) {
+									categories_id.push(childrenCategories[index].id);
+								});
+							}
+
 							return {
+								'categories_id': categories_id ? categories_id.join(', ') : null,
 								'search': params.term,
 								'context': 'list',
 								'parent_value': field.data('parent-value'),
@@ -210,42 +230,70 @@ var hivepress = {
 				});
 			}
 
+			// Is category has children.
+			var category_without_children = true;
+
 			if (field.data('render')) {
 				field.on('change', function() {
-					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
 
-					data.append('_id', container.data('id'));
-					data.append('_model', container.data('model'));
-					data.delete('_wpnonce');
+					if (categories) {
+						var result = categories.filter(obj => {
+							return obj.parent === parseInt(field.val())
+						});
 
-					container.attr('data-state', 'loading');
+						if (result.length || !field.val()) {
+							category_without_children = false;
+						} else {
+							category_without_children = true;
+						}
+					}
 
-					$.ajax({
-						url: $(this).data('render'),
-						method: 'POST',
-						data: data,
-						contentType: false,
-						processData: false,
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-						},
-						complete: function(xhr) {
-							var response = xhr.responseJSON;
+					if (category_without_children) {
+						var container = $(this).closest('[data-model]'),
+							data = new FormData($(this).closest('form').get(0));
 
-							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
-								var newContainer = $(response.data.html);
+						data.append('_id', container.data('id'));
+						data.append('_model', container.data('model'));
+						data.delete('_wpnonce');
 
-								container.replaceWith(newContainer);
+						container.attr('data-state', 'loading');
 
-								hivepress.initUI(newContainer);
-							}
-						},
-					});
+						$.ajax({
+							url: $(this).data('render'),
+							method: 'POST',
+							data: data,
+							contentType: false,
+							processData: false,
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							},
+							complete: function(xhr) {
+								var response = xhr.responseJSON;
+
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									container.replaceWith(newContainer);
+
+									hivepress.initUI(newContainer);
+								}
+							},
+						});
+					}
 				});
 			}
 
 			field.select2(settings);
+
+			field.on('select2:select', function(e) {
+				if ('0' === field.val()) {
+					field.val(null).trigger('change');
+				}
+
+				if (!category_without_children) {
+					field.select2('open');
+				}
+			});
 		});
 
 		// Phone
