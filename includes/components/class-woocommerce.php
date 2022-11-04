@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -56,6 +57,10 @@ final class WooCommerce extends Component {
 
 		// Set countries configuration.
 		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
+
+		// Set billing name fields.
+		add_filter( 'hivepress/v1/models/user/update_first_name', [ $this, 'set_billing_names' ], 100, 2 );
+		add_filter( 'hivepress/v1/models/user/update_last_name', [ $this, 'set_billing_names' ], 100, 2 );
 
 		if ( ! is_admin() ) {
 
@@ -311,6 +316,28 @@ final class WooCommerce extends Component {
 	 */
 	public function set_countries( $countries ) {
 		return WC()->countries->get_countries();
+	}
+
+	/**
+	 * Set billing name fields.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $value Value.
+	 */
+	public function set_billing_names( $user_id, $value ) {
+		$user = Models\User::query()->get_by_id( $user_id );
+
+		if ( ! $user ) {
+			return;
+		}
+
+		$meta_key = 'billing_first_name';
+
+		if ( strpos( current_filter(), 'last_name' ) ) {
+			$meta_key = 'billing_last_name';
+		}
+		// Set billing names.
+		update_user_meta( $user_id, $meta_key, $value );
 	}
 
 	/**
