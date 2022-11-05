@@ -1556,10 +1556,10 @@ final class Admin extends Component {
 			}
 		}
 
-		if ( ! get_option( 'hp_hivepress_license_key' ) && hivepress()->get_version('updates') ) {
+		if ( ! get_option( 'hp_hivepress_license_key' ) && hivepress()->get_version( 'updates' ) ) {
 			$notices['license_key'] = [
-				'type'        => 'warning',
-				'text'        => hp\sanitize_html( __( 'Please enter the license key in <strong>HivePress > Settings > Integrations > HivePress Store</strong> to enable automatic updates', 'hivepress' ) ),
+				'type' => 'warning',
+				'text' => hp\sanitize_html( __( 'Please enter the license key in <strong>HivePress > Settings > Integrations > HivePress Store</strong> to enable automatic updates', 'hivepress' ) ),
 			];
 		}
 
