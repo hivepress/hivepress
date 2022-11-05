@@ -244,6 +244,12 @@ var hivepress = {
 
 								container.replaceWith(newContainer);
 
+								if($(newContainer).find('#hp_g-recaptcha-container').length) {
+									grecaptcha.ready(function() {
+										grecaptcha.render("hp_g-recaptcha-container");
+									});
+								}
+
 								hivepress.initUI(newContainer);
 							}
 						},

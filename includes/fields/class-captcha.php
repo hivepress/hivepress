@@ -26,6 +26,7 @@ class Captcha extends Field {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
+				'id'           => 'hp_g-recaptcha-container',
 				'class'        => [ 'g-recaptcha' ],
 				'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
 			]
