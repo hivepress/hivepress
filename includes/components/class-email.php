@@ -28,7 +28,7 @@ final class Email extends Component {
 		add_filter( 'hivepress/v1/emails/email', [ $this, 'set_email_content' ], 10, 2 );
 
 		// Register integrations.
-		add_action( 'init', [ $this, 'register_integrations' ] );
+		add_action( 'plugins_loaded', [ $this, 'register_integrations' ] );
 
 		if ( is_admin() ) {
 
