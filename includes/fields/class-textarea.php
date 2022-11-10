@@ -82,6 +82,7 @@ class Textarea extends Text {
 					'toolbar3'    => '',
 					'toolbar4'    => '',
 					'elementpath' => false,
+					'wpautop'     => true,
 				];
 			}
 		}
