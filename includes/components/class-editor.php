@@ -373,6 +373,7 @@ final class Editor extends Component {
 
 			// Get block arguments.
 			$block_type = substr( $name, strlen( 'render_' ) );
+			$block_name = substr( $name, strlen( 'render_' ) );
 			$block_args = (array) hp\get_first_array_value( $args );
 
 			if ( isset( $this->blocks[ $block_type ] ) ) {
@@ -404,6 +405,9 @@ final class Editor extends Component {
 						$block_args = array_merge( [ 'context' => $this->context ], $block_args );
 					}
 				}
+
+				// Set block name.
+				$block_args['name'] = $block_name;
 
 				// Create block.
 				$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ $block_args ] );
