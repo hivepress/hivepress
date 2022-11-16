@@ -274,6 +274,7 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function() {
 			var field = $(this),
+				currentDate = new Date(),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -320,6 +321,7 @@ var hivepress = {
 			}
 
 			if (field.data('min-date')) {
+				currentDate = new Date(field.data('min-date'));
 				settings['minDate'] = field.data('min-date');
 			}
 
@@ -370,14 +372,6 @@ var hivepress = {
 						}
 					});
 				};
-			}
-
-			if (field.is('[data-offset]')) {
-				settings['minDate'] = new Date().fp_incr(field.data('offset'));
-			}
-
-			if (field.is('[data-window]')) {
-				settings['maxDate'] = new Date().fp_incr(field.data('window'));
 			}
 
 			if (field.data('time')) {
@@ -454,7 +448,15 @@ var hivepress = {
 				},
 			});
 
-			field.flatpickr(settings);
+			var flatpickrField = field.flatpickr(settings);
+
+			if (field.is('[data-offset]')) {
+				flatpickrField.set('minDate', currentDate.fp_incr(field.data('offset')));
+			}
+
+			if (field.is('[data-window]')) {
+				flatpickrField.set('maxDate', currentDate.fp_incr(field.data('window')));
+			}
 		});
 
 		// Time
