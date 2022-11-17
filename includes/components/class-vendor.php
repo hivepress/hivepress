@@ -45,6 +45,7 @@ final class Vendor extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+			add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_user_edit_settings_page' ], 100, 2 );
 		}
 
 		parent::__construct( $args );
@@ -277,5 +278,47 @@ final class Vendor extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Alters user edit settings page.
+	 *
+	 * @param array  $blocks Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_edit_settings_page( $blocks, $template ) {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return $blocks;
+		}
+
+		// Get vendor id.
+		$vendor_id = Models\Vendor::query()->filter( [ 'user' => get_current_user_id() ] )->get_first_id();
+
+		if ( ! $vendor_id ) {
+			return $blocks;
+		}
+
+		// Add vendor id to template context.
+		$template->set_context( 'vendor_id', $vendor_id );
+
+		return hivepress()->template->merge_blocks(
+			$blocks,
+			[
+				'user_update_form' => [
+					'footer' => [
+						'form_actions' => [
+							'blocks' => [
+								'vendor_profile_link' => [
+									'type'   => 'part',
+									'path'   => 'vendor/edit/page/vendor-profile-link',
+									'_order' => 5,
+								],
+							],
+						],
+					],
+				],
+			]
+		);
 	}
 }
