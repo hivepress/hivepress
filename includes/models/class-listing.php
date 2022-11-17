@@ -162,12 +162,12 @@ class Listing extends Post {
 					],
 
 					'images'           => [
-						'label'     => hivepress()->translator->get_string( 'images' ),
-						'caption'   => hivepress()->translator->get_string( 'select_images' ),
+						'label'     => hivepress()->translator->get_string( 'images_video' ),
+						'caption'   => hivepress()->translator->get_string( 'select_images_video' ),
 						'type'      => 'attachment_upload',
 						'multiple'  => true,
 						'max_files' => 10,
-						'formats'   => [ 'jpg', 'jpeg', 'png' ],
+						'formats'   => [ 'jpg', 'jpeg', 'png', 'mp4', 'm4v', 'webm', 'ogv', 'wmv', 'flv' ],
 						'_model'    => 'attachment',
 						'_relation' => 'one_to_many',
 					],
@@ -208,7 +208,7 @@ class Listing extends Post {
 			if ( is_null( $image_ids ) ) {
 				$image_ids = [];
 
-				foreach ( get_attached_media( 'image', $this->id ) as $image ) {
+				foreach ( get_attached_media( '', $this->id ) as $image ) {
 					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
 						$image_ids[] = $image->ID;
 					}
@@ -252,10 +252,21 @@ class Listing extends Post {
 
 			if ( $this->get_images__id() ) {
 				foreach ( $this->get_images__id() as $image_id ) {
-					$urls = wp_get_attachment_image_src( $image_id, $size );
 
-					if ( $urls ) {
-						$image_urls[] = hp\get_first_array_value( $urls );
+					// Get attachment url.
+					$url = null;
+
+					// Get attachment type.
+					$type = get_post_mime_type( $image_id );
+
+					if ( strpos( $type, 'image' ) !== false ) {
+						$url = hp\get_first_array_value( (array) wp_get_attachment_image_src( $image_id, $size ) );
+					} elseif ( strpos( $type, 'video' ) !== false ) {
+						$url = wp_get_attachment_url( $image_id );
+					}
+
+					if ( $url ) {
+						$image_urls[] = $url;
 					}
 				}
 			}

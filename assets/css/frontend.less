@@ -630,15 +630,21 @@
 				.slick-slide {
 					padding: 0 0.5rem;
 					outline: none;
+					cursor: pointer;
 
-					img {
-						cursor: pointer;
+					img, video {
 						opacity: 0.5;
+					}
+
+					video{
+						pointer-events: none;
 					}
 				}
 
 				.slick-current img,
-				.slick-slide img:hover {
+				.slick-slide img:hover,
+				.slick-current video,
+				.slick-slide video:hover {
 					opacity: 1;
 				}
 

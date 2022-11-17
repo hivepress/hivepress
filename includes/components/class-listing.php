@@ -190,12 +190,21 @@ final class Listing extends Component {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Get image IDs.
-		$image_ids = $listing->get_images__id();
+		// Get image ID.
+		$image_post_id = null;
+
+		foreach ( $listing->get_images__id() as $image_id ) {
+			$type = get_post_mime_type( $image_id );
+
+			if ( strpos( $type, 'image' ) !== false ) {
+				$image_post_id = $image_id;
+				break;
+			}
+		}
 
 		// Set image.
-		if ( $image_ids ) {
-			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
+		if ( $image_post_id ) {
+			set_post_thumbnail( $listing->get_id(), $image_post_id );
 		} else {
 			delete_post_thumbnail( $listing->get_id() );
 		}

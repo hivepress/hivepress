@@ -93,7 +93,7 @@
 		// Carousel slider
 		hivepress.getComponent('carousel-slider').each(function() {
 			var container = $(this),
-				images = container.find('img');
+				images = container.find('img, video');
 
 			if (images.length && images.first().data('src')) {
 				var imageURLs = [];
@@ -104,8 +104,8 @@
 					});
 				});
 
-				container.on('click', 'img', function() {
-					var index = container.find('img').index($(this).get(0));
+				container.on('click', 'img, video', function() {
+					var index = container.find('img, video').index($(this).get(0));
 
 					if (index < imageURLs.length) {
 						$.fancybox.open(imageURLs, {
