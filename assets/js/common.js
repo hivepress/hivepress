@@ -322,7 +322,7 @@ var hivepress = {
 
 			if (field.data('min-date')) {
 				currentDate = new Date(field.data('min-date'));
-				settings['minDate'] = field.data('min-date');
+				settings['minDate'] = currentDate;
 			}
 
 			if (field.data('max-date')) {
@@ -376,6 +376,14 @@ var hivepress = {
 
 			if (field.data('time')) {
 				settings['enableTime'] = true;
+			}
+
+			if (field.is('[data-offset]')) {
+				settings['minDate'] = currentDate.fp_incr(field.data('offset'));
+			}
+
+			if (field.is('[data-window]')) {
+				settings['maxDate'] = currentDate.fp_incr(field.data('window'));
 			}
 
 			if (field.data('mode')) {
@@ -448,15 +456,7 @@ var hivepress = {
 				},
 			});
 
-			var flatpickrField = field.flatpickr(settings);
-
-			if (field.is('[data-offset]')) {
-				flatpickrField.set('minDate', currentDate.fp_incr(field.data('offset')));
-			}
-
-			if (field.is('[data-window]')) {
-				flatpickrField.set('maxDate', currentDate.fp_incr(field.data('window')));
-			}
+			field.flatpickr(settings);
 		});
 
 		// Time
