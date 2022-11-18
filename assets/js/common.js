@@ -321,6 +321,7 @@ var hivepress = {
 			}
 
 			if (field.data('min-date')) {
+				// todo: needs additional testing after adding assets.
 				currentDate = new Date(field.data('min-date'));
 				settings['minDate'] = currentDate;
 			}
@@ -379,10 +380,12 @@ var hivepress = {
 			}
 
 			if (field.is('[data-offset]')) {
+				// todo: needs additional testing after adding assets.
 				settings['minDate'] = currentDate.fp_incr(field.data('offset'));
 			}
 
 			if (field.is('[data-window]')) {
+				// todo: needs additional testing after adding assets.
 				settings['maxDate'] = currentDate.fp_incr(field.data('window'));
 			}
 
