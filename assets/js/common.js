@@ -274,6 +274,7 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function() {
 			var field = $(this),
+				currentDate = new Date(),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -320,7 +321,9 @@ var hivepress = {
 			}
 
 			if (field.data('min-date')) {
-				settings['minDate'] = field.data('min-date');
+				// todo: needs additional testing after adding assets.
+				currentDate = new Date(field.data('min-date'));
+				settings['minDate'] = currentDate;
 			}
 
 			if (field.data('max-date')) {
@@ -372,16 +375,18 @@ var hivepress = {
 				};
 			}
 
+			if (field.data('time')) {
+				settings['enableTime'] = true;
+			}
+
 			if (field.is('[data-offset]')) {
-				settings['minDate'] = new Date().fp_incr(field.data('offset'));
+				// todo: needs additional testing after adding assets.
+				settings['minDate'] = currentDate.fp_incr(field.data('offset'));
 			}
 
 			if (field.is('[data-window]')) {
-				settings['maxDate'] = new Date().fp_incr(field.data('window'));
-			}
-
-			if (field.data('time')) {
-				settings['enableTime'] = true;
+				// todo: needs additional testing after adding assets.
+				settings['maxDate'] = currentDate.fp_incr(field.data('window'));
 			}
 
 			if (field.data('mode')) {
