@@ -231,6 +231,7 @@ class Date extends Field {
 
 		if ( $this->multiple ) {
 			$attributes['data-mode'] = 'multiple';
+			$this->value             = explode( ', ', $this->value );
 		}
 
 		// Set component.
@@ -285,7 +286,22 @@ class Date extends Field {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = trim( wp_unslash( $this->value ) );
+			if ( $this->multiple ) {
+				$output = [];
+				$dates  = $this->value;
+
+				if ( ! is_array( $dates ) ) {
+					$dates = explode( ',', $this->value );
+				}
+
+				foreach ( $dates as $value ) {
+					$output[] = trim( wp_unslash( $value ) );
+				}
+
+				$this->value = $output;
+			} else {
+				$this->value = trim( wp_unslash( $this->value ) );
+			}
 		}
 	}
 
@@ -293,7 +309,22 @@ class Date extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$this->value = sanitize_text_field( $this->value );
+		if ( $this->multiple ) {
+			$output = [];
+			$dates  = $this->value;
+
+			if ( ! is_array( $dates ) ) {
+				$dates = explode( ',', $this->value );
+			}
+
+			foreach ( $dates as $value ) {
+				$output[] = sanitize_text_field( $value );
+			}
+
+			$this->value = $output;
+		} else {
+			$this->value = sanitize_text_field( $this->value );
+		}
 	}
 
 	/**
@@ -304,10 +335,6 @@ class Date extends Field {
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
 			$dates = (array) $this->value;
-
-			if ( $this->multiple ) {
-				$dates = explode( ', ', $this->value );
-			}
 
 			foreach ( $dates as $value ) {
 				$date = date_create_from_format( $this->format, $value );
@@ -348,13 +375,19 @@ class Date extends Field {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
+		$value = $this->value;
+
+		if ( $this->multiple ) {
+			$value = implode( ', ', (array) $value );
+		}
+
 		// Render field.
 		$output .= ( new Text(
 			array_merge(
 				$this->args,
 				[
 					'display_type' => 'text',
-					'default'      => $this->value,
+					'default'      => $value,
 
 					'attributes'   => [
 						'data-input' => '',
