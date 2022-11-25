@@ -193,11 +193,9 @@ final class Listing extends Component {
 		// Get image ID.
 		$image_post_id = null;
 
-		foreach ( $listing->get_images__id() as $image_id ) {
-			$type = get_post_mime_type( $image_id );
-
-			if ( strpos( $type, 'image' ) !== false ) {
-				$image_post_id = $image_id;
+		foreach ( $listing->get_images__object() as $image ) {
+			if ( strpos( $image->get_mime_type(), 'image' ) !== false ) {
+				$image_post_id = $image->get_id();
 				break;
 			}
 		}
@@ -420,6 +418,12 @@ final class Listing extends Component {
 	public function alter_model_fields( $model ) {
 		if ( get_option( 'hp_listing_title_format' ) ) {
 			$model['fields']['title']['required'] = false;
+		}
+
+		if ( get_option( 'hp_listing_enable_video' ) ) {
+			$model['fields']['images']['label']   = esc_html__( 'Images or Videos', 'hivepress' );
+			$model['fields']['images']['caption'] = esc_html__( 'Select Images or Videos', 'hivepress' );
+			$model['fields']['images']['formats'] = array_merge( $model['fields']['images']['formats'], [ 'mp4', 'm4v', 'webm', 'ogv', 'wmv', 'flv' ] );
 		}
 
 		return $model;

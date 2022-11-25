@@ -8,6 +8,7 @@
 namespace HivePress\Models;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -162,12 +163,12 @@ class Listing extends Post {
 					],
 
 					'images'           => [
-						'label'     => hivepress()->translator->get_string( 'images_video' ),
-						'caption'   => hivepress()->translator->get_string( 'select_images_video' ),
+						'label'     => hivepress()->translator->get_string( 'images' ),
+						'caption'   => hivepress()->translator->get_string( 'select_images' ),
 						'type'      => 'attachment_upload',
 						'multiple'  => true,
 						'max_files' => 10,
-						'formats'   => [ 'jpg', 'jpeg', 'png', 'mp4', 'm4v', 'webm', 'ogv', 'wmv', 'flv' ],
+						'formats'   => [ 'jpg', 'jpeg', 'png' ],
 						'_model'    => 'attachment',
 						'_relation' => 'one_to_many',
 					],
@@ -208,7 +209,7 @@ class Listing extends Post {
 			if ( is_null( $image_ids ) ) {
 				$image_ids = [];
 
-				foreach ( get_attached_media( '', $this->id ) as $image ) {
+				foreach ( get_attached_media( [ 'image', 'video' ], $this->id ) as $image ) {
 					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
 						$image_ids[] = $image->ID;
 					}
@@ -276,5 +277,23 @@ class Listing extends Post {
 		}
 
 		return $this->values[ $name ];
+	}
+
+	/**
+	 * Gets image objects.
+	 *
+	 * @return array
+	 */
+	final public function get_images__object() {
+		$objects = [];
+
+		if ( $this->get_images__id() ) {
+			$attachments = Models\Attachment::query()->filter( [ 'id__in' => (array) $this->get_images__id() ] )->get();
+			foreach ( $attachments as $attachment ) {
+				$objects[] = $attachment;
+			}
+		}
+
+		return $objects;
 	}
 }

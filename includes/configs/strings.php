@@ -27,8 +27,6 @@ return [
 	'image'                                     => esc_html__( 'Image', 'hivepress' ),
 	'images'                                    => esc_html__( 'Images', 'hivepress' ),
 	'select_images'                             => esc_html__( 'Select Images', 'hivepress' ),
-	'images_video'                              => esc_html__( 'Images or Videos', 'hivepress' ),
-	'select_images_video'                       => esc_html__( 'Select Images or Videos', 'hivepress' ),
 	'description'                               => esc_html__( 'Description', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
 	'emails'                                    => esc_html__( 'Emails', 'hivepress' ),
