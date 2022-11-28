@@ -41,6 +41,9 @@ final class Vendor extends Component {
 		// Alter post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
 
+		// Set request context.
+		add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
 		if ( ! is_admin() ) {
 
 			// Alter templates.
@@ -288,19 +291,23 @@ final class Vendor extends Component {
 	 * @return array
 	 */
 	public function alter_user_edit_settings_page( $blocks, $template ) {
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			return $blocks;
-		}
 
-		// Get vendor id.
-		$vendor_id = Models\Vendor::query()->filter( [ 'user' => get_current_user_id() ] )->get_first_id();
+		// Get vendor ID.
+		$vendor_id = hivepress()->request->get_context( 'vendor_id' );
 
 		if ( ! $vendor_id ) {
 			return $blocks;
 		}
 
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( $vendor_id );
+
+		if ( ! $vendor ) {
+			return $blocks;
+		}
+
 		// Add vendor id to template context.
-		$template->set_context( 'vendor_id', $vendor_id );
+		$template->set_context( 'vendor', $vendor );
 
 		return hivepress()->template->merge_blocks(
 			$blocks,
@@ -320,5 +327,36 @@ final class Vendor extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+
+		// Check permission.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return $context;
+		}
+
+		// Get cached vendor ID.
+		$vendor_id = hivepress()->cache->get_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor' );
+
+		if ( is_null( $vendor_id ) ) {
+
+			// Get vendor id.
+			$vendor_id = Models\Vendor::query()->filter( [ 'user' => get_current_user_id() ] )->get_first_id();
+
+			// Cache vendor ID.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor', $vendor_id );
+		}
+
+		// Set request context.
+		$context['vendor_id'] = $vendor_id;
+
+		return $context;
 	}
 }
