@@ -640,10 +640,6 @@
 			&-slider {
 				margin-bottom: 1rem;
 				direction: ltr;
-
-				video[data-src^="http"] {
-					cursor: pointer;
-				}
 			}
 
 			&-carousel {
@@ -656,23 +652,22 @@
 				.slick-slide {
 					padding: 0 0.5rem;
 					outline: none;
+					cursor: pointer;
 
 					img,
 					video {
 						opacity: 0.5;
-						cursor: pointer;
-					}
-
-					video:focus {
 						pointer-events: none;
 					}
 				}
 
-				.slick-current img,
-				.slick-current video,
-				.slick-slide img:hover,
-				.slick-slide video:hover {
-					opacity: 1;
+				.slick-current,
+				.slick-slide:hover {
+
+					img,
+					video {
+						opacity: 1;
+					}
 				}
 
 				.slick-arrow {
@@ -704,8 +699,11 @@
 				}
 			}
 
-			img[data-src^="http"] {
-				cursor: pointer;
+			img,
+			video {
+				&[data-src^="http"] {
+					cursor: pointer;
+				}
 			}
 		}
 
