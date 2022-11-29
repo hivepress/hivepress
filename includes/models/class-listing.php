@@ -208,7 +208,15 @@ class Listing extends Post {
 			if ( is_null( $image_ids ) ) {
 				$image_ids = [];
 
-				foreach ( get_attached_media( [ 'image', 'video' ], $this->id ) as $image ) {
+				// Get file formats.
+				$formats = [ 'image' ];
+
+				if ( get_option( 'hp_listing_allow_video' ) ) {
+					$formats[] = 'video';
+				}
+
+				// Get image IDs.
+				foreach ( get_attached_media( $formats, $this->id ) as $image ) {
 					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
 						$image_ids[] = $image->ID;
 					}
