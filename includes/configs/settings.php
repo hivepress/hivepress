@@ -79,9 +79,8 @@ return [
 						'_order'  => 70,
 					],
 
-					'listing_enable_video'             => [
-						'label'   => esc_html__( 'Video', 'hivepress' ),
-						'caption' => esc_html__( 'Enable video uploading', 'hivepress' ),
+					'listing_allow_video'             => [
+						'caption' => esc_html__( 'Allow uploading videos', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 80,
 					],

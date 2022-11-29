@@ -190,19 +190,22 @@ final class Listing extends Component {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( $listing_id );
 
-		// Get image ID.
-		$image_post_id = null;
+		// Get image IDs.
+		$image_ids = $listing->get_images__id();
 
-		foreach ( $listing->get_images__object() as $image ) {
-			if ( strpos( $image->get_mime_type(), 'image' ) !== false ) {
-				$image_post_id = $image->get_id();
-				break;
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$image_ids = [];
+
+			foreach ( $listing->get_images() as $image ) {
+				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
+					$image_ids[] = $image->get_id();
+				}
 			}
 		}
 
 		// Set image.
-		if ( $image_post_id ) {
-			set_post_thumbnail( $listing->get_id(), $image_post_id );
+		if ( $image_ids ) {
+			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
 		} else {
 			delete_post_thumbnail( $listing->get_id() );
 		}
@@ -420,10 +423,15 @@ final class Listing extends Component {
 			$model['fields']['title']['required'] = false;
 		}
 
-		if ( get_option( 'hp_listing_enable_video' ) ) {
-			$model['fields']['images']['label']   = esc_html__( 'Images or Videos', 'hivepress' );
-			$model['fields']['images']['caption'] = esc_html__( 'Select Images or Videos', 'hivepress' );
-			$model['fields']['images']['formats'] = array_merge( $model['fields']['images']['formats'], [ 'mp4', 'm4v', 'webm', 'ogv', 'wmv', 'flv' ] );
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$model['fields']['images'] = hp\merge_arrays(
+				$model['fields']['images'],
+				[
+					'label'   => esc_html__( 'Gallery', 'hivepress' ),
+					'caption' => null,
+					'formats' => [ 'mp4', 'webm', 'ogv' ],
+				]
+			);
 		}
 
 		return $model;
