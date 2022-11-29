@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Blocks;
+use HivePress\Menus;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -40,6 +41,9 @@ final class Template extends Component {
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
 
+			// Add menu items.
+			add_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+
 			// Render site header.
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
 
@@ -55,6 +59,100 @@ final class Template extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Fetches template block.
+	 *
+	 * @param array  $template Template blocks.
+	 * @param string $name Block name.
+	 * @param bool   $remove Remove block?
+	 * @return array
+	 */
+	public function fetch_block( &$template, $name, $remove = true ) {
+		return hp\get_first_array_value( $this->fetch_blocks( $template, [ $name ], $remove ) );
+	}
+
+	/**
+	 * Fetches template blocks.
+	 *
+	 * @param array $template Template blocks.
+	 * @param array $names Block names.
+	 * @param bool  $remove Remove block?
+	 * @return array
+	 */
+	public function fetch_blocks( &$template, $names, $remove = true ) {
+		if ( isset( $template['blocks'] ) ) {
+			return $this->_fetch_blocks( $template['blocks'], $names, $remove );
+		}
+
+		return $this->_fetch_blocks( $template, $names, $remove );
+	}
+
+	protected function _fetch_blocks( &$template, &$names, $remove ) {
+		$blocks = [];
+
+		foreach ( $template as $name => $block ) {
+			if ( ! $names ) {
+				break;
+			}
+
+			$index = array_search( $name, $names );
+
+			if ( false !== $index ) {
+				$blocks[ $name ] = $block;
+
+				if ( $remove ) {
+					unset( $template[ $name ] );
+				}
+
+				unset( $names[ $index ] );
+			} elseif ( isset( $block['blocks'] ) ) {
+				$blocks += $this->_fetch_blocks( $template[ $name ]['blocks'], $names, $remove );
+			}
+		}
+
+		return $blocks;
+	}
+
+	/**
+	 * Merges template blocks.
+	 *
+	 * @param array $template Template blocks.
+	 * @param array $blocks Blocks to merge.
+	 * @return array
+	 */
+	public function merge_blocks( &$template, $blocks ) {
+		if ( isset( $template['blocks'] ) ) {
+			$template['blocks'] = $this->_merge_blocks( $template['blocks'], $blocks );
+		} else {
+			$template = $this->_merge_blocks( $template, $blocks );
+		}
+
+		return $template;
+	}
+
+	protected function _merge_blocks( &$template, &$blocks ) {
+		$names = array_keys( $blocks );
+
+		foreach ( $template as $name => $block ) {
+			if ( ! $names ) {
+				break;
+			}
+
+			$index = array_search( $name, $names );
+
+			if ( false !== $index ) {
+				$template[ $name ] = hp\merge_arrays( $template[ $name ], $blocks[ $name ] );
+
+				unset( $blocks[ $name ] );
+				unset( $names[ $index ] );
+			} elseif ( isset( $block['blocks'] ) ) {
+				$template[ $name ]['blocks'] = $this->_merge_blocks( $template[ $name ]['blocks'], $blocks );
+			}
+		}
+
+		return $template;
 	}
 
 	/**
@@ -130,6 +228,59 @@ final class Template extends Component {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Adds menu items.
+	 *
+	 * @param string $items Menu items.
+	 * @param object $args Menu arguments.
+	 * @return string
+	 */
+	public function add_menu_items( $items, $args ) {
+
+		// Check menu.
+		if ( ! function_exists( 'hivetheme' ) ) {
+			remove_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+		} elseif ( 'header' !== $args->theme_location ) {
+			return $items;
+		}
+
+		// Get class.
+		$class = 'menu-item';
+
+		if ( is_user_logged_in() ) {
+			$class .= ' menu-item--user-account menu-item-has-children';
+		} else {
+			$class .= ' menu-item--user-login';
+		}
+
+		// Render item.
+		$output = '<li class="' . esc_attr( $class ) . '">';
+
+		$output .= ( new Blocks\Part(
+			[
+				'path' => 'user/login/user-login-link',
+			]
+		) )->render();
+
+		if ( is_user_logged_in() ) {
+
+			// Render menu.
+			$output .= ( new Menus\User_Account(
+				[
+					'wrap'       => false,
+
+					'attributes' => [
+						'class' => [ 'sub-menu' ],
+					],
+				]
+			) )->render();
+		}
+
+		$output .= '</li>';
+
+		return $output . $items . $output;
 	}
 
 	/**

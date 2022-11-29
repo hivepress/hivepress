@@ -185,6 +185,15 @@
 			}
 		}
 
+		&--checkbox&--readonly {
+			pointer-events: none;
+
+			input[type=checkbox]:checked + span::before {
+				background-color: #ccc;
+				border-color: #ccc;
+			}
+		}
+
 		&--date,
 		&--time {
 			display: flex;
@@ -608,6 +617,7 @@
 		&__images {
 			&-slider {
 				margin-bottom: 1rem;
+				direction: ltr;
 			}
 
 			&-carousel {
@@ -1083,7 +1093,6 @@
 /*--------------------------------------------------------------
 Select2
 --------------------------------------------------------------*/
-
 .select2 {
 	&-container {
 		min-width: 4.5rem;
@@ -1101,5 +1110,23 @@ body.admin-bar {
 #wpadminbar {
 	@media screen and (max-width: 600px) {
 		top: -46px;
+	}
+}
+/*--------------------------------------------------------------
+Menus
+--------------------------------------------------------------*/
+.menu-item {
+	&--user-account,
+	&--user-login {
+		@media only screen and (min-width:48em) {
+			&:first-child {
+				display: none;
+			}
+		}
+		@media only screen and (max-width:47.99em) {
+			&:last-child {
+				display: none;
+			}
+		}
 	}
 }

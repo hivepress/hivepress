@@ -894,10 +894,6 @@ final class Listing extends Controller {
 			) ) {
 				return home_url();
 			}
-
-			if ( get_option( 'hp_listing_enable_moderation' ) && ! $vendor->validate() ) {
-				$vendor->set_status( 'draft' )->save_status();
-			}
 		}
 
 		// Set request context.
@@ -1010,6 +1006,14 @@ final class Listing extends Controller {
 		// @todo replace temporary fix.
 		$listing->get_images__id();
 
+		// Check redirect.
+		// @todo remove temporary fix.
+		if ( isset( $_GET['redirect'] ) ) {
+			wp_set_post_terms( $listing->get_id(), [], 'hp_listing_category' );
+
+			return hivepress()->router->get_url( 'listing_submit_details_page' );
+		}
+
 		// Check listing.
 		if ( $listing->validate() ) {
 			return true;
@@ -1055,6 +1059,14 @@ final class Listing extends Controller {
 				'drafted' => null,
 			]
 		)->save( [ 'status', 'drafted' ] );
+
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
+
+		// Update vendor.
+		if ( 'pending' === $status && $vendor->get_status() === 'auto-draft' ) {
+			$vendor->set_status( 'draft' )->save_status();
+		}
 
 		// Send email.
 		( new Emails\Listing_Submit(

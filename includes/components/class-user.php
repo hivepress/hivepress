@@ -355,49 +355,47 @@ final class User extends Component {
 	 * @return array
 	 */
 	public function alter_site_footer_block( $template ) {
-		return hp\merge_trees(
+		return hivepress()->template->merge_blocks(
 			$template,
 			[
-				'blocks' => [
-					'modals' => [
-						'blocks' => [
-							'user_login_modal'            => [
-								'type'        => 'modal',
-								'title'       => esc_html__( 'Sign In', 'hivepress' ),
-								'_capability' => 'login',
+				'modals' => [
+					'blocks' => [
+						'user_login_modal'            => [
+							'type'        => 'modal',
+							'title'       => esc_html__( 'Sign In', 'hivepress' ),
+							'_capability' => 'login',
 
-								'blocks'      => [
-									'user_login_form' => [
-										'type'   => 'user_login_form',
-										'_order' => 10,
-									],
+							'blocks'      => [
+								'user_login_form' => [
+									'type'   => 'user_login_form',
+									'_order' => 10,
 								],
 							],
+						],
 
-							'user_register_modal'         => [
-								'type'        => 'modal',
-								'title'       => esc_html__( 'Register', 'hivepress' ),
-								'_capability' => 'login',
+						'user_register_modal'         => [
+							'type'        => 'modal',
+							'title'       => esc_html__( 'Register', 'hivepress' ),
+							'_capability' => 'login',
 
-								'blocks'      => [
-									'user_register_form' => [
-										'type'   => 'user_register_form',
-										'_order' => 10,
-									],
+							'blocks'      => [
+								'user_register_form' => [
+									'type'   => 'user_register_form',
+									'_order' => 10,
 								],
 							],
+						],
 
-							'user_password_request_modal' => [
-								'type'        => 'modal',
-								'title'       => esc_html__( 'Reset Password', 'hivepress' ),
-								'_capability' => 'login',
+						'user_password_request_modal' => [
+							'type'        => 'modal',
+							'title'       => esc_html__( 'Reset Password', 'hivepress' ),
+							'_capability' => 'login',
 
-								'blocks'      => [
-									'user_password_request_form' => [
-										'type'   => 'form',
-										'form'   => 'user_password_request',
-										'_order' => 10,
-									],
+							'blocks'      => [
+								'user_password_request_form' => [
+									'type'   => 'form',
+									'form'   => 'user_password_request',
+									'_order' => 10,
 								],
 							],
 						],
