@@ -538,6 +538,7 @@ var hivepress = {
 				url: field.data('url'),
 				dataType: 'json',
 				paramName: 'file',
+				sequentialUploads: true,
 				formData: {
 					'parent_model': container.data('model'),
 					'parent_field': field.data('name'),
