@@ -316,9 +316,9 @@ final class Vendor extends Component {
 					'footer' => [
 						'form_actions' => [
 							'blocks' => [
-								'vendor_profile_link' => [
+								'vendor_view_link' => [
 									'type'   => 'part',
-									'path'   => 'vendor/edit/page/vendor-profile-link',
+									'path'   => 'vendor/edit/page/vendor-view-link',
 									'_order' => 5,
 								],
 							],
