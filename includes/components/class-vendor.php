@@ -270,7 +270,12 @@ final class Vendor extends Component {
 		if ( is_null( $vendor_id ) ) {
 
 			// Get vendor ID.
-			$vendor_id = (int) Models\Vendor::query()->filter( [ 'user' => get_current_user_id() ] )->get_first_id();
+			$vendor_id = (int) Models\Vendor::query()->filter(
+				[
+					'status' => 'publish',
+					'user'   => get_current_user_id(),
+				]
+			)->get_first_id();
 
 			// Cache vendor ID.
 			hivepress()->cache->set_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor', $vendor_id );
@@ -333,7 +338,7 @@ final class Vendor extends Component {
 		// Get vendor.
 		$vendor = Models\Vendor::query()->get_by_id( $vendor_id );
 
-		if ( ! $vendor ) {
+		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
 			return $blocks;
 		}
 
