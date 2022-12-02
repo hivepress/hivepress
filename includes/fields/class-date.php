@@ -88,6 +88,13 @@ class Date extends Field {
 	protected $window;
 
 	/**
+	 * Allow selecting multiple dates?
+	 *
+	 * @var bool
+	 */
+	protected $multiple = false;
+
+	/**
 	 * Allow selecting time?
 	 *
 	 * @var bool
@@ -215,6 +222,11 @@ class Date extends Field {
 		// Set window.
 		if ( ! is_null( $this->window ) ) {
 			$attributes['data-window'] = $this->window;
+		}
+
+		// Set multiple mode.
+		if ( $this->multiple ) {
+			$attributes['data-mode'] = 'multiple';
 		}
 
 		// Set time flag.
