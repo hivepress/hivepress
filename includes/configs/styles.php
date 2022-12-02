@@ -25,30 +25,30 @@ return [
 
 	'fancybox'          => [
 		'handle' => 'fancybox',
-		'src'    => hivepress()->get_url() . '/assets/css/fancybox.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'slick'             => [
 		'handle' => 'slick',
-		'src'    => hivepress()->get_url() . '/assets/css/slick.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/slick-carousel/slick/slick.css',
 	],
 
 	'flatpickr'         => [
 		'handle' => 'flatpickr',
-		'src'    => hivepress()->get_url() . '/assets/css/flatpickr.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/flatpickr/dist/flatpickr.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'select2'           => [
 		'handle' => 'select2',
-		'src'    => hivepress()->get_url() . '/assets/css/select2.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/select2/dist/css/select2.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'intl_tel_input'    => [
 		'handle' => 'intl-tel-input',
-		'src'    => hivepress()->get_url() . '/assets/css/intlTelInput.min.css',
+		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/css/intlTelInput.min.css',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
