@@ -360,7 +360,7 @@ class Date extends Field {
 		$value = $this->value;
 
 		if ( $this->multiple && ! is_null( $value ) ) {
-			$value = implode( ', ', (array) $value );
+			$value = implode( ', ', $value );
 		}
 
 		// Render field.
