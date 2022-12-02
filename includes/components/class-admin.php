@@ -1561,6 +1561,18 @@ final class Admin extends Component {
 			}
 		}
 
+		if ( $installed_time < time() - MONTH_IN_SECONDS ) {
+			$notices['showcase_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'It\'s been more than 1 month since you installed HivePress, that\'s awesome! If you find it useful, please leave your website URL on <a href="%s" target="_blank">HivePress Showcases</a> page to help us spread the word.', 'hivepress' ) ),
+					'https://hivepress.io/showcase'
+				),
+			];
+		}
+
 		/**
 		 * Filters the WordPress admin area notices.
 		 *
