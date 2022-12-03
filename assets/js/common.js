@@ -433,6 +433,10 @@ var hivepress = {
 				parseDate: function (date) {
 					var parsedDate = hivepress.dateFormatter.parseDate(date, settings['dateFormat']);
 
+					if (null === parsedDate) {
+						parsedDate = hivepress.dateFormatter.parseDate(date, settings['altFormat']);
+					}
+
 					if (settings['dateFormat'] === 'U') {
 						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
 							timeZone: 'UTC',
