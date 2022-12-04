@@ -317,8 +317,20 @@ var hivepress = {
 				settings['altFormat'] = field.data('display-format');
 			}
 
+			if (field.data('time')) {
+				settings['enableTime'] = true;
+			}
+
+			if (field.is('[data-offset]')) {
+				settings['minDate'] = new Date().fp_incr(field.data('offset'));
+			}
+
 			if (field.data('min-date')) {
 				settings['minDate'] = field.data('min-date');
+			}
+
+			if (field.is('[data-window]')) {
+				settings['maxDate'] = new Date().fp_incr(field.data('window'));
 			}
 
 			if (field.data('max-date')) {
@@ -370,18 +382,6 @@ var hivepress = {
 				};
 			}
 
-			if (field.is('[data-offset]')) {
-				settings['minDate'] = new Date().fp_incr(field.data('offset'));
-			}
-
-			if (field.is('[data-window]')) {
-				settings['maxDate'] = new Date().fp_incr(field.data('window'));
-			}
-
-			if (field.data('time')) {
-				settings['enableTime'] = true;
-			}
-
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
 
@@ -430,14 +430,10 @@ var hivepress = {
 
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
-				parseDate: function (date) {
-					var parsedDate = hivepress.dateFormatter.parseDate(date, settings['dateFormat']);
+				parseDate: function (date, format) {
+					var parsedDate = hivepress.dateFormatter.parseDate(date, format);
 
-					if (null === parsedDate) {
-						parsedDate = hivepress.dateFormatter.parseDate(date, settings['altFormat']);
-					}
-
-					if (settings['dateFormat'] === 'U') {
+					if (format === 'U') {
 						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
 							timeZone: 'UTC',
 						}));
@@ -471,14 +467,16 @@ var hivepress = {
 					altFormat: 'g:i A',
 					defaultHour: 0,
 					disableMobile: true,
-					parseDate: function (time) {
-						var date = new Date();
+					parseDate: function (date, format) {
+						var parsedDate = hivepress.dateFormatter.parseDate(date, format);
 
-						date.setHours(Math.floor(time / 3600));
-						date.setMinutes(Math.floor((time % 3600) / 60));
-						date.setSeconds(time % 60);
+						if (format === 'U') {
+							parsedDate = new Date(parsedDate.toLocaleString('en-US', {
+								timeZone: 'UTC',
+							}));
+						}
 
-						return date;
+						return parsedDate;
 					},
 					formatDate: function (date, format) {
 						if (format === 'U') {
