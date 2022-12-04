@@ -78,6 +78,12 @@ return [
 						'type'    => 'checkbox',
 						'_order'  => 70,
 					],
+
+					'listing_allow_video'             => [
+						'caption' => esc_html__( 'Allow uploading videos', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 80,
+					],
 				],
 			],
 
