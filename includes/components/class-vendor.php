@@ -43,8 +43,12 @@ final class Vendor extends Component {
 
 		if ( ! is_admin() ) {
 
+			// Set request context.
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+			add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_user_edit_settings_page' ], 100, 2 );
 		}
 
 		parent::__construct( $args );
@@ -248,6 +252,42 @@ final class Vendor extends Component {
 	}
 
 	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return $context;
+		}
+
+		// Get cached vendor ID.
+		$vendor_id = hivepress()->cache->get_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor' );
+
+		if ( is_null( $vendor_id ) ) {
+
+			// Get vendor ID.
+			$vendor_id = (int) Models\Vendor::query()->filter(
+				[
+					'status' => 'publish',
+					'user'   => get_current_user_id(),
+				]
+			)->get_first_id();
+
+			// Cache vendor ID.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor', $vendor_id );
+		}
+
+		// Set request context.
+		$context['vendor_id'] = $vendor_id;
+
+		return $context;
+	}
+
+	/**
 	 * Alters post types.
 	 *
 	 * @param array $post_types Post type arguments.
@@ -277,5 +317,51 @@ final class Vendor extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Alters user edit settings page.
+	 *
+	 * @param array  $blocks Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_edit_settings_page( $blocks, $template ) {
+
+		// Get vendor ID.
+		$vendor_id = hivepress()->request->get_context( 'vendor_id' );
+
+		if ( ! $vendor_id ) {
+			return $blocks;
+		}
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( $vendor_id );
+
+		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
+			return $blocks;
+		}
+
+		// Set template context.
+		$template->set_context( 'vendor', $vendor );
+
+		return hivepress()->template->merge_blocks(
+			$blocks,
+			[
+				'user_update_form' => [
+					'footer' => [
+						'form_actions' => [
+							'blocks' => [
+								'vendor_view_link' => [
+									'type'   => 'part',
+									'path'   => 'vendor/edit/page/vendor-view-link',
+									'_order' => 5,
+								],
+							],
+						],
+					],
+				],
+			]
+		);
 	}
 }
