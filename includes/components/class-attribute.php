@@ -74,6 +74,9 @@ final class Attribute extends Component {
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
+		// Add archive page redirect.
+		add_action( 'template_redirect', [ $this, 'add_archive_redirect' ], 1000 );
+
 		if ( ! is_admin() ) {
 
 			// Set search query.
@@ -1859,5 +1862,26 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Add archive page redirect.
+	 */
+	public function add_archive_redirect() {
+		foreach ( $this->get_models() as $model ) {
+			if ( is_post_type_archive( hp\prefix( $model ) ) ) {
+
+				// Get page ID.
+				$page_id = absint( get_option( hp\prefix( 'page_' . $model . 's' ) ) );
+
+				if ( ! $page_id ) {
+					continue;
+				}
+
+				// Redirect to custom archive page.
+				wp_redirect( get_permalink( $page_id ) );
+				exit;
+			}
+		}
 	}
 }
