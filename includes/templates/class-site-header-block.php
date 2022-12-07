@@ -36,10 +36,16 @@ class Site_Header_Block extends Template {
 						],
 
 						'blocks'     => [
-							'listing_submit_link' => [
+							'user_login_dropdown_link' => [
+								'type'   => 'part',
+								'path'   => 'user/login/user-login-link-dropdown',
+								'_order' => 10,
+							],
+
+							'listing_submit_link'      => [
 								'type'   => 'part',
 								'path'   => 'listing/submit/listing-submit-link',
-								'_order' => 10,
+								'_order' => 20,
 							],
 						],
 					],

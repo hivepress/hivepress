@@ -65,10 +65,9 @@ final class Template extends Component {
 	/**
 	 * Get account menu item HTML.
 	 *
-	 * @param bool $twice Is return HTML twice.
 	 * @return string
 	 */
-	protected function get_account_menu_item( $twice = false ) {
+	public function get_account_menu_item() {
 
 		// Get class.
 		$class = 'menu-item';
@@ -104,11 +103,7 @@ final class Template extends Component {
 
 		$output .= '</li>';
 
-		if ( $twice ) {
-			return $output . $output;
-		} else {
-			return $output;
-		}
+		return $output;
 	}
 
 	/**
@@ -299,7 +294,7 @@ final class Template extends Component {
 		// Get account menu item.
 		$account_item = $this->get_account_menu_item();
 
-		return $account_item . $items . $account_item;
+		return $account_item . $items;
 	}
 
 	/**
@@ -354,7 +349,7 @@ final class Template extends Component {
 		}
 
 		// Get account menu item.
-		$account_item = $this->get_account_menu_item( true );
+		$account_item = $this->get_account_menu_item();
 
 		// Get menu wrapper.
 		$items = hp\get_first_array_value( explode( '<li', $menu ) );
