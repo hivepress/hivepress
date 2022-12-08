@@ -1140,20 +1140,39 @@ Select2
 		min-width: 4.5rem;
 	}
 
+	&-container--focus &-selection--multiple  {
+		border: 1px solid rgba(7, 36, 86, 0.075) !important;
+	}
+
 	&-selection{
 		ul{
 			margin-left: 0;
 			margin-bottom: 0 !important;
 		}
 
-		&__choice{
-			&__remove{
-				border-right: none !important;
+		&--multiple{
+			min-height: 40px !important;
+		}
 
+		&--multiple &__choice{
+			padding: 0 0 0 20px !important;
+			margin-left: 0 !important;
+
+			&__remove{
 				&:hover{
 					background-color: transparent !important;
 				}
 			}
+
+			&__display{
+				padding-left: 5px !important;
+			}
+		}
+	}
+
+	&-search{
+		&--inline{
+			display: none;
 		}
 	}
 
