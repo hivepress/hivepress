@@ -353,6 +353,10 @@ var hivepress = {
 						return disabledDays.indexOf(date.getDay()) !== -1;
 					}
 
+					if(typeof settings['disable'] === 'undefined'){
+						settings['disable'] = [];
+					}
+
 					settings['disable'].push(disableDates);
 				}
 			}
