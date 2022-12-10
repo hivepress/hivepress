@@ -1,10 +1,12 @@
 .hp {
+
 	/*--------------------------------------------------------------
 	Icons
 	--------------------------------------------------------------*/
 	&-icon {
 		font-size: 16px;
 	}
+
 	/*--------------------------------------------------------------
 	Links
 	--------------------------------------------------------------*/
@@ -24,6 +26,7 @@
 			}
 		}
 	}
+
 	/*--------------------------------------------------------------
 	Statuses
 	--------------------------------------------------------------*/
@@ -63,6 +66,7 @@
 			}
 		}
 	}
+
 	/*--------------------------------------------------------------
 	Blocks
 	--------------------------------------------------------------*/
@@ -84,6 +88,7 @@
 			}
 		}
 	}
+
 	/*--------------------------------------------------------------
 	Forms
 	--------------------------------------------------------------*/
@@ -99,7 +104,7 @@
 			}
 		}
 
-		& > &__messages {
+		&>&__messages {
 			&:not(:last-child) {
 				margin-bottom: 1.5rem;
 			}
@@ -108,7 +113,7 @@
 		&__messages {
 			display: none;
 			border-left: 3px solid transparent;
-			background-color: rgba(0,0,0,0.04);
+			background-color: rgba(0, 0, 0, 0.04);
 			padding: 1rem 1.5rem;
 
 			&--info {
@@ -127,7 +132,7 @@
 				border-left-color: #46b450;
 			}
 
-			> div {
+			>div {
 				&:not(:last-child) {
 					margin-bottom: 0.5rem;
 				}
@@ -164,6 +169,7 @@
 				margin-bottom: 1rem;
 			}
 		}
+
 		@media only screen and (max-width:47.99em) {
 			&__button {
 				width: 100%;
@@ -178,7 +184,9 @@
 		&--narrow &__footer {
 			flex-direction: column;
 		}
+
 		@media only screen and (max-width:47.99em) {
+
 			&__actions,
 			&__footer {
 				flex-direction: column;
@@ -206,6 +214,7 @@
 				margin: 0 0 0.5rem;
 			}
 		}
+
 		@media only screen and (max-width:47.99em) {
 			&__action {
 				&:not(:last-child) {
@@ -219,6 +228,7 @@
 				margin-bottom: 1rem;
 			}
 		}
+
 		@media only screen and (max-width:47.99em) {
 			& button&__action {
 				&:not(:last-child) {
@@ -309,13 +319,13 @@
 				direction: ltr;
 			}
 
-			> div:first-child {
+			>div:first-child {
 				&:not(:empty) {
 					margin-bottom: -2rem;
 					padding-bottom: 1rem;
 				}
 
-				> div {
+				>div {
 					position: relative;
 					margin-bottom: 2rem;
 
@@ -329,10 +339,10 @@
 						cursor: move;
 					}
 
-					> div {
+					>div {
 						position: relative;
 						padding-top: 100%;
-						background-color: rgba(0,0,0,0.04);
+						background-color: rgba(0, 0, 0, 0.04);
 
 						&::before {
 							font-family: 'Font Awesome 5 Free';
@@ -350,7 +360,8 @@
 							content: '\f15b';
 							font-size: 64px;
 							margin: -32px 0 0 -24px;
-							color: rgba(0,0,0,0.05);
+							color: rgba(0, 0, 0, 0.05);
+
 							@media only screen and (max-width:47.99em) {
 								font-size: 48px;
 								margin: -24px 0 0 -18px;
@@ -374,7 +385,7 @@
 						}
 					}
 
-					> a {
+					>a {
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -386,7 +397,8 @@
 						border-radius: 50%;
 						text-decoration: none;
 						color: #fff;
-						background-color: rgba(0,0,0,.5);
+						background-color: rgba(0, 0, 0, .5);
+
 						@media only screen and (max-width:47.99em) {
 							width: 20px;
 							height: 20px;
@@ -400,8 +412,8 @@
 			}
 
 			&[data-required=true] {
-				> div:first-child {
-					> div:only-child {
+				>div:first-child {
+					>div:only-child {
 						a {
 							display: none;
 						}
@@ -422,11 +434,12 @@
 					&.ui-sortable-helper {
 						display: table;
 					}
+
 					@media only screen and (max-width:47.99em) {
 						display: flex;
 						flex-direction: column;
 						position: relative;
-						border: 1px solid rgba(0,0,0,0.1);
+						border: 1px solid rgba(0, 0, 0, 0.1);
 						border-radius: 4px;
 						padding-top: 0.25rem;
 						padding-bottom: 0.25rem;
@@ -445,6 +458,7 @@
 					vertical-align: middle;
 
 					&:first-child {
+
 						&,
 						* {
 							cursor: move;
@@ -463,6 +477,7 @@
 							margin: 0;
 						}
 					}
+
 					@media only screen and (max-width:47.99em) {
 						border-bottom: none;
 
@@ -508,13 +523,14 @@
 	}
 
 	&-modal &-field--attachment-upload {
-		> div:first-child {
-			> div {
+		>div:first-child {
+			>div {
 				flex-basis: 33.33333333%;
 				max-width: 33.33333333%;
 			}
 		}
 	}
+
 	/*--------------------------------------------------------------
 	Modals
 	--------------------------------------------------------------*/
@@ -540,6 +556,7 @@
 		}
 	}
 }
+
 /*--------------------------------------------------------------
 Flatpickr
 --------------------------------------------------------------*/
@@ -566,6 +583,10 @@ Flatpickr
 		}
 	}
 
+	&-days {
+		overflow: visible;
+	}
+
 	&-day {
 		&-label {
 			display: none;
@@ -577,7 +598,7 @@ Flatpickr
 			font-size: 0.625rem;
 			line-height: 1.5;
 			text-align: center;
-			background: rgba(0,0,0,0.75);
+			background: rgba(0, 0, 0, 0.75);
 			color: #fff;
 			font-weight: normal;
 			border-radius: 2px;
@@ -587,7 +608,7 @@ Flatpickr
 				content: '';
 				display: block;
 				border: 4px solid transparent;
-				border-top-color: rgba(0,0,0,0.75);
+				border-top-color: rgba(0, 0, 0, 0.75);
 				position: absolute;
 				left: calc(50% - 4px);
 				bottom: -8px;
@@ -599,6 +620,7 @@ Flatpickr
 		}
 	}
 }
+
 /*--------------------------------------------------------------
 Phone
 --------------------------------------------------------------*/
@@ -606,9 +628,11 @@ Phone
 	display: block;
 
 	&__flag {
-		background-image: url("../images/intl-tel-input/flags.png");
-		@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-			background-image: url("../images/intl-tel-input/flags@2x.png");
+		background-image: url("../../node_modules/intl-tel-input/build/img/flags.png");
+
+		@media (-webkit-min-device-pixel-ratio: 2),
+		(min-resolution: 192dpi) {
+			background-image: url("../../node_modules/intl-tel-input/build/img/flags@2x.png");
 		}
 	}
 
