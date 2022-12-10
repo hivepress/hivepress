@@ -280,6 +280,7 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					disabled: [],
 					disableMobile: true,
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -351,10 +352,6 @@ var hivepress = {
 				if (disabledDays.length) {
 					function disableDates(date) {
 						return disabledDays.indexOf(date.getDay()) !== -1;
-					}
-
-					if(typeof settings['disable'] === 'undefined'){
-						settings['disable'] = [];
 					}
 
 					settings['disable'].push(disableDates);
