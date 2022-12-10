@@ -235,7 +235,7 @@ final class Template extends Component {
 	 * Adds menu items.
 	 *
 	 * @param string $items Menu items.
-	 * @param object $args Menu arguments.
+	 * @param mixed  $args Menu arguments.
 	 * @return string
 	 */
 	public function add_menu_items( $items, $args ) {
