@@ -43,6 +43,7 @@ final class Template extends Component {
 
 			// Add menu items.
 			add_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+			add_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
 
 			// Render site header.
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
@@ -234,7 +235,7 @@ final class Template extends Component {
 	 * Adds menu items.
 	 *
 	 * @param string $items Menu items.
-	 * @param object $args Menu arguments.
+	 * @param mixed  $args Menu arguments.
 	 * @return string
 	 */
 	public function add_menu_items( $items, $args ) {
@@ -242,7 +243,8 @@ final class Template extends Component {
 		// Check menu.
 		if ( ! function_exists( 'hivetheme' ) ) {
 			remove_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
-		} elseif ( 'header' !== $args->theme_location ) {
+			remove_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
+		} elseif ( hp\get_array_value( (array) $args, 'theme_location' ) !== 'header' ) {
 			return $items;
 		}
 
@@ -256,9 +258,9 @@ final class Template extends Component {
 		}
 
 		// Render item.
-		$output = '<li class="' . esc_attr( $class ) . '">';
+		$item = '<li class="' . esc_attr( $class ) . '">';
 
-		$output .= ( new Blocks\Part(
+		$item .= ( new Blocks\Part(
 			[
 				'path' => 'user/login/user-login-link',
 			]
@@ -267,7 +269,7 @@ final class Template extends Component {
 		if ( is_user_logged_in() ) {
 
 			// Render menu.
-			$output .= ( new Menus\User_Account(
+			$item .= ( new Menus\User_Account(
 				[
 					'wrap'       => false,
 
@@ -278,9 +280,13 @@ final class Template extends Component {
 			) )->render();
 		}
 
-		$output .= '</li>';
+		$item .= '</li>';
 
-		return $output . $items . $output;
+		// Add item.
+		$items = substr_replace( $items, $item, (int) strpos( $items, '<li' ), 0 );
+		$items = substr_replace( $items, $item, strrpos( $items, '/li>' ) + 4, 0 );
+
+		return $items;
 	}
 
 	/**
