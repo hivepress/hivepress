@@ -280,7 +280,7 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
-					disabled: [],
+					disable: [],
 					disableMobile: true,
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
