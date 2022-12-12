@@ -213,7 +213,9 @@ var hivepress = {
 			if (field.data('render')) {
 				field.on('change', function () {
 					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+						data = new FormData($(this).closest('form').get(0)),
+						tinymceSettings = [],
+						tinymceIDs = [];
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -228,6 +230,17 @@ var hivepress = {
 						contentType: false,
 						processData: false,
 						beforeSend: function (xhr) {
+							if (typeof tinyMCE !== 'undefined') {
+								$.each(tinymce.editors, function(index, configs) {
+									tinymceSettings.push(configs.settings);
+									tinymceIDs.push(configs.id);
+								});
+
+								$.each(tinymceIDs, function(index, id) {
+									tinymce.remove('#' + id);
+								});
+							}
+
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 						},
 						complete: function (xhr) {
@@ -239,6 +252,12 @@ var hivepress = {
 								container.replaceWith(newContainer);
 
 								hivepress.initUI(newContainer);
+
+								if (typeof tinyMCE !== 'undefined') {
+									$.each(tinymceSettings, function(index, configs) {
+										tinymce.init(configs);
+									});
+								}
 							}
 						},
 					});
