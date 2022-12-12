@@ -239,6 +239,16 @@ var hivepress = {
 								container.replaceWith(newContainer);
 
 								hivepress.initUI(newContainer);
+
+								// Get ReCAPTCHA element and key.
+								var captcha = newContainer.find('.g-recaptcha'),
+									sitekey = captcha.data('sitekey');
+
+								if (typeof grecaptcha !== 'undefined' && sitekey) {
+									grecaptcha.render(captcha.get(0), {
+										'sitekey': sitekey,
+									});
+								}
 							}
 						},
 					});
