@@ -75,7 +75,7 @@ final class Attribute extends Component {
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
 		// Add archive page redirect.
-		add_action( 'template_redirect', [ $this, 'add_archive_redirect' ], 1000 );
+		add_action( 'template_redirect', [ $this, 'redirect_archive_page' ], 1000 );
 
 		if ( ! is_admin() ) {
 
@@ -1865,23 +1865,28 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Add archive page redirect.
+	 * Redirect archive page.
 	 */
-	public function add_archive_redirect() {
-		foreach ( $this->get_models() as $model ) {
-			if ( is_post_type_archive( hp\prefix( $model ) ) ) {
+	public function redirect_archive_page() {
+		if ( is_post_type_archive( hp\prefix( $this->get_models() ) ) ) {
 
-				// Get page ID.
-				$page_id = absint( get_option( hp\prefix( 'page_' . $model . 's' ) ) );
+			// Get archive post name.
+			$post_type_name = get_post_type();
 
-				if ( ! $page_id ) {
-					continue;
-				}
-
-				// Redirect to custom archive page.
-				wp_redirect( get_permalink( $page_id ) );
-				exit;
+			if ( ! $post_type_name ) {
+				$post_type_name = hp\get_array_value( (array) get_queried_object(), 'name', null );
 			}
+
+			// Get page ID.
+			$page_id = absint( get_option( hp\prefix( 'page_' . hp\unprefix( $post_type_name ) . 's' ) ) );
+
+			if ( ! $page_id ) {
+				return;
+			}
+
+			// Redirect to custom archive page.
+			wp_safe_redirect( get_permalink( $page_id ) );
+			exit;
 		}
 	}
 }
