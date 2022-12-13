@@ -1868,25 +1868,26 @@ final class Attribute extends Component {
 	 * Redirect archive page.
 	 */
 	public function redirect_archive_page() {
-		if ( is_post_type_archive( hp\prefix( $this->get_models() ) ) ) {
-
-			// Get archive post name.
-			$post_type_name = get_post_type();
-
-			if ( ! $post_type_name ) {
-				$post_type_name = hp\get_array_value( (array) get_queried_object(), 'name', null );
-			}
-
-			// Get page ID.
-			$page_id = absint( get_option( hp\prefix( 'page_' . hp\unprefix( $post_type_name ) . 's' ) ) );
-
-			if ( ! $page_id ) {
-				return;
-			}
-
-			// Redirect to custom archive page.
-			wp_safe_redirect( get_permalink( $page_id ) );
-			exit;
+		if ( !is_post_type_archive( hp\prefix( $this->get_models() ) ) ) {
+			return;
 		}
+
+		// Get archive post name.
+		$post_type_name = get_post_type();
+
+		if ( ! $post_type_name ) {
+			$post_type_name = hp\get_array_value( (array) get_queried_object(), 'name', null );
+		}
+
+		// Get page ID.
+		$page_id = absint( get_option( hp\prefix( 'page_' . hp\unprefix( $post_type_name ) . 's' ) ) );
+
+		if ( ! $page_id ) {
+			return;
+		}
+
+		// Redirect to custom archive page.
+		wp_safe_redirect( get_permalink( $page_id ) );
+		exit;
 	}
 }
