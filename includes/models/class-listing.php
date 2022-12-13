@@ -241,4 +241,48 @@ class Listing extends Post {
 
 		return $this->fields['images']->get_value();
 	}
+
+	/**
+	 * Gets image URLs.
+	 *
+	 * @param string $size Image size.
+	 * @return array
+	 */
+	final public function get_images__url( $size = 'thumbnail' ) {
+
+		// Get field name.
+		$name = 'images__url__' . $size;
+
+		if ( ! isset( $this->values[ $name ] ) ) {
+
+			// Get image URLs.
+			$image_urls = [];
+
+			if ( $this->get_images__id() ) {
+				foreach ( $this->get_images__id() as $image_id ) {
+
+					// Get attachment url.
+					$url = null;
+
+					// Get attachment type.
+					$type = get_post_mime_type( $image_id );
+
+					if ( strpos( $type, 'image' ) !== false ) {
+						$url = hp\get_first_array_value( (array) wp_get_attachment_image_src( $image_id, $size ) );
+					} elseif ( strpos( $type, 'video' ) !== false ) {
+						$url = wp_get_attachment_url( $image_id );
+					}
+
+					if ( $url ) {
+						$image_urls[] = $url;
+					}
+				}
+			}
+
+			// Set field value.
+			$this->values[ $name ] = $image_urls;
+		}
+
+		return $this->values[ $name ];
+	}
 }
