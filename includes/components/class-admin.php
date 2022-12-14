@@ -51,9 +51,6 @@ final class Admin extends Component {
 
 		if ( is_admin() ) {
 
-			// Update dismissed HivePress pointers.
-			add_action( 'wp_ajax_hp_dismissed_pointers', [ $this, 'update_dismiss_pointers' ] );
-
 			// Add admin pages.
 			add_action( 'admin_menu', [ $this, 'add_admin_pages' ] );
 
@@ -1486,7 +1483,7 @@ final class Admin extends Component {
 		}
 
 		// Get pointers.
-		$pointers = apply_filters( 'hivepress/v1/admin/tooltips', [] );
+		$pointers = apply_filters( 'hivepress/v1/components/admin/tooltips', [] );
 
 		if ( ! $pointers ) {
 			return;
@@ -1500,12 +1497,18 @@ final class Admin extends Component {
 
 		// Check pointers.
 		foreach ( $pointers as $pointer_id => $pointer ) {
-			if ( ! $pointer_id || in_array( $pointer_id, $dismissed ) || ! $pointer || ! $pointer['target'] || ! $pointer['options'] ) {
+			if ( ! $pointer_id || in_array( $pointer_id, $dismissed ) || ! hp\search_array_value( (array) $pointer, [ 'title', 'content', 'target', 'options' ] ) ) {
 				continue;
 			}
 
 			// Add pointer ID.
 			$pointer['pointer_id'] = $pointer_id;
+
+			// Add pointer content.
+			$pointer['content'] = '<h3>' . $pointer['title'] . '</h3><p>' . $pointer['content'] . '</p>';
+
+			// Add pointer handler.
+			$pointer['handler'] = hivepress()->router->get_url( 'pointer_dismiss_action', [ 'user_id' => get_current_user_id() ] );
 
 			// Add valid pointer.
 			$valid_pointers['pointers'][] = $pointer;
@@ -1903,31 +1906,5 @@ final class Admin extends Component {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Update dismissed HivePress pointers.
-	 */
-	public function update_dismiss_pointers() {
-
-		// Get pointer.
-		$pointer = sanitize_text_field( hp\get_array_value( $_POST, 'pointer' ) );
-
-		if ( ! current_user_can( 'edit_others_posts' ) || ! $pointer ) {
-			return;
-		}
-
-		// Get dismissed HivePress pointers.
-		$dismissed = (array) get_user_meta( get_current_user_id(), 'hp_dismissed_pointers', true );
-
-		if ( in_array( $pointer, $dismissed ) ) {
-			return;
-		}
-
-		// Add dismissed HivePress pointers.
-		$dismissed[] = $pointer;
-
-		// Update dismissed HivePress pointers.
-		update_user_meta( get_current_user_id(), 'hp_dismissed_pointers', $dismissed );
 	}
 }

@@ -57,6 +57,14 @@ final class Admin extends Controller {
 						'action' => [ $this, 'deactivate_plugin' ],
 						'rest'   => true,
 					],
+
+					'pointer_dismiss_action'     => [
+						'base'   => 'admin_base',
+						'path'   => '/dismiss_pointer/(?P<user_id>\d+)',
+						'method' => 'POST',
+						'action' => [ $this, 'dismiss_pointer' ],
+						'rest'   => true,
+					],
 				],
 			],
 			$args
@@ -154,6 +162,44 @@ final class Admin extends Controller {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 		deactivate_plugins( HP_FILE );
+
+		return hp\rest_response( 200, [] );
+	}
+
+	/**
+	 * Dismiss pointer.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function dismiss_pointer( $request ) {
+
+		// Get user ID.
+		$user_id = absint( $request->get_param( 'user_id' ) );
+
+		if ( ! user_can( $user_id, 'manage_options' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get pointer.
+		$pointer = sanitize_text_field( $request->get_param( 'pointer' ) );
+
+		if ( ! $pointer ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get dismissed HivePress pointers.
+		$dismissed = (array) get_user_meta( $user_id, 'hp_dismissed_pointers', true );
+
+		if ( in_array( $pointer, $dismissed ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Add dismissed HivePress pointers.
+		$dismissed[] = $pointer;
+
+		// Update dismissed HivePress pointers.
+		update_user_meta( $user_id, 'hp_dismissed_pointers', $dismissed );
 
 		return hp\rest_response( 200, [] );
 	}
