@@ -257,10 +257,8 @@ final class Template extends Component {
 			$class .= ' menu-item--user-login';
 		}
 
-		// Render item.
-		$item = '<li class="' . esc_attr( $class ) . '">';
-
-		$item .= ( new Blocks\Part(
+		// Get account menu HTML.
+		$account_item = ( new Blocks\Part(
 			[
 				'path' => 'user/login/user-login-link',
 			]
@@ -269,7 +267,7 @@ final class Template extends Component {
 		if ( is_user_logged_in() ) {
 
 			// Render menu.
-			$item .= ( new Menus\User_Account(
+			$account_item .= ( new Menus\User_Account(
 				[
 					'wrap'       => false,
 
@@ -280,11 +278,13 @@ final class Template extends Component {
 			) )->render();
 		}
 
-		$item .= '</li>';
+		// Render item.
+		$first_account_item  = '<li class="' . esc_attr( $class ) . ' menu-item--first-user-account">' . $account_item . '</li>';
+		$second_account_item = '<li class="' . esc_attr( $class ) . ' menu-item--second-user-account">' . $account_item . '</li>';
 
 		// Add item.
-		$items = substr_replace( $items, $item, (int) strpos( $items, '<li' ), 0 );
-		$items = substr_replace( $items, $item, strrpos( $items, '/li>' ) + 4, 0 );
+		$items = substr_replace( $items, $first_account_item, (int) strpos( $items, '<li' ), 0 );
+		$items = substr_replace( $items, $second_account_item, strrpos( $items, '/li>' ) + 4, 0 );
 
 		return $items;
 	}
