@@ -50,13 +50,14 @@ final class Scheduler extends Component {
 	 */
 	public function add_action( $hook, $args = [], $time = null, $interval = null ) {
 
-		// Check if scheduled.
-		if ( as_has_scheduled_action( $hook, $args, 'hivepress' ) ) {
-			return;
-		}
-
 		// Get interval by name.
 		if ( is_string( $interval ) ) {
+
+			if ( strpos( $hook, 'hivepress/v1/events/' ) === 0 && ! has_action( $hook ) ) {
+				$this->remove_action( $hook );
+				return;
+			}
+
 			$interval = hp\get_array_value(
 				[
 					'hourly'     => HOUR_IN_SECONDS,
@@ -66,6 +67,11 @@ final class Scheduler extends Component {
 				],
 				$interval
 			);
+		}
+
+		// Check if scheduled.
+		if ( as_has_scheduled_action( $hook, $args, 'hivepress' ) ) {
+			return;
 		}
 
 		// Schedule an action.
