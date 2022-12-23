@@ -23,6 +23,13 @@ var hivepress = {
 			container = $('body');
 		}
 
+		// Prepend https to url field.
+		container.find('input[type="url"]').focusout(function(){
+			if($(this).val().indexOf('https://') < 0 && $(this).val().indexOf('http://') < 0){
+				$(this).val('https://' + $(this).val());
+			}
+		});
+
 		// Link
 		container.find(hivepress.getSelector('link')).on('click', function (e) {
 			var url = $(this).data('url');
