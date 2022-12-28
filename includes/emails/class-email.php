@@ -159,6 +159,15 @@ abstract class Email {
 	}
 
 	/**
+	 * Gets email tokens.
+	 *
+	 * @return string
+	 */
+	final public function get_tokens() {
+		return $this->tokens;
+	}
+
+	/**
 	 * Sends email.
 	 *
 	 * @return bool
