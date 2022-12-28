@@ -116,5 +116,31 @@
 
 			e.preventDefault();
 		});
+
+		// Show email tokens.
+		$('select[name="hp_event"]').on('change', function() {
+
+			// Get email event.
+			var event = $(this).val();
+
+			// Render email tokens.
+			$.ajax({
+				url: $(this).data('tokens-render'),
+				method: 'POST',
+				data: {
+					'email_event': event,
+				},
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+				},
+				complete: function(xhr) {
+					var response = xhr.responseJSON;
+
+					if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('tokens')) {
+						$('#hp_email_details').find('div.inside').html(response.data.tokens);
+					}
+				},
+			});
+		});
 	});
 })(jQuery);

@@ -34,12 +34,16 @@ return [
 
 		'fields' => [
 			'event' => [
-				'label'    => esc_html__( 'Event', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'emails',
-				'required' => true,
-				'_alias'   => 'post_name',
-				'_order'   => 10,
+				'label'      => esc_html__( 'Event', 'hivepress' ),
+				'type'       => 'select',
+				'options'    => 'emails',
+				'required'   => true,
+				'_alias'     => 'post_name',
+				'_order'     => 10,
+
+				'attributes' => [
+					'data-tokens-render' => hivepress()->router->get_url( 'email_show_tokens' ),
+				],
 			],
 		],
 	],
@@ -47,7 +51,13 @@ return [
 	'email_details'             => [
 		'title'  => hivepress()->translator->get_string( 'details' ),
 		'screen' => 'email',
-		'blocks' => [],
+		'blocks' => [
+			'email_details' => [
+				'type'    => 'content',
+				'content' => esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ),
+				'_order'  => 10,
+			],
+		],
 	],
 
 	'listing_settings'          => [
