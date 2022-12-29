@@ -199,6 +199,8 @@ final class Listing extends Component {
 			foreach ( $listing->get_images() as $image ) {
 				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
 					$image_ids[] = $image->get_id();
+
+					break;
 				}
 			}
 		}
