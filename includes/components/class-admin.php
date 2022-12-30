@@ -1561,14 +1561,14 @@ final class Admin extends Component {
 			}
 		}
 
-		if ( $installed_time < time() - MONTH_IN_SECONDS ) {
+		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
 			$notices['showcase_request'] = [
 				'type'        => 'info',
 				'dismissible' => true,
 				'text'        => sprintf(
 					/* translators: %s: link URL. */
-					hp\sanitize_html( __( 'It\'s been more than 1 month since you installed HivePress, that\'s awesome! If you find it useful, please leave your website URL on <a href="%s" target="_blank">HivePress Showcases</a> page to help us spread the word.', 'hivepress' ) ),
-					'https://hivepress.io/showcase'
+					hp\sanitize_html( __( 'Have you already launched this website? Please submit it to the <a href="%s" target="_blank">HivePress Showcase</a> to inspire others.', 'hivepress' ) ),
+					'https://hivepress.io/showcase/'
 				),
 			];
 		}
