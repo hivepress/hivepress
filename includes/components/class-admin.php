@@ -1573,6 +1573,18 @@ final class Admin extends Component {
 			];
 		}
 
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
+			$notices['expert_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Are you a developer familiar with HivePress? Join the <a href="%s" target="_blank">HivePress Experts</a> program to regularly get new clients.', 'hivepress' ) ),
+					'https://hivepress.io/experts/'
+				),
+			];
+		}
+
 		/**
 		 * Filters the WordPress admin area notices.
 		 *
