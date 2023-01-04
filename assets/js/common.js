@@ -426,6 +426,12 @@ var hivepress = {
 							}
 						},
 					});
+				} 
+				
+				if (field.data('mode') === 'multiple') {
+					$.extend(settings, {
+						conjunction: '; ',
+					});
 				}
 			}
 
