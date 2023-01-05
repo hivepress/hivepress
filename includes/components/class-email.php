@@ -43,6 +43,9 @@ final class Email extends Component {
 			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
 		}
 
+		// Updates email subject and content.
+		add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+
 		parent::__construct( $args );
 	}
 
@@ -182,5 +185,84 @@ final class Email extends Component {
 		}
 
 		return $meta_box;
+	}
+
+	/**
+	 * Updates email subject and content.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param object $post Post object.
+	 */
+	public function update_meta_box( $post_id, $post ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
+			return;
+		}
+
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Check post.
+		if ( get_the_ID() !== $post_id || 'hp_email' !== $post->post_type ) {
+			return;
+		}
+
+		// Remove action.
+		remove_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+
+		// Update field values.
+		foreach ( hivepress()->admin->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {
+			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
+				if ( 'post_name' !== hp\get_array_value( $field_args, '_alias' ) ) {
+					continue;
+				}
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+
+				if ( ! $field || $field->is_disabled() ) {
+					return;
+				}
+
+				// Validate field.
+				$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
+
+				if ( ! $field->validate() || $field->get_arg( '_external' ) || $post->post_name === $field->get_value() ) {
+					return;
+				}
+
+				// Set post arguments.
+				$args = [
+					'ID'                        => $post_id,
+					$field->get_arg( '_alias' ) => $field->get_value(),
+				];
+
+				// Get email object.
+				$email = hp\create_class_instance( '\HivePress\Emails\\' . $field->get_value(), [] );
+
+				if ( ! $email || ! $email->get_body() ) {
+					return;
+				}
+
+				$args = array_merge(
+					$args,
+					[
+						'post_title'   => $email->get_subject(),
+						'post_content' => $email->get_body(),
+					]
+				);
+
+				// Update post.
+				wp_update_post( $args );
+			}
+		}
 	}
 }
