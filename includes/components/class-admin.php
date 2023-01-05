@@ -72,7 +72,7 @@ final class Admin extends Component {
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
-			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -1076,10 +1076,9 @@ final class Admin extends Component {
 	/**
 	 * Updates meta box values.
 	 *
-	 * @param int    $post_id Post ID.
-	 * @param object $post Post object.
+	 * @param int $post_id Post ID.
 	 */
-	public function update_meta_box( $post_id, $post ) {
+	public function update_meta_box( $post_id ) {
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -1102,7 +1101,7 @@ final class Admin extends Component {
 		}
 
 		// Remove action.
-		remove_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Update field values.
 		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {
@@ -1136,36 +1135,12 @@ final class Admin extends Component {
 								}
 							}
 						} else {
-
-							// Set post arguments.
-							$args = [
-								'ID' => $post_id,
-								$field->get_arg( '_alias' ) => $field->get_value(),
-							];
-
-							if ( 'hp_email' !== $post->post_type || 'post_name' !== $field->get_arg( '_alias' ) ) {
-								wp_update_post( $args );
-								return;
-							}
-
-							// Get email object.
-							$email = hp\create_class_instance( '\HivePress\Emails\\' . $field->get_value(), [] );
-
-							if ( ! $email || ! $email->get_body() ) {
-								wp_update_post( $args );
-								return;
-							}
-
-							if ( ! $post->post_title ) {
-								$args['post_title'] = $email->get_subject();
-							}
-
-							if ( ! $post->post_content ) {
-								$args['post_content'] = $email->get_body();
-							}
-
-							// Update post.
-							wp_update_post( $args );
+							wp_update_post(
+								[
+									'ID' => $post_id,
+									$field->get_arg( '_alias' ) => $field->get_value(),
+								]
+							);
 						}
 					}
 				}
