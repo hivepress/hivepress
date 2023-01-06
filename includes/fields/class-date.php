@@ -102,13 +102,6 @@ class Date extends Field {
 	protected $time = false;
 
 	/**
-	 * Default date.
-	 *
-	 * @var array
-	 */
-	protected $default_date = [];
-
-	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -239,11 +232,6 @@ class Date extends Field {
 		// Set time flag.
 		if ( $this->time ) {
 			$attributes['data-time'] = 'true';
-		}
-
-		// Set default date.
-		if ( $this->default_date ) {
-			$attributes['data-default-date'] = wp_json_encode( $this->default_date );
 		}
 
 		// Set component.

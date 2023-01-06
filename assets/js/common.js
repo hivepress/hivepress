@@ -391,13 +391,6 @@ var hivepress = {
 						minLength = field.data('min-length'),
 						maxLength = field.data('max-length');
 
-					if (field.data('default-date')) {
-
-						$.each(field.data('default-date'), function(index) {
-							fields.eq(index).val(this);
-						});
-					}
-
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
