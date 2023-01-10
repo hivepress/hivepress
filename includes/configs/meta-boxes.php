@@ -42,7 +42,12 @@ return [
 				'_order'     => 10,
 
 				'attributes' => [
-					'data-tokens-render' => hivepress()->router->get_url( 'email_show_tokens' ),
+					'data-render' => wp_json_encode(
+						[
+							'url'   => hivepress()->router->get_url( 'email_show_tokens' ),
+							'block' => 'email-details',
+						]
+					),
 				],
 			],
 		],
@@ -54,7 +59,7 @@ return [
 		'blocks' => [
 			'email_details' => [
 				'type'    => 'content',
-				'content' => esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ),
+				'content' => '<p data-render-block="email-details">' . esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ) . '</p>',
 				'_order'  => 10,
 			],
 		],
