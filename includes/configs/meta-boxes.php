@@ -34,12 +34,21 @@ return [
 
 		'fields' => [
 			'event' => [
-				'label'    => esc_html__( 'Event', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'emails',
-				'required' => true,
-				'_alias'   => 'post_name',
-				'_order'   => 10,
+				'label'      => esc_html__( 'Event', 'hivepress' ),
+				'type'       => 'select',
+				'options'    => 'emails',
+				'required'   => true,
+				'_alias'     => 'post_name',
+				'_order'     => 10,
+
+				'attributes' => [
+					'data-render' => wp_json_encode(
+						[
+							'url'   => hivepress()->router->get_url( 'email_show_tokens' ),
+							'block' => 'email-details',
+						]
+					),
+				],
 			],
 		],
 	],
@@ -47,7 +56,13 @@ return [
 	'email_details'             => [
 		'title'  => hivepress()->translator->get_string( 'details' ),
 		'screen' => 'email',
-		'blocks' => [],
+		'blocks' => [
+			'email_details' => [
+				'type'    => 'content',
+				'content' => '<p data-render-block="email-details">' . esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ) . '</p>',
+				'_order'  => 10,
+			],
+		],
 	],
 
 	'listing_settings'          => [

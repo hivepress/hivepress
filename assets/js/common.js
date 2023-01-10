@@ -213,16 +213,24 @@ var hivepress = {
 			if (field.data('render')) {
 				field.on('change', function () {
 					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+						data = new FormData($(this).closest('form').get(0)),
+						renderUrl = $(this).data('render');
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
 					data.delete('_wpnonce');
 
+					if(typeof renderUrl === 'object'){
+						container = $(document).find('[data-render-block="'+renderUrl.block+'"]');
+						data.append('value', $(this).val());
+						data.append('block', renderUrl.block);
+						renderUrl = renderUrl.url;
+					}
+
 					container.attr('data-state', 'loading');
 
 					$.ajax({
-						url: $(this).data('render'),
+						url: renderUrl,
 						method: 'POST',
 						data: data,
 						contentType: false,
