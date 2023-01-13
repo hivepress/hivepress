@@ -53,6 +53,13 @@ class Select extends Field {
 	protected $max_values;
 
 	/**
+	 * Minimum number of selected options.
+	 *
+	 * @var int
+	 */
+	protected $min_values;
+
+	/**
 	 * SQL query operator.
 	 *
 	 * @var mixed
@@ -91,6 +98,16 @@ class Select extends Field {
 						'type'    => 'checkbox',
 						'_order'  => 105,
 					],
+
+					'min_values'      => [
+						'label'     => esc_html__( 'Minimum Selection', 'hivepress' ),
+						'type'      => 'number',
+						'min_value' => 1,
+						'_context'  => 'edit',
+						'_parent'   => 'edit_field_multiple',
+						'_order'    => 107,
+					],
+
 
 					// @todo remove prefix from parent.
 					'max_values'      => [
@@ -150,6 +167,14 @@ class Select extends Field {
 			}
 		} elseif ( ! is_null( $this->placeholder ) ) {
 			$attributes['data-placeholder'] = $this->placeholder;
+		}
+
+		if($this->max_values){
+			$attributes['data-max-values'] = $this->max_values;
+		}
+
+		if($this->min_values){
+			$attributes['data-min-values'] = $this->min_values;
 		}
 
 		// Set disabled flags.
@@ -315,6 +340,10 @@ class Select extends Field {
 				)
 			) ) {
 				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->get_label( true ) ) );
+			}
+			
+			if ( $this->multiple && $this->min_values && count( $options ) < $this->min_values ) {
+				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_contains_too_few_values' ), $this->get_label( true ) ) );
 			}
 
 			if ( $this->multiple && $this->max_values && count( $options ) > $this->max_values ) {

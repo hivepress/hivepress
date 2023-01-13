@@ -106,6 +106,9 @@ var hivepress = {
 		// Select
 		container.find(hivepress.getSelector('select')).each(function () {
 			var field = $(this),
+				form = field.closest('form'),
+				messageContainer = form.find(hivepress.getSelector('messages')).first(),
+				messageClass = messageContainer.attr('class').split(' ')[0],
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
@@ -246,6 +249,60 @@ var hivepress = {
 			}
 
 			field.select2(settings);
+
+			if(field.data('max-values') || field.data('min-values')){
+				field.on('select2:close', function(e){
+					if(field.select2('data').length > field.data('max-values') || field.select2('data').length < field.data('min-values')){
+						$.ajax({
+							url: form.data('validate-fields'),
+							method: 'POST', 
+							data: {
+								'value': field.val(),
+								'name': field.attr('name'),
+								'model': form.data('model'),
+								'model_id': form.data('id'),
+								'listing_id': form.find('input[name="listing"').val(),
+							},
+							beforeSend: function (xhr) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON;
+
+								if (response.hasOwnProperty('error') && response.error.hasOwnProperty('errors')) {
+									if (!messageContainer.is(':empty')) {
+										messageContainer.empty();
+										messageContainer.attr('class', messageClass);
+									}
+									
+									$.each(response.error.errors, function (index, error) {
+										messageContainer.append('<div>' + error.message + '</div>');
+									});
+			
+									if (!messageContainer.is(':empty')) {
+										messageContainer.show();
+										messageContainer.addClass(messageClass + '--error');
+									}
+
+									if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
+										$('html, body').animate({
+											scrollTop: form.offset().top,
+										}, 500);
+									}
+								}else{
+									messageContainer.empty();
+									messageContainer.attr('class', messageClass);
+									messageContainer.hide();
+								}
+							},
+						})
+					}else{
+						messageContainer.empty();
+						messageContainer.attr('class', messageClass);
+						messageContainer.hide();
+					}
+				});
+			}
 		});
 
 		// Phone
@@ -527,7 +584,7 @@ var hivepress = {
 
 		// File upload
 		container.find(hivepress.getSelector('file-upload')).each(function () {
-			var field = $(this),
+			var field = $(this), 
 				container = field.parents('[data-model]:first'),
 				submitButton = field.closest('form').find(':submit'),
 				selectLabel = field.closest('label'),

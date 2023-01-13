@@ -96,6 +96,8 @@ return [
 	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
 	/* translators: %s: field label. */
 	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
+	/* translators: %s: field label. */
+	'field_contains_too_few_values'            => esc_html__( '"%s" field contains too few values.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),

@@ -27,12 +27,12 @@ final class Attribute extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'forms_resource'      => [
+					'forms_resource'         => [
 						'path' => '/forms',
 						'rest' => true,
 					],
 
-					'form_resource'       => [
+					'form_resource'          => [
 						'base'   => 'forms_resource',
 						'path'   => '/(?P<form_name>[a-z0-9_]+)',
 						'method' => 'POST',
@@ -40,16 +40,24 @@ final class Attribute extends Controller {
 						'rest'   => true,
 					],
 
-					'meta_boxes_resource' => [
+					'meta_boxes_resource'    => [
 						'path' => '/meta-boxes',
 						'rest' => true,
 					],
 
-					'meta_box_resource'   => [
+					'meta_box_resource'      => [
 						'base'   => 'meta_boxes_resource',
 						'path'   => '/(?P<meta_box_name>[a-z0-9_]+)',
 						'method' => 'POST',
 						'action' => [ $this, 'get_meta_box' ],
+						'rest'   => true,
+					],
+
+					'fields_validate_action' => [
+						'base'   => 'form_resource',
+						'path'   => '/validate-field',
+						'method' => 'POST',
+						'action' => [ $this, 'validate_field' ],
 						'rest'   => true,
 					],
 				],
@@ -197,5 +205,102 @@ final class Attribute extends Controller {
 				'html' => $output,
 			]
 		);
+	}
+
+	/**
+	 * Validate field.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function validate_field( $request ) {
+
+		// Get form name.
+		$form_name = sanitize_key( $request->get_param( 'form_name' ) );
+
+		if ( ! $form_name ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Get model name.
+		$model_name = sanitize_key( $request->get_param( 'model' ) );
+
+		// Get form.
+		$form = null;
+
+		if ( $model_name ) {
+
+			// Get model class.
+			$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model_name );
+
+			if ( ! $model_class ) {
+				return hp\rest_error( 404 );
+			}
+
+			// Get model.
+			$model = $model_class->query()->get_by_id( absint( $request->get_param( 'model_id' ) ) );
+
+			if ( ! $model ) {
+
+				// Get listing ID.
+				$listing_id = absint( $request->get_param( 'listing_id' ) );
+
+				if ( ! $listing_id ) {
+					return hp\rest_error( 404 );
+				}
+
+				// Get listing.
+				$listing = Models\Listing::query()->get_by_id( $listing_id );
+
+				if ( ! $listing ) {
+					return hp\rest_error( 404 );
+				}
+
+				// Fill model.
+				$model_class->fill(
+					[
+						'listing' => $listing,
+					]
+				);
+
+				// Get form.
+				$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model_class ] ] );
+			} else {
+
+				// Get form.
+				$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name, [ [ 'model' => $model ] ] );
+			}
+		} else {
+
+			// Get form.
+			$form = hp\create_class_instance( '\HivePress\Forms\\' . $form_name );
+		}
+
+		if ( ! $form ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Get field name.
+		$field_name = wp_strip_all_tags( str_replace( '[]', '', $request->get_param( 'name' ) ) );
+
+		if ( ! $field_name ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Get field.
+		$field = hp\get_array_value( $form->get_fields(), $field_name );
+
+		if ( ! $field ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Set field value.
+		$field->set_value( $request->get_param( 'value' ) );
+
+		if ( ! $field->validate() ) {
+			return hp\rest_error( 400, $field->get_errors() );
+		}
+
+		return hp\rest_error( 200 );
 	}
 }

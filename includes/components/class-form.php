@@ -55,6 +55,10 @@ final class Form extends Component {
 	protected function get_field_options( $type, $args, $value = null ) {
 		$options = [];
 
+		if ( is_array( $type ) ) {
+			return $options;
+		}
+
 		// Set method.
 		$method = 'get_' . $type;
 

@@ -189,6 +189,8 @@ abstract class Form {
 			$attributes['data-message'] = $this->message;
 		}
 
+		$attributes['data-validate-fields'] = hivepress()->router->get_url('fields_validate_action', ['form_name' => $this::get_meta('name')]);
+
 		// Set action.
 		if ( strpos( $this->action, get_rest_url() ) === 0 ) {
 			$attributes['action']      = '#';
