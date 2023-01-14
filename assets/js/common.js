@@ -842,6 +842,24 @@ var hivepress = {
 		$(document).trigger('hivepress:init', [container]);
 	}
 
+	$(window).on('load', function(){
+
+		// Form
+		hivepress.getComponent('form').each(function () {
+			var form = $(this),
+				renderSettings = form.data('render');
+
+			if (renderSettings) {
+				form.find('input:not([type="hidden"]), textarea').each(function(){
+					if($(this).val()){
+						form.trigger('change');
+						return false;
+					}
+				});
+			}
+		});
+	});
+
 	$(document).ready(function () {
 
 		// Date formatter
