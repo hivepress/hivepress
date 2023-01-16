@@ -127,10 +127,6 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
-			if (field.find('option[data-level]').length) {
-				settings['minimumResultsForSearch'] = -1;
-			}
-
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',
@@ -207,6 +203,60 @@ var hivepress = {
 				$.extend(settings, {
 					tags: true,
 					tokenSeparators: [','],
+				});
+			}
+
+			if (field.data('multistep')) {
+				var options = [];
+
+				field.find('option').each(function () {
+					var option = $(this);
+
+					options.push({
+						id: parseInt(option.val()),
+						text: option.text(),
+						parent: parseInt(option.data('parent')),
+					});
+				});
+
+				var parentID = parseInt(field.val()),
+					parentOption = options.find(function (option) {
+						return option.id === parentID;
+					});
+
+				if (parentOption && parentOption.parent) {
+					var parentOptions = options.filter(function (option) {
+						return option.id === parentOption.parent || option.parent === parentOption.parent;
+					});
+
+					if (parentOptions.length > 1) {
+						field.html('');
+
+						$.extend(settings, { data: parentOptions });
+					}
+				} else {
+					field.find('option[data-level]').remove();
+				}
+
+				field.on('select2:select', function () {
+					var parentID = parseInt($(this).val()),
+						childOptions = options.filter(function (option) {
+							return option.id === parentID || option.parent === parentID;
+						});
+
+					if (childOptions.length > 1) {
+						if (parentID) {
+							childOptions[0] = $.extend({}, childOptions[0], {
+								id: childOptions[0].parent,
+								text: '← ' + childOptions[0].text,
+							});
+						}
+
+						field.html('').select2($.extend({}, settings, { data: childOptions }));
+						field.val(null);
+
+						field.select2('open');
+					}
 				});
 			}
 
