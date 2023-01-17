@@ -225,14 +225,14 @@ var hivepress = {
 					});
 
 				if (parentOption && parentOption.parent) {
-					var parentOptions = options.filter(function (option) {
+					var currentOptions = options.filter(function (option) {
 						return option.id === parentOption.parent || option.parent === parentOption.parent;
 					});
 
-					if (parentOptions.length > 1) {
+					if (currentOptions.length > 1) {
 						field.html('');
 
-						$.extend(settings, { data: parentOptions });
+						$.extend(settings, { data: currentOptions });
 					}
 				} else {
 					field.find('option[data-level]').remove();
@@ -240,23 +240,23 @@ var hivepress = {
 
 				field.on('select2:select', function () {
 					var parentID = parseInt($(this).val()),
-						childOptions = options.filter(function (option) {
+						currentOptions = options.filter(function (option) {
 							return option.id === parentID || option.parent === parentID;
 						});
 
-					if (childOptions.length > 1 || !parentID) {
-						if (childOptions.length > 1) {
-							childOptions[0] = $.extend({}, childOptions[0], {
-								id: childOptions[0].parent,
-								text: '← ' + childOptions[0].text,
+					if (currentOptions.length > 1 || !parentID) {
+						if (currentOptions.length > 1) {
+							currentOptions[0] = $.extend({}, currentOptions[0], {
+								id: currentOptions[0].parent,
+								text: '← ' + currentOptions[0].text,
 							});
 						} else {
-							childOptions = options.filter(function (option) {
+							currentOptions = options.filter(function (option) {
 								return !option.parent;
 							});
 						}
 
-						field.html('').select2($.extend({}, settings, { data: childOptions }));
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
 						field.val(null);
 
 						field.select2('open');
