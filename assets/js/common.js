@@ -335,7 +335,7 @@ var hivepress = {
 								if (typeof grecaptcha !== 'undefined') {
 									var captcha = newContainer.find('.g-recaptcha');
 
-									if (captcha && captcha.data('sitekey')) {
+									if (captcha.length && captcha.data('sitekey')) {
 										grecaptcha.render(captcha.get(0), {
 											'sitekey': captcha.data('sitekey'),
 										});
