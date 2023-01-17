@@ -127,10 +127,6 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
-			if (field.find('option[data-level]').length) {
-				settings['minimumResultsForSearch'] = -1;
-			}
-
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',
@@ -210,10 +206,78 @@ var hivepress = {
 				});
 			}
 
-			if (field.data('render')) {
-				field.on('change', function () {
-					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+			if (field.data('multistep')) {
+				var options = [];
+
+				field.find('option').each(function () {
+					var option = $(this);
+
+					options.push({
+						id: parseInt(option.val()),
+						text: option.text(),
+						parent: parseInt(option.data('parent')),
+					});
+				});
+
+				var currentID = parseInt(field.val()),
+					currentOption = options.find(function (option) {
+						return option.id === currentID;
+					});
+
+				if (currentOption && currentOption.parent) {
+					var currentOptions = options.filter(function (option) {
+						return option.id === currentOption.parent || option.parent === currentOption.parent;
+					});
+
+					if (currentOptions.length > 1) {
+						currentOptions[0] = $.extend({}, currentOptions[0], {
+							id: currentOptions[0].parent,
+							text: '← ' + currentOptions[0].text,
+						});
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(currentID).trigger('change');
+					}
+				} else {
+					field.find('option[data-level]').remove();
+				}
+			}
+
+			field.on('select2:select', function () {
+				var field = $(this);
+
+				if (field.data('multistep')) {
+					var currentID = parseInt(field.val()),
+						currentOptions = options.filter(function (option) {
+							return option.id === currentID || option.parent === currentID;
+						});
+
+					if (!currentID || currentOptions.length > 1) {
+						if (!currentID) {
+							currentOptions = options.filter(function (option) {
+								return !option.parent;
+							});
+						} else {
+							currentOptions[0] = $.extend({}, currentOptions[0], {
+								id: currentOptions[0].parent,
+								text: '← ' + currentOptions[0].text,
+							});
+						}
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(null);
+
+						field.select2('open');
+
+						return false;
+					}
+				}
+
+				if (field.data('render')) {
+					var container = field.closest('[data-model]'),
+						data = new FormData(field.closest('form').get(0));
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -222,7 +286,7 @@ var hivepress = {
 					container.attr('data-state', 'loading');
 
 					$.ajax({
-						url: $(this).data('render'),
+						url: field.data('render'),
 						method: 'POST',
 						data: data,
 						contentType: false,
@@ -242,10 +306,12 @@ var hivepress = {
 							}
 						},
 					});
-				});
-			}
+				}
+			});
 
-			field.select2(settings);
+			if (!field.data('select2-id')) {
+				field.select2(settings);
+			}
 		});
 
 		// Phone
