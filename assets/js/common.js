@@ -237,22 +237,24 @@ var hivepress = {
 				} else {
 					field.find('option[data-level]').remove();
 				}
+			}
 
-				field.on('select2:select', function () {
+			field.on('select2:select', function () {
+				if (field.data('multistep')) {
 					var currentID = parseInt($(this).val()),
 						currentOptions = options.filter(function (option) {
 							return option.id === currentID || option.parent === currentID;
 						});
 
-					if (currentOptions.length > 1 || !currentID) {
-						if (currentOptions.length > 1) {
+					if (!currentID || currentOptions.length > 1) {
+						if (!currentID) {
+							currentOptions = options.filter(function (option) {
+								return !option.parent;
+							});
+						} else {
 							currentOptions[0] = $.extend({}, currentOptions[0], {
 								id: currentOptions[0].parent,
 								text: '← ' + currentOptions[0].text,
-							});
-						} else {
-							currentOptions = options.filter(function (option) {
-								return !option.parent;
 							});
 						}
 
@@ -260,12 +262,12 @@ var hivepress = {
 						field.val(null);
 
 						field.select2('open');
-					}
-				});
-			}
 
-			if (field.data('render')) {
-				field.on('change', function () {
+						return false;
+					}
+				}
+
+				if (field.data('render')) {
 					var container = $(this).closest('[data-model]'),
 						data = new FormData($(this).closest('form').get(0));
 
@@ -296,8 +298,8 @@ var hivepress = {
 							}
 						},
 					});
-				});
-			}
+				}
+			});
 
 			field.select2(settings);
 		});
