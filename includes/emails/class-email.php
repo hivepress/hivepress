@@ -161,7 +161,7 @@ abstract class Email {
 	/**
 	 * Gets email tokens.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	final public function get_tokens() {
 		return $this->tokens;
