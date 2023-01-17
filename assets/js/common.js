@@ -245,8 +245,10 @@ var hivepress = {
 			}
 
 			field.on('select2:select', function () {
+				var field = $(this);
+
 				if (field.data('multistep')) {
-					var currentID = parseInt($(this).val()),
+					var currentID = parseInt(field.val()),
 						currentOptions = options.filter(function (option) {
 							return option.id === currentID || option.parent === currentID;
 						});
@@ -274,8 +276,8 @@ var hivepress = {
 				}
 
 				if (field.data('render')) {
-					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+					var container = field.closest('[data-model]'),
+						data = new FormData(field.closest('form').get(0));
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -284,7 +286,7 @@ var hivepress = {
 					container.attr('data-state', 'loading');
 
 					$.ajax({
-						url: $(this).data('render'),
+						url: field.data('render'),
 						method: 'POST',
 						data: data,
 						contentType: false,
