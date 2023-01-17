@@ -244,11 +244,15 @@ var hivepress = {
 							return option.id === parentID || option.parent === parentID;
 						});
 
-					if (childOptions.length > 1) {
-						if (parentID) {
+					if (childOptions.length > 1 || !parentID) {
+						if (childOptions.length > 1) {
 							childOptions[0] = $.extend({}, childOptions[0], {
 								id: childOptions[0].parent,
 								text: '← ' + childOptions[0].text,
+							});
+						} else {
+							childOptions = options.filter(function (option) {
+								return !option.parent;
 							});
 						}
 
