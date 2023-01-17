@@ -219,14 +219,14 @@ var hivepress = {
 					});
 				});
 
-				var parentID = parseInt(field.val()),
-					parentOption = options.find(function (option) {
-						return option.id === parentID;
+				var currentID = parseInt(field.val()),
+					currentOption = options.find(function (option) {
+						return option.id === currentID;
 					});
 
-				if (parentOption && parentOption.parent) {
+				if (currentOption && currentOption.parent) {
 					var currentOptions = options.filter(function (option) {
-						return option.id === parentOption.parent || option.parent === parentOption.parent;
+						return option.id === currentOption.parent || option.parent === currentOption.parent;
 					});
 
 					if (currentOptions.length > 1) {
@@ -239,12 +239,12 @@ var hivepress = {
 				}
 
 				field.on('select2:select', function () {
-					var parentID = parseInt($(this).val()),
+					var currentID = parseInt($(this).val()),
 						currentOptions = options.filter(function (option) {
-							return option.id === parentID || option.parent === parentID;
+							return option.id === currentID || option.parent === currentID;
 						});
 
-					if (currentOptions.length > 1 || !parentID) {
+					if (currentOptions.length > 1 || !currentID) {
 						if (currentOptions.length > 1) {
 							currentOptions[0] = $.extend({}, currentOptions[0], {
 								id: currentOptions[0].parent,
