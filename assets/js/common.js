@@ -968,7 +968,7 @@ var hivepress = {
 		}
 
 		// File delete
-		$(document).on('click', hivepress.getSelector('file-delete'), function (e) {
+		$(document).on('click tap touchstart', hivepress.getSelector('file-delete'), function (e) {
 			var container = $(this).parent();
 
 			$.ajax({
