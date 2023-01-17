@@ -394,6 +394,8 @@ class Select extends Field {
 
 			if ( $level ) {
 				$attributes['data-level'] = $level;
+
+				$attributes['data-parent'] = hp\get_array_value( $label, 'parent' );
 			}
 
 			if ( hp\get_array_value( $label, 'disabled' ) ) {
