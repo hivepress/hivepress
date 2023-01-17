@@ -34,6 +34,15 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// URL
+		container.find('input[type=url]').focusout(function () {
+			var value = $(this).val();
+
+			if (!value.startsWith('https://') && !value.startsWith('http://')) {
+				$(this).val('https://' + value);
+			}
+		});
+
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
 			var url = '#' + $(this).attr('id');
