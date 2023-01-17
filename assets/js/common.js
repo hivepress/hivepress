@@ -230,9 +230,14 @@ var hivepress = {
 					});
 
 					if (currentOptions.length > 1) {
-						field.html('');
+						currentOptions[0] = $.extend({}, currentOptions[0], {
+							id: currentOptions[0].parent,
+							text: '← ' + currentOptions[0].text,
+						});
 
-						$.extend(settings, { data: currentOptions });
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(currentID).trigger('change');
 					}
 				} else {
 					field.find('option[data-level]').remove();
@@ -259,6 +264,7 @@ var hivepress = {
 						}
 
 						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
 						field.val(null);
 
 						field.select2('open');
@@ -301,7 +307,9 @@ var hivepress = {
 				}
 			});
 
-			field.select2(settings);
+			if (!field.data('select2-id')) {
+				field.select2(settings);
+			}
 		});
 
 		// Phone

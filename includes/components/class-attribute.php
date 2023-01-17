@@ -942,7 +942,7 @@ final class Attribute extends Component {
 				'_order'     => 5,
 
 				'attributes' => [
-					'data-multistep' => true,
+					'data-multistep' => 'true',
 					'data-render'    => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
 				],
 			];
