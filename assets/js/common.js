@@ -331,16 +331,6 @@ var hivepress = {
 										tinymce.init(configs);
 									});
 								}
-
-								if (typeof grecaptcha !== 'undefined') {
-									var captcha = newContainer.find('.g-recaptcha');
-
-									if (captcha.length && captcha.data('sitekey')) {
-										grecaptcha.render(captcha.get(0), {
-											'sitekey': captcha.data('sitekey'),
-										});
-									}
-								}
 							}
 						},
 					});
@@ -942,6 +932,21 @@ var hivepress = {
 				}
 			}
 		});
+
+		// reCAPTCHA
+		if (typeof grecaptcha !== 'undefined') {
+			container.find('.g-recaptcha').each(function(){
+	
+				// Get reCAPTCHA field
+				var captcha = $(this);
+	
+				if(captcha.data('sitekey')){
+					grecaptcha.render(captcha.get(0), {
+						'sitekey': captcha.data('sitekey'),
+					});
+				}
+			});
+		}
 
 		$(document).trigger('hivepress:init', [container]);
 	}
