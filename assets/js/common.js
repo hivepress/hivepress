@@ -38,7 +38,7 @@ var hivepress = {
 		container.find('input[type=url]').focusout(function () {
 			var value = $(this).val();
 
-			if (!value.startsWith('https://') && !value.startsWith('http://')) {
+			if (value && !value.startsWith('https://') && !value.startsWith('http://')) {
 				$(this).val('https://' + value);
 			}
 		});
