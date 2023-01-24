@@ -72,7 +72,7 @@ final class Admin extends Component {
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
-			add_action( 'save_post', [ $this, 'update_meta_box' ], 11 );
+			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -983,7 +983,7 @@ final class Admin extends Component {
 	 * @param string $screen Screen name.
 	 * @return array
 	 */
-	public function get_meta_boxes( $screen ) {
+	protected function get_meta_boxes( $screen ) {
 		if ( empty( $this->meta_boxes ) ) {
 			$this->meta_boxes = [];
 
@@ -1101,7 +1101,7 @@ final class Admin extends Component {
 		}
 
 		// Remove action.
-		remove_action( 'save_post', [ $this, 'update_meta_box' ], 11 );
+		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Update field values.
 		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {

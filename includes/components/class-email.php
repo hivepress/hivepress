@@ -41,10 +41,10 @@ final class Email extends Component {
 
 			// Render email details.
 			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
-		}
 
-		// Updates email subject and content.
-		add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+			// Set email defaults.
+			add_action( 'post_updated', [ $this, 'set_email_defaults' ], 10, 3 );
+		}
 
 		parent::__construct( $args );
 	}
@@ -57,7 +57,7 @@ final class Email extends Component {
 	 * @return array
 	 */
 	public function set_email_content( $args, $email ) {
-		if ( $email::get_meta( 'label' ) ) {
+		if ( $email::get_meta( 'label' ) && ! hp\get_array_value( $args, 'default' ) ) {
 
 			// Get content.
 			$content = get_page_by_path( $email::get_meta( 'name' ), OBJECT, 'hp_email' );
@@ -188,81 +188,33 @@ final class Email extends Component {
 	}
 
 	/**
-	 * Updates email subject and content.
+	 * Sets email defaults.
 	 *
-	 * @param int    $post_id Post ID.
-	 * @param object $post Post object.
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post Post object.
+	 * @param WP_Post $old_post Old post object.
 	 */
-	public function update_meta_box( $post_id, $post ) {
-
-		// Check permissions.
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-
-		// Check action.
-		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
-			return;
-		}
-
-		// Check autosave.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
+	public function set_email_defaults( $post_id, $post, $old_post ) {
 
 		// Check post.
-		if ( get_the_ID() !== $post_id || 'hp_email' !== $post->post_type ) {
+		if ( 'hp_email' !== $post->post_type || $post->post_title || $post->post_name === $old_post->post_name ) {
 			return;
 		}
 
-		// Remove action.
-		remove_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+		// Create email.
+		$email = hp\create_class_instance( '\HivePress\Emails\\' . sanitize_key( $post->post_name ), [ [ 'default' => true ] ] );
 
-		// Update field values.
-		foreach ( hivepress()->admin->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {
-			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
-				if ( 'post_name' !== hp\get_array_value( $field_args, '_alias' ) ) {
-					continue;
-				}
-
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
-
-				if ( ! $field || $field->is_disabled() ) {
-					return;
-				}
-
-				// Validate field.
-				$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
-
-				if ( ! $field->validate() || $field->get_arg( '_external' ) || $post->post_name === $field->get_value() ) {
-					return;
-				}
-
-				// Set post arguments.
-				$args = [
-					'ID'                        => $post_id,
-					$field->get_arg( '_alias' ) => $field->get_value(),
-				];
-
-				// Get email object.
-				$email = hp\create_class_instance( '\HivePress\Emails\\' . $field->get_value(), [] );
-
-				if ( ! $email || ! $email->get_body() ) {
-					return;
-				}
-
-				$args = array_merge(
-					$args,
-					[
-						'post_title'   => $email->get_subject(),
-						'post_content' => $email->get_body(),
-					]
-				);
-
-				// Update post.
-				wp_update_post( $args );
-			}
+		if ( ! $email || ! $email->get_body() ) {
+			return;
 		}
+
+		// Set defaults.
+		wp_update_post(
+			[
+				'ID'           => $post_id,
+				'post_title'   => $email->get_subject(),
+				'post_content' => $email->get_body(),
+			]
+		);
 	}
 }
