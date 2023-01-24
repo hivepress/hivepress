@@ -33,6 +33,9 @@ final class Scheduler extends Component {
 		add_action( 'hivepress/v1/activate', [ $this, 'unschedule_events' ] );
 		add_action( 'hivepress/v1/update', [ $this, 'unschedule_events' ] );
 
+		// Dry run events.
+		$this->run_events();
+
 		// Include Action Scheduler.
 		require_once hivepress()->get_path() . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
@@ -100,11 +103,7 @@ final class Scheduler extends Component {
 		$intervals = [ 'hourly', 'twicedaily', 'daily', 'weekly' ];
 
 		foreach ( $intervals as $interval ) {
-			$hook = 'hivepress/v1/events/' . $interval;
-
-			$this->add_action( $hook, [], null, $interval );
-
-			add_action( $hook, [ $this, 'run_events' ] );
+			$this->add_action( 'hivepress/v1/events/' . $interval, [], null, $interval );
 		}
 	}
 
@@ -126,7 +125,18 @@ final class Scheduler extends Component {
 	/**
 	 * Dry run events.
 	 */
-	public function run_events() {
+	protected function run_events() {
+		$intervals = [ 'hourly', 'twicedaily', 'daily', 'weekly' ];
+
+		foreach ( $intervals as $interval ) {
+			add_action( 'hivepress/v1/events/' . $interval, [ $this, 'run_event' ] );
+		}
+	}
+
+	/**
+	 * Dry run event.
+	 */
+	public function run_event() {
 		return;
 	}
 }
