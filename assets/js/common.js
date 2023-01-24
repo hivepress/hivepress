@@ -253,25 +253,49 @@ var hivepress = {
 				}
 			}
 
+			var previousSelection = parseInt(null),
+				form = field.closest('form');
+
 			field.on('select2:select', function () {
 				var field = $(this);
 
 				if (field.data('multistep')) {
-					var currentID = parseInt(field.val()),
-						currentOptions = options.filter(function (option) {
-							return option.id === currentID || option.parent === currentID;
+					var renderID = parseInt(field.val()),
+						isSearch = form.hasClass('hp-form--listing-search');
+					
+					if(isSearch && renderID === previousSelection){
+						var renderObject = options.filter(function (option) {
+							return option.id === renderID;
 						});
 
-					if (!currentID || currentOptions.length > 1) {
-						if (!currentID) {
+						if(renderObject){
+							renderID = renderObject[0].parent;
+						}
+
+						previousSelection = parseInt(renderObject[0].parent);
+					}else{
+						previousSelection = parseInt(field.val());
+					}
+
+					var currentOptions = options.filter(function (option) {
+						return option.id === renderID || option.parent === renderID;
+					});
+
+					if (!renderID || currentOptions.length > 1) {
+						if (!renderID) {
 							currentOptions = options.filter(function (option) {
 								return !option.parent;
 							});
 						} else {
-							currentOptions[0] = $.extend({}, currentOptions[0], {
-								id: currentOptions[0].parent,
+							var optionArgs = {
 								text: '← ' + currentOptions[0].text,
-							});
+							};
+
+							if(!isSearch){
+								optionArgs['id'] = currentOptions[0].parent;
+							}
+
+							currentOptions[0] = $.extend({}, currentOptions[0], optionArgs);
 						}
 
 						field.html('').select2($.extend({}, settings, { data: currentOptions }));

@@ -60,6 +60,10 @@ class Listing_Search extends Form {
 						'options'      => 'terms',
 						'option_args'  => [ 'taxonomy' => 'hp_listing_category' ],
 						'_order'       => 5,
+
+						'attributes' => [
+							'data-multistep' => true,
+						]
 					],
 
 					'post_type' => [
