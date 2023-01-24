@@ -1561,6 +1561,30 @@ final class Admin extends Component {
 			}
 		}
 
+		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
+			$notices['showcase_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Have you already launched this website? Please submit it to the <a href="%s" target="_blank">HivePress Showcase</a> to inspire others.', 'hivepress' ) ),
+					'https://hivepress.io/showcase/'
+				),
+			];
+		}
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
+			$notices['expert_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Are you a developer familiar with HivePress? Join the <a href="%s" target="_blank">HivePress Experts</a> program to regularly get new clients.', 'hivepress' ) ),
+					'https://hivepress.io/experts/'
+				),
+			];
+		}
+
 		/**
 		 * Filters the WordPress admin area notices.
 		 *
