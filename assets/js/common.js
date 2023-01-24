@@ -286,7 +286,8 @@ var hivepress = {
 
 				if (field.data('render')) {
 					var container = field.closest('[data-model]'),
-						data = new FormData(field.closest('form').get(0)),
+						form = field.closest('form'),
+						data = new FormData(form.get(0)),
 						tinymceSettings = [],
 						tinymceIDs = [];
 
@@ -307,7 +308,12 @@ var hivepress = {
 
 							if (typeof tinyMCE !== 'undefined') {
 								$.each(tinymce.editors, function (index, configs) {
-									tinymceSettings.push(configs.settings);
+
+									if(!form.find('textarea#' + configs.id)){
+										return;
+									}
+									
+									tinymceSettings.push({configs: configs.settings, content: tinymce.get(configs.id).getContent()});
 									tinymceIDs.push(configs.id);
 								});
 
@@ -327,8 +333,9 @@ var hivepress = {
 								hivepress.initUI(newContainer);
 
 								if (typeof tinyMCE !== 'undefined') {
-									$.each(tinymceSettings, function (index, configs) {
-										tinymce.init(configs);
+									$.each(tinymceSettings, function (index, tinymceSetting) {
+										tinymce.init(tinymceSetting.configs);
+										tinymce.get(tinymceSetting.configs.id).setContent(tinymceSetting.content);
 									});
 								}
 
