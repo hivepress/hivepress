@@ -34,6 +34,15 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// URL
+		container.find('input[type=url]').focusout(function () {
+			var value = $(this).val();
+
+			if (value && !value.startsWith('https://') && !value.startsWith('http://')) {
+				$(this).val('https://' + value);
+			}
+		});
+
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
 			var url = '#' + $(this).attr('id');
@@ -127,10 +136,6 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
-			if (field.find('option[data-level]').length) {
-				settings['minimumResultsForSearch'] = -1;
-			}
-
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',
@@ -210,10 +215,80 @@ var hivepress = {
 				});
 			}
 
-			if (field.data('render')) {
-				field.on('change', function () {
-					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+			if (field.data('multistep')) {
+				var options = [];
+
+				field.find('option').each(function () {
+					var option = $(this);
+
+					options.push({
+						id: parseInt(option.val()),
+						text: option.text(),
+						parent: parseInt(option.data('parent')),
+					});
+				});
+
+				var currentID = parseInt(field.val()),
+					currentOption = options.find(function (option) {
+						return option.id === currentID;
+					});
+
+				if (currentOption && currentOption.parent) {
+					var currentOptions = options.filter(function (option) {
+						return option.id === currentOption.parent || option.parent === currentOption.parent;
+					});
+
+					if (currentOptions.length > 1) {
+						currentOptions[0] = $.extend({}, currentOptions[0], {
+							id: currentOptions[0].parent,
+							text: '← ' + currentOptions[0].text,
+						});
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(currentID).trigger('change');
+					}
+				} else {
+					field.find('option[data-level]').remove();
+				}
+			}
+
+			field.on('select2:select', function () {
+				var field = $(this);
+
+				if (field.data('multistep')) {
+					var currentID = parseInt(field.val()),
+						currentOptions = options.filter(function (option) {
+							return option.id === currentID || option.parent === currentID;
+						});
+
+					if (!currentID || currentOptions.length > 1) {
+						if (!currentID) {
+							currentOptions = options.filter(function (option) {
+								return !option.parent;
+							});
+						} else {
+							currentOptions[0] = $.extend({}, currentOptions[0], {
+								id: currentOptions[0].parent,
+								text: '← ' + currentOptions[0].text,
+							});
+						}
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(null);
+
+						field.select2('open');
+
+						return false;
+					}
+				}
+
+				if (field.data('render')) {
+					var container = field.closest('[data-model]'),
+						data = new FormData(field.closest('form').get(0)),
+						tinymceSettings = [],
+						tinymceIDs = [];
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -222,13 +297,24 @@ var hivepress = {
 					container.attr('data-state', 'loading');
 
 					$.ajax({
-						url: $(this).data('render'),
+						url: field.data('render'),
 						method: 'POST',
 						data: data,
 						contentType: false,
 						processData: false,
 						beforeSend: function (xhr) {
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+
+							if (typeof tinyMCE !== 'undefined') {
+								$.each(tinymce.editors, function (index, configs) {
+									tinymceSettings.push(configs.settings);
+									tinymceIDs.push(configs.id);
+								});
+
+								$.each(tinymceIDs, function (index, id) {
+									tinymce.remove('#' + id);
+								});
+							}
 						},
 						complete: function (xhr) {
 							var response = xhr.responseJSON;
@@ -239,13 +325,31 @@ var hivepress = {
 								container.replaceWith(newContainer);
 
 								hivepress.initUI(newContainer);
+
+								if (typeof tinyMCE !== 'undefined') {
+									$.each(tinymceSettings, function (index, configs) {
+										tinymce.init(configs);
+									});
+								}
+
+								if (typeof grecaptcha !== 'undefined') {
+									var captcha = newContainer.find('.g-recaptcha');
+
+									if (captcha.length && captcha.data('sitekey')) {
+										grecaptcha.render(captcha.get(0), {
+											'sitekey': captcha.data('sitekey'),
+										});
+									}
+								}
 							}
 						},
 					});
-				});
-			}
+				}
+			});
 
-			field.select2(settings);
+			if (!field.data('select2-id')) {
+				field.select2(settings);
+			}
 		});
 
 		// Phone
@@ -280,6 +384,7 @@ var hivepress = {
 					dateFormat: 'Y-m-d',
 					altFormat: 'Y-m-d',
 					defaultHour: 0,
+					disable: [],
 					disableMobile: true,
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -863,7 +968,7 @@ var hivepress = {
 		}
 
 		// File delete
-		$(document).on('click', hivepress.getSelector('file-delete'), function (e) {
+		$(document).on('click tap touchstart', hivepress.getSelector('file-delete'), function (e) {
 			var container = $(this).parent();
 
 			$.ajax({

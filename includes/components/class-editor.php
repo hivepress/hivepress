@@ -391,7 +391,7 @@ final class Editor extends Component {
 						}
 
 						// Set block arguments.
-						$block_args = array_merge( $this->template[ $block_type ], $block_args );
+						$block_args = array_merge( $this->template[ $block_type ], $block_args, [ 'name' => $block_type ] );
 						$block_type = hp\get_array_value( $this->template[ $block_type ], 'type' );
 					}
 				}
