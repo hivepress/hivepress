@@ -74,6 +74,9 @@ final class Attribute extends Component {
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
+		// Redirect archive page.
+		add_action( 'template_redirect', [ $this, 'redirect_archive_page' ] );
+
 		if ( ! is_admin() ) {
 
 			// Set search query.
@@ -937,13 +940,13 @@ final class Attribute extends Component {
 
 			// Add field.
 			$form_args['fields']['categories'] = [
-				'parent_disabled' => true,
-				'multiple'        => false,
-				'required'        => true,
-				'_order'          => 5,
+				'multiple'   => false,
+				'required'   => true,
+				'_order'     => 5,
 
-				'attributes'      => [
-					'data-render' => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
+				'attributes' => [
+					'data-multistep' => 'true',
+					'data-render'    => hivepress()->router->get_url( 'form_resource', [ 'form_name' => $form::get_meta( 'name' ) ] ),
 				],
 			];
 		}
@@ -1558,6 +1561,32 @@ final class Attribute extends Component {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Redirects archive page.
+	 */
+	public function redirect_archive_page() {
+
+		// Check page.
+		if ( ! is_post_type_archive( hp\prefix( $this->get_models() ) ) || is_search() ) {
+			return;
+		}
+
+		// Get model.
+		$model = hp\unprefix( get_post_type() );
+
+		// Get page ID.
+		$page_id = absint( get_option( hp\prefix( 'page_' . $model . 's' ) ) );
+
+		if ( ! $page_id ) {
+			return;
+		}
+
+		// Redirect page.
+		wp_safe_redirect( get_permalink( $page_id ) );
+
+		exit;
 	}
 
 	/**
