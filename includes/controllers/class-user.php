@@ -217,6 +217,17 @@ final class User extends Controller {
 						'redirect' => [ $this, 'redirect_user_edit_settings_page' ],
 						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
+
+					'users_view_page'               => [
+						'path' => '/users',
+					],
+
+					'user_view_page'               => [
+						'base' => 'users_view_page',
+						'path' => '/(?P<username>[a-z0-9_]+)',
+						'redirect' => [ $this, 'redirect_user_view_page' ],
+						'action'   => [ $this, 'render_user_view_page' ],
+					],
 				],
 			],
 			$args
@@ -901,6 +912,42 @@ final class User extends Controller {
 
 				'context'  => [
 					'user' => hivepress()->request->get_user(),
+				],
+			]
+		) )->render();
+	}
+
+	public function redirect_user_view_page(){
+
+		// Get username.
+		$username  = sanitize_user( hivepress()->request->get_param('username') );
+
+		if ( ! $username ) {
+			wp_die( esc_html__( 'User doe not exist', 'hivepress' ) );
+		}
+
+		$user = Models\User::query()->filter(['username' => $username])->get_first();
+
+		if(!$user){
+			wp_die( esc_html__( 'User does not exist', 'hivepress' ) );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'user_view_data', $user );
+
+		return false;
+	}
+
+
+	public function render_user_view_page(){
+
+		// Render template.
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_view_page',
+
+				'context'  => [
+					'user'   => hivepress()->request->get_context('user_view_data'),
 				],
 			]
 		) )->render();
