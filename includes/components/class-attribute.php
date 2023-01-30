@@ -167,6 +167,11 @@ final class Attribute extends Component {
 		}
 
 		if ( ! $id ) {
+
+			if ( is_object( $object ) && $object->get_categories__id() ) {
+				return $object->get_categories__id();
+			}
+
 			return;
 		}
 
@@ -771,8 +776,8 @@ final class Attribute extends Component {
 		// Get category IDs.
 		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
 
-		if ( is_null( $category_ids ) ) {
-			$category_ids = $this->get_category_ids( $model, $object->get_id() );
+		if ( is_null( $category_ids ) || ! $object->get_id() ) {
+			$category_ids = $this->get_category_ids( $model, $object );
 
 			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
 				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
