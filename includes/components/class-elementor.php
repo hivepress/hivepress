@@ -33,8 +33,15 @@ final class Elementor extends Component {
 		// Register categories.
 		add_action( 'elementor/elements/categories_registered', [ $this, 'register_categories' ] );
 
-		// Register widgets.
-		add_action( 'elementor/widgets/widgets_registered', [ $this, 'register_widgets' ] );
+		if ( version_compare( ELEMENTOR_VERSION, '3.5.0', '<=' ) ) {
+
+			// Register widgets.
+			add_action( 'elementor/widgets/widgets_registered', [ $this, 'register_widgets' ] );
+		} else {
+
+			// Register widgets.
+			add_action( 'elementor/widgets/register', [ $this, 'register_widgets' ] );
+		}
 
 		// Set preview mode.
 		add_filter( 'hivepress/v1/components/editor/preview', [ $this, 'set_preview_mode' ] );
@@ -69,10 +76,19 @@ final class Elementor extends Component {
 				// Get slug.
 				$block_slug = 'hivepress-' . hp\sanitize_slug( $block_type );
 
-				// Register widget.
-				\Elementor\Plugin::instance()->widgets_manager->register_widget_type(
-					new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
-				);
+				if ( version_compare( ELEMENTOR_VERSION, '3.5.0', '<=' ) ) {
+
+					// Register widget.
+					\Elementor\Plugin::instance()->widgets_manager->register_widget_type(
+						new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
+					);
+				} else {
+
+					// Register widget.
+					\Elementor\Plugin::instance()->widgets_manager->register(
+						new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
+					);
+				}
 			}
 		}
 	}
