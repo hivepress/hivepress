@@ -53,6 +53,13 @@ class Date extends Field {
 	protected $max_date;
 
 	/**
+	 * Enabled dates.
+	 *
+	 * @var array
+	 */
+	protected $enabled_dates = [];
+
+	/**
 	 * Disabled dates.
 	 *
 	 * @var array
@@ -79,6 +86,13 @@ class Date extends Field {
 	 * @var int
 	 */
 	protected $window;
+
+	/**
+	 * Allow selecting multiple dates?
+	 *
+	 * @var bool
+	 */
+	protected $multiple = false;
 
 	/**
 	 * Allow selecting time?
@@ -185,16 +199,14 @@ class Date extends Field {
 			$attributes['data-max-date'] = $this->max_date;
 		}
 
+		// Set enabled dates.
+		if ( $this->enabled_dates ) {
+			$attributes['data-enabled-dates'] = wp_json_encode( $this->get_ranges( $this->enabled_dates ) );
+		}
+
 		// Set disabled dates.
 		if ( $this->disabled_dates ) {
-			$attributes['data-disabled-dates'] = wp_json_encode(
-				array_map(
-					function( $date ) {
-						return is_array( $date ) ? array_combine( [ 'from', 'to' ], $date ) : $date;
-					},
-					$this->disabled_dates
-				)
-			);
+			$attributes['data-disabled-dates'] = wp_json_encode( $this->get_ranges( $this->disabled_dates ) );
 		}
 
 		// Set disabled days.
@@ -210,6 +222,11 @@ class Date extends Field {
 		// Set window.
 		if ( ! is_null( $this->window ) ) {
 			$attributes['data-window'] = $this->window;
+		}
+
+		// Set multiple mode.
+		if ( $this->multiple ) {
+			$attributes['data-mode'] = 'multiple';
 		}
 
 		// Set time flag.
@@ -231,6 +248,8 @@ class Date extends Field {
 	 * @return mixed
 	 */
 	public function get_display_value() {
+
+		// @todo add support for multiple dates.
 		if ( ! is_null( $this->value ) ) {
 			$date = date_create_from_format( $this->format, $this->value );
 
@@ -247,7 +266,22 @@ class Date extends Field {
 		parent::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = trim( wp_unslash( $this->value ) );
+			if ( $this->multiple && ! is_array( $this->value ) ) {
+				$this->value = explode( ',', $this->value );
+			}
+
+			$this->value = array_map(
+				function( $value ) {
+					return trim( wp_unslash( $value ) );
+				},
+				(array) $this->value
+			);
+
+			if ( ! $this->multiple ) {
+				$this->value = hp\get_first_array_value( $this->value );
+			} elseif ( [] === $this->value ) {
+				$this->value = null;
+			}
 		}
 	}
 
@@ -255,7 +289,16 @@ class Date extends Field {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$this->value = sanitize_text_field( $this->value );
+		if ( $this->multiple ) {
+			$this->value = array_map(
+				function( $value ) {
+					return sanitize_text_field( $value );
+				},
+				$this->value
+			);
+		} else {
+			$this->value = sanitize_text_field( $this->value );
+		}
 	}
 
 	/**
@@ -265,29 +308,40 @@ class Date extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			$date = date_create_from_format( $this->format, $this->value );
 
-			if ( false === $date ) {
-				/* translators: %s: field label. */
-				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
-			} else {
-				if ( ! is_null( $this->min_date ) ) {
-					$min_date = date_create( $this->min_date );
+			// Validate fields.
+			$errors = [];
 
-					if ( $date < $min_date ) {
-						/* translators: 1: field label, 2: date. */
-						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->get_label( true ), $min_date->format( $this->display_format ) ) );
+			foreach ( (array) $this->value as $value ) {
+				$date = date_create_from_format( $this->format, $value );
+
+				if ( false === $date ) {
+					/* translators: %s: field label. */
+					$errors[] = sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) );
+				} else {
+					if ( ! is_null( $this->min_date ) ) {
+						$min_date = date_create( $this->min_date );
+
+						if ( $date < $min_date ) {
+							/* translators: 1: field label, 2: date. */
+							$errors[] = sprintf( esc_html__( '"%1$s" can\'t be earlier than %2$s.', 'hivepress' ), $this->get_label( true ), $min_date->format( $this->display_format ) );
+						}
+					}
+
+					if ( ! is_null( $this->max_date ) ) {
+						$max_date = date_create( $this->max_date );
+
+						if ( $date > $max_date ) {
+							/* translators: 1: field label, 2: date. */
+							$errors[] = sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->get_label( true ), $max_date->format( $this->display_format ) );
+						}
 					}
 				}
+			}
 
-				if ( ! is_null( $this->max_date ) ) {
-					$max_date = date_create( $this->max_date );
-
-					if ( $date > $max_date ) {
-						/* translators: 1: field label, 2: date. */
-						$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be later than %2$s.', 'hivepress' ), $this->get_label( true ), $max_date->format( $this->display_format ) ) );
-					}
-				}
+			// Add errors.
+			if ( $errors ) {
+				$this->add_errors( array_unique( $errors ) );
 			}
 		}
 
@@ -302,13 +356,20 @@ class Date extends Field {
 	public function render() {
 		$output = '<div ' . hp\html_attributes( $this->attributes ) . '>';
 
+		// Get value.
+		$value = $this->value;
+
+		if ( $this->multiple && ! is_null( $value ) ) {
+			$value = implode( ', ', $value );
+		}
+
 		// Render field.
 		$output .= ( new Text(
 			array_merge(
 				$this->args,
 				[
 					'display_type' => 'text',
-					'default'      => $this->value,
+					'default'      => $value,
 
 					'attributes'   => [
 						'data-input' => '',
@@ -323,5 +384,20 @@ class Date extends Field {
 		$output .= '</div>';
 
 		return $output;
+	}
+
+	/**
+	 * Gets date ranges.
+	 *
+	 * @param array $dates Dates or ranges.
+	 * @return array
+	 */
+	protected function get_ranges( $dates ) {
+		return array_map(
+			function( $date ) {
+				return is_array( $date ) ? array_combine( [ 'from', 'to' ], $date ) : $date;
+			},
+			$dates
+		);
 	}
 }

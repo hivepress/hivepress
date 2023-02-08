@@ -328,6 +328,13 @@ final class Editor extends Component {
 	 * Registers default blocks.
 	 */
 	public function register_default_blocks() {
+		global $pagenow;
+
+		// Check request.
+		if ( isset( $_GET['doing_wp_cron'] ) || ( is_admin() && ! in_array( $pagenow, [ 'post.php', 'post-new.php' ] ) ) ) {
+			return;
+		}
+
 		foreach ( hivepress()->get_classes( 'blocks' ) as $block_type => $block_class ) {
 			if ( $block_class::get_meta( 'label' ) ) {
 
@@ -384,7 +391,7 @@ final class Editor extends Component {
 						}
 
 						// Set block arguments.
-						$block_args = array_merge( $this->template[ $block_type ], $block_args );
+						$block_args = array_merge( $this->template[ $block_type ], $block_args, [ 'name' => $block_type ] );
 						$block_type = hp\get_array_value( $this->template[ $block_type ], 'type' );
 					}
 				}

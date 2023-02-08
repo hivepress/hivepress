@@ -54,7 +54,7 @@ class Listing_Search extends Form {
 					],
 
 					'_category' => [
-						'placeholder'  => esc_html__( 'All Categories', 'hivepress' ),
+						'placeholder'  => hivepress()->translator->get_string( 'all_categories' ),
 						'type'         => 'select',
 						'display_type' => 'hidden',
 						'options'      => 'terms',

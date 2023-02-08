@@ -46,6 +46,9 @@ final class Admin extends Component {
 		// Register taxonomies.
 		add_action( 'init', [ $this, 'register_taxonomies' ] );
 
+		// Share usage data.
+		add_action( 'hivepress/v1/events/weekly', [ $this, 'share_usage_data' ] );
+
 		if ( is_admin() ) {
 
 			// Add admin pages.
@@ -775,10 +778,23 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get referral ID.
+			$referral = null;
+
+			$stylesheet = get_template_directory() . '/style.css';
+
+			if ( file_exists( $stylesheet ) ) {
+				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
+			}
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) {
+				function( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
+
+					if ( $referral ) {
+						$path .= '&ref=' . $referral;
+					}
 
 					return array_merge(
 						$extension,
@@ -1103,10 +1119,20 @@ final class Admin extends Component {
 
 						// Update field value.
 						if ( $field->get_arg( '_external' ) ) {
+							$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
+
 							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
-								delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+								if ( $taxonomy ) {
+									wp_set_post_terms( $post_id, [], $taxonomy );
+								} else {
+									delete_post_meta( $post_id, $field->get_arg( '_alias' ) );
+								}
 							} elseif ( ! $field->get_arg( 'readonly' ) ) {
-								update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+								if ( $taxonomy ) {
+									wp_set_post_terms( $post_id, (array) $field->get_value(), $taxonomy );
+								} else {
+									update_post_meta( $post_id, $field->get_arg( '_alias' ), $field->get_value() );
+								}
 							}
 						} else {
 							wp_update_post(
@@ -1174,7 +1200,13 @@ final class Admin extends Component {
 						if ( isset( $args['defaults'] ) ) {
 							$value = hp\get_array_value( $args['defaults'], $field_name, '' );
 						} elseif ( $field->get_arg( '_external' ) ) {
-							$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+							$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
+
+							if ( $taxonomy ) {
+								$value = wp_get_post_terms( $post->ID, $taxonomy, [ 'fields' => 'ids' ] );
+							} else {
+								$value = get_post_meta( $post->ID, $field->get_arg( '_alias' ), true );
+							}
 						} else {
 							$value = get_post_field( $field->get_arg( '_alias' ), $post );
 						}
@@ -1502,26 +1534,54 @@ final class Admin extends Component {
 					'https://wordpress.org/support/plugin/hivepress/reviews/'
 				),
 			];
-		} elseif ( $installed_time < time() - DAY_IN_SECONDS * 2 && get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
-			$notices['upgrade_request'] = [
+		}
+
+		if ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
+				$notices['upgrade_request'] = [
+					'type'        => 'info',
+					'dismissible' => true,
+					'text'        => sprintf(
+						/* translators: %s: link URL. */
+						hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
+						esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
+					),
+				];
+			}
+
+			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+				$notices['usage_tracking'] = [
+					'type'        => 'info',
+					'option'      => 'hivepress_allow_tracking',
+					'dismissible' => true,
+					/* translators: %s: terms URL. */
+					'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
+				];
+			}
+		}
+
+		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
+			$notices['showcase_request'] = [
 				'type'        => 'info',
 				'dismissible' => true,
 				'text'        => sprintf(
 					/* translators: %s: link URL. */
-					hp\sanitize_html( __( 'Great start with HivePress! Check out our <a href="%1$s">premium themes</a> and <a href="%2$s">extensions</a> for more tailored design and functionality.', 'hivepress' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_themes' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_extensions' ) )
+					hp\sanitize_html( __( 'Have you already launched this website? Please submit it to the <a href="%s" target="_blank">HivePress Showcase</a> to inspire others.', 'hivepress' ) ),
+					'https://hivepress.io/showcase/'
 				),
 			];
 		}
 
-		if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
-			$notices['usage_tracking'] = [
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
+			$notices['expert_request'] = [
 				'type'        => 'info',
-				'option'      => 'hivepress_allow_tracking',
 				'dismissible' => true,
-				/* translators: %s: terms URL. */
-				'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Are you a developer familiar with HivePress? Join the <a href="%s" target="_blank">HivePress Experts</a> program to regularly get new clients.', 'hivepress' ) ),
+					'https://hivepress.io/experts/'
+				),
 			];
 		}
 
@@ -1668,5 +1728,167 @@ final class Admin extends Component {
 		$output .= hivepress()->request->get_context( 'admin_footer' );
 
 		echo $output;
+	}
+
+	/**
+	 * Shares usage data.
+	 */
+	public function share_usage_data() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
+			return;
+		}
+
+		// Set defaults.
+		$data = [
+			'url'       => home_url(),
+			'date'      => gmdate( 'Y-m-d' ),
+			'email'     => get_bloginfo( 'admin_email' ),
+			'language'  => get_locale(),
+			'timezone'  => wp_timezone_string(),
+			'version'   => get_bloginfo( 'version' ),
+			'multisite' => is_multisite(),
+		];
+
+		if ( get_option( 'hp_installed_time' ) ) {
+			$data['lifetime'] = ceil( ( time() - absint( get_option( 'hp_installed_time' ) ) ) / DAY_IN_SECONDS );
+		}
+
+		// Get stats.
+		$data['stats'] = [
+			'listings' => wp_count_posts( 'hp_listing' )->publish,
+			'vendors'  => wp_count_posts( 'hp_vendor' )->publish,
+			'users'    => get_user_count(),
+		];
+
+		// Get theme.
+		$theme = wp_get_theme( get_template() );
+
+		$data['theme'] = [
+			'slug' => get_template(),
+		];
+
+		if ( $theme->exists() ) {
+			$data['theme'] = array_merge(
+				$data['theme'],
+				array_filter(
+					array_combine(
+						[
+							'name',
+							'version',
+							'url',
+							'author',
+							'author_url',
+						],
+						array_map(
+							function( $header ) use ( $theme ) {
+								return $theme->get( $header );
+							},
+							[
+								'Name',
+								'Version',
+								'ThemeURI',
+								'Author',
+								'AuthorURI',
+							]
+						)
+					)
+				)
+			);
+		}
+
+		// Get plugins.
+		$data['plugins'] = array_filter(
+			array_map(
+				function ( $plugin ) {
+					$file = WP_PLUGIN_DIR . '/' . $plugin;
+
+					if ( file_exists( $file ) ) {
+						$headers = array_filter(
+							get_file_data(
+								$file,
+								[
+									'name'       => 'Plugin Name',
+									'version'    => 'Version',
+									'url'        => 'Plugin URI',
+									'author'     => 'Author',
+									'author_url' => 'Author URI',
+								]
+							)
+						);
+
+						$headers['slug'] = basename( $plugin, '.php' );
+
+						return $headers;
+					}
+				},
+				(array) get_option( 'active_plugins' )
+			)
+		);
+
+		// Get settings.
+		$settings = hivepress()->get_config( 'settings' );
+
+		unset( $settings['integrations'] );
+
+		// Get options.
+		$options = [
+			'users_can_register',
+			'default_role',
+			'date_format',
+			'time_format',
+			'start_of_week',
+			'show_on_front',
+			'blog_public',
+			'permalink_structure',
+		];
+
+		foreach ( $settings as $tab ) {
+			foreach ( hp\get_array_value( $tab, 'sections', [] ) as $section ) {
+				foreach ( array_keys( hp\get_array_value( $section, 'fields', [] ) ) as $field ) {
+					$options[] = hp\prefix( $field );
+				}
+			}
+		}
+
+		$data['options'] = array_filter(
+			wp_load_alloptions(),
+			function( $value, $option ) use ( $options ) {
+				return in_array( $option, $options ) && strlen( $value );
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		// Get PHP info.
+		$configs = [
+			'max_execution_time',
+			'max_input_time',
+			'memory_limit',
+			'upload_max_filesize',
+		];
+
+		$data['php'] = array_combine(
+			$configs,
+			array_map(
+				function( $config ) {
+					return ini_get( $config );
+				},
+				$configs
+			)
+		);
+
+		$data['php']['version'] = phpversion();
+
+		// Send usage data.
+		wp_remote_post(
+			'https://hivepress.io/api/v1/feedback',
+			[
+				'body' => [
+					'action' => 'share_usage_data',
+					'data'   => wp_json_encode( $data ),
+				],
+			]
+		);
 	}
 }

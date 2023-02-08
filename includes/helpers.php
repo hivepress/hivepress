@@ -113,6 +113,7 @@ function get_last_array_value( $array, $default = null ) {
 /**
  * Searches array item value by keys.
  *
+ * @deprecated since version 1.6.13.
  * @param array $array Source array.
  * @param mixed $keys Keys to search.
  * @return mixed
@@ -171,6 +172,7 @@ function merge_arrays() {
 /**
  * Merges trees with mixed values.
  *
+ * @deprecated since version 1.6.13.
  * @param array  $parent_tree Parent tree.
  * @param array  $child_tree Child tree.
  * @param string $tree_key Tree key.

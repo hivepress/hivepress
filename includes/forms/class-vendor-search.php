@@ -54,7 +54,12 @@ class Vendor_Search extends Form {
 					],
 
 					'_category' => [
-						'type' => 'hidden',
+						'placeholder'  => hivepress()->translator->get_string( 'all_categories' ),
+						'type'         => 'select',
+						'display_type' => 'hidden',
+						'options'      => 'terms',
+						'option_args'  => [ 'taxonomy' => 'hp_vendor_category' ],
+						'_order'       => 5,
 					],
 
 					'post_type' => [

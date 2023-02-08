@@ -20,10 +20,11 @@ jobs:
       - name: Install dependencies
         run: |
           composer install -o --no-dev
+          npm install --omit=dev
 
       - name: Pack release
         run: |
-          rm -rf .git* composer.* phpcs.xml README.md
+          rm -rf .git* composer.* phpcs.xml package.json package-lock.json README.md
           cd ..
           zip -r release.zip ${{ github.event.repository.name }}
 

@@ -31,27 +31,27 @@ final class Cache extends Component {
 		add_action( 'hivepress/v1/events/hourly', [ $this, 'clear_meta_cache' ] );
 
 		// Clear user cache.
-		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ] );
-		add_action( 'hivepress/v1/models/user/update', [ $this, 'clear_user_cache' ] );
-		add_action( 'hivepress/v1/models/user/delete', [ $this, 'clear_user_cache' ] );
+		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ], 1000 );
+		add_action( 'hivepress/v1/models/user/update', [ $this, 'clear_user_cache' ], 1000 );
+		add_action( 'hivepress/v1/models/user/delete', [ $this, 'clear_user_cache' ], 1000 );
 
 		// Clear post cache.
-		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/post/create', [ $this, 'clear_post_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/post/update', [ $this, 'clear_post_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/post/delete', [ $this, 'clear_post_cache' ], 1000, 2 );
 
 		// Clear post term cache.
-		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 10, 3 );
+		add_action( 'hivepress/v1/models/post/update_terms', [ $this, 'clear_post_term_cache' ], 1000, 3 );
 
 		// Clear term cache.
-		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/term/create', [ $this, 'clear_term_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/term/update', [ $this, 'clear_term_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/term/delete', [ $this, 'clear_term_cache' ], 1000, 2 );
 
 		// Clear comment cache.
-		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ], 10, 2 );
-		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ], 10, 2 );
+		add_action( 'hivepress/v1/models/comment/create', [ $this, 'clear_comment_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/comment/update', [ $this, 'clear_comment_cache' ], 1000, 2 );
+		add_action( 'hivepress/v1/models/comment/delete', [ $this, 'clear_comment_cache' ], 1000, 2 );
 
 		parent::__construct( $args );
 	}

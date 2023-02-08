@@ -3,28 +3,28 @@ var hivepress = {
 	/**
 	 * Gets component selector.
 	 */
-	getSelector: function(name) {
+	getSelector: function (name) {
 		return '[data-component="' + name + '"]';
 	},
 
 	/**
 	 * Gets component object.
 	 */
-	getComponent: function(name) {
+	getComponent: function (name) {
 		return jQuery(this.getSelector(name));
 	},
 };
 
-(function($) {
+(function ($) {
 	'use strict';
 
-	hivepress.initUI = function(container = null) {
+	hivepress.initUI = function (container = null) {
 		if (container === null) {
 			container = $('body');
 		}
 
 		// Link
-		container.find(hivepress.getSelector('link')).on('click', function(e) {
+		container.find(hivepress.getSelector('link')).on('click', function (e) {
 			var url = $(this).data('url');
 
 			if (url.indexOf('#') !== 0) {
@@ -34,11 +34,20 @@ var hivepress = {
 			e.preventDefault();
 		});
 
+		// URL
+		container.find('input[type=url]').focusout(function () {
+			var value = $(this).val();
+
+			if (value && !value.startsWith('https://') && !value.startsWith('http://')) {
+				$(this).val('https://' + value);
+			}
+		});
+
 		// Modal
-		container.find(hivepress.getSelector('modal')).each(function() {
+		container.find(hivepress.getSelector('modal')).each(function () {
 			var url = '#' + $(this).attr('id');
 
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function(e) {
+			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function (e) {
 				$.fancybox.close();
 				$.fancybox.open({
 					src: url,
@@ -50,7 +59,7 @@ var hivepress = {
 		});
 
 		// Repeater
-		container.find(hivepress.getSelector('repeater')).each(function() {
+		container.find(hivepress.getSelector('repeater')).each(function () {
 			var container = $(this),
 				itemContainer = container.find('tbody');
 
@@ -64,12 +73,12 @@ var hivepress = {
 			});
 
 			if (firstItem.length) {
-				container.find('[data-add]').on('click', function() {
+				container.find('[data-add]').on('click', function () {
 					var newItem = sampleItem.clone(),
 						index = Math.random().toString(36).slice(2);
 
 					if (index) {
-						newItem.find(':input').each(function() {
+						newItem.find(':input').each(function () {
 							var field = $(this),
 								name = field.attr('name'),
 								pattern = /\[([^\]]+)\]/,
@@ -96,7 +105,7 @@ var hivepress = {
 				});
 			}
 
-			container.on('click', '[data-remove]', function() {
+			container.on('click', '[data-remove]', function () {
 				if (container.find('tr').length > 1) {
 					$(this).closest('tr').remove();
 				}
@@ -104,13 +113,13 @@ var hivepress = {
 		});
 
 		// Select
-		container.find(hivepress.getSelector('select')).each(function() {
+		container.find(hivepress.getSelector('select')).each(function () {
 			var field = $(this),
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
-					templateResult: function(state) {
+					templateResult: function (state) {
 						var template = state.text,
 							level = 0;
 
@@ -127,10 +136,6 @@ var hivepress = {
 				settings['placeholder'] = field.data('placeholder');
 			}
 
-			if (field.find('option[data-level]').length) {
-				settings['minimumResultsForSearch'] = -1;
-			}
-
 			if (field.data('style') === 'inline') {
 				$.extend(settings, {
 					containerCssClass: 'select2-selection--inline',
@@ -142,7 +147,7 @@ var hivepress = {
 			}
 
 			if (field.data('template') === 'icon') {
-				var template = function(icon) {
+				var template = function (icon) {
 					var output = icon.text;
 
 					if (icon.id) {
@@ -155,7 +160,7 @@ var hivepress = {
 				$.extend(settings, {
 					templateResult: template,
 					templateSelection: template,
-					escapeMarkup: function(output) {
+					escapeMarkup: function (output) {
 						return output;
 					},
 				});
@@ -168,7 +173,7 @@ var hivepress = {
 						dataType: 'json',
 						delay: 250,
 						cache: true,
-						data: function(params) {
+						data: function (params) {
 							return {
 								'search': params.term,
 								'context': 'list',
@@ -176,7 +181,7 @@ var hivepress = {
 								'_wpnonce': hivepressCoreData.apiNonce,
 							};
 						},
-						processResults: function(response) {
+						processResults: function (response) {
 							var results = [];
 
 							if (response && response.hasOwnProperty('data')) {
@@ -194,7 +199,7 @@ var hivepress = {
 					var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
 
 					if (parentField.length) {
-						parentField.on('change', function() {
+						parentField.on('change', function () {
 							field.data('parent-value', $(this).val());
 						});
 					}
@@ -210,10 +215,80 @@ var hivepress = {
 				});
 			}
 
-			if (field.data('render')) {
-				field.on('change', function() {
-					var container = $(this).closest('[data-model]'),
-						data = new FormData($(this).closest('form').get(0));
+			if (field.data('multistep')) {
+				var options = [];
+
+				field.find('option').each(function () {
+					var option = $(this);
+
+					options.push({
+						id: parseInt(option.val()),
+						text: option.text(),
+						parent: parseInt(option.data('parent')),
+					});
+				});
+
+				var currentID = parseInt(field.val()),
+					currentOption = options.find(function (option) {
+						return option.id === currentID;
+					});
+
+				if (currentOption && currentOption.parent) {
+					var currentOptions = options.filter(function (option) {
+						return option.id === currentOption.parent || option.parent === currentOption.parent;
+					});
+
+					if (currentOptions.length > 1) {
+						currentOptions[0] = $.extend({}, currentOptions[0], {
+							id: currentOptions[0].parent,
+							text: '← ' + currentOptions[0].text,
+						});
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(currentID).trigger('change');
+					}
+				} else {
+					field.find('option[data-level]').remove();
+				}
+			}
+
+			field.on('select2:select', function () {
+				var field = $(this);
+
+				if (field.data('multistep')) {
+					var currentID = parseInt(field.val()),
+						currentOptions = options.filter(function (option) {
+							return option.id === currentID || option.parent === currentID;
+						});
+
+					if (!currentID || currentOptions.length > 1) {
+						if (!currentID) {
+							currentOptions = options.filter(function (option) {
+								return !option.parent;
+							});
+						} else {
+							currentOptions[0] = $.extend({}, currentOptions[0], {
+								id: currentOptions[0].parent,
+								text: '← ' + currentOptions[0].text,
+							});
+						}
+
+						field.html('').select2($.extend({}, settings, { data: currentOptions }));
+
+						field.val(null);
+
+						field.select2('open');
+
+						return false;
+					}
+				}
+
+				if (field.data('render')) {
+					var container = field.closest('[data-model]'),
+						data = new FormData(field.closest('form').get(0)),
+						tinymceSettings = [],
+						tinymceIDs = [];
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -222,15 +297,26 @@ var hivepress = {
 					container.attr('data-state', 'loading');
 
 					$.ajax({
-						url: $(this).data('render'),
+						url: field.data('render'),
 						method: 'POST',
 						data: data,
 						contentType: false,
 						processData: false,
-						beforeSend: function(xhr) {
+						beforeSend: function (xhr) {
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+
+							if (typeof tinyMCE !== 'undefined') {
+								$.each(tinymce.editors, function (index, configs) {
+									tinymceSettings.push(configs.settings);
+									tinymceIDs.push(configs.id);
+								});
+
+								$.each(tinymceIDs, function (index, id) {
+									tinymce.remove('#' + id);
+								});
+							}
 						},
-						complete: function(xhr) {
+						complete: function (xhr) {
 							var response = xhr.responseJSON;
 
 							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
@@ -239,23 +325,40 @@ var hivepress = {
 								container.replaceWith(newContainer);
 
 								hivepress.initUI(newContainer);
+
+								if (typeof tinyMCE !== 'undefined') {
+									$.each(tinymceSettings, function (index, configs) {
+										tinymce.init(configs);
+									});
+								}
+
+								if (typeof grecaptcha !== 'undefined') {
+									var captcha = newContainer.find('.g-recaptcha');
+
+									if (captcha.length && captcha.data('sitekey')) {
+										grecaptcha.render(captcha.get(0), {
+											'sitekey': captcha.data('sitekey'),
+										});
+									}
+								}
 							}
 						},
 					});
-				});
-			}
+				}
+			});
 
-			field.select2(settings);
+			if (!field.data('select2-id')) {
+				field.select2(settings);
+			}
 		});
 
 		// Phone
-		container.find(hivepress.getSelector('phone')).each(function() {
+		container.find(hivepress.getSelector('phone')).each(function () {
 			var field = $(this),
 				settings = {
 					hiddenInput: field.attr('name'),
 					preferredCountries: [],
 					separateDialCode: true,
-					formatOnDisplay: false,
 					utilsScript: field.data('utils'),
 				};
 
@@ -265,11 +368,15 @@ var hivepress = {
 				settings['onlyCountries'] = field.data('countries');
 			}
 
+			if (field.data('country')) {
+				settings['initialCountry'] = field.data('country');
+			}
+
 			window.intlTelInput(field.get(0), settings);
 		});
 
 		// Date
-		container.find(hivepress.getSelector('date')).each(function() {
+		container.find(hivepress.getSelector('date')).each(function () {
 			var field = $(this),
 				settings = {
 					allowInput: true,
@@ -279,12 +386,12 @@ var hivepress = {
 					defaultHour: 0,
 					disable: [],
 					disableMobile: true,
-					onOpen: function(selectedDates, dateStr, instance) {
+					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 
 						$(instance.element).find('[data-clear]').show();
 					},
-					onClose: function(selectedDates, dateStr, instance) {
+					onClose: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
 
@@ -302,7 +409,7 @@ var hivepress = {
 				settings['wrap'] = true;
 				settings['altInputClass'] = '';
 
-				field.find('[data-clear]').on('click', function() {
+				field.find('[data-clear]').on('click', function () {
 					field.data('reset', true);
 				});
 			}
@@ -315,12 +422,28 @@ var hivepress = {
 				settings['altFormat'] = field.data('display-format');
 			}
 
+			if (field.data('time')) {
+				settings['enableTime'] = true;
+			}
+
+			if (field.is('[data-offset]')) {
+				settings['minDate'] = new Date().fp_incr(field.data('offset'));
+			}
+
 			if (field.data('min-date')) {
 				settings['minDate'] = field.data('min-date');
 			}
 
+			if (field.is('[data-window]')) {
+				settings['maxDate'] = new Date().fp_incr(field.data('window'));
+			}
+
 			if (field.data('max-date')) {
 				settings['maxDate'] = field.data('max-date');
+			}
+
+			if (field.data('enabled-dates')) {
+				settings['enable'] = field.data('enabled-dates');
 			}
 
 			if (field.data('disabled-dates')) {
@@ -342,14 +465,14 @@ var hivepress = {
 			if (field.data('ranges')) {
 				var ranges = field.data('ranges');
 
-				settings['onDayCreate'] = function(dObj, dStr, fp, dayElem) {
+				settings['onDayCreate'] = function (dObj, dStr, fp, dayElem) {
 					if (dayElem.className.includes('disabled')) {
 						return;
 					}
 
 					var time = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
 
-					$.each(ranges, function(index, range) {
+					$.each(ranges, function (index, range) {
 						if (range.start <= time && time < range.end) {
 							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
 							dayElem.className += ' flatpickr-status';
@@ -364,18 +487,6 @@ var hivepress = {
 				};
 			}
 
-			if (field.is('[data-offset]')) {
-				settings['minDate'] = new Date().fp_incr(field.data('offset'));
-			}
-
-			if (field.is('[data-window]')) {
-				settings['maxDate'] = new Date().fp_incr(field.data('window'));
-			}
-
-			if (field.data('time')) {
-				settings['enableTime'] = true;
-			}
-
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
 
@@ -386,8 +497,8 @@ var hivepress = {
 
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
-						errorHandler: function(error) {},
-						onChange: function(selectedDates, dateStr, instance) {
+						errorHandler: function (error) { },
+						onChange: function (selectedDates, dateStr, instance) {
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
@@ -407,7 +518,7 @@ var hivepress = {
 									}
 								}
 
-								var formattedDates = selectedDates.map(function(date) {
+								var formattedDates = selectedDates.map(function (date) {
 									return hivepress.dateFormatter.formatDate(date, settings['dateFormat']);
 								});
 
@@ -424,10 +535,10 @@ var hivepress = {
 
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
-				parseDate: function(date) {
-					var parsedDate = hivepress.dateFormatter.parseDate(date, settings['dateFormat']);
+				parseDate: function (date, format) {
+					var parsedDate = hivepress.dateFormatter.parseDate(date, format);
 
-					if (settings['dateFormat'] === 'U') {
+					if (format === 'U') {
 						parsedDate = new Date(parsedDate.toLocaleString('en-US', {
 							timeZone: 'UTC',
 						}));
@@ -435,7 +546,7 @@ var hivepress = {
 
 					return parsedDate;
 				},
-				formatDate: function(date, format) {
+				formatDate: function (date, format) {
 					var formattedDate = hivepress.dateFormatter.formatDate(date, format);
 
 					if (format === 'U') {
@@ -450,7 +561,7 @@ var hivepress = {
 		});
 
 		// Time
-		container.find(hivepress.getSelector('time')).each(function() {
+		container.find(hivepress.getSelector('time')).each(function () {
 			var field = $(this),
 				settings = {
 					allowInput: true,
@@ -461,28 +572,30 @@ var hivepress = {
 					altFormat: 'g:i A',
 					defaultHour: 0,
 					disableMobile: true,
-					parseDate: function(time) {
-						var date = new Date();
+					parseDate: function (date, format) {
+						var parsedDate = hivepress.dateFormatter.parseDate(date, format);
 
-						date.setHours(Math.floor(time / 3600));
-						date.setMinutes(Math.floor((time % 3600) / 60));
-						date.setSeconds(time % 60);
+						if (format === 'U') {
+							parsedDate = new Date(parsedDate.toLocaleString('en-US', {
+								timeZone: 'UTC',
+							}));
+						}
 
-						return date;
+						return parsedDate;
 					},
-					formatDate: function(date, format) {
+					formatDate: function (date, format) {
 						if (format === 'U') {
 							return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 						}
 
 						return hivepress.dateFormatter.formatDate(date, format);
 					},
-					onOpen: function(selectedDates, dateStr, instance) {
+					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 
 						$(instance.element).find('[data-clear]').show();
 					},
-					onClose: function(selectedDates, dateStr, instance) {
+					onClose: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', false);
 						$(instance.altInput).blur();
 
@@ -500,7 +613,7 @@ var hivepress = {
 				settings['wrap'] = true;
 				settings['altInputClass'] = '';
 
-				field.find('[data-clear]').on('click', function() {
+				field.find('[data-clear]').on('click', function () {
 					field.data('reset', true);
 				});
 			}
@@ -517,7 +630,7 @@ var hivepress = {
 		});
 
 		// File upload
-		container.find(hivepress.getSelector('file-upload')).each(function() {
+		container.find(hivepress.getSelector('file-upload')).each(function () {
 			var field = $(this),
 				container = field.parents('[data-model]:first'),
 				submitButton = field.closest('form').find(':submit'),
@@ -530,6 +643,7 @@ var hivepress = {
 				url: field.data('url'),
 				dataType: 'json',
 				paramName: 'file',
+				limitConcurrentUploads: 2,
 				formData: {
 					'parent_model': container.data('model'),
 					'parent_field': field.data('name'),
@@ -537,7 +651,7 @@ var hivepress = {
 					'render': true,
 					'_wpnonce': hivepressCoreData.apiNonce,
 				},
-				start: function() {
+				start: function () {
 					field.prop('disabled', true);
 
 					selectButton.prop('disabled', true);
@@ -550,7 +664,7 @@ var hivepress = {
 
 					messageContainer.hide().html('');
 				},
-				stop: function() {
+				stop: function () {
 					field.prop('disabled', false);
 
 					selectButton.prop('disabled', false);
@@ -561,7 +675,7 @@ var hivepress = {
 						submitButton.attr('data-state', '');
 					}
 				},
-				always: function(e, data) {
+				always: function (e, data) {
 					var response = data.jqXHR.responseJSON;
 
 					if (response.hasOwnProperty('data')) {
@@ -572,7 +686,7 @@ var hivepress = {
 						}
 					} else if (response.hasOwnProperty('error')) {
 						if (response.error.hasOwnProperty('errors')) {
-							$.each(response.error.errors, function(index, error) {
+							$.each(response.error.errors, function (index, error) {
 								messageContainer.append('<div>' + error.message + '</div>');
 							});
 						} else if (response.error.hasOwnProperty('message')) {
@@ -588,20 +702,20 @@ var hivepress = {
 		});
 
 		// Sortable
-		container.find(hivepress.getSelector('sortable')).each(function() {
+		container.find(hivepress.getSelector('sortable')).each(function () {
 			var container = $(this);
 
 			container.sortable({
-				stop: function() {
+				stop: function () {
 					if (container.children().length > 1) {
-						container.children().each(function(index) {
+						container.children().each(function (index) {
 							$.ajax({
 								url: $(this).data('url'),
 								method: 'POST',
 								data: {
 									'sort_order': index,
 								},
-								beforeSend: function(xhr) {
+								beforeSend: function (xhr) {
 									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 								},
 							});
@@ -612,7 +726,7 @@ var hivepress = {
 		});
 
 		// Chart
-		container.find(hivepress.getSelector('chart')).each(function() {
+		container.find(hivepress.getSelector('chart')).each(function () {
 			var canvas = $(this),
 				chart = new Chart(canvas, {
 					type: 'line',
@@ -649,7 +763,7 @@ var hivepress = {
 			forms = container;
 		}
 
-		forms.each(function() {
+		forms.each(function () {
 			var form = $(this),
 				captcha = form.find('.g-recaptcha'),
 				captchaId = $('.g-recaptcha').index(captcha.get(0)),
@@ -657,13 +771,13 @@ var hivepress = {
 				renderSettings = form.data('render');
 
 			if (form.data('autosubmit') === true) {
-				form.on('change', function() {
+				form.on('change', function () {
 					form.submit();
 				});
 			}
 
 			if (renderSettings) {
-				form.on('change', function() {
+				form.on('change', function () {
 					var container = $('[data-block=' + renderSettings.block + ']'),
 						data = new FormData(form.get(0));
 
@@ -682,12 +796,12 @@ var hivepress = {
 						data: data,
 						contentType: false,
 						processData: false,
-						beforeSend: function(xhr) {
+						beforeSend: function (xhr) {
 							if ($('body').hasClass('logged-in')) {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 							}
 						},
-						complete: function(xhr) {
+						complete: function (xhr) {
 							var response = xhr.responseJSON;
 
 							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
@@ -702,7 +816,7 @@ var hivepress = {
 				});
 			}
 
-			form.on('submit', function() {
+			form.on('submit', function () {
 				submitButton.prop('disabled', true);
 				submitButton.attr('data-state', 'loading');
 			});
@@ -711,7 +825,7 @@ var hivepress = {
 				var messageContainer = form.find(hivepress.getSelector('messages')).first(),
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
-				form.on('submit', function(e) {
+				form.on('submit', function (e) {
 					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 
 					if (typeof tinyMCE !== 'undefined') {
@@ -724,7 +838,7 @@ var hivepress = {
 						data: new FormData(form.get(0)),
 						contentType: false,
 						processData: false,
-						beforeSend: function(xhr) {
+						beforeSend: function (xhr) {
 							var method = form.data('method') ? form.data('method') : form.attr('method');
 
 							if (method !== 'POST') {
@@ -735,7 +849,7 @@ var hivepress = {
 								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 							}
 						},
-						complete: function(xhr) {
+						complete: function (xhr) {
 							var response = xhr.responseJSON,
 								redirect = form.data('redirect');
 
@@ -760,7 +874,7 @@ var hivepress = {
 								} else if (form.data('reset') || !form.is('[data-id]')) {
 									form.trigger('reset');
 
-									form.find(hivepress.getSelector('file-upload')).each(function() {
+									form.find(hivepress.getSelector('file-upload')).each(function () {
 										var field = $(this),
 											selectLabel = field.closest('label'),
 											responseContainer = selectLabel.parent().children('div').first();
@@ -770,7 +884,7 @@ var hivepress = {
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
-									$.each(response.error.errors, function(index, error) {
+									$.each(response.error.errors, function (index, error) {
 										messageContainer.append('<div>' + error.message + '</div>');
 									});
 								} else if (response.error.hasOwnProperty('message')) {
@@ -794,14 +908,14 @@ var hivepress = {
 				});
 			}
 
-			form.find('input[readonly], textarea[readonly]').on('click', function() {
+			form.find('input[readonly], textarea[readonly]').on('click', function () {
 				this.select();
 				document.execCommand('copy');
 			});
 		});
 
 		// Field
-		container.find(hivepress.getSelector('field')).each(function() {
+		container.find(hivepress.getSelector('field')).each(function () {
 			var field = $(this);
 
 			if (field.data('parent')) {
@@ -818,7 +932,7 @@ var hivepress = {
 						field.hide();
 					}
 
-					parentField.on('change', function() {
+					parentField.on('change', function () {
 						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
 							field.hide();
 						} else {
@@ -832,7 +946,7 @@ var hivepress = {
 		$(document).trigger('hivepress:init', [container]);
 	}
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 
 		// Date formatter
 		hivepress.dateFormatter = new DateFormatter();
@@ -854,13 +968,13 @@ var hivepress = {
 		}
 
 		// File delete
-		$(document).on('click', hivepress.getSelector('file-delete'), function(e) {
+		$(document).on('click tap touchstart', hivepress.getSelector('file-delete'), function (e) {
 			var container = $(this).parent();
 
 			$.ajax({
 				url: $(this).data('url'),
 				method: 'DELETE',
-				beforeSend: function(xhr) {
+				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 				},
 			});

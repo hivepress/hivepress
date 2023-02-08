@@ -27,6 +27,9 @@ final class Email extends Component {
 		// Set email content.
 		add_filter( 'hivepress/v1/emails/email', [ $this, 'set_email_content' ], 10, 2 );
 
+		// Register integrations.
+		add_action( 'plugins_loaded', [ $this, 'register_integrations' ] );
+
 		if ( is_admin() ) {
 
 			// Manage admin columns.
@@ -38,11 +41,9 @@ final class Email extends Component {
 
 			// Render email details.
 			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
-		}
 
-		// Register Mailchimp integration.
-		if ( hp\is_plugin_active( 'mc4wp' ) ) {
-			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
+			// Set email defaults.
+			add_action( 'post_updated', [ $this, 'set_email_defaults' ], 10, 3 );
 		}
 
 		parent::__construct( $args );
@@ -56,7 +57,7 @@ final class Email extends Component {
 	 * @return array
 	 */
 	public function set_email_content( $args, $email ) {
-		if ( $email::get_meta( 'label' ) ) {
+		if ( $email::get_meta( 'label' ) && ! hp\get_array_value( $args, 'default' ) ) {
 
 			// Get content.
 			$content = get_page_by_path( $email::get_meta( 'name' ), OBJECT, 'hp_email' );
@@ -74,6 +75,15 @@ final class Email extends Component {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Registers integrations.
+	 */
+	public function register_integrations() {
+		if ( hp\is_plugin_active( 'mc4wp' ) ) {
+			mc4wp( 'integrations' )->register_integration( 'hivepress', '\HivePress\Integrations\Mailchimp', false );
+		}
 	}
 
 	/**
@@ -175,5 +185,36 @@ final class Email extends Component {
 		}
 
 		return $meta_box;
+	}
+
+	/**
+	 * Sets email defaults.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post Post object.
+	 * @param WP_Post $old_post Old post object.
+	 */
+	public function set_email_defaults( $post_id, $post, $old_post ) {
+
+		// Check post.
+		if ( 'hp_email' !== $post->post_type || $post->post_title || $post->post_name === $old_post->post_name ) {
+			return;
+		}
+
+		// Create email.
+		$email = hp\create_class_instance( '\HivePress\Emails\\' . sanitize_key( $post->post_name ), [ [ 'default' => true ] ] );
+
+		if ( ! $email || ! $email->get_body() ) {
+			return;
+		}
+
+		// Set defaults.
+		wp_update_post(
+			[
+				'ID'           => $post_id,
+				'post_title'   => $email->get_subject(),
+				'post_content' => $email->get_body(),
+			]
+		);
 	}
 }
