@@ -369,7 +369,7 @@ final class User extends Controller {
 
 					'tokens'    => [
 						'user'             => $user,
-						'user_name'        => $user->get_username(),
+						'user_name'        => $user->get_display_name(),
 						'email_verify_url' => hivepress()->router->get_url(
 							'user_email_verify_page',
 							[
@@ -649,34 +649,35 @@ final class User extends Controller {
 			}
 		}
 
+		// Check email.
 		if ( get_option( 'hp_user_verify_email' ) && $form->get_value( 'email' ) !== $user->get_email() ) {
-			update_user_meta( $user->get_id(), 'hp_email', $form->get_value( 'email' ) );
 
 			// Set email key.
 			$email_key = md5( $form->get_value( 'email' ) . time() . wp_rand() );
 
 			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+			update_user_meta( $user->get_id(), 'hp_email_verify_address', $form->get_value( 'email' ) );
 
 			// Send email.
-			( new Emails\User_Email_Change(
+			( new Emails\User_Email_Verify(
 				[
 					'recipient' => $form->get_value( 'email' ),
 
 					'tokens'    => [
 						'user'             => $user,
-						'user_name'        => $user->get_username(),
+						'user_name'        => $user->get_display_name(),
 						'email_verify_url' => hivepress()->router->get_url(
 							'user_email_verify_page',
 							[
 								'username'         => $user->get_username(),
 								'email_verify_key' => $email_key,
-								'new_email'        => $form->get_value( 'email' ),
 							]
 						),
 					],
 				]
 			) )->send();
 
+			// Set old email.
 			$form->set_value( 'email', $user->get_email() );
 		}
 
