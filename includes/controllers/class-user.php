@@ -871,16 +871,13 @@ final class User extends Controller {
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
 
-		// Get new email.
-		$new_email = get_user_meta( $user->ID, 'hp_email_verify_address', true );
-
-		if ( $new_email ) {
+		if ( $user->hp_email_verify_address ) {
 
 			// Set new email.
 			wp_update_user(
 				[
 					'ID'         => $user->ID,
-					'user_email' => $new_email,
+					'user_email' => $user->hp_email_verify_address,
 				]
 			);
 
@@ -890,18 +887,6 @@ final class User extends Controller {
 			// Redirect user.
 			return hivepress()->router->get_url( 'user_edit_settings_page' );
 		}
-
-		// Check authentication.
-		if ( is_user_logged_in() ) {
-			return hivepress()->router->get_url( 'user_account_page' );
-		}
-
-		// Authenticate user.
-		do_action( 'hivepress/v1/models/user/login' );
-
-		wp_set_auth_cookie( $user->ID, true );
-
-		do_action( 'wp_login', $user->user_login, $user );
 
 		// Send email.
 		( new Emails\User_Register(
@@ -915,6 +900,18 @@ final class User extends Controller {
 				],
 			]
 		) )->send();
+
+		// Check authentication.
+		if ( is_user_logged_in() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
+		}
+
+		// Authenticate user.
+		do_action( 'hivepress/v1/models/user/login' );
+
+		wp_set_auth_cookie( $user->ID, true );
+
+		do_action( 'wp_login', $user->user_login, $user );
 
 		// Redirect user.
 		$redirect = $user->hp_email_verify_redirect;
