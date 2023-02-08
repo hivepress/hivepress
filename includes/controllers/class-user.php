@@ -886,6 +886,9 @@ final class User extends Controller {
 
 			// Delete new email.
 			delete_user_meta( $user->ID, 'hp_email_verify_address' );
+
+			// Redirect user.
+			return hivepress()->router->get_url( 'user_edit_settings_page' );
 		}
 
 		// Check authentication.
