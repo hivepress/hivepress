@@ -863,30 +863,29 @@ final class User extends Controller {
 		// Get user.
 		$user = get_user_by( 'login', $username );
 
-		// Get new email.
-		$new_email = sanitize_email( hp\get_array_value( $_GET, 'new_email' ) );
-
 		// Check email key.
-		if ( ! $user || $user->hp_email_verify_key !== $email_key || ( $new_email && $user->hp_email !== $new_email ) ) {
+		if ( ! $user || $user->hp_email_verify_key !== $email_key ) {
 			return true;
 		}
 
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
 
-		// Delete new email.
-		delete_user_meta( $user->ID, 'hp_email' );
+		// Get new email.
+		$new_email = get_user_meta( $user->ID, 'hp_email_verify_address', true );
 
 		if ( $new_email ) {
 
-			// Get user.
-			$user = Models\User::query()->get_by_id( $user->ID );
+			// Set new email.
+			wp_update_user(
+				[
+					'ID'         => $user->ID,
+					'user_email' => $new_email,
+				]
+			);
 
-			if ( $user ) {
-
-				// Change user email.
-				$user->set_email( $new_email )->save_email();
-			}
+			// Delete new email.
+			delete_user_meta( $user->ID, 'hp_email_verify_address' );
 		}
 
 		// Check authentication.
@@ -901,7 +900,7 @@ final class User extends Controller {
 
 		do_action( 'wp_login', $user->user_login, $user );
 
-		// Send successful registration email.
+		// Send email.
 		( new Emails\User_Register(
 			[
 				'recipient' => $user->user_email,
