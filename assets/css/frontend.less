@@ -1159,19 +1159,19 @@ body.admin-bar {
 Menus
 --------------------------------------------------------------*/
 .menu-item {
+	@media only screen and (min-width: 48em) {
 
-	&--user-account,
-	&--user-login {
-		@media only screen and (min-width: 48em) {
-			&:first-child {
-				display: none !important;
-			}
+		&--user-account&--first,
+		&--user-login&--first {
+			display: none !important;
 		}
+	}
 
-		@media only screen and (max-width: 47.99em) {
-			&:last-child {
-				display: none !important;
-			}
+	@media only screen and (max-width: 47.99em) {
+
+		&--user-account&--last,
+		&--user-login&--last {
+			display: none !important;
 		}
 	}
 }
