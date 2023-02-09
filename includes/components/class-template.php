@@ -249,7 +249,7 @@ final class Template extends Component {
 		}
 
 		// Get class.
-		$class = 'menu-item';
+		$class = 'menu-item menu-item--first';
 
 		if ( is_user_logged_in() ) {
 			$class .= ' menu-item--user-account menu-item-has-children';
@@ -257,10 +257,10 @@ final class Template extends Component {
 			$class .= ' menu-item--user-login';
 		}
 
-		// Render item.
-		$item = '<li class="' . esc_attr( $class ) . '">';
+		// Render items.
+		$first_item = '<li class="' . esc_attr( $class ) . '">';
 
-		$item .= ( new Blocks\Part(
+		$first_item .= ( new Blocks\Part(
 			[
 				'path' => 'user/login/user-login-link',
 			]
@@ -269,7 +269,7 @@ final class Template extends Component {
 		if ( is_user_logged_in() ) {
 
 			// Render menu.
-			$item .= ( new Menus\User_Account(
+			$first_item .= ( new Menus\User_Account(
 				[
 					'wrap'       => false,
 
@@ -280,11 +280,13 @@ final class Template extends Component {
 			) )->render();
 		}
 
-		$item .= '</li>';
+		$first_item .= '</li>';
+
+		$last_item = str_replace( 'menu-item--first', 'menu-item--last', $first_item );
 
 		// Add item.
-		$items = substr_replace( $items, $item, (int) strpos( $items, '<li' ), 0 );
-		$items = substr_replace( $items, $item, strrpos( $items, '/li>' ) + 4, 0 );
+		$items = substr_replace( $items, $first_item, (int) strpos( $items, '<li' ), 0 );
+		$items = substr_replace( $items, $last_item, strrpos( $items, '/li>' ) + 4, 0 );
 
 		return $items;
 	}

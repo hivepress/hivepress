@@ -1,12 +1,14 @@
 {
-    "require": {
-        "league/oauth2-google": "^3.0",
+	"require": {
+		"league/oauth2-google": "^3.0",
 		"woocommerce/action-scheduler": "^3.4"
-    },
-
+	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"wp-coding-standards/wpcs": "~2.3.0",
 		"phpcompatibility/phpcompatibility-wp": "^2.1.0"
+	},
+	"allow-plugins": {
+		"dealerdirect/phpcodesniffer-composer-installer": true
 	}
 }
