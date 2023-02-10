@@ -54,7 +54,7 @@ class User_View_Page extends Page_Sidebar_Left {
 						],
 
 						'blocks'     => [
-							'user_summary'            => [
+							'user_summary'         => [
 								'type'       => 'container',
 								'_label'     => esc_html__( 'Summary', 'hivepress' ),
 								'_order'     => 10,
@@ -82,7 +82,7 @@ class User_View_Page extends Page_Sidebar_Left {
 										],
 
 										'blocks'     => [
-											'vendor_name_text'           => [
+											'user_name_text' => [
 												'type'   => 'part',
 												'path'   => 'user/view/page/user-name',
 												'_order' => 10,
@@ -99,9 +99,9 @@ class User_View_Page extends Page_Sidebar_Left {
 								],
 							],
 
-							'page_sidebar_widgets'      => [
+							'page_sidebar_widgets' => [
 								'type'   => 'widgets',
-								'area'   => 'hp_view_view_sidebar',
+								'area'   => 'hp_user_view_sidebar',
 								'_label' => hivepress()->translator->get_string( 'widgets' ),
 								'_order' => 100,
 							],
