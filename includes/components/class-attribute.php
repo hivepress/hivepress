@@ -42,6 +42,7 @@ final class Attribute extends Component {
 				'models' => [
 					'listing' => [],
 					'vendor'  => [],
+					'user'    => [],
 				],
 			],
 			$args
@@ -289,7 +290,7 @@ final class Attribute extends Component {
 			$post_types[ $model . '_attribute' ] = [
 				'public'       => false,
 				'show_ui'      => true,
-				'show_in_menu' => 'edit.php?post_type=' . hp\prefix( $model ),
+				'show_in_menu' => 'user' === $model ? 'users.php' : 'edit.php?post_type=' . hp\prefix( $model ),
 				'supports'     => [ 'title', 'page-attributes' ],
 
 				'labels'       => [
