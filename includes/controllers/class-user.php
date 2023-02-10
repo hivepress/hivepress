@@ -982,7 +982,7 @@ final class User extends Controller {
 	public function redirect_user_view_page() {
 
 		// Check settings.
-		if ( ! get_option( 'user_enable_display' ) ) {
+		if ( ! get_option( 'hp_user_enable_display' ) ) {
 			return true;
 		}
 
