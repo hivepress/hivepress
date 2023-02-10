@@ -991,7 +991,7 @@ final class User extends Controller {
 		)->get_first();
 
 		if ( $user ) {
-			return sprintf( hivepress()->translator->get_string( 'listings_by_vendor' ), $user->get_display_name() );
+			$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
 		}
 
 		// Set request context.
