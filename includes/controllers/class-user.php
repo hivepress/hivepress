@@ -218,13 +218,8 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
 
-					'users_view_page'               => [
-						'path' => '/users',
-					],
-
 					'user_view_page'               => [
-						'base' => 'users_view_page',
-						'path' => '/(?P<username>[a-z0-9_]+)',
+						'path'     => '/user/(?P<username>[a-z0-9 _.\-@]+)',
 						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
 					],
@@ -979,37 +974,50 @@ final class User extends Controller {
 		) )->render();
 	}
 
-	public function redirect_user_view_page(){
+	/**
+	 * Redirects user view page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_view_page() {
 
-		// Get username.
-		$username  = sanitize_user( hivepress()->request->get_param('username') );
-
-		if ( ! $username ) {
-			wp_die( esc_html__( 'User doe not exist', 'hivepress' ) );
+		// Check settings.
+		if ( ! get_option( 'user_enable_display' ) ) {
+			return true;
 		}
 
-		$user = Models\User::query()->filter(['username' => $username])->get_first();
+		// Get username.
+		$username = sanitize_user( hivepress()->request->get_param( 'username' ) );
 
-		if(!$user){
-			wp_die( esc_html__( 'User does not exist', 'hivepress' ) );
+		if ( ! $username ) {
+			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		// Get user.
+		$user = Models\User::query()->filter( [ 'username' => $username ] )->get_first();
+
+		if ( ! $user ) {
+			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
 		}
 
 		// Set request context.
-		hivepress()->request->set_context( 'user_view_data', $user );
+		hivepress()->request->set_context( 'viewed_user', $user );
 
 		return false;
 	}
 
-
-	public function render_user_view_page(){
-
-		// Render template.
+	/**
+	 * Renders user view page.
+	 *
+	 * @return string
+	 */
+	public function render_user_view_page() {
 		return ( new Blocks\Template(
 			[
 				'template' => 'user_view_page',
 
 				'context'  => [
-					'user'   => hivepress()->request->get_context('user_view_data'),
+					'user' => hivepress()->request->get_context( 'viewed_user' ),
 				],
 			]
 		) )->render();
