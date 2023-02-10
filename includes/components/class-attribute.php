@@ -1583,6 +1583,13 @@ final class Attribute extends Component {
 			return;
 		}
 
+		// Get page slug.
+		$slug = hp\get_array_value( hp\get_array_value( (array) get_queried_object(), 'rewrite', [] ), 'slug' );
+
+		if ( is_feed() || ( is_archive() && get_post_field( 'post_name', $page_id ) === $slug ) ) {
+			return;
+		}
+
 		// Redirect page.
 		wp_safe_redirect( get_permalink( $page_id ) );
 
