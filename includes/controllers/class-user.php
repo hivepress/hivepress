@@ -217,6 +217,12 @@ final class User extends Controller {
 						'redirect' => [ $this, 'redirect_user_edit_settings_page' ],
 						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
+
+					'user_view_page'               => [
+						'path'     => '/user/(?P<username>[a-z0-9 _.\-@]+)',
+						'redirect' => [ $this, 'redirect_user_view_page' ],
+						'action'   => [ $this, 'render_user_view_page' ],
+					],
 				],
 			],
 			$args
@@ -963,6 +969,55 @@ final class User extends Controller {
 
 				'context'  => [
 					'user' => hivepress()->request->get_user(),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects user view page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_view_page() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_display' ) ) {
+			return true;
+		}
+
+		// Get username.
+		$username = sanitize_user( hivepress()->request->get_param( 'username' ) );
+
+		if ( ! $username ) {
+			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		// Get user.
+		$user = Models\User::query()->filter( [ 'username' => $username ] )->get_first();
+
+		if ( ! $user ) {
+			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'viewed_user', $user );
+
+		return false;
+	}
+
+	/**
+	 * Renders user view page.
+	 *
+	 * @return string
+	 */
+	public function render_user_view_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_view_page',
+
+				'context'  => [
+					'user' => hivepress()->request->get_context( 'viewed_user' ),
 				],
 			]
 		) )->render();

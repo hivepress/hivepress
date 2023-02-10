@@ -79,7 +79,7 @@ return [
 						'_order'  => 70,
 					],
 
-					'listing_allow_video'             => [
+					'listing_allow_video'              => [
 						'caption' => esc_html__( 'Allow uploading videos', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 80,
@@ -274,12 +274,19 @@ return [
 				'_order' => 10,
 
 				'fields' => [
-					'user_display_name' => [
+					'user_enable_display' => [
+						'label'   => hivepress()->translator->get_string( 'display_noun' ),
+						'caption' => esc_html__( 'Display profiles on the front-end', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 10,
+					],
+
+					'user_display_name'   => [
 						'label'    => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 'first_name',
 						'required' => true,
-						'_order'   => 10,
+						'_order'   => 20,
 
 						'options'  => [
 							'username'         => esc_html__( 'Username', 'hivepress' ),
