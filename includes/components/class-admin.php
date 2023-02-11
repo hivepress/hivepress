@@ -1466,8 +1466,15 @@ final class Admin extends Component {
 	 */
 	public function check_access() {
 		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
-			wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
+			if ( strpos( wp_get_referer(), 'redirect' ) !== false ) {
+				wp_safe_redirect( wp_get_referer() );
+			} else {
+				wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
+			}
 
+			exit;
+		} else {
+			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}
 	}

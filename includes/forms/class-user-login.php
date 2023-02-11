@@ -44,7 +44,7 @@ class User_Login extends Model_Form {
 		$args = hp\merge_arrays(
 			[
 				'action'   => hivepress()->router->get_url( 'user_login_action' ),
-				'redirect' => true,
+				'redirect' => wp_login_url(),
 
 				'fields'   => [
 					'username_or_email' => [
