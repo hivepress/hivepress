@@ -1466,14 +1466,14 @@ final class Admin extends Component {
 	 */
 	public function check_access() {
 		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
-			if ( strpos( wp_get_referer(), 'redirect' ) !== false ) {
+			if ( strpos( wp_get_referer(), 'redirect' ) !== false && strpos( wp_get_referer(), 'hp-login' ) !== false ) {
 				wp_safe_redirect( wp_get_referer() );
 			} else {
 				wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
 			}
 
 			exit;
-		} else {
+		} elseif ( wp_get_referer() && strpos( wp_get_referer(), 'hp-login' ) !== false ) {
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}

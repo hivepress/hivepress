@@ -291,12 +291,17 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_return_url( $name ) {
-		return $this->get_url(
-			$name,
-			[
-				'redirect' => $this->get_current_url(),
-			]
-		);
+
+		// Set URL parameters.
+		$params = [
+			'redirect' => $this->get_current_url(),
+		];
+
+		if ( in_array( $name, [ 'user_account_page', 'user_login_page' ] ) ) {
+			$params['action'] = 'hp-login';
+		}
+
+		return $this->get_url( $name, $params );
 	}
 
 	/**
