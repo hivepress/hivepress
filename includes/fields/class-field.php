@@ -123,6 +123,13 @@ abstract class Field {
 	protected $attributes = [];
 
 	/**
+	 * Resetable field.
+	 *
+	 * @var bool
+	 */
+	protected $resetable = true;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -241,6 +248,12 @@ abstract class Field {
 				},
 				ARRAY_FILTER_USE_KEY
 			);
+		} else {
+
+			// Set resetable.
+			if ( $this->resetable ) {
+				$this->attributes['data-resetable'] = true;
+			}
 		}
 
 		$this->attributes = hp\merge_arrays(

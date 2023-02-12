@@ -943,6 +943,18 @@ var hivepress = {
 			}
 		});
 
+		// Reset
+		hivepress.getComponent('reset').each(function () {
+			var field = $(this),
+				form = field.closest('form');
+
+			field.on('click', function(){
+				form.find('[data-resetable], [data-resetable] input').each(function(){
+					$(this).val('').trigger('change');
+				});
+			});
+		});
+
 		$(document).trigger('hivepress:init', [container]);
 	}
 

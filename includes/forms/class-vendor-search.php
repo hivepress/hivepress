@@ -8,6 +8,7 @@
 namespace HivePress\Forms;
 
 use HivePress\Helpers as hp;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -50,6 +51,7 @@ class Vendor_Search extends Form {
 						'type'         => 'text',
 						'display_type' => 'search',
 						'max_length'   => 256,
+						'resetable'    => false,
 						'_order'       => 10,
 					],
 
@@ -59,6 +61,7 @@ class Vendor_Search extends Form {
 						'display_type' => 'hidden',
 						'options'      => 'terms',
 						'option_args'  => [ 'taxonomy' => 'hp_vendor_category' ],
+						'resetable'    => false,
 						'_order'       => 5,
 					],
 
@@ -71,6 +74,12 @@ class Vendor_Search extends Form {
 				'button' => [
 					'label' => hivepress()->translator->get_string( 'search' ),
 				],
+
+				'footer' => ( new Blocks\Part(
+					[
+						'path' => 'page/reset-button',
+					]
+				) )->render(),
 			],
 			$args
 		);
