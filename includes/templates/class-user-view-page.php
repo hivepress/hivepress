@@ -64,14 +64,14 @@ class User_View_Page extends Page_Sidebar_Left {
 								],
 
 								'blocks'     => [
-									'user_image'       => [
+									'user_image'           => [
 										'type'   => 'part',
 										'path'   => 'user/view/page/user-image',
 										'_label' => hivepress()->translator->get_string( 'image' ),
 										'_order' => 10,
 									],
 
-									'user_name'        => [
+									'user_name'            => [
 										'type'       => 'container',
 										'tag'        => 'h3',
 										'_label'     => hivepress()->translator->get_string( 'name' ),
@@ -90,12 +90,43 @@ class User_View_Page extends Page_Sidebar_Left {
 										],
 									],
 
-									'user_description' => [
+									'user_details_primary' => [
+										'type'       => 'container',
+										'optional'   => true,
+										'_label'     => hivepress()->translator->get_string( 'details' ),
+										'_order'     => 30,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__details', 'hp-vendor__details--primary' ],
+										],
+
+										'blocks'     => [
+											'user_registered_date' => [
+												'type'   => 'part',
+												'path'   => 'user/view/user-registered-date',
+												'_label' => hivepress()->translator->get_string( 'date' ),
+												'_order' => 10,
+											],
+										],
+									],
+
+									'user_description'     => [
 										'type'   => 'part',
 										'path'   => 'user/view/page/user-description',
 										'_label' => hivepress()->translator->get_string( 'description' ),
 										'_order' => 50,
 									],
+								],
+							],
+
+							'user_actions_primary' => [
+								'type'       => 'container',
+								'blocks'     => [],
+								'_label'     => hivepress()->translator->get_string( 'actions' ),
+								'_order'     => 30,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary', 'hp-widget', 'widget' ],
 								],
 							],
 
