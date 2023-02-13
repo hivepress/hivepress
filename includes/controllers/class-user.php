@@ -988,6 +988,15 @@ final class User extends Controller {
 			[
 				'username' => hivepress()->request->get_param( 'username' ),
 			]
+		)->set_args(
+			[
+				'meta_query' => [
+					[
+						'key'     => 'hp_email_verify_key',
+						'compare' => 'NOT EXISTS',
+					],
+				],
+			]
 		)->get_first();
 
 		if ( $user ) {
