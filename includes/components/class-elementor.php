@@ -115,6 +115,12 @@ final class Elementor extends Component {
 				height: 28px;
 				background: url("' . esc_url( $icon_url ) . '") center center no-repeat;
 				background-size: 28px;
+			}
+			@media screen and (prefers-color-scheme: dark) {
+				.eicon-hivepress {
+					background: url("' . hivepress()->get_url() . '/assets/images/logo-light.svg") center center no-repeat;
+					background-size: 28px;
+				}
 			}'
 		);
 	}
