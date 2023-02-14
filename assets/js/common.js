@@ -912,6 +912,33 @@ var hivepress = {
 				this.select();
 				document.execCommand('copy');
 			});
+
+			form.find('input[type="password"]').on('input', function(){
+				var passwordStrength = wp.passwordStrength.meter( $(this).val(), []),
+					strenghtField = form.find('#hp-password-strength-result');
+				strenghtField.removeClass();
+				
+				switch ( passwordStrength ) {
+					case 2:
+						strenghtField.addClass( 'bad' ).html( pwsL10n.bad );
+						break;
+				
+					case 3:
+						strenghtField.addClass( 'good' ).html( pwsL10n.good );
+						break;
+				
+					case 4:
+						strenghtField.addClass( 'strong' ).html( pwsL10n.strong );
+						break;
+				
+					case 5:
+						strenghtField.addClass( 'short' ).html( pwsL10n.mismatch );
+						break;
+				
+					default:
+						strenghtField.addClass( 'short' ).html( pwsL10n.short );
+				}
+			});
 		});
 
 		// Field

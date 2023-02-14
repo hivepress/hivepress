@@ -581,6 +581,9 @@ final class Form extends Component {
 				wp_script_add_data( 'recaptcha', 'async', true );
 				wp_script_add_data( 'recaptcha', 'defer', true );
 			}
+
+			// Enqueue password strength meter.
+			wp_enqueue_script( 'password-strength-meter' );
 		}
 	}
 }
