@@ -493,6 +493,28 @@ function rest_response( $code, $data = null ) {
 }
 
 /**
+ * Creates a REST API redirect.
+ *
+ * @param int   $code Error code.
+ * @param string $redirect Redirect data.
+ * @return WP_Rest_Response
+ */
+function rest_redirect( $data = null, $code = 303 ) {
+	$response = new \WP_Rest_Response( (object) [], $code );
+
+	if ( ! is_null( $data ) ) {
+		$response = new \WP_Rest_Response(
+			[
+				'redirect' => $data,
+			],
+			$code
+		);
+	}
+
+	return $response;
+}
+
+/**
  * Creates a REST API error.
  *
  * @param int   $code Error code.
