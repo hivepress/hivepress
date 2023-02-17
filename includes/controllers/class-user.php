@@ -1014,7 +1014,7 @@ final class User extends Controller {
 
 		// Check user.
 		if ( ! hivepress()->request->get_context( 'viewed_user' ) ) {
-			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+			hivepress()->router->redirect_not_found_page();
 		}
 
 		return false;

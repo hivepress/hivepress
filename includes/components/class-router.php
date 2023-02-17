@@ -681,4 +681,15 @@ final class Router extends Component {
 
 		return $url;
 	}
+
+	/**
+	 * Redirect to Not Found page.
+	 */
+	public function redirect_not_found_page() {
+		// todo: create not found template.
+		if ( ! is_404() ) {
+			wp_redirect( home_url( '/404' ) );
+			exit();
+		}
+	}
 }
