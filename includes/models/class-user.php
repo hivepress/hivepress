@@ -136,6 +136,11 @@ class User extends Model {
 						'_model'    => 'attachment',
 						'_external' => true,
 					],
+
+					'verified'        => [
+						'type'      => 'checkbox',
+						'_external' => true,
+					],
 				],
 			],
 			$args
