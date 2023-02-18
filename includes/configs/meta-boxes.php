@@ -173,7 +173,7 @@ return [
 
 	'user_settings'             => [
 		'title'  => hivepress()->translator->get_string( 'settings' ),
-		'screen' => 'user_profile',
+		'screen' => 'user',
 		'model'  => 'user',
 
 		'fields' => [
