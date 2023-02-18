@@ -85,6 +85,45 @@ class User_View_Block extends Template {
 											],
 										],
 									],
+
+									'user_attributes_secondary' => [
+										'type'    => 'attributes',
+										'model'   => 'user',
+										'alias'   => 'vendor',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
+									],
+								],
+							],
+
+							'user_footer'  => [
+								'type'       => 'container',
+								'tag'        => 'footer',
+								'_order'     => 30,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__footer' ],
+								],
+
+								'blocks'     => [
+									'user_attributes_primary' => [
+										'type'   => 'attributes',
+										'model'  => 'user',
+										'alias'  => 'vendor',
+										'area'   => 'view_block_primary',
+										'_order' => 10,
+									],
+
+									'user_actions_primary' => [
+										'type'       => 'container',
+										'blocks'     => [],
+										'_order'     => 20,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
+										],
+									],
 								],
 							],
 						],
