@@ -284,31 +284,6 @@ final class User extends Component {
 	}
 
 	/**
-	 * Get user meta box.
-	 *
-	 * @return array
-	 */
-	public function get_user_meta_box_fields() {
-
-		// Get user meta box;
-		$meta_box = hp\get_array_value( hivepress()->get_config( 'meta_boxes' ), 'user_settings' );
-
-		if ( 'user_profile' !== hp\get_array_value( $meta_box, 'screen' ) ) {
-			return [];
-		}
-
-		/**
-		* Filters user meta box properties. The dynamic part of the hook refers to the user meta box with name 'user_settings'. You can check the available meta boxes in the `includes/configs/meta-boxes.php` file of HivePress.
-		*
-		* @hook hivepress/v1/meta_box/user
-		* @return {array} User settings meta box properties.
-		*/
-		$meta_box = apply_filters( 'hivepress/v1/meta_box/user', array_merge( $meta_box, [ 'name' => 'user_settings' ] ) );
-
-		return hp\get_array_value( $meta_box, 'fields', [] );
-	}
-
-	/**
 	 * Renders admin columns.
 	 *
 	 * @param string $output Output.
@@ -329,43 +304,32 @@ final class User extends Component {
 	 * @param WP_User $user User object.
 	 */
 	public function add_profile_fields( $user ) {
-		if ( ! $this->get_user_meta_box_fields() ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		// Check verification key.
+		if ( ! $user->hp_email_verify_key ) {
 			return;
 		}
 
 		$output  = '<h2>' . esc_html( hivepress()->translator->get_string( 'settings' ) ) . '</h2>';
-		$output .= '<table class="form-table hp-form">';
+		$output .= '<table class="form-table hp-form"><tr>';
 
-		foreach ( $this->get_user_meta_box_fields() as $field_name => $field_args ) {
-			if ( ! hp\get_array_value( $field_args, 'label' ) || ! hp\get_array_value( $field_args, 'type' ) || ( ! current_user_can( 'edit_users' ) && ! $user->hp_email_verify_key && 'verified' === $field_name ) ) {
-				continue;
-			}
+		// Render label.
+		$output .= '<th>' . esc_html( hivepress()->translator->get_string( 'status' ) ) . '</th>';
 
-			// Get field.
-			$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+		// Render field.
+		$output .= '<td>' . ( new Fields\Checkbox(
+			[
+				'name'    => 'hp_verified',
+				'caption' => esc_html__( 'Mark this user as verified', 'hivepress' ),
+			]
+		) )->render() . '</td>';
 
-			if ( ! $field ) {
-				continue;
-			}
-
-			// Add prefix to the field name.
-			$field_name = hp\prefix( $field_name );
-
-			// Set field value.
-			$field->set_value( get_user_meta( $user->ID, $field_name, true ) );
-
-			$output .= '<tr>';
-
-			// Render label.
-			$output .= '<th>' . $field_args['label'] . '</th>';
-
-			// Render field.
-			$output .= '<td>' . $field->render() . '</td>';
-
-			$output .= '</tr>';
-		}
-
-		$output .= '</table>';
+		$output .= '</tr></table>';
 
 		echo $output;
 	}
@@ -376,12 +340,15 @@ final class User extends Component {
 	 * @param int $user_id User ID.
 	 */
 	public function update_profile_fields( $user_id ) {
-		foreach ( $_POST as $field_name => $field_value ) {
-			if ( current_user_can( 'edit_users' ) && 'hp_verified' === $field_name && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
-				delete_user_meta( $user_id, 'hp_email_verify_key' );
-			} else {
-				update_user_meta( $user_id, $field_name, wp_strip_all_tags( $field_value ) );
-			}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		// Delete verification key.
+		if ( hp\get_array_value( $_POST, 'hp_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+			delete_user_meta( $user_id, 'hp_email_verify_key' );
 		}
 	}
 
