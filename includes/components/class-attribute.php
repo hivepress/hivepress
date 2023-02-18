@@ -42,6 +42,7 @@ final class Attribute extends Component {
 				'models' => [
 					'listing' => [],
 					'vendor'  => [],
+					'user'    => [],
 				],
 			],
 			$args
@@ -127,10 +128,22 @@ final class Attribute extends Component {
 	/**
 	 * Gets model names.
 	 *
+	 * @param string $type Model type.
 	 * @return array
 	 */
-	public function get_models() {
-		return array_keys( $this->models );
+	public function get_models( $type = null ) {
+		$models = array_keys( $this->models );
+
+		if ( 'post' === $type ) {
+			$models = array_filter(
+				$models,
+				function( $model ) {
+					return 'user' !== $model;
+				}
+			);
+		}
+
+		return $models;
 	}
 
 	/**
@@ -151,6 +164,11 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	protected function get_category_ids( $model, $object = null ) {
+
+		// Check model.
+		if ( 'user' === $model ) {
+			return;
+		}
 
 		// Check object.
 		if ( ! $object ) {
@@ -235,46 +253,51 @@ final class Attribute extends Component {
 
 		foreach ( $this->get_models() as $model ) {
 
-			// Update attribute.
-			add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
-
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_display', [ $this, 'add_field_settings' ], 100 );
 
-			// Add admin fields.
-			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
-
 			// Add model fields.
 			add_filter( 'hivepress/v1/models/' . $model . '/fields', [ $this, 'add_model_fields' ], 100, 2 );
 
-			// Update model snippet.
-			add_action( 'hivepress/v1/models/' . $model . '/create', [ $this, 'update_model_snippet' ], 100, 2 );
-			add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'update_model_snippet' ], 100, 2 );
-
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
-			add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_submit_fields' ], 100, 2 );
 
-			// Add search fields.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 100, 2 );
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 100, 2 );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 100, 2 );
+			// Add admin fields.
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
-			// Add sort options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
+			if ( 'user' !== $model ) {
 
-			// Add category options.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
+				// Update attribute.
+				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
 
-			// Set category value.
-			add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'set_category_value' ], 100, 2 );
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ], 100, 2 );
-			add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ], 100, 2 );
+				// Update model snippet.
+				add_action( 'hivepress/v1/models/' . $model . '/create', [ $this, 'update_model_snippet' ], 100, 2 );
+				add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'update_model_snippet' ], 100, 2 );
 
-			// Set range values.
-			add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
+				// Add submit fields.
+				add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_submit_fields' ], 100, 2 );
+
+				// Add search fields.
+				add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'add_search_fields' ], 100, 2 );
+				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_search_fields' ], 100, 2 );
+				add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_search_fields' ], 100, 2 );
+
+				// Add sort options.
+				add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'add_sort_options' ], 100, 2 );
+
+				// Add category options.
+				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'add_category_options' ], 100, 2 );
+
+				// Set category value.
+				add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'set_category_value' ], 100, 2 );
+				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_category_value' ], 100, 2 );
+				add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ], 100, 2 );
+
+				// Set range values.
+				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
+			}
 		}
 	}
 
@@ -289,7 +312,7 @@ final class Attribute extends Component {
 			$post_types[ $model . '_attribute' ] = [
 				'public'       => false,
 				'show_ui'      => true,
-				'show_in_menu' => 'edit.php?post_type=' . hp\prefix( $model ),
+				'show_in_menu' => 'user' === $model ? 'users.php' : 'edit.php?post_type=' . hp\prefix( $model ),
 				'supports'     => [ 'title', 'page-attributes' ],
 
 				'labels'       => [
@@ -317,7 +340,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function register_taxonomies( $taxonomies ) {
-		foreach ( $this->get_models() as $model ) {
+		foreach ( $this->get_models( 'post' ) as $model ) {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
@@ -477,6 +500,7 @@ final class Attribute extends Component {
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
 					$taxonomy_name = hp\prefix( $model . '_' . $attribute_name );
+					$taxonomy_type = hp\prefix( $model );
 
 					$taxonomy_args = [
 						'hierarchical'       => true,
@@ -499,7 +523,9 @@ final class Attribute extends Component {
 						],
 					];
 
-					if ( hp\get_array_value( $attribute_args, 'public' ) ) {
+					if ( 'user' === $model ) {
+						$taxonomy_type = hp\prefix( 'vendor' );
+					} elseif ( hp\get_array_value( $attribute_args, 'public' ) ) {
 						$taxonomy_args['public'] = true;
 
 						$taxonomy_args['rewrite'] = [
@@ -508,7 +534,7 @@ final class Attribute extends Component {
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
-						register_taxonomy( $taxonomy_name, hp\prefix( $model ), $taxonomy_args );
+						register_taxonomy( $taxonomy_name, $taxonomy_type, $taxonomy_args );
 					}
 				}
 			}
@@ -562,7 +588,7 @@ final class Attribute extends Component {
 	 */
 	public function import_attribute( $term ) {
 		if ( strpos( $term['taxonomy'], 'hp_' ) === 0 && ! taxonomy_exists( $term['taxonomy'] ) ) {
-			register_taxonomy( $term['taxonomy'], hp\prefix( $this->get_models() ) );
+			register_taxonomy( $term['taxonomy'], hp\prefix( $this->get_models( 'post' ) ) );
 		}
 
 		return $term;
@@ -646,7 +672,7 @@ final class Attribute extends Component {
 													'edit-tags.php?' . http_build_query(
 														[
 															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-															'post_type' => hp\prefix( $model ),
+															'post_type' => hp\prefix( 'user' === $model ? 'vendor' : $model ),
 														]
 													)
 												)
@@ -690,7 +716,7 @@ final class Attribute extends Component {
 						'type'    => 'checkbox',
 						'_order'  => 5,
 					];
-				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) ) {
+				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) && 'user' !== $model ) {
 					$meta_box['fields']['public'] = [
 						'label'   => esc_html__( 'Pages', 'hivepress' ),
 						'caption' => esc_html__( 'Create a page for each attribute option', 'hivepress' ),
@@ -769,13 +795,17 @@ final class Attribute extends Component {
 		$model = $object::_get_meta( 'name' );
 
 		// Get category IDs.
-		$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+		$category_ids = null;
 
-		if ( is_null( $category_ids ) ) {
-			$category_ids = $this->get_category_ids( $model, $object->get_id() );
+		if ( 'user' !== $model ) {
+			$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
 
-			if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
-				hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
+			if ( is_null( $category_ids ) ) {
+				$category_ids = $this->get_category_ids( $model, $object->get_id() );
+
+				if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
+					hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
+				}
 			}
 		}
 
@@ -810,7 +840,7 @@ final class Attribute extends Component {
 				}
 
 				// Set field relation.
-				if ( ! isset( $field_args['options'] ) ) {
+				if ( ! isset( $field_args['options'] ) || 'user' === $model ) {
 					$field_args['_external'] = true;
 				} elseif ( ! isset( $field_args['_external'] ) ) {
 					$field_args = array_merge(
@@ -829,12 +859,14 @@ final class Attribute extends Component {
 		}
 
 		// Add snippet field.
-		$fields['snippet'] = [
-			'type'       => 'textarea',
-			'max_length' => 10240,
-			'html'       => true,
-			'_alias'     => 'post_excerpt',
-		];
+		if ( 'user' !== $model ) {
+			$fields['snippet'] = [
+				'type'       => 'textarea',
+				'max_length' => 10240,
+				'html'       => true,
+				'_alias'     => 'post_excerpt',
+			];
+		}
 
 		return $fields;
 	}
@@ -1543,7 +1575,7 @@ final class Attribute extends Component {
 			// Get post type.
 			$post_type = get_post_type();
 
-			if ( in_array( $post_type, hp\prefix( $this->get_models() ), true ) ) {
+			if ( in_array( $post_type, hp\prefix( $this->get_models( 'post' ) ), true ) ) {
 
 				// Get model.
 				$model = hp\unprefix( $post_type );
@@ -1569,7 +1601,7 @@ final class Attribute extends Component {
 	public function redirect_archive_page() {
 
 		// Check page.
-		if ( ! is_post_type_archive( hp\prefix( $this->get_models() ) ) || is_search() ) {
+		if ( ! is_post_type_archive( hp\prefix( $this->get_models( 'post' ) ) ) || is_search() ) {
 			return;
 		}
 
@@ -1611,7 +1643,7 @@ final class Attribute extends Component {
 		// Get model.
 		$model = null;
 
-		foreach ( $this->get_models() as $model_name ) {
+		foreach ( $this->get_models( 'post' ) as $model_name ) {
 			if ( is_post_type_archive( hp\prefix( $model_name ) ) || $this->get_term_id( $model_name ) ) {
 				$model = $model_name;
 
