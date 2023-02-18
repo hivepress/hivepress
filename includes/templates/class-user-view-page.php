@@ -54,7 +54,7 @@ class User_View_Page extends Page_Sidebar_Left {
 						],
 
 						'blocks'     => [
-							'user_summary'         => [
+							'user_summary'            => [
 								'type'       => 'container',
 								'_label'     => esc_html__( 'Summary', 'hivepress' ),
 								'_order'     => 10,
@@ -110,6 +110,17 @@ class User_View_Page extends Page_Sidebar_Left {
 										],
 									],
 
+									'user_attributes_secondary' => [
+										'type'      => 'attributes',
+										'model'     => 'user',
+										'alias'     => 'vendor',
+										'area'      => 'view_page_secondary',
+										'columns'   => 2,
+										'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
+										'_settings' => [ 'columns' ],
+										'_order'    => 40,
+									],
+
 									'user_description'     => [
 										'type'   => 'part',
 										'path'   => 'user/view/page/user-description',
@@ -119,7 +130,17 @@ class User_View_Page extends Page_Sidebar_Left {
 								],
 							],
 
-							'user_actions_primary' => [
+							'user_attributes_primary' => [
+								'type'      => 'attributes',
+								'model'     => 'user',
+								'alias'     => 'vendor',
+								'area'      => 'view_page_primary',
+								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
+								'_settings' => [ 'columns' ],
+								'_order'    => 20,
+							],
+
+							'user_actions_primary'    => [
 								'type'       => 'container',
 								'blocks'     => [],
 								'_label'     => hivepress()->translator->get_string( 'actions' ),
@@ -130,7 +151,7 @@ class User_View_Page extends Page_Sidebar_Left {
 								],
 							],
 
-							'page_sidebar_widgets' => [
+							'page_sidebar_widgets'    => [
 								'type'   => 'widgets',
 								'area'   => 'hp_user_view_sidebar',
 								'_label' => hivepress()->translator->get_string( 'widgets' ),
