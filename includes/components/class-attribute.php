@@ -1601,7 +1601,7 @@ final class Attribute extends Component {
 	public function redirect_archive_page() {
 
 		// Check page.
-		if ( ! is_post_type_archive( hp\prefix( $this->get_models( 'post' ) ) ) || is_search() ) {
+		if ( ! is_post_type_archive( hp\prefix( $this->get_models( 'post' ) ) ) || is_search() || is_feed() ) {
 			return;
 		}
 
@@ -1612,6 +1612,13 @@ final class Attribute extends Component {
 		$page_id = absint( get_option( hp\prefix( 'page_' . $model . 's' ) ) );
 
 		if ( ! $page_id ) {
+			return;
+		}
+
+		// Get page slug.
+		$page_slug = get_post_field( 'post_name', $page_id );
+
+		if ( hp\get_array_value( get_queried_object()->rewrite, 'slug' ) === $page_slug ) {
 			return;
 		}
 
