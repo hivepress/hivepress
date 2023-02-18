@@ -128,10 +128,22 @@ final class Attribute extends Component {
 	/**
 	 * Gets model names.
 	 *
+	 * @param string $type Model type.
 	 * @return array
 	 */
-	public function get_models() {
-		return array_keys( $this->models );
+	public function get_models( $type = null ) {
+		$models = array_keys( $this->models );
+
+		if ( 'post' === $type ) {
+			$models = array_filter(
+				$models,
+				function( $model ) {
+					return 'user' !== $model;
+				}
+			);
+		}
+
+		return $models;
 	}
 
 	/**
@@ -252,9 +264,10 @@ final class Attribute extends Component {
 			// Add edit fields.
 			add_filter( 'hivepress/v1/forms/' . $model . '_update', [ $this, 'add_edit_fields' ], 100, 2 );
 
-			if ( 'user' === $model ) {
-				// todo add admin fields.
-			} else {
+			// Add admin fields.
+			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
+
+			if ( 'user' !== $model ) {
 
 				// Update attribute.
 				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
@@ -262,9 +275,6 @@ final class Attribute extends Component {
 				// Update model snippet.
 				add_action( 'hivepress/v1/models/' . $model . '/create', [ $this, 'update_model_snippet' ], 100, 2 );
 				add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'update_model_snippet' ], 100, 2 );
-
-				// Add admin fields.
-				add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
 				// Add submit fields.
 				add_filter( 'hivepress/v1/forms/' . $model . '_submit', [ $this, 'add_submit_fields' ], 100, 2 );
@@ -330,8 +340,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function register_taxonomies( $taxonomies ) {
-		// todo maybe exclude user.
-		foreach ( $this->get_models() as $model ) {
+		foreach ( $this->get_models( 'post' ) as $model ) {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
@@ -491,6 +500,7 @@ final class Attribute extends Component {
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
 					$taxonomy_name = hp\prefix( $model . '_' . $attribute_name );
+					$taxonomy_type = hp\prefix( $model );
 
 					$taxonomy_args = [
 						'hierarchical'       => true,
@@ -513,7 +523,9 @@ final class Attribute extends Component {
 						],
 					];
 
-					if ( hp\get_array_value( $attribute_args, 'public' ) ) {
+					if ( 'user' === $model ) {
+						$taxonomy_type = hp\prefix( 'vendor' );
+					} elseif ( hp\get_array_value( $attribute_args, 'public' ) ) {
 						$taxonomy_args['public'] = true;
 
 						$taxonomy_args['rewrite'] = [
@@ -522,8 +534,7 @@ final class Attribute extends Component {
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
-						// todo remove user support.
-						register_taxonomy( $taxonomy_name, hp\prefix( $model ), $taxonomy_args );
+						register_taxonomy( $taxonomy_name, $taxonomy_type, $taxonomy_args );
 					}
 				}
 			}
@@ -577,8 +588,7 @@ final class Attribute extends Component {
 	 */
 	public function import_attribute( $term ) {
 		if ( strpos( $term['taxonomy'], 'hp_' ) === 0 && ! taxonomy_exists( $term['taxonomy'] ) ) {
-			// todo exclude user.
-			register_taxonomy( $term['taxonomy'], hp\prefix( $this->get_models() ) );
+			register_taxonomy( $term['taxonomy'], hp\prefix( $this->get_models( 'post' ) ) );
 		}
 
 		return $term;
@@ -648,7 +658,6 @@ final class Attribute extends Component {
 						// Set field arguments.
 						if ( 'options' === $field_name ) {
 							if ( get_post_status() === 'publish' ) {
-								// todo for users.
 								$field_args = array_merge(
 									$field_args,
 									[
@@ -663,7 +672,7 @@ final class Attribute extends Component {
 													'edit-tags.php?' . http_build_query(
 														[
 															'taxonomy' => hp\prefix( $model . '_' . $this->get_attribute_name( get_post_field( 'post_name' ), $model ) ),
-															'post_type' => hp\prefix( $model ),
+															'post_type' => hp\prefix( 'user' === $model ? 'vendor' : $model ),
 														]
 													)
 												)
@@ -707,8 +716,7 @@ final class Attribute extends Component {
 						'type'    => 'checkbox',
 						'_order'  => 5,
 					];
-				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) ) {
-					// todo for users.
+				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) && 'user' !== $model ) {
 					$meta_box['fields']['public'] = [
 						'label'   => esc_html__( 'Pages', 'hivepress' ),
 						'caption' => esc_html__( 'Create a page for each attribute option', 'hivepress' ),
@@ -1510,7 +1518,6 @@ final class Attribute extends Component {
 					$meta_box['model'] = $model;
 
 					if ( 'attributes' === $meta_box_name ) {
-						// todo exclude for users.
 						$meta_box['screen'] = $model;
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
@@ -1568,8 +1575,7 @@ final class Attribute extends Component {
 			// Get post type.
 			$post_type = get_post_type();
 
-			// todo exclude users.
-			if ( in_array( $post_type, hp\prefix( $this->get_models() ), true ) ) {
+			if ( in_array( $post_type, hp\prefix( $this->get_models( 'post' ) ), true ) ) {
 
 				// Get model.
 				$model = hp\unprefix( $post_type );
@@ -1595,8 +1601,7 @@ final class Attribute extends Component {
 	public function redirect_archive_page() {
 
 		// Check page.
-		// todo exclude users.
-		if ( ! is_post_type_archive( hp\prefix( $this->get_models() ) ) || is_search() ) {
+		if ( ! is_post_type_archive( hp\prefix( $this->get_models( 'post' ) ) ) || is_search() ) {
 			return;
 		}
 
@@ -1631,8 +1636,7 @@ final class Attribute extends Component {
 		// Get model.
 		$model = null;
 
-		// todo exclude users.
-		foreach ( $this->get_models() as $model_name ) {
+		foreach ( $this->get_models( 'post' ) as $model_name ) {
 			if ( is_post_type_archive( hp\prefix( $model_name ) ) || $this->get_term_id( $model_name ) ) {
 				$model = $model_name;
 
