@@ -113,6 +113,7 @@ class User_View_Page extends Page_Sidebar_Left {
 									'user_attributes_secondary' => [
 										'type'      => 'attributes',
 										'model'     => 'user',
+										'alias'     => 'vendor',
 										'area'      => 'view_page_secondary',
 										'columns'   => 2,
 										'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'secondary_plural' ) . ')',
@@ -132,6 +133,7 @@ class User_View_Page extends Page_Sidebar_Left {
 							'user_attributes_primary' => [
 								'type'      => 'attributes',
 								'model'     => 'user',
+								'alias'     => 'vendor',
 								'area'      => 'view_page_primary',
 								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'primary_plural' ) . ')',
 								'_settings' => [ 'columns' ],
