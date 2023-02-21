@@ -123,17 +123,17 @@ class User extends Model {
 						'_alias' => 'user_registered',
 					],
 
+					'verified'        => [
+						'type'      => 'checkbox',
+						'_external' => true,
+					],
+
 					'image'           => [
 						'label'     => esc_html__( 'Profile Image', 'hivepress' ),
 						'caption'   => esc_html__( 'Select Image', 'hivepress' ),
 						'type'      => 'attachment_upload',
 						'formats'   => [ 'jpg', 'jpeg', 'png' ],
 						'_model'    => 'attachment',
-						'_external' => true,
-					],
-
-					'verified'        => [
-						'type'      => 'checkbox',
 						'_external' => true,
 					],
 				],
