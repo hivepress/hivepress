@@ -991,6 +991,12 @@ final class Admin extends Component {
 	 * @return array
 	 */
 	protected function get_meta_boxes( $screen ) {
+
+		// Check screen.
+		if ( 'user' === $screen ) {
+			$screen = hp\prefix( $screen );
+		}
+
 		if ( empty( $this->meta_boxes ) ) {
 			$this->meta_boxes = [];
 
