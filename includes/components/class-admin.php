@@ -1475,12 +1475,17 @@ final class Admin extends Component {
 	 */
 	public function update_user_boxes( $user_id ) {
 
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
 		// Remove actions.
 		remove_action( 'personal_options_update', [ $this, 'update_user_boxes' ] );
 		remove_action( 'edit_user_profile_update', [ $this, 'update_user_boxes' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes( 'hp_user' ) as $meta_box ) {
+		foreach ( $this->get_meta_boxes( 'user' ) as $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.
@@ -1522,7 +1527,12 @@ final class Admin extends Component {
 	public function render_user_boxes( $user ) {
 		$output = '';
 
-		foreach ( $this->get_meta_boxes( 'hp_user' ) as $meta_box ) {
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		foreach ( $this->get_meta_boxes( 'user' ) as $meta_box ) {
 
 			// Check fields.
 			if ( ! $meta_box['fields'] ) {
