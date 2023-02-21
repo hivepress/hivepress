@@ -87,6 +87,12 @@ class User_View_Page extends Page_Sidebar_Left {
 												'path'   => 'user/view/page/user-name',
 												'_order' => 10,
 											],
+
+											'user_verified_badge' => [
+												'type'   => 'part',
+												'path'   => 'user/view/user-verified-badge',
+												'_order' => 20,
+											],
 										],
 									],
 

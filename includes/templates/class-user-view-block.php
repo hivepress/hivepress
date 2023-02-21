@@ -63,9 +63,27 @@ class User_View_Block extends Template {
 
 								'blocks'     => [
 									'user_name'            => [
-										'type'   => 'part',
-										'path'   => 'user/view/block/user-name',
-										'_order' => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__name' ],
+										],
+
+										'blocks'     => [
+											'user_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'user/view/block/user-name',
+												'_order' => 10,
+											],
+
+											'user_verified_badge' => [
+												'type'   => 'part',
+												'path'   => 'user/view/user-verified-badge',
+												'_order' => 20,
+											],
+										],
 									],
 
 									'user_details_primary' => [
