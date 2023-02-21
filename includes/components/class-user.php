@@ -348,9 +348,7 @@ final class User extends Component {
 
 		// Delete verification key.
 		if ( hp\get_array_value( $_POST, 'hp_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
-			// todo: change user meta on user model field to verify users.
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
-			update_user_meta( $user_id, 'hp_verified', true );
 		}
 	}
 
