@@ -62,9 +62,9 @@ class User_View_Block extends Template {
 								],
 
 								'blocks'     => [
-									'user_name' => [
+									'user_name'            => [
 										'type'       => 'container',
-										'tag'        => 'h3',
+										'tag'        => 'h4',
 										'_order'     => 10,
 
 										'attributes' => [
