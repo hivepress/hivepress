@@ -27,9 +27,6 @@ final class Request extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Set the current user.
-		add_action( 'init', [ $this, 'set_user' ], 1 );
-
 		// Set request context.
 		add_action( 'init', [ $this, 'set_request_context' ], 100 );
 
@@ -82,15 +79,6 @@ final class Request extends Component {
 	}
 
 	/**
-	 * Sets the current user.
-	 */
-	public function set_user() {
-		if ( is_user_logged_in() ) {
-			$this->set_context( 'user', Models\User::query()->get_by_id( wp_get_current_user() ) );
-		}
-	}
-
-	/**
 	 * Gets the current user.
 	 *
 	 * @return object
@@ -124,6 +112,9 @@ final class Request extends Component {
 		if ( ! is_user_logged_in() || hp\is_rest() ) {
 			return;
 		}
+
+		// Set current user.
+		$this->set_context( 'user', Models\User::query()->get_by_id( wp_get_current_user() ) );
 
 		/**
 		 * Filters the current request context. You can use this hook to store some request-specific values and retrieve them anywhere in the code with the `hivepress()->request->get_context( 'context_key' )` method.
