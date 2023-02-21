@@ -1475,7 +1475,7 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Updates term box values.
+	 * Updates user box values.
 	 *
 	 * @param int $user_id User ID.
 	 */
