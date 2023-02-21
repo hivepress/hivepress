@@ -1523,6 +1523,13 @@ final class Admin extends Component {
 		$output = '';
 
 		foreach ( $this->get_meta_boxes( 'hp_user' ) as $meta_box ) {
+
+			// Check fields.
+			if ( ! $meta_box['fields'] ) {
+				continue;
+			}
+
+			// Render title.
 			$output .= '<h2>' . esc_html( $meta_box['title'] ) . '</h2>';
 			$output .= '<table class="form-table hp-form" role="presentation">';
 
