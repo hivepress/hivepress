@@ -219,7 +219,8 @@ final class User extends Controller {
 					],
 
 					'user_view_page'               => [
-						'path'     => '/user/(?P<username>[a-z0-9 _.\-@]+)',
+						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
+						'title'    => [ $this, 'get_user_view_title' ],
 						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
 					],
@@ -975,6 +976,31 @@ final class User extends Controller {
 	}
 
 	/**
+	 * Gets user view title.
+	 *
+	 * @return string
+	 */
+	public function get_user_view_title() {
+		$title = null;
+
+		// Get user.
+		$user = Models\User::query()->filter(
+			[
+				'username' => hivepress()->request->get_param( 'username' ),
+			]
+		)->get_first();
+
+		if ( $user ) {
+			$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'viewed_user', $user );
+
+		return $title;
+	}
+
+	/**
 	 * Redirects user view page.
 	 *
 	 * @return mixed
@@ -986,22 +1012,24 @@ final class User extends Controller {
 			return true;
 		}
 
-		// Get username.
-		$username = sanitize_user( hivepress()->request->get_param( 'username' ) );
-
-		if ( ! $username ) {
-			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
-		}
-
 		// Get user.
-		$user = Models\User::query()->filter( [ 'username' => $username ] )->get_first();
+		$user = hivepress()->request->get_context( 'viewed_user' );
 
 		if ( ! $user ) {
 			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
 		}
 
-		// Set request context.
-		hivepress()->request->set_context( 'viewed_user', $user );
+		// Get vendor ID.
+		$vendor_id = Models\Vendor::query()->filter(
+			[
+				'user'   => $user->get_id(),
+				'status' => 'publish',
+			]
+		)->get_first_id();
+
+		if ( $vendor_id ) {
+			return hivepress()->router->get_url( 'vendor_view_page', [ 'vendor_id' => $vendor_id ] );
+		}
 
 		return false;
 	}
