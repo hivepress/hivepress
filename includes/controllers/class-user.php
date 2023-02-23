@@ -219,7 +219,7 @@ final class User extends Controller {
 					],
 
 					'user_view_page'               => [
-						'path'     => '/user/(?P<username>[a-z0-9 _.\-@]+)',
+						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
 						'title'    => [ $this, 'get_user_view_title' ],
 						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
@@ -1012,9 +1012,23 @@ final class User extends Controller {
 			return true;
 		}
 
-		// Check user.
-		if ( ! hivepress()->request->get_context( 'viewed_user' ) ) {
+		// Get user.
+		$user = hivepress()->request->get_context( 'viewed_user' );
+
+		if ( ! $user ) {
 			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		// Get vendor ID.
+		$vendor_id = Models\Vendor::query()->filter(
+			[
+				'user'   => $user->get_id(),
+				'status' => 'publish',
+			]
+		)->get_first_id();
+
+		if ( $vendor_id ) {
+			return hivepress()->router->get_url( 'vendor_view_page', [ 'vendor_id' => $vendor_id ] );
 		}
 
 		return false;
