@@ -170,4 +170,19 @@ return [
 			],
 		],
 	],
+
+	'user_settings'             => [
+		'title'  => hivepress()->translator->get_string( 'settings' ),
+		'screen' => 'user',
+		'model'  => 'user',
+
+		'fields' => [
+			'verified' => [
+				'label'   => esc_html_x( 'Verified', 'user', 'hivepress' ),
+				'caption' => esc_html__( 'Mark this user as verified', 'hivepress' ),
+				'type'    => 'checkbox',
+				'_order'  => 10,
+			],
+		],
+	],
 ];

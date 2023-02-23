@@ -51,11 +51,10 @@ final class User extends Component {
 			}
 
 			// Manage profile fields.
-			add_action( 'show_user_profile', [ $this, 'add_profile_fields' ] );
-			add_action( 'edit_user_profile', [ $this, 'add_profile_fields' ] );
+			add_filter( 'hivepress/v1/meta_boxes/user_settings', [ $this, 'add_profile_fields' ] );
 
-			add_action( 'personal_options_update', [ $this, 'update_profile_fields' ] );
-			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ] );
+			add_action( 'personal_options_update', [ $this, 'update_profile_fields' ], 100 );
+			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 		} else {
 
 			// Alter templates.
@@ -301,37 +300,32 @@ final class User extends Component {
 	/**
 	 * Adds admin profile fields.
 	 *
-	 * @param WP_User $user User object.
+	 * @param array $meta_box Meta box arguments.
+	 * @return array
 	 */
-	public function add_profile_fields( $user ) {
+	public function add_profile_fields( $meta_box ) {
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_users' ) ) {
 			return;
 		}
 
-		// Check verification key.
-		if ( ! $user->hp_email_verify_key ) {
-			return;
+		// Get user ID.
+		$user_id = absint( hp\get_array_value( $_GET, 'user_id' ) );
+
+		if ( ! $user_id ) {
+			$user_id = get_current_user_id();
 		}
 
-		$output  = '<h2>' . esc_html( hivepress()->translator->get_string( 'settings' ) ) . '</h2>';
-		$output .= '<table class="form-table hp-form"><tr>';
+		if ( get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+			$meta_box['fields']['email_verified'] = [
+				'caption' => esc_html__( 'Confirm the email verification', 'hivepress' ),
+				'type'    => 'checkbox',
+				'_order'  => 15,
+			];
+		}
 
-		// Render label.
-		$output .= '<th>' . esc_html( hivepress()->translator->get_string( 'status' ) ) . '</th>';
-
-		// Render field.
-		$output .= '<td>' . ( new Fields\Checkbox(
-			[
-				'name'    => 'hp_verified',
-				'caption' => esc_html__( 'Mark this user as verified', 'hivepress' ),
-			]
-		) )->render() . '</td>';
-
-		$output .= '</tr></table>';
-
-		echo $output;
+		return $meta_box;
 	}
 
 	/**
@@ -347,7 +341,8 @@ final class User extends Component {
 		}
 
 		// Delete verification key.
-		if ( hp\get_array_value( $_POST, 'hp_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+		if ( hp\get_array_value( $_POST, 'hp_email_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
 		}
 	}
