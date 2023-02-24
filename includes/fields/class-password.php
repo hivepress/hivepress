@@ -62,6 +62,14 @@ class Password extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '><div id="hp-password-strength-result"></div>';
+
+		// Set output.
+		$output = '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '><div id="hp-password-strength-result"></div>';
+
+		if ( 'password' === hp\get_array_value( $this->attributes, 'data-component' ) ) {
+			$output .= '<div data-component="password-meter"></div>';
+		}
+
+		return $output;
 	}
 }

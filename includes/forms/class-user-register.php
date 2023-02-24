@@ -60,7 +60,8 @@ class User_Register extends Model_Form {
 						'_order'     => 20,
 
 						'attributes' => [
-							'autocomplete' => 'new-password',
+							'autocomplete'   => 'new-password',
+							'data-component' => 'password',
 						],
 					],
 				],

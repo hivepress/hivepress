@@ -181,6 +181,36 @@
 				buttons.attr('data-state', '');
 			}
 		});
+
+		hivepress.getComponent('password').each(function () {
+			var field = $(this),
+				strenghtField = field.parent().find('[data-component="password-meter"]');
+
+			field.on('input', function(){ 
+				strenghtField.removeClass();
+				
+				switch ( wp.passwordStrength.meter( field.val(), []) ) {
+					case 2:
+						strenghtField.addClass( 'bad' ).html( pwsL10n.bad );
+						break;
+				
+					case 3:
+						strenghtField.addClass( 'good' ).html( pwsL10n.good );
+						break;
+				
+					case 4:
+						strenghtField.addClass( 'strong' ).html( pwsL10n.strong );
+						break;
+				
+					case 5:
+						strenghtField.addClass( 'short' ).html( pwsL10n.mismatch );
+						break;
+				
+					default:
+						strenghtField.addClass( 'short' ).html( pwsL10n.short );
+				}
+			});
+		});
 	});
 
 	$('body').imagesLoaded(function () {

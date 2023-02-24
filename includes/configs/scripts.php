@@ -11,6 +11,13 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'password_strength'     => [
+		'handle' => 'password-strength-meter',
+		'src'    => '',
+		'deps'   => [ 'hivepress-core-frontend' ],
+		'scope'  => [ 'frontend' ],
+	],
+
 	'jquery_ui_touch_punch' => [
 		'handle' => 'jquery-ui-touch-punch',
 		'src'    => hivepress()->get_url() . '/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
