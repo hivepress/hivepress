@@ -949,8 +949,9 @@ var hivepress = {
 				form = field.closest('form');
 
 			field.on('click', function(){
-				form.find('[data-resetable], [data-resetable] input').each(function(){
+				form.find('input:not([type="hidden"], [name="_category"]), select:not([type="hidden"])').each(function(){
 					$(this).val('').trigger('change');
+					form.trigger('submit');
 				});
 			});
 		});
