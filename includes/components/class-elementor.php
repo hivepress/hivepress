@@ -102,10 +102,7 @@ final class Elementor extends Component {
 	 */
 	public function add_icon_styles() {
 
-		// Get icon URL.
-		$icon_url = hivepress()->get_url() . '/assets/images/logo-dark.svg';
-
-		// Add icon styles.
+		// Add dark icon styles.
 		wp_add_inline_style(
 			'elementor-icons',
 			'.eicon-hivepress {
@@ -113,14 +110,16 @@ final class Elementor extends Component {
 				margin: 0 auto;
 				width: 28px;
 				height: 28px;
-				background: url("' . esc_url( $icon_url ) . '") center center no-repeat;
+				background: url("' . hivepress()->get_url() . '/assets/images/logo-dark.svg") center center no-repeat;
 				background-size: 28px;
-			}
-			@media screen and (prefers-color-scheme: dark) {
-				.eicon-hivepress {
-					background: url("' . hivepress()->get_url() . '/assets/images/logo-light.svg") center center no-repeat;
-					background-size: 28px;
-				}
+			}'
+		);
+
+		// Add light icon styles.
+		wp_add_inline_style(
+			'elementor-editor-dark-mode',
+			'.eicon-hivepress {
+				background-image: url("' . hivepress()->get_url() . '/assets/images/logo-light.svg");
 			}'
 		);
 	}
