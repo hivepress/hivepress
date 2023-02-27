@@ -46,7 +46,53 @@ final class Email extends Component {
 			add_action( 'post_updated', [ $this, 'set_email_defaults' ], 10, 3 );
 		}
 
+		// Add object specific tokens.
+		add_filter( 'hivepress/v1/emails/email/meta', [ $this, 'alter_email_meta' ] );
+
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Add object specific tokens.
+	 *
+	 * @param array $meta Email meta.
+	 * @return array
+	 */
+	public function alter_email_meta( $meta ) {
+		foreach ( hp\get_array_value( $meta, 'tokens', [] ) as $name => $args ) {
+
+			// Get model name.
+			$model_name = hp\get_array_value( (array) $args, 'model' );
+
+			if ( ! $model_name ) {
+				continue;
+			}
+
+			// Get class object.
+			$class = hp\create_class_instance( 'HivePress\Models\\' . $model_name );
+
+			if ( ! $class ) {
+				continue;
+			}
+
+			// Get model fields.
+			$model_fields = $class->_get_fields();
+
+			if ( ! $model_fields ) {
+				continue;
+			}
+
+			foreach ( $model_fields as $field_name => $field_args ) {
+				if ( $field_args->get_arg( '_model' ) ) {
+					continue;
+				}
+
+				// Add token.
+				$meta['tokens'][] = $name . '.' . $field_name;
+			}
+		}
+
+		return $meta;
 	}
 
 	/**
@@ -171,8 +217,16 @@ final class Email extends Component {
 				$output .= $email::get_meta( 'description' ) . ' ';
 			}
 
-			if ( $email::get_meta( 'tokens' ) ) {
-				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+			// Get tokens
+			$tokens = array_filter(
+				(array) $email::get_meta( 'tokens' ),
+				function( $token ) {
+					return ! is_array( $token );
+				}
+			);
+
+			if ( $tokens ) {
+				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $tokens ) . '%</code>' );
 			}
 
 			if ( $output ) {

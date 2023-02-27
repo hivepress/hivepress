@@ -83,32 +83,6 @@ abstract class Email {
 			$meta = apply_filters( 'hivepress/v1/emails/' . hp\get_class_name( $class ) . '/meta', $meta );
 		}
 
-		foreach ( hp\get_array_value( $meta, 'tokens', [] ) as $token ) {
-
-			// Get class object.
-			$class = hp\create_class_instance( 'HivePress\Models\\' . $token );
-
-			if ( ! $class ) {
-				continue;
-			}
-
-			// Get model fields.
-			$model_fields = $class->_get_fields();
-
-			if ( ! $model_fields ) {
-				continue;
-			}
-
-			foreach ( $model_fields as $field_name => $field_args ) {
-				if ( $field_args->get_arg( '_model' ) ) {
-					continue;
-				}
-
-				// Add token.
-				$meta['tokens'][] = $token . '.' . $field_name;
-			}
-		}
-
 		// Set meta.
 		static::set_meta( $meta );
 	}
