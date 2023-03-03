@@ -894,8 +894,6 @@ var hivepress = {
 								if (!messageContainer.is(':empty')) {
 									messageContainer.addClass(messageClass + '--error').show();
 								}
-							}else if (response.hasOwnProperty('redirect')){
-								window.location.replace(response.redirect);
 							}
 
 							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {

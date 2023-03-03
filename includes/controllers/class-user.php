@@ -31,7 +31,7 @@ final class User extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'users_resource'                => [
+					'users_resource'               => [
 						'path'   => '/users',
 						'method' => 'GET',
 						'action' => [ $this, 'get_users' ],
@@ -47,7 +47,7 @@ final class User extends Controller {
 					*     @OA\Schema(type="integer"),
 					* ),
 					*/
-					'user_resource'                 => [
+					'user_resource'                => [
 						'base' => 'users_resource',
 						'path' => '/(?P<user_id>\d+)',
 						'rest' => true,
@@ -68,7 +68,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="201", description="")
 					 * )
 					 */
-					'user_register_action'          => [
+					'user_register_action'         => [
 						'base'   => 'users_resource',
 						'method' => 'POST',
 						'action' => [ $this, 'register_user' ],
@@ -89,7 +89,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_login_action'             => [
+					'user_login_action'            => [
 						'base'   => 'users_resource',
 						'path'   => '/login',
 						'method' => 'POST',
@@ -110,7 +110,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_password_request_action'  => [
+					'user_password_request_action' => [
 						'base'   => 'users_resource',
 						'path'   => '/request-password',
 						'method' => 'POST',
@@ -133,7 +133,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_password_reset_action'    => [
+					'user_password_reset_action'   => [
 						'base'   => 'users_resource',
 						'path'   => '/reset-password',
 						'method' => 'POST',
@@ -152,7 +152,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_update_action'            => [
+					'user_update_action'           => [
 						'base'   => 'user_resource',
 						'method' => 'POST',
 						'action' => [ $this, 'update_user' ],
@@ -168,27 +168,19 @@ final class User extends Controller {
 					 *     @OA\Response(response="204", description="")
 					 * )
 					 */
-					'user_delete_action'            => [
+					'user_delete_action'           => [
 						'base'   => 'user_resource',
 						'method' => 'DELETE',
 						'action' => [ $this, 'delete_user' ],
 						'rest'   => true,
 					],
 
-					'user_resend_email_verify'      => [
-						'base'   => 'user_resource',
-						'path'   => '/resend-email-verify',
-						'method' => 'POST',
-						'action' => [ $this, 'resend_email_verify' ],
-						'rest'   => true,
-					],
-
-					'user_account_page'             => [
+					'user_account_page'            => [
 						'path'     => '/account',
 						'redirect' => [ $this, 'redirect_user_account_page' ],
 					],
 
-					'user_login_page'               => [
+					'user_login_page'              => [
 						'title'    => esc_html__( 'Sign In', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/login',
@@ -196,13 +188,13 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_login_page' ],
 					],
 
-					'user_logout_page'              => [
+					'user_logout_page'             => [
 						'base'     => 'user_account_page',
 						'path'     => '/logout',
 						'redirect' => [ $this, 'redirect_user_logout_page' ],
 					],
 
-					'user_password_reset_page'      => [
+					'user_password_reset_page'     => [
 						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/reset-password',
@@ -210,7 +202,7 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_password_reset_page' ],
 					],
 
-					'user_email_verify_page'        => [
+					'user_email_verify_page'       => [
 						'title'    => esc_html__( 'Email Verified', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/verify-email',
@@ -218,7 +210,7 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_email_verify_page' ],
 					],
 
-					'user_edit_settings_page'       => [
+					'user_edit_settings_page'      => [
 						'title'    => hivepress()->translator->get_string( 'settings' ),
 						'base'     => 'user_account_page',
 						'path'     => '/settings',
@@ -231,13 +223,6 @@ final class User extends Controller {
 						'title'    => [ $this, 'get_user_view_title' ],
 						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
-					],
-
-					'user_resend_email_verify_page' => [
-						'base'     => 'users_resource',
-						'path'     => '/resend-verify/(?P<user_id>\d+)',
-						'redirect' => [ $this, 'redirect_user_resend_email_verify_page' ],
-						'action'   => [ $this, 'render_user_resend_email_verify_page' ],
 					],
 				],
 			],
@@ -466,7 +451,7 @@ final class User extends Controller {
 
 		// Check email key.
 		if ( get_option( 'hp_user_verify_email' ) && $user_object->hp_email_verify_key ) {
-			return hp\rest_redirect( hivepress()->router->get_url( 'user_resend_email_verify_page', [ 'user_id' => $user->get_id() ] ) );
+			return hp\rest_error( 401, esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
 		}
 
 		// Authenticate user.
@@ -537,7 +522,7 @@ final class User extends Controller {
 
 		// Check email key.
 		if ( get_option( 'hp_user_verify_email' ) && $user_object->hp_email_verify_key ) {
-			return hp\rest_redirect( hivepress()->router->get_url( 'user_resend_email_verify_page', [ 'user_id' => $user->get_id() ] ) );
+			return hp\rest_error( 401, esc_html__( 'Please check your email to activate your account.', 'hivepress' ) );
 		}
 
 		// Send email.
@@ -768,50 +753,6 @@ final class User extends Controller {
 	}
 
 	/**
-	 * Resend user verification email.
-	 *
-	 * @param WP_REST_Request $request API request.
-	 * @return WP_Rest_Response
-	 */
-	public function resend_email_verify( $request ) {
-
-		// Get user.
-		$user = Models\User::query()->get_by_id( absint( $request->get_param( 'user_id' ) ) );
-
-		if ( ! $user ) {
-			return hp\rest_error( 401, esc_html__( 'User not found', 'hivepress' ) );
-		}
-
-		if ( $user->is_verified() ) {
-			return hp\rest_error( 404, esc_html__( 'User has been already verified', 'hivepress' ) );
-		}
-
-		// Set email key.
-		$email_key = md5( $user->get_email() . time() . wp_rand() );
-
-		update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
-
-		// Send email.
-		( new Emails\User_Email_Verify(
-			[
-				'recipient' => $user->get_email(),
-
-				'tokens'    => [
-					'user'             => $user,
-					'user_name'        => $user->get_username(),
-					'email_verify_url' => hivepress()->router->get_url(
-						'user_email_verify_page',
-						[
-							'username'         => $user->get_username(),
-							'email_verify_key' => $email_key,
-						]
-					),
-				],
-			]
-		) )->send();
-	}
-
-	/**
 	 * Redirects user account page.
 	 *
 	 * @return mixed
@@ -982,8 +923,6 @@ final class User extends Controller {
 		// Redirect user.
 		$redirect = $user->hp_email_verify_redirect;
 
-		$user->set_verified( true )->save_verified();
-
 		if ( $redirect ) {
 			delete_user_meta( $user->ID, 'hp_email_verify_redirect' );
 
@@ -1107,51 +1046,6 @@ final class User extends Controller {
 
 				'context'  => [
 					'user' => hivepress()->request->get_context( 'viewed_user' ),
-				],
-			]
-		) )->render();
-	}
-
-	/**
-	 * Redirects user view page.
-	 *
-	 * @return mixed
-	 */
-	public function redirect_user_resend_email_verify_page() {
-
-		if ( ! get_option( 'hp_user_verify_email' ) ) {
-			return true;
-		}
-
-		// Get user.
-		$user = Models\User::query()->get_by_id( absint( hivepress()->request->get_param( 'user_id' ) ) );
-
-		if ( ! $user ) {
-			wp_die( esc_html__( 'User not found', 'hivepress' ) );
-		}
-
-		if ( $user->is_verified() ) {
-			wp_die( esc_html__( 'User has been already verified', 'hivepress' ) );
-		}
-
-		// Set context.
-		hivepress()->request->set_context( 'resend_verify_email_user', $user );
-
-		return false;
-	}
-
-	/**
-	 * Renders user view page.
-	 *
-	 * @return string
-	 */
-	public function render_user_resend_email_verify_page() {
-		return ( new Blocks\Template(
-			[
-				'template' => 'User_Resend_Email_Verify_Page',
-
-				'context'  => [
-					'user' => hivepress()->request->get_context( 'resend_verify_email_user' ),
 				],
 			]
 		) )->render();
