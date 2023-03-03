@@ -25,7 +25,7 @@ class User_Email_Verify_Page extends Page_Narrow {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => esc_html__( 'Email Verified', 'hivepress' ),
+				'label' => esc_html__( 'Email Verification', 'hivepress' ),
 			],
 			$meta
 		);

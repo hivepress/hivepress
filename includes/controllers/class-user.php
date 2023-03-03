@@ -175,6 +175,14 @@ final class User extends Controller {
 						'rest'   => true,
 					],
 
+					'user_resend_email_verify'     => [
+						'base'   => 'users_resource',
+						'path'   => '/resend-email-verify',
+						'method' => 'POST',
+						'action' => [ $this, 'resend_email_verify' ],
+						'rest'   => true,
+					],
+
 					'user_account_page'            => [
 						'path'     => '/account',
 						'redirect' => [ $this, 'redirect_user_account_page' ],
@@ -203,7 +211,7 @@ final class User extends Controller {
 					],
 
 					'user_email_verify_page'       => [
-						'title'    => esc_html__( 'Email Verified', 'hivepress' ),
+						'title'    => esc_html__( 'Email Verification', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/verify-email',
 						'redirect' => [ $this, 'redirect_user_email_verify_page' ],
@@ -753,6 +761,66 @@ final class User extends Controller {
 	}
 
 	/**
+	 * Resend user verification email.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function resend_email_verify( $request ) {
+
+		// Check authentication.
+		if ( is_user_logged_in() ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Check permissions.
+		if ( ! get_option( 'hp_user_verify_email' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Get user email.
+		$email = sanitize_email( $request->get_param( 'email' ) );
+
+		if ( ! $email ) {
+			return hp\rest_error( 403, esc_html__( 'Email is not found', 'hivepress' ) );
+		}
+
+		// Get user object.
+		$user_object = get_user_by( 'email', $email );
+
+		if ( ! $user_object || $user_object->hp_user_verified ) {
+			return hp\rest_error( 404, esc_html__( 'User is not found or user has been already verified', 'hivepress' ) );
+		}
+
+		// Set email key.
+		$email_key = md5( $email . time() . wp_rand() );
+
+		update_user_meta( $user_object->ID, 'hp_email_verify_key', $email_key );
+
+		// Get user model.
+		$user = Models\User::query()->get_by_id( $user_object->ID );
+
+		// Send email.
+		( new Emails\User_Email_Verify(
+			[
+				'recipient' => $user->get_email(),
+
+				'tokens'    => [
+					'user'             => $user,
+					'user_name'        => $user->get_username(),
+					'email_verify_url' => hivepress()->router->get_url(
+						'user_email_verify_page',
+						[
+							'username'         => $user->get_username(),
+							'email_verify_key' => $email_key,
+						]
+					),
+				],
+			]
+		) )->send();
+	}
+
+	/**
 	 * Redirects user account page.
 	 *
 	 * @return mixed
@@ -854,9 +922,19 @@ final class User extends Controller {
 	 */
 	public function redirect_user_email_verify_page() {
 
+		// Check authentication.
+		if ( is_user_logged_in() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
+		}
+
 		// Check permissions.
 		if ( ! get_option( 'hp_user_verify_email' ) ) {
 			return true;
+		}
+
+		if ( absint( hp\get_array_value( $_GET, 'after_registration' ) ) ) {
+			hivepress()->request->set_context( 'after_registration', true );
+			return false;
 		}
 
 		// Get username and email key.
@@ -877,6 +955,7 @@ final class User extends Controller {
 
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
+		update_user_meta( $user->ID, 'hp_email_verified', true );
 
 		if ( is_email( $user->hp_email_verify_address ) ) {
 
@@ -941,6 +1020,10 @@ final class User extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template' => 'user_email_verify_page',
+
+				'context'  => [
+					'after_registration' => hivepress()->request->get_context( 'after_registration' ),
+				],
 			]
 		) )->render();
 	}

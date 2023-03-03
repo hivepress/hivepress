@@ -59,6 +59,7 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+			add_filter( 'hivepress/v1/templates/user_email_verify_page/blocks', [ $this, 'alter_user_email_verify_page' ], 10, 2 );
 		}
 
 		parent::__construct( $args );
@@ -180,8 +181,7 @@ final class User extends Component {
 		if ( get_option( 'hp_user_verify_email' ) ) {
 
 			// Set form message.
-			$form['message']  = esc_html__( 'Please check your email to activate your account.', 'hivepress' );
-			$form['redirect'] = false;
+			$form['redirect'] = hivepress()->router->get_url( 'user_email_verify_page', [ 'after_registration' => true ] );
 
 			// Add redirect field.
 			$form['fields']['_redirect'] = [
@@ -342,7 +342,6 @@ final class User extends Component {
 
 		// Delete verification key.
 		if ( hp\get_array_value( $_POST, 'hp_email_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
-			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
 		}
 	}
@@ -402,5 +401,32 @@ final class User extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Alters user email verification page.
+	 *
+	 * @param array  $blocks Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_email_verify_page( $blocks, $template ) {
+		if ( get_option( 'hp_user_verify_email' ) && $template->get_context( 'after_registration' ) ) {
+			$blocks = hivepress()->template->merge_blocks(
+				$blocks,
+				[
+					'page_content' => [
+						'blocks' => [
+							'user_resend_email_verification_form' => [
+								'type'   => 'form',
+								'form'   => 'user_resend_email_verification',
+								'_order' => 20,
+							],
+						],
+					],
+				],
+			);
+		}
+		return $blocks;
 	}
 }
