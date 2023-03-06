@@ -8,7 +8,6 @@
 namespace HivePress\Forms;
 
 use HivePress\Helpers as hp;
-use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;

@@ -71,11 +71,7 @@ class Listing_Filter extends Form {
 					'label' => hivepress()->translator->get_string( 'filter' ),
 				],
 
-				'footer' => ( new Blocks\Part(
-					[
-						'path' => 'page/reset-button',
-					]
-				) )->render(),
+				'footer' => '<a data-component="reset" class="hp-link">' . esc_html__( 'Reset Filters', 'hivepress' ) . '</a>',
 			],
 			$args
 		);
