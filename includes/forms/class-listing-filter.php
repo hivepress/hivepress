@@ -8,6 +8,7 @@
 namespace HivePress\Forms;
 
 use HivePress\Helpers as hp;
+use HivePress\Blocks;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -69,6 +70,8 @@ class Listing_Filter extends Form {
 				'button' => [
 					'label' => hivepress()->translator->get_string( 'filter' ),
 				],
+
+				'footer' => '<a data-component="reset" class="hp-link">' . esc_html__( 'Reset Filters', 'hivepress' ) . '</a>',
 			],
 			$args
 		);

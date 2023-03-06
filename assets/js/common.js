@@ -943,6 +943,19 @@ var hivepress = {
 			}
 		});
 
+		// Reset
+		hivepress.getComponent('reset').each(function () {
+			var field = $(this),
+				form = field.closest('form');
+
+			field.on('click', function(){
+				form.find('input:not([type="hidden"], [name="_category"]), select:not([type="hidden"])').each(function(){
+					$(this).val('').trigger('change');
+					form.trigger('submit');
+				});
+			});
+		});
+
 		$(document).trigger('hivepress:init', [container]);
 	}
 
