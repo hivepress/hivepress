@@ -1513,10 +1513,6 @@ final class Attribute extends Component {
 		foreach ( $this->get_models() as $model ) {
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
 
-				if ( 'attribute_search' === $meta_box_name && ( ! hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ) || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model, [] ), 'has_archive' ) ) ) {
-					continue;
-				}
-
 				// Set screen and model.
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
 					$meta_box['model'] = $model;
@@ -1535,6 +1531,9 @@ final class Attribute extends Component {
 						}
 					}
 
+					// Get post type.
+					$post_type = hp\get_array_value( hivepress()->get_config( 'post_types' ), $model, [] );
+
 					// @todo replace temporary fix.
 					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
 						$meta_box['fields']['moderated'] = [
@@ -1544,6 +1543,8 @@ final class Attribute extends Component {
 							'_parent' => 'editable',
 							'_order'  => 20,
 						];
+					} elseif ( ( 'user' === $model || ! hp\get_array_value( $post_type, 'has_archive' ) ) && 'attribute_search' === $meta_box_name ) {
+						continue;
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
