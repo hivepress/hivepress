@@ -1,6 +1,6 @@
 <?php
 /**
- * User email verify page template.
+ * User resend email verify page template.
  *
  * @package HivePress\Templates
  */
@@ -13,9 +13,9 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Email verification page.
+ * Resend email verification page.
  */
-class User_Email_Verify_Page extends Page_Narrow {
+class User_Email_Verify_Resend_Page extends Page_Narrow {
 
 	/**
 	 * Class initializer.
@@ -25,7 +25,7 @@ class User_Email_Verify_Page extends Page_Narrow {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label' => esc_html__( 'Email Verified', 'hivepress' ),
+				'label' => esc_html__( 'Email Verification', 'hivepress' ),
 			],
 			$meta
 		);
@@ -49,6 +49,12 @@ class User_Email_Verify_Page extends Page_Narrow {
 								'path'   => 'user/register/user-email-verify-message',
 								'_label' => hivepress()->translator->get_string( 'message' ),
 								'_order' => 10,
+							],
+
+							'user_resend_email_verification_form' => [
+								'type'   => 'form',
+								'form'   => 'user_resend_email_verification',
+								'_order' => 20,
 							],
 						],
 					],

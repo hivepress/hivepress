@@ -26,7 +26,7 @@ class User_Resend_Email_Verification extends Form {
 		$args = hp\merge_arrays(
 			[
 				'message' => esc_html__( 'The email verification email was succesfully sent. Please check your email inbox', 'hivepress' ),
-				'action'  => hivepress()->router->get_url( 'user_resend_email_verify' ),
+				'action'  => hivepress()->router->get_url( 'user_resend_email_verify_action' ),
 
 				'fields'  => [
 					'email' => [

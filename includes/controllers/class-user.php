@@ -31,7 +31,7 @@ final class User extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'users_resource'               => [
+					'users_resource'                  => [
 						'path'   => '/users',
 						'method' => 'GET',
 						'action' => [ $this, 'get_users' ],
@@ -47,7 +47,7 @@ final class User extends Controller {
 					*     @OA\Schema(type="integer"),
 					* ),
 					*/
-					'user_resource'                => [
+					'user_resource'                   => [
 						'base' => 'users_resource',
 						'path' => '/(?P<user_id>\d+)',
 						'rest' => true,
@@ -68,7 +68,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="201", description="")
 					 * )
 					 */
-					'user_register_action'         => [
+					'user_register_action'            => [
 						'base'   => 'users_resource',
 						'method' => 'POST',
 						'action' => [ $this, 'register_user' ],
@@ -89,7 +89,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_login_action'            => [
+					'user_login_action'               => [
 						'base'   => 'users_resource',
 						'path'   => '/login',
 						'method' => 'POST',
@@ -110,7 +110,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_password_request_action' => [
+					'user_password_request_action'    => [
 						'base'   => 'users_resource',
 						'path'   => '/request-password',
 						'method' => 'POST',
@@ -133,7 +133,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_password_reset_action'   => [
+					'user_password_reset_action'      => [
 						'base'   => 'users_resource',
 						'path'   => '/reset-password',
 						'method' => 'POST',
@@ -152,7 +152,7 @@ final class User extends Controller {
 					 *     @OA\Response(response="200", description="")
 					 * )
 					 */
-					'user_update_action'           => [
+					'user_update_action'              => [
 						'base'   => 'user_resource',
 						'method' => 'POST',
 						'action' => [ $this, 'update_user' ],
@@ -168,27 +168,27 @@ final class User extends Controller {
 					 *     @OA\Response(response="204", description="")
 					 * )
 					 */
-					'user_delete_action'           => [
+					'user_delete_action'              => [
 						'base'   => 'user_resource',
 						'method' => 'DELETE',
 						'action' => [ $this, 'delete_user' ],
 						'rest'   => true,
 					],
 
-					'user_resend_email_verify'     => [
+					'user_resend_email_verify_action' => [
 						'base'   => 'users_resource',
-						'path'   => '/resend-email-verify',
+						'path'   => '/resend-email',
 						'method' => 'POST',
 						'action' => [ $this, 'resend_email_verify' ],
 						'rest'   => true,
 					],
 
-					'user_account_page'            => [
+					'user_account_page'               => [
 						'path'     => '/account',
 						'redirect' => [ $this, 'redirect_user_account_page' ],
 					],
 
-					'user_login_page'              => [
+					'user_login_page'                 => [
 						'title'    => esc_html__( 'Sign In', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/login',
@@ -196,13 +196,13 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_login_page' ],
 					],
 
-					'user_logout_page'             => [
+					'user_logout_page'                => [
 						'base'     => 'user_account_page',
 						'path'     => '/logout',
 						'redirect' => [ $this, 'redirect_user_logout_page' ],
 					],
 
-					'user_password_reset_page'     => [
+					'user_password_reset_page'        => [
 						'title'    => esc_html__( 'Reset Password', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/reset-password',
@@ -210,15 +210,15 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_password_reset_page' ],
 					],
 
-					'user_email_verify_page'       => [
-						'title'    => esc_html__( 'Email Verification', 'hivepress' ),
+					'user_email_verify_page'          => [
+						'title'    => esc_html__( 'Email Verified', 'hivepress' ),
 						'base'     => 'user_account_page',
 						'path'     => '/verify-email',
 						'redirect' => [ $this, 'redirect_user_email_verify_page' ],
 						'action'   => [ $this, 'render_user_email_verify_page' ],
 					],
 
-					'user_edit_settings_page'      => [
+					'user_edit_settings_page'         => [
 						'title'    => hivepress()->translator->get_string( 'settings' ),
 						'base'     => 'user_account_page',
 						'path'     => '/settings',
@@ -226,11 +226,19 @@ final class User extends Controller {
 						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
 
-					'user_view_page'               => [
+					'user_view_page'                  => [
 						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
 						'title'    => [ $this, 'get_user_view_title' ],
 						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
+					],
+
+					'user_resend_email_verify_page'   => [
+						'title'    => esc_html__( 'Email Verification', 'hivepress' ),
+						'base'     => 'user_account_page',
+						'path'     => '/resend-email',
+						'redirect' => [ $this, 'redirect_user_resend_email_verify_page' ],
+						'action'   => [ $this, 'render_user_resend_email_verify_page' ],
 					],
 				],
 			],
@@ -365,36 +373,16 @@ final class User extends Controller {
 
 		if ( get_option( 'hp_user_verify_email' ) ) {
 
-			// Set email key.
-			$email_key = md5( $user->get_email() . time() . wp_rand() );
-
-			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
-
-			// Set email redirect.
-			$email_redirect = wp_validate_redirect( $form->get_value( '_redirect' ) );
-
-			if ( $email_redirect ) {
-				update_user_meta( $user->get_id(), 'hp_email_verify_redirect', $email_redirect );
-			}
-
-			// Send email.
-			( new Emails\User_Email_Verify(
-				[
-					'recipient' => $user->get_email(),
-
-					'tokens'    => [
-						'user'             => $user,
-						'user_name'        => $user->get_username(),
-						'email_verify_url' => hivepress()->router->get_url(
-							'user_email_verify_page',
-							[
-								'username'         => $user->get_username(),
-								'email_verify_key' => $email_key,
-							]
-						),
-					],
-				]
-			) )->send();
+			/**
+			* Fires when a verification email is send.
+			*
+			* @hook hivepress/v1/models/user/resend-email
+			* @param {mixed} $user User object or user ID.
+			* @param {string} $email User email.
+			* @param {string} $redirect Redirect URL.
+			* @param {bool} $email_changed Is email changed.
+			*/
+			 do_action( 'hivepress/v1/models/user/send-verification-email', $user, $user->get_email(), $form->get_value( '_redirect' ) );
 		} elseif ( ! is_user_logged_in() ) {
 
 			// Authenticate user.
@@ -667,30 +655,16 @@ final class User extends Controller {
 		// Check email.
 		if ( get_option( 'hp_user_verify_email' ) && $form->get_value( 'email' ) !== $user->get_email() ) {
 
-			// Set email key.
-			$email_key = md5( $form->get_value( 'email' ) . time() . wp_rand() );
-
-			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
-			update_user_meta( $user->get_id(), 'hp_email_verify_address', $form->get_value( 'email' ) );
-
-			// Send email.
-			( new Emails\User_Email_Verify(
-				[
-					'recipient' => $form->get_value( 'email' ),
-
-					'tokens'    => [
-						'user'             => $user,
-						'user_name'        => $user->get_display_name(),
-						'email_verify_url' => hivepress()->router->get_url(
-							'user_email_verify_page',
-							[
-								'username'         => $user->get_username(),
-								'email_verify_key' => $email_key,
-							]
-						),
-					],
-				]
-			) )->send();
+			/**
+			* Fires when a verification email is send.
+			*
+			* @hook hivepress/v1/models/user/resend-email
+			* @param {mixed} $user User object or user ID.
+			* @param {string} $email User email.
+			* @param {string} $redirect Redirect URL.
+			* @param {bool} $email_changed Is email changed.
+			*/
+			do_action( 'hivepress/v1/models/user/send-verification-email', $user, $form->get_value( 'email' ), null, true );
 
 			// Set old email.
 			$form->set_value( 'email', $user->get_email() );
@@ -782,42 +756,26 @@ final class User extends Controller {
 		$email = sanitize_email( $request->get_param( 'email' ) );
 
 		if ( ! $email ) {
-			return hp\rest_error( 403, esc_html__( 'Email is not found', 'hivepress' ) );
+			return hp\rest_error( 400, esc_html__( 'Email is not found', 'hivepress' ) );
 		}
 
 		// Get user object.
 		$user_object = get_user_by( 'email', $email );
 
-		if ( ! $user_object || $user_object->hp_user_verified ) {
-			return hp\rest_error( 404, esc_html__( 'User is not found or user has been already verified', 'hivepress' ) );
+		if ( ! $user_object || ! $user_object->hp_email_verify_key ) {
+			return hp\rest_error( 404, esc_html__( 'No users found.', 'hivepress' ) );
 		}
 
-		// Set email key.
-		$email_key = md5( $email . time() . wp_rand() );
-
-		update_user_meta( $user_object->ID, 'hp_email_verify_key', $email_key );
-
-		// Get user model.
-		$user = Models\User::query()->get_by_id( $user_object->ID );
-
-		// Send email.
-		( new Emails\User_Email_Verify(
-			[
-				'recipient' => $user->get_email(),
-
-				'tokens'    => [
-					'user'             => $user,
-					'user_name'        => $user->get_username(),
-					'email_verify_url' => hivepress()->router->get_url(
-						'user_email_verify_page',
-						[
-							'username'         => $user->get_username(),
-							'email_verify_key' => $email_key,
-						]
-					),
-				],
-			]
-		) )->send();
+		/**
+		* Fires when a verification email is send.
+		*
+		* @hook hivepress/v1/models/user/resend-email
+		* @param {mixed} $user User object or user ID.
+		* @param {string} $email User email.
+		* @param {string} $redirect Redirect URL.
+		* @param {bool} $email_changed Is email changed.
+		*/
+		do_action( 'hivepress/v1/models/user/send-verification-email', $user_object->ID, $email );
 	}
 
 	/**
@@ -922,19 +880,9 @@ final class User extends Controller {
 	 */
 	public function redirect_user_email_verify_page() {
 
-		// Check authentication.
-		if ( is_user_logged_in() ) {
-			return hivepress()->router->get_url( 'user_account_page' );
-		}
-
 		// Check permissions.
 		if ( ! get_option( 'hp_user_verify_email' ) ) {
 			return true;
-		}
-
-		if ( absint( hp\get_array_value( $_GET, 'after_registration' ) ) ) {
-			hivepress()->request->set_context( 'after_registration', true );
-			return false;
 		}
 
 		// Get username and email key.
@@ -955,7 +903,6 @@ final class User extends Controller {
 
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
-		update_user_meta( $user->ID, 'hp_email_verified', true );
 
 		if ( is_email( $user->hp_email_verify_address ) ) {
 
@@ -1020,10 +967,6 @@ final class User extends Controller {
 		return ( new Blocks\Template(
 			[
 				'template' => 'user_email_verify_page',
-
-				'context'  => [
-					'after_registration' => hivepress()->request->get_context( 'after_registration' ),
-				],
 			]
 		) )->render();
 	}
@@ -1129,6 +1072,43 @@ final class User extends Controller {
 
 				'context'  => [
 					'user' => hivepress()->request->get_context( 'viewed_user' ),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Redirects user resend email verify page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_resend_email_verify_page() {
+
+		// Check authentication.
+		if ( is_user_logged_in() ) {
+			return hivepress()->router->get_url( 'user_account_page' );
+		}
+
+		// Check permissions.
+		if ( ! get_option( 'hp_user_verify_email' ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders user resend email verify page.
+	 *
+	 * @return string
+	 */
+	public function render_user_resend_email_verify_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_email_verify_resend_page',
+
+				'context'  => [
+					'is_resend' => true,
 				],
 			]
 		) )->render();
