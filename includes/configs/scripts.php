@@ -11,6 +11,20 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'iris'                  => [
+		'handle' => 'iris',
+		'src'    => admin_url( 'js/iris.min.js' ),
+		'deps'   => [ 'wp-i18n', 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ],
+		'scope'  => [ 'frontend' ],
+	],
+
+	'color_picker'          => [
+		'handle' => 'wp-color-picker',
+		'src'    => admin_url( 'js/color-picker.min.js' ),
+		'deps'   => [ 'iris' ],
+		'scope'  => [ 'frontend' ],
+	],
+
 	'jquery_ui_touch_punch' => [
 		'handle' => 'jquery-ui-touch-punch',
 		'src'    => hivepress()->get_url() . '/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
@@ -76,7 +90,7 @@ return [
 	'core'                  => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload', 'fancybox' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'wp-color-picker' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
