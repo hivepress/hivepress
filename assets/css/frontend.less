@@ -229,6 +229,26 @@
 			}
 		}
 
+		&--attachment-upload {
+			a {
+				&[data-component="file-download"]{
+					display: none !important;
+				}
+			}
+
+			>div:first-child{
+				>div{
+					&:hover{
+						a {
+							&[data-component="file-download"]{
+								display: flex !important;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		input[type="checkbox"],
 		input[type="radio"] {
 			margin-right: 0.5rem;
