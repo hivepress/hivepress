@@ -229,24 +229,12 @@
 			}
 		}
 
-		&--attachment-upload {
-			a {
-				&[data-component="file-download"]{
-					display: none !important;
-				}
-			}
+		&--attachment-upload &--file-download{
+			display: none !important;
+		}
 
-			>div:first-child{
-				>div{
-					&:hover{
-						a {
-							&[data-component="file-download"]{
-								display: flex !important;
-							}
-						}
-					}
-				}
-			}
+		&--attachment-upload > div:first-child > div:hover &--file-download{
+			display: flex !important;
 		}
 
 		input[type="checkbox"],
