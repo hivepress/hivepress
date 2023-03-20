@@ -944,7 +944,7 @@ var hivepress = {
 		}); 
 
 		// Color picker
-		hivepress.getComponent('color-picker').each(function () {
+		hivepress.getComponent('color').each(function () {
 			$(this).wpColorPicker();
 		});
 

@@ -24,18 +24,30 @@ class Color extends Text {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'    => esc_html__( 'Color', 'hivepress' ),
-				'sortable' => false,
+				'label'      => esc_html__( 'Color', 'hivepress' ),
+				'filterable' => false,
+				'sortable'   => false,
 
-				'settings' => [
-					'min_length' => null,
-					'max_length' => null,
+				'settings'   => [
+					'min_length'  => null,
+					'max_length'  => null,
+					'pattern'     => null,
+					'placeholder' => null,
 				],
 			],
 			$meta
 		);
 
 		parent::init( $meta );
+	}
+
+	/**
+	 * Bootstraps field properties.
+	 */
+	protected function boot() {
+		$this->attributes = hp\merge_arrays( $this->attributes, [ 'data-component' => 'color' ] );
+
+		parent::boot();
 	}
 
 	/**
@@ -60,14 +72,5 @@ class Color extends Text {
 	 */
 	protected function sanitize() {
 		$this->value = sanitize_hex_color( $this->value );
-	}
-
-	/**
-	 * Renders field HTML.
-	 *
-	 * @return string
-	 */
-	public function render() {
-		return '<input data-component="color-picker" type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }
