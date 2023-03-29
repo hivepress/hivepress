@@ -403,7 +403,8 @@ var hivepress = {
 							$(instance.element).data('reset', false);
 						}
 					}
-				};
+				},
+				disableDates = field.data('disabled-dates');
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -446,8 +447,8 @@ var hivepress = {
 				settings['enable'] = field.data('enabled-dates');
 			}
 
-			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
+			if (disableDates) {
+				settings['disable'] = disableDates;
 			}
 
 			if (field.data('disabled-days')) {
@@ -499,6 +500,11 @@ var hivepress = {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
 						onChange: function (selectedDates, dateStr, instance) {
+
+							// Set default min and max dates.
+							instance.set('maxDate', field.data('max-date'));
+							instance.set('minDate', field.data('min-date'));
+
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
@@ -525,6 +531,26 @@ var hivepress = {
 								fields.eq(0).val(formattedDates[0]);
 								fields.eq(1).val(formattedDates[1]);
 							} else {
+
+								if(disableDates){
+									var unixDate = Math.floor((new Date(dateStr).getTime()) / 1000);
+
+									var maxDateFromUnix = disableDates.filter(date => Math.floor((new Date(date.from).getTime()) / 1000) >= unixDate);
+
+									if(maxDateFromUnix.length){
+										maxDateFromUnix = new Date(maxDateFromUnix[0].from);
+									}
+
+									var minDateFromUnix = disableDates.filter(date => Math.floor((new Date(date.to).getTime()) / 1000) <= unixDate);
+
+									if(minDateFromUnix.length){
+										minDateFromUnix = new Date(minDateFromUnix[minDateFromUnix.length - 1].to);
+									}
+
+									instance.set('maxDate', new Date(maxDateFromUnix));
+									instance.set('minDate', new Date(minDateFromUnix));
+								}
+
 								fields.eq(0).val('');
 								fields.eq(1).val('');
 							}
