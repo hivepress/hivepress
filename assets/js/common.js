@@ -404,7 +404,8 @@ var hivepress = {
 						}
 					}
 				},
-				disableDates = field.data('disabled-dates');
+				disableDates = field.data('disabled-dates'),
+				enabledDates = field.data('enabled-dates');
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -443,8 +444,8 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
-			if (field.data('enabled-dates')) {
-				settings['enable'] = field.data('enabled-dates');
+			if (enabledDates) {
+				settings['enable'] = enabledDates;
 			}
 
 			if (disableDates) {
@@ -502,8 +503,8 @@ var hivepress = {
 						onChange: function (selectedDates, dateStr, instance) {
 
 							// Set default min and max dates.
-							instance.set('maxDate', field.data('max-date'));
-							instance.set('minDate', field.data('min-date'));
+							instance.set('maxDate', field.data('max-date') ? field.data('max-date') : new Date().fp_incr(field.data('window')));
+							instance.set('minDate', field.data('min-date') ? field.data('min-date') : new Date().fp_incr(field.data('offset')));
 
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
@@ -532,23 +533,91 @@ var hivepress = {
 								fields.eq(1).val(formattedDates[1]);
 							} else {
 
-								if(disableDates){
-									var unixDate = Math.floor((new Date(dateStr).getTime()) / 1000);
+								if(dateStr){
+									var unixDate = new Date(dateStr),
+										minMaxDates = {
+											minDate: unixDate,
+											maxDate: unixDate,
+										};
 
-									var maxDateFromUnix = disableDates.filter(date => Math.floor((new Date(date.from).getTime()) / 1000) >= unixDate);
+									if(disableDates){
 
-									if(maxDateFromUnix.length){
-										maxDateFromUnix = new Date(maxDateFromUnix[0].from);
+										var maxDateFromUnix = disableDates.filter(date => new Date(date.from) >= unixDate);
+
+										if(maxDateFromUnix.length){
+											minMaxDates.maxDate = new Date(maxDateFromUnix[0].from);
+										}
+
+										var minDateFromUnix = disableDates.filter(date => new Date(date.to) <= unixDate);
+
+										if(minDateFromUnix.length){
+											minMaxDates.minDate = new Date(minDateFromUnix[minDateFromUnix.length - 1].to);
+										}
 									}
 
-									var minDateFromUnix = disableDates.filter(date => Math.floor((new Date(date.to).getTime()) / 1000) <= unixDate);
+									if(enabledDates){
 
-									if(minDateFromUnix.length){
-										minDateFromUnix = new Date(minDateFromUnix[minDateFromUnix.length - 1].to);
+										// Get enabled dates.
+										var enabledDatesList = enabledDates.filter(function(date){
+											date = new Date(date);
+
+											if(minMaxDates.minDate && minMaxDates.maxDate){
+												return date.getTime() !== unixDate.getTime() && minMaxDates.minDate <= date && minMaxDates.maxDate >= date;
+											}else if(minMaxDates.minDate || minMaxDates.maxDate){
+												return date.getTime() !== unixDate.getTime() && ((minMaxDates.minDate && minMaxDates.minDate <= date) || (minMaxDates.maxDate && minMaxDates.maxDate >= date));
+											}else{
+												return date.getTime() !== unixDate.getTime();
+											}
+										});
+
+										minMaxDates = {
+											minDate: unixDate,
+											maxDate: unixDate,
+										}
+
+										if( enabledDatesList.length ) {
+											var maxEnabledDates = enabledDatesList.filter(date => new Date(date) >= unixDate),
+												minEnabledDates = enabledDatesList.reverse().filter(date => new Date(date) <= unixDate);
+
+											for ( var i = 0; i < maxEnabledDates.length; i++ ) {
+												var maxDateFound = false,
+													daysCount = 1;
+
+												if(maxDateFound){
+													break;
+												}
+											
+												while (!maxDateFound && unixDate.fp_incr(daysCount) <= new Date(maxEnabledDates[i])){
+													if(!enabledDatesList.includes(unixDate.fp_incr(daysCount))){
+														maxDateFound = true;
+														minMaxDates.maxDate = unixDate.fp_incr(daysCount);
+													}
+													daysCount++;
+												}
+											}
+
+											for(var i = 0; i < minEnabledDates.length; i++){
+												var minDateFound = false,
+													daysCount = -1;
+
+												if(minDateFound){
+													break;
+												}
+											
+												while(!minDateFound && unixDate.fp_incr(daysCount) >= new Date(minEnabledDates[i])){
+													if(!enabledDatesList.includes(unixDate.fp_incr(daysCount))){
+														minDateFound = true;
+														minMaxDates.minDate = unixDate.fp_incr(daysCount);
+													}
+
+													daysCount--;
+												}
+											}
+										}
 									}
 
-									instance.set('maxDate', new Date(maxDateFromUnix));
-									instance.set('minDate', new Date(minDateFromUnix));
+									instance.set('minDate', minMaxDates.minDate);
+									instance.set('maxDate', minMaxDates.maxDate);
 								}
 
 								fields.eq(0).val('');
