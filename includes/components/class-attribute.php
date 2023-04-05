@@ -481,8 +481,18 @@ final class Attribute extends Component {
 
 						// Set field options.
 						foreach ( $field_contexts as $field_context ) {
-							$attribute_args[ $field_context . '_field' ]['options']     = 'terms';
-							$attribute_args[ $field_context . '_field' ]['option_args'] = [ 'taxonomy' => hp\prefix( $model . '_' . $attribute_name ) ];
+							$attribute_args[ $field_context . '_field' ]['options'] = 'terms';
+
+							// Set attribute option args.
+							$attribute_option_args = [
+								'taxonomy' => hp\prefix( $model . '_' . $attribute_name ),
+							];
+
+							if ( 'search' === $field_context ) {
+								$attribute_option_args['hide_empty'] = true;
+							}
+
+							$attribute_args[ $field_context . '_field' ]['option_args'] = $attribute_option_args;
 						}
 					}
 
