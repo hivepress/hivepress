@@ -563,6 +563,9 @@ final class Cache extends Component {
 
 		// Delete meta cache.
 		$this->delete_post_cache( $post_id, null, hivepress()->model->get_cache_group( 'term', $taxonomy ) );
+
+		// Delete transient cache.
+		$this->delete_cache( null, hivepress()->model->get_cache_group( 'term', $taxonomy ) );
 	}
 
 	/**
