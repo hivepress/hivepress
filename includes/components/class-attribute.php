@@ -548,6 +548,25 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
+			foreach ( $attributes as $name => $args ) {
+
+				// Get categories id.
+				$category_ids = hp\get_array_value( $args, 'categories', [] );
+
+				if ( ! $category_ids ) {
+					continue;
+				}
+
+				foreach ( $category_ids as $category_id ) {
+
+					// Get children categories.
+					$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) );
+				}
+
+				// Set categories id.
+				$attributes[ $name ]['categories'] = array_unique( $category_ids );
+			}
+
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $args ) {
