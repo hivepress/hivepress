@@ -137,7 +137,10 @@ class Attributes extends Block {
 		}
 
 		// @todo remove when implemented globally.
-		$attributes['data-block'] = $this->name;
+		if ( ! in_array( $this->area, [ 'view_block_primary', 'view_block_secondary' ] ) ) {
+
+			$attributes['data-block'] = $this->name;
+		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
