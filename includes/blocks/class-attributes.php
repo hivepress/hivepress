@@ -137,8 +137,7 @@ class Attributes extends Block {
 		}
 
 		// @todo remove when implemented globally.
-		if ( ! in_array( $this->area, [ 'view_block_primary', 'view_block_secondary' ] ) ) {
-
+		if ( 'view_page_primary' === $this->area ) {
 			$attributes['data-block'] = $this->name;
 		}
 
