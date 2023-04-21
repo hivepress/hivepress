@@ -442,10 +442,6 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
-			if (field.data('enabled-dates')) {
-				settings['enable'] = field.data('enabled-dates');
-			}
-
 			if (field.data('disabled-dates')) {
 				settings['disable'] = field.data('disabled-dates');
 			}
@@ -460,6 +456,46 @@ var hivepress = {
 
 					settings['disable'].push(disableDates);
 				}
+			}
+
+			if (field.data('enabled-dates')) {
+
+				// Get enabled dates.
+				var enabledDates = field.data('enabled-dates');
+
+				if (field.data('disabled-days')) {
+
+					// Find enabled dates among disabled days.
+					enabledDates = enabledDates.filter(function (date) {
+						return field.data('disabled-days').indexOf(new Date(date).getDay()) !== -1;
+					});
+				}
+
+				if (field.data('disabled-dates')) {
+
+					// Find enabled dates among disabled dates.
+					enabledDates = enabledDates.filter(function (date) {
+						var date = new Date(date),
+							isMatch = true;
+
+						$.each(field.data('disabled-dates'), function (index, disabledDates) {
+							var startDate = new Date(disabledDates.from),
+								endDate = new Date(disabledDates.to);
+
+							if(isMatch && startDate.getTime() < date.getTime() && endDate.getTime() > date.getTime()){
+								isMatch = false;
+								return;
+							}
+						});
+
+						if(isMatch){
+							return date;
+						}
+					});
+				}
+
+				// Set enabled dates.
+				settings['enable'] = enabledDates;
 			}
 
 			if (field.data('ranges')) {
