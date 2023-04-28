@@ -495,7 +495,9 @@ var hivepress = {
 				if (field.data('mode') === 'range') {
 					var fields = field.parent().find('input[type="hidden"]').not(field),
 						minLength = field.data('min-length'),
-						maxLength = field.data('max-length');
+						maxLength = field.data('max-length'),
+						minDate = field.data('min-date') ? field.data('min-date') : new Date().fp_incr(field.data('offset')),
+						maxDate = field.data('max-date') ? field.data('max-date') : new Date().fp_incr(field.data('window'));
 
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
@@ -503,8 +505,8 @@ var hivepress = {
 						onChange: function (selectedDates, dateStr, instance) {
 
 							// Set default min and max dates.
-							instance.set('maxDate', field.data('max-date') ? field.data('max-date') : new Date().fp_incr(field.data('window')));
-							instance.set('minDate', field.data('min-date') ? field.data('min-date') : new Date().fp_incr(field.data('offset')));
+							instance.set('minDate', minDate);
+							instance.set('maxDate', maxDate);
 
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
@@ -536,8 +538,8 @@ var hivepress = {
 								if(dateStr){
 									var unixDate = new Date(dateStr),
 										minMaxDates = {
-											minDate: unixDate,
-											maxDate: unixDate,
+											minDate: minDate,
+											maxDate: maxDate,
 										};
 
 									if(disableDates){
@@ -569,11 +571,6 @@ var hivepress = {
 												return date.getTime() !== unixDate.getTime();
 											}
 										});
-
-										minMaxDates = {
-											minDate: unixDate,
-											maxDate: unixDate,
-										}
 
 										if( enabledDatesList.length ) {
 											var maxEnabledDates = enabledDatesList.filter(date => new Date(date) >= unixDate),
