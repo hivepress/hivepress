@@ -542,7 +542,7 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
-			// @todo cache category IDs.
+			// Set categories.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
 
@@ -557,6 +557,8 @@ final class Attribute extends Component {
 				}
 
 				foreach ( $category_ids as $category_id ) {
+
+					// @todo cache category IDs.
 					$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
 				}
 
@@ -583,7 +585,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
-							'categories'     => hp\get_array_value( $categories, $name, [] ),
+							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
 						],
