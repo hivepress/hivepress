@@ -410,10 +410,16 @@
 					}
 				}
 			}
-		}
 
-		&--attachment-upload[data-required=true] &--file-delete{
-			display: none;
+			&[data-required=true] {
+				>div:first-child {
+					>div:only-child {
+						>a {
+							display: none;
+						}
+					}
+				}
+			}
 		}
 
 		&--repeater {
