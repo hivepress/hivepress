@@ -542,50 +542,30 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
-			// Get cache key.
-			$cache_key = [
-				'model'      => $model,
-				'attributes' => $attributes,
-				'format'     => 'categories',
-			];
+			// @todo cache category IDs.
+			foreach ( $attributes as $attribute_name => $attribute_args ) {
+				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
 
-			// Get cached categories.
-			$categories = hivepress()->cache->get_cache( $cache_key );
-
-			if ( is_null( $categories ) ) {
-
-				// Get categories.
-				$categories = [];
-
-				foreach ( $attributes as $attribute_name => $attribute_args ) {
-					$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
-
-					if ( ! taxonomy_exists( $taxonomy_name ) ) {
-						continue;
-					}
-
-					$category_ids = hp\get_array_value( $attribute_args, 'categories' );
-
-					if ( ! $category_ids ) {
-						continue;
-					}
-
-					foreach ( $category_ids as $category_id ) {
-						$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
-					}
-
-					$categories[ $attribute_name ] = array_unique( $category_ids );
+				if ( ! taxonomy_exists( $taxonomy_name ) ) {
+					continue;
 				}
 
-				// Cache categories.
-				if ( count( $attributes ) <= 100 ) {
-					hivepress()->cache->get_cache( $cache_key, null, $categories );
+				$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+
+				if ( ! $category_ids ) {
+					continue;
 				}
+
+				foreach ( $category_ids as $category_id ) {
+					$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
+				}
+
+				$attributes[ $attribute_name ]['categories'] = array_unique( $category_ids );
 			}
 
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
-				function( $name, $args ) use ( $categories ) {
+				function( $args ) {
 					if ( ! isset( $args['label'] ) && isset( $args['edit_field']['label'] ) ) {
 						$args['label'] = $args['edit_field']['label'];
 					}
@@ -610,7 +590,6 @@ final class Attribute extends Component {
 						$args
 					);
 				},
-				array_keys( $attributes ),
 				$attributes
 			);
 		}
