@@ -11,6 +11,12 @@ use HivePress\Helpers as hp;
 defined( 'ABSPATH' ) || exit;
 
 return [
+	'color_picker'      => [
+		'handle' => 'wp-color-picker',
+		'src'    => '',
+		'scope'  => [ 'frontend', 'backend' ],
+	],
+
 	'fontawesome'       => [
 		'handle' => 'fontawesome',
 		'src'    => hivepress()->get_url() . '/assets/css/fontawesome/fontawesome.min.css',

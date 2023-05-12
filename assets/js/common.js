@@ -941,6 +941,11 @@ var hivepress = {
 					});
 				}
 			}
+		}); 
+
+		// Color picker
+		hivepress.getComponent('color').each(function () {
+			$(this).wpColorPicker();
 		});
 
 		$(document).trigger('hivepress:init', [container]);
