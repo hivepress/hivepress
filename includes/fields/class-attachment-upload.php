@@ -352,13 +352,14 @@ class Attachment_Upload extends Field {
 		// Render attachment.
 		if ( strpos( $attachment->get_mime_type(), 'image/' ) === 0 ) {
 			$output .= wp_get_attachment_image( $attachment->get_id(), 'thumbnail' );
-			$output .= '<a class="hp-field--file-download" href="' . esc_url( $attachment->get_url() ) . '" target="_blank" title="' . esc_attr__( 'Download', 'hivepress' ) . '"><i class="hp-icon fa-solid fa fa-arrow-down"></i></a>';
+
+			$output .= '<a href="' . esc_url( $attachment->get_url() ) . '" target="_blank" title="' . esc_attr__( 'Download', 'hivepress' ) . '" class="hp-field__button hp-field__button--download"><i class="hp-icon fas fa-arrow-down"></i></a>';
 		} else {
 			$output .= '<div><a href="' . esc_url( $attachment->get_url() ) . '" target="_blank" title="' . esc_attr__( 'Download', 'hivepress' ) . '">' . esc_html( $attachment->get_name() ) . '</a></div>';
 		}
 
 		// Render delete button.
-		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" class="hp-field__button hp-field__button--delete" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 		$output .= '</div>';
 
