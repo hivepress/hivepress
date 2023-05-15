@@ -407,15 +407,9 @@ final class Attribute extends Component {
 
 					$attribute_args['display_format'] = str_replace( '%icon%', $icon, $attribute_args['display_format'] );
 
-					// Get categories.
+					// Set categories.
 					if ( taxonomy_exists( hp\prefix( $this->get_category_model( $model ) ) ) ) {
-						$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
-
-						foreach ( $category_ids as $category_id ) {
-							$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) );
-						}
-
-						$attribute_args['categories'] = array_unique( $category_ids );
+						$attribute_args['categories'] = wp_get_post_terms( $attribute_object->ID, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
 					}
 
 					// Get fields.
@@ -547,6 +541,29 @@ final class Attribute extends Component {
 			 * @return {array} Attribute configurations.
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
+
+			// Set categories.
+			foreach ( $attributes as $attribute_name => $attribute_args ) {
+				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
+
+				if ( ! taxonomy_exists( $taxonomy_name ) ) {
+					continue;
+				}
+
+				$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+
+				if ( ! $category_ids ) {
+					continue;
+				}
+
+				foreach ( $category_ids as $category_id ) {
+
+					// @todo cache category IDs.
+					$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
+				}
+
+				$attributes[ $attribute_name ]['categories'] = array_unique( $category_ids );
+			}
 
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(

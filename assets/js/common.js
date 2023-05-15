@@ -815,18 +815,23 @@ var hivepress = {
 			if (renderSettings) {
 				form.on('change', function () {
 					var container = $('[data-block=' + renderSettings.block + ']'),
-						data = new FormData(form.get(0));
+						data = new FormData(form.get(0)),
+						request = form.data('renderRequest');
 
 					if (!container.length) {
 						return;
 					}
 
-					data.append('_render', true);
-					data.delete('_wpnonce');
+					if (container.attr('data-state') === 'loading') {
+						request.abort();
+					}
 
 					container.attr('data-state', 'loading');
 
-					$.ajax({
+					data.append('_render', true);
+					data.delete('_wpnonce');
+
+					form.data('renderRequest', $.ajax({
 						url: renderSettings.url,
 						method: 'POST',
 						data: data,
@@ -848,7 +853,7 @@ var hivepress = {
 								hivepress.initUI(newContainer);
 							}
 						},
-					});
+					}));
 				});
 			}
 
