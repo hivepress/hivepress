@@ -459,14 +459,16 @@ var hivepress = {
 
 			if (enabledDates && enabledDates.length) {
 				if (disabledDays && disabledDays.length) {
-					enabledDates = enabledDates.filter(function (date) {
-						return disabledDays.indexOf(new Date(date).getDay()) !== -1;
+					enabledDates = enabledDates.filter(function (dateStr) {
+						var date = new Date(dateStr);
+
+						return disabledDays.indexOf(date.getDay()) !== -1;
 					});
 				}
 
 				if (disabledDates && disabledDates.length) {
-					enabledDates = enabledDates.filter(function (date) {
-						var date = new Date(date),
+					enabledDates = enabledDates.filter(function (dateStr) {
+						var date = new Date(dateStr),
 							isMatch = true;
 
 						$.each(disabledDates, function (index, disabledDate) {
