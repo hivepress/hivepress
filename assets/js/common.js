@@ -458,6 +458,12 @@ var hivepress = {
 			}
 
 			if (enabledDates && enabledDates.length) {
+				if (disabledDays && disabledDays.length) {
+					enabledDates = enabledDates.filter(function (date) {
+						return disabledDays.indexOf(new Date(date).getDay()) !== -1;
+					});
+				}
+
 				if (disabledDates && disabledDates.length) {
 					enabledDates = enabledDates.filter(function (date) {
 						var date = new Date(date),
@@ -477,12 +483,6 @@ var hivepress = {
 						if (isMatch) {
 							return date;
 						}
-					});
-				}
-
-				if (disabledDays && disabledDays.length) {
-					enabledDates = enabledDates.filter(function (date) {
-						return disabledDays.indexOf(new Date(date).getDay()) !== -1;
 					});
 				}
 
