@@ -378,6 +378,9 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function () {
 			var field = $(this),
+				disabledDates = field.data('disabled-dates'),
+				disabledDays = field.data('disabled-days'),
+				enabledDates = field.data('enabled-dates'),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -442,59 +445,47 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
-			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
+			if (disabledDates && disabledDates.length) {
+				settings['disable'] = disabledDates;
 			}
 
-			if (field.data('disabled-days')) {
-				var disabledDays = field.data('disabled-days');
-
-				if (disabledDays.length) {
-					function disableDates(date) {
-						return disabledDays.indexOf(date.getDay()) !== -1;
-					}
-
-					settings['disable'].push(disableDates);
+			if (disabledDays && disabledDays.length) {
+				function disableDates(date) {
+					return disabledDays.indexOf(date.getDay()) !== -1;
 				}
+
+				settings['disable'].push(disableDates);
 			}
 
-			if (field.data('enabled-dates')) {
-
-				// Get enabled dates.
-				var enabledDates = field.data('enabled-dates');
-
-				if (field.data('disabled-days')) {
-
-					// Find enabled dates among disabled days.
-					enabledDates = enabledDates.filter(function (date) {
-						return field.data('disabled-days').indexOf(new Date(date).getDay()) !== -1;
-					});
-				}
-
-				if (field.data('disabled-dates')) {
-
-					// Find enabled dates among disabled dates.
+			if (enabledDates && enabledDates.length) {
+				if (disabledDates && disabledDates.length) {
 					enabledDates = enabledDates.filter(function (date) {
 						var date = new Date(date),
 							isMatch = true;
 
-						$.each(field.data('disabled-dates'), function (index, disabledDates) {
-							var startDate = new Date(disabledDates.from),
-								endDate = new Date(disabledDates.to);
+						$.each(disabledDates, function (index, disabledDate) {
+							var startDate = new Date(disabledDate.from),
+								endDate = new Date(disabledDate.to);
 
-							if(isMatch && startDate.getTime() < date.getTime() && endDate.getTime() > date.getTime()){
+							if (isMatch && startDate.getTime() < date.getTime() && endDate.getTime() > date.getTime()) {
 								isMatch = false;
+
 								return;
 							}
 						});
 
-						if(isMatch){
+						if (isMatch) {
 							return date;
 						}
 					});
 				}
 
-				// Set enabled dates.
+				if (disabledDays && disabledDays.length) {
+					enabledDates = enabledDates.filter(function (date) {
+						return disabledDays.indexOf(new Date(date).getDay()) !== -1;
+					});
+				}
+
 				settings['enable'] = enabledDates;
 			}
 
