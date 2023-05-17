@@ -79,10 +79,16 @@ return [
 						'_order'  => 70,
 					],
 
+					'listing_enable_image_preview'     => [
+						'caption' => esc_html__( 'Enable image preview', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 80,
+					],
+
 					'listing_allow_video'              => [
 						'caption' => esc_html__( 'Allow uploading videos', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 80,
+						'_order'  => 90,
 					],
 				],
 			],

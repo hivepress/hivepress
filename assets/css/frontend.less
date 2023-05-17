@@ -628,52 +628,9 @@
 		&__image,
 		&__images {
 
-			img,
-			video {
-				display: block;
-				width: 100%;
-				height: auto;
-			}
-		}
-
-		&__images {
-
 			&-slider,
 			&-carousel {
 				direction: ltr;
-			}
-
-			&-slider {
-				margin-bottom: 1rem;
-			}
-
-			&-carousel {
-				overflow: hidden;
-
-				.slick-list {
-					margin: 0 -0.5rem;
-				}
-
-				.slick-slide {
-					padding: 0 0.5rem;
-					outline: none;
-					cursor: pointer;
-
-					img,
-					video {
-						opacity: 0.5;
-						pointer-events: none;
-					}
-				}
-
-				.slick-current,
-				.slick-slide:hover {
-
-					img,
-					video {
-						opacity: 1;
-					}
-				}
 
 				.slick-arrow {
 					position: absolute;
@@ -704,8 +661,51 @@
 				}
 			}
 
+			&-slider {
+				&:not(:last-child) {
+					margin-bottom: 1rem;
+				}
+
+				&:not(:hover) .slick-arrow {
+					display: none !important;
+				}
+			}
+
+			&-carousel {
+				overflow: hidden;
+
+				.slick-list {
+					margin: 0 -0.5rem;
+				}
+
+				.slick-slide {
+					padding: 0 0.5rem;
+					outline: none;
+					cursor: pointer;
+
+					img,
+					video {
+						opacity: 0.5;
+						pointer-events: none;
+					}
+				}
+
+				.slick-current,
+				.slick-slide:hover {
+
+					img,
+					video {
+						opacity: 1;
+					}
+				}
+			}
+
 			img,
 			video {
+				display: block;
+				width: 100%;
+				height: auto;
+
 				&[data-src^="http"] {
 					cursor: pointer;
 				}

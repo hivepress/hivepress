@@ -93,7 +93,9 @@
 		// Carousel slider
 		hivepress.getComponent('carousel-slider').each(function () {
 			var container = $(this),
-				images = container.find('img, video');
+				images = container.find('img, video'),
+				url = container.data('url'),
+				isPreview = container.data('preview') !== false;
 
 			if (images.length && images.first().data('src')) {
 				var imageURLs = [];
@@ -122,52 +124,70 @@
 				container.imagesLoaded(function () {
 					var containerClass = container.attr('class').split(' ')[0],
 						slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
-						carousel = slider.clone();
+						settings = {
+							slidesToShow: 1,
+							slidesToScroll: 1,
+							adaptiveHeight: true,
+						};
 
 					container.html('');
 
+					if (url) {
+						slider.find('img, video').wrap('<a href="' + url + '"></a>');
+					}
+
 					slider.appendTo(container);
 
-					carousel.find('video').removeAttr('controls');
-					carousel.appendTo(container);
+					if (isPreview) {
+						var carousel = slider.clone();
 
-					slider.addClass(containerClass + '-slider').slick({
-						slidesToShow: 1,
-						slidesToScroll: 1,
-						adaptiveHeight: true,
-						infinite: false,
-						arrows: false,
-						asNavFor: carousel,
-					});
+						carousel.find('video').removeAttr('controls');
+						carousel.appendTo(container);
 
-					carousel.addClass(containerClass + '-carousel').slick({
-						slidesToShow: 6,
-						slidesToScroll: 1,
-						infinite: false,
-						focusOnSelect: true,
-						prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-						nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
-						asNavFor: slider,
-						responsive: [{
-							breakpoint: 1025,
-							settings: {
-								slidesToShow: 5,
+						$.extend(settings, {
+							asNavFor: carousel,
+							infinite: false,
+							arrows: false,
+						});
+					} else {
+						$.extend(settings, {
+							prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
+							nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+						});
+					}
+
+					slider.addClass(containerClass + '-slider').slick(settings);
+
+					if (isPreview) {
+						carousel.addClass(containerClass + '-carousel').slick({
+							slidesToShow: 6,
+							slidesToScroll: 1,
+							infinite: false,
+							focusOnSelect: true,
+							prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
+							nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+							asNavFor: slider,
+							responsive: [{
+								breakpoint: 1025,
+								settings: {
+									slidesToShow: 5,
+								},
 							},
-						},
-						{
-							breakpoint: 769,
-							settings: {
-								slidesToShow: 4,
+							{
+								breakpoint: 769,
+								settings: {
+									slidesToShow: 4,
+								},
 							},
-						},
-						{
-							breakpoint: 481,
-							settings: {
-								slidesToShow: 3,
+							{
+								breakpoint: 481,
+								settings: {
+									slidesToShow: 3,
+								},
 							},
-						},
-						],
-					});
+							],
+						});
+					}
 				});
 			}
 		});
