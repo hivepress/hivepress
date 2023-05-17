@@ -49,6 +49,8 @@ final class Vendor extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
 			add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_user_edit_settings_page' ], 100, 2 );
+		} else {
+			add_action( 'save_post_hp_vendor', [ $this, 'update_user' ], 100 );
 		}
 
 		parent::__construct( $args );
@@ -82,12 +84,68 @@ final class Vendor extends Component {
 	}
 
 	/**
+	 * Updates user.
+	 *
+	 * @param int $vendor_id Vendor ID.
+	 */
+	public function update_user( $vendor_id ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_post', $vendor_id ) ) {
+			return;
+		}
+
+		// Check action.
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
+			return;
+		}
+
+		// Check autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( $vendor_id );
+
+		if ( ! $vendor ) {
+			return;
+		}
+
+		// Remove action.
+		remove_action( 'hivepress/v2/models/user/update', [ $this, 'update_vendor' ], 100, 2 );
+
+		// Get user.
+		$user = $vendor->get_user();
+
+		if ( ! $user ) {
+			return;
+		}
+
+		// Update user.
+		$user->fill(
+			[
+				'description' => $vendor->get_description(),
+				'image'       => $vendor->get_image__id(),
+			]
+		)->save(
+			[
+				'description',
+				'image',
+			]
+		);
+	}
+
+	/**
 	 * Updates vendor.
 	 *
 	 * @param int    $user_id User ID.
 	 * @param object $user User object.
 	 */
 	public function update_vendor( $user_id, $user ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_user' ], 100, 2 );
 
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
