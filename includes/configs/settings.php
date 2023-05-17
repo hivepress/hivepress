@@ -80,7 +80,7 @@ return [
 					],
 
 					'listing_enable_image_preview'     => [
-						'caption' => esc_html__( 'Enable image preview', 'hivepress' ),
+						'caption' => esc_html__( 'Enable gallery preview', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 80,
 					],
