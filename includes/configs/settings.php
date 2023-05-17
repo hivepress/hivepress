@@ -72,15 +72,15 @@ return [
 						'_order'      => 60,
 					],
 
-					'listing_enable_image_zoom'        => [
-						'label'   => hivepress()->translator->get_string( 'images' ),
-						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
+					'listing_enable_image_preview'     => [
+						'caption' => esc_html__( 'Enable gallery preview', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 70,
 					],
 
-					'listing_enable_image_preview'     => [
-						'caption' => esc_html__( 'Enable gallery preview', 'hivepress' ),
+					'listing_enable_image_zoom'        => [
+						'label'   => hivepress()->translator->get_string( 'images' ),
+						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 80,
 					],
