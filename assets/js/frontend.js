@@ -133,7 +133,7 @@
 					container.html('');
 
 					if (url) {
-						slider.find('img, video').wrap('<a href="' + url + '"></a>');
+						slider.find('img, video').wrap('<a href="' + url + '" />');
 					}
 
 					slider.appendTo(container);
