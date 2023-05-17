@@ -73,13 +73,13 @@ return [
 					],
 
 					'listing_enable_image_preview'     => [
+						'label'   => hivepress()->translator->get_string( 'images' ),
 						'caption' => esc_html__( 'Enable gallery preview', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 70,
 					],
 
 					'listing_enable_image_zoom'        => [
-						'label'   => hivepress()->translator->get_string( 'images' ),
 						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 80,
