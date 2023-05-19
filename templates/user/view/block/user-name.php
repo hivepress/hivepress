@@ -1,5 +1,18 @@
 <?php
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-?>
-<h4 class="hp-vendor__name"><?php echo esc_html( $user->get_display_name() ); ?></h4>
+
+$display = get_option( 'hp_user_enable_display' );
+
+if ( $display ) : ?>
+	<a href="<?php echo esc_url( hivepress()->router->get_url( 'user_view_page', [ 'username' => $user->get_username() ] ) ); ?>">
+	<?php
+endif;
+
+echo esc_html( $user->get_display_name() );
+
+if ( $display ) :
+	?>
+	</a>
+	<?php
+endif;

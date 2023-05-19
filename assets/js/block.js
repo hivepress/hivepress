@@ -1,8 +1,8 @@
 var registerBlockType = wp.blocks.registerBlockType,
 	createElement = wp.element.createElement,
 	decodeEntities = wp.htmlEntities.decodeEntities,
-	ServerSideRender = wp.components.ServerSideRender,
-	InspectorControls = wp.editor.InspectorControls,
+	ServerSideRender = wp.editor.ServerSideRender,
+	InspectorControls = wp.blockEditor.InspectorControls,
 	TextControl = wp.components.TextControl,
 	SelectControl = wp.components.SelectControl,
 	CheckboxControl = wp.components.CheckboxControl;

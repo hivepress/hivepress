@@ -208,7 +208,15 @@ class Listing extends Post {
 			if ( is_null( $image_ids ) ) {
 				$image_ids = [];
 
-				foreach ( get_attached_media( 'image', $this->id ) as $image ) {
+				// Get file formats.
+				$formats = [ 'image' ];
+
+				if ( get_option( 'hp_listing_allow_video' ) ) {
+					$formats[] = 'video';
+				}
+
+				// Get image IDs.
+				foreach ( get_attached_media( $formats, $this->id ) as $image ) {
 					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
 						$image_ids[] = $image->ID;
 					}
@@ -232,38 +240,5 @@ class Listing extends Post {
 		}
 
 		return $this->fields['images']->get_value();
-	}
-
-	/**
-	 * Gets image URLs.
-	 *
-	 * @param string $size Image size.
-	 * @return array
-	 */
-	final public function get_images__url( $size = 'thumbnail' ) {
-
-		// Get field name.
-		$name = 'images__url__' . $size;
-
-		if ( ! isset( $this->values[ $name ] ) ) {
-
-			// Get image URLs.
-			$image_urls = [];
-
-			if ( $this->get_images__id() ) {
-				foreach ( $this->get_images__id() as $image_id ) {
-					$urls = wp_get_attachment_image_src( $image_id, $size );
-
-					if ( $urls ) {
-						$image_urls[] = hp\get_first_array_value( $urls );
-					}
-				}
-			}
-
-			// Set field value.
-			$this->values[ $name ] = $image_urls;
-		}
-
-		return $this->values[ $name ];
 	}
 }

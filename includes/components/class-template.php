@@ -43,6 +43,7 @@ final class Template extends Component {
 
 			// Add menu items.
 			add_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+			add_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
 
 			// Render site header.
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
@@ -234,7 +235,7 @@ final class Template extends Component {
 	 * Adds menu items.
 	 *
 	 * @param string $items Menu items.
-	 * @param object $args Menu arguments.
+	 * @param mixed  $args Menu arguments.
 	 * @return string
 	 */
 	public function add_menu_items( $items, $args ) {
@@ -242,12 +243,13 @@ final class Template extends Component {
 		// Check menu.
 		if ( ! function_exists( 'hivetheme' ) ) {
 			remove_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
-		} elseif ( 'header' !== $args->theme_location ) {
+			remove_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
+		} elseif ( hp\get_array_value( (array) $args, 'theme_location' ) !== 'header' ) {
 			return $items;
 		}
 
 		// Get class.
-		$class = 'menu-item';
+		$class = 'menu-item menu-item--first';
 
 		if ( is_user_logged_in() ) {
 			$class .= ' menu-item--user-account menu-item-has-children';
@@ -255,10 +257,10 @@ final class Template extends Component {
 			$class .= ' menu-item--user-login';
 		}
 
-		// Render item.
-		$output = '<li class="' . esc_attr( $class ) . '">';
+		// Render items.
+		$first_item = '<li class="' . esc_attr( $class ) . '">';
 
-		$output .= ( new Blocks\Part(
+		$first_item .= ( new Blocks\Part(
 			[
 				'path' => 'user/login/user-login-link',
 			]
@@ -267,7 +269,7 @@ final class Template extends Component {
 		if ( is_user_logged_in() ) {
 
 			// Render menu.
-			$output .= ( new Menus\User_Account(
+			$first_item .= ( new Menus\User_Account(
 				[
 					'wrap'       => false,
 
@@ -278,9 +280,15 @@ final class Template extends Component {
 			) )->render();
 		}
 
-		$output .= '</li>';
+		$first_item .= '</li>';
 
-		return $output . $items . $output;
+		$last_item = str_replace( 'menu-item--first', 'menu-item--last', $first_item );
+
+		// Add item.
+		$items = substr_replace( $items, $first_item, (int) strpos( $items, '<li' ), 0 );
+		$items = substr_replace( $items, $last_item, strrpos( $items, '/li>' ) + 4, 0 );
+
+		return $items;
 	}
 
 	/**

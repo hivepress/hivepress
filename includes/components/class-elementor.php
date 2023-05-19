@@ -34,7 +34,11 @@ final class Elementor extends Component {
 		add_action( 'elementor/elements/categories_registered', [ $this, 'register_categories' ] );
 
 		// Register widgets.
-		add_action( 'elementor/widgets/widgets_registered', [ $this, 'register_widgets' ] );
+		if ( version_compare( ELEMENTOR_VERSION, '3.5.0', '<=' ) ) {
+			add_action( 'elementor/widgets/widgets_registered', [ $this, 'register_widgets' ] );
+		} else {
+			add_action( 'elementor/widgets/register', [ $this, 'register_widgets' ] );
+		}
 
 		// Set preview mode.
 		add_filter( 'hivepress/v1/components/editor/preview', [ $this, 'set_preview_mode' ] );
@@ -70,9 +74,15 @@ final class Elementor extends Component {
 				$block_slug = 'hivepress-' . hp\sanitize_slug( $block_type );
 
 				// Register widget.
-				\Elementor\Plugin::instance()->widgets_manager->register_widget_type(
-					new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
-				);
+				if ( version_compare( ELEMENTOR_VERSION, '3.5.0', '<=' ) ) {
+					\Elementor\Plugin::instance()->widgets_manager->register_widget_type(
+						new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
+					);
+				} else {
+					\Elementor\Plugin::instance()->widgets_manager->register(
+						new Integrations\Elementor_Widget( [], [ 'widgetType' => $block_slug ] )
+					);
+				}
 			}
 		}
 	}

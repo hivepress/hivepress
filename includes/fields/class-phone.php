@@ -106,7 +106,7 @@ class Phone extends Text {
 		}
 
 		// Set utils URL.
-		$attributes['data-utils'] = hivepress()->get_url() . '/assets/js/intl-tel-input/utils.min.js';
+		$attributes['data-utils'] = hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/utils.js';
 
 		// Set component.
 		$attributes['data-component'] = 'phone';

@@ -1,24 +1,12 @@
-=== HivePress - Business Directory & Classified Ads WordPress Plugin ===
-Contributors: hivepress
-Tags: business directory, classified ads, job board, real estate, car dealer, events directory, services directory, staff directory, member directory, directory plugin, listings, classifieds
-Requires at least: 5.0
-Tested up to: 6.1
-Requires PHP: 7.0
-Stable tag: 1.7.2
-License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
-
-A simple yet powerful plugin to create a business directory, job board, real estate, classified ads, or basically any type of directory website.
-
-== Description ==
+# HivePress - Business Directory & Classified Ads WordPress Plugin
 
 HivePress is an easy-to-use, extensible, and highly customizable plugin that allows you to create any type of directory website.
 
-[Demo](https://listinghive.hivepress.io/) | [Themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) | [Extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) | [Docs](https://help.hivepress.io/) | [Support](https://community.hivepress.io/)
+[Demo](https://listinghive.hivepress.io/) | [Themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=github.com) | [Extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=github.com) | [Docs](https://help.hivepress.io/) | [Support](https://community.hivepress.io/)
 
 Whether it’s a business directory, job board, real estate, classified ads, or staff directory, HivePress is an excellent choice for it!
 
-https://www.youtube.com/watch?v=-OzyG6vhR_o
+[▶️ Watch a 5-minute installation tutorial](https://www.youtube.com/watch?v=-OzyG6vhR_o)
 
 This plugin comes with all the essential features for building a directory website to allow users easily add, manage and search listings:
 
@@ -34,20 +22,20 @@ Crucial features like **user registration**, **listing moderation**, and **captc
 
 Moreover, if you ever need to customize any of the HivePress **page templates** or **email notifications**, you can do this without coding skills using the familiar WordPress editor.
 
-= Monetization Options =
+## Monetization Options
 With HivePress, you can create a business, not just a website. There are at least a few ways to monetize your directory, for example:
 
 - **Paid Listings** - Charge users for adding listings.
 - **Featured Listings** - Charge users for advertising listings.
 - **Claim Listings** - Charge companies for claiming their listings.
 
-= Free & Premium Extensions =
-Enhance your website functionality with just a few clicks using HivePress extensions. While you can build a fully functional directory using free extensions only, [premium extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) may also be useful depending on your website requirements.
+## Free & Premium Extensions
+Enhance your website functionality with just a few clicks using HivePress extensions. While you can build a fully functional directory using free extensions only, [premium extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=github.com) may also be useful depending on your website requirements.
 
-= Niche-Specific Themes =
-HivePress comes with a free [ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=wordpress.org) theme that is fully compatible with HivePress and its official extensions. Also, there are a few [premium themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) with more tailored design and functionality for various directory and marketplace niches.
+## Niche-Specific Themes
+HivePress comes with a free [ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=github.com) theme that is fully compatible with HivePress and its official extensions. Also, there are a few [premium themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=github.com) with more tailored design and functionality for various directory and marketplace niches.
 
-= Developer Features =
+## Developer Features
 If you have at least basic coding skills, then look no further because HivePress is powered by the most customizable and extensible [framework](https://docs.hivepress.io/developer-docs/) for directory websites:
 
 - **Structured Code** - We follow the WordPress coding standards, so the codebase is well-structured and readable.
@@ -56,9 +44,5 @@ If you have at least basic coding skills, then look no further because HivePress
 - **REST API** - There’s an API endpoint for every action, so you can integrate HivePress with third-party platforms.
 - **Docs & Snippets** - Never get stuck with our collection of ready-made code snippets, API references, and docs.
 
-= Support & Community =
+## Support & Community
 HivePress is directly supported by its developers, people who know the plugin inside and out, so any issues are resolved in the best way possible. Join the [community](https://community.hivepress.io/) to report a bug, suggest a feature, or vote for suggestions to help us make HivePress better!
-
-== Changelog ==
-
-[View changelog on GitHub.](https://github.com/hivepress/hivepress/releases)

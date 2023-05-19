@@ -196,6 +196,18 @@ final class Listing extends Component {
 		// Get image IDs.
 		$image_ids = $listing->get_images__id();
 
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$image_ids = [];
+
+			foreach ( $listing->get_images() as $image ) {
+				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
+					$image_ids[] = $image->get_id();
+
+					break;
+				}
+			}
+		}
+
 		// Set image.
 		if ( $image_ids ) {
 			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
@@ -414,6 +426,17 @@ final class Listing extends Component {
 	public function alter_model_fields( $model ) {
 		if ( get_option( 'hp_listing_title_format' ) ) {
 			$model['fields']['title']['required'] = false;
+		}
+
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$model['fields']['images'] = hp\merge_arrays(
+				$model['fields']['images'],
+				[
+					'label'   => esc_html__( 'Gallery', 'hivepress' ),
+					'caption' => null,
+					'formats' => [ 'mp4', 'webm', 'ogv' ],
+				]
+			);
 		}
 
 		return $model;
