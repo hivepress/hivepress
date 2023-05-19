@@ -331,12 +331,17 @@ final class Attribute extends Component {
 	public function register_attributes() {
 		foreach ( $this->get_models() as $model ) {
 
+			// Get models to sync.
+			// @todo improve update models sync.
+			$sync_models = apply_filters( 'hivepress/v1/models/' . $model . '/attributes/sync', [] );
+
 			// Get post types.
 			$post_types = [ hp\prefix( $model . '_attribute' ) ];
 
-			if ( 'listing' === $model ) {
-				// todo: make improvements in future updates
-				$post_types[] = hp\prefix( 'vendor_attribute' );
+			if ( $sync_models ) {
+				foreach ( $sync_models as $sync_model ) {
+					$post_types[] = hp\prefix( $sync_model . '_attribute' );
+				}
 			}
 
 			// Set query arguments.
@@ -361,17 +366,8 @@ final class Attribute extends Component {
 				$attribute_objects = get_posts( $query_args );
 
 				foreach ( $attribute_objects as $attribute_object ) {
-
-					// Is sync attribute.
-					// todo: make improvements in future updates
-					$is_sync = (bool) $attribute_object->hp_sync;
-
-					if ( 'listing' === $model && hp\prefix( 'vendor_attribute' ) === $attribute_object->post_type ) {
-						if ( ! $is_sync ) {
-							continue;
-						} else {
-							$attribute_object->hp_editable = false;
-						}
+					if ( hp\prefix( $model . '_attribute' ) !== $attribute_object->post_type && (bool) $attribute_object->hp_sync ) {
+						$attribute_object->hp_editable = false;
 					}
 
 					// Set defaults.
@@ -387,7 +383,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
-						'sync'           => $is_sync,
+						'sync'           => (bool) $attribute_object->hp_sync,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -1529,6 +1525,8 @@ final class Attribute extends Component {
 								'_order'  => 20,
 							];
 						} elseif ( 'vendor' === $model ) {
+
+							// @todo improve adding checkbox to other models.
 							$meta_box['fields']['sync'] = [
 								'label'   => esc_html__( 'Sync', 'hivepress' ),
 								'caption' => esc_html__( 'Sync value for listings', 'hivepress' ),

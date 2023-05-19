@@ -75,6 +75,9 @@ final class Listing extends Component {
 			add_filter( 'hivepress/v1/templates/listing_edit_block/blocks', [ $this, 'alter_listing_view_blocks' ], 10, 2 );
 		}
 
+		// Add sync attributes models.
+		add_filter( 'hivepress/v1/models/listing/attributes/sync', [ $this, 'add_listing_attributes_sync' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -740,5 +743,17 @@ final class Listing extends Component {
 		}
 
 		return $blocks;
+	}
+
+	/**
+	 * Add sync attributes models.
+	 *
+	 * @param array $models Sync models.
+	 * @return array
+	 */
+	public function add_listing_attributes_sync( $models ) {
+		$models[] = 'vendor';
+
+		return $models;
 	}
 }
