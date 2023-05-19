@@ -32,6 +32,20 @@ final class Attribute extends Component {
 	protected $attributes = [];
 
 	/**
+	 * Sync model names.
+	 *
+	 * @var array
+	 */
+	protected $attributes_sync_models = [];
+
+	/**
+	 * Sync model filter params.
+	 *
+	 * @var array
+	 */
+	protected $attributes_sync_params = [];
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $args Component arguments.
@@ -223,10 +237,39 @@ final class Attribute extends Component {
 
 		// Convert for compatibility.
 		foreach ( $this->models as $index => $model ) {
+
+			// Get model name.
+			$model_name = $index;
+
 			if ( is_string( $model ) ) {
 				unset( $this->models[ $index ] );
 
 				$this->models[ $model ] = [];
+
+				// Set model name.
+				$model_name = $model;
+			}
+
+			// Get sync models.
+			$sync_models = apply_filters( 'hivepress/v1/models/' . $model_name . '/attributes/sync', [] );
+
+			foreach ( $sync_models as $sync_model ) {
+
+				// Get sync model name.
+				$sync_model_name = hp\get_array_value( $sync_model, 'name' );
+
+				if ( isset( $this->attributes_sync_models[ $model_name ] ) ) {
+
+					// Save sync model name.
+					$this->attributes_sync_models[ $model_name ][] = $sync_model_name;
+				} else {
+
+					// Save sync model name.
+					$this->attributes_sync_models[ $model_name ] = [ $sync_model_name ];
+				}
+
+				// Save filter params.
+				$this->attributes_sync_params[ $sync_model_name ][ $model_name ] = hp\get_array_value( $sync_model, 'filter_params' );
 			}
 		}
 
@@ -331,15 +374,11 @@ final class Attribute extends Component {
 	public function register_attributes() {
 		foreach ( $this->get_models() as $model ) {
 
-			// Get models to sync.
-			// @todo improve update models sync.
-			$sync_models = apply_filters( 'hivepress/v1/models/' . $model . '/attributes/sync', [] );
-
 			// Get post types.
 			$post_types = [ hp\prefix( $model . '_attribute' ) ];
 
-			if ( $sync_models ) {
-				foreach ( $sync_models as $sync_model ) {
+			if ( isset( $this->attributes_sync_models[ $model ] ) ) {
+				foreach ( $this->attributes_sync_models[ $model ] as $sync_model ) {
 					$post_types[] = hp\prefix( $sync_model . '_attribute' );
 				}
 			}
@@ -868,6 +907,9 @@ final class Attribute extends Component {
 		// Get snippet.
 		$snippet = '';
 
+		// Get model name.
+		$model_name = $model::_get_meta( 'name' );
+
 		foreach ( $model->_get_fields() as $field ) {
 			if ( $field->get_arg( '_indexable' ) && ! is_null( $field->get_value() ) ) {
 				if ( $field->get_label() ) {
@@ -878,7 +920,7 @@ final class Attribute extends Component {
 			}
 		}
 
-		if ( $model::_get_meta( 'name' ) === 'listing' && $model->get_vendor__id() ) {
+		if ( 'listing' === $model_name && $model->get_vendor__id() ) {
 			$snippet .= hivepress()->translator->get_string( 'vendor' ) . ': ' . $model->get_vendor__name() . '; ';
 		}
 
@@ -887,6 +929,68 @@ final class Attribute extends Component {
 		// Update snippet.
 		if ( $model->get_snippet() !== $snippet ) {
 			$model->set_snippet( $snippet )->save_snippet();
+		}
+
+		// Get sync filter params.
+		$sync_model_params = hp\get_array_value( $this->attributes_sync_params, $model_name );
+
+		if ( ! $sync_model_params ) {
+			return;
+		}
+
+		// Get attributes.
+		$attributes = array_filter(
+			array_map(
+				function( $args ) {
+					return $args['sync'];
+				},
+				(array) hivepress()->attribute->get_attributes( $model_name )
+			)
+		);
+
+		// Get values.
+		$values = array_intersect_key( $model->serialize(), $attributes );
+
+		foreach ( $sync_model_params as $name => $params ) {
+
+			// Get sync model object.
+			$model_object = hp\create_class_instance( '\HivePress\Models\\' . $name );
+
+			// Get filter params.
+			$filter_params = [];
+
+			foreach ( $params as $key => $value ) {
+				if ( 'param_function' === $key ) {
+
+					// Get param name.
+					$param_name = hp\get_array_value( $value, 'name' );
+
+					// Get param function name.
+					$param_function = hp\get_array_value( $value, 'function' );
+
+					if ( ! $param_name || ! $param_function ) {
+						continue;
+					}
+
+					// Add filter param.
+					$filter_params[ $param_name ] = call_user_func( [ $model, 'get_' . $param_function ] );
+				} else {
+
+					// Add filter param.
+					$filter_params[ $key ] = $value;
+				}
+			}
+
+			// Get sync models.
+			$sync_models = $model_object::query()->filter( $filter_params )->get();
+
+			// Update sync models.
+			foreach ( $sync_models as $sync_model ) {
+
+				if ( array_intersect_key( $sync_model->serialize(), $attributes ) !== $values ) {
+					$sync_model->fill( $values )->save( array_keys( $values ) );
+				}
+			}
 		}
 	}
 
@@ -1524,12 +1628,14 @@ final class Attribute extends Component {
 								'_parent' => 'editable',
 								'_order'  => 20,
 							];
-						} elseif ( 'vendor' === $model ) {
+						}
+
+						if ( hp\get_array_value( $this->attributes_sync_params, $model ) ) {
 
 							// @todo improve adding checkbox to other models.
 							$meta_box['fields']['sync'] = [
 								'label'   => esc_html__( 'Sync', 'hivepress' ),
-								'caption' => esc_html__( 'Sync value for listings', 'hivepress' ),
+								'caption' => esc_html__( 'Sync value with other attributes', 'hivepress' ),
 								'type'    => 'checkbox',
 								'_order'  => 30,
 							];

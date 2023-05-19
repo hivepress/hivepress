@@ -41,9 +41,6 @@ final class Vendor extends Component {
 		// Alter post types.
 		add_filter( 'hivepress/v1/post_types', [ $this, 'alter_post_types' ] );
 
-		// Update vendor sync attributes.
-		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_sync_attributes' ], 10, 2 );
-
 		if ( ! is_admin() ) {
 
 			// Alter templates.
@@ -280,45 +277,5 @@ final class Vendor extends Component {
 		}
 
 		return $template;
-	}
-
-	/**
-	 * Updates vendor sync attributes.
-	 *
-	 * @param int    $vendor_id Vendor ID.
-	 * @param object $vendor Vendor object.
-	 */
-	public function update_sync_attributes( $vendor_id, $vendor ) {
-
-		// Remove action.
-		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_sync_attributes' ] );
-
-		// Get attributes.
-		$attributes = array_filter(
-			array_map(
-				function( $args ) {
-					return $args['sync'];
-				},
-				(array) hivepress()->attribute->get_attributes( 'vendor' )
-			)
-		);
-
-		// Get values.
-		$values = array_intersect_key( $vendor->serialize(), $attributes );
-
-		// Get listings.
-		$listings = Models\Listing::query()->filter(
-			[
-				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-				'user'       => $vendor->get_user__id(),
-			]
-		)->get();
-
-		// Update listings.
-		foreach ( $listings as $listing ) {
-			if ( array_intersect_key( $listing->serialize(), $attributes ) !== $values ) {
-				$listing->fill( $values )->save( array_keys( $values ) );
-			}
-		}
 	}
 }

@@ -752,7 +752,17 @@ final class Listing extends Component {
 	 * @return array
 	 */
 	public function add_listing_attributes_sync( $models ) {
-		$models[] = 'vendor';
+		$models[] = [
+			'name'          => 'vendor',
+			'filter_params' => [
+				'status__in'     => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+
+				'param_function' => [
+					'name'     => 'user',
+					'function' => 'user__id',
+				],
+			],
+		];
 
 		return $models;
 	}
