@@ -26,10 +26,11 @@ final class Vendor extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Update vendor.
-		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_vendor' ], 100, 2 );
+		// Update user.
+		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 100, 2 );
 
-		// Update vendor status.
+		// Update vendor.
+		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
 		add_action( 'hivepress/v1/models/vendor/update_status', [ $this, 'update_vendor_status' ], 10, 4 );
 
 		// Add vendor fields.
@@ -52,6 +53,48 @@ final class Vendor extends Component {
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Updates vendor.
+	 *
+	 * @param int    $vendor_id Vendor ID.
+	 * @param object $vendor Vendor object.
+	 */
+	public function update_vendor( $vendor_id, $vendor ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
+
+		// Get attributes.
+		$attributes = array_filter(
+			hivepress()->attribute->get_attributes( 'listing' ),
+			function( $attribute ) {
+				return hp\get_array_value( $attribute, 'synced' );
+			}
+		);
+
+		if ( ! $attributes ) {
+			return;
+		}
+
+		// Get values.
+		$values = array_intersect_key( $vendor->serialize(), $attributes );
+
+		// Get listings.
+		$listings = Models\Listing::query()->filter(
+			[
+				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+				'user'       => $vendor->get_user__id(),
+			]
+		)->get();
+
+		// Update listings.
+		foreach ( $listings as $listing ) {
+			if ( array_intersect_key( $listing->serialize(), $attributes ) !== $values ) {
+				$listing->fill( $values )->save( array_keys( $values ) );
+			}
+		}
 	}
 
 	/**
@@ -82,12 +125,12 @@ final class Vendor extends Component {
 	}
 
 	/**
-	 * Updates vendor.
+	 * Updates user.
 	 *
 	 * @param int    $user_id User ID.
 	 * @param object $user User object.
 	 */
-	public function update_vendor( $user_id, $user ) {
+	public function update_user( $user_id, $user ) {
 
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
