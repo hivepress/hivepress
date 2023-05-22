@@ -388,6 +388,7 @@ final class Attribute extends Component {
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
+						'synced'         => (bool) $attribute_object->hp_synced,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
 						'indexable'      => (bool) $attribute_object->hp_indexable,
 						'searchable'     => (bool) $attribute_object->hp_searchable,
@@ -580,6 +581,7 @@ final class Attribute extends Component {
 							'display_format' => '%value%',
 							'protected'      => false,
 							'editable'       => false,
+							'synced'         => false,
 							'moderated'      => false,
 							'indexable'      => false,
 							'searchable'     => false,
@@ -1550,12 +1552,20 @@ final class Attribute extends Component {
 
 					// @todo replace temporary fix.
 					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['synced'] = [
+							'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
+							'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
+							'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 20,
+						];
+
 						$meta_box['fields']['moderated'] = [
 							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
 							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
 							'type'    => 'checkbox',
 							'_parent' => 'editable',
-							'_order'  => 20,
+							'_order'  => 30,
 						];
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
