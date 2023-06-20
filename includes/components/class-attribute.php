@@ -175,6 +175,10 @@ final class Attribute extends Component {
 			return;
 		}
 
+		if ( is_object( $object ) && ! $object->get_id() ) {
+			return $object->get_categories__id();
+		}
+
 		// Get object ID.
 		$id = is_object( $object ) ? $object->get_id() : $object;
 
@@ -817,12 +821,16 @@ final class Attribute extends Component {
 		$category_ids = null;
 
 		if ( 'user' !== $model ) {
-			$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+			$category_ids = null;
+
+			if ( $object->get_id() ) {
+				$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+			}
 
 			if ( is_null( $category_ids ) ) {
-				$category_ids = $this->get_category_ids( $model, $object->get_id() );
+				$category_ids = $this->get_category_ids( $model, $object );
 
-				if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
+				if ( $object->get_id() && is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
 					hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
 				}
 			}
