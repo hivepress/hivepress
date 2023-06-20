@@ -176,6 +176,8 @@ final class Attribute extends Component {
 		}
 
 		if ( is_object( $object ) && ! $object->get_id() ) {
+
+			// @todo fix for cases when category model is set.
 			return $object->get_categories__id();
 		}
 
