@@ -1560,6 +1560,9 @@ final class Attribute extends Component {
 						}
 					}
 
+					// Get post type.
+					$post_type = hp\get_array_value( hivepress()->get_config( 'post_types' ), $model, [] );
+
 					// @todo replace temporary fix.
 					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
 						$meta_box['fields']['synced'] = [
@@ -1577,6 +1580,8 @@ final class Attribute extends Component {
 							'_parent' => 'editable',
 							'_order'  => 30,
 						];
+					} elseif ( ( 'user' === $model || ! hp\get_array_value( $post_type, 'has_archive' ) ) && 'attribute_search' === $meta_box_name ) {
+						continue;
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
