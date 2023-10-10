@@ -549,6 +549,9 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
+			// Get WPML default language
+			$wpml_default_language = hivepress()->translator->get_wpml_default_language();
+
 			// Set categories.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
 				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
@@ -558,6 +561,22 @@ final class Attribute extends Component {
 				}
 
 				$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+
+				if ( $wpml_default_language ) {
+
+					// Get attribute post language.
+					$attribute_post_language = hivepress()->translator->get_wpml_post_language_code( hp\get_array_value( $attribute_args, 'id' ), hp\prefix( $model . '_attribute' ) );
+
+					if ( $attribute_post_language !== $wpml_default_language ) {
+
+						// Update category IDs.
+						$category_ids = [];
+
+						foreach ( hp\get_array_value( $attribute_args, 'categories' ) as $category ) {
+							$category_ids[] = hivepress()->translator->get_wpml_post_id( $category, $taxonomy_name, $attribute_post_language );
+						}
+					}
+				}
 
 				if ( ! $category_ids ) {
 					continue;

@@ -537,7 +537,11 @@ final class Listing extends Controller {
 		// Get page ID.
 		$page_id = absint( get_option( 'hp_page_listings' ) );
 
-		return ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_listing' ) || ( is_tax() && strpos( get_queried_object()->taxonomy, 'hp_listing_' ) === 0 );
+		// Get WPML translated page.
+		// todo: find universal solution.
+		$translated_page_id = hivepress()->translator->get_wpml_post_id( $page_id );
+
+		return ( $page_id && is_page( [ $page_id, $translated_page_id ] ) ) || is_post_type_archive( 'hp_listing' ) || ( is_tax() && strpos( get_queried_object()->taxonomy, 'hp_listing_' ) === 0 );
 	}
 
 	/**
