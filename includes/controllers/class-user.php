@@ -991,7 +991,11 @@ final class User extends Controller {
 		)->get_first();
 
 		if ( $user ) {
-			$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
+			if ( get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
+				$user = null;
+			} else {
+				$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
+			}
 		}
 
 		// Set request context.
