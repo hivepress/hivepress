@@ -378,6 +378,9 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function () {
 			var field = $(this),
+				disabledDates = field.data('disabled-dates'),
+				disabledDays = field.data('disabled-days'),
+				enabledDates = field.data('enabled-dates'),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -442,24 +445,50 @@ var hivepress = {
 				settings['maxDate'] = field.data('max-date');
 			}
 
-			if (field.data('enabled-dates')) {
-				settings['enable'] = field.data('enabled-dates');
+			if (disabledDates && disabledDates.length) {
+				settings['disable'] = disabledDates;
 			}
 
-			if (field.data('disabled-dates')) {
-				settings['disable'] = field.data('disabled-dates');
-			}
-
-			if (field.data('disabled-days')) {
-				var disabledDays = field.data('disabled-days');
-
-				if (disabledDays.length) {
-					function disableDates(date) {
-						return disabledDays.indexOf(date.getDay()) !== -1;
-					}
-
-					settings['disable'].push(disableDates);
+			if (disabledDays && disabledDays.length) {
+				function disableDates(date) {
+					return disabledDays.indexOf(date.getDay()) !== -1;
 				}
+
+				settings['disable'].push(disableDates);
+			}
+
+			if (enabledDates && enabledDates.length) {
+				if (disabledDays && disabledDays.length) {
+					enabledDates = enabledDates.filter(function (dateStr) {
+						var date = new Date(dateStr);
+
+						return disabledDays.indexOf(date.getDay()) !== -1;
+					});
+				}
+
+				if (disabledDates && disabledDates.length) {
+					enabledDates = enabledDates.filter(function (dateStr) {
+						var date = new Date(dateStr),
+							isMatch = true;
+
+						$.each(disabledDates, function (index, disabledDate) {
+							var startDate = new Date(disabledDate.from),
+								endDate = new Date(disabledDate.to);
+
+							if (isMatch && startDate.getTime() < date.getTime() && endDate.getTime() > date.getTime()) {
+								isMatch = false;
+
+								return;
+							}
+						});
+
+						if (isMatch) {
+							return date;
+						}
+					});
+				}
+
+				settings['enable'] = enabledDates;
 			}
 
 			if (field.data('ranges')) {
