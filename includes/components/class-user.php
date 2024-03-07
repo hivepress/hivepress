@@ -160,6 +160,11 @@ final class User extends Component {
 				$display_name = $user->get_full_name();
 
 				break;
+
+			case 'display_name':
+				$display_name = $user->get_display_name();
+
+				break;
 		}
 
 		if ( ! $display_name ) {
