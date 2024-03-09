@@ -107,7 +107,6 @@ class User extends Model {
 						'label'      => esc_html__( 'Display Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
-						'required'   => true,
 						'_alias'     => 'display_name',
 					],
 
