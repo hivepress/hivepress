@@ -527,8 +527,10 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets objects array.
 	 *
+	 * @todo Fix the return type or class implementation.
 	 * @return array
 	 */
+	#[\ReturnTypeWillChange]
 	final public function serialize() {
 		return $this->getArrayCopy();
 	}
