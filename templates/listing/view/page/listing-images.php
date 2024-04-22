@@ -12,7 +12,7 @@ if ( $listing->get_images__id() ) :
 	<div class="hp-listing__images" data-component="carousel-slider">
 		<?php
 		foreach ( $listing->get_images() as $image_index => $image ) :
-			$image_url = hivepress()->helper->get_array_value( $image_urls, $image_index );
+			$image_url = hivepress()->helper->get_array_value( $image_urls, $image_index, '' );
 
 			if ( strpos( $image->get_mime_type(), 'video' ) === 0 ) :
 				?>

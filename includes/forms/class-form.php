@@ -40,7 +40,7 @@ abstract class Form {
 	 *
 	 * @var string
 	 */
-	protected $action;
+	protected $action = '';
 
 	/**
 	 * HTTP method.

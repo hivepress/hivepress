@@ -92,7 +92,10 @@ class Toggle extends Block {
 			$attributes['href'] = '#';
 
 			$attributes['data-component'] = 'toggle';
-			$attributes['data-url']       = esc_url( $this->url );
+
+			if ( $this->url ) {
+				$attributes['data-url'] = esc_url( $this->url );
+			}
 
 			if ( $this->active ) {
 				$attributes['data-icon']    = hp\get_first_array_value( $this->icon );
