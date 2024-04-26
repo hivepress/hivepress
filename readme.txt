@@ -1,6 +1,6 @@
 === HivePress - Business Directory & Classified Ads WordPress Plugin ===
 Contributors: hivepress
-Tags: business directory, classified ads, job board, real estate, car dealer, events directory, services directory, staff directory, member directory, directory plugin, listings, classifieds
+Tags: business directory, classifieds, listing, directory plugin, job board
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.0
