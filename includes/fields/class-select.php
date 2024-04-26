@@ -229,7 +229,7 @@ class Select extends Field {
 				$label = hp\get_array_value( $this->options, $value, '' );
 
 				if ( is_array( $label ) ) {
-					$label = hp\get_array_value( $label, 'label' );
+					$label = hp\get_array_value( $label, 'label', '' );
 				}
 
 				if ( strlen( $label ) ) {
