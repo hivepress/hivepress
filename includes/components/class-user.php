@@ -42,6 +42,9 @@ final class User extends Component {
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
 
+		// Alter account deletion form.
+		add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_account_deletion_form' ], 10, 2 );
+
 		if ( is_admin() ) {
 
 			// Manage admin columns.
@@ -407,5 +410,27 @@ final class User extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Alters account deletion form.
+	 *
+	 * @param array $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_account_deletion_form( $blocks, $template ) {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_account_deletion', true ) ) {
+
+			// Remove user deletion modal.
+			unset( $blocks['page_container']['blocks']['page_columns']['blocks']['page_content']['blocks']['user_delete_modal'] );
+
+			// Remove user deletion link.
+			unset( $blocks['page_container']['blocks']['page_columns']['blocks']['page_content']['blocks']['user_update_form']['footer']['form_actions']['blocks']['user_delete_link'] );
+		}
+
+		return $blocks;
 	}
 }
