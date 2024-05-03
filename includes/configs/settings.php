@@ -355,6 +355,14 @@ return [
 						'_parent'     => 'user_enable_registration',
 						'_order'      => 50,
 					],
+
+					'user_enable_account_deletion'  => [
+						'caption'     => esc_html__( 'Allow users to delete their account', 'hivepress' ),
+						'type'        => 'checkbox',
+						'default'     => true,
+						'_parent'     => 'user_enable_registration',
+						'_order'      => 60,
+					],
 				],
 			],
 		],
