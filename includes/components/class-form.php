@@ -540,6 +540,11 @@ final class Form extends Component {
 		// Get language.
 		$language = hivepress()->translator->get_language();
 
+		// Fix for Greek language.
+		if ( 'el' === strtolower( $language ) ) {
+			$language = 'gr';
+		}
+
 		// Enqueue Flatpickr.
 		$filepath = '/node_modules/flatpickr/dist/l10n/' . $language . '.js';
 
