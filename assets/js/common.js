@@ -956,8 +956,15 @@ var hivepress = {
 		// Date formatter
 		hivepress.dateFormatter = new DateFormatter();
 
-		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
-			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
+		// Date picker
+		var language = hivepressCoreData.language;
+
+		if (language === 'el') {
+			language = 'gr';
+		}
+
+		if (flatpickr.l10ns.hasOwnProperty(language)) {
+			var dateSettings = flatpickr.l10ns[language];
 
 			flatpickr.localize(dateSettings);
 
