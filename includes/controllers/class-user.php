@@ -716,6 +716,11 @@ final class User extends Controller {
 			return hp\rest_error( 401 );
 		}
 
+		// Check settings.
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Get user.
 		$user = Models\User::query()->get_by_id( $request->get_param( 'user_id' ) );
 
