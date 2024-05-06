@@ -77,6 +77,13 @@ final class Admin extends Component {
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
 
+			// Manage user boxes.
+			add_action( 'show_user_profile', [ $this, 'render_user_boxes' ] );
+			add_action( 'edit_user_profile', [ $this, 'render_user_boxes' ] );
+
+			add_action( 'personal_options_update', [ $this, 'update_user_boxes' ] );
+			add_action( 'edit_user_profile_update', [ $this, 'update_user_boxes' ] );
+
 			// Check access.
 			add_action( 'admin_init', [ $this, 'check_access' ] );
 
@@ -984,6 +991,12 @@ final class Admin extends Component {
 	 * @return array
 	 */
 	protected function get_meta_boxes( $screen ) {
+
+		// Check screen.
+		if ( 'user' === $screen ) {
+			$screen = hp\prefix( $screen );
+		}
+
 		if ( empty( $this->meta_boxes ) ) {
 			$this->meta_boxes = [];
 
@@ -1104,7 +1117,7 @@ final class Admin extends Component {
 		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.
@@ -1323,7 +1336,7 @@ final class Admin extends Component {
 		remove_action( 'create_' . $term->taxonomy, [ $this, 'update_term_box' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes( $term->taxonomy ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( $term->taxonomy ) as $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.
@@ -1376,7 +1389,7 @@ final class Admin extends Component {
 			$term_id = $term->term_id;
 		}
 
-		foreach ( $this->get_meta_boxes( $taxonomy ) as $meta_box_name => $meta_box ) {
+		foreach ( $this->get_meta_boxes( $taxonomy ) as $meta_box ) {
 			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
 
 				// Create field.
@@ -1456,6 +1469,144 @@ final class Admin extends Component {
 					}
 				}
 			}
+		}
+
+		echo $output;
+	}
+
+	/**
+	 * Updates user box values.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	public function update_user_boxes( $user_id ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		// Remove actions.
+		remove_action( 'personal_options_update', [ $this, 'update_user_boxes' ] );
+		remove_action( 'edit_user_profile_update', [ $this, 'update_user_boxes' ] );
+
+		// Update field values.
+		foreach ( $this->get_meta_boxes( 'user' ) as $meta_box ) {
+			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+
+				if ( $field && ! $field->is_disabled() ) {
+
+					// Validate field.
+					$field->set_value( hp\get_array_value( $_POST, hp\prefix( $field_name ) ) );
+
+					if ( $field->validate() ) {
+
+						// Update field value.
+						if ( $field->get_arg( '_external' ) ) {
+							if ( in_array( $field->get_value(), [ null, false ], true ) ) {
+								delete_user_meta( $user_id, $field->get_arg( '_alias' ) );
+							} elseif ( ! $field->get_arg( 'readonly' ) ) {
+								update_user_meta( $user_id, $field->get_arg( '_alias' ), $field->get_value() );
+							}
+						} else {
+							wp_update_user(
+								[
+									'ID' => $user_id,
+									$field->get_arg( '_alias' ) => $field->get_value(),
+								]
+							);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Renders user box fields.
+	 *
+	 * @param WP_User $user User object.
+	 */
+	public function render_user_boxes( $user ) {
+		$output = '';
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+
+		foreach ( $this->get_meta_boxes( 'user' ) as $meta_box ) {
+
+			// Check fields.
+			if ( ! $meta_box['fields'] ) {
+				continue;
+			}
+
+			// Render title.
+			$output .= '<h2>' . esc_html( $meta_box['title'] ) . '</h2>';
+			$output .= '<table class="form-table hp-form" role="presentation">';
+
+			foreach ( hp\sort_array( $meta_box['fields'] ) as $field_name => $field_args ) {
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ array_merge( $field_args, [ 'name' => hp\prefix( $field_name ) ] ) ] );
+
+				if ( $field ) {
+
+					// Get field attributes.
+					$attributes = [
+						'class' => 'form-field hp-form--table',
+					];
+
+					if ( $field->get_arg( '_parent' ) ) {
+						$attributes['data-component'] = 'field';
+						$attributes['data-parent']    = hp\prefix( $field->get_arg( '_parent' ) );
+					}
+
+					$output .= '<tr ' . hp\html_attributes( $attributes ) . '>';
+
+					// Render label.
+					$output .= '<th><label class="hp-field__label"><span>' . esc_html( $field->get_label() ) . '</span>';
+
+					if ( $field->get_statuses() ) {
+						$output .= ' <small>(' . esc_html( implode( ', ', $field->get_statuses() ) ) . ')</small>';
+					}
+
+					$output .= '</label></th>';
+
+					// Get field value.
+					$value = '';
+
+					if ( $field->get_arg( '_external' ) ) {
+						$value = get_user_meta( $user->ID, $field->get_arg( '_alias' ), true );
+					} else {
+						$value = $user->get( $field->get_arg( '_alias' ) );
+					}
+
+					// Set field value.
+					if ( '' !== $value ) {
+						$field->set_value( $value );
+					}
+
+					// Render field.
+					$output .= '<td>';
+
+					$output .= $field->render();
+
+					// Render description.
+					if ( $field->get_description() ) {
+						$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+					}
+
+					$output .= '</td>';
+					$output .= '</tr>';
+				}
+			}
+
+			$output .= '</table>';
 		}
 
 		echo $output;
@@ -1559,6 +1710,30 @@ final class Admin extends Component {
 					'text'        => sprintf( hp\sanitize_html( __( 'Help us make HivePress better by sharing <a href="%s" target="_blank">non-sensitive usage data</a> or dismiss this notice to opt out.', 'hivepress' ) ), 'https://hivepress.io/usage-tracking/' ) . '&nbsp;&nbsp;<a href="#" class="button">' . esc_html__( 'Share Usage Data', 'hivepress' ) . '</a>',
 				];
 			}
+		}
+
+		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
+			$notices['showcase_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Have you already launched this website? Please submit it to the <a href="%s" target="_blank">HivePress Showcase</a> to inspire others.', 'hivepress' ) ),
+					'https://hivepress.io/showcase/'
+				),
+			];
+		}
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
+			$notices['expert_request'] = [
+				'type'        => 'info',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: %s: link URL. */
+					hp\sanitize_html( __( 'Are you a developer familiar with HivePress? Join the <a href="%s" target="_blank">HivePress Experts</a> program to regularly get new clients.', 'hivepress' ) ),
+					'https://hivepress.io/experts/'
+				),
+			];
 		}
 
 		/**
