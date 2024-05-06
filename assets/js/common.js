@@ -915,7 +915,18 @@ var hivepress = {
 
 			form.find('input[readonly], textarea[readonly]').on('click', function () {
 				this.select();
-				document.execCommand('copy');
+
+				// API Clipboard support check
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					// Copy value asynchronously
+					navigator.clipboard.writeText(this.value)
+						.catch((err) => {
+							console.error('An error occurred while using API Clipboard:', err);
+							document.execCommand('copy'); // Use default command in case of error
+						});
+				} else {
+					document.execCommand('copy'); // Use default command in case of not supporting API Clipboard
+				}
 			});
 		});
 
