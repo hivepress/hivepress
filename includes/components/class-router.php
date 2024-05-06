@@ -241,7 +241,7 @@ final class Router extends Component {
 					// Set URL path.
 					if ( get_option( 'permalink_structure' ) || hp\get_array_value( $route, 'rest' ) ) {
 						foreach ( $params as $param ) {
-							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
+							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', hp\get_array_value( $query, $param, '' ), $path );
 						}
 
 						$path = rtrim( str_replace( '/?', '/', $path ), '/' ) . '/';

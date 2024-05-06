@@ -534,8 +534,8 @@ final class Listing extends Component {
 			$output = '&mdash;';
 
 			// Get name and URL.
-			$name = null;
-			$url  = null;
+			$name = '';
+			$url  = '';
 
 			// Get vendor ID.
 			$vendor_id = wp_get_post_parent_id( $listing_id );
