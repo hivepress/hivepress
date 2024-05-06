@@ -57,13 +57,12 @@ final class User extends Component {
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 		} else {
 
+			// Redirect author page.
+			add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
-
-		// Alter author page.
-		add_filter( 'author_link', [ $this, 'alter_author_link' ], 100, 3 );
-		add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
 
 		parent::__construct( $args );
 	}
@@ -357,6 +356,22 @@ final class User extends Component {
 	}
 
 	/**
+	 * Redirect author page.
+	 */
+	public function redirect_author_page() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_display' ) || ! is_author() ) {
+			return;
+		}
+
+		// Redirect user.
+		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
+
+		exit;
+	}
+
+	/**
 	 * Alters site footer block.
 	 *
 	 * @param array $template Template arguments.
@@ -411,37 +426,5 @@ final class User extends Component {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Alters authour link.
-	 *
-	 * @param string $link Author page link.
-	 * @param int    $user_id User ID.
-	 * @param string $username Username.
-	 * @return string
-	 */
-	public function alter_author_link( $link, $user_id, $username ) {
-
-		// Check settings.
-		if ( ! get_option( 'hp_user_enable_display' ) ) {
-			return $link;
-		}
-
-		return esc_url( hivepress()->router->get_url( 'user_view_page', [ 'username' => $username ] ) );
-	}
-
-	/**
-	 * Redirect author page.
-	 */
-	public function redirect_author_page() {
-
-		// Check settings.
-		if ( ! get_option( 'hp_user_enable_display' ) || ! is_author() ) {
-			return;
-		}
-
-		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
-		exit;
 	}
 }
