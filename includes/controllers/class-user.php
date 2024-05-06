@@ -1024,6 +1024,10 @@ final class User extends Controller {
 			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
 		}
 
+		if ( get_option( 'hp_user_verify_email' ) && get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
+			return true;
+		}
+
 		// Get vendor ID.
 		$vendor_id = Models\Vendor::query()->filter(
 			[
