@@ -68,6 +68,9 @@ final class WooCommerce extends Component {
 			// Redirect account page.
 			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
+			// Redirect listing page.
+			add_action( 'template_redirect', [ $this, 'redirect_listing_page' ] );
+
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
 
@@ -362,6 +365,21 @@ final class WooCommerce extends Component {
 			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
 
 			exit;
+		}
+	}
+
+	/**
+	 * Redirects listing page.
+	 */
+	public function redirect_listing_page() {
+		if ( is_product() && has_post_parent() ) {
+			$post_parent = get_post_parent();
+
+			if ( 'hp_listing' === $post_parent->post_type ) {
+				wp_safe_redirect( get_the_permalink( $post_parent->ID ) );
+
+				exit;
+			}
 		}
 	}
 
