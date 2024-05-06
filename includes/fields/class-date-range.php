@@ -125,9 +125,9 @@ class Date_Range extends Date {
 		$this->max_field->set_value( hp\get_last_array_value( $this->value ) );
 
 		// Set range value.
-		$this->value = array_filter( [ $this->min_field->get_value(), $this->max_field->get_value() ], 'strlen' );
-
-		if ( count( $this->value ) !== 2 ) {
+		if ( ! is_null( $this->min_field->get_value() ) && ! is_null( $this->max_field->get_value() ) ) {
+			$this->value = [ $this->min_field->get_value(), $this->max_field->get_value() ];
+		} else {
 			$this->value = null;
 		}
 	}

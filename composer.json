@@ -8,7 +8,9 @@
 		"wp-coding-standards/wpcs": "~2.3.0",
 		"phpcompatibility/phpcompatibility-wp": "^2.1.0"
 	},
-	"allow-plugins": {
-		"dealerdirect/phpcodesniffer-composer-installer": true
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }

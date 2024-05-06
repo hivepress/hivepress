@@ -247,6 +247,11 @@ final class User extends Component {
 	 */
 	public function render_user_image( $image, $id_or_email, $size, $default, $alt ) {
 
+		// Check ID.
+		if ( ! $id_or_email ) {
+			return $image;
+		}
+
 		// Get user.
 		$user_object = null;
 
