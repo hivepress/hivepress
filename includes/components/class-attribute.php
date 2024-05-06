@@ -1541,9 +1541,14 @@ final class Attribute extends Component {
 		// Add meta boxes.
 		foreach ( $this->get_models() as $model ) {
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
-
-				// Set screen and model.
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
+
+					// Skip adding meta box.
+					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+						continue;
+					}
+
+					// Set screen and model.
 					$meta_box['model'] = $model;
 
 					if ( 'attributes' === $meta_box_name ) {
