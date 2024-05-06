@@ -435,6 +435,12 @@ final class Editor extends Component {
 	 * Enqueues editor styles.
 	 */
 	public function enqueue_editor_styles() {
+
+		// @todo remove when fixed in the theme framework.
+		if ( ! defined( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS' ) ) {
+			define( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS', true );
+		}
+
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {
 			if ( in_array( 'editor', (array) hp\get_array_value( $style, 'scope' ), true ) ) {
 				add_editor_style( $style['src'] );

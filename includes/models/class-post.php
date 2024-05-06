@@ -147,8 +147,10 @@ abstract class Post extends Model {
 			}
 		}
 
-		if ( array_key_exists( 'post_content', $post ) && is_null( $post['post_content'] ) ) {
-			$post['post_content'] = '';
+		foreach ( [ 'post_excerpt', 'post_content' ] as $field_name ) {
+			if ( array_key_exists( $field_name, $post ) && is_null( $post[ $field_name ] ) ) {
+				$post[ $field_name ] = '';
+			}
 		}
 
 		// Create post.
