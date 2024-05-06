@@ -956,10 +956,10 @@ var hivepress = {
 		// Date formatter
 		hivepress.dateFormatter = new DateFormatter();
 
-		// Fix for Greek language
+		// Date picker
 		var language = hivepressCoreData.language;
 
-		if (language.toLowerCase() === 'el') {
+		if (language === 'el') {
 			language = 'gr';
 		}
 
