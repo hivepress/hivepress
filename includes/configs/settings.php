@@ -329,21 +329,13 @@ return [
 						'_order'  => 20,
 					],
 
-					'user_allow_deletion'          => [
-						'caption' => esc_html__( 'Allow users to delete their accounts', 'hivepress' ),
-						'type'    => 'checkbox',
-						'default' => true,
-						'_parent' => 'user_enable_registration',
-						'_order'  => 30,
-					],
-
 					'user_generate_username'       => [
 						'label'   => esc_html__( 'Username', 'hivepress' ),
 						'caption' => esc_html__( 'Generate username from the email address', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
 						'_parent' => 'user_enable_registration',
-						'_order'  => 40,
+						'_order'  => 30,
 					],
 
 					'user_verify_email'            => [
@@ -351,7 +343,7 @@ return [
 						'caption' => esc_html__( 'Require email address verification', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_parent' => 'user_enable_registration',
-						'_order'  => 50,
+						'_order'  => 40,
 					],
 
 					'user_disable_backend'         => [
@@ -361,7 +353,15 @@ return [
 						'type'        => 'checkbox',
 						'default'     => true,
 						'_parent'     => 'user_enable_registration',
-						'_order'      => 60,
+						'_order'      => 50,
+					],
+
+					'user_allow_deletion'          => [
+						'caption' => esc_html__( 'Allow users to delete their accounts', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_parent' => 'user_enable_registration',
+						'_order'  => 60,
 					],
 				],
 			],

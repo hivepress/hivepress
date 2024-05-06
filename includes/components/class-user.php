@@ -415,14 +415,14 @@ final class User extends Component {
 	/**
 	 * Alters account deletion form.
 	 *
-	 * @param array $blocks Block arguments.
+	 * @param array  $blocks Block arguments.
 	 * @param object $template Template object.
 	 * @return array
 	 */
 	public function alter_account_deletion_form( $blocks, $template ) {
 
 		// Check settings.
-		if ( ! get_option( 'hp_user_enable_account_deletion', true ) ) {
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
 
 			// Remove user deletion modal.
 			unset( $blocks['page_container']['blocks']['page_columns']['blocks']['page_content']['blocks']['user_delete_modal'] );

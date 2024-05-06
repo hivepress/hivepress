@@ -717,7 +717,7 @@ final class User extends Controller {
 		}
 
 		// Check settings.
-		if ( ! get_option( 'hp_user_enable_account_deletion', true ) ) {
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
 			return hp\rest_error( 403 );
 		}
 
