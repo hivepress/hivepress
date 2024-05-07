@@ -393,15 +393,15 @@ final class WooCommerce extends Component {
 		// Redirect from WC product page to related listing page
 		if ( is_product() ) {
 
-			// Get parent ID
-			$parent_id = wp_get_post_parent_id();
+			// Get parent.
+			$post_parent = get_post_parent();
 
-			if ( ! $parent_id ) {
+			if ( ! $post_parent || strpos( $post_parent->post_type, 'hp_' ) !== 0 ) {
 				return;
 			}
 
 			// Get listing URL
-			$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $parent_id ] );
+			$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $post_parent->ID ] );
 
 			if ( ! $listing_url ) {
 				return;
