@@ -127,11 +127,21 @@ class User_View_Page extends Page_Sidebar_Left {
 										'_order'    => 40,
 									],
 
+									'user_attributes_ternary' => [
+										'type'      => 'attributes',
+										'model'     => 'user',
+										'alias'     => 'vendor',
+										'area'      => 'view_page_ternary',
+										'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'ternary_plural' ) . ')',
+										'_settings' => [ 'columns' ],
+										'_order'    => 50,
+									],
+
 									'user_description'     => [
 										'type'   => 'part',
 										'path'   => 'user/view/page/user-description',
 										'_label' => hivepress()->translator->get_string( 'description' ),
-										'_order' => 50,
+										'_order' => 60,
 									],
 								],
 							],
