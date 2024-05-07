@@ -175,6 +175,12 @@ final class Attribute extends Component {
 			return;
 		}
 
+		if ( is_object( $object ) && ! $object->get_id() ) {
+
+			// @todo fix for cases when category model is set.
+			return $object->get_categories__id();
+		}
+
 		// Get object ID.
 		$id = is_object( $object ) ? $object->get_id() : $object;
 
@@ -388,6 +394,7 @@ final class Attribute extends Component {
 						'display_format' => (string) $attribute_object->hp_display_format,
 						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
+						'synced'         => (bool) $attribute_object->hp_synced,
 						'moderated'      => (bool) $attribute_object->hp_moderated,
 						'indexable'      => (bool) $attribute_object->hp_indexable,
 						'searchable'     => (bool) $attribute_object->hp_searchable,
@@ -407,15 +414,9 @@ final class Attribute extends Component {
 
 					$attribute_args['display_format'] = str_replace( '%icon%', $icon, $attribute_args['display_format'] );
 
-					// Get categories.
+					// Set categories.
 					if ( taxonomy_exists( hp\prefix( $this->get_category_model( $model ) ) ) ) {
-						$category_ids = wp_get_post_terms( $attribute_object->ID, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
-
-						foreach ( $category_ids as $category_id ) {
-							$category_ids = array_merge( $category_ids, get_term_children( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) );
-						}
-
-						$attribute_args['categories'] = array_unique( $category_ids );
+						$attribute_args['categories'] = wp_get_post_terms( $attribute_object->ID, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
 					}
 
 					// Get fields.
@@ -548,6 +549,29 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
+			// Set categories.
+			foreach ( $attributes as $attribute_name => $attribute_args ) {
+				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
+
+				if ( ! taxonomy_exists( $taxonomy_name ) ) {
+					continue;
+				}
+
+				$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+
+				if ( ! $category_ids ) {
+					continue;
+				}
+
+				foreach ( $category_ids as $category_id ) {
+
+					// @todo cache category IDs.
+					$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
+				}
+
+				$attributes[ $attribute_name ]['categories'] = array_unique( $category_ids );
+			}
+
 			// Set attributes.
 			$this->attributes[ $model ] = array_map(
 				function( $args ) {
@@ -563,6 +587,7 @@ final class Attribute extends Component {
 							'display_format' => '%value%',
 							'protected'      => false,
 							'editable'       => false,
+							'synced'         => false,
 							'moderated'      => false,
 							'indexable'      => false,
 							'searchable'     => false,
@@ -798,12 +823,16 @@ final class Attribute extends Component {
 		$category_ids = null;
 
 		if ( 'user' !== $model ) {
-			$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+			$category_ids = null;
+
+			if ( $object->get_id() ) {
+				$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+			}
 
 			if ( is_null( $category_ids ) ) {
-				$category_ids = $this->get_category_ids( $model, $object->get_id() );
+				$category_ids = $this->get_category_ids( $model, $object );
 
-				if ( is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
+				if ( $object->get_id() && is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
 					hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
 				}
 			}
@@ -1467,8 +1496,10 @@ final class Attribute extends Component {
 						'options'     => [
 							'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
 							'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_block_ternary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'ternary', 'area', 'hivepress' ) ),
 							'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
 							'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_page_ternary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'ternary', 'area', 'hivepress' ) ),
 						],
 					],
 
@@ -1512,9 +1543,14 @@ final class Attribute extends Component {
 		// Add meta boxes.
 		foreach ( $this->get_models() as $model ) {
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
-
-				// Set screen and model.
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
+
+					// Skip adding meta box.
+					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+						continue;
+					}
+
+					// Set screen and model.
 					$meta_box['model'] = $model;
 
 					if ( 'attributes' === $meta_box_name ) {
@@ -1533,12 +1569,20 @@ final class Attribute extends Component {
 
 					// @todo replace temporary fix.
 					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['synced'] = [
+							'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
+							'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
+							'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 20,
+						];
+
 						$meta_box['fields']['moderated'] = [
 							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
 							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
 							'type'    => 'checkbox',
 							'_parent' => 'editable',
-							'_order'  => 20,
+							'_order'  => 30,
 						];
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
