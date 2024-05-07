@@ -916,20 +916,11 @@ var hivepress = {
 			form.find('input[readonly], textarea[readonly]').on('click', function () {
 				this.select();
 
-				// API Clipboard support check
 				if (navigator.clipboard && navigator.clipboard.writeText) {
-
-					// Copy value asynchronously
-					navigator.clipboard.writeText(this.value)
-						.catch((err) => {
-							console.error('An error occurred while using API Clipboard:', err);
-
-							// Use default command in case of error
-							document.execCommand('copy');
-						});
+					navigator.clipboard.writeText(this.value).catch(() => {
+						document.execCommand('copy');
+					});
 				} else {
-
-					// Use default command in case of not supporting API Clipboard
 					document.execCommand('copy');
 				}
 			});
