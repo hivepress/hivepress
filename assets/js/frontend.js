@@ -97,12 +97,12 @@
 				url = container.data('url'),
 				isPreview = container.data('preview') !== false;
 
-			if (images.length && images.first().data('src')) {
+			if (images.length && images.first().data('lightbox')) {
 				var imageURLs = [];
 
 				images.each(function () {
 					imageURLs.push({
-						src: $(this).data('src'),
+						src: $(this).data('lightbox'),
 					});
 				});
 

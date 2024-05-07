@@ -20,7 +20,7 @@ if ( $listing->get_images__id() ) :
 					<source src="<?php echo esc_url( $image->get_url() ); ?>#t=0.001" type="<?php echo esc_attr( $image->get_mime_type() ); ?>">
 				</video>
 			<?php else : ?>
-				<img src="<?php echo esc_url( $image->get_url( 'hp_landscape_large' ) ); ?>" data-src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
+				<img src="<?php echo esc_url( $image->get_url( 'hp_landscape_large' ) ); ?>" data-lightbox="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
 				<?php
 			endif;
 		endforeach;
