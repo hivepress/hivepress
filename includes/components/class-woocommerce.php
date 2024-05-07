@@ -66,11 +66,11 @@ final class WooCommerce extends Component {
 			// Set request context.
 			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
-			// Set account template.
-			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
-
 			// Redirect pages.
 			add_action( 'template_redirect', [ $this, 'redirect_pages' ] );
+
+			// Set account template.
+			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
@@ -364,6 +364,33 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Redirects pages.
+	 */
+	public function redirect_pages() {
+		$url = null;
+
+		// Redirect account page.
+		if ( ! is_user_logged_in() && is_account_page() ) {
+			$url = hivepress()->router->get_return_url( 'user_login_page' );
+		}
+
+		// Redirect product page.
+		if ( is_product() ) {
+			$parent = get_post_parent();
+
+			if ( $parent && strpos( $parent->post_type, 'hp_' ) === 0 ) {
+				$url = get_permalink( $parent->ID );
+			}
+		}
+
+		if ( $url ) {
+			wp_safe_redirect( $url );
+
+			exit;
+		}
+	}
+
+	/**
 	 * Sets account page template.
 	 *
 	 * @param string $path Template filepath.
@@ -376,41 +403,6 @@ final class WooCommerce extends Component {
 		}
 
 		return $path;
-	}
-
-	/**
-	 * Page redirection settings.
-	 */
-	public function redirect_pages() {
-
-		// Redirect for account page
-		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
-
-			exit;
-		}
-
-		// Redirect from WC product page to related listing page
-		if ( is_product() ) {
-
-			// Get parent.
-			$post_parent = get_post_parent();
-
-			if ( ! $post_parent || strpos( $post_parent->post_type, 'hp_' ) !== 0 ) {
-				return;
-			}
-
-			// Get listing URL
-			$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $post_parent->ID ] );
-
-			if ( ! $listing_url ) {
-				return;
-			}
-
-			wp_safe_redirect( $listing_url );
-
-			exit;
-		}
 	}
 
 	/**
