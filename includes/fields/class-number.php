@@ -46,6 +46,13 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
+	 * Enable number formatting?
+	 *
+	 * @var bool
+	 */
+	protected $disable_formatting = true;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -59,14 +66,14 @@ class Number extends Field {
 				'sortable'   => true,
 
 				'settings'   => [
-					'placeholder' => [
+					'placeholder'        => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'_order'     => 100,
 					],
 
-					'decimals'    => [
+					'decimals'           => [
 						'label'     => esc_html_x( 'Decimals', 'quantity', 'hivepress' ),
 						'type'      => 'number',
 						'default'   => 0,
@@ -76,18 +83,24 @@ class Number extends Field {
 						'_order'    => 110,
 					],
 
-					'min_value'   => [
+					'min_value'          => [
 						'label'    => esc_html__( 'Minimum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
 						'_order'   => 120,
 					],
 
-					'max_value'   => [
+					'max_value'          => [
 						'label'    => esc_html__( 'Maximum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
 						'_order'   => 130,
+					],
+
+					'disable_formatting' => [
+						'label'   => esc_html__( 'Disable Formatting', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 140,
 					],
 				],
 			],
@@ -143,7 +156,7 @@ class Number extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return hp\format_number( $this->value, $this->decimals );
+			return $this->disable_formatting ? $this->value : hp\format_number( $this->value, $this->decimals );
 		}
 	}
 
