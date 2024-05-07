@@ -66,11 +66,11 @@ final class WooCommerce extends Component {
 			// Set request context.
 			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
+			// Redirect pages.
+			add_action( 'template_redirect', [ $this, 'redirect_pages' ] );
+
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
-
-			// Redirect account page.
-			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
@@ -364,6 +364,33 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Redirects pages.
+	 */
+	public function redirect_pages() {
+		$url = null;
+
+		// Redirect account page.
+		if ( ! is_user_logged_in() && is_account_page() ) {
+			$url = hivepress()->router->get_return_url( 'user_login_page' );
+		}
+
+		// Redirect product page.
+		if ( is_product() ) {
+			$parent = get_post_parent();
+
+			if ( $parent && strpos( $parent->post_type, 'hp_' ) === 0 ) {
+				$url = get_permalink( $parent->ID );
+			}
+		}
+
+		if ( $url ) {
+			wp_safe_redirect( $url );
+
+			exit;
+		}
+	}
+
+	/**
 	 * Sets account page template.
 	 *
 	 * @param string $path Template filepath.
@@ -376,17 +403,6 @@ final class WooCommerce extends Component {
 		}
 
 		return $path;
-	}
-
-	/**
-	 * Redirects account page.
-	 */
-	public function redirect_account_page() {
-		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
-
-			exit;
-		}
 	}
 
 	/**
