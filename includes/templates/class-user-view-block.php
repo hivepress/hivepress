@@ -112,6 +112,14 @@ class User_View_Block extends Template {
 										'columns' => 2,
 										'_order'  => 30,
 									],
+
+									'user_attributes_ternary' => [
+										'type'   => 'attributes',
+										'model'  => 'user',
+										'alias'  => 'vendor',
+										'area'   => 'view_block_ternary',
+										'_order' => 40,
+									],
 								],
 							],
 

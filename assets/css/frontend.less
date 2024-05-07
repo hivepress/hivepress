@@ -569,6 +569,7 @@
 		}
 
 		&--view-block &__attributes--secondary,
+		&--view-block &__attributes--ternary,
 		&--view-block &__details--primary,
 		&--view-block &__image,
 		&--view-block &__title {
@@ -616,6 +617,7 @@
 		&--view-page &__actions--primary,
 		&--view-page &__attributes--primary,
 		&--view-page &__attributes--secondary,
+		&--view-page &__attributes--ternary,
 		&--view-page &__description,
 		&--view-page &__details--primary,
 		&--view-page &__images,
@@ -760,8 +762,21 @@
 		}
 
 		&__attributes--primary &__attribute,
-		&__attributes--secondary &__attribute {
+		&__attributes--secondary &__attribute,
+		&__attributes--ternary &__attribute {
 			word-wrap: break-word;
+		}
+
+		&--view-block &__attributes--ternary &__attribute {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
+		}
+
+		&--view-page &__attributes--ternary &__attribute {
+			&:not(:last-child) {
+				margin-bottom: 1rem;
+			}
 		}
 
 		&--view-block &__attributes--primary &__attribute {
@@ -913,8 +928,16 @@
 		}
 
 		&__attributes--primary &__attribute,
-		&__attributes--secondary &__attribute {
+		&__attributes--secondary &__attribute,
+		&__attributes--ternary &__attribute {
 			word-wrap: break-word;
+		}
+
+		&--view-block &__attributes--ternary &__attribute,
+		&--view-page &__attributes--ternary &__attribute {
+			&:not(:last-child) {
+				margin-bottom: 0.5rem;
+			}
 		}
 
 		&--view-block &__attributes--primary &__attribute {
@@ -941,6 +964,7 @@
 		}
 
 		&--view-block &__attributes--secondary,
+		&--view-block &__attributes--ternary,
 		&--view-block &__image,
 		&--view-block &__name {
 			&:not(:last-child) {
@@ -950,6 +974,7 @@
 
 		&--view-block &__details--primary,
 		&--view-page &__attributes--secondary,
+		&--view-page &__attributes--ternary,
 		&--view-page &__details--primary,
 		&--view-page &__image,
 		&--view-page &__name {

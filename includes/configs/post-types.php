@@ -53,14 +53,15 @@ return [
 	],
 
 	'listing'  => [
-		'public'           => true,
-		'has_archive'      => true,
-		'delete_with_user' => true,
-		'supports'         => [ 'title', 'editor', 'thumbnail' ],
-		'menu_icon'        => 'dashicons-format-aside',
-		'rewrite'          => [ 'slug' => 'listing' ],
+		'public'              => true,
+		'has_archive'         => true,
+		'exclude_from_search' => true,
+		'delete_with_user'    => true,
+		'supports'            => [ 'title', 'editor', 'thumbnail' ],
+		'menu_icon'           => 'dashicons-format-aside',
+		'rewrite'             => [ 'slug' => 'listing' ],
 
-		'labels'           => [
+		'labels'              => [
 			'name'               => hivepress()->translator->get_string( 'listings' ),
 			'singular_name'      => hivepress()->translator->get_string( 'listing' ),
 			'add_new'            => esc_html_x( 'Add New', 'listing', 'hivepress' ),
@@ -77,16 +78,17 @@ return [
 	],
 
 	'vendor'   => [
-		'public'             => true,
-		'show_ui'            => true,
-		'has_archive'        => true,
-		'delete_with_user'   => true,
-		'supports'           => [ 'title', 'editor', 'thumbnail' ],
-		'menu_icon'          => 'dashicons-businessman',
-		'rewrite'            => [ 'slug' => 'vendor' ],
-		'redirect_canonical' => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'has_archive'         => true,
+		'exclude_from_search' => true,
+		'delete_with_user'    => true,
+		'supports'            => [ 'title', 'editor', 'thumbnail' ],
+		'menu_icon'           => 'dashicons-businessman',
+		'rewrite'             => [ 'slug' => 'vendor' ],
+		'redirect_canonical'  => false,
 
-		'labels'             => [
+		'labels'              => [
 			'name'               => hivepress()->translator->get_string( 'vendors' ),
 			'singular_name'      => hivepress()->translator->get_string( 'vendor' ),
 			'add_new'            => esc_html_x( 'Add New', 'vendor', 'hivepress' ),

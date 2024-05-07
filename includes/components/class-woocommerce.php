@@ -54,6 +54,10 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
+		// Update user billing name.
+		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/update_last_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+
 		// Set countries configuration.
 		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
 
@@ -301,6 +305,26 @@ final class WooCommerce extends Component {
 		}
 
 		return $meta;
+	}
+
+	/**
+	 * Updates user billing name.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $value Value.
+	 */
+	public function update_user_billing_name( $user_id, $value ) {
+
+		// Check field value.
+		if ( ! strlen( $value ) ) {
+			return;
+		}
+
+		// Get field name.
+		$field_name = substr( hp\get_last_array_value( explode( '/', current_filter() ) ), strlen( 'update_' ) );
+
+		// Update field value.
+		update_user_meta( $user_id, 'billing_' . $field_name, $value );
 	}
 
 	/**
