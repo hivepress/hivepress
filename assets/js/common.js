@@ -918,14 +918,19 @@ var hivepress = {
 
 				// API Clipboard support check
 				if (navigator.clipboard && navigator.clipboard.writeText) {
+
 					// Copy value asynchronously
 					navigator.clipboard.writeText(this.value)
 						.catch((err) => {
 							console.error('An error occurred while using API Clipboard:', err);
-							document.execCommand('copy'); // Use default command in case of error
+
+							// Use default command in case of error
+							document.execCommand('copy');
 						});
 				} else {
-					document.execCommand('copy'); // Use default command in case of not supporting API Clipboard
+
+					// Use default command in case of not supporting API Clipboard
+					document.execCommand('copy');
 				}
 			});
 		});
