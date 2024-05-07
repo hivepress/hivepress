@@ -370,7 +370,7 @@ final class WooCommerce extends Component {
 		if ( is_product() ) {
 
 			// Get parent ID
-			$parent_id = wc_get_product()->get_parent_id();
+			$parent_id = wp_get_post_parent_id();
 
 			if ( ! $parent_id ) {
 				return;
