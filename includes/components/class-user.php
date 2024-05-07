@@ -57,6 +57,9 @@ final class User extends Component {
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 		} else {
 
+			// Redirect author page.
+			add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
@@ -350,6 +353,22 @@ final class User extends Component {
 			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
 		}
+	}
+
+	/**
+	 * Redirect author page.
+	 */
+	public function redirect_author_page() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_display' ) || ! is_author() ) {
+			return;
+		}
+
+		// Redirect user.
+		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
+
+		exit;
 	}
 
 	/**
