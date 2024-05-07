@@ -915,7 +915,14 @@ var hivepress = {
 
 			form.find('input[readonly], textarea[readonly]').on('click', function () {
 				this.select();
-				document.execCommand('copy');
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(this.value).catch(() => {
+						document.execCommand('copy');
+					});
+				} else {
+					document.execCommand('copy');
+				}
 			});
 		});
 
