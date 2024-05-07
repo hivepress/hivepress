@@ -369,18 +369,28 @@ final class WooCommerce extends Component {
 	}
 
 	/**
-	 * Redirects listing page.
+	 * Redirects to the listing page.
 	 */
 	public function redirect_listing_page() {
-		if ( is_product() && has_post_parent() ) {
-			$post_parent = get_post_parent();
-
-			if ( 'hp_listing' === $post_parent->post_type ) {
-				wp_safe_redirect( get_the_permalink( $post_parent->ID ) );
-
-				exit;
-			}
+		if ( ! is_product() ) {
+			return;
 		}
+
+		$parent_id = wc_get_product()->get_parent_id();
+
+		if ( ! $parent_id ) {
+			return;
+		}
+
+		$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $parent_id ] );
+
+		if ( ! $listing_url ) {
+			return;
+		}
+
+		wp_safe_redirect( $listing_url );
+
+		exit;
 	}
 
 	/**
