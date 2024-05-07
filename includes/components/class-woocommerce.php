@@ -65,11 +65,8 @@ final class WooCommerce extends Component {
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
 
-			// Redirect account page.
-			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
-
-			// Redirect listing page.
-			add_action( 'template_redirect', [ $this, 'redirect_listing_page' ] );
+			// Redirect pages.
+			add_action( 'template_redirect', [ $this, 'redirect_pages' ] );
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
@@ -358,39 +355,38 @@ final class WooCommerce extends Component {
 	}
 
 	/**
-	 * Redirects account page.
+	 * Page redirection settings.
 	 */
-	public function redirect_account_page() {
+	public function redirect_pages() {
+
+		// Redirect for account page
 		if ( ! is_user_logged_in() && is_account_page() ) {
 			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
 
 			exit;
 		}
-	}
 
-	/**
-	 * Redirects to the listing page.
-	 */
-	public function redirect_listing_page() {
-		if ( ! is_product() ) {
-			return;
+		// Redirect from WC product page to related listing page
+		if ( is_product() ) {
+
+			// Get parent ID
+			$parent_id = wc_get_product()->get_parent_id();
+
+			if ( ! $parent_id ) {
+				return;
+			}
+
+			// Get listing URL
+			$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $parent_id ] );
+
+			if ( ! $listing_url ) {
+				return;
+			}
+
+			wp_safe_redirect( $listing_url );
+
+			exit;
 		}
-
-		$parent_id = wc_get_product()->get_parent_id();
-
-		if ( ! $parent_id ) {
-			return;
-		}
-
-		$listing_url = hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $parent_id ] );
-
-		if ( ! $listing_url ) {
-			return;
-		}
-
-		wp_safe_redirect( $listing_url );
-
-		exit;
 	}
 
 	/**
