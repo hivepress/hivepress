@@ -168,6 +168,79 @@ final class User extends Component {
 
 		// Update display name.
 		$user->set_display_name( $display_name )->save_display_name();
+
+		// Get attributes.
+		$attributes = array_filter(
+			hivepress()->attribute->get_attributes( 'user' ),
+			function( $attribute ) {
+				return hp\get_array_value( $attribute, 'synced' );
+			}
+		);
+
+		// Sync user attributes with vendor attributes.
+		if ( ! empty( $attributes ) ) {
+			// Get values.
+			$values = array_intersect_key( $user->serialize(), $attributes );
+
+			foreach ( $attributes as $attribute_name => $attribute ) {
+				if ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) {
+					continue;
+				}
+
+				// Get field.
+				$attribute_field = hp\get_array_value( $user->_get_fields(), $attribute_name );
+
+				if ( ! $attribute_field || ! $attribute_field->get_value() ) {
+					continue;
+				}
+
+				// Get term names.
+				$term_names = get_terms(
+					[
+						'taxonomy'   => $attribute_field->get_arg( 'option_args' )['taxonomy'],
+						'include'    => (array) $attribute_field->get_value(),
+						'fields'     => 'names',
+						'hide_empty' => false,
+					]
+				);
+
+				if ( ! $term_names ) {
+					continue;
+				}
+
+				// Get term IDs.
+				$term_ids = get_terms(
+					[
+						'taxonomy'   => $attribute['edit_field']['option_args']['taxonomy'],
+						'name'       => $term_names,
+						'fields'     => 'ids',
+						'hide_empty' => false,
+					]
+				);
+
+				if ( ! $term_ids ) {
+					continue;
+				}
+
+				// Set value.
+				$values[ $attribute_name ] = $term_ids;
+			}
+
+			// Get vendors.
+			$vendors = Models\Vendor::query()->filter(
+				[
+					'status__in' => [ 'auto-draft', 'draft', 'publish' ],
+					'user'       => $user_id,
+				]
+			)->get();
+
+			// Update listings.
+			foreach ( $vendors as $vendor ) {
+				if ( array_intersect_key( $vendor->serialize(), $attributes ) !== $values ) {
+					$vendor->fill( $values )->save( array_keys( $values ) );
+				}
+			}
+		}
 	}
 
 	/**

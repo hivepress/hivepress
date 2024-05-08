@@ -1577,6 +1577,14 @@ final class Attribute extends Component {
 							'_parent' => 'editable',
 							'_order'  => 30,
 						];
+					} elseif ( 'user' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['synced'] = [
+							'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
+							'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
+							'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 20,
+						];
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
