@@ -301,8 +301,6 @@ class Attachment_Upload extends Field {
 			foreach ( $attachments as $attachment ) {
 				$output .= $this->render_attachment( $attachment );
 			}
-
-			$output .= '<input value="' . implode( ',', $attachments->get_ids() ) . '" type="hidden" name="_' . esc_attr( $this->name ) . '">';
 		}
 
 		$output .= '</div>';
