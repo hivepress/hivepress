@@ -335,16 +335,9 @@ final class Listing extends Controller {
 					$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
 
 					if ( 'attachment_upload' === $field->get_arg( 'type' ) ) {
-						$attachment_id = array_map(
-							function( $attachment_id ) use ( $value ) {
-								return absint( $attachment_id ) === $value;
-							},
-							(array) $request->get_param( '_' . $field->get_name() )
-						);
 
-						if ( $attachment_id ) {
-							continue;
-						}
+						// @todo find better solution for attachment moderation.
+						continue;
 					}
 
 					if ( $field->get_value() !== $value ) {
