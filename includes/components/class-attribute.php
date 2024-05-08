@@ -779,9 +779,8 @@ final class Attribute extends Component {
 				$meta_box['fields']['edit_field_name'] = $field_args;
 			}
 
+			// @todo replace temporary fix.
 			if ( 'attachment_upload' === $field_type ) {
-
-				// @todo find better solution for attachment moderation.
 				unset( $meta_box['fields']['moderated'] );
 			}
 		}
@@ -966,7 +965,7 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) && 'attachment_upload' !== hp\get_array_value( $field_args, 'type', '' ) ) {
+				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[

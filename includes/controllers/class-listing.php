@@ -334,12 +334,6 @@ final class Listing extends Controller {
 				if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
 					$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
 
-					if ( 'attachment_upload' === $field->get_arg( 'type' ) ) {
-
-						// @todo find better solution for attachment moderation.
-						continue;
-					}
-
 					if ( $field->get_value() !== $value ) {
 						$attributes[] = $field->get_label();
 					}
