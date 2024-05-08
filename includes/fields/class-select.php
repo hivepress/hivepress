@@ -226,10 +226,10 @@ class Select extends Field {
 			$labels = [];
 
 			foreach ( (array) $this->value as $value ) {
-				$label = hp\get_array_value( $this->options, $value );
+				$label = hp\get_array_value( $this->options, $value, '' );
 
 				if ( is_array( $label ) ) {
-					$label = hp\get_array_value( $label, 'label' );
+					$label = hp\get_array_value( $label, 'label', '' );
 				}
 
 				if ( strlen( $label ) ) {
@@ -394,6 +394,8 @@ class Select extends Field {
 
 			if ( $level ) {
 				$attributes['data-level'] = $level;
+
+				$attributes['data-parent'] = hp\get_array_value( $label, 'parent' );
 			}
 
 			if ( hp\get_array_value( $label, 'disabled' ) ) {

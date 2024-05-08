@@ -82,6 +82,7 @@ class Textarea extends Text {
 					'toolbar3'    => '',
 					'toolbar4'    => '',
 					'elementpath' => false,
+					'wpautop'     => true,
 				];
 			}
 		}
@@ -140,7 +141,7 @@ class Textarea extends Text {
 		} else {
 
 			// Render textarea.
-			$output .= '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( html_entity_decode( $this->value ) ) . '</textarea>';
+			$output .= '<textarea name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>' . esc_textarea( html_entity_decode( is_null( $this->value ) ? '' : $this->value ) ) . '</textarea>';
 		}
 
 		return $output;

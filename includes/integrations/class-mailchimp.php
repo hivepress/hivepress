@@ -86,7 +86,7 @@ final class Mailchimp extends \MC4WP_Integration {
 		}
 
 		// Check email.
-		if ( ! is_email( hp\get_array_value( $values, 'email' ) ) ) {
+		if ( ! is_email( hp\get_array_value( $values, 'email', '' ) ) ) {
 			return;
 		}
 

@@ -313,7 +313,7 @@ function replace_tokens( $tokens, $text ) {
 
 			if ( $fields ) {
 				foreach ( $fields as $field_name ) {
-					$field_value = null;
+					$field_value = '';
 
 					$field = get_array_value( $value->_get_fields(), $field_name );
 
@@ -327,7 +327,7 @@ function replace_tokens( $tokens, $text ) {
 				}
 			}
 		} elseif ( ! is_array( $value ) ) {
-			$text = str_replace( '%' . $name . '%', $value, $text );
+			$text = str_replace( '%' . $name . '%', is_null( $value ) ? '' : $value, $text );
 		}
 	}
 

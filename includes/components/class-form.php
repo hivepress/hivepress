@@ -541,7 +541,7 @@ final class Form extends Component {
 		$language = hivepress()->translator->get_language();
 
 		// Enqueue Flatpickr.
-		$filepath = '/assets/js/flatpickr/l10n/' . $language . '.js';
+		$filepath = '/node_modules/flatpickr/dist/l10n/' . ( 'el' === $language ? 'gr' : $language ) . '.js';
 
 		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 			wp_enqueue_script(
@@ -556,7 +556,7 @@ final class Form extends Component {
 		if ( ! is_admin() ) {
 
 			// Enqueue Select2.
-			$filepath = '/assets/js/select2/i18n/' . $language . '.js';
+			$filepath = '/node_modules/select2/dist/js/i18n/' . $language . '.js';
 
 			if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 				wp_enqueue_script(

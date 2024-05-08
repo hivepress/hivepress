@@ -193,6 +193,18 @@ final class Listing extends Component {
 		// Get image IDs.
 		$image_ids = $listing->get_images__id();
 
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$image_ids = [];
+
+			foreach ( $listing->get_images() as $image ) {
+				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
+					$image_ids[] = $image->get_id();
+
+					break;
+				}
+			}
+		}
+
 		// Set image.
 		if ( $image_ids ) {
 			set_post_thumbnail( $listing->get_id(), hp\get_first_array_value( $image_ids ) );
@@ -413,6 +425,17 @@ final class Listing extends Component {
 			$model['fields']['title']['required'] = false;
 		}
 
+		if ( get_option( 'hp_listing_allow_video' ) ) {
+			$model['fields']['images'] = hp\merge_arrays(
+				$model['fields']['images'],
+				[
+					'label'   => esc_html__( 'Gallery', 'hivepress' ),
+					'caption' => null,
+					'formats' => [ 'mp4', 'webm', 'ogv' ],
+				]
+			);
+		}
+
 		return $model;
 	}
 
@@ -511,8 +534,8 @@ final class Listing extends Component {
 			$output = '&mdash;';
 
 			// Get name and URL.
-			$name = null;
-			$url  = null;
+			$name = '';
+			$url  = '';
 
 			// Get vendor ID.
 			$vendor_id = wp_get_post_parent_id( $listing_id );

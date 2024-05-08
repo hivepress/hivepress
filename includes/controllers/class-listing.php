@@ -666,6 +666,9 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( get_post() );
 
+		// @todo replace temporary fix.
+		$listing->get_images__id();
+
 		// Get vendor.
 		$vendor = $listing->get_vendor();
 

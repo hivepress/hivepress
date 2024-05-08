@@ -63,9 +63,27 @@ class User_View_Block extends Template {
 
 								'blocks'     => [
 									'user_name'            => [
-										'type'   => 'part',
-										'path'   => 'user/view/block/user-name',
-										'_order' => 10,
+										'type'       => 'container',
+										'tag'        => 'h4',
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__name' ],
+										],
+
+										'blocks'     => [
+											'user_name_text'           => [
+												'type'   => 'part',
+												'path'   => 'user/view/block/user-name',
+												'_order' => 10,
+											],
+
+											'user_verified_badge' => [
+												'type'   => 'part',
+												'path'   => 'user/view/user-verified-badge',
+												'_order' => 20,
+											],
+										],
 									],
 
 									'user_details_primary' => [
@@ -83,6 +101,53 @@ class User_View_Block extends Template {
 												'path'   => 'user/view/user-registered-date',
 												'_order' => 10,
 											],
+										],
+									],
+
+									'user_attributes_secondary' => [
+										'type'    => 'attributes',
+										'model'   => 'user',
+										'alias'   => 'vendor',
+										'area'    => 'view_block_secondary',
+										'columns' => 2,
+										'_order'  => 30,
+									],
+
+									'user_attributes_ternary' => [
+										'type'   => 'attributes',
+										'model'  => 'user',
+										'alias'  => 'vendor',
+										'area'   => 'view_block_ternary',
+										'_order' => 40,
+									],
+								],
+							],
+
+							'user_footer'  => [
+								'type'       => 'container',
+								'tag'        => 'footer',
+								'_order'     => 30,
+
+								'attributes' => [
+									'class' => [ 'hp-vendor__footer' ],
+								],
+
+								'blocks'     => [
+									'user_attributes_primary' => [
+										'type'   => 'attributes',
+										'model'  => 'user',
+										'alias'  => 'vendor',
+										'area'   => 'view_block_primary',
+										'_order' => 10,
+									],
+
+									'user_actions_primary' => [
+										'type'       => 'container',
+										'blocks'     => [],
+										'_order'     => 20,
+
+										'attributes' => [
+											'class' => [ 'hp-vendor__actions', 'hp-vendor__actions--primary' ],
 										],
 									],
 								],

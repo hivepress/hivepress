@@ -9,6 +9,7 @@ namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
 use HivePress\Blocks;
+use HivePress\Menus;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -39,6 +40,10 @@ final class Template extends Component {
 
 			// Add theme class.
 			add_filter( 'body_class', [ $this, 'add_theme_class' ] );
+
+			// Add menu items.
+			add_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+			add_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
 
 			// Render site header.
 			add_action( 'storefront_header', [ $this, 'render_site_header' ], 31 );
@@ -224,6 +229,66 @@ final class Template extends Component {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Adds menu items.
+	 *
+	 * @param string $items Menu items.
+	 * @param mixed  $args Menu arguments.
+	 * @return string
+	 */
+	public function add_menu_items( $items, $args ) {
+
+		// Check menu.
+		if ( ! function_exists( 'hivetheme' ) ) {
+			remove_filter( 'wp_nav_menu_items', [ $this, 'add_menu_items' ], 10, 2 );
+			remove_filter( 'wp_page_menu', [ $this, 'add_menu_items' ], 10, 2 );
+		} elseif ( hp\get_array_value( (array) $args, 'theme_location' ) !== 'header' ) {
+			return $items;
+		}
+
+		// Get class.
+		$class = 'menu-item menu-item--first';
+
+		if ( is_user_logged_in() ) {
+			$class .= ' menu-item--user-account menu-item-has-children';
+		} else {
+			$class .= ' menu-item--user-login';
+		}
+
+		// Render items.
+		$first_item = '<li class="' . esc_attr( $class ) . '">';
+
+		$first_item .= ( new Blocks\Part(
+			[
+				'path' => 'user/login/user-login-link',
+			]
+		) )->render();
+
+		if ( is_user_logged_in() ) {
+
+			// Render menu.
+			$first_item .= ( new Menus\User_Account(
+				[
+					'wrap'       => false,
+
+					'attributes' => [
+						'class' => [ 'sub-menu' ],
+					],
+				]
+			) )->render();
+		}
+
+		$first_item .= '</li>';
+
+		$last_item = str_replace( 'menu-item--first', 'menu-item--last', $first_item );
+
+		// Add item.
+		$items = substr_replace( $items, $first_item, (int) strpos( $items, '<li' ), 0 );
+		$items = substr_replace( $items, $last_item, strrpos( $items, '/li>' ) + 4, 0 );
+
+		return $items;
 	}
 
 	/**

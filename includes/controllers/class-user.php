@@ -217,6 +217,13 @@ final class User extends Controller {
 						'redirect' => [ $this, 'redirect_user_edit_settings_page' ],
 						'action'   => [ $this, 'render_user_edit_settings_page' ],
 					],
+
+					'user_view_page'               => [
+						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
+						'title'    => [ $this, 'get_user_view_title' ],
+						'redirect' => [ $this, 'redirect_user_view_page' ],
+						'action'   => [ $this, 'render_user_view_page' ],
+					],
 				],
 			],
 			$args
@@ -649,6 +656,38 @@ final class User extends Controller {
 			}
 		}
 
+		// Check email.
+		if ( get_option( 'hp_user_verify_email' ) && $form->get_value( 'email' ) !== $user->get_email() ) {
+
+			// Set email key.
+			$email_key = md5( $form->get_value( 'email' ) . time() . wp_rand() );
+
+			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+			update_user_meta( $user->get_id(), 'hp_email_verify_address', $form->get_value( 'email' ) );
+
+			// Send email.
+			( new Emails\User_Email_Verify(
+				[
+					'recipient' => $form->get_value( 'email' ),
+
+					'tokens'    => [
+						'user'             => $user,
+						'user_name'        => $user->get_display_name(),
+						'email_verify_url' => hivepress()->router->get_url(
+							'user_email_verify_page',
+							[
+								'username'         => $user->get_username(),
+								'email_verify_key' => $email_key,
+							]
+						),
+					],
+				]
+			) )->send();
+
+			// Set old email.
+			$form->set_value( 'email', $user->get_email() );
+		}
+
 		// Update user.
 		$user->fill( $form->get_values() );
 
@@ -675,6 +714,11 @@ final class User extends Controller {
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
 			return hp\rest_error( 401 );
+		}
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
+			return hp\rest_error( 403 );
 		}
 
 		// Get user.
@@ -839,6 +883,36 @@ final class User extends Controller {
 		// Delete email key.
 		delete_user_meta( $user->ID, 'hp_email_verify_key' );
 
+		if ( is_email( $user->hp_email_verify_address ) ) {
+
+			// Set new email.
+			wp_update_user(
+				[
+					'ID'         => $user->ID,
+					'user_email' => $user->hp_email_verify_address,
+				]
+			);
+
+			// Delete new email.
+			delete_user_meta( $user->ID, 'hp_email_verify_address' );
+
+			// Redirect user.
+			return hivepress()->router->get_url( 'user_edit_settings_page' );
+		}
+
+		// Send email.
+		( new Emails\User_Register(
+			[
+				'recipient' => $user->user_email,
+
+				'tokens'    => [
+					'user'          => Models\User::query()->get_by_id( $user->ID ),
+					'user_name'     => $user->display_name,
+					'user_password' => '********',
+				],
+			]
+		) )->send();
+
 		// Check authentication.
 		if ( is_user_logged_in() ) {
 			return hivepress()->router->get_url( 'user_account_page' );
@@ -901,6 +975,86 @@ final class User extends Controller {
 
 				'context'  => [
 					'user' => hivepress()->request->get_user(),
+				],
+			]
+		) )->render();
+	}
+
+	/**
+	 * Gets user view title.
+	 *
+	 * @return string
+	 */
+	public function get_user_view_title() {
+		$title = null;
+
+		// Get user.
+		$user = Models\User::query()->filter(
+			[
+				'username' => hivepress()->request->get_param( 'username' ),
+			]
+		)->get_first();
+
+		if ( $user ) {
+			$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
+		}
+
+		// Set request context.
+		hivepress()->request->set_context( 'viewed_user', $user );
+
+		return $title;
+	}
+
+	/**
+	 * Redirects user view page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_user_view_page() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_display' ) ) {
+			return true;
+		}
+
+		// Get user.
+		$user = hivepress()->request->get_context( 'viewed_user' );
+
+		if ( ! $user ) {
+			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		if ( get_option( 'hp_user_verify_email' ) && get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
+			return true;
+		}
+
+		// Get vendor ID.
+		$vendor_id = Models\Vendor::query()->filter(
+			[
+				'user'   => $user->get_id(),
+				'status' => 'publish',
+			]
+		)->get_first_id();
+
+		if ( $vendor_id ) {
+			return hivepress()->router->get_url( 'vendor_view_page', [ 'vendor_id' => $vendor_id ] );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Renders user view page.
+	 *
+	 * @return string
+	 */
+	public function render_user_view_page() {
+		return ( new Blocks\Template(
+			[
+				'template' => 'user_view_page',
+
+				'context'  => [
+					'user' => hivepress()->request->get_context( 'viewed_user' ),
 				],
 			]
 		) )->render();

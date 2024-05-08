@@ -26,10 +26,11 @@ final class Vendor extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Update vendor.
-		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_vendor' ], 100, 2 );
+		// Update user.
+		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 100, 2 );
 
-		// Update vendor status.
+		// Update vendor.
+		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
 		add_action( 'hivepress/v1/models/vendor/update_status', [ $this, 'update_vendor_status' ], 10, 4 );
 
 		// Add vendor fields.
@@ -43,11 +44,101 @@ final class Vendor extends Component {
 
 		if ( ! is_admin() ) {
 
+			// Set request context.
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
+			add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_user_edit_settings_page' ], 100, 2 );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Updates vendor.
+	 *
+	 * @param int    $vendor_id Vendor ID.
+	 * @param object $vendor Vendor object.
+	 */
+	public function update_vendor( $vendor_id, $vendor ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
+
+		// Get attributes.
+		$attributes = array_filter(
+			hivepress()->attribute->get_attributes( 'listing' ),
+			function( $attribute ) {
+				return hp\get_array_value( $attribute, 'synced' );
+			}
+		);
+
+		if ( ! $attributes ) {
+			return;
+		}
+
+		// Get values.
+		$values = array_intersect_key( $vendor->serialize(), $attributes );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) {
+				continue;
+			}
+
+			// Get field.
+			$attribute_field = hp\get_array_value( $vendor->_get_fields(), $attribute_name );
+
+			if ( ! $attribute_field || ! $attribute_field->get_value() ) {
+				continue;
+			}
+
+			// Get term names.
+			$term_names = get_terms(
+				[
+					'taxonomy'   => $attribute_field->get_arg( 'option_args' )['taxonomy'],
+					'include'    => (array) $attribute_field->get_value(),
+					'fields'     => 'names',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_names ) {
+				continue;
+			}
+
+			// Get term IDs.
+			$term_ids = get_terms(
+				[
+					'taxonomy'   => $attribute['edit_field']['option_args']['taxonomy'],
+					'name'       => $term_names,
+					'fields'     => 'ids',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_ids ) {
+				continue;
+			}
+
+			// Set value.
+			$values[ $attribute_name ] = $term_ids;
+		}
+
+		// Get listings.
+		$listings = Models\Listing::query()->filter(
+			[
+				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+				'user'       => $vendor->get_user__id(),
+			]
+		)->get();
+
+		// Update listings.
+		foreach ( $listings as $listing ) {
+			if ( array_intersect_key( $listing->serialize(), $attributes ) !== $values ) {
+				$listing->fill( $values )->save( array_keys( $values ) );
+			}
+		}
 	}
 
 	/**
@@ -78,12 +169,12 @@ final class Vendor extends Component {
 	}
 
 	/**
-	 * Updates vendor.
+	 * Updates user.
 	 *
 	 * @param int    $user_id User ID.
 	 * @param object $user User object.
 	 */
-	public function update_vendor( $user_id, $user ) {
+	public function update_user( $user_id, $user ) {
 
 		// Get vendor.
 		$vendor = Models\Vendor::query()->filter(
@@ -248,6 +339,42 @@ final class Vendor extends Component {
 	}
 
 	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return $context;
+		}
+
+		// Get cached vendor ID.
+		$vendor_id = hivepress()->cache->get_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor' );
+
+		if ( is_null( $vendor_id ) ) {
+
+			// Get vendor ID.
+			$vendor_id = (int) Models\Vendor::query()->filter(
+				[
+					'status' => 'publish',
+					'user'   => get_current_user_id(),
+				]
+			)->get_first_id();
+
+			// Cache vendor ID.
+			hivepress()->cache->set_user_cache( get_current_user_id(), 'vendor_id', 'models/vendor', $vendor_id );
+		}
+
+		// Set request context.
+		$context['vendor_id'] = $vendor_id;
+
+		return $context;
+	}
+
+	/**
 	 * Alters post types.
 	 *
 	 * @param array $post_types Post type arguments.
@@ -277,5 +404,51 @@ final class Vendor extends Component {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Alters user edit settings page.
+	 *
+	 * @param array  $blocks Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_edit_settings_page( $blocks, $template ) {
+
+		// Get vendor ID.
+		$vendor_id = hivepress()->request->get_context( 'vendor_id' );
+
+		if ( ! $vendor_id ) {
+			return $blocks;
+		}
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->get_by_id( $vendor_id );
+
+		if ( ! $vendor || $vendor->get_status() !== 'publish' ) {
+			return $blocks;
+		}
+
+		// Set template context.
+		$template->set_context( 'vendor', $vendor );
+
+		return hivepress()->template->merge_blocks(
+			$blocks,
+			[
+				'user_update_form' => [
+					'footer' => [
+						'form_actions' => [
+							'blocks' => [
+								'vendor_view_link' => [
+									'type'   => 'part',
+									'path'   => 'vendor/edit/page/vendor-view-link',
+									'_order' => 5,
+								],
+							],
+						],
+					],
+				],
+			]
+		);
 	}
 }

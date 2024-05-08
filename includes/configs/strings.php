@@ -73,6 +73,7 @@ return [
 	'widgets'                                   => esc_html__( 'Widgets', 'hivepress' ),
 	'primary_plural'                            => esc_html_x( 'Primary', 'plural', 'hivepress' ),
 	'secondary_plural'                          => esc_html_x( 'Secondary', 'plural', 'hivepress' ),
+	'ternary_plural'                            => esc_html_x( 'Ternary', 'plural', 'hivepress' ),
 	'related_plural'                            => esc_html_x( 'Related', 'plural', 'hivepress' ),
 	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
 	'by_name'                                   => esc_html_x( 'Name', 'sort order', 'hivepress' ),
