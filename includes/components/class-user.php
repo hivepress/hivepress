@@ -234,7 +234,7 @@ final class User extends Component {
 				]
 			)->get();
 
-			// Update listings.
+			// Update vendors.
 			foreach ( $vendors as $vendor ) {
 				if ( array_intersect_key( $vendor->serialize(), $attributes ) !== $values ) {
 					$vendor->fill( $values )->save( array_keys( $values ) );
