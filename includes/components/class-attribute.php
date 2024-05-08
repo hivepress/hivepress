@@ -778,6 +778,11 @@ final class Attribute extends Component {
 				// Add field.
 				$meta_box['fields']['edit_field_name'] = $field_args;
 			}
+
+			// @todo replace temporary fix.
+			if ( 'attachment_upload' === $field_type ) {
+				unset( $meta_box['fields']['moderated'] );
+			}
 		}
 
 		return $meta_box;
