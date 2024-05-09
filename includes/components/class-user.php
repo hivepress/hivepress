@@ -169,7 +169,7 @@ final class User extends Component {
 		// Update display name.
 		$user->set_display_name( $display_name )->save_display_name();
 
-		// Get attributes.
+		// Get attributes to sync.
 		$attributes = array_filter(
 			hivepress()->attribute->get_attributes( 'user' ),
 			function( $attribute ) {
