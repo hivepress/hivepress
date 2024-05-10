@@ -394,13 +394,17 @@ final class Vendor extends Component {
 	 */
 	public function alter_listing_view_page( $template ) {
 
-		// Get vendor.
-		$vendor = hivepress()->request->get_context( 'vendor' );
+		// Check for REST.
+		if ( ! hp\is_rest() ) {
 
-		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
+			// Get vendor.
+			$vendor = hivepress()->request->get_context( 'vendor' );
 
-			// Hide vendor.
-			hivepress()->template->fetch_block( $template, 'listing_vendor' );
+			if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
+
+				// Hide vendor.
+				hivepress()->template->fetch_block( $template, 'listing_vendor' );
+			}
 		}
 
 		return $template;
