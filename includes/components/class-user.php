@@ -168,17 +168,6 @@ final class User extends Component {
 
 		// Update display name.
 		$user->set_display_name( $display_name )->save_display_name();
-
-		// Sync attributes.
-		parent::sync_attributes(
-			$user,
-			'vendor',
-			'user',
-			[
-				'status__in' => [ 'auto-draft', 'draft', 'publish' ],
-				'user'       => $user_id,
-			]
-		);
 	}
 
 	/**
