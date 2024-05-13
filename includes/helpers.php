@@ -315,18 +315,15 @@ function replace_tokens( $tokens, $text ) {
 				foreach ( $fields as $field_name ) {
 					$field_value = '';
 
-					// Check field name.
-					if ( 'id' !== $field_name ) {
+					if ( 'id' === $field_name ) {
+						$field_value = $value->get_id();
+					} else {
 						$field = get_array_value( $value->_get_fields(), $field_name );
 
 						if ( $field ) {
 							$field_value = $field->display();
 						} elseif ( method_exists( $value, 'display_' . $field_name ) ) {
 							$field_value = call_user_func( [ $value, 'display_' . $field_name ] );
-						}
-					} else {
-						if ( method_exists( $value, 'get_id' ) ) {
-							$field_value = $value->get_id();
 						}
 					}
 
