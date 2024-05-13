@@ -394,6 +394,11 @@ final class Vendor extends Component {
 	 */
 	public function alter_listing_view_page( $template ) {
 
+		// @todo remove temporary fix after adding context to the editor.
+		if ( hp\is_rest() ) {
+			return $template;
+		}
+
 		// Get vendor.
 		$vendor = hivepress()->request->get_context( 'vendor' );
 
