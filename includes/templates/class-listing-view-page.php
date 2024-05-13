@@ -158,11 +158,20 @@ class Listing_View_Page extends Page_Sidebar_Right {
 								'_order'    => 50,
 							],
 
+							'listing_attributes_ternary'   => [
+								'type'      => 'attributes',
+								'model'     => 'listing',
+								'area'      => 'view_page_ternary',
+								'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'ternary_plural' ) . ')',
+								'_settings' => [ 'columns' ],
+								'_order'    => 60,
+							],
+
 							'listing_description'          => [
 								'type'   => 'part',
 								'path'   => 'listing/view/page/listing-description',
 								'_label' => hivepress()->translator->get_string( 'description' ),
-								'_order' => 60,
+								'_order' => 70,
 							],
 						],
 					],

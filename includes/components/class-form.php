@@ -541,7 +541,7 @@ final class Form extends Component {
 		$language = hivepress()->translator->get_language();
 
 		// Enqueue Flatpickr.
-		$filepath = '/node_modules/flatpickr/dist/l10n/' . $language . '.js';
+		$filepath = '/node_modules/flatpickr/dist/l10n/' . ( 'el' === $language ? 'gr' : $language ) . '.js';
 
 		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 			wp_enqueue_script(
