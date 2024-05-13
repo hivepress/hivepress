@@ -396,16 +396,17 @@ final class Vendor extends Component {
 
 		// Check for REST.
 		// todo: find the better solution when block is removed.
-		if ( ! hp\is_rest() ) {
+		if ( hp\is_rest() ) {
+			return $template;
+		}
 
-			// Get vendor.
-			$vendor = hivepress()->request->get_context( 'vendor' );
+		// Get vendor.
+		$vendor = hivepress()->request->get_context( 'vendor' );
 
-			if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
+		if ( ! get_option( 'hp_vendor_enable_display' ) || ! $vendor || $vendor->get_status() !== 'publish' ) {
 
-				// Hide vendor.
-				hivepress()->template->fetch_block( $template, 'listing_vendor' );
-			}
+			// Hide vendor.
+			hivepress()->template->fetch_block( $template, 'listing_vendor' );
 		}
 
 		return $template;
