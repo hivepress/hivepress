@@ -395,6 +395,7 @@ final class Vendor extends Component {
 	public function alter_listing_view_page( $template ) {
 
 		// Check for REST.
+		// todo: find the better solution when block is removed.
 		if ( ! hp\is_rest() ) {
 
 			// Get vendor.
