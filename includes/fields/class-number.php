@@ -46,11 +46,11 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
-	 * Enable number formatting?
+	 * Disable formatting.
 	 *
 	 * @var bool
 	 */
-	protected $disable_formatting = true;
+	protected $disable_formatting;
 
 	/**
 	 * Class initializer.
@@ -98,9 +98,9 @@ class Number extends Field {
 					],
 
 					'disable_formatting' => [
-						'label'   => esc_html__( 'Disable Formatting', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 140,
+						'label'  => esc_html__( 'Disable Formatting', 'hivepress' ),
+						'type'   => 'checkbox',
+						'_order' => 140,
 					],
 				],
 			],
