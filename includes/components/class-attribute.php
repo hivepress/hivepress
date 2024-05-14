@@ -306,7 +306,7 @@ final class Attribute extends Component {
 			} else {
 
 				// Add registration fields.
-				add_filter( 'hivepress/v1/forms/' . $model . '_register', [ $this, 'add_registration_fields' ], 100, 2 );
+				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ], 100, 2 );
 			}
 		}
 	}
@@ -402,7 +402,6 @@ final class Attribute extends Component {
 						'moderated'      => (bool) $attribute_object->hp_moderated,
 						'indexable'      => (bool) $attribute_object->hp_indexable,
 						'searchable'     => (bool) $attribute_object->hp_searchable,
-						'registrable'    => (bool) $attribute_object->hp_registrable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
 						'categories'     => [],
@@ -596,7 +595,6 @@ final class Attribute extends Component {
 							'moderated'      => false,
 							'indexable'      => false,
 							'searchable'     => false,
-							'registrable'    => false,
 							'filterable'     => false,
 							'sortable'       => false,
 							'categories'     => [],
@@ -740,15 +738,6 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
-
-					if ( 'user' === $model && 'attachment_upload' !== $field_type ) {
-						$meta_box['fields']['registrable'] = [
-							'label'   => esc_html_x( 'Registrable', 'attribute', 'hivepress' ),
-							'caption' => esc_html__( 'Display in the registration form', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_order'  => 5,
-						];
-					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
@@ -858,6 +847,11 @@ final class Attribute extends Component {
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $fields[ $attribute_name ] ) ) {
+
+				// Check user attributes.
+				if ( 'user' === $model && ! $this->is_attribute_registrable( $attribute ) ) {
+					continue;
+				}
 
 				// Get field arguments.
 				$field_args = array_merge(
@@ -1438,7 +1432,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
-			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && hp\get_array_value( $attribute, 'editable' ) && hp\get_array_value( $attribute, 'registrable' ) ) {
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && $this->is_attribute_registrable( $attribute ) ) {
 
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $attribute['edit_field'];
@@ -2002,5 +1996,21 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Checks if attribute is registrable.
+	 *
+	 * @param array $attribute Attribute object.
+	 * @return bool
+	 */
+	public function is_attribute_registrable( $attribute ) {
+
+		// Set restricted attribute types.
+		$restricted_types = [
+			'attachment_upload',
+		];
+
+		return hp\get_array_value( $attribute, 'editable' ) && hp\get_array_value( $attribute['edit_field'], 'required' ) && ! in_array( $attribute['edit_field']['type'], $restricted_types );
 	}
 }
