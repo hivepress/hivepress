@@ -843,6 +843,10 @@ final class Attribute extends Component {
 			}
 		}
 
+		if ( ! $category_ids ) {
+			$fields['categories']['required'] = false;
+		}
+
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );
 
