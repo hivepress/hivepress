@@ -46,11 +46,11 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
-	 * Disable formatting.
+	 * Is formatted?
 	 *
 	 * @var bool
 	 */
-	protected $disable_formatting;
+	protected $is_formatted;
 
 	/**
 	 * Class initializer.
@@ -97,10 +97,11 @@ class Number extends Field {
 						'_order'   => 130,
 					],
 
-					'disable_formatting' => [
-						'label'  => esc_html__( 'Disable Formatting', 'hivepress' ),
-						'type'   => 'checkbox',
-						'_order' => 140,
+					'is_formatted'       => [
+						'label'   => esc_html__( 'Enable Formatting', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_order'  => 140,
 					],
 				],
 			],
@@ -156,7 +157,7 @@ class Number extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return $this->disable_formatting ? $this->value : hp\format_number( $this->value, $this->decimals );
+			return $this->is_formatted ? hp\format_number( $this->value, $this->decimals ) : $this->value;
 		}
 	}
 
