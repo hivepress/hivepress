@@ -168,6 +168,31 @@ final class User extends Component {
 
 		// Update display name.
 		$user->set_display_name( $display_name )->save_display_name();
+
+		// Get vendors.
+		$query = Models\Vendor::query()->filter(
+			[
+				'status__in' => [ 'auto-draft', 'draft', 'publish' ],
+				'user'       => $user_id,
+			]
+		);
+
+		// Sync user-vendor attributes.
+		hivepress()->attribute->sync_attributes( $user, 'user', $query );
+
+		foreach ( $query->get() as $vendor ) {
+
+			// Get vendor listings.
+			$query = Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+					'user'       => $vendor->get_user__id(),
+				]
+			);
+
+			// Sync vendor-listing attributes.
+			hivepress()->attribute->sync_attributes( $vendor, 'listing', $query );
+		}
 	}
 
 	/**

@@ -954,8 +954,21 @@ final class Attribute extends Component {
 		// Get attributes.
 		$attributes = $this->get_attributes( $model, $category_ids );
 
+		// Get user attributes.
+		$user_attributes = 'vendor' === $model ? array_filter(
+			$this->get_attributes( 'user' ),
+			function( $attribute ) {
+				return hp\get_array_value( $attribute, 'editable' );
+			}
+		) : [];
+
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
+
+				// Check attribute priority.
+				if ( 'vendor' === $model && in_array( $attribute_name, array_keys( $user_attributes ) ) ) {
+					continue;
+				}
 
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
@@ -1972,5 +1985,90 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Syncs attributes.
+	 *
+	 * @param object $model Model object to sync.
+	 * @param string $model_attributes Model name of attributes to sync.
+	 * @param object $query Model query object to sync with.
+	 */
+	public function sync_attributes( $model, $model_attributes, $query ) {
+
+		// Get models.
+		$sync_models = $query->get();
+
+		// Check query.
+		if ( ! $sync_models->count() ) {
+			return;
+		}
+
+		// Get attributes.
+		$attributes = array_filter(
+			hivepress()->attribute->get_attributes( $model_attributes ),
+			function( $attribute ) {
+				return hp\get_array_value( $attribute, 'synced' );
+			}
+		);
+
+		// Check attributes.
+		if ( ! $attributes ) {
+			return;
+		}
+
+		// Get values.
+		$values = array_intersect_key( $model->serialize(), $attributes );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) {
+				continue;
+			}
+
+			// Get field.
+			$attribute_field = hp\get_array_value( $model->_get_fields(), $attribute_name );
+
+			if ( ! $attribute_field || ! $attribute_field->get_value() ) {
+				continue;
+			}
+
+			// Get term names.
+			$term_names = get_terms(
+				[
+					'taxonomy'   => $attribute_field->get_arg( 'option_args' )['taxonomy'],
+					'include'    => (array) $attribute_field->get_value(),
+					'fields'     => 'names',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_names ) {
+				continue;
+			}
+
+			// Get term IDs.
+			$term_ids = get_terms(
+				[
+					'taxonomy'   => $attribute['edit_field']['option_args']['taxonomy'],
+					'name'       => $term_names,
+					'fields'     => 'ids',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_ids ) {
+				continue;
+			}
+
+			// Set value.
+			$values[ $attribute_name ] = $term_ids;
+		}
+
+		// Update models.
+		foreach ( $sync_models as $sync_model ) {
+			if ( array_intersect_key( $sync_model->serialize(), $attributes ) !== $values ) {
+				$sync_model->fill( $values )->save( array_keys( $values ) );
+			}
+		}
 	}
 }
