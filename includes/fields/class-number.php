@@ -50,7 +50,7 @@ class Number extends Field {
 	 *
 	 * @var bool
 	 */
-	protected $is_formatted;
+	protected $formatted;
 
 	/**
 	 * Class initializer.
@@ -97,7 +97,7 @@ class Number extends Field {
 						'_order'   => 130,
 					],
 
-					'is_formatted'       => [
+					'formatted'       => [
 						'label'   => esc_html__( 'Enable Formatting', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
@@ -157,7 +157,7 @@ class Number extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			return $this->is_formatted ? hp\format_number( $this->value, $this->decimals ) : $this->value;
+			return $this->formatted ? hp\format_number( $this->value, $this->decimals ) : $this->value;
 		}
 	}
 
