@@ -66,14 +66,14 @@ class Number extends Field {
 				'sortable'   => true,
 
 				'settings'   => [
-					'placeholder'        => [
+					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'_order'     => 100,
 					],
 
-					'decimals'           => [
+					'decimals'    => [
 						'label'     => esc_html_x( 'Decimals', 'quantity', 'hivepress' ),
 						'type'      => 'number',
 						'default'   => 0,
@@ -83,21 +83,21 @@ class Number extends Field {
 						'_order'    => 110,
 					],
 
-					'min_value'          => [
+					'min_value'   => [
 						'label'    => esc_html__( 'Minimum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
 						'_order'   => 120,
 					],
 
-					'max_value'          => [
+					'max_value'   => [
 						'label'    => esc_html__( 'Maximum Value', 'hivepress' ),
 						'type'     => 'number',
 						'decimals' => 6,
 						'_order'   => 130,
 					],
 
-					'formatted'       => [
+					'formatted'   => [
 						'label'   => esc_html__( 'Enable Formatting', 'hivepress' ),
 						'type'    => 'checkbox',
 						'default' => true,
