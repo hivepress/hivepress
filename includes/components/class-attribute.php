@@ -303,12 +303,11 @@ final class Attribute extends Component {
 
 				// Set range values.
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
-			} else {
-
-				// Add registration fields.
-				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ], 100, 2 );
 			}
 		}
+
+		// Add registration fields.
+		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ], 100, 2 );
 	}
 
 	/**
@@ -849,7 +848,7 @@ final class Attribute extends Component {
 			if ( ! isset( $fields[ $attribute_name ] ) ) {
 
 				// Check user attributes.
-				if ( 'user' === $model && ! $this->is_attribute_registrable( $attribute ) ) {
+				if ( 'user' === $model && ! ( $attribute['editable'] && $attribute['edit_field']['required'] && 'attachment_upload' !== $attribute['edit_field']['type'] ) ) {
 					continue;
 				}
 
@@ -1432,7 +1431,7 @@ final class Attribute extends Component {
 		$model = $form::get_meta( 'model' );
 
 		foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
-			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && $this->is_attribute_registrable( $attribute ) ) {
+			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && $attribute['editable'] && $attribute['edit_field']['required'] && 'attachment_upload' !== $attribute['edit_field']['type'] ) {
 
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $attribute['edit_field'];
@@ -1996,21 +1995,5 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
-	}
-
-	/**
-	 * Checks if attribute is registrable.
-	 *
-	 * @param array $attribute Attribute object.
-	 * @return bool
-	 */
-	public function is_attribute_registrable( $attribute ) {
-
-		// Set restricted attribute types.
-		$restricted_types = [
-			'attachment_upload',
-		];
-
-		return hp\get_array_value( $attribute, 'editable' ) && hp\get_array_value( $attribute['edit_field'], 'required' ) && ! in_array( $attribute['edit_field']['type'], $restricted_types );
 	}
 }
