@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -41,8 +42,25 @@ final class Attribute extends Component {
 			[
 				'models' => [
 					'listing' => [],
-					'vendor'  => [],
-					'user'    => [],
+					'vendor'  => [
+						'sync' => [
+							'model'      => 'listing',
+							'filters'    => [
+								'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+								'user'       => 'user__id',
+							],
+						],
+					],
+					'user'    => [
+						'sync' => [
+							'model'      => 'vendor',
+							'attributes' => 'user',
+							'filters'    => [
+								'status__in' => [ 'auto-draft', 'draft', 'publish' ],
+								'user'       => 'id',
+							],
+						],
+					],
 				],
 			],
 			$args
@@ -272,6 +290,9 @@ final class Attribute extends Component {
 
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
+
+			// Update model snippet.
+			add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'sync_model_attributes' ], 100, 2 );
 
 			if ( 'user' !== $model ) {
 
@@ -1988,29 +2009,57 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Syncs attributes.
+	 * Syncs attributes between models.
 	 *
-	 * @param object $model Model object to sync.
-	 * @param string $model_attributes Model name of attributes to sync.
-	 * @param object $query Model query object to sync with.
+	 * @param int $model_id Model ID.
+	 * @param object|string $model Model object.
 	 */
-	public function sync_attributes( $model, $model_attributes, $query ) {
+	public function sync_model_attributes( $model_id, $model ) {
 
-		// Get models.
-		$sync_models = $query->get();
+		// Check model.
+		if ( 'user' === $model ) {
+			$model = Models\User::query()->get_by_id( $model_id );
+		}
 
-		// Check query.
-		if ( ! $sync_models->count() ) {
+		// Check sync settings.
+		if ( ! isset( $this->models[ $model::_get_meta( 'name' ) ]['sync'] ) ) {
+			return;
+		}
+
+		// Get sync settings.
+		$sync_settings = $this->models[ $model::_get_meta( 'name' ) ]['sync'];
+
+		// Check sync model.
+		if ( ! isset( $sync_settings['model'] ) ) {
+			return;
+		}
+
+		// Get sync model.
+		$sync_model = hp\create_class_instance( '\HivePress\Models\\' . $sync_settings['model'] );
+
+		// Check sync model.
+		if ( ! $sync_model ) {
 			return;
 		}
 
 		// Get attributes.
 		$attributes = array_filter(
-			hivepress()->attribute->get_attributes( $model_attributes ),
+			hivepress()->attribute->get_attributes( $sync_settings['attributes'] ?? $sync_settings['model'] ),
 			function( $attribute ) {
 				return hp\get_array_value( $attribute, 'synced' );
 			}
 		);
+
+		// Check attributes model.
+		if ( isset( $sync_settings['attributes'] ) && $sync_settings['attributes'] !== $sync_settings['model'] ) {
+			$attributes = array_filter(
+				hivepress()->attribute->get_attributes( $sync_settings['model'] ),
+				function( $attribute_name ) use ( $attributes ) {
+					return in_array( $attribute_name, array_keys( $attributes ) );
+				},
+				ARRAY_FILTER_USE_KEY
+			);
+		}
 
 		// Check attributes.
 		if ( ! $attributes ) {
@@ -2064,7 +2113,23 @@ final class Attribute extends Component {
 			$values[ $attribute_name ] = $term_ids;
 		}
 
-		// Update models.
+		// Set filters.
+		$filters = [];
+
+		// Check sync model filters.
+		if ( isset( $sync_settings['filters'] ) ) {
+			$filters = $sync_settings['filters'];
+
+			// Check user filter.
+			if ( isset( $filters['user'] ) && method_exists( $sync_model, 'get_' . $filters['user'] ) ) {
+				$filters['user'] = call_user_func( [ $sync_model, 'get_' . $filters['user'] ] );
+			}
+		}
+
+		// Get sync models.
+		$sync_models = $sync_model::query()->filter( $filters )->get();
+
+		// Update sync models.
 		foreach ( $sync_models as $sync_model ) {
 			if ( array_intersect_key( $sync_model->serialize(), $attributes ) !== $values ) {
 				$sync_model->fill( $values )->save( array_keys( $values ) );
