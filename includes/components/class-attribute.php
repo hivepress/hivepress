@@ -291,7 +291,7 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
-			// Update model snippet.
+			// Sync model attributes.
 			add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'sync_model_attributes' ], 100, 2 );
 
 			if ( 'user' !== $model ) {
