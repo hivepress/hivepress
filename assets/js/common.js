@@ -386,6 +386,9 @@ var hivepress = {
 					defaultHour: 0,
 					disable: [],
 					disableMobile: true,
+					onReady: function (selectedDates, dateStr, instance) {
+						$(instance.altInput).attr('inputmode', 'none');
+					},
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 
@@ -589,6 +592,9 @@ var hivepress = {
 						}
 
 						return hivepress.dateFormatter.formatDate(date, format);
+					},
+					onReady: function (selectedDates, dateStr, instance) {
+						$(instance.altInput).attr('inputmode', 'none');
 					},
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
