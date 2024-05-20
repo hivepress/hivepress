@@ -43,23 +43,10 @@ final class Attribute extends Component {
 				'models' => [
 					'listing' => [],
 					'vendor'  => [
-						'sync' => [
-							'model'      => 'listing',
-							'filters'    => [
-								'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-								'user'       => 'user__id',
-							],
-						],
+						'sync' => 'listing',
 					],
 					'user'    => [
-						'sync' => [
-							'model'      => 'vendor',
-							'attributes' => 'user',
-							'filters'    => [
-								'status__in' => [ 'auto-draft', 'draft', 'publish' ],
-								'user'       => 'id',
-							],
-						],
+						'sync' => 'vendor',
 					],
 				],
 			],
@@ -2026,16 +2013,11 @@ final class Attribute extends Component {
 			return;
 		}
 
-		// Get sync settings.
-		$sync_settings = $this->models[ $model::_get_meta( 'name' ) ]['sync'];
-
-		// Check sync model.
-		if ( ! isset( $sync_settings['model'] ) ) {
-			return;
-		}
+		// Get sync model name.
+		$sync_model_name = $this->models[ $model::_get_meta( 'name' ) ]['sync'];
 
 		// Get sync model.
-		$sync_model = hp\create_class_instance( '\HivePress\Models\\' . $sync_settings['model'] );
+		$sync_model = hp\create_class_instance( '\HivePress\Models\\' . $sync_model_name );
 
 		// Check sync model.
 		if ( ! $sync_model ) {
@@ -2043,23 +2025,19 @@ final class Attribute extends Component {
 		}
 
 		// Get attributes.
+		if ( 'user' === $model::_get_meta( 'name' ) && 'vendor' === $sync_model_name ) {
+			$model_attributes = hivepress()->attribute->get_attributes( 'user' );
+		} else {
+			$model_attributes = hivepress()->attribute->get_attributes( $sync_model_name );
+		}
+
+		// Get attributes.
 		$attributes = array_filter(
-			hivepress()->attribute->get_attributes( $sync_settings['attributes'] ?? $sync_settings['model'] ),
+			$model_attributes,
 			function( $attribute ) {
 				return hp\get_array_value( $attribute, 'synced' );
 			}
 		);
-
-		// Check attributes model.
-		if ( isset( $sync_settings['attributes'] ) && $sync_settings['attributes'] !== $sync_settings['model'] ) {
-			$attributes = array_filter(
-				hivepress()->attribute->get_attributes( $sync_settings['model'] ),
-				function( $attribute_name ) use ( $attributes ) {
-					return in_array( $attribute_name, array_keys( $attributes ) );
-				},
-				ARRAY_FILTER_USE_KEY
-			);
-		}
 
 		// Check attributes.
 		if ( ! $attributes ) {
@@ -2114,16 +2092,15 @@ final class Attribute extends Component {
 		}
 
 		// Set filters.
-		$filters = [];
+		$filters = [
+			'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+		];
 
-		// Check sync model filters.
-		if ( isset( $sync_settings['filters'] ) ) {
-			$filters = $sync_settings['filters'];
-
-			// Check user filter.
-			if ( isset( $filters['user'] ) && method_exists( $sync_model, 'get_' . $filters['user'] ) ) {
-				$filters['user'] = call_user_func( [ $sync_model, 'get_' . $filters['user'] ] );
-			}
+		// Set user filter.
+		if ( 'user' === $model::_get_meta( 'name' ) ) {
+			$filters['user'] = $model->get_id();
+		} else {
+			$filters['user'] = $model->get_user__id();
 		}
 
 		// Get sync models.
