@@ -173,6 +173,27 @@ final class Vendor extends Component {
 
 				// Add fields.
 				foreach ( $vendor_form->get_fields() as $field_name => $field ) {
+
+					// Get user attribute name.
+					$user_attribute_name = hp\get_first_array_value(
+						array_keys(
+							array_filter(
+								hivepress()->attribute->get_attributes( 'user' ),
+								function( $attribute, $attribute_name ) use ( $field_name ) {
+									return hp\get_array_value( $attribute, 'editable' ) && $field_name === $attribute_name;
+								},
+								ARRAY_FILTER_USE_BOTH
+							)
+						)
+					);
+
+					if ( $user_attribute_name ) {
+
+						// Remove vendor field.
+						unset( $form_args['fields'][ $user_attribute_name ] );
+						continue;
+					}
+
 					if ( ! isset( $form_args['fields'][ $field_name ] ) ) {
 						$field_args = $field->get_args();
 
