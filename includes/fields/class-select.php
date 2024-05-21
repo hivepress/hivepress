@@ -226,10 +226,10 @@ class Select extends Field {
 			$labels = [];
 
 			foreach ( (array) $this->value as $value ) {
-				$label = hp\get_array_value( $this->options, $value );
+				$label = hp\get_array_value( $this->options, $value, '' );
 
 				if ( is_array( $label ) ) {
-					$label = hp\get_array_value( $label, 'label' );
+					$label = hp\get_array_value( $label, 'label', '' );
 				}
 
 				if ( strlen( $label ) ) {

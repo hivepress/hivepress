@@ -54,6 +54,10 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
+		// Update user billing name.
+		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/update_last_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+
 		// Set countries configuration.
 		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
 
@@ -62,11 +66,11 @@ final class WooCommerce extends Component {
 			// Set request context.
 			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
+			// Redirect pages.
+			add_action( 'template_redirect', [ $this, 'redirect_pages' ] );
+
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
-
-			// Redirect account page.
-			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
@@ -304,6 +308,26 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Updates user billing name.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $value Value.
+	 */
+	public function update_user_billing_name( $user_id, $value ) {
+
+		// Check field value.
+		if ( ! strlen( $value ) ) {
+			return;
+		}
+
+		// Get field name.
+		$field_name = substr( hp\get_last_array_value( explode( '/', current_filter() ) ), strlen( 'update_' ) );
+
+		// Update field value.
+		update_user_meta( $user_id, 'billing_' . $field_name, $value );
+	}
+
+	/**
 	 * Sets countries configuration.
 	 *
 	 * @param array $countries Countries array.
@@ -340,6 +364,33 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Redirects pages.
+	 */
+	public function redirect_pages() {
+		$url = null;
+
+		// Redirect account page.
+		if ( ! is_user_logged_in() && is_account_page() ) {
+			$url = hivepress()->router->get_return_url( 'user_login_page' );
+		}
+
+		// Redirect product page.
+		if ( is_product() ) {
+			$parent = get_post_parent();
+
+			if ( $parent && strpos( $parent->post_type, 'hp_' ) === 0 ) {
+				$url = get_permalink( $parent->ID );
+			}
+		}
+
+		if ( $url ) {
+			wp_safe_redirect( $url );
+
+			exit;
+		}
+	}
+
+	/**
 	 * Sets account page template.
 	 *
 	 * @param string $path Template filepath.
@@ -352,17 +403,6 @@ final class WooCommerce extends Component {
 		}
 
 		return $path;
-	}
-
-	/**
-	 * Redirects account page.
-	 */
-	public function redirect_account_page() {
-		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
-
-			exit;
-		}
 	}
 
 	/**

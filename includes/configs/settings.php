@@ -72,17 +72,23 @@ return [
 						'_order'      => 60,
 					],
 
-					'listing_enable_image_zoom'        => [
+					'listing_enable_image_preview'     => [
 						'label'   => hivepress()->translator->get_string( 'images' ),
-						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
+						'caption' => esc_html__( 'Enable gallery preview', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 70,
+					],
+
+					'listing_enable_image_zoom'        => [
+						'caption' => esc_html__( 'Enable image zoom', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 80,
 					],
 
 					'listing_allow_video'              => [
 						'caption' => esc_html__( 'Allow uploading videos', 'hivepress' ),
 						'type'    => 'checkbox',
-						'_order'  => 80,
+						'_order'  => 90,
 					],
 				],
 			],
@@ -348,6 +354,14 @@ return [
 						'default'     => true,
 						'_parent'     => 'user_enable_registration',
 						'_order'      => 50,
+					],
+
+					'user_allow_deletion'          => [
+						'caption' => esc_html__( 'Allow users to delete their accounts', 'hivepress' ),
+						'type'    => 'checkbox',
+						'default' => true,
+						'_parent' => 'user_enable_registration',
+						'_order'  => 60,
 					],
 				],
 			],

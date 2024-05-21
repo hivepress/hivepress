@@ -126,11 +126,20 @@ class Vendor_View_Page extends Page_Sidebar_Left {
 										'_order'    => 40,
 									],
 
+									'vendor_attributes_ternary' => [
+										'type'      => 'attributes',
+										'model'     => 'vendor',
+										'area'      => 'view_page_ternary',
+										'_label'    => hivepress()->translator->get_string( 'attributes' ) . ' (' . hivepress()->translator->get_string( 'ternary_plural' ) . ')',
+										'_settings' => [ 'columns' ],
+										'_order'    => 50,
+									],
+
 									'vendor_description' => [
 										'type'   => 'part',
 										'path'   => 'vendor/view/page/vendor-description',
 										'_label' => hivepress()->translator->get_string( 'description' ),
-										'_order' => 50,
+										'_order' => 60,
 									],
 								],
 							],
