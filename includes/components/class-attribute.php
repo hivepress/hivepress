@@ -273,6 +273,9 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
+			// Validate model attributes.
+			add_filter( 'hivepress/v1/models/' . $model . '/errors', [ $this, 'validate_model_attributes' ], 100, 2 );
+
 			if ( 'user' !== $model ) {
 
 				// Update attribute.
@@ -305,6 +308,66 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Validates model attributes.
+	 *
+	 * @param array  $errors Error messages.
+	 * @param object $model Model object.
+	 * @return array
+	 */
+	public function validate_model_attributes( $errors, $model ) {
+		if ( empty( $errors ) ) {
+
+			// Get attributes.
+			$attributes = array_filter(
+				hivepress()->attribute->get_attributes( $model::_get_meta( 'name' ) ),
+				function ( $attribute ) {
+					return hp\get_array_value( $attribute['edit_field'], 'unique' );
+				}
+			);
+
+			if ( $attributes ) {
+
+				// Get model class.
+				$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model::_get_meta( 'name' ) );
+
+				if ( $model_class ) {
+
+					// Get models.
+					$models = $model_class->query()->filter(
+						[
+							'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+							'id__not_in' => [ $model->get_id() ],
+						]
+					)->get();
+
+					foreach ( $models as $check_model ) {
+
+						// Get attributes with the same name.
+						$model_attributes = array_filter(
+							$check_model->_get_fields(),
+							function ( $attribute_name ) use ( $attributes ) {
+								return in_array( $attribute_name, array_keys( $attributes ) );
+							},
+							ARRAY_FILTER_USE_KEY
+						);
+
+						foreach ( $model_attributes as $attribute_name => $attribute ) {
+							if ( ! $attribute->get_value() || $attribute->get_value() !== call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+								continue;
+							}
+
+							/* translators: %s: field label. */
+							$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $attribute->get_label() );
+						}
+					}
+				}
+			}
+		}
+
+		return $errors;
 	}
 
 	/**
