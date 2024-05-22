@@ -319,21 +319,26 @@ final class Attribute extends Component {
 	 */
 	public function validate_model_attributes( $errors, $model ) {
 		if ( empty( $errors ) ) {
+			$fields = [];
 
-			// Get attributes.
-			$attributes = array_filter(
-				hivepress()->attribute->get_attributes( $model::_get_meta( 'name' ) ),
-				function ( $attribute ) {
-					return hp\get_array_value( $attribute['edit_field'], 'unique' );
+			foreach ( $model->_get_fields() as $field_name => $field ) {
+				if ( ! hp\get_array_value( $field->get_args(), 'unique' ) || ! $field->get_value() ) {
+					continue;
 				}
-			);
 
-			if ( $attributes ) {
+				$fields[] = [
+					'name'  => $field_name,
+					'value' => $field->get_value(),
+					'label' => $field->get_label(),
+				];
+			}
+
+			if ( $fields ) {
 
 				// Get model class.
 				$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model::_get_meta( 'name' ) );
 
-				if ( $model_class ) {
+				foreach ( $fields as $field ) {
 
 					// Get models.
 					$models = $model_class->query()->filter(
@@ -341,28 +346,20 @@ final class Attribute extends Component {
 							'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
 							'id__not_in' => [ $model->get_id() ],
 						]
-					)->get();
+					)->set_args(
+						[
+							'meta_key'  => hp\prefix( $field['name'] ),
+							'meta_value' => $field['value'],
+						]
+					)->get_count();
 
-					foreach ( $models as $check_model ) {
-
-						// Get attributes with the same name.
-						$model_attributes = array_filter(
-							$check_model->_get_fields(),
-							function ( $attribute_name ) use ( $attributes ) {
-								return in_array( $attribute_name, array_keys( $attributes ) );
-							},
-							ARRAY_FILTER_USE_KEY
-						);
-
-						foreach ( $model_attributes as $attribute_name => $attribute ) {
-							if ( ! $attribute->get_value() || $attribute->get_value() !== call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
-								continue;
-							}
-
-							/* translators: %s: field label. */
-							$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $attribute->get_label() );
-						}
+					// Check models.
+					if ( ! $models ) {
+						continue;
 					}
+
+					/* translators: %s: field label. */
+					$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
 				}
 			}
 		}
