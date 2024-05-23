@@ -274,7 +274,7 @@ final class Attribute extends Component {
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
 			// Validate model attributes.
-			add_filter( 'hivepress/v1/models/' . $model . '/errors', [ $this, 'validate_model_attributes' ], 100, 2 );
+			add_filter( 'hivepress/v1/models/' . $model . '/errors', [ $this, 'validate_unique_attributes' ], 100, 2 );
 
 			if ( 'user' !== $model ) {
 
@@ -311,13 +311,13 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Validates model attributes.
+	 * Validates unique model attributes.
 	 *
 	 * @param array  $errors Error messages.
 	 * @param object $model Model object.
 	 * @return array
 	 */
-	public function validate_model_attributes( $errors, $model ) {
+	public function validate_unique_attributes( $errors, $model ) {
 		if ( empty( $errors ) ) {
 			$fields = [];
 
