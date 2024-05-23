@@ -319,6 +319,8 @@ final class Attribute extends Component {
 	 */
 	public function validate_unique_attributes( $errors, $model ) {
 		if ( empty( $errors ) ) {
+
+			// Set unique fields.
 			$fields = [];
 
 			foreach ( $model->_get_fields() as $field_name => $field ) {
@@ -356,7 +358,7 @@ final class Attribute extends Component {
 					]
 				)->set_args(
 					[
-						'meta_key'  => hp\prefix( $field['name'] ),
+						'meta_key'   => hp\prefix( $field['name'] ),
 						'meta_value' => $field['value'],
 					]
 				)->get_count();
