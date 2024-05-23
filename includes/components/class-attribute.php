@@ -333,34 +333,41 @@ final class Attribute extends Component {
 				];
 			}
 
-			if ( $fields ) {
+			// Check fields.
+			if ( ! $fields ) {
+				return $errors;
+			}
 
-				// Get model class.
-				$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model::_get_meta( 'name' ) );
+			// Get model class.
+			$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model::_get_meta( 'name' ) );
 
-				foreach ( $fields as $field ) {
+			// Check model class.
+			if ( ! $model_class ) {
+				return $errors;
+			}
 
-					// Get models.
-					$models = $model_class->query()->filter(
-						[
-							'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-							'id__not_in' => [ $model->get_id() ],
-						]
-					)->set_args(
-						[
-							'meta_key'  => hp\prefix( $field['name'] ),
-							'meta_value' => $field['value'],
-						]
-					)->get_count();
+			foreach ( $fields as $field ) {
 
-					// Check models.
-					if ( ! $models ) {
-						continue;
-					}
+				// Get models.
+				$models = $model_class->query()->filter(
+					[
+						'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+						'id__not_in' => [ $model->get_id() ],
+					]
+				)->set_args(
+					[
+						'meta_key'  => hp\prefix( $field['name'] ),
+						'meta_value' => $field['value'],
+					]
+				)->get_count();
 
-					/* translators: %s: field label. */
-					$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
+				// Check models.
+				if ( ! $models ) {
+					continue;
 				}
+
+				/* translators: %s: field label. */
+				$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
 			}
 		}
 
