@@ -215,6 +215,12 @@ var hivepress = {
 				});
 			}
 
+			if (field.data('max-input-length')) {
+				$.extend(settings, {
+					maximumInputLength: field.data('max-input-length'),
+				});
+			}
+
 			if (field.data('multistep')) {
 				var options = [];
 
