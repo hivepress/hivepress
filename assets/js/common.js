@@ -843,77 +843,90 @@ var hivepress = {
 						tinyMCE.triggerSave();
 					}
 
-					$.ajax({
-						url: form.data('action'),
-						method: 'POST',
-						data: new FormData(form.get(0)),
-						contentType: false,
-						processData: false,
-						beforeSend: function (xhr) {
-							var method = form.data('method') ? form.data('method') : form.attr('method');
+					var formSubmission = function() {
+						$.ajax({ 
+							url: form.data('action'),
+							method: 'POST',
+							timeout: form.attr('data-infinite') ? form.attr('data-infinite') * 1000 : 0,
+							data: new FormData(form.get(0)),
+							contentType: false,
+							processData: false,
+							beforeSend: function (xhr) {
+								var method = form.data('method') ? form.data('method') : form.attr('method');
 
-							if (method !== 'POST') {
-								xhr.setRequestHeader('X-HTTP-Method-Override', method);
-							}
-
-							if ($('body').hasClass('logged-in') || $('body').hasClass('wp-admin')) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							}
-						},
-						complete: function (xhr) {
-							var response = xhr.responseJSON,
-								redirect = form.data('redirect');
-
-							submitButton.prop('disabled', false);
-							submitButton.attr('data-state', '');
-
-							if (typeof grecaptcha !== 'undefined' && captcha.length) {
-								grecaptcha.reset(captchaId);
-							}
-
-							if (response == null || response.hasOwnProperty('data')) {
-								if (form.data('message') && xhr.status !== 307) {
-									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
+								if (method !== 'POST') {
+									xhr.setRequestHeader('X-HTTP-Method-Override', method);
 								}
 
-								if (redirect || xhr.status === 307) {
-									if (typeof redirect === 'string') {
-										window.location.replace(redirect);
-									} else {
-										window.location.reload(true);
+								if ($('body').hasClass('logged-in') || $('body').hasClass('wp-admin')) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								}
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON,
+									redirect = form.data('redirect');
+
+								submitButton.prop('disabled', false);
+								submitButton.attr('data-state', '');
+
+								if (typeof grecaptcha !== 'undefined' && captcha.length) {
+									grecaptcha.reset(captchaId);
+								}
+
+								if (response == null || response.hasOwnProperty('data')) {
+									if (form.data('message') && xhr.status !== 307) {
+										messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 									}
-								} else if (form.data('reset') || !form.is('[data-id]')) {
-									form.trigger('reset');
 
-									form.find(hivepress.getSelector('file-upload')).each(function () {
-										var field = $(this),
-											selectLabel = field.closest('label'),
-											responseContainer = selectLabel.parent().children('div').first();
+									if (redirect || xhr.status === 307) {
+										if (typeof redirect === 'string') {
+											window.location.replace(redirect);
+										} else {
+											window.location.reload(true);
+										}
+									} else if (form.data('reset') || !form.is('[data-id]')) {
+										form.trigger('reset');
 
-										responseContainer.html('');
-									});
+										form.find(hivepress.getSelector('file-upload')).each(function () {
+											var field = $(this),
+												selectLabel = field.closest('label'),
+												responseContainer = selectLabel.parent().children('div').first();
+
+											responseContainer.html('');
+										});
+									}
+								} else if (response.hasOwnProperty('error')) {
+									if (response.error.hasOwnProperty('errors')) {
+										$.each(response.error.errors, function (index, error) {
+											messageContainer.append('<div>' + error.message + '</div>');
+										});
+									} else if (response.error.hasOwnProperty('message')) {
+										messageContainer.html('<div>' + response.error.message + '</div>');
+									}
+
+									if (!messageContainer.is(':empty')) {
+										messageContainer.addClass(messageClass + '--error').show();
+									}
 								}
-							} else if (response.hasOwnProperty('error')) {
-								if (response.error.hasOwnProperty('errors')) {
-									$.each(response.error.errors, function (index, error) {
-										messageContainer.append('<div>' + error.message + '</div>');
-									});
-								} else if (response.error.hasOwnProperty('message')) {
-									messageContainer.html('<div>' + response.error.message + '</div>');
-								}
 
-								if (!messageContainer.is(':empty')) {
-									messageContainer.addClass(messageClass + '--error').show();
+								if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
+									$('html, body').animate({
+										scrollTop: form.offset().top,
+									}, 500);
+								}
+							},
+							error: function(jqXHR, textStatus) {
+								if (textStatus === 'timeout') {
+
+									// Repeat AJAX request.
+									formSubmission();
 								}
 							}
+						});
+					}
 
-							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
-								$('html, body').animate({
-									scrollTop: form.offset().top,
-								}, 500);
-							}
-						},
-					});
+					// Send AJAX request.
+					formSubmission();
 
 					e.preventDefault();
 				});
