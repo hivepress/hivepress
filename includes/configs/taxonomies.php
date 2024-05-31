@@ -15,6 +15,7 @@ return [
 		'post_type'         => [ 'listing' ],
 		'hierarchical'      => true,
 		'show_admin_column' => true,
+		'meta_box_cb'       => false,
 		'rewrite'           => [ 'slug' => 'listing-category' ],
 
 		'labels'            => [

@@ -1560,6 +1560,22 @@ final class Attribute extends Component {
 
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
+
+						if ( 'listing' === $model ) {
+							$meta_box['fields']['category'] = [
+								'label'       => hivepress()->translator->get_string( 'category' ),
+								'type'        => 'select',
+								'options'     => 'terms',
+								'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+								'required'    => true,
+
+								'attributes'  => [
+									'data-render' => hivepress()->router->get_url( 'listing_attributes' ),
+								],
+
+								'_order'      => 1,
+							];
+						}
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
 
