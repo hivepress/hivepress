@@ -499,6 +499,13 @@ final class Listing extends Component {
 			);
 		}
 
+		// Set attributes default values.
+		foreach ( $listing->_get_fields() as $field) {
+			if ( ! $field->get_value() && $field->get_default() ) {
+				$field->set_value( $field->get_default() );
+			}
+		}
+
 		// Remove title field.
 		if ( get_option( 'hp_listing_title_format' ) ) {
 			unset( $form_args['fields']['title'] );

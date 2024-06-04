@@ -60,6 +60,13 @@ abstract class Field {
 	protected $label;
 
 	/**
+	 * Field default value.
+	 *
+	 * @var mixed
+	 */
+	protected $default;
+
+	/**
 	 * Field description.
 	 *
 	 * @var string
@@ -152,6 +159,13 @@ abstract class Field {
 						'html'       => true,
 						'_context'   => 'edit',
 						'_order'     => 20,
+					],
+
+					'default'     => [
+						'label'    => hivepress()->translator->get_string( 'default' ),
+						'type'     => 'text',
+						'_context' => 'edit',
+						'_order'   => 30,
 					],
 				],
 			],
@@ -348,6 +362,15 @@ abstract class Field {
 		}
 
 		return $label;
+	}
+
+	/**
+	 * Gets field default value.
+	 *
+	 * @return mixed
+	 */
+	final public function get_default() {
+		return $this->default;
 	}
 
 	/**
