@@ -960,14 +960,17 @@ final class Attribute extends Component {
 	 */
 	public function add_edit_fields( $form_args, $form ) {
 
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
+
 		// Get model.
-		$model = $form::get_meta( 'model' );
+		$model = $form->get_model();
 
 		// Get category IDs.
-		$category_ids = $this->get_category_ids( $model, $form->get_model() );
+		$category_ids = $this->get_category_ids( $model_name, $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model_name, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -975,7 +978,7 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
+				if ( $attribute['moderated'] && $model_name . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
@@ -987,6 +990,13 @@ final class Attribute extends Component {
 
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $field_args;
+			}
+		}
+
+		// Set attributes default values.
+		foreach ( $model->_get_fields() as $field) {
+			if ( ! $field->get_value() && $field->get_default() ) {
+				$field->set_value( $field->get_default() );
 			}
 		}
 
