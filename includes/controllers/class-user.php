@@ -489,11 +489,6 @@ final class User extends Controller {
 	 */
 	public function request_user_password( $request ) {
 
-		// Check permissions.
-		if ( is_user_logged_in() && ! current_user_can( 'edit_users' ) ) {
-			return hp\rest_error( 403 );
-		}
-
 		// Validate form.
 		$form = ( new Forms\User_Password_Request() )->set_values( $request->get_params() );
 
@@ -516,6 +511,11 @@ final class User extends Controller {
 			} else {
 				return hp\rest_error( 404, esc_html__( 'User with this username doesn\'t exist.', 'hivepress' ) );
 			}
+		}
+
+		// Check permissions.
+		if ( is_user_logged_in() && get_current_user_id() !== $user_object->ID ) {
+			return hp\rest_error( 403 );
 		}
 
 		$user = Models\User::query()->get_by_id( $user_object );
@@ -829,7 +829,11 @@ final class User extends Controller {
 	 */
 	public function redirect_user_password_reset_page() {
 		if ( is_user_logged_in() ) {
-			if ( hivepress()->router->get_redirect_url() ) {
+			if ( ! is_wp_error( check_password_reset_key( hp\get_array_value( $_GET, 'password_reset_key' ), hp\get_array_value( $_GET, 'username' ) ) ) ) {
+				wp_logout();
+
+				return hivepress()->router->get_current_url();
+			} elseif ( hivepress()->router->get_redirect_url() ) {
 				return hivepress()->router->get_redirect_url();
 			} else {
 				return hivepress()->router->get_url( 'user_account_page' );
