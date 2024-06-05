@@ -85,7 +85,64 @@ final class Attribute extends Component {
 
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
+		} else {
+
+			// Alter settings.
+			add_filter( 'hivepress/v1/settings', [ $this, 'alter_settings' ] );
 		}
+	}
+
+	/**
+	 * Alters settings.
+	 *
+	 * @param array $settings Settings configuration.
+	 * @return array
+	 */
+	public function alter_settings( $settings ) {
+
+		// Get all tabs.
+		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
+
+		$first_tab   = hp\get_first_array_value( $tabs );
+		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
+
+		// Check tab.
+		if ( ! in_array( $current_tab, [ 'listings', 'vendors', 'requests' ], true ) ) {
+			return $settings;
+		}
+
+		// Set model.
+		$model = substr( $current_tab, 0, -1 );
+
+		// Create sort form.
+		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
+
+		// Get form fields.
+		$form_fields = $sort_form->get_fields();
+
+		// Get sort args.
+		$field_args = $form_fields['_sort']->get_args();
+
+		// Check sort options.
+		if ( ! isset( $field_args['options'] ) ) {
+			return $settings;
+		}
+
+		$settings[ $current_tab ]['sections']['display']['fields'] = hp\merge_arrays(
+			[
+				$model . '_sorting_option' => [
+					'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
+					/* translators: %s: model name. */
+					'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
+					'type'        => 'select',
+					'options'     => $field_args['options'],
+					'_order'      => 100,
+				],
+			],
+			$settings[ $current_tab ]['sections']['display']['fields']
+		);
+
+		return $settings;
 	}
 
 	/**
@@ -1129,6 +1186,11 @@ final class Attribute extends Component {
 
 		// Set options.
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
+
+		// Set default sort option.
+		if ( get_option( hp\prefix( $model . '_sorting_option' ) ) ) {
+			$form_args['fields']['_sort']['default'] = get_option( hp\prefix( $model . '_sorting_option' ) );
+		}
 
 		return $form_args;
 	}
