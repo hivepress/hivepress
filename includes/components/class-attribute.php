@@ -128,19 +128,14 @@ final class Attribute extends Component {
 			return $settings;
 		}
 
-		$settings[ $current_tab ]['sections']['display']['fields'] = hp\merge_arrays(
-			[
-				$model . '_sorting_option' => [
-					'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
-					/* translators: %s: model name. */
-					'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
-					'type'        => 'select',
-					'options'     => $field_args['options'],
-					'_order'      => 100,
-				],
-			],
-			$settings[ $current_tab ]['sections']['display']['fields']
-		);
+		$settings[ $current_tab ]['sections']['display']['fields'][ $model . '_sorting_option' ] = [
+			'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
+			/* translators: %s: model name. */
+			'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
+			'type'        => 'select',
+			'options'     => $field_args['options'],
+			'_order'      => 100,
+		];
 
 		return $settings;
 	}
