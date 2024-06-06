@@ -95,7 +95,7 @@ final class Attribute extends Controller {
 					get_post( $model_id ),
 					[
 						'id'       => hp\prefix( 'listing_attributes' ),
-//						'defaults' => $request->get_params(),
+						'defaults' => $request->get_params(),
 						'echo'     => false,
 					]
 				),

@@ -988,9 +988,10 @@ final class Admin extends Component {
 	 * Gets meta boxes.
 	 *
 	 * @param string $screen Screen name.
+	 * @param mixed  $category_id Category ID.
 	 * @return array
 	 */
-	protected function get_meta_boxes( $screen ) {
+	protected function get_meta_boxes( $screen, $category_id = null ) {
 
 		// Check screen.
 		if ( 'user' === $screen ) {
@@ -1010,7 +1011,7 @@ final class Admin extends Component {
 					 * @param {array} $props Meta box properties.
 					 * @return {array} Meta box properties.
 					 */
-					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
+					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name, 'category' => $category_id ] ) );
 
 					// Set default arguments.
 					$args = array_merge(
@@ -1173,8 +1174,15 @@ final class Admin extends Component {
 		// Get meta box name.
 		$meta_box_name = hp\unprefix( $args['id'] );
 
+		// Set category.
+		$category = null;
+
+		if ( isset( $args['defaults']['hp_category'] ) ) {
+			$category = $args['defaults']['hp_category'];
+		}
+
 		// Get meta box.
-		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type ), $meta_box_name );
+		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type, $category ), $meta_box_name );
 
 		if ( $meta_box ) {
 
