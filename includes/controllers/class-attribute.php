@@ -52,55 +52,12 @@ final class Attribute extends Controller {
 						'action' => [ $this, 'get_meta_box' ],
 						'rest'   => true,
 					],
-
-					'listing_attributes' => [
-						'base'   => 'meta_boxes_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'render_listing_attributes' ],
-						'rest'   => true,
-					],
 				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Renders listing attributes.
-	 *
-	 * @param WP_REST_Request $request API request.
-	 * @return WP_Rest_Response
-	 */
-	public function render_listing_attributes( $request ) {
-
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return hp\rest_error( 401 );
-		}
-
-		$model_id = absint( $request->get_param( '_id' ) );
-
-		// Get model.
-		$model = hivepress()->model->get_model_object( sanitize_key( $request->get_param( '_model' ) ), $model_id );
-
-		// Update categories.
-		$model->set_categories( $request->get_param( 'hp_category' ) )->save_categories();
-
-		return hp\rest_response(
-			200,
-			[
-				'html' => hivepress()->admin->render_meta_box(
-					get_post( $model_id ),
-					[
-						'id'       => hp\prefix( 'listing_attributes' ),
-						'defaults' => $request->get_params(),
-						'echo'     => false,
-					]
-				),
-			]
-		);
 	}
 
 	/**
@@ -199,7 +156,7 @@ final class Attribute extends Controller {
 			hivepress()->attribute->get_models()
 		);
 
-		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_edit', $model_name . '_search' ] ) ) {
+		if ( ! in_array( $model_name, array_merge( [ 'listing' ], $model_names ) ) || ! in_array( $meta_box, [ 'listing_attributes', $model_name . '_edit', $model_name . '_search' ] ) ) {
 			return hp\rest_error( 400 );
 		}
 
@@ -215,6 +172,12 @@ final class Attribute extends Controller {
 		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return hp\rest_error( 403 );
+		}
+
+		if ( 'listing' === $model_name && 'listing_attributes' === $meta_box ) {
+
+			// Update categories.
+			Models\Listing::query()->get_by_id( $post->ID )->set_categories( $request->get_param( 'hp_category' ) )->save_categories();
 		}
 
 		// Update field types.

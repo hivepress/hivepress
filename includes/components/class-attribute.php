@@ -800,11 +800,7 @@ final class Attribute extends Component {
 		$model = $meta_box['model'];
 
 		// Get category IDs.
-		if ( isset( $meta_box['category'] ) && $meta_box['category'] ) {
-			$category_ids = $meta_box['category'];
-		} else {
-			$category_ids = $this->get_category_ids( $model, get_the_ID() );
-		}
+		$category_ids = hp\get_array_value( $meta_box, 'category', $this->get_category_ids( $model, get_the_ID() ) );
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
@@ -1575,7 +1571,7 @@ final class Attribute extends Component {
 								'_order'      => 1,
 
 								'attributes'  => [
-									'data-render' => hivepress()->router->get_url( 'listing_attributes' ),
+									'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
 								],
 							];
 						}
