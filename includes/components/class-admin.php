@@ -72,7 +72,7 @@ final class Admin extends Component {
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
-			add_action( 'save_post', [ $this, 'update_meta_box' ] );
+			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -1091,8 +1091,9 @@ final class Admin extends Component {
 	 * Updates meta box values.
 	 *
 	 * @param int $post_id Post ID.
+	 * @param WP_Post $post Post object.
 	 */
-	public function update_meta_box( $post_id ) {
+	public function update_meta_box( $post_id, $post ) {
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -1114,11 +1115,18 @@ final class Admin extends Component {
 			return;
 		}
 
+		// Get post category ID.
+		$category = get_post_meta($post->ID, 'hp_listing_temporary_category', true);
+
+		if($category){
+			delete_post_meta($post->ID, 'hp_listing_temporary_category');
+		}
+
 		// Remove action.
 		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box ) {
+		foreach ( $this->get_meta_boxes( get_post_type(), $category ) as $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.

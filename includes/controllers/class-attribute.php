@@ -176,8 +176,8 @@ final class Attribute extends Controller {
 
 		if ( 'listing' === $model_name && 'listing_attributes' === $meta_box ) {
 
-			// Update categories.
-			Models\Listing::query()->get_by_id( $post->ID )->set_categories( $request->get_param( 'hp_category' ) )->save_categories();
+			// Save listing temporary category ID.
+			update_post_meta($post->ID, 'hp_listing_temporary_category', $request->get_param( 'hp_category' ));
 		}
 
 		// Update field types.
