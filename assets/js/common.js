@@ -333,7 +333,7 @@ var hivepress = {
 								}
 
 								if (typeof grecaptcha !== 'undefined') {
-									var captcha = newContainer.find('.g-recaptcha');
+									var captcha = newContainer.find('.recaptcha');
 
 									if (captcha.length && captcha.data('sitekey')) {
 										grecaptcha.render(captcha.get(0), {
@@ -771,8 +771,8 @@ var hivepress = {
 
 		forms.each(function () {
 			var form = $(this),
-				captcha = form.find('.g-recaptcha'),
-				captchaId = $('.g-recaptcha').index(captcha.get(0)),
+				captcha = form.find('.recaptcha'),
+				captchaId = $('.recaptcha').index(captcha.get(0)),
 				submitButton = form.find(':submit'),
 				renderSettings = form.data('render');
 
@@ -836,19 +836,14 @@ var hivepress = {
 				var messageContainer = form.find(hivepress.getSelector('messages')).first(),
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
-				form.on('submit', function (e) {
-					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
-
-					if (typeof tinyMCE !== 'undefined') {
-						tinyMCE.triggerSave();
-					}
-
+				function formSubmit() {
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
 						data: new FormData(form.get(0)),
 						contentType: false,
 						processData: false,
+						async: false,
 						beforeSend: function (xhr) {
 							var method = form.data('method') ? form.data('method') : form.attr('method');
 
@@ -868,7 +863,7 @@ var hivepress = {
 							submitButton.attr('data-state', '');
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
-								grecaptcha.reset(captchaId);
+								captcha.val('');
 							}
 
 							if (response == null || response.hasOwnProperty('data')) {
@@ -914,6 +909,23 @@ var hivepress = {
 							}
 						},
 					});
+				}
+
+				form.on('submit', function (e) {
+					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
+
+					if (typeof tinyMCE !== 'undefined') {
+						tinyMCE.triggerSave();
+					}
+
+					if (typeof grecaptcha !== 'undefined' && captcha.length) {
+						grecaptcha.execute(captcha.data('sitekey'), {action: 'submit'}).then(function (token) {
+							captcha.val(token);
+							formSubmit();
+						});
+					} else {
+						formSubmit();
+					}
 
 					e.preventDefault();
 				});

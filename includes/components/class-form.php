@@ -572,7 +572,7 @@ final class Form extends Component {
 			if ( $this->is_captcha_enabled() ) {
 				wp_enqueue_script(
 					'recaptcha',
-					'https://www.google.com/recaptcha/api.js',
+					'https://www.google.com/recaptcha/api.js?render=' . get_option( 'hp_recaptcha_site_key' ),
 					[],
 					null,
 					false

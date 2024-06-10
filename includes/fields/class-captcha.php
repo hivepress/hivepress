@@ -26,7 +26,8 @@ class Captcha extends Field {
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
 			[
-				'class'        => [ 'g-recaptcha' ],
+				'name'         => 'g-recaptcha-response',
+				'class'        => [ 'recaptcha' ],
 				'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
 			]
 		);
@@ -45,6 +46,6 @@ class Captcha extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<div ' . hp\html_attributes( $this->attributes ) . '></div>';
+		return '<input type="hidden" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }
