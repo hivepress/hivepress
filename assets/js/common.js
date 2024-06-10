@@ -764,22 +764,20 @@ var hivepress = {
 
 		// Number
 		container.find('input[type="number"]').each(function () {
-			var number = $(this);
+			var number = $(this),
+				regexp = new RegExp(number.attr('pattern'));
 
-			number.on('keypress', function(event) {
-				var allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ','];
-
-				if (!allowedKeys.includes(event.key)) {
-					event.preventDefault();
+			number.on('keypress', function(e) {
+				if (!regexp.test(e.key)) {
+					e.preventDefault();
 				}
 			});
 
-			number.on('paste', function(event) {
-				var paste = (event.originalEvent.clipboardData || window.clipboardData).getData('text'),
-					regex = /^-?\d*[.,]?\d*$/;
+			number.on('paste', function(e) {
+				var paste = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
 
-				if (!regex.test(paste)) {
-					event.preventDefault();
+				if (!regexp.test(paste)) {
+					e.preventDefault();
 				}
 			});
 		});
