@@ -85,11 +85,53 @@ final class Attribute extends Component {
 
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
+
+			// Set search order.
+			add_filter( 'posts_orderby', [ $this, 'set_search_order' ] );
 		} else {
 
 			// Alter settings.
 			add_filter( 'hivepress/v1/settings', [ $this, 'alter_settings' ] );
 		}
+	}
+
+	/**
+	 * Sets WP search order.
+	 *
+	 * @param string $orderby Order filters.
+	 * @return string
+	 */
+	public function set_search_order( $orderby ) {
+		global $wpdb;
+
+		// Check sort option.
+		if ( isset( $_GET['_sort'] ) ) {
+			return $orderby;
+		}
+
+		foreach ( [ 'listing', 'vendor', 'request' ] as $model ) {
+
+			// Get page ID.
+			$page_id = absint( get_option( 'hp_page_' . $model . 's' ) );
+
+			// Check page.
+			if ( ! ( ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_' . $model ) || ( is_tax() && strpos( get_queried_object()->taxonomy, 'hp_' . $model . '_' ) === 0 ) ) ) {
+				continue;
+			}
+
+			// Set sort param.
+			$sort_param = get_option( hp\prefix( $model . '_sorting_option' ) );
+
+			if ( 'title' === $sort_param ) {
+
+				// Set sort order.
+				$orderby = $wpdb->posts . '.post_title ASC';
+			}
+
+			break;
+		}
+
+		return $orderby;
 	}
 
 	/**
@@ -99,43 +141,36 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function alter_settings( $settings ) {
+		foreach ( [ 'listing', 'vendor', 'request' ] as $model ) {
 
-		// Get all tabs.
-		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
 
-		$first_tab   = hp\get_first_array_value( $tabs );
-		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
+			// Check sort form.
+			if ( ! $sort_form ) {
+				continue;
+			}
 
-		// Check tab.
-		if ( ! in_array( $current_tab, [ 'listings', 'vendors', 'requests' ], true ) ) {
-			return $settings;
+			// Get form fields.
+			$form_fields = $sort_form->get_fields();
+
+			// Get sort args.
+			$field_args = $form_fields['_sort']->get_args();
+
+			// Check sort options.
+			if ( ! isset( $field_args['options'] ) ) {
+				continue;
+			}
+
+			$settings[ $model . 's' ]['sections']['display']['fields'][ $model . '_sorting_option' ] = [
+				'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
+				/* translators: %s: model name. */
+				'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
+				'type'        => 'select',
+				'options'     => $field_args['options'],
+				'_order'      => 100,
+			];
 		}
-
-		// Set model.
-		$model = substr( $current_tab, 0, -1 );
-
-		// Create sort form.
-		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
-
-		// Get form fields.
-		$form_fields = $sort_form->get_fields();
-
-		// Get sort args.
-		$field_args = $form_fields['_sort']->get_args();
-
-		// Check sort options.
-		if ( ! isset( $field_args['options'] ) ) {
-			return $settings;
-		}
-
-		$settings[ $current_tab ]['sections']['display']['fields'][ $model . '_sorting_option' ] = [
-			'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
-			/* translators: %s: model name. */
-			'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
-			'type'        => 'select',
-			'options'     => $field_args['options'],
-			'_order'      => 100,
-		];
 
 		return $settings;
 	}
