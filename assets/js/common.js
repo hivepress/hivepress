@@ -762,6 +762,28 @@ var hivepress = {
 				});
 		});
 
+		// Number
+		container.find('input[type="number"]').each(function () {
+			var number = $(this);
+
+			number.on('keypress', function(event) {
+				var allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ','];
+
+				if (!allowedKeys.includes(event.key)) {
+					event.preventDefault();
+				}
+			});
+
+			number.on('paste', function(event) {
+				var paste = (event.originalEvent.clipboardData || window.clipboardData).getData('text'),
+					regex = /^-?\d*[.,]?\d*$/;
+
+				if (!regex.test(paste)) {
+					event.preventDefault();
+				}
+			});
+		});
+
 		// Form
 		var forms = container.find(hivepress.getSelector('form'));
 
