@@ -570,9 +570,18 @@ final class Form extends Component {
 
 			// Enqueue ReCAPTCHA.
 			if ( $this->is_captcha_enabled() ) {
+
+				// Set reCaptcha script path.
+				$src = 'https://www.google.com/recaptcha/api.js';
+
+				// Check reCaptcha version.
+				if ( get_option( 'hp_recaptcha_version' ) === 'v3' ) {
+					$src .= '?render=' . get_option( 'hp_recaptcha_site_key' );
+				}
+
 				wp_enqueue_script(
 					'recaptcha',
-					'https://www.google.com/recaptcha/api.js?render=' . get_option( 'hp_recaptcha_site_key' ),
+					$src,
 					[],
 					null,
 					false

@@ -401,6 +401,20 @@ return [
 						'_parent'    => 'recaptcha_forms[]',
 						'_order'     => 30,
 					],
+
+					'recaptcha_version' => [
+						'label'   => esc_html__( 'Version', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 'v2',
+
+						'options' => [
+							'v2' => esc_html__( 'reCAPTCHA V2', 'hivepress' ),
+							'v3' => esc_html__( 'reCAPTCHA V3', 'hivepress' ),
+						],
+
+						'_parent' => 'recaptcha_forms[]',
+						'_order'  => 40,
+					],
 				],
 			],
 

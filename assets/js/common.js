@@ -864,6 +864,7 @@ var hivepress = {
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								captcha.val('');
+								grecaptcha.reset(captchaId);
 							}
 
 							if (response == null || response.hasOwnProperty('data')) {
@@ -918,7 +919,7 @@ var hivepress = {
 						tinyMCE.triggerSave();
 					}
 
-					if (typeof grecaptcha !== 'undefined' && captcha.length) {
+					if (typeof grecaptcha !== 'undefined' && captcha.length && !captcha.hasClass('g-recaptcha')) {
 						grecaptcha.execute(captcha.data('sitekey'), {action: 'submit'}).then(function (token) {
 							captcha.val(token);
 							formSubmit();
