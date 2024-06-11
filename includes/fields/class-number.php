@@ -149,6 +149,8 @@ class Number extends Field {
 		// Set regex pattern.
 		if ( ! is_null( $this->pattern ) ) {
 			$attributes['pattern'] = $this->pattern;
+		} else {
+			$attributes['pattern'] = '[0-9.,-]+';
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -232,6 +234,6 @@ class Number extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" pattern="' . esc_attr( $this->pattern ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" value="' . esc_attr( $this->value ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 	}
 }

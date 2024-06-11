@@ -767,16 +767,16 @@ var hivepress = {
 			var number = $(this),
 				regexp = new RegExp(number.attr('pattern'));
 
-			number.on('keypress', function(e) {
-				if (!regexp.test(e.key)) {
-					e.preventDefault();
+			number.on('keypress paste', function(e) {
+				var text;
+
+				if (e.type === 'paste') {
+					text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+				} else {
+					text = e.key;
 				}
-			});
 
-			number.on('paste', function(e) {
-				var paste = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
-
-				if (!regexp.test(paste)) {
+				if (!regexp.test(text)) {
 					e.preventDefault();
 				}
 			});
