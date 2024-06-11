@@ -122,10 +122,52 @@ final class Attribute extends Component {
 			// Set sort param.
 			$sort_param = get_option( hp\prefix( $model . '_sorting_option' ) );
 
+			// Set sort options.
+			$order_by = '';
+			$order = '';
+
 			if ( 'title' === $sort_param ) {
 
+				// Set sort options.
+				$order_by = $wpdb->posts . '.post_title';
+				$order = 'ASC';
+			} else {
+
+				// Get sort order.
+				$sort_order = 'ASC';
+
+				if ( strpos( $sort_param, '__' ) ) {
+					list($sort_param, $sort_order) = explode( '__', $sort_param );
+				}
+
+				// Get category ID.
+				$category_id = $this->get_category_id( $model );
+
+				// Get attributes.
+				$attributes = $this->get_attributes( $model, (array) $category_id );
+
+				// Get sort attribute.
+				$sort_attribute = hp\get_array_value( $attributes, $sort_param );
+
+				if ( $sort_attribute && $sort_attribute['sortable'] ) {
+
+					// Get sort field.
+					$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
+
+					if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
+
+						// Set sort options.
+						$order_by = $sort_param . '__order';
+						$order = strtoupper( $sort_order );
+					}
+				}
+			}
+
+			// Check sort options.
+			if ( $order_by && $order ) {
+
 				// Set sort order.
-				$orderby = $wpdb->posts . '.post_title ASC';
+				$orderby = $order_by . ' ' . $order;
 			}
 
 			break;
