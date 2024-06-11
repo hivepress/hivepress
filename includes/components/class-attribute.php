@@ -734,6 +734,10 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+
+					if ( ! in_array( $field_type, [ 'number', 'text' ], true ) ) {
+						unset( $meta_box['fields'][ $field_context . '_field_readonly' ] );
+					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
