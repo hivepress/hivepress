@@ -243,6 +243,13 @@ class Attachment_Upload extends Field {
 
 		if ( empty( $this->value ) ) {
 			$this->value = null;
+		} elseif ( absint( get_option( 'hp_installed_time' ) ) > strtotime( '12 June 2024' ) ) {
+			$this->value = Models\Attachment::query()->filter(
+				[
+					'id__in'       => (array) $this->value,
+					'parent_field' => hp\unprefix( $this->get_name() ),
+				]
+			)->get_ids();
 		}
 	}
 
