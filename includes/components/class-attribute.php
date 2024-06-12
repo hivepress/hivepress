@@ -745,8 +745,8 @@ final class Attribute extends Component {
 					];
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
-						$meta_box['fields'][ 'allow_unique' ] = [
-							'label'    => esc_html__( 'Read Only', 'hivepress' ),
+						$meta_box['fields']['allow_unique'] = [
+							'label'    => esc_html__( 'Allow Unique', 'hivepress' ),
 							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
 							'type'     => 'checkbox',
 							'_context' => 'edit',
