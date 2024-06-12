@@ -138,6 +138,7 @@ final class Admin extends Component {
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_submenu_page( 'hp_settings', esc_html__( 'Status', 'hivepress' ) . $title, esc_html__( 'Status', 'hivepress' ), 'install_plugins', 'hp_status', [ $this, 'render_status' ] );
 
 		// Add counts.
 		foreach ( $menu as $item_index => $item_args ) {
@@ -212,6 +213,8 @@ final class Admin extends Component {
 					$extensions  = $this->get_extensions( $current_tab );
 				} elseif ( 'themes' === $template_name ) {
 					$themes = $this->get_themes();
+				} elseif ( 'status' === $template_name ) {
+					$report = $this->get_report();
 				}
 
 				include $template_path;
@@ -944,6 +947,51 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
+	}
+
+	/**
+	 * Gets system report.
+	 *
+	 * @return array
+	 */
+	protected function get_report() {
+
+		// Get report.
+		$report = [
+			'content'  => '',
+			'sections' => [
+				[
+					'label'  => esc_html__( 'WordPress enviroment', 'hivepress' ),
+					'values' => [
+						[
+							'label' => esc_html__( 'WordPress address (URL):', 'hivepress' ),
+							'value' => get_option( 'home' ),
+						],
+					],
+				],
+				[
+					'label'  => esc_html__( 'Server environment', 'hivepress' ),
+					'values' => [
+						[
+							'label' => esc_html__( 'PHP version:', 'hivepress' ),
+							'value' => phpversion(),
+						],
+					],
+				],
+			],
+		];
+
+		foreach ( $report['sections'] as $section ) {
+
+			// Get report content.
+			$report['content'] .= hp\get_array_value( $section, 'label' ) . '&#13;&#10;';
+
+			foreach ( $section['values'] as $value ) {
+				$report['content'] .= hp\get_array_value( $value, 'label' ) . ' ' . hp\get_array_value( $value, 'value' ) . '&#13;&#10;';
+			}
+		}
+
+		return $report;
 	}
 
 	/**

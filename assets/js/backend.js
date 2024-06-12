@@ -116,5 +116,11 @@
 
 			e.preventDefault();
 		});
+
+		// Copy information for support.
+		$('#hp-copy-for-support-button').on('click', function(){
+			$(document).find('.hp-copy-for-support-content').select();
+			document.execCommand('copy');
+		});
 	});
 })(jQuery);
