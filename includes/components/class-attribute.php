@@ -400,6 +400,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'allow_unique'   => (bool) $attribute_object->hp_allow_unique,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -593,6 +594,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'allow_unique'   => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -644,6 +646,13 @@ final class Attribute extends Component {
 		// Check post ID.
 		if ( get_the_ID() !== $attribute_id ) {
 			return;
+		}
+
+		// Get field type.
+		$field_type = sanitize_key( get_post_meta( $attribute_id, hp\prefix( 'edit_field_type' ), true ) );
+
+		if ( $field_type && ! in_array( $field_type, [ 'text', 'number' ], true ) ) {
+			delete_post_meta($attribute_id, hp\prefix( 'allow_unique' ) );
 		}
 
 		// Refresh permalinks.
@@ -736,15 +745,13 @@ final class Attribute extends Component {
 					];
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
-						$meta_box['fields'][ $field_context . '_field_readonly' ] = [
+						$meta_box['fields'][ 'allow_unique' ] = [
 							'label'    => esc_html__( 'Read Only', 'hivepress' ),
 							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
 							'type'     => 'checkbox',
 							'_context' => 'edit',
 							'_order'   => 130,
 						];
-					} else {
-						unset( $meta_box['fields'][ $field_context . '_field_readonly' ] );
 					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
@@ -984,9 +991,9 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				// Remove readonly option.
-				if ( $field_args['readonly'] && ! call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
-					$field_args['readonly'] = false;
+				// Add readonly option.
+				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+					$field_args['readonly'] = true;
 				}
 
 				if ( $attribute['moderated'] && $model_name . '_update' === $form::get_meta( 'name' ) ) {

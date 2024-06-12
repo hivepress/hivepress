@@ -123,13 +123,6 @@ abstract class Field {
 	protected $attributes = [];
 
 	/**
-	 * Is value readonly?
-	 *
-	 * @var bool
-	 */
-	protected $readonly = false;
-
-	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -159,14 +152,6 @@ abstract class Field {
 						'html'       => true,
 						'_context'   => 'edit',
 						'_order'     => 20,
-					],
-
-					'readonly'    => [
-						'label'    => esc_html__( 'Read Only', 'hivepress' ),
-						'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
-						'type'     => 'checkbox',
-						'_context' => 'edit',
-						'_order'   => 30,
 					],
 				],
 			],
@@ -484,15 +469,6 @@ abstract class Field {
 	 */
 	final public function is_required() {
 		return $this->required;
-	}
-
-	/**
-	 * Checks if field is readonly.
-	 *
-	 * @return bool
-	 */
-	final public function is_readonly() {
-		return $this->readonly;
 	}
 
 	/**
