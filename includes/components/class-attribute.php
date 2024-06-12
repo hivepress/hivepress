@@ -735,7 +735,15 @@ final class Attribute extends Component {
 						'_order'     => 120,
 					];
 
-					if ( ! in_array( $field_type, [ 'number', 'text' ], true ) ) {
+					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
+						$meta_box['fields'][ $field_context . '_field_readonly' ] = [
+							'label'    => esc_html__( 'Read Only', 'hivepress' ),
+							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
+							'type'     => 'checkbox',
+							'_context' => 'edit',
+							'_order'   => 130,
+						];
+					} else {
 						unset( $meta_box['fields'][ $field_context . '_field_readonly' ] );
 					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
@@ -809,6 +817,10 @@ final class Attribute extends Component {
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
 			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
+
+				// Remove readonly option.
+				$attribute['edit_field']['readonly'] = false;
+
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
@@ -954,14 +966,17 @@ final class Attribute extends Component {
 	 */
 	public function add_edit_fields( $form_args, $form ) {
 
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
+
 		// Get model.
-		$model = $form::get_meta( 'model' );
+		$model = $form->get_model();
 
 		// Get category IDs.
-		$category_ids = $this->get_category_ids( $model, $form->get_model() );
+		$category_ids = $this->get_category_ids( $model_name, $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model_name, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -969,7 +984,12 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
+				// Remove readonly option.
+				if ( $field_args['readonly'] && ! call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+					$field_args['readonly'] = false;
+				}
+
+				if ( $attribute['moderated'] && $model_name . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
