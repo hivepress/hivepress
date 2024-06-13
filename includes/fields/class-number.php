@@ -46,13 +46,6 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
-	 * Regex pattern.
-	 *
-	 * @var string
-	 */
-	protected $pattern;
-
-	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -96,14 +89,6 @@ class Number extends Field {
 						'decimals' => 6,
 						'_order'   => 130,
 					],
-
-					'pattern'     => [
-						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
-						'type'       => 'regex',
-						'default'    => '[0-9.,-]+',
-						'max_length' => 256,
-						'_order'     => 140,
-					],
 				],
 			],
 			$meta
@@ -144,13 +129,6 @@ class Number extends Field {
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
-		}
-
-		// Set regex pattern.
-		if ( ! is_null( $this->pattern ) ) {
-			$attributes['pattern'] = $this->pattern;
-		} else {
-			$attributes['pattern'] = '[0-9.,-]+';
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
@@ -217,11 +195,6 @@ class Number extends Field {
 			if ( ! is_null( $this->max_value ) && $this->value > $this->max_value ) {
 				/* translators: 1: field label, 2: number. */
 				$this->add_errors( sprintf( esc_html__( '"%1$s" can\'t be greater than %2$s.', 'hivepress' ), $this->get_label( true ), hp\format_number( $this->max_value ) ) );
-			}
-
-			if ( ! is_null( $this->pattern ) && ! preg_match( '/^' . $this->pattern . '$/', $this->value ) ) {
-				/* translators: %s: field label. */
-				$this->add_errors( sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) ) );
 			}
 		}
 

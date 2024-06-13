@@ -765,19 +765,22 @@ var hivepress = {
 		// Number
 		container.find('input[type="number"]').each(function () {
 			var number = $(this),
-				regexp = new RegExp(number.attr('pattern'));
+				allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ','];
 
 			number.on('keypress paste', function(e) {
-				var text;
-
 				if (e.type === 'paste') {
-					text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
-				} else {
-					text = e.key;
-				}
+					var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
 
-				if (!regexp.test(text)) {
-					e.preventDefault();
+					for (var i = 0; i < text.length; i++) {
+						if (!allowedKeys.includes(text[i])) {
+							e.preventDefault();
+							return;
+						}
+					}
+				} else {
+					if (!allowedKeys.includes(e.key)) {
+						e.preventDefault();
+					}
 				}
 			});
 		});
