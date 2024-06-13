@@ -273,6 +273,9 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
+			// Validate attributes.
+			add_filter( 'hivepress/v1/forms/' . $model . '_update/errors', [ $this, 'validate_model_attributes' ], 10, 2 );
+
 			if ( 'user' !== $model ) {
 
 				// Update attribute.
@@ -305,6 +308,39 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Validates model attributes.
+	 *
+	 * @param array  $errors Form errors.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function validate_model_attributes( $errors, $form ) {
+		if ( empty( $errors ) ) {
+
+			// Get model name.
+			$model_name = $form::get_meta( 'model' );
+
+			// Get model.
+			$model = $form->get_model();
+
+			// Get category IDs.
+			$category_ids = $this->get_category_ids( $model_name, $model );
+
+			// Get form fields.
+			$fields = $form->get_fields();
+
+			foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
+				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) !== $fields[ $attribute_name ]->get_value() ) {
+					/* translators: %s: field label. */
+					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $attribute_name ]->get_label( true ) );
+				}
+			}
+		}
+
+		return $errors;
 	}
 
 	/**
