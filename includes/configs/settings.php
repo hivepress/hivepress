@@ -408,8 +408,8 @@ return [
 						'default' => 'v2',
 
 						'options' => [
-							'v2' => esc_html__( 'reCAPTCHA V2', 'hivepress' ),
-							'v3' => esc_html__( 'reCAPTCHA V3', 'hivepress' ),
+							'v2' => '2',
+							'v3' => '3',
 						],
 
 						'_parent' => 'recaptcha_forms[]',
