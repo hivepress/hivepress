@@ -734,24 +734,6 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
-
-					if ( 'attachment_upload' === $field_type ) {
-						$meta_box['fields'][ $field_context . '_field_multiple' ] = [
-							'label'   => esc_html__( 'Multiple', 'hivepress' ),
-							'type'    => 'checkbox',
-							'default' => true,
-							'_order'  => 120,
-						];
-
-						$meta_box['fields'][ $field_context . '_field_max_files' ] = [
-							'label'     => esc_html__( 'Max Files', 'hivepress' ),
-							'type'      => 'number',
-							'default'   => 1,
-							'min_value' => 1,
-							'max_value' => 10,
-							'_order'    => 130,
-						];
-					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
@@ -982,16 +964,6 @@ final class Attribute extends Component {
 
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
-
-				if ( 'attachment_upload' === $field_args['type'] ) {
-					$field_args = hp\merge_arrays(
-						$field_args,
-						[
-							'multiple'  => (bool) get_post_meta($attribute['id'], hp\prefix( 'edit_field_multiple' ), true),
-							'max_files' => (int) get_post_meta($attribute['id'], hp\prefix( 'edit_field_max_files' ), true),
-						]
-					);
-				}
 
 				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
