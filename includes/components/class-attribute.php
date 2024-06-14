@@ -366,7 +366,7 @@ final class Attribute extends Component {
 			foreach ( $form->get_values() as $name => $value ) {
 				if ( in_array( $name, array_keys( $unique_attributes ) ) && $value !== $unique_attributes[ $name ] ) {
 					/* translators: %s: field label. */
-					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label( true ) );
+					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label() );
 				}
 			}
 		}
