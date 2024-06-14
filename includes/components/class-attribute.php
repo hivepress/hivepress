@@ -332,10 +332,15 @@ final class Attribute extends Component {
 			// Get form fields.
 			$fields = $form->get_fields();
 
-			// Get attributes.
-			$attributes = $this->get_attributes( $model_name, $category_ids );
+			$unique_attributes = [];
 
-			if ( 'user' === $model_name ) {
+			foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
+				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+					$unique_attributes[ $attribute_name ] = call_user_func( [ $model, 'get_' . $attribute_name ] );
+				}
+			}
+
+			if ( 'user' === $model_name && current_user_can( 'edit_posts' ) ) {
 
 				// Get vendor.
 				$vendor = \HivePress\Models\Vendor::query()->filter(
@@ -350,17 +355,18 @@ final class Attribute extends Component {
 					// Get category IDs.
 					$category_ids = $this->get_category_ids( 'vendor', $vendor );
 
-					$attributes = array_merge(
-						$attributes,
-						$this->get_attributes( 'vendor', $category_ids )
-					);
+					foreach ( $this->get_attributes( 'vendor', $category_ids ) as $attribute_name => $attribute ) {
+						if ( $attribute['allow_unique'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
+							$unique_attributes[ $attribute_name ] = call_user_func( [ $vendor, 'get_' . $attribute_name ] );
+						}
+					}
 				}
 			}
 
-			foreach ( $attributes as $attribute_name => $attribute ) {
-				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) !== $fields[ $attribute_name ]->get_value() ) {
+			foreach ( $form->get_values() as $name => $value ) {
+				if ( in_array( $name, array_keys( $unique_attributes ) ) && $value !== $unique_attributes[ $name ] ) {
 					/* translators: %s: field label. */
-					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $attribute_name ]->get_label( true ) );
+					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label( true ) );
 				}
 			}
 		}
