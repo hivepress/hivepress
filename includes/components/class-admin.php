@@ -956,6 +956,104 @@ final class Admin extends Component {
 	 */
 	protected function get_report() {
 
+		global $wpdb;
+
+		// Get cURL version.
+		$curl_version = esc_html__( 'No', 'hivepress' );
+
+		if ( function_exists( 'curl_version' ) ) {
+			$curl_version = hp\get_array_value( curl_version(), 'version' ) . ', ' . hp\get_array_value( curl_version(), 'ssl_version' );
+		} elseif ( extension_loaded( 'curl' ) ) {
+			$curl_version = esc_html__( 'cURL installed but unable to retrieve version.', 'hivepress' );
+		}
+
+		// Get post types count.
+		$post_types = [];
+
+		foreach ( (array) $wpdb->get_results( "SELECT post_type AS 'type', count(1) AS 'count' FROM {$wpdb->posts} GROUP BY post_type;" ) as $post_type_count ) {
+			$post_types[] = [
+				'label' => sprintf( esc_html__( '%s:', 'hivepress' ), $post_type_count->type ),
+				'value' => $post_type_count->count,
+			];
+		}
+
+		// Get active plugins.
+		$active_plugins = array_filter(
+			array_map(
+				function ( $plugin ) {
+					$file = WP_PLUGIN_DIR . '/' . $plugin;
+
+					if ( file_exists( $file ) ) {
+						$headers = array_filter(
+							get_file_data(
+								$file,
+								[
+									'name'    => 'Plugin Name',
+									'version' => 'Version',
+									'url'     => 'Plugin URI',
+									'author'  => 'Author',
+								]
+							)
+						);
+
+						$value = [
+							'label' => sprintf( esc_html__( '%s:', 'hivepress' ), hp\get_array_value( $headers, 'name' ) ),
+							'value' => sprintf( esc_html__( 'by %1$s - %2$s', 'hivepress' ), hp\get_array_value( $headers, 'author' ), hp\get_array_value( $headers, 'version' ) ),
+							'url'   => hp\get_array_value( $headers, 'url' ),
+						];
+
+						return $value;
+					}
+				},
+				(array) get_option( 'active_plugins' )
+			)
+		);
+
+		// Get theme info.
+		$theme = wp_get_theme( get_template() );
+
+		$theme_info = [
+			[
+				'label' => esc_html__( 'Name:', 'hivepress' ),
+				'value' => $theme->get( 'Name' ),
+			],
+			[
+				'label' => esc_html__( 'Version:', 'hivepress' ),
+				'value' => $theme->get( 'Version' ),
+			],
+			[
+				'label' => esc_html__( 'Author URL:', 'hivepress' ),
+				'value' => $theme->get( 'AuthorURI' ),
+			],
+			[
+				'label' => esc_html__( 'Child theme:', 'hivepress' ),
+				'value' => is_child_theme() ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+			],
+		];
+
+		if ( is_child_theme() ) {
+			$parent_theme = wp_get_theme( $theme->template );
+
+			$theme_info = array_merge(
+				$theme_info,
+				[
+					[
+						'label' => esc_html__( 'Parent Theme Name', 'hivepress' ),
+						'value' => $parent_theme->name,
+					],
+					[
+						'label' => esc_html__( 'Parent Theme Version', 'hivepress' ),
+						'value' => $parent_theme->version,
+					],
+				]
+			);
+		}
+
+		$theme_info[] = [
+			'label' => esc_html__( 'HivePress support:', 'hivepress' ),
+			'value' => current_theme_supports( 'hivepress' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+		];
+
 		// Get report.
 		$report = [
 			'content'  => '',
@@ -964,8 +1062,40 @@ final class Admin extends Component {
 					'label'  => esc_html__( 'WordPress enviroment', 'hivepress' ),
 					'values' => [
 						[
-							'label' => esc_html__( 'WordPress address (URL):', 'hivepress' ),
-							'value' => get_option( 'home' ),
+							'label' => esc_html__( 'HivePress version:', 'hivepress' ),
+							'value' => hivepress()->get_version(),
+						],
+						[
+							'label' => esc_html__( 'Action Scheduler package:', 'hivepress' ),
+							'value' => class_exists( 'ActionScheduler_Versions' ) && class_exists( 'ActionScheduler' ) ? \ActionScheduler_Versions::instance()->latest_version() . ' ' . \ActionScheduler::plugin_path( '' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'WordPress version:', 'hivepress' ),
+							'value' => get_bloginfo( 'version' ),
+						],
+						[
+							'label' => esc_html__( 'WordPress multisite:', 'hivepress' ),
+							'value' => is_multisite() ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'WordPress memory limit:', 'hivepress' ),
+							'value' => WP_MEMORY_LIMIT,
+						],
+						[
+							'label' => esc_html__( 'WordPress debug mode:', 'hivepress' ),
+							'value' => ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'WordPress cron:', 'hivepress' ),
+							'value' => ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'Language:', 'hivepress' ),
+							'value' => get_locale(),
+						],
+						[
+							'label' => esc_html__( 'External object cache:', 'hivepress' ),
+							'value' => wp_using_ext_object_cache() ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
 						],
 					],
 				],
@@ -973,10 +1103,88 @@ final class Admin extends Component {
 					'label'  => esc_html__( 'Server environment', 'hivepress' ),
 					'values' => [
 						[
+							'label' => esc_html__( 'Server info:', 'hivepress' ),
+							'value' => isset( $_SERVER['SERVER_SOFTWARE'] ) ? wc_clean( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
 							'label' => esc_html__( 'PHP version:', 'hivepress' ),
 							'value' => phpversion(),
 						],
+						[
+							'label' => esc_html__( 'PHP post max size:', 'hivepress' ),
+							'value' => ini_get( 'post_max_size' ),
+						],
+						[
+							'label' => esc_html__( 'PHP time limit:', 'hivepress' ),
+							'value' => (int) ini_get( 'max_execution_time' ),
+						],
+						[
+							'label' => esc_html__( 'PHP max input vars:', 'hivepress' ),
+							'value' => (int) ini_get( 'max_input_vars' ),
+						],
+						[
+							'label' => esc_html__( 'cURL version:', 'hivepress' ),
+							'value' => $curl_version,
+						],
+						[
+							'label' => esc_html__( 'SUHOSIN installed:', 'hivepress' ),
+							'value' => extension_loaded( 'suhosin' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'MySQL version:', 'hivepress' ),
+							'value' => $wpdb->db_server_info(),
+						],
+						[
+							'label' => esc_html__( 'Max upload size:', 'hivepress' ),
+							'value' => size_format( wp_max_upload_size() ),
+						],
+						[
+							'label' => esc_html__( 'Default timezone:', 'hivepress' ),
+							'value' => date_default_timezone_get(),
+						],
+						[
+							'label' => esc_html__( 'fsockopen/cURL:', 'hivepress' ),
+							'value' => function_exists( 'fsockopen' ) || function_exists( 'curl_init' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'SoapClient:', 'hivepress' ),
+							'value' => class_exists( 'SoapClient' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'DOMDocument:', 'hivepress' ),
+							'value' => class_exists( 'DOMDocument' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'GZip:', 'hivepress' ),
+							'value' => is_callable( 'gzopen' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							'label' => esc_html__( 'Multibyte string:', 'hivepress' ),
+							'value' => extension_loaded( 'mbstring' ) ? esc_html__( 'Yes', 'hivepress' ) : esc_html__( 'No', 'hivepress' ),
+						],
+						[
+							// todo: check the possibility to test remote post.
+							'label' => esc_html__( 'Remote post:', 'hivepress' ),
+							'value' => phpversion(),
+						],
+						[
+							// todo: check the possibility to test remote get.
+							'label' => esc_html__( 'Remote get:', 'hivepress' ),
+							'value' => phpversion(),
+						],
 					],
+				],
+				[
+					'label'  => esc_html__( 'Post Type Counts', 'hivepress' ),
+					'values' => $post_types,
+				],
+				[
+					'label'  => esc_html__( 'Active plugins', 'hivepress' ),
+					'values' => $active_plugins,
+				],
+				[
+					'label'  => esc_html__( 'Theme', 'hivepress' ),
+					'values' => $theme_info,
 				],
 			],
 		];
@@ -989,6 +1197,8 @@ final class Admin extends Component {
 			foreach ( $section['values'] as $value ) {
 				$report['content'] .= hp\get_array_value( $value, 'label' ) . ' ' . hp\get_array_value( $value, 'value' ) . '&#13;&#10;';
 			}
+
+			$report['content'] .= '&#13;&#10;';
 		}
 
 		return $report;
