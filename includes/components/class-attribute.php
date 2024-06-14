@@ -193,11 +193,8 @@ final class Attribute extends Component {
 				continue;
 			}
 
-			// Get form fields.
-			$form_fields = $sort_form->get_fields();
-
 			// Get sort args.
-			$field_args = $form_fields['_sort']->get_args();
+			$field_args = $sort_form->get_fields()['_sort']->get_args();
 
 			// Check sort options.
 			if ( ! isset( $field_args['options'] ) ) {
