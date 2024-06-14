@@ -332,7 +332,32 @@ final class Attribute extends Component {
 			// Get form fields.
 			$fields = $form->get_fields();
 
-			foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
+			// Get attributes.
+			$attributes = $this->get_attributes( $model_name, $category_ids );
+
+			if ( 'user' === $model_name ) {
+
+				// Get vendor.
+				$vendor = \HivePress\Models\Vendor::query()->filter(
+					[
+						'status' => 'publish',
+						'user'   => get_current_user_id(),
+					]
+				)->get_first();
+
+				if ( $vendor ) {
+
+					// Get category IDs.
+					$category_ids = $this->get_category_ids( 'vendor', $vendor );
+
+					$attributes = array_merge(
+						$attributes,
+						$this->get_attributes( 'vendor', $category_ids )
+					);
+				}
+			}
+
+			foreach ( $attributes as $attribute_name => $attribute ) {
 				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) !== $fields[ $attribute_name ]->get_value() ) {
 					/* translators: %s: field label. */
 					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $attribute_name ]->get_label( true ) );
