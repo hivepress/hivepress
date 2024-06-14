@@ -765,20 +765,20 @@ var hivepress = {
 		// Number
 		container.find('input[type="number"]').each(function () {
 			var number = $(this),
-				allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ','];
+				disallowedKeys = ['+', 'e'];
 
 			number.on('keypress paste', function(e) {
 				if (e.type === 'paste') {
 					var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
 
 					for (var i = 0; i < text.length; i++) {
-						if (!allowedKeys.includes(text[i])) {
+						if (disallowedKeys.includes(text[i])) {
 							e.preventDefault();
 							return;
 						}
 					}
 				} else {
-					if (!allowedKeys.includes(e.key)) {
+					if (disallowedKeys.includes(e.key)) {
 						e.preventDefault();
 					}
 				}
