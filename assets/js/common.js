@@ -120,6 +120,10 @@ var hivepress = {
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
 					templateResult: function (state) {
+						if (state.error) {
+							return state.error;
+						}
+
 						var template = state.text,
 							level = 0;
 
