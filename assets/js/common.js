@@ -476,7 +476,7 @@ var hivepress = {
 					var time = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
 
 					$.each(ranges, function (index, range) {
-						if (range.start <= time && time < range.end) {
+						if ( ( range.start <= time && time < range.end ) || ( range.days && range.days.includes( dayElem.dateObj.getDay() ) ) ) {
 							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
 							dayElem.className += ' flatpickr-status';
 
