@@ -201,6 +201,7 @@ var hivepress = {
 					if (parentField.length) {
 						parentField.on('change', function () {
 							field.data('parent-value', $(this).val());
+							field.val(null).trigger('change');
 						});
 					}
 				} else {
