@@ -738,21 +738,21 @@ var hivepress = {
 					type: 'line',
 					options: {
 						scales: {
-							yAxes: [{
+							y: {
 								ticks: {
 									beginAtZero: true,
 								},
-							}],
-							xAxes: [{
+							},
+							x: {
 								type: 'time',
 								time: {
-									tooltipFormat: 'MMM D, YYYY',
+									tooltipFormat: 'MMM d, yyyy',
 									unit: 'week',
 									displayFormats: {
-										'week': 'MMM D, YYYY',
+										'week': 'MMM d, yyyy',
 									},
 								},
-							}],
+							},
 						},
 					},
 					data: {
