@@ -458,7 +458,7 @@ final class Admin extends Component {
 
 		// Render description.
 		if ( isset( $section['description'] ) ) {
-			echo '<p>' . esc_html( $section['description'] ) . '</p>';
+			echo '<p>' . hp\sanitize_html( $section['description'] ) . '</p>';
 		}
 	}
 
@@ -1682,7 +1682,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p>' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</div>';
@@ -1719,7 +1719,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p class="description">' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</td>';
@@ -1856,7 +1856,7 @@ final class Admin extends Component {
 
 					// Render description.
 					if ( $field->get_description() ) {
-						$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+						$output .= '<p class="description">' . do_shortcode( wp_kses_post( $field->get_description() ) ) . '</p>';
 					}
 
 					$output .= '</td>';
@@ -2101,7 +2101,7 @@ final class Admin extends Component {
 		if ( $text ) {
 			$output .= '<div class="hp-tooltip">';
 			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
-			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '<div class="hp-tooltip__text">' . do_shortcode( wp_kses_post( $text ) ) . '</div>';
 			$output .= '</div>';
 		}
 
