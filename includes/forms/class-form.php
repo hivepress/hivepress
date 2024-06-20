@@ -411,7 +411,7 @@ abstract class Form {
 			$output .= '<div class="hp-form__header">';
 
 			if ( $this->description ) {
-				$output .= '<p class="hp-form__description">' . hp\sanitize_html( $this->description ) . '</p>';
+				$output .= '<p class="hp-form__description">' . wp_kses_post( $this->description ) . '</p>';
 			}
 
 			if ( $this->header ) {
