@@ -4,7 +4,7 @@ Tags: business directory, classifieds, listing, directory plugin, job board
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
