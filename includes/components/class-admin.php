@@ -1225,7 +1225,7 @@ final class Admin extends Component {
 						}
 
 						// Set field value.
-						if ( '' !== $value ) {
+						if ( '' !== $value || ( 'checkbox' === $field_args['type'] && ! in_array( $post->post_status, [ 'auto-draft', 'draft' ], true ) && isset( $field_args['default'] ) && $field_args['default'] != $value ) ) {
 							$field->set_value( $value );
 						}
 
