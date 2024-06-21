@@ -244,6 +244,12 @@ final class Admin extends Component {
 				}
 			}
 		}
+
+		if ( 'hivepress/v1/activate' === current_filter() ) {
+
+			// Delete cached extensions.
+			hivepress()->cache->delete_cache( 'all_extensions' );
+		}
 	}
 
 	/**
