@@ -165,22 +165,9 @@ final class WooCommerce extends Component {
 	 * Formats price.
 	 *
 	 * @param float $price Price.
-	 * @param int   $product_id Product ID.
 	 * @return string
 	 */
-	public function format_price( $price, $product_id = null ) {
-		if ( $product_id ) {
-
-			// Get product.
-			$product = wc_get_product( $product_id );
-
-			if ( $product ) {
-
-				// Get price product.
-				$price = wc_get_price_to_display( $product );
-			}
-		}
-
+	public function format_price( $price ) {
 		return wp_strip_all_tags( wc_price( $price ) );
 	}
 

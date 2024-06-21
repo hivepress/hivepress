@@ -64,7 +64,23 @@ class Currency extends Number {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) && hp\is_plugin_active( 'woocommerce' ) ) {
-			return hivepress()->woocommerce->format_price( $this->value, $this->product_id );
-		}
+			
+			// Get price.
+			$price = $this->value;
+
+			if ( $this->product_id  ) {
+
+				// Get product.
+				$product = wc_get_product( $this->product_id  );
+	
+				if ( $product ) {
+	
+					// Get price product.
+					$price = wc_get_price_to_display( $product );
+				}
+			}
+
+			return hivepress()->woocommerce->format_price( $price );
+		} 
 	}
 }
