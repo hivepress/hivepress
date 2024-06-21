@@ -98,10 +98,11 @@ class Number extends Field {
 					],
 
 					'formatted'   => [
-						'label'   => esc_html__( 'Enable Formatting', 'hivepress' ),
-						'type'    => 'checkbox',
-						'default' => true,
-						'_order'  => 140,
+						'label'    => esc_html__( 'Enable Formatting', 'hivepress' ),
+						'type'     => 'checkbox',
+						'default'  => true,
+						'_context' => 'edit',
+						'_order'   => 140,
 					],
 				],
 			],
