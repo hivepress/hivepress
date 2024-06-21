@@ -171,26 +171,21 @@ final class Vendor extends Component {
 				// Get form.
 				$vendor_form = hp\create_class_instance( '\HivePress\Forms\\' . ( 'user_update_profile' === $form::get_meta( 'name' ) ? 'vendor_submit' : 'vendor_update' ), [ [ 'model' => $vendor ] ] );
 
+				// Get user attributes.
+				$user_attributes = array_keys( array_filter(
+					hivepress()->attribute->get_attributes( 'user' ),
+					function( $attribute ) {
+						return hp\get_array_value( $attribute, 'editable' );
+					}
+				) );
+
 				// Add fields.
 				foreach ( $vendor_form->get_fields() as $field_name => $field ) {
-
-					// Get user attribute name.
-					$user_attribute_name = hp\get_first_array_value(
-						array_keys(
-							array_filter(
-								hivepress()->attribute->get_attributes( 'user' ),
-								function( $attribute, $attribute_name ) use ( $field_name ) {
-									return hp\get_array_value( $attribute, 'editable' ) && $field_name === $attribute_name;
-								},
-								ARRAY_FILTER_USE_BOTH
-							)
-						)
-					);
-
-					if ( $user_attribute_name ) {
+					if ( in_array( $field_name, $user_attributes ) ) {
 
 						// Remove vendor field.
-						unset( $form_args['fields'][ $user_attribute_name ] );
+						unset( $form_args['fields'][ $field_name ] );
+
 						continue;
 					}
 
