@@ -1426,11 +1426,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_registration_fields( $form_args, $form ) {
-
-		// Get model.
-		$model = $form::get_meta( 'model' );
-
-		foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
+		foreach ( $this->get_attributes( 'user' ) as $attribute_name => $attribute ) {
 			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && $attribute['editable'] && $attribute['edit_field']['required'] && 'attachment_upload' !== $attribute['edit_field']['type'] ) {
 
 				// Add field.
