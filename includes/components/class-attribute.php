@@ -96,6 +96,17 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets searchable models.
+	 *
+	 * @return array
+	 */
+	public function get_searchable_models() {
+		return array_keys( array_filter( hivepress()->get_config( 'post_types' ), function ( $post_type ) {
+			return isset( $post_type['has_archive'] ) && $post_type['has_archive'];
+		} ) );
+	}
+
+	/**
 	 * Sets WP search order.
 	 *
 	 * @param string $orderby Order filters.
@@ -183,7 +194,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function alter_settings( $settings ) {
-		foreach ( [ 'listing', 'vendor', 'request' ] as $model ) {
+		foreach ( $this->get_searchable_models() as $model ) {
 
 			// Create sort form.
 			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
