@@ -318,56 +318,58 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function validate_model_attributes( $errors, $form ) {
-		if ( empty( $errors ) ) {
 
-			// Get model name.
-			$model_name = $form::get_meta( 'model' );
+		if ( ! empty( $errors ) ) {
+			return $errors;
+		}
 
-			// Get model.
-			$model = $form->get_model();
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
 
-			// Get category IDs.
-			$category_ids = $this->get_category_ids( $model_name, $model );
+		// Get model.
+		$model = $form->get_model();
 
-			// Get form fields.
-			$fields = $form->get_fields();
+		// Get category IDs.
+		$category_ids = $this->get_category_ids( $model_name, $model );
 
-			$unique_attributes = [];
+		// Get form fields.
+		$fields = $form->get_fields();
 
-			foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
-				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
-					$unique_attributes[ $attribute_name ] = call_user_func( [ $model, 'get_' . $attribute_name ] );
-				}
+		$unique_attributes = [];
+
+		foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
+			if ( $attribute['unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+				$unique_attributes[ $attribute_name ] = call_user_func( [ $model, 'get_' . $attribute_name ] );
 			}
+		}
 
-			if ( 'user' === $model_name && current_user_can( 'edit_posts' ) ) {
+		if ( 'user' === $model_name && current_user_can( 'edit_posts' ) ) {
 
-				// Get vendor.
-				$vendor = \HivePress\Models\Vendor::query()->filter(
-					[
-						'status' => 'publish',
-						'user'   => get_current_user_id(),
-					]
-				)->get_first();
+			// Get vendor.
+			$vendor = \HivePress\Models\Vendor::query()->filter(
+				[
+					'status' => 'publish',
+					'user'   => get_current_user_id(),
+				]
+			)->get_first();
 
-				if ( $vendor ) {
+			if ( $vendor ) {
 
-					// Get category IDs.
-					$category_ids = $this->get_category_ids( 'vendor', $vendor );
+				// Get category IDs.
+				$category_ids = $this->get_category_ids( 'vendor', $vendor );
 
-					foreach ( $this->get_attributes( 'vendor', $category_ids ) as $attribute_name => $attribute ) {
-						if ( $attribute['allow_unique'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
-							$unique_attributes[ $attribute_name ] = call_user_func( [ $vendor, 'get_' . $attribute_name ] );
-						}
+				foreach ( $this->get_attributes( 'vendor', $category_ids ) as $attribute_name => $attribute ) {
+					if ( $attribute['unique'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
+						$unique_attributes[ $attribute_name ] = call_user_func( [ $vendor, 'get_' . $attribute_name ] );
 					}
 				}
 			}
+		}
 
-			foreach ( $form->get_values() as $name => $value ) {
-				if ( in_array( $name, array_keys( $unique_attributes ) ) && $value !== $unique_attributes[ $name ] ) {
-					/* translators: %s: field label. */
-					$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label() );
-				}
+		foreach ( $form->get_values() as $name => $value ) {
+			if ( in_array( $name, array_keys( $unique_attributes ) ) && $value !== $unique_attributes[ $name ] ) {
+				/* translators: %s: field label. */
+				$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label() );
 			}
 		}
 
@@ -467,7 +469,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
-						'allow_unique'   => (bool) $attribute_object->hp_allow_unique,
+						'unique'         => (bool) $attribute_object->hp_unique,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -661,7 +663,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
-							'allow_unique'   => false,
+							'unique'         => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -719,7 +721,7 @@ final class Attribute extends Component {
 		$field_type = sanitize_key( get_post_meta( $attribute_id, hp\prefix( 'edit_field_type' ), true ) );
 
 		if ( $field_type && ! in_array( $field_type, [ 'text', 'number' ], true ) ) {
-			delete_post_meta($attribute_id, hp\prefix( 'allow_unique' ) );
+			delete_post_meta( $attribute_id, hp\prefix( 'unique' ) );
 		}
 
 		// Refresh permalinks.
@@ -812,7 +814,7 @@ final class Attribute extends Component {
 					];
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
-						$meta_box['fields']['allow_unique'] = [
+						$meta_box['fields']['unique'] = [
 							'label'    => esc_html__( 'Allow Unique', 'hivepress' ),
 							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
 							'type'     => 'checkbox',
@@ -1059,7 +1061,7 @@ final class Attribute extends Component {
 				$field_args = $attribute['edit_field'];
 
 				// Add readonly option.
-				if ( $attribute['allow_unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+				if ( $attribute['unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
 					$field_args['readonly'] = true;
 				}
 
