@@ -324,7 +324,7 @@ function replace_tokens( $tokens, $text, $is_attribute = false ) {
 						if ( $field ) {
 							$field_value = $field->get_display_value();
 							
-							if ( $is_attribute ) {
+							if ( $is_attribute || strtotime( '22 June 2024' ) > get_option( 'hp_installed_time' ) ) {
 								$field_value = $field->display();
 							}
 						} elseif ( method_exists( $value, 'display_' . $field_name ) ) {
