@@ -131,6 +131,9 @@ class Number extends Field {
 			$attributes['required'] = true;
 		}
 
+		// Set component.
+		$attributes['data-component'] = 'number';
+
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		parent::boot();

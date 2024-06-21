@@ -763,7 +763,7 @@ var hivepress = {
 		});
 
 		// Number
-		container.find('input[type="number"]').each(function () {
+		container.find(hivepress.getSelector('number')).each(function () {
 			var number = $(this),
 				disallowedKeys = ['+', 'e'];
 
