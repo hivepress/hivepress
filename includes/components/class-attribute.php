@@ -847,11 +847,6 @@ final class Attribute extends Component {
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( ! isset( $fields[ $attribute_name ] ) ) {
 
-				// Check user attributes.
-				if ( 'user' === $model && ! ( $attribute['editable'] && $attribute['edit_field']['required'] && 'attachment_upload' !== $attribute['edit_field']['type'] ) ) {
-					continue;
-				}
-
 				// Get field arguments.
 				$field_args = array_merge(
 					$attribute['edit_field'],
