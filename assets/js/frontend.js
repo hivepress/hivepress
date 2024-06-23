@@ -95,14 +95,25 @@
 			var container = $(this),
 				images = container.find('img, video'),
 				url = container.data('url'),
-				isPreview = container.data('preview') !== false;
+				isPreview = container.data('preview') !== false,
+				lightboxSelector = 'lightbox';
+			
+			if(!images.first().is(['data-lightbox'])){
+				lightboxSelector = 'src';
+			}
 
-			if (images.length && images.first().data('lightbox')) {
+			if (images.length && images.first().data(lightboxSelector)) {
 				var imageURLs = [];
 
 				images.each(function () {
+
+					if('src' === lightboxSelector){
+						$(this).attr('data-lightbox', $(this).data('src'));
+						$(this).removeAttr('data-src');
+					}
+
 					imageURLs.push({
-						src: $(this).data('lightbox'),
+						src: $(this).data(lightboxSelector),
 					});
 				});
 
