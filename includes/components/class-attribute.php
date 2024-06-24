@@ -273,7 +273,11 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
-			if ( 'user' !== $model ) {
+			if ( 'user' === $model ) {
+
+				// Add register fields.
+				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ], 100 );
+			} else {
 
 				// Update attribute.
 				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
@@ -305,9 +309,6 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
-
-		// Add registration fields.
-		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_registration_fields' ], 100, 2 );
 	}
 
 	/**
@@ -945,6 +946,28 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds register fields.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_register_fields( $form ) {
+		foreach ( $this->get_attributes( 'user' ) as $attribute_name => $attribute ) {
+
+			// Get required flag.
+			$required = hp\get_array_value( $attribute['edit_field'], 'required' );
+
+			if ( $attribute['editable'] && $required && 'attachment_upload' !== $attribute['edit_field']['type'] && ! isset( $form['fields'][ $attribute_name ] ) ) {
+
+				// Add field.
+				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
+			}
+		}
+
+		return $form;
+	}
+
+	/**
 	 * Adds edit fields.
 	 *
 	 * @param array  $form_args Form arguments.
@@ -1412,25 +1435,6 @@ final class Attribute extends Component {
 					$form_args['fields'][ $field_name ]['min_value'] = hp\get_first_array_value( $range );
 					$form_args['fields'][ $field_name ]['max_value'] = hp\get_last_array_value( $range );
 				}
-			}
-		}
-
-		return $form_args;
-	}
-
-	/**
-	 * Adds registration fields.
-	 *
-	 * @param array  $form_args Form arguments.
-	 * @param object $form Form object.
-	 * @return array
-	 */
-	public function add_registration_fields( $form_args, $form ) {
-		foreach ( $this->get_attributes( 'user' ) as $attribute_name => $attribute ) {
-			if ( ! isset( $form_args['fields'][ $attribute_name ] ) && $attribute['editable'] && $attribute['edit_field']['required'] && 'attachment_upload' !== $attribute['edit_field']['type'] ) {
-
-				// Add field.
-				$form_args['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
 
