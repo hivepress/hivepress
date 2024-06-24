@@ -58,6 +58,28 @@ var hivepress = {
 			});
 		});
 
+		// Number
+		container.find(hivepress.getSelector('number')).each(function () {
+			var field = $(this),
+				disallowedKeys = ['+', 'e'];
+
+			field.on('keypress paste', function (e) {
+				if (e.type === 'paste') {
+					var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+
+					for (var i = 0; i < text.length; i++) {
+						if (disallowedKeys.includes(text[i])) {
+							e.preventDefault();
+
+							return;
+						}
+					}
+				} else if (disallowedKeys.includes(e.key)) {
+					e.preventDefault();
+				}
+			});
+		});
+
 		// Repeater
 		container.find(hivepress.getSelector('repeater')).each(function () {
 			var container = $(this),
@@ -386,6 +408,9 @@ var hivepress = {
 					defaultHour: 0,
 					disable: [],
 					disableMobile: true,
+					onReady: function (selectedDates, dateStr, instance) {
+						$(instance.altInput).attr('inputmode', 'none');
+					},
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
 
@@ -589,6 +614,9 @@ var hivepress = {
 						}
 
 						return hivepress.dateFormatter.formatDate(date, format);
+					},
+					onReady: function (selectedDates, dateStr, instance) {
+						$(instance.altInput).attr('inputmode', 'none');
 					},
 					onOpen: function (selectedDates, dateStr, instance) {
 						$(instance.altInput).prop('readonly', true);
@@ -915,7 +943,14 @@ var hivepress = {
 
 			form.find('input[readonly], textarea[readonly]').on('click', function () {
 				this.select();
-				document.execCommand('copy');
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(this.value).catch(() => {
+						document.execCommand('copy');
+					});
+				} else {
+					document.execCommand('copy');
+				}
 			});
 		});
 
@@ -956,8 +991,15 @@ var hivepress = {
 		// Date formatter
 		hivepress.dateFormatter = new DateFormatter();
 
-		if (flatpickr.l10ns.hasOwnProperty(hivepressCoreData.language)) {
-			var dateSettings = flatpickr.l10ns[hivepressCoreData.language];
+		// Date picker
+		var language = hivepressCoreData.language;
+
+		if (language === 'el') {
+			language = 'gr';
+		}
+
+		if (flatpickr.l10ns.hasOwnProperty(language)) {
+			var dateSettings = flatpickr.l10ns[language];
 
 			flatpickr.localize(dateSettings);
 

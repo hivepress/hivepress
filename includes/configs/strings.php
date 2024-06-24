@@ -73,6 +73,7 @@ return [
 	'widgets'                                   => esc_html__( 'Widgets', 'hivepress' ),
 	'primary_plural'                            => esc_html_x( 'Primary', 'plural', 'hivepress' ),
 	'secondary_plural'                          => esc_html_x( 'Secondary', 'plural', 'hivepress' ),
+	'ternary_plural'                            => esc_html_x( 'Ternary', 'plural', 'hivepress' ),
 	'related_plural'                            => esc_html_x( 'Related', 'plural', 'hivepress' ),
 	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
 	'by_name'                                   => esc_html_x( 'Name', 'sort order', 'hivepress' ),
@@ -96,6 +97,10 @@ return [
 	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
 	/* translators: %s: field label. */
 	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
+	/* translators: 1: field label, 2: length. */
+	'field_longer_than_n_characters'            => esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ),
+	/* translators: 1: field label, 2: length. */
+	'field_shorter_than_n_characters'           => esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),

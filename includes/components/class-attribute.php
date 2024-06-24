@@ -781,6 +781,11 @@ final class Attribute extends Component {
 				// Add field.
 				$meta_box['fields']['edit_field_name'] = $field_args;
 			}
+
+			// @todo replace temporary fix.
+			if ( 'attachment_upload' === $field_type ) {
+				unset( $meta_box['fields']['moderated'] );
+			}
 		}
 
 		return $meta_box;
@@ -1518,8 +1523,10 @@ final class Attribute extends Component {
 						'options'     => [
 							'view_block_primary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
 							'view_block_secondary' => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_block_ternary'   => esc_html__( 'Block', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'ternary', 'area', 'hivepress' ) ),
 							'view_page_primary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'primary', 'area', 'hivepress' ) ),
 							'view_page_secondary'  => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'secondary', 'area', 'hivepress' ) ),
+							'view_page_ternary'    => esc_html__( 'Page', 'hivepress' ) . ' ' . sprintf( '(%s)', esc_html_x( 'ternary', 'area', 'hivepress' ) ),
 						],
 					],
 
@@ -1563,9 +1570,14 @@ final class Attribute extends Component {
 		// Add meta boxes.
 		foreach ( $this->get_models() as $model ) {
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
-
-				// Set screen and model.
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
+
+					// Skip adding meta box.
+					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+						continue;
+					}
+
+					// Set screen and model.
 					$meta_box['model'] = $model;
 
 					if ( 'attributes' === $meta_box_name ) {
