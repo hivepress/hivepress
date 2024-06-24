@@ -338,7 +338,7 @@ final class Attribute extends Component {
 		$unique_attributes = [];
 
 		foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
-			if ( $attribute['unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+			if ( $attribute['readonly'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
 				$unique_attributes[ $attribute_name ] = call_user_func( [ $model, 'get_' . $attribute_name ] );
 			}
 		}
@@ -359,7 +359,7 @@ final class Attribute extends Component {
 				$category_ids = $this->get_category_ids( 'vendor', $vendor );
 
 				foreach ( $this->get_attributes( 'vendor', $category_ids ) as $attribute_name => $attribute ) {
-					if ( $attribute['unique'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
+					if ( $attribute['readonly'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
 						$unique_attributes[ $attribute_name ] = call_user_func( [ $vendor, 'get_' . $attribute_name ] );
 					}
 				}
@@ -469,7 +469,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
-						'unique'         => (bool) $attribute_object->hp_unique,
+						'readonly'       => (bool) $attribute_object->hp_readonly,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -663,7 +663,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
-							'unique'         => false,
+							'readonly'       => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -721,7 +721,7 @@ final class Attribute extends Component {
 		$field_type = sanitize_key( get_post_meta( $attribute_id, hp\prefix( 'edit_field_type' ), true ) );
 
 		if ( $field_type && ! in_array( $field_type, [ 'text', 'number' ], true ) ) {
-			delete_post_meta( $attribute_id, hp\prefix( 'unique' ) );
+			delete_post_meta( $attribute_id, hp\prefix( 'readonly' ) );
 		}
 
 		// Refresh permalinks.
@@ -814,7 +814,7 @@ final class Attribute extends Component {
 					];
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
-						$meta_box['fields']['unique'] = [
+						$meta_box['fields']['readonly'] = [
 							'label'    => esc_html__( 'Allow Unique', 'hivepress' ),
 							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
 							'type'     => 'checkbox',
@@ -1061,7 +1061,7 @@ final class Attribute extends Component {
 				$field_args = $attribute['edit_field'];
 
 				// Add readonly option.
-				if ( $attribute['unique'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+				if ( $attribute['readonly'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
 					$field_args['readonly'] = true;
 				}
 
