@@ -72,7 +72,7 @@ final class Admin extends Component {
 			// Manage meta boxes.
 			add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ], 10, 2 );
 			add_action( 'do_meta_boxes', [ $this, 'remove_meta_boxes' ] );
-			add_action( 'save_post', [ $this, 'update_meta_box' ], 10, 2 );
+			add_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 			// Add term boxes.
 			add_action( 'admin_init', [ $this, 'add_term_boxes' ] );
@@ -988,10 +988,9 @@ final class Admin extends Component {
 	 * Gets meta boxes.
 	 *
 	 * @param string $screen Screen name.
-	 * @param mixed  $category_id Category ID.
 	 * @return array
 	 */
-	protected function get_meta_boxes( $screen, $category_id = null ) {
+	protected function get_meta_boxes( $screen ) {
 
 		// Check screen.
 		if ( 'user' === $screen ) {
@@ -1011,7 +1010,7 @@ final class Admin extends Component {
 					 * @param {array} $props Meta box properties.
 					 * @return {array} Meta box properties.
 					 */
-					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name, 'category' => $category_id ] ) );
+					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name, 'category' => hivepress()->request->get_context( 'model_category' ) ] ) );
 
 					// Set default arguments.
 					$args = array_merge(
@@ -1091,9 +1090,8 @@ final class Admin extends Component {
 	 * Updates meta box values.
 	 *
 	 * @param int $post_id Post ID.
-	 * @param WP_Post $post Post object.
 	 */
-	public function update_meta_box( $post_id, $post ) {
+	public function update_meta_box( $post_id ) {
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -1115,18 +1113,11 @@ final class Admin extends Component {
 			return;
 		}
 
-		// Get post category ID.
-		$category = get_post_meta($post->ID, 'hp_listing_temporary_category', true);
-
-		if($category){
-			delete_post_meta($post->ID, 'hp_listing_temporary_category');
-		}
-
 		// Remove action.
 		remove_action( 'save_post', [ $this, 'update_meta_box' ] );
 
 		// Update field values.
-		foreach ( $this->get_meta_boxes( get_post_type(), $category ) as $meta_box ) {
+		foreach ( $this->get_meta_boxes( get_post_type() ) as $meta_box ) {
 			foreach ( $meta_box['fields'] as $field_name => $field_args ) {
 
 				// Create field.
@@ -1182,15 +1173,8 @@ final class Admin extends Component {
 		// Get meta box name.
 		$meta_box_name = hp\unprefix( $args['id'] );
 
-		// Set category.
-		$category = null;
-
-		if ( isset( $args['defaults']['hp_category'] ) ) {
-			$category = $args['defaults']['hp_category'];
-		}
-
 		// Get meta box.
-		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type, $category ), $meta_box_name );
+		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type ), $meta_box_name );
 
 		if ( $meta_box ) {
 

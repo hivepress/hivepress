@@ -1561,12 +1561,12 @@ final class Attribute extends Component {
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
 
-						if ( 'listing' === $model ) {
+						if ( in_array( $model, $this->get_models( 'post' ), true ) && taxonomy_exists( hp\prefix( $model . '_category' ) ) ) {
 							$meta_box['fields']['category'] = [
 								'label'       => hivepress()->translator->get_string( 'category' ),
 								'type'        => 'select',
 								'options'     => 'terms',
-								'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
+								'option_args' => [ 'taxonomy' => hp\prefix( $model . '_category' ) ],
 								'required'    => true,
 								'_order'      => 1,
 

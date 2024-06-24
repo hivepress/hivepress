@@ -149,14 +149,43 @@ final class Attribute extends Controller {
 		$meta_box   = sanitize_key( $request->get_param( 'meta_box_name' ) );
 		$model_name = sanitize_key( $request->get_param( '_model' ) );
 
-		$model_names = array_map(
-			function( $name ) {
-				return $name . '_attribute';
-			},
-			hivepress()->attribute->get_models()
+		// Get post-based models with categories.
+		$post_models = array_filter(
+			hivepress()->attribute->get_models( 'post' ),
+			function( $model ) {
+				return taxonomy_exists( hp\prefix( $model . '_category' ) );
+			}
 		);
 
-		if ( ! in_array( $model_name, array_merge( [ 'listing' ], $model_names ) ) || ! in_array( $meta_box, [ 'listing_attributes', $model_name . '_edit', $model_name . '_search' ] ) ) {
+		// Set allowed models.
+		$model_names = array_merge(
+			array_map(
+				function( $name ) {
+					return $name . '_attribute';
+				},
+				hivepress()->attribute->get_models()
+			),
+			$post_models
+		);
+
+		// Get post-based model attributes.
+		$post_attributes = array_map(
+			function( $model ) {
+				return $model . '_attributes';
+			},
+			$post_models
+		);
+
+		// Set allowed meta boxes.
+		$meta_boxes = array_merge(
+			[
+				$model_name . '_edit',
+				$model_name . '_search',
+			],
+			$post_attributes
+		);
+
+		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, $meta_boxes ) ) {
 			return hp\rest_error( 400 );
 		}
 
@@ -174,10 +203,10 @@ final class Attribute extends Controller {
 			return hp\rest_error( 403 );
 		}
 
-		if ( 'listing' === $model_name && 'listing_attributes' === $meta_box ) {
+		if ( in_array( $model_name, $post_models, true ) && in_array( $meta_box, $post_attributes, true ) ) {
 
-			// Save listing temporary category ID.
-			update_post_meta($post->ID, 'hp_listing_temporary_category', $request->get_param( 'hp_category' ));
+			// Save model temporary category ID.
+			hivepress()->request->set_context( 'model_category', $request->get_param( 'hp_category' ) );
 		}
 
 		// Update field types.
