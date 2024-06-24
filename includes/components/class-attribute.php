@@ -735,24 +735,14 @@ final class Attribute extends Component {
 						'_order'     => 120,
 					];
 
-					if('attachment_upload' === $field_type){
-						unset( $meta_box['fields'][ $field_context . '_field_default' ] );
-					}else{
-
-						// Set default field parameters.
-						$default_field_args = [
+					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
+						$meta_box['fields'][ $field_context . '_field_default' ] = [
 							'label'  => hivepress()->translator->get_string( 'default' ),
 							'type'   => $field_type,
 							'_order' => 130,
 						];
-
-						if(isset( $field_settings['options'] )){
-							$default_field_args['type'] = 'number';
-							$default_field_args['description'] = esc_html__('Please put the default option ID', 'hivepress');
-						}
-
-
-						$meta_box['fields'][ $field_context . '_field_default' ] = $default_field_args;
+					} else {
+						unset( $meta_box['fields'][ $field_context . '_field_default' ] );
 					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
