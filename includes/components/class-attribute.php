@@ -318,59 +318,56 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function validate_unique_attributes( $errors, $model ) {
-		if ( empty( $errors ) ) {
 
-			// Set unique fields.
-			$fields = [];
+		if ( ! empty( $errors ) ) {
+			return $errors;
+		}
 
-			foreach ( $model->_get_fields() as $field_name => $field ) {
-				if ( ! hp\get_array_value( $field->get_args(), 'unique' ) || ! $field->get_value() ) {
-					continue;
-				}
+		// Get unique fields.
+		$fields = array_filter(
+			array_map(
+				function( $field_name, $field ) {
+					return [
+						'name'  => $field_name,
+						'value' => $field->get_value(),
+						'label' => $field->get_label(),
+					];
+				},
+				array_keys( $model->_get_fields() ),
+				$model->_get_fields()
+			),
+			function( $field ) {
+				return hp\get_array_value( $field->get_args(), 'unique' ) && $field['value'];
+			}
+		);
 
-				$fields[] = [
-					'name'  => $field_name,
-					'value' => $field->get_value(),
-					'label' => $field->get_label(),
-				];
+		// Check fields.
+		if ( ! $fields ) {
+			return $errors;
+		}
+
+		foreach ( $fields as $field ) {
+
+			// Get models.
+			$models = $model->query()->filter(
+				[
+					'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+					'id__not_in' => [ $model->get_id() ],
+				]
+			)->set_args(
+				[
+					'meta_key'   => hp\prefix( $field['name'] ),
+					'meta_value' => $field['value'],
+				]
+			)->get_first_id();
+
+			// Check models.
+			if ( ! $models ) {
+				continue;
 			}
 
-			// Check fields.
-			if ( ! $fields ) {
-				return $errors;
-			}
-
-			// Get model class.
-			$model_class = hp\create_class_instance( '\HivePress\Models\\' . $model::_get_meta( 'name' ) );
-
-			// Check model class.
-			if ( ! $model_class ) {
-				return $errors;
-			}
-
-			foreach ( $fields as $field ) {
-
-				// Get models.
-				$models = $model_class->query()->filter(
-					[
-						'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-						'id__not_in' => [ $model->get_id() ],
-					]
-				)->set_args(
-					[
-						'meta_key'   => hp\prefix( $field['name'] ),
-						'meta_value' => $field['value'],
-					]
-				)->get_count();
-
-				// Check models.
-				if ( ! $models ) {
-					continue;
-				}
-
-				/* translators: %s: field label. */
-				$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
-			}
+			/* translators: %s: field label. */
+			$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
 		}
 
 		return $errors;
@@ -469,6 +466,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'unique'         => (bool) $attribute_object->hp_unique,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -662,6 +660,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'unique'         => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -803,6 +802,16 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+
+					if ( in_array( $field_type, [ 'text', 'phone', 'number' ], true ) ) {
+						$meta_box['fields']['unique'] = [
+							'label'       => esc_html__( 'Unique', 'hivepress' ),
+							'caption'     => esc_html__( 'Enable unique value', 'hivepress' ),
+							'description' => esc_html__( 'Keep value unique between other models.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 130,
+						];
+					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),

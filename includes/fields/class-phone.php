@@ -64,14 +64,6 @@ class Phone extends Text {
 						'options'     => 'countries',
 						'_order'      => 120,
 					],
-
-					'unique'    => [
-						'label'       => esc_html__( 'Unique', 'hivepress' ),
-						'caption'     => esc_html__( 'Enable unique value', 'hivepress' ),
-						'description' => esc_html__( 'Keep value unique between other models.', 'hivepress' ),
-						'type'        => 'checkbox',
-						'_order'      => 130,
-					],
 				],
 			],
 			$meta
