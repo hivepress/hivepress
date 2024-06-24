@@ -320,7 +320,7 @@ final class WooCommerce extends Component {
 	public function update_user_billing_name( $user_id, $value ) {
 
 		// Check field value.
-		if ( ! strlen( $value ) ) {
+		if ( ! $value ) {
 			return;
 		}
 
