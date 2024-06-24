@@ -273,6 +273,9 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
+			// Validate attributes.
+			add_filter( 'hivepress/v1/forms/' . $model . '_update/errors', [ $this, 'validate_model_attributes' ], 10, 2 );
+
 			if ( 'user' !== $model ) {
 
 				// Update attribute.
@@ -305,6 +308,72 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Validates model attributes.
+	 *
+	 * @param array  $errors Form errors.
+	 * @param object $form Form object.
+	 * @return array
+	 */
+	public function validate_model_attributes( $errors, $form ) {
+
+		if ( ! empty( $errors ) ) {
+			return $errors;
+		}
+
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
+
+		// Get model.
+		$model = $form->get_model();
+
+		// Get category IDs.
+		$category_ids = $this->get_category_ids( $model_name, $model );
+
+		// Get form fields.
+		$fields = $form->get_fields();
+
+		$unique_attributes = [];
+
+		foreach ( $this->get_attributes( $model_name, $category_ids ) as $attribute_name => $attribute ) {
+			if ( $attribute['readonly'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+				$unique_attributes[ $attribute_name ] = call_user_func( [ $model, 'get_' . $attribute_name ] );
+			}
+		}
+
+		if ( 'user' === $model_name && current_user_can( 'edit_posts' ) ) {
+
+			// Get vendor.
+			$vendor = \HivePress\Models\Vendor::query()->filter(
+				[
+					'status' => 'publish',
+					'user'   => get_current_user_id(),
+				]
+			)->get_first();
+
+			if ( $vendor ) {
+
+				// Get category IDs.
+				$category_ids = $this->get_category_ids( 'vendor', $vendor );
+
+				foreach ( $this->get_attributes( 'vendor', $category_ids ) as $attribute_name => $attribute ) {
+					if ( $attribute['readonly'] && call_user_func( [ $vendor, 'get_' . $attribute_name ] ) ) {
+						$unique_attributes[ $attribute_name ] = call_user_func( [ $vendor, 'get_' . $attribute_name ] );
+					}
+				}
+			}
+		}
+
+		foreach ( $form->get_values() as $name => $value ) {
+			if ( in_array( $name, array_keys( $unique_attributes ) ) && $value !== $unique_attributes[ $name ] ) {
+				/* translators: %s: field label. */
+				$errors[] = sprintf( esc_html__( '"%s" field value cannot be changed.', 'hivepress' ), $fields[ $name ]->get_label() );
+			}
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -400,6 +469,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'readonly'       => (bool) $attribute_object->hp_readonly,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -593,6 +663,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'readonly'       => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -644,6 +715,13 @@ final class Attribute extends Component {
 		// Check post ID.
 		if ( get_the_ID() !== $attribute_id ) {
 			return;
+		}
+
+		// Get field type.
+		$field_type = sanitize_key( get_post_meta( $attribute_id, hp\prefix( 'edit_field_type' ), true ) );
+
+		if ( $field_type && ! in_array( $field_type, [ 'text', 'number' ], true ) ) {
+			delete_post_meta( $attribute_id, hp\prefix( 'readonly' ) );
 		}
 
 		// Refresh permalinks.
@@ -734,6 +812,16 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+
+					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
+						$meta_box['fields']['readonly'] = [
+							'label'    => esc_html__( 'Allow Unique', 'hivepress' ),
+							'caption'  => esc_html__( 'Prevent editing attribute after the value is set', 'hivepress' ),
+							'type'     => 'checkbox',
+							'_context' => 'edit',
+							'_order'   => 130,
+						];
+					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
@@ -805,6 +893,10 @@ final class Attribute extends Component {
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
 			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
+
+				// Remove readonly option.
+				$attribute['edit_field']['readonly'] = false;
+
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
@@ -950,14 +1042,17 @@ final class Attribute extends Component {
 	 */
 	public function add_edit_fields( $form_args, $form ) {
 
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
+
 		// Get model.
-		$model = $form::get_meta( 'model' );
+		$model = $form->get_model();
 
 		// Get category IDs.
-		$category_ids = $this->get_category_ids( $model, $form->get_model() );
+		$category_ids = $this->get_category_ids( $model_name, $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model_name, $category_ids );
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -965,7 +1060,12 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
+				// Add readonly option.
+				if ( $attribute['readonly'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+					$field_args['readonly'] = true;
+				}
+
+				if ( $attribute['moderated'] && $model_name . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[

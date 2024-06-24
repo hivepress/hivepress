@@ -46,6 +46,13 @@ class Number extends Field {
 	protected $max_value;
 
 	/**
+	 * Make text read-only?
+	 *
+	 * @var bool
+	 */
+	protected $readonly = false;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -129,6 +136,14 @@ class Number extends Field {
 		// Set required flag.
 		if ( $this->required ) {
 			$attributes['required'] = true;
+		}
+
+		// Set readonly flag.
+		if ( $this->readonly ) {
+			$attributes['readonly'] = true;
+			$attributes['title']    = esc_html__( 'Click to copy', 'hivepress' );
+
+			$this->statuses['optional'] = null;
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
