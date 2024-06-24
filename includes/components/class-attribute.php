@@ -323,22 +323,20 @@ final class Attribute extends Component {
 			return $errors;
 		}
 
-		// Get unique fields.
-		$fields = array_filter(
-			array_map(
-				function( $field_name, $field ) {
-					return [
-						'name'  => $field_name,
-						'value' => $field->get_value(),
-						'label' => $field->get_label(),
-					];
-				},
-				array_keys( $model->_get_fields() ),
-				$model->_get_fields()
+		// Set unique fields.
+		$fields = array_intersect_key(
+			array_filter(
+				$model->_get_fields(),
+				function ( $field ) {
+					return $field->get_value();
+				}
 			),
-			function( $field ) {
-				return hp\get_array_value( $field->get_args(), 'unique' ) && $field['value'];
-			}
+			array_filter(
+				$this->get_attributes( $model::get_meta( 'name' ) ),
+				function ( $value ) {
+					return $value['unique'];
+				}
+			)
 		);
 
 		// Check fields.
@@ -356,8 +354,8 @@ final class Attribute extends Component {
 				]
 			)->set_args(
 				[
-					'meta_key'   => hp\prefix( $field['name'] ),
-					'meta_value' => $field['value'],
+					'meta_key'   => hp\prefix( $field->get_name() ),
+					'meta_value' => $field->get_value(),
 				]
 			)->get_first_id();
 
@@ -367,7 +365,7 @@ final class Attribute extends Component {
 			}
 
 			/* translators: %s: field label. */
-			$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field['label'] );
+			$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field->get_label() );
 		}
 
 		return $errors;
