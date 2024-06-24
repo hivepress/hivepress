@@ -162,7 +162,7 @@ abstract class Field {
 					],
 
 					'default'     => [
-						'label'    => hivepress()->translator->get_string( 'default' ),
+						'label'    => esc_html__( 'Default Value', 'hivepress' ),
 						'type'     => 'text',
 						'_context' => 'edit',
 						'_order'   => 30,

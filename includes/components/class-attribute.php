@@ -737,9 +737,9 @@ final class Attribute extends Component {
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
 						$meta_box['fields'][ $field_context . '_field_default' ] = [
-							'label'  => hivepress()->translator->get_string( 'default' ),
+							'label'  => esc_html__( 'Default Value', 'hivepress' ),
 							'type'   => $field_type,
-							'_order' => 130,
+							'_order' => 210,
 						];
 					} else {
 						unset( $meta_box['fields'][ $field_context . '_field_default' ] );
