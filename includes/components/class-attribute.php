@@ -273,7 +273,11 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
-			if ( 'user' !== $model ) {
+			if ( 'user' === $model ) {
+
+				// Add register fields.
+				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ], 100 );
+			} else {
 
 				// Update attribute.
 				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
@@ -939,6 +943,28 @@ final class Attribute extends Component {
 		if ( $model->get_snippet() !== $snippet ) {
 			$model->set_snippet( $snippet )->save_snippet();
 		}
+	}
+
+	/**
+	 * Adds register fields.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_register_fields( $form ) {
+		foreach ( $this->get_attributes( 'user' ) as $attribute_name => $attribute ) {
+
+			// Get required flag.
+			$required = hp\get_array_value( $attribute['edit_field'], 'required' );
+
+			if ( $attribute['editable'] && $required && 'attachment_upload' !== $attribute['edit_field']['type'] && ! isset( $form['fields'][ $attribute_name ] ) ) {
+
+				// Add field.
+				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
+			}
+		}
+
+		return $form;
 	}
 
 	/**
