@@ -87,7 +87,7 @@ final class Attribute extends Component {
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 
 			// Set search order.
-			add_filter( 'posts_orderby', [ $this, 'set_search_order' ] );
+			// add_filter( 'posts_orderby', [ $this, 'set_search_order' ] );
 		} else {
 
 			// Alter settings.
@@ -101,9 +101,14 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function get_searchable_models() {
-		return array_keys( array_filter( hivepress()->get_config( 'post_types' ), function ( $post_type ) {
-			return isset( $post_type['has_archive'] ) && $post_type['has_archive'];
-		} ) );
+		return array_keys(
+			array_filter(
+				hivepress()->get_config( 'post_types' ),
+				function ( $post_type ) {
+					return isset( $post_type['has_archive'] ) && $post_type['has_archive'];
+				}
+			)
+		);
 	}
 
 	/**
@@ -135,13 +140,13 @@ final class Attribute extends Component {
 
 			// Set sort options.
 			$order_by = '';
-			$order = '';
+			$order    = '';
 
 			if ( 'title' === $sort_param ) {
 
 				// Set sort options.
 				$order_by = $wpdb->posts . '.post_title';
-				$order = 'ASC';
+				$order    = 'ASC';
 			} else {
 
 				// Get sort order.
@@ -169,7 +174,7 @@ final class Attribute extends Component {
 
 						// Set sort options.
 						$order_by = $sort_param . '__order';
-						$order = strtoupper( $sort_order );
+						$order    = strtoupper( $sort_order );
 					}
 				}
 			}
@@ -1853,7 +1858,7 @@ final class Attribute extends Component {
 	public function set_search_query( $query ) {
 
 		// Check query.
-		if ( ! $query->is_main_query() ) {
+		if ( ! $query->is_main_query() && ! $query->get( 'hp_main' ) ) {
 			return;
 		}
 
