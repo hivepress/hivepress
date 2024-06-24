@@ -273,6 +273,9 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
+			// Validate model attributes.
+			add_filter( 'hivepress/v1/models/' . $model . '/errors', [ $this, 'validate_unique_attributes' ], 100, 2 );
+
 			if ( 'user' !== $model ) {
 
 				// Update attribute.
@@ -305,6 +308,67 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Validates unique model attributes.
+	 *
+	 * @param array  $errors Error messages.
+	 * @param object $model Model object.
+	 * @return array
+	 */
+	public function validate_unique_attributes( $errors, $model ) {
+
+		if ( ! empty( $errors ) ) {
+			return $errors;
+		}
+
+		// Set unique fields.
+		$fields = array_intersect_key(
+			array_filter(
+				$model->_get_fields(),
+				function ( $field ) {
+					return $field->get_value();
+				}
+			),
+			array_filter(
+				$this->get_attributes( $model::get_meta( 'name' ) ),
+				function ( $value ) {
+					return $value['unique'];
+				}
+			)
+		);
+
+		// Check fields.
+		if ( ! $fields ) {
+			return $errors;
+		}
+
+		foreach ( $fields as $field ) {
+
+			// Get models.
+			$models = $model->query()->filter(
+				[
+					'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+					'id__not_in' => [ $model->get_id() ],
+				]
+			)->set_args(
+				[
+					'meta_key'   => hp\prefix( $field->get_name() ),
+					'meta_value' => $field->get_value(),
+				]
+			)->get_first_id();
+
+			// Check models.
+			if ( ! $models ) {
+				continue;
+			}
+
+			/* translators: %s: field label. */
+			$errors[] = sprintf( esc_html__( '"%s" field must be unique.', 'hivepress' ), $field->get_label() );
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -400,6 +464,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'unique'         => (bool) $attribute_object->hp_unique,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -593,6 +658,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'unique'         => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -734,6 +800,16 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+
+					if ( in_array( $field_type, [ 'text', 'phone', 'number' ], true ) ) {
+						$meta_box['fields']['unique'] = [
+							'label'       => esc_html__( 'Unique', 'hivepress' ),
+							'caption'     => esc_html__( 'Enable unique value', 'hivepress' ),
+							'description' => esc_html__( 'Keep value unique between other models.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 130,
+						];
+					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
