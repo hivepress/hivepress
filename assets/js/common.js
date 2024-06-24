@@ -58,6 +58,28 @@ var hivepress = {
 			});
 		});
 
+		// Number
+		container.find(hivepress.getSelector('number')).each(function () {
+			var field = $(this),
+				disallowedKeys = ['+', 'e'];
+
+			field.on('keypress paste', function (e) {
+				if (e.type === 'paste') {
+					var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+
+					for (var i = 0; i < text.length; i++) {
+						if (disallowedKeys.includes(text[i])) {
+							e.preventDefault();
+
+							return;
+						}
+					}
+				} else if (disallowedKeys.includes(e.key)) {
+					e.preventDefault();
+				}
+			});
+		});
+
 		// Repeater
 		container.find(hivepress.getSelector('repeater')).each(function () {
 			var container = $(this),
@@ -760,29 +782,6 @@ var hivepress = {
 						datasets: canvas.data('datasets'),
 					},
 				});
-		});
-
-		// Number
-		container.find(hivepress.getSelector('number')).each(function () {
-			var number = $(this),
-				disallowedKeys = ['+', 'e'];
-
-			number.on('keypress paste', function(e) {
-				if (e.type === 'paste') {
-					var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
-
-					for (var i = 0; i < text.length; i++) {
-						if (disallowedKeys.includes(text[i])) {
-							e.preventDefault();
-							return;
-						}
-					}
-				} else {
-					if (disallowedKeys.includes(e.key)) {
-						e.preventDefault();
-					}
-				}
-			});
 		});
 
 		// Form
