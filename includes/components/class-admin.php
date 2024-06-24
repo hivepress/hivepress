@@ -62,6 +62,10 @@ final class Admin extends Component {
 			add_action( 'hivepress/v1/activate', [ $this, 'init_settings' ] );
 			add_action( 'hivepress/v1/update', [ $this, 'init_settings' ] );
 
+			// Clear cache.
+			add_action( 'hivepress/v1/activate', [ $this, 'flush_extensions_cache' ] );
+			add_action( 'switch_theme', [ $this, 'flush_extensions_cache' ] );
+
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
@@ -244,12 +248,15 @@ final class Admin extends Component {
 				}
 			}
 		}
+	}
 
-		if ( 'hivepress/v1/activate' === current_filter() ) {
+	/**
+	 * Clears cached extensions.
+	 */
+	public function flush_extensions_cache() {
 
-			// Delete cached extensions.
-			hivepress()->cache->delete_cache( 'all_extensions' );
-		}
+		// Delete cached extensions.
+		hivepress()->cache->delete_cache( 'all_extensions' );
 	}
 
 	/**
