@@ -1061,7 +1061,7 @@ final class Attribute extends Component {
 				$field_args = $attribute['edit_field'];
 
 				// Add readonly option.
-				if ( $attribute['readonly'] && call_user_func( [ $model, 'get_' . $attribute_name ] ) ) {
+				if ( $attribute['readonly'] && ! is_null( call_user_func( [ $model, 'get_' . $attribute_name ] ) ) ) {
 					$field_args['readonly'] = true;
 				}
 
