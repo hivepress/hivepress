@@ -85,9 +85,6 @@ final class Attribute extends Component {
 
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
-
-			// Set search order.
-			// add_filter( 'posts_orderby', [ $this, 'set_search_order' ] );
 		} else {
 
 			// Alter settings.
@@ -103,93 +100,12 @@ final class Attribute extends Component {
 	public function get_searchable_models() {
 		return array_keys(
 			array_filter(
-				hivepress()->get_config( 'post_types' ),
-				function ( $post_type ) {
-					return isset( $post_type['has_archive'] ) && $post_type['has_archive'];
+				$this->models,
+				function ( $model ) {
+					return isset( $model['searchable'] ) && $model['searchable'];
 				}
 			)
 		);
-	}
-
-	/**
-	 * Sets WP search order.
-	 *
-	 * @param string $orderby Order filters.
-	 * @return string
-	 */
-	public function set_search_order( $orderby ) {
-		global $wpdb;
-
-		// Check sort option.
-		if ( isset( $_GET['_sort'] ) ) {
-			return $orderby;
-		}
-
-		foreach ( [ 'listing', 'vendor', 'request' ] as $model ) {
-
-			// Get page ID.
-			$page_id = absint( get_option( 'hp_page_' . $model . 's' ) );
-
-			// Check page.
-			if ( ! ( ( $page_id && is_page( $page_id ) ) || is_post_type_archive( 'hp_' . $model ) || ( is_tax() && strpos( get_queried_object()->taxonomy, 'hp_' . $model . '_' ) === 0 ) ) ) {
-				continue;
-			}
-
-			// Set sort param.
-			$sort_param = get_option( hp\prefix( $model . '_sorting_option' ) );
-
-			// Set sort options.
-			$order_by = '';
-			$order    = '';
-
-			if ( 'title' === $sort_param ) {
-
-				// Set sort options.
-				$order_by = $wpdb->posts . '.post_title';
-				$order    = 'ASC';
-			} else {
-
-				// Get sort order.
-				$sort_order = 'ASC';
-
-				if ( strpos( $sort_param, '__' ) ) {
-					list($sort_param, $sort_order) = explode( '__', $sort_param );
-				}
-
-				// Get category ID.
-				$category_id = $this->get_category_id( $model );
-
-				// Get attributes.
-				$attributes = $this->get_attributes( $model, (array) $category_id );
-
-				// Get sort attribute.
-				$sort_attribute = hp\get_array_value( $attributes, $sort_param );
-
-				if ( $sort_attribute && $sort_attribute['sortable'] ) {
-
-					// Get sort field.
-					$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
-
-					if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
-
-						// Set sort options.
-						$order_by = $sort_param . '__order';
-						$order    = strtoupper( $sort_order );
-					}
-				}
-			}
-
-			// Check sort options.
-			if ( $order_by && $order ) {
-
-				// Set sort order.
-				$orderby = $order_by . ' ' . $order;
-			}
-
-			break;
-		}
-
-		return $orderby;
 	}
 
 	/**
@@ -399,7 +315,15 @@ final class Attribute extends Component {
 			}
 		}
 
+		// Get post types.
+		$post_types = hivepress()->get_config( 'post_types' );
+
 		foreach ( $this->get_models() as $model ) {
+
+			// Set searchable models.
+			if ( isset( $post_types[ $model ]['has_archive'] ) && $post_types[ $model ]['has_archive'] ) {
+				$this->models[ $model ]['searchable'] = true;
+			}
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
