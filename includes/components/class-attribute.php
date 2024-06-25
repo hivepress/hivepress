@@ -996,13 +996,7 @@ final class Attribute extends Component {
 		// Set attributes default values.
 		foreach ( $model->_get_fields() as $field) {
 
-			// Check field value.
-			if ( $field->get_value() || ! $field->get_default() ) {
-				continue;
-			}
-
-			// Check model status.
-			if ( in_array( $model::get_meta( 'name' ), $this->get_models( 'post' ), true ) && ! in_array( $model->get_status(), [ 'draft', 'auto-draft' ], true ) ) {
+			if ( $field->get_value() || ! $field->get_default() || ( in_array( $model::get_meta( 'name' ), $this->get_models( 'post' ), true ) && ! in_array( $model->get_status(), [ 'draft', 'auto-draft' ], true ) ) ) {
 				continue;
 			}
 
