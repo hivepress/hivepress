@@ -1243,7 +1243,7 @@ final class Admin extends Component {
 						}
 
 						// Set field value.
-						if ( '' !== $value ) {
+						if ( '' !== $value || ( ! in_array( $post->post_status, [ 'auto-draft', 'draft' ], true ) && hp\get_array_value( $field_args, 'default' ) !== $value ) ) {
 							$field->set_value( $value );
 						}
 
