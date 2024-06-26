@@ -2,11 +2,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-<div>
-<p><textarea class="hp-copy-for-support-content" readonly="readonly"><?php echo $report['content']; ?></textarea></p>
-<p><button id="hp-copy-for-support-button" class="button"><?php esc_html_e( 'Copy for support', 'hivepress' ); ?></button></p>
-</div>
-<table class="hp-status-table" cellspacing="0">
+<div class="wrap hp-page">
+<h1 class="hp-page__title"><?php echo esc_html( hivepress()->get_name() ); ?> <span>/</span> <?php esc_html_e( 'Status', 'hivepress' ); ?></h1>
+<hr class="wp-header-end">
+<table class="form-table" cellspacing="0">
 <?php
 foreach($report['sections'] as $data):
 ?>
@@ -17,13 +16,22 @@ foreach($report['sections'] as $data):
         <?php foreach(hivepress()->helper->get_array_value($data, 'values') as $value): ?>
         <tr>
             <?php if(hivepress()->helper->get_array_value($value, 'url')): ?>
-            <td class="hp-status-table--option-label"><a href="<?php echo esc_attr(hivepress()->helper->get_array_value($value, 'url')); ?>" target="_blank"><?php echo hivepress()->helper->get_array_value($value, 'label'); ?></a></td>
+            <th><a href="<?php echo esc_attr(hivepress()->helper->get_array_value($value, 'url')); ?>" target="_blank"><?php echo hivepress()->helper->get_array_value($value, 'label'); ?></a></th>
             <?php else: ?>
-            <td><?php echo hivepress()->helper->get_array_value($value, 'label'); ?></td>
+            <th><?php echo hivepress()->helper->get_array_value($value, 'label'); ?></th>
             <?php endif; ?>
             <td><?php echo hivepress()->helper->get_array_value($value, 'value'); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 <?php endforeach; ?>
+<tbody>
+    <tr>
+        <th colspan="2">
+        <p><?php echo esc_html__('Please click on the field to copy the text for support.', 'hivepress') ?></p>
+        <textarea rows="10" class="large-text" data-component="support-status-table" readonly="readonly"><?php echo $report['content']; ?></textarea>
+        </th>
+    </tr>
+</tbody>
 </table>
+</div>

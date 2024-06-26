@@ -118,9 +118,16 @@
 		});
 
 		// Copy information for support.
-		$('#hp-copy-for-support-button').on('click', function(){
-			$(document).find('.hp-copy-for-support-content').select();
-			document.execCommand('copy');
+		hivepress.getComponent('support-status-table').on('click', function () {
+			this.select();
+
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(this.value).catch(() => {
+					document.execCommand('copy');
+				});
+			} else {
+				document.execCommand('copy');
+			}
 		});
 	});
 })(jQuery);
