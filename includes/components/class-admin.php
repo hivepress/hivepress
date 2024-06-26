@@ -40,6 +40,9 @@ final class Admin extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+        // Remove unlicensed extensions.
+        add_filter( 'hivepress/v1/extensions', [ $this, 'remove_unlicensed_extensions' ] );
+
 		// Register post types.
 		add_action( 'init', [ $this, 'register_post_types' ] );
 
@@ -102,10 +105,107 @@ final class Admin extends Component {
 
 			// Render footer.
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
+
+            // Check extensions license.
+            add_action( 'admin_init', [ $this, 'check_extensions_license' ] );
 		}
 
 		parent::__construct( $args );
 	}
+
+    /**
+     * Gets license key.
+     *
+     * @return string
+     */
+    protected function get_license_key() {
+        return implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+    }
+
+    /**
+     * Removes unlicensed extensions.
+     *
+     * @param array $extensions Extensions array.
+     * @return array
+     */
+    public function remove_unlicensed_extensions( $extensions ) {
+        return array_map(
+            function ( $extension ) {
+                return ! in_array(
+                    hp\get_last_array_value(
+                        explode( '/', $extension )
+                    ),
+                    array_keys(
+                        (array) hivepress()->cache->get_cache(
+                            'unlicensed_plugins_' . md5( $this->get_license_key() )
+                        )
+                    ),
+                    true
+                );
+            },
+            $extensions
+        );
+    }
+
+    /**
+     * Checks extensions license keys.
+     */
+    public function check_extensions_license() {
+
+        // Get extensions.
+        $extensions = array_filter(
+            $this->get_extensions(),
+            function ( $extension ) {
+                return isset( $extension['price'] ) && $extension['status'] === 'activate' && $extension['slug'] !== 'bundle';
+            }
+        );
+
+        // Check extensions.
+        if ( ! $extensions ) {
+            return;
+        }
+
+        // Get license key.
+        $license_key = $this->get_license_key();
+
+        // Get cache key.
+        $cache_key = 'unlicensed_plugins_' . md5( $license_key );
+
+        // Get cached unlicensed extensions.
+        $unlicensed_extensions = hivepress()->cache->get_cache( $cache_key );
+
+        if ( is_null( $unlicensed_extensions ) ) {
+            $plugins = [];
+
+            // Get API response.
+            $response = json_decode(
+                wp_remote_retrieve_body(
+                    wp_remote_get(
+                        'https://store.hivepress.io/api/v1/products?' . http_build_query(
+                            [
+                                'type'        => 'extension',
+                                'license_key' => $license_key,
+                            ]
+                        )
+                    )
+                ),
+                true
+            );
+
+            if ( is_array( $response ) && isset( $response['data'] ) ) {
+                foreach ( $response['data'] as $extension ) {
+
+                    // Add plugin.
+                    $plugins[ $extension['slug'] ] = [
+                        'name' => $extension['name'],
+                    ];
+                }
+
+                // Cache plugins.
+                hivepress()->cache->set_cache( $cache_key, null, $plugins, WEEK_IN_SECONDS );
+            }
+        }
+    }
 
 	/**
 	 * Registers post types.
@@ -1680,6 +1780,30 @@ final class Admin extends Component {
 
 		// Add default notices.
 		$notices = [];
+
+        // Get unlicensed extensions.
+        $unlicensed_extensions = (array) hivepress()->cache->get_cache( 'unlicensed_plugins_' . md5( $this->get_license_key() ) );
+
+        if ( $unlicensed_extensions ) {
+            $notices['unlicensed_extensions'] = [
+                'type'        => 'warning',
+                'dismissible' => true,
+                'text'        => sprintf(
+                /* translators: 1: extensions names, 2: URL. */
+                    hp\sanitize_html( __( 'Functionality of %1$s extensions has been disabled since you did not activate license key for them. You can set license key in the <a href="%2$s">Settings</a>.', 'hivepress' ) ),
+                    implode(
+                        ', ',
+                        array_map(
+                            function ( $extension ) {
+                                return $extension['name'];
+                            },
+                            $unlicensed_extensions
+                        )
+                    ),
+                    esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) )
+                ),
+            ];
+        }
 
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
