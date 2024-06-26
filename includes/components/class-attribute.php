@@ -392,6 +392,7 @@ final class Attribute extends Component {
 						'label'          => $attribute_object->post_title,
 						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
+                        'default'        => (string) $attribute_object->hp_default,
 						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'synced'         => (bool) $attribute_object->hp_synced,
@@ -585,6 +586,7 @@ final class Attribute extends Component {
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '%value%',
+                            'default'        => '',
 							'protected'      => false,
 							'editable'       => false,
 							'synced'         => false,
@@ -736,13 +738,11 @@ final class Attribute extends Component {
 					];
 
 					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
-						$meta_box['fields'][ $field_context . '_field_default' ] = [
+						$meta_box['fields']['default'] = [
 							'label'  => esc_html__( 'Default Value', 'hivepress' ),
 							'type'   => $field_type,
 							'_order' => 210,
 						];
-					} else {
-						unset( $meta_box['fields'][ $field_context . '_field_default' ] );
 					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
@@ -972,6 +972,9 @@ final class Attribute extends Component {
 		// Get attributes.
 		$attributes = $this->get_attributes( $model_name, $category_ids );
 
+        // Get model fields.
+        $fields = $model->_get_fields();
+
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
 
@@ -990,17 +993,12 @@ final class Attribute extends Component {
 
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $field_args;
+
+                // Set field default.
+                if ( isset( $attribute['default'] ) && in_array( $attribute_name, array_keys( $fields ) ) && ! call_user_func( [ $model, 'get_' . $attribute_name ] ) && in_array( $model::get_meta( 'name' ), $this->get_models( 'post' ), true ) && in_array( $model->get_status(), [ 'draft', 'auto-draft' ], true ) ) {
+                    call_user_func( [ $model, 'set_' . $attribute_name ], $attribute['default'] );
+                }
 			}
-		}
-
-		// Set attributes default values.
-		foreach ( $model->_get_fields() as $field) {
-
-			if ( $field->get_value() || ! $field->get_default() || ( in_array( $model::get_meta( 'name' ), $this->get_models( 'post' ), true ) && ! in_array( $model->get_status(), [ 'draft', 'auto-draft' ], true ) ) ) {
-				continue;
-			}
-
-			$field->set_value( $field->get_default() );
 		}
 
 		return $form_args;

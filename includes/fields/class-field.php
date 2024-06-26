@@ -60,13 +60,6 @@ abstract class Field {
 	protected $label;
 
 	/**
-	 * Field default value.
-	 *
-	 * @var mixed
-	 */
-	protected $default;
-
-	/**
 	 * Field description.
 	 *
 	 * @var string
@@ -160,13 +153,6 @@ abstract class Field {
 						'_context'   => 'edit',
 						'_order'     => 20,
 					],
-
-					'default'     => [
-						'label'    => esc_html__( 'Default Value', 'hivepress' ),
-						'type'     => 'text',
-						'_context' => 'edit',
-						'_order'   => 30,
-					],
 				],
 			],
 			$meta
@@ -233,11 +219,6 @@ abstract class Field {
 	 * Bootstraps field properties.
 	 */
 	protected function boot() {
-
-		// Set default value.
-		if ( isset( $this->args['default'] ) ) {
-			$this->set_value( $this->args['default'] );
-		}
 
 		// Set optional status.
 		if ( ! $this->required ) {
@@ -362,15 +343,6 @@ abstract class Field {
 		}
 
 		return $label;
-	}
-
-	/**
-	 * Gets field default value.
-	 *
-	 * @return mixed
-	 */
-	final public function get_default() {
-		return $this->default;
 	}
 
 	/**
