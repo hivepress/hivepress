@@ -6,7 +6,8 @@
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"wp-coding-standards/wpcs": "~2.3.0",
-		"phpcompatibility/phpcompatibility-wp": "^2.1.0"
+		"phpcompatibility/phpcompatibility-wp": "^2.1.0",
+		"yoast/phpunit-polyfills" : "1.1.0"
 	},
 	"config": {
 		"autoloader-suffix": "21c39cc08ce52103df1d21bf943a415d",
