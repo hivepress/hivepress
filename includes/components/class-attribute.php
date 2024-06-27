@@ -1838,7 +1838,7 @@ final class Attribute extends Component {
 		if ( $sort_form ) {
 
 			// Set form values.
-			$sort_form->set_values( $_GET );
+			$sort_form->set_values( $_GET, true );
 
 			if ( $sort_form->validate() ) {
 
