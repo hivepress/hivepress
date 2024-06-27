@@ -1789,43 +1789,50 @@ final class Attribute extends Component {
 			return;
 		}
 
-		// Set post type.
-		$query->set( 'post_type', hp\prefix( $model ) );
+		if ( $query->is_main_query() ) {
 
-		// Set status.
-		$query->set( 'post_status', 'publish' );
+			// Set post type.
+			$query->set( 'post_type', hp\prefix( $model ) );
 
-		// Paginate results.
-		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
+			// Set status.
+			$query->set( 'post_status', 'publish' );
+
+			// Paginate results.
+			$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
+		}
 
 		// Get meta and taxonomy queries.
 		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
 		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
 
 		// Get category ID.
-		$category_id = $this->get_category_id( $model );
+		$category_id = null;
 
-		if ( $category_id ) {
+		if ( $query->is_main_query() ) {
+			$category_id = $this->get_category_id( $model );
 
-			// Set category ID.
-			$tax_query[] = [
-				[
-					'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
-					'terms'    => $category_id,
-				],
-			];
-		} else {
+			if ( $category_id ) {
 
-			// Set term ID.
-			$term_id = $this->get_term_id( $model );
-
-			if ( $term_id ) {
+				// Set category ID.
 				$tax_query[] = [
 					[
-						'taxonomy' => get_queried_object()->taxonomy,
-						'terms'    => $term_id,
+						'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
+						'terms'    => $category_id,
 					],
 				];
+			} else {
+
+				// Set term ID.
+				$term_id = $this->get_term_id( $model );
+
+				if ( $term_id ) {
+					$tax_query[] = [
+						[
+							'taxonomy' => get_queried_object()->taxonomy,
+							'terms'    => $term_id,
+						],
+					];
+				}
 			}
 		}
 
@@ -2016,34 +2023,37 @@ final class Attribute extends Component {
 			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
 		}
 
-		// Get featured results.
-		$featured_count = absint( get_option( hp\prefix( $model . 's_featured_per_page' ) ) );
+		if ( $query->is_main_query() ) {
 
-		if ( $featured_count ) {
+			// Get featured results.
+			$featured_count = absint( get_option( hp\prefix( $model . 's_featured_per_page' ) ) );
 
-			// Get featured IDs.
-			$featured_ids = get_posts(
-				[
-					'post_type'        => hp\prefix( $model ),
-					'post_status'      => 'publish',
-					's'                => $query->get( 's' ),
-					'tax_query'        => $query->get( 'tax_query' ),
-					'meta_query'       => $query->get( 'meta_query' ),
-					'meta_key'         => 'hp_featured',
-					'posts_per_page'   => $featured_count,
-					'orderby'          => 'rand',
-					'fields'           => 'ids',
-					'suppress_filters' => false,
-				]
-			);
+			if ( $featured_count ) {
 
-			if ( $featured_ids ) {
+				// Get featured IDs.
+				$featured_ids = get_posts(
+					[
+						'post_type'        => hp\prefix( $model ),
+						'post_status'      => 'publish',
+						's'                => $query->get( 's' ),
+						'tax_query'        => $query->get( 'tax_query' ),
+						'meta_query'       => $query->get( 'meta_query' ),
+						'meta_key'         => 'hp_featured',
+						'posts_per_page'   => $featured_count,
+						'orderby'          => 'rand',
+						'fields'           => 'ids',
+						'suppress_filters' => false,
+					]
+				);
 
-				// Exclude featured IDs.
-				$query->set( 'post__not_in', $featured_ids );
+				if ( $featured_ids ) {
 
-				// Set request context.
-				hivepress()->request->set_context( 'featured_ids', $featured_ids );
+					// Exclude featured IDs.
+					$query->set( 'post__not_in', $featured_ids );
+
+					// Set request context.
+					hivepress()->request->set_context( 'featured_ids', $featured_ids );
+				}
 			}
 		}
 	}
