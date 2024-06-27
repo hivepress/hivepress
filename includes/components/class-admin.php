@@ -40,9 +40,6 @@ final class Admin extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-        // Remove unlicensed extensions.
-        add_filter( 'hivepress/v1/extensions', [ $this, 'remove_unlicensed_extensions' ] );
-
 		// Register post types.
 		add_action( 'init', [ $this, 'register_post_types' ] );
 
@@ -51,6 +48,9 @@ final class Admin extends Component {
 
 		// Share usage data.
 		add_action( 'hivepress/v1/events/weekly', [ $this, 'share_usage_data' ] );
+
+        // Update license key.
+        add_action( 'update_option_hp_hivepress_license_key', [ $this, 'update_license_key' ] );
 
 		if ( is_admin() ) {
 
@@ -106,8 +106,8 @@ final class Admin extends Component {
 			// Render footer.
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
 
-            // Check extensions license.
-            add_action( 'admin_init', [ $this, 'check_extensions_license' ] );
+            // Disable extensions.
+            add_action( 'admin_init', [ $this, 'disable_extensions' ] );
 		}
 
 		parent::__construct( $args );
@@ -123,59 +123,75 @@ final class Admin extends Component {
     }
 
     /**
-     * Removes unlicensed extensions.
-     *
-     * @param array $extensions Extensions array.
-     * @return array
+     * Updates license key option.
      */
-    public function remove_unlicensed_extensions( $extensions ) {
-        return array_map(
-            function ( $extension ) {
-                return ! in_array(
-                    hp\get_last_array_value(
-                        explode( '/', $extension )
-                    ),
-                    array_keys(
-                        (array) hivepress()->cache->get_cache(
-                            'unlicensed_plugins_' . md5( $this->get_license_key() )
-                        )
-                    ),
-                    true
-                );
-            },
-            $extensions
-        );
+    public function update_license_key() {
+
+        // Clear purchased extensions cache.
+        hivepress()->cache->delete_cache( 'purchased_plugins' );
     }
 
     /**
-     * Checks extensions license keys.
+     * Disables unlicensed extensions.
      */
-    public function check_extensions_license() {
+    public function disable_extensions() {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+        foreach ( array_diff_key( $this->get_installed_extensions(), $this->get_purchased_extensions() ) as $extension ) {
+            if ( ! is_plugin_active( $extension['file'] ) ) {
+                continue;
+            }
+
+            // Deactivate extension.
+            deactivate_plugins( $extension['file'] );
+        }
+    }
+
+    /**
+     * Gets installed extensions.
+     * @return array
+     */
+    public function get_installed_extensions() {
 
         // Get extensions.
         $extensions = array_filter(
             $this->get_extensions(),
             function ( $extension ) {
-                return isset( $extension['price'] ) && $extension['status'] === 'activate' && $extension['slug'] !== 'bundle';
+                return isset( $extension['price'] ) && in_array( $extension['status'], [ 'activate', 'latest_installed' ], true ) && $extension['slug'] !== 'bundle';
             }
         );
 
-        // Check extensions.
-        if ( ! $extensions ) {
-            return;
+        // Set installed extensions.
+        $installed_extensions = [];
+
+        foreach ( $extensions as $extension ) {
+            $installed_extensions[ $extension['slug'] ] = $extension;
         }
 
-        // Get license key.
-        $license_key = $this->get_license_key();
+        return $installed_extensions;
+    }
 
-        // Get cache key.
-        $cache_key = 'unlicensed_plugins_' . md5( $license_key );
+    /**
+     * Gets purchased extensions.
+     * @return array
+     */
+    public function get_purchased_extensions() {
 
-        // Get cached unlicensed extensions.
-        $unlicensed_extensions = hivepress()->cache->get_cache( $cache_key );
+        // Get cached extensions.
+        $extensions = hivepress()->cache->get_cache( 'purchased_plugins' );
 
-        if ( is_null( $unlicensed_extensions ) ) {
-            $plugins = [];
+        if ( is_null( $extensions ) ) {
+
+            // Get license key.
+            $license_key = $this->get_license_key();
+
+            // Set extensions.
+            $extensions = [];
+
+            // Check license key.
+            if ( ! $license_key ) {
+                return $extensions;
+            }
 
             // Get API response.
             $response = json_decode(
@@ -196,15 +212,17 @@ final class Admin extends Component {
                 foreach ( $response['data'] as $extension ) {
 
                     // Add plugin.
-                    $plugins[ $extension['slug'] ] = [
+                    $extensions[ $extension['slug'] ] = [
                         'name' => $extension['name'],
                     ];
                 }
 
-                // Cache plugins.
-                hivepress()->cache->set_cache( $cache_key, null, $plugins, WEEK_IN_SECONDS );
+                // Cache extensions.
+                hivepress()->cache->set_cache( 'purchased_plugins', null, $extensions, WEEK_IN_SECONDS );
             }
         }
+
+        return $extensions;
     }
 
 	/**
@@ -1782,7 +1800,7 @@ final class Admin extends Component {
 		$notices = [];
 
         // Get unlicensed extensions.
-        $unlicensed_extensions = (array) hivepress()->cache->get_cache( 'unlicensed_plugins_' . md5( $this->get_license_key() ) );
+        $unlicensed_extensions = array_diff_key( $this->get_installed_extensions(), $this->get_purchased_extensions() );
 
         if ( $unlicensed_extensions ) {
             $notices['unlicensed_extensions'] = [
