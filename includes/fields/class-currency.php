@@ -22,7 +22,7 @@ class Currency extends Number {
 	 *
 	 * @var int
 	 */
-	protected $product_id = 0;
+	protected $product = 0;
 
 	/**
 	 * Class initializer.
@@ -64,23 +64,23 @@ class Currency extends Number {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) && hp\is_plugin_active( 'woocommerce' ) ) {
-			
+
 			// Get price.
 			$price = $this->value;
 
-			if ( $this->product_id  ) {
+			if ( $this->product ) {
 
 				// Get product.
-				$product = wc_get_product( $this->product_id  );
-	
+				$product = wc_get_product( $this->product );
+
 				if ( $product ) {
-	
-					// Get price product.
+
+					// Set price.
 					$price = wc_get_price_to_display( $product );
 				}
 			}
 
 			return hivepress()->woocommerce->format_price( $price );
-		} 
+		}
 	}
 }
