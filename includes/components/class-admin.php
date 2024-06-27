@@ -137,7 +137,7 @@ final class Admin extends Component {
     public function disable_extensions() {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-        foreach ( array_diff_key( $this->get_installed_extensions(), $this->get_purchased_extensions() ) as $extension ) {
+        foreach ( $this->get_unlicensed_extensions() as $extension ) {
             if ( ! is_plugin_active( $extension['file'] ) ) {
                 continue;
             }
@@ -148,10 +148,11 @@ final class Admin extends Component {
     }
 
     /**
-     * Gets installed extensions.
+     * Gets installed unlicensed extensions.
+     *
      * @return array
      */
-    public function get_installed_extensions() {
+    public function get_unlicensed_extensions() {
 
         // Get extensions.
         $extensions = array_filter(
@@ -168,61 +169,50 @@ final class Admin extends Component {
             $installed_extensions[ $extension['slug'] ] = $extension;
         }
 
-        return $installed_extensions;
-    }
-
-    /**
-     * Gets purchased extensions.
-     * @return array
-     */
-    public function get_purchased_extensions() {
-
         // Get cached extensions.
-        $extensions = hivepress()->cache->get_cache( 'purchased_plugins' );
+        $purchased_extensions = hivepress()->cache->get_cache( 'purchased_plugins' );
 
-        if ( is_null( $extensions ) ) {
+        if ( is_null( $purchased_extensions ) ) {
 
             // Get license key.
             $license_key = $this->get_license_key();
 
             // Set extensions.
-            $extensions = [];
+            $purchased_extensions = [];
 
             // Check license key.
-            if ( ! $license_key ) {
-                return $extensions;
-            }
-
-            // Get API response.
-            $response = json_decode(
-                wp_remote_retrieve_body(
-                    wp_remote_get(
-                        'https://store.hivepress.io/api/v1/products?' . http_build_query(
-                            [
-                                'type'        => 'extension',
-                                'license_key' => $license_key,
-                            ]
+            if ( $license_key ) {
+                // Get API response.
+                $response = json_decode(
+                    wp_remote_retrieve_body(
+                        wp_remote_get(
+                            'https://store.hivepress.io/api/v1/products?' . http_build_query(
+                                [
+                                    'type'        => 'extension',
+                                    'license_key' => $license_key,
+                                ]
+                            )
                         )
-                    )
-                ),
-                true
-            );
+                    ),
+                    true
+                );
 
-            if ( is_array( $response ) && isset( $response['data'] ) ) {
-                foreach ( $response['data'] as $extension ) {
+                if ( is_array( $response ) && isset( $response['data'] ) ) {
+                    foreach ( $response['data'] as $extension ) {
 
-                    // Add plugin.
-                    $extensions[ $extension['slug'] ] = [
-                        'name' => $extension['name'],
-                    ];
+                        // Add plugin.
+                        $purchased_extensions[ $extension['slug'] ] = [
+                            'name' => $extension['name'],
+                        ];
+                    }
+
+                    // Cache extensions.
+                    hivepress()->cache->set_cache( 'purchased_plugins', null, $purchased_extensions, WEEK_IN_SECONDS );
                 }
-
-                // Cache extensions.
-                hivepress()->cache->set_cache( 'purchased_plugins', null, $extensions, WEEK_IN_SECONDS );
             }
         }
 
-        return $extensions;
+        return array_diff_key( $installed_extensions, $purchased_extensions );
     }
 
 	/**
@@ -1800,7 +1790,7 @@ final class Admin extends Component {
 		$notices = [];
 
         // Get unlicensed extensions.
-        $unlicensed_extensions = array_diff_key( $this->get_installed_extensions(), $this->get_purchased_extensions() );
+        $unlicensed_extensions = $this->get_unlicensed_extensions();
 
         if ( $unlicensed_extensions ) {
             $notices['unlicensed_extensions'] = [
