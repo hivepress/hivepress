@@ -251,14 +251,16 @@ final class Attribute extends Component {
 		 */
 		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
 
+		// Convert for compatibility.
 		foreach ( $this->models as $index => $model ) {
-
-			// Convert to array.
 			if ( is_string( $model ) ) {
 				unset( $this->models[ $index ] );
 
 				$this->models[ $model ] = [];
 			}
+		}
+
+		foreach ( $this->get_models() as $model ) {
 
 			// Set defaults.
 			$this->models[ $model ]['searchable'] = false;
@@ -266,9 +268,6 @@ final class Attribute extends Component {
 			if ( 'user' !== $model ) {
 				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
 			}
-		}
-
-		foreach ( $this->get_models() as $model ) {
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
