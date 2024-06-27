@@ -22,7 +22,7 @@ class Currency extends Number {
 	 *
 	 * @var int
 	 */
-	protected $product = 0;
+	protected $product;
 
 	/**
 	 * Class initializer.
