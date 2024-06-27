@@ -71,6 +71,9 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
+		// Add settings.
+		add_filter( 'hivepress/v1/settings', [ $this, 'add_settings' ] );
+
 		// Manage meta boxes.
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
@@ -85,65 +88,7 @@ final class Attribute extends Component {
 
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
-		} else {
-
-			// Alter settings.
-			add_filter( 'hivepress/v1/settings', [ $this, 'alter_settings' ] );
 		}
-	}
-
-	/**
-	 * Gets searchable models.
-	 *
-	 * @return array
-	 */
-	public function get_searchable_models() {
-		return array_keys(
-			array_filter(
-				$this->models,
-				function ( $model ) {
-					return isset( $model['searchable'] ) && $model['searchable'];
-				}
-			)
-		);
-	}
-
-	/**
-	 * Alters settings.
-	 *
-	 * @param array $settings Settings configuration.
-	 * @return array
-	 */
-	public function alter_settings( $settings ) {
-		foreach ( $this->get_searchable_models() as $model ) {
-
-			// Create sort form.
-			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
-
-			// Check sort form.
-			if ( ! $sort_form ) {
-				continue;
-			}
-
-			// Get sort args.
-			$field_args = $sort_form->get_fields()['_sort']->get_args();
-
-			// Check sort options.
-			if ( ! isset( $field_args['options'] ) ) {
-				continue;
-			}
-
-			$settings[ $model . 's' ]['sections']['display']['fields'][ $model . '_sorting_option' ] = [
-				'label'       => esc_html__( 'Sorting Option', 'hivepress' ),
-				/* translators: %s: model name. */
-				'description' => sprintf( esc_html__( 'Choose a default %s sorting option.', 'hivepress' ), $model ),
-				'type'        => 'select',
-				'options'     => $field_args['options'],
-				'_order'      => 100,
-			];
-		}
-
-		return $settings;
 	}
 
 	/**
@@ -306,24 +251,24 @@ final class Attribute extends Component {
 		 */
 		$this->models = apply_filters( 'hivepress/v1/components/attribute/models', $this->models );
 
-		// Convert for compatibility.
 		foreach ( $this->models as $index => $model ) {
+
+			// Convert to array.
 			if ( is_string( $model ) ) {
 				unset( $this->models[ $index ] );
 
 				$this->models[ $model ] = [];
 			}
+
+			// Set defaults.
+			$this->models[ $model ]['searchable'] = false;
+
+			if ( 'user' !== $model ) {
+				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			}
 		}
 
-		// Get post types.
-		$post_types = hivepress()->get_config( 'post_types' );
-
 		foreach ( $this->get_models() as $model ) {
-
-			// Set searchable models.
-			if ( isset( $post_types[ $model ]['has_archive'] ) && $post_types[ $model ]['has_archive'] ) {
-				$this->models[ $model ]['searchable'] = true;
-			}
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
@@ -1222,9 +1167,11 @@ final class Attribute extends Component {
 		// Set options.
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
 
-		// Set default sort option.
-		if ( get_option( hp\prefix( $model . '_sorting_option' ) ) ) {
-			$form_args['fields']['_sort']['default'] = get_option( hp\prefix( $model . '_sorting_option' ) );
+		// Set default option.
+		$default = get_option( hp\prefix( $model . '_default_order' ) );
+
+		if ( $default ) {
+			$form_args['fields']['_sort']['default'] = $default;
 		}
 
 		return $form_args;
@@ -1510,6 +1457,48 @@ final class Attribute extends Component {
 		}
 
 		return $form_args;
+	}
+
+	/**
+	 * Adds settings.
+	 *
+	 * @param array $settings Settings configuration.
+	 * @return array
+	 */
+	public function add_settings( $settings ) {
+		foreach ( $this->models as $model_name => $model_args ) {
+
+			// Check model.
+			if ( ! $model_args['searchable'] ) {
+				continue;
+			}
+
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model_name . '_sort' );
+
+			if ( ! $sort_form ) {
+				continue;
+			}
+
+			// Get sort options.
+			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+
+			if ( ! $sort_options ) {
+				continue;
+			}
+
+			// Add field.
+			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
+				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
+					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'type'    => 'select',
+					'options' => $sort_options,
+					'_order'  => 20,
+				];
+			}
+		}
+
+		return $settings;
 	}
 
 	/**
