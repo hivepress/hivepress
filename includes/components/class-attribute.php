@@ -1636,7 +1636,7 @@ final class Attribute extends Component {
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
 
 					// Skip adding meta box.
-					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+					if ( 'attribute_search' === $meta_box_name && ! $this->models[ $model ]['searchable'] ) {
 						continue;
 					}
 
