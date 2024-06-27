@@ -129,6 +129,9 @@ final class Admin extends Component {
 
         // Clear purchased extensions cache.
         hivepress()->cache->delete_cache( 'purchased_plugins' );
+
+        // Clear purchased themes cache.
+        hivepress()->cache->delete_cache( 'purchased_themes' );
     }
 
     /**
