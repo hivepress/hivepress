@@ -333,7 +333,12 @@ final class User extends Controller {
 		}
 
 		// Register user.
-		$user = ( new Models\User() )->fill(
+		$user = new Models\User();
+
+		// @todo remove temporary fix when updated.
+		$user->set_id( null );
+
+		$user->fill(
 			array_merge(
 				$form->get_values(),
 				[
