@@ -71,6 +71,9 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
+		// Add settings.
+		add_filter( 'hivepress/v1/settings', [ $this, 'add_settings' ] );
+
 		// Manage meta boxes.
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
@@ -258,6 +261,13 @@ final class Attribute extends Component {
 		}
 
 		foreach ( $this->get_models() as $model ) {
+
+			// Set defaults.
+			$this->models[ $model ]['searchable'] = false;
+
+			if ( 'user' !== $model ) {
+				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			}
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
@@ -1156,6 +1166,13 @@ final class Attribute extends Component {
 		// Set options.
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
 
+		// Set default option.
+		$default = get_option( hp\prefix( $model . '_default_order' ) );
+
+		if ( $default ) {
+			$form_args['fields']['_sort']['default'] = $default;
+		}
+
 		return $form_args;
 	}
 
@@ -1442,6 +1459,48 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds settings.
+	 *
+	 * @param array $settings Settings configuration.
+	 * @return array
+	 */
+	public function add_settings( $settings ) {
+		foreach ( $this->models as $model_name => $model_args ) {
+
+			// Check model.
+			if ( ! $model_args['searchable'] ) {
+				continue;
+			}
+
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model_name . '_sort' );
+
+			if ( ! $sort_form ) {
+				continue;
+			}
+
+			// Get sort options.
+			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+
+			if ( ! $sort_options ) {
+				continue;
+			}
+
+			// Add field.
+			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
+				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
+					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'type'    => 'select',
+					'options' => $sort_options,
+					'_order'  => 20,
+				];
+			}
+		}
+
+		return $settings;
+	}
+
+	/**
 	 * Adds meta boxes.
 	 *
 	 * @param array $meta_boxes Meta box arguments.
@@ -1577,7 +1636,7 @@ final class Attribute extends Component {
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
 
 					// Skip adding meta box.
-					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+					if ( 'attribute_search' === $meta_box_name && ! $this->models[ $model ]['searchable'] ) {
 						continue;
 					}
 
@@ -1711,7 +1770,7 @@ final class Attribute extends Component {
 	public function set_search_query( $query ) {
 
 		// Check query.
-		if ( ! $query->is_main_query() ) {
+		if ( ! $query->is_main_query() && ! $query->get( 'hp_main' ) ) {
 			return;
 		}
 
@@ -1779,7 +1838,7 @@ final class Attribute extends Component {
 		if ( $sort_form ) {
 
 			// Set form values.
-			$sort_form->set_values( $_GET );
+			$sort_form->set_values( $_GET, true );
 
 			if ( $sort_form->validate() ) {
 
