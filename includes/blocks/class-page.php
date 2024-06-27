@@ -53,14 +53,9 @@ class Page extends Container {
 		$query = hivepress()->request->get_context( 'post_query' );
 
 		if ( $query ) {
-			query_posts(
-				array_merge(
-					$query,
-					[
-						'hp_main' => true,
-					]
-				)
-			);
+			$query['hp_main'] = true;
+
+			query_posts( $query );
 		}
 
 		// Render content.
