@@ -140,7 +140,7 @@ final class Admin extends Component {
     public function disable_extensions() {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-        foreach ( $this->get_unlicensed_extensions() as $extension ) {
+        foreach ( $this->get_unlicensed_products()['extensions'] as $extension ) {
             if ( ! is_plugin_active( $extension['file'] ) ) {
                 continue;
             }
@@ -151,41 +151,54 @@ final class Admin extends Component {
     }
 
     /**
-     * Gets installed unlicensed themes.
+     * Gets installed unlicensed products.
      *
      * @return array
      */
-    public function get_unlicensed_themes() {
-
-        // Get themes.
-        $themes = array_filter(
-            $this->get_themes(),
-            function ( $extension ) {
-                return isset( $extension['price'] ) && in_array( $extension['status'], [ 'activate', 'latest_installed' ], true );
-            }
-        );
+    public function get_unlicensed_products() {
 
         // Set installed themes.
         $installed_themes = [];
 
-        foreach ( $themes as $theme ) {
-            $installed_themes[ $theme['slug'] ] = $theme;
+        // Set installed extensions.
+        $installed_extensions = [];
+
+        // Get cached purchased products.
+        $purchased_products = (array) hivepress()->cache->get_cache( 'purchased_products' );
+
+        // Get products.
+        $products = array_filter(
+            array_merge(
+                $this->get_themes(),
+                $this->get_extensions(),
+            ),
+            function ( $product ) {
+                return isset( $product['price'] ) && in_array( $product['status'], [ 'activate', 'latest_installed' ], true ) && $product['slug'] !== 'bundle';
+            }
+        );
+
+        foreach ( $products as $product ) {
+            if ( 'theme' === $product['type'] ) {
+                $installed_themes[ $product['slug'] ] = $product;
+            } elseif ( 'extension' === $product['type'] ) {
+                $installed_extensions[ $product['slug'] ] = $product;
+            }
         }
 
-        // Get cached extensions.
-        $purchased_themes = hivepress()->cache->get_cache( 'purchased_themes' );
-
-        if ( is_null( $purchased_themes ) ) {
+        if ( ! $purchased_products ) {
 
             // Get license key.
             $license_key = $this->get_license_key();
 
             // Set purchased themes.
-            $purchased_themes = [];
+            $purchased_products = [];
 
             // Check license key.
             if ( ! $license_key ) {
-                return array_diff_key( $installed_themes, $purchased_themes );
+                return [
+                    'themes'     => $installed_themes,
+                    'extensions' => $installed_extensions,
+                ];
             }
 
             // Get API response.
@@ -194,7 +207,6 @@ final class Admin extends Component {
                     wp_remote_get(
                         'https://store.hivepress.io/api/v1/products?' . http_build_query(
                             [
-                                'type'        => 'theme',
                                 'license_key' => $license_key,
                             ]
                         )
@@ -204,90 +216,40 @@ final class Admin extends Component {
             );
 
             if ( is_array( $response ) && isset( $response['data'] ) ) {
-                foreach ( $response['data'] as $theme ) {
+                foreach ( $response['data'] as $product ) {
 
-                    // Add plugin.
-                    $purchased_themes[ $theme['slug'] ] = [
-                        'name' => $theme['name'],
+                    // Add product.
+                    $purchased_products[ $product['slug'] ] = [
+                        'name' => $product['name'],
+                        'type' => $product['type'],
                     ];
                 }
 
                 // Cache themes.
-                hivepress()->cache->set_cache( 'purchased_themes', null, $purchased_themes, WEEK_IN_SECONDS );
+                hivepress()->cache->set_cache( 'purchased_products', null, $purchased_products, WEEK_IN_SECONDS );
             }
         }
 
-        return array_diff_key( $installed_themes, $purchased_themes );
-    }
-
-    /**
-     * Gets installed unlicensed extensions.
-     *
-     * @return array
-     */
-    public function get_unlicensed_extensions() {
-
-        // Get extensions.
-        $extensions = array_filter(
-            $this->get_extensions(),
-            function ( $extension ) {
-                return isset( $extension['price'] ) && in_array( $extension['status'], [ 'activate', 'latest_installed' ], true ) && $extension['slug'] !== 'bundle';
-            }
-        );
-
-        // Set installed extensions.
-        $installed_extensions = [];
-
-        foreach ( $extensions as $extension ) {
-            $installed_extensions[ $extension['slug'] ] = $extension;
-        }
-
-        // Get cached extensions.
-        $purchased_extensions = hivepress()->cache->get_cache( 'purchased_plugins' );
-
-        if ( is_null( $purchased_extensions ) ) {
-
-            // Get license key.
-            $license_key = $this->get_license_key();
-
-            // Set purchased extensions.
-            $purchased_extensions = [];
-
-            // Check license key.
-            if ( ! $license_key ) {
-                return array_diff_key( $installed_extensions, $purchased_extensions );
-            }
-
-            // Get API response.
-            $response = json_decode(
-                wp_remote_retrieve_body(
-                    wp_remote_get(
-                        'https://store.hivepress.io/api/v1/products?' . http_build_query(
-                            [
-                                'type'        => 'extension',
-                                'license_key' => $license_key,
-                            ]
-                        )
-                    )
-                ),
-                true
-            );
-
-            if ( is_array( $response ) && isset( $response['data'] ) ) {
-                    foreach ( $response['data'] as $extension ) {
-
-                        // Add plugin.
-                        $purchased_extensions[ $extension['slug'] ] = [
-                            'name' => $extension['name'],
-                        ];
+        return [
+            'themes'     => array_diff_key(
+                $installed_themes,
+                array_filter(
+                    $purchased_products,
+                    function ( $product ) {
+                        return 'theme' === $product['type'];
                     }
-
-                    // Cache extensions.
-                    hivepress()->cache->set_cache( 'purchased_plugins', null, $purchased_extensions, WEEK_IN_SECONDS );
-                }
-        }
-
-        return array_diff_key( $installed_extensions, $purchased_extensions );
+                )
+            ),
+            'extensions' => array_diff_key(
+                $installed_extensions,
+                array_filter(
+                    $purchased_products,
+                    function ( $product ) {
+                        return 'extension' === $product['type'];
+                    }
+                )
+            ),
+        ];
     }
 
 	/**
@@ -1864,10 +1826,10 @@ final class Admin extends Component {
 		// Add default notices.
 		$notices = [];
 
-        // Get unlicensed themes.
-        $unlicensed_themes = $this->get_unlicensed_themes();
+        // Get unlicensed products.
+        $unlicensed_products = $this->get_unlicensed_products();
 
-        if ( $unlicensed_themes ) {
+        if ( $unlicensed_products['themes'] ) {
             $notices['unlicensed_themes'] = [
                 'type'        => 'warning',
                 'dismissible' => true,
@@ -1877,10 +1839,10 @@ final class Admin extends Component {
                     implode(
                         ', ',
                         array_map(
-                            function ( $extension ) {
-                                return $extension['name'];
+                            function ( $theme ) {
+                                return $theme['name'];
                             },
-                            $unlicensed_themes
+                            $unlicensed_products['themes']
                         )
                     ),
                     esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) )
@@ -1888,10 +1850,7 @@ final class Admin extends Component {
             ];
         }
 
-        // Get unlicensed extensions.
-        $unlicensed_extensions = $this->get_unlicensed_extensions();
-
-        if ( $unlicensed_extensions ) {
+        if ( $unlicensed_products['extensions'] ) {
             $notices['unlicensed_extensions'] = [
                 'type'        => 'warning',
                 'dismissible' => true,
@@ -1904,7 +1863,7 @@ final class Admin extends Component {
                             function ( $extension ) {
                                 return hivepress()->get_name() . ' ' . $extension['name'];
                             },
-                            $unlicensed_extensions
+                            $unlicensed_products['extensions']
                         )
                     ),
                     esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) )
