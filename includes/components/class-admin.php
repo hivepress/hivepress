@@ -114,15 +114,6 @@ final class Admin extends Component {
 	}
 
     /**
-     * Gets license key.
-     *
-     * @return string
-     */
-    protected function get_license_key() {
-        return implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
-    }
-
-    /**
      * Updates license key option.
      */
     public function update_license_key() {
@@ -185,10 +176,10 @@ final class Admin extends Component {
             }
         }
 
-        if ( ! $purchased_products ) {
+        if ( is_null( $purchased_products ) ) {
 
             // Get license key.
-            $license_key = $this->get_license_key();
+            $license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
 
             // Set purchased themes.
             $purchased_products = [];
