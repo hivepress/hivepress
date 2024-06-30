@@ -1028,7 +1028,7 @@ final class Admin extends Component {
 					 * @param {array} $props Meta box properties.
 					 * @return {array} Meta box properties.
 					 */
-					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name, 'category' => hivepress()->request->get_context( 'model_category' ) ] ) );
+					$args = apply_filters( 'hivepress/v1/meta_boxes/' . $name, array_merge( $args, [ 'name' => $name ] ) );
 
 					// Set default arguments.
 					$args = array_merge(
