@@ -364,6 +364,8 @@ final class Attribute extends Component {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
+				$taxonomies[ $taxonomy ]['meta_box_cb'] = false;
+
 				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
 			}
 		}
@@ -1645,6 +1647,22 @@ final class Attribute extends Component {
 
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
+
+						if ( ! isset( $this->models[ $model ]['category_model'] ) ) {
+							$meta_box['fields']['categories'] = [
+								'label'       => hivepress()->translator->get_string( 'category' ),
+								'type'        => 'select',
+								'options'     => 'terms',
+								'option_args' => [ 'taxonomy' => hp\prefix( $model . '_category' ) ],
+								'required'    => true,
+								'_order'      => 1,
+
+								'attributes'  => [
+									'data-multistep' => 'true',
+									'data-render'    => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
+								],
+							];
+						}
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
 
