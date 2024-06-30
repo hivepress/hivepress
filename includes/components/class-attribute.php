@@ -160,6 +160,25 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Checks if category model required.
+	 *
+	 * @param string $model Model name.
+	 * @return bool
+	 */
+	protected function requires_category_model( $model ) {
+		$taxonomy = hp\prefix( $this->get_category_model( $model ) );
+
+		return taxonomy_exists( $taxonomy ) && get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'number'     => 1,
+				'fields'     => 'ids',
+				'hide_empty' => false,
+			]
+		);
+	}
+
+	/**
 	 * Gets category model IDs.
 	 *
 	 * @param string $model Model name.
@@ -364,9 +383,14 @@ final class Attribute extends Component {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
-				$taxonomies[ $taxonomy ]['meta_box_cb'] = false;
-
-				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+				$taxonomies[ $taxonomy ] = hp\merge_arrays(
+					$taxonomies[ $taxonomy ],
+					[
+						'post_type'          => [ $model . '_attribute' ],
+						'meta_box_cb'        => false,
+						'show_in_quick_edit' => false,
+					]
+				);
 			}
 		}
 
@@ -1029,20 +1053,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_submit_fields( $form_args, $form ) {
-
-		// Get taxonomy.
-		$taxonomy = hp\prefix( $this->get_category_model( $form::get_meta( 'model' ) ) );
-
-		if ( taxonomy_exists( $taxonomy ) && get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'number'     => 1,
-				'fields'     => 'ids',
-				'hide_empty' => false,
-			]
-		) ) {
-
-			// Add field.
+		if ( $this->requires_category_model( $form::get_meta( 'model' ) ) ) {
 			$form_args['fields']['categories'] = [
 				'multiple'   => false,
 				'required'   => true,
@@ -1648,7 +1659,7 @@ final class Attribute extends Component {
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
 
-						if ( ! isset( $this->models[ $model ]['category_model'] ) ) {
+						if ( ! isset( $this->models[ $model ]['category_model'] ) && $this->requires_category_model( $model ) ) {
 							$meta_box['fields']['categories'] = [
 								'label'       => hivepress()->translator->get_string( 'category' ),
 								'type'        => 'select',
