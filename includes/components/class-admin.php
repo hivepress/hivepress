@@ -104,7 +104,43 @@ final class Admin extends Component {
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
 		}
 
+		// Add hash name to extensions and themes.
+		add_filter( 'sanitize_file_name', [ $this, 'add_hash_name' ] );
+
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Add hash name to extensions and themes.
+	 *
+	 * @param string $filename File name.
+	 * @return string
+	 */
+	public function add_hash_name( $filename ) {
+
+		// Get file info.
+		$info = pathinfo( $filename );
+
+		if ( 'zip' !== $info['extension'] ) {
+			return $filename;
+		}
+
+		// Get file name without extension.
+		$name = basename( $filename, '.' . $info['extension'] );
+
+		// Is HivePress plugin or theme.
+		$is_extension_theme = array_filter(
+			array_merge( $this->get_extensions(), $this->get_themes() ),
+			function ( $extension ) use ( $filename, $name ) {
+				return $extension['slug'] === $name;
+			}
+		);
+
+		if ( ! $is_extension_theme ) {
+			return $filename;
+		}
+
+		return $name . '-' . md5( $name ) . '.' . $info['extension'];
 	}
 
 	/**
