@@ -71,6 +71,9 @@ final class Attribute extends Component {
 		// Import attribute.
 		add_filter( 'wxr_importer.pre_process.term', [ $this, 'import_attribute' ] );
 
+		// Add settings.
+		add_filter( 'hivepress/v1/settings', [ $this, 'add_settings' ] );
+
 		// Manage meta boxes.
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
@@ -154,6 +157,25 @@ final class Attribute extends Component {
 	 */
 	protected function get_category_model( $model ) {
 		return ( isset( $this->models[ $model ]['category_model'] ) ? $this->models[ $model ]['category_model'] : $model ) . '_category';
+	}
+
+	/**
+	 * Checks if category model required.
+	 *
+	 * @param string $model Model name.
+	 * @return bool
+	 */
+	protected function requires_category_model( $model ) {
+		$taxonomy = hp\prefix( $this->get_category_model( $model ) );
+
+		return taxonomy_exists( $taxonomy ) && get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'number'     => 1,
+				'fields'     => 'ids',
+				'hide_empty' => false,
+			]
+		);
 	}
 
 	/**
@@ -259,6 +281,13 @@ final class Attribute extends Component {
 
 		foreach ( $this->get_models() as $model ) {
 
+			// Set defaults.
+			$this->models[ $model ]['searchable'] = false;
+
+			if ( 'user' !== $model ) {
+				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			}
+
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
@@ -273,7 +302,11 @@ final class Attribute extends Component {
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
 
-			if ( 'user' !== $model ) {
+			if ( 'user' === $model ) {
+
+				// Add register fields.
+				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ], 100 );
+			} else {
 
 				// Update attribute.
 				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
@@ -350,7 +383,14 @@ final class Attribute extends Component {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
-				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+				$taxonomies[ $taxonomy ] = hp\merge_arrays(
+					$taxonomies[ $taxonomy ],
+					[
+						'post_type'          => [ $model . '_attribute' ],
+						'meta_box_cb'        => false,
+						'show_in_quick_edit' => false,
+					]
+				);
 			}
 		}
 
@@ -800,7 +840,7 @@ final class Attribute extends Component {
 		$model = $meta_box['model'];
 
 		// Get category IDs.
-		$category_ids = hp\get_array_value( $meta_box, 'category', $this->get_category_ids( $model, get_the_ID() ) );
+		$category_ids = $this->get_category_ids( $model, get_the_ID() );
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
@@ -942,6 +982,28 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds register fields.
+	 *
+	 * @param array $form Form arguments.
+	 * @return array
+	 */
+	public function add_register_fields( $form ) {
+		foreach ( $this->get_attributes( 'user' ) as $attribute_name => $attribute ) {
+
+			// Get required flag.
+			$required = hp\get_array_value( $attribute['edit_field'], 'required' );
+
+			if ( $attribute['editable'] && $required && 'attachment_upload' !== $attribute['edit_field']['type'] && ! isset( $form['fields'][ $attribute_name ] ) ) {
+
+				// Add field.
+				$form['fields'][ $attribute_name ] = $attribute['edit_field'];
+			}
+		}
+
+		return $form;
+	}
+
+	/**
 	 * Adds edit fields.
 	 *
 	 * @param array  $form_args Form arguments.
@@ -991,20 +1053,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_submit_fields( $form_args, $form ) {
-
-		// Get taxonomy.
-		$taxonomy = hp\prefix( $this->get_category_model( $form::get_meta( 'model' ) ) );
-
-		if ( taxonomy_exists( $taxonomy ) && get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'number'     => 1,
-				'fields'     => 'ids',
-				'hide_empty' => false,
-			]
-		) ) {
-
-			// Add field.
+		if ( $this->requires_category_model( $form::get_meta( 'model' ) ) ) {
 			$form_args['fields']['categories'] = [
 				'multiple'   => false,
 				'required'   => true,
@@ -1129,6 +1178,13 @@ final class Attribute extends Component {
 
 		// Set options.
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
+
+		// Set default option.
+		$default = get_option( hp\prefix( $model . '_default_order' ) );
+
+		if ( $default ) {
+			$form_args['fields']['_sort']['default'] = $default;
+		}
 
 		return $form_args;
 	}
@@ -1416,6 +1472,48 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds settings.
+	 *
+	 * @param array $settings Settings configuration.
+	 * @return array
+	 */
+	public function add_settings( $settings ) {
+		foreach ( $this->models as $model_name => $model_args ) {
+
+			// Check model.
+			if ( ! $model_args['searchable'] ) {
+				continue;
+			}
+
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model_name . '_sort' );
+
+			if ( ! $sort_form ) {
+				continue;
+			}
+
+			// Get sort options.
+			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+
+			if ( ! $sort_options ) {
+				continue;
+			}
+
+			// Add field.
+			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
+				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
+					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'type'    => 'select',
+					'options' => $sort_options,
+					'_order'  => 20,
+				];
+			}
+		}
+
+		return $settings;
+	}
+
+	/**
 	 * Adds meta boxes.
 	 *
 	 * @param array $meta_boxes Meta box arguments.
@@ -1551,7 +1649,7 @@ final class Attribute extends Component {
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
 
 					// Skip adding meta box.
-					if ( 'attribute_search' === $meta_box_name && ( 'user' === $model || ! hp\get_array_value( hp\get_array_value( hivepress()->get_config( 'post_types' ), $model ), 'has_archive' ) ) ) {
+					if ( 'attribute_search' === $meta_box_name && ! $this->models[ $model ]['searchable'] ) {
 						continue;
 					}
 
@@ -1561,8 +1659,8 @@ final class Attribute extends Component {
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
 
-						if ( in_array( $model, $this->get_models( 'post' ), true ) && taxonomy_exists( hp\prefix( $model . '_category' ) ) ) {
-							$meta_box['fields']['category'] = [
+						if ( ! isset( $this->models[ $model ]['category_model'] ) && $this->requires_category_model( $model ) ) {
+							$meta_box['fields']['categories'] = [
 								'label'       => hivepress()->translator->get_string( 'category' ),
 								'type'        => 'select',
 								'options'     => 'terms',
@@ -1571,7 +1669,8 @@ final class Attribute extends Component {
 								'_order'      => 1,
 
 								'attributes'  => [
-									'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
+									'data-multistep' => 'true',
+									'data-render'    => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
 								],
 							];
 						}
@@ -1700,7 +1799,7 @@ final class Attribute extends Component {
 	public function set_search_query( $query ) {
 
 		// Check query.
-		if ( ! $query->is_main_query() ) {
+		if ( ! $query->is_main_query() && ! $query->get( 'hp_main' ) ) {
 			return;
 		}
 
@@ -1719,43 +1818,50 @@ final class Attribute extends Component {
 			return;
 		}
 
-		// Set post type.
-		$query->set( 'post_type', hp\prefix( $model ) );
+		if ( $query->is_main_query() ) {
 
-		// Set status.
-		$query->set( 'post_status', 'publish' );
+			// Set post type.
+			$query->set( 'post_type', hp\prefix( $model ) );
 
-		// Paginate results.
-		$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
+			// Set status.
+			$query->set( 'post_status', 'publish' );
+
+			// Paginate results.
+			$query->set( 'posts_per_page', absint( get_option( hp\prefix( $model . 's_per_page' ) ) ) );
+		}
 
 		// Get meta and taxonomy queries.
 		$meta_query = array_filter( (array) $query->get( 'meta_query' ) );
 		$tax_query  = array_filter( (array) $query->get( 'tax_query' ) );
 
 		// Get category ID.
-		$category_id = $this->get_category_id( $model );
+		$category_id = null;
 
-		if ( $category_id ) {
+		if ( $query->is_main_query() ) {
+			$category_id = $this->get_category_id( $model );
 
-			// Set category ID.
-			$tax_query[] = [
-				[
-					'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
-					'terms'    => $category_id,
-				],
-			];
-		} else {
+			if ( $category_id ) {
 
-			// Set term ID.
-			$term_id = $this->get_term_id( $model );
-
-			if ( $term_id ) {
+				// Set category ID.
 				$tax_query[] = [
 					[
-						'taxonomy' => get_queried_object()->taxonomy,
-						'terms'    => $term_id,
+						'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
+						'terms'    => $category_id,
 					],
 				];
+			} else {
+
+				// Set term ID.
+				$term_id = $this->get_term_id( $model );
+
+				if ( $term_id ) {
+					$tax_query[] = [
+						[
+							'taxonomy' => get_queried_object()->taxonomy,
+							'terms'    => $term_id,
+						],
+					];
+				}
 			}
 		}
 
@@ -1768,7 +1874,7 @@ final class Attribute extends Component {
 		if ( $sort_form ) {
 
 			// Set form values.
-			$sort_form->set_values( $_GET );
+			$sort_form->set_values( $_GET, true );
 
 			if ( $sort_form->validate() ) {
 
@@ -1946,34 +2052,37 @@ final class Attribute extends Component {
 			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
 		}
 
-		// Get featured results.
-		$featured_count = absint( get_option( hp\prefix( $model . 's_featured_per_page' ) ) );
+		if ( $query->is_main_query() ) {
 
-		if ( $featured_count ) {
+			// Get featured results.
+			$featured_count = absint( get_option( hp\prefix( $model . 's_featured_per_page' ) ) );
 
-			// Get featured IDs.
-			$featured_ids = get_posts(
-				[
-					'post_type'        => hp\prefix( $model ),
-					'post_status'      => 'publish',
-					's'                => $query->get( 's' ),
-					'tax_query'        => $query->get( 'tax_query' ),
-					'meta_query'       => $query->get( 'meta_query' ),
-					'meta_key'         => 'hp_featured',
-					'posts_per_page'   => $featured_count,
-					'orderby'          => 'rand',
-					'fields'           => 'ids',
-					'suppress_filters' => false,
-				]
-			);
+			if ( $featured_count ) {
 
-			if ( $featured_ids ) {
+				// Get featured IDs.
+				$featured_ids = get_posts(
+					[
+						'post_type'        => hp\prefix( $model ),
+						'post_status'      => 'publish',
+						's'                => $query->get( 's' ),
+						'tax_query'        => $query->get( 'tax_query' ),
+						'meta_query'       => $query->get( 'meta_query' ),
+						'meta_key'         => 'hp_featured',
+						'posts_per_page'   => $featured_count,
+						'orderby'          => 'rand',
+						'fields'           => 'ids',
+						'suppress_filters' => false,
+					]
+				);
 
-				// Exclude featured IDs.
-				$query->set( 'post__not_in', $featured_ids );
+				if ( $featured_ids ) {
 
-				// Set request context.
-				hivepress()->request->set_context( 'featured_ids', $featured_ids );
+					// Exclude featured IDs.
+					$query->set( 'post__not_in', $featured_ids );
+
+					// Set request context.
+					hivepress()->request->set_context( 'featured_ids', $featured_ids );
+				}
 			}
 		}
 	}

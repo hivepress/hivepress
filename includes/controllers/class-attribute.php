@@ -149,15 +149,6 @@ final class Attribute extends Controller {
 		$meta_box   = sanitize_key( $request->get_param( 'meta_box_name' ) );
 		$model_name = sanitize_key( $request->get_param( '_model' ) );
 
-		// Get post-based models with categories.
-		$post_models = array_filter(
-			hivepress()->attribute->get_models( 'post' ),
-			function( $model ) {
-				return taxonomy_exists( hp\prefix( $model . '_category' ) );
-			}
-		);
-
-		// Set allowed models.
 		$model_names = array_merge(
 			array_map(
 				function( $name ) {
@@ -165,27 +156,10 @@ final class Attribute extends Controller {
 				},
 				hivepress()->attribute->get_models()
 			),
-			$post_models
+			hivepress()->attribute->get_models( 'post' )
 		);
 
-		// Get post-based model attributes.
-		$post_attributes = array_map(
-			function( $model ) {
-				return $model . '_attributes';
-			},
-			$post_models
-		);
-
-		// Set allowed meta boxes.
-		$meta_boxes = array_merge(
-			[
-				$model_name . '_edit',
-				$model_name . '_search',
-			],
-			$post_attributes
-		);
-
-		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, $meta_boxes ) ) {
+		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_attributes', $model_name . '_edit', $model_name . '_search' ] ) ) {
 			return hp\rest_error( 400 );
 		}
 
@@ -203,17 +177,22 @@ final class Attribute extends Controller {
 			return hp\rest_error( 403 );
 		}
 
-		if ( in_array( $model_name, $post_models, true ) && in_array( $meta_box, $post_attributes, true ) ) {
+		if ( $model_name . '_attributes' === $meta_box ) {
 
-			// Save model temporary category ID.
-			hivepress()->request->set_context( 'model_category', $request->get_param( 'hp_category' ) );
-		}
+			// Update category.
+			$taxonomy = hp\prefix( $model_name . '_category' );
 
-		// Update field types.
-		foreach ( [ 'edit', 'search' ] as $field_context ) {
-			$field_name = hp\prefix( $field_context . '_field_type' );
+			if ( taxonomy_exists( $taxonomy ) ) {
+				wp_set_post_terms( $post->ID, [ absint( $request->get_param( hp\prefix( 'categories' ) ) ) ], $taxonomy );
+			}
+		} else {
 
-			update_post_meta( $post->ID, $field_name, sanitize_key( $request->get_param( $field_name ) ) );
+			// Update field types.
+			foreach ( [ 'edit', 'search' ] as $field_context ) {
+				$field_name = hp\prefix( $field_context . '_field_type' );
+
+				update_post_meta( $post->ID, $field_name, sanitize_key( $request->get_param( $field_name ) ) );
+			}
 		}
 
 		// Render meta box.
