@@ -279,6 +279,10 @@ final class Attachment extends Controller {
 			$data['html'] = $parent_field->render_attachment( $attachment );
 		}
 
+		// Indicate that attachment field is changed.
+		// todo: find the solution to check the field is moderated.
+		update_post_meta( $parent->get_id(), 'hp_' . $parent_field->get_name() . '_updated', true );
+
 		return hp\rest_response( 201, $data );
 	}
 
@@ -397,6 +401,10 @@ final class Attachment extends Controller {
 
 		// Fire update action.
 		do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
+
+		// Indicate that attachment field is changed.
+		// todo: find the solution to check the field is moderated.
+		update_post_meta( $parent->get_id(), 'hp_' . $parent_field->get_name() . '_updated', true );
 
 		return hp\rest_response( 204 );
 	}

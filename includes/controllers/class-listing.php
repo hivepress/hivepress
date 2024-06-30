@@ -334,8 +334,18 @@ final class Listing extends Controller {
 				if ( hp\get_array_value( $field->get_args(), '_moderated' ) ) {
 					$value = call_user_func( [ $listing, 'get_' . $field->get_name() ] );
 
-					if ( $field->get_value() !== $value ) {
+					if ( $field->get_value() !== $value && 'attachment_upload' !== $field->get_arg( 'type' ) ) {
 						$attributes[] = $field->get_label();
+					} else {
+
+						// Is attachment field changed.
+						$is_changed = get_post_meta( $listing->get_id(), 'hp_' . $field->get_name() . '_updated', true );
+
+						if ( $is_changed ) {
+							$attributes[] = $field->get_label();
+						}
+
+						delete_post_meta( $listing->get_id(), 'hp_' . $field->get_name() . '_updated' );
 					}
 				}
 			}
