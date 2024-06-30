@@ -1061,7 +1061,7 @@ final class Admin extends Component {
 		}
 
 		$theme_info[] = [
-			'label'    => esc_html__( 'HivePress support', 'hivepress' ),
+			'label'    => sprintf( esc_html__( '%s support', 'hivepress' ), 'HivePress' ),
 			'label_en' => 'HivePress support',
 			'value'    => current_theme_supports( 'hivepress' ) ? '+' : '-',
 		];
@@ -1101,7 +1101,7 @@ final class Admin extends Component {
 							'value'    => hivepress()->get_version(),
 						],
 						[
-							'label'         => 'Action Scheduler package',
+							'label'         => sprintf( esc_html__( '%s package', 'hivepress' ), 'Action Scheduler' ),
 							'value'         => class_exists( 'ActionScheduler_Versions' ) && class_exists( 'ActionScheduler' ) ? \ActionScheduler_Versions::instance()->latest_version() . ' ' . \ActionScheduler::plugin_path( '' ) : '-',
 							'value_support' => class_exists( 'ActionScheduler_Versions' ) && class_exists( 'ActionScheduler' ) ? \ActionScheduler_Versions::instance()->latest_version() : '-',
 						],
@@ -1157,15 +1157,18 @@ final class Admin extends Component {
 							'value'    => phpversion(),
 						],
 						[
-							'label' => 'PHP post max size',
+							'label'    => sprintf( esc_html__( '%s post max size', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP post max size',
 							'value' => ini_get( 'post_max_size' ),
 						],
 						[
-							'label' => 'PHP time limit',
+							'label'    => sprintf( esc_html__( '%s time limit', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP time limit',
 							'value' => (int) ini_get( 'max_execution_time' ),
 						],
 						[
-							'label' => 'PHP max input vars',
+							'label'    => sprintf( esc_html__( '%s max input vars', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP max input vars',
 							'value' => (int) ini_get( 'max_input_vars' ),
 						],
 						[
@@ -1185,6 +1188,8 @@ final class Admin extends Component {
 						],
 						[
 							'label' => 'Max upload size',
+							'label'    => esc_html__( 'Max upload size', 'hivepress' ),
+							'label_en' => 'Max upload size',
 							'value' => size_format( wp_max_upload_size() ),
 						],
 						[
@@ -1209,15 +1214,18 @@ final class Admin extends Component {
 							'value' => is_callable( 'gzopen' ) ? '+' : '-',
 						],
 						[
-							'label' => 'Multibyte string',
+							'label'    => sprintf( esc_html__( '%s string', 'hivepress' ), 'Multibyte' ),
+							'label_en' => 'Multibyte string',
 							'value' => extension_loaded( 'mbstring' ) ? '+' : '-',
 						],
 						[
-							'label' => 'Remote POST',
+							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'POST' ),
+							'label_en' => 'Remote POST',
 							'value' => $is_remote_post ? '+' : '-',
 						],
 						[
-							'label' => 'Remote GET',
+							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'GET' ),
+							'label_en' => 'Remote GET',
 							'value' => $is_remote_get ? '+' : '-',
 						],
 					],
