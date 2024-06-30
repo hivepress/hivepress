@@ -383,9 +383,14 @@ final class Attribute extends Component {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
-				$taxonomies[ $taxonomy ]['meta_box_cb'] = false;
-
-				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+				$taxonomies[ $taxonomy ] = hp\merge_arrays(
+					$taxonomies[ $taxonomy ],
+					[
+						'post_type'          => [ $model . '_attribute' ],
+						'meta_box_cb'        => false,
+						'show_in_quick_edit' => false,
+					]
+				);
 			}
 		}
 
