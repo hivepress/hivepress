@@ -98,7 +98,7 @@
 				isPreview = container.data('preview') !== false,
 				zoomAttribute = 'zoom';
 
-			if (!images.first().is(['data-zoom'])) {
+			if (!images.first().is('[data-zoom]')) {
 				zoomAttribute = 'src';
 			}
 
