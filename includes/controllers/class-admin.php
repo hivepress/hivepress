@@ -58,12 +58,10 @@ final class Admin extends Controller {
 						'rest'   => true,
 					],
 
-					'plugin_watermark_action'    => [
+					'plugin_watermark_page'    => [
 						'base'   => 'admin_base',
 						'path'   => '/watermark-plugin',
-						'method' => 'POST',
-						'action' => [ $this, 'watermark_plugin' ],
-						'rest'   => true,
+						'redirect' => [ $this, 'redirect_watermark_plugin' ],
 					],
 				],
 			],
@@ -73,7 +71,12 @@ final class Admin extends Controller {
 		parent::__construct( $args );
 	}
 
-	public function watermark_plugin( $request ) {
+	/**
+	 * Redirects listing submit profile page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_watermark_plugin() {
 		$license_key = 'test';
 		$file_path   = '/test/test.zip';
 
@@ -99,6 +102,8 @@ final class Admin extends Controller {
 		} else {
 			wp_die( 'The requested file does not exist.' );
 		}
+
+		return true;
 	}
 
 	/**
