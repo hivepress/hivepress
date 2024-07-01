@@ -96,24 +96,23 @@
 				images = container.find('img, video'),
 				url = container.data('url'),
 				isPreview = container.data('preview') !== false,
-				lightboxSelector = 'lightbox';
-			
-			if(!images.first().is(['data-lightbox'])){
-				lightboxSelector = 'src';
+				zoomAttribute = 'zoom';
+
+			if (!images.first().is(['data-zoom'])) {
+				zoomAttribute = 'src';
 			}
 
-			if (images.length && images.first().data(lightboxSelector)) {
+			if (images.length && images.first().data(zoomAttribute)) {
 				var imageURLs = [];
 
 				images.each(function () {
-
-					if('src' === lightboxSelector){
-						$(this).attr('data-lightbox', $(this).data('src'));
+					if ('src' === zoomAttribute) {
+						$(this).attr('data-zoom', $(this).data('src'));
 						$(this).removeAttr('data-src');
 					}
 
 					imageURLs.push({
-						src: $(this).data(lightboxSelector),
+						src: $(this).data(zoomAttribute),
 					});
 				});
 
