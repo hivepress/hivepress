@@ -104,7 +104,30 @@ final class Admin extends Component {
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
 		}
 
+		// Add hash name to extensions and themes.
+		add_filter( 'wp_handle_upload_prefilter', [ $this, 'add_hash_name' ] );
+
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Add hash name to extensions and themes.
+	 *
+	 * @param string $filename File name.
+	 * @return string
+	 */
+	public function add_hash_name( $file ) {
+
+		// Get file info.
+		$info = pathinfo( $file['name'] );
+
+		if ( 'zip' !== $info['extension'] ) {
+			return $file;
+		}
+
+		$file['name'] = $info['filename'] . '-' . md5( rand() ) . '.' . $info['extension'];
+
+		return $file;
 	}
 
 	/**
