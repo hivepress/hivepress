@@ -57,12 +57,53 @@ final class Admin extends Controller {
 						'action' => [ $this, 'deactivate_plugin' ],
 						'rest'   => true,
 					],
+
+					'plugin_watermark_page'    => [
+						'base'   => 'admin_base',
+						'path'   => '/watermark-plugin',
+						'redirect' => [ $this, 'redirect_watermark_plugin' ],
+					],
 				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Redirects listing submit profile page.
+	 *
+	 * @return mixed
+	 */
+	public function redirect_watermark_plugin() {
+		$license_key = 'test';
+		$file_path   = '/test/test.zip';
+
+		if ( file_exists( $file_path ) ) {
+
+			// Open the existing ZIP file
+			$zip = new \ZipArchive();
+
+			if ( $zip->open( $file_path ) === true ) {
+				$zip->setArchiveComment( $license_key );
+				$zip->close();
+
+				// Send the headers
+				header( 'Content-Type: application/zip' );
+				header( 'Content-Disposition: attachment; filename="' . basename( $file_path ) . '"' );
+				header( 'Content-Length: ' . filesize( $file_path ) );
+
+				readfile( $file_path );
+				exit;
+			} else {
+				wp_die( 'Failed to open the ZIP file.' );
+			}
+		} else {
+			wp_die( 'The requested file does not exist.' );
+		}
+
+		return true;
 	}
 
 	/**
