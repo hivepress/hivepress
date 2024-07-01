@@ -105,7 +105,7 @@ final class Admin extends Component {
 		}
 
 		// Add hash name to extensions and themes.
-		add_filter( 'sanitize_file_name', [ $this, 'add_hash_name' ] );
+		add_filter( 'wp_handle_upload_prefilter', [ $this, 'add_hash_name' ] );
 
 		parent::__construct( $args );
 	}
@@ -116,31 +116,18 @@ final class Admin extends Component {
 	 * @param string $filename File name.
 	 * @return string
 	 */
-	public function add_hash_name( $filename ) {
+	public function add_hash_name( $file ) {
 
 		// Get file info.
-		$info = pathinfo( $filename );
+		$info = pathinfo( $file['name'] );
 
 		if ( 'zip' !== $info['extension'] ) {
-			return $filename;
+			return $file;
 		}
 
-		// Get file name without extension.
-		$name = basename( $filename, '.' . $info['extension'] );
+		$file['name'] = $info['filename'] . '-' . md5( rand() ) . '.' . $info['extension'];
 
-		// Is HivePress plugin or theme.
-		$is_extension_theme = array_filter(
-			array_merge( $this->get_extensions(), $this->get_themes() ),
-			function ( $extension ) use ( $filename, $name ) {
-				return $extension['slug'] === $name;
-			}
-		);
-
-		if ( ! $is_extension_theme ) {
-			return $filename;
-		}
-
-		return $name . '-' . md5( $name ) . '.' . $info['extension'];
+		return $file;
 	}
 
 	/**
