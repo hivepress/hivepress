@@ -128,6 +128,13 @@ class Vendor_View_Block extends Template {
 										'columns' => 2,
 										'_order'  => 30,
 									],
+
+									'vendor_attributes_ternary' => [
+										'type'   => 'attributes',
+										'model'  => 'vendor',
+										'area'   => 'view_block_ternary',
+										'_order' => 40,
+									],
 								],
 							],
 

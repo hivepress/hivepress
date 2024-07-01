@@ -149,14 +149,17 @@ final class Attribute extends Controller {
 		$meta_box   = sanitize_key( $request->get_param( 'meta_box_name' ) );
 		$model_name = sanitize_key( $request->get_param( '_model' ) );
 
-		$model_names = array_map(
-			function( $name ) {
-				return $name . '_attribute';
-			},
-			hivepress()->attribute->get_models()
+		$model_names = array_merge(
+			array_map(
+				function( $name ) {
+					return $name . '_attribute';
+				},
+				hivepress()->attribute->get_models()
+			),
+			hivepress()->attribute->get_models( 'post' )
 		);
 
-		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_edit', $model_name . '_search' ] ) ) {
+		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_attributes', $model_name . '_edit', $model_name . '_search' ] ) ) {
 			return hp\rest_error( 400 );
 		}
 
@@ -174,11 +177,22 @@ final class Attribute extends Controller {
 			return hp\rest_error( 403 );
 		}
 
-		// Update field types.
-		foreach ( [ 'edit', 'search' ] as $field_context ) {
-			$field_name = hp\prefix( $field_context . '_field_type' );
+		if ( $model_name . '_attributes' === $meta_box ) {
 
-			update_post_meta( $post->ID, $field_name, sanitize_key( $request->get_param( $field_name ) ) );
+			// Update category.
+			$taxonomy = hp\prefix( $model_name . '_category' );
+
+			if ( taxonomy_exists( $taxonomy ) ) {
+				wp_set_post_terms( $post->ID, [ absint( $request->get_param( hp\prefix( 'categories' ) ) ) ], $taxonomy );
+			}
+		} else {
+
+			// Update field types.
+			foreach ( [ 'edit', 'search' ] as $field_context ) {
+				$field_name = hp\prefix( $field_context . '_field_type' );
+
+				update_post_meta( $post->ID, $field_name, sanitize_key( $request->get_param( $field_name ) ) );
+			}
 		}
 
 		// Render meta box.

@@ -65,6 +65,10 @@ final class Admin extends Component {
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
+			// Clear cache.
+			add_action( 'hivepress/v1/activate', [ $this, 'clear_extensions_cache' ] );
+			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
+
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
@@ -455,7 +459,7 @@ final class Admin extends Component {
 
 		// Render description.
 		if ( isset( $section['description'] ) ) {
-			echo '<p>' . esc_html( $section['description'] ) . '</p>';
+			echo '<p>' . hp\sanitize_html( $section['description'] ) . '</p>';
 		}
 	}
 
@@ -718,6 +722,13 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Clears cached themes.
+	 */
+	public function clear_themes_cache() {
+		hivepress()->cache->delete_cache( 'themes' );
+	}
+
+	/**
 	 * Gets HivePress extensions.
 	 *
 	 * @param string $status Extensions status.
@@ -876,6 +887,13 @@ final class Admin extends Component {
 		}
 
 		return $extensions;
+	}
+
+	/**
+	 * Clears cached extensions.
+	 */
+	public function clear_extensions_cache() {
+		hivepress()->cache->delete_cache( 'all_extensions' );
 	}
 
 	/**
@@ -1424,7 +1442,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p>' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</div>';
@@ -1461,7 +1479,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p class="description">' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</td>';
@@ -1598,7 +1616,7 @@ final class Admin extends Component {
 
 					// Render description.
 					if ( $field->get_description() ) {
-						$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+						$output .= '<p class="description">' . do_shortcode( wp_kses_post( $field->get_description() ) ) . '</p>';
 					}
 
 					$output .= '</td>';
@@ -1843,7 +1861,7 @@ final class Admin extends Component {
 		if ( $text ) {
 			$output .= '<div class="hp-tooltip">';
 			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
-			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '<div class="hp-tooltip__text">' . do_shortcode( wp_kses_post( $text ) ) . '</div>';
 			$output .= '</div>';
 		}
 

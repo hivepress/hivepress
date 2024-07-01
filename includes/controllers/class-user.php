@@ -333,7 +333,12 @@ final class User extends Controller {
 		}
 
 		// Register user.
-		$user = ( new Models\User() )->fill(
+		$user = new Models\User();
+
+		// @todo remove temporary fix when updated.
+		$user->set_id( null );
+
+		$user->fill(
 			array_merge(
 				$form->get_values(),
 				[
@@ -716,6 +721,11 @@ final class User extends Controller {
 			return hp\rest_error( 401 );
 		}
 
+		// Check settings.
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Get user.
 		$user = Models\User::query()->get_by_id( $request->get_param( 'user_id' ) );
 
@@ -1017,6 +1027,10 @@ final class User extends Controller {
 
 		if ( ! $user ) {
 			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		if ( get_option( 'hp_user_verify_email' ) && get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
+			return true;
 		}
 
 		// Get vendor ID.
