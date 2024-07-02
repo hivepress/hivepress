@@ -116,18 +116,5 @@
 
 			e.preventDefault();
 		});
-
-		// Copy information for support.
-		hivepress.getComponent('support-status-table').on('click', function () {
-			this.select();
-
-			if (navigator.clipboard && navigator.clipboard.writeText) {
-				navigator.clipboard.writeText(this.value).catch(() => {
-					document.execCommand('copy');
-				});
-			} else {
-				document.execCommand('copy');
-			}
-		});
 	});
 })(jQuery);
