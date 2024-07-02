@@ -387,7 +387,6 @@ final class Attribute extends Component {
 					$taxonomies[ $taxonomy ],
 					[
 						'post_type'          => [ $model . '_attribute' ],
-						'meta_box_cb'        => false,
 						'show_in_quick_edit' => false,
 					]
 				);
