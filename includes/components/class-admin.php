@@ -146,7 +146,7 @@ final class Admin extends Component {
 	 *
 	 * @return array
 	 */
-	public function get_unlicensed_products() {
+	protected function get_unlicensed_products() {
 
 		// Set installed themes.
 		$installed_themes = [];
@@ -1823,7 +1823,6 @@ final class Admin extends Component {
 		if ( $unlicensed_products['themes'] ) {
 			$notices['unlicensed_themes'] = [
 				'type'        => 'warning',
-				'dismissible' => true,
 				'text'        => sprintf(
 				/* translators: 1: themes names, 2: URL. */
 					hp\sanitize_html( __( 'Functionality of %1$s themes has been disabled since you did not activate license key for them. You can set license key in the <a href="%2$s">Settings</a>.', 'hivepress' ) ),
@@ -1844,7 +1843,6 @@ final class Admin extends Component {
 		if ( $unlicensed_products['extensions'] ) {
 			$notices['unlicensed_extensions'] = [
 				'type'        => 'warning',
-				'dismissible' => true,
 				'text'        => sprintf(
 				/* translators: 1: extensions names, 2: URL. */
 					hp\sanitize_html( __( 'Functionality of %1$s extensions has been disabled since you did not activate license key for them. You can set license key in the <a href="%2$s">Settings</a>.', 'hivepress' ) ),
