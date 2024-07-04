@@ -23,12 +23,22 @@ class Captcha extends Field {
 	protected function boot() {
 
 		// Set attributes.
+		$attributes = [
+			'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
+			'class'        => [ 'recaptcha' ],
+		];
+
+		// Check reCaptcha version.
+		if ( get_option( 'hp_recaptcha_version' ) === 'v3' ) {
+			$attributes['name'] = 'g-recaptcha-response';
+		} else {
+			$attributes['class'][] = 'g-recaptcha';
+		}
+
+		// Set attributes.
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
-			[
-				'class'        => [ 'g-recaptcha' ],
-				'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
-			]
+			$attributes
 		);
 
 		parent::boot();
@@ -45,6 +55,14 @@ class Captcha extends Field {
 	 * @return string
 	 */
 	public function render() {
-		return '<div ' . hp\html_attributes( $this->attributes ) . '></div>';
+
+		// Check reCaptcha version.
+		if ( get_option( 'hp_recaptcha_version' ) === 'v3' ) {
+			$output = '<input type="hidden" ' . hp\html_attributes( $this->attributes ) . '>';
+		} else {
+			$output = '<div ' . hp\html_attributes( $this->attributes ) . '></div>';
+		}
+
+		return $output;
 	}
 }
