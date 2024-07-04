@@ -218,7 +218,7 @@ final class Admin extends Component {
 				} elseif ( 'themes' === $template_name ) {
 					$themes = $this->get_themes();
 				} elseif ( 'status' === $template_name ) {
-					$report = $this->get_report();
+					$status = $this->get_status();
 				}
 
 				include $template_path;
@@ -968,11 +968,11 @@ final class Admin extends Component {
 	}
 
 	/**
-	 * Gets system report.
+	 * Gets system status.
 	 *
 	 * @return array
 	 */
-	protected function get_report() {
+	protected function get_status() {
 		global $wpdb;
 
 		// Get cURL version.
@@ -1105,8 +1105,8 @@ final class Admin extends Component {
 			$is_remote_post = true;
 		}
 
-		// Get report.
-		$report = [
+		// Get status.
+		$status = [
 			'content'  => '',
 			'sections' => [
 				[
@@ -1177,17 +1177,17 @@ final class Admin extends Component {
 						[
 							'label'    => sprintf( esc_html__( '%s post max size', 'hivepress' ), 'PHP' ),
 							'label_en' => 'PHP post max size',
-							'value' => ini_get( 'post_max_size' ),
+							'value'    => ini_get( 'post_max_size' ),
 						],
 						[
 							'label'    => sprintf( esc_html__( '%s time limit', 'hivepress' ), 'PHP' ),
 							'label_en' => 'PHP time limit',
-							'value' => (int) ini_get( 'max_execution_time' ),
+							'value'    => (int) ini_get( 'max_execution_time' ),
 						],
 						[
 							'label'    => sprintf( esc_html__( '%s max input vars', 'hivepress' ), 'PHP' ),
 							'label_en' => 'PHP max input vars',
-							'value' => (int) ini_get( 'max_input_vars' ),
+							'value'    => (int) ini_get( 'max_input_vars' ),
 						],
 						[
 							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'cURL' ),
@@ -1205,10 +1205,10 @@ final class Admin extends Component {
 							'value'    => $wpdb->db_server_info(),
 						],
 						[
-							'label' => 'Max upload size',
+							'label'    => 'Max upload size',
 							'label'    => esc_html__( 'Max upload size', 'hivepress' ),
 							'label_en' => 'Max upload size',
-							'value' => size_format( wp_max_upload_size() ),
+							'value'    => size_format( wp_max_upload_size() ),
 						],
 						[
 							'label'    => esc_html__( 'PHP Default timezone' ),
@@ -1234,17 +1234,17 @@ final class Admin extends Component {
 						[
 							'label'    => sprintf( esc_html__( '%s string', 'hivepress' ), 'Multibyte' ),
 							'label_en' => 'Multibyte string',
-							'value' => extension_loaded( 'mbstring' ) ? '+' : '-',
+							'value'    => extension_loaded( 'mbstring' ) ? '+' : '-',
 						],
 						[
 							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'POST' ),
 							'label_en' => 'Remote POST',
-							'value' => $is_remote_post ? '+' : '-',
+							'value'    => $is_remote_post ? '+' : '-',
 						],
 						[
 							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'GET' ),
 							'label_en' => 'Remote GET',
-							'value' => $is_remote_get ? '+' : '-',
+							'value'    => $is_remote_get ? '+' : '-',
 						],
 					],
 				],
@@ -1266,19 +1266,19 @@ final class Admin extends Component {
 			],
 		];
 
-		foreach ( $report['sections'] as $section ) {
+		foreach ( $status['sections'] as $section ) {
 
-			// Get report content.
-			$report['content'] .= hp\get_array_value( $section, 'label_en', hp\get_array_value( $section, 'label' ) ) . '&#13;&#10;';
+			// Get status content.
+			$status['content'] .= hp\get_array_value( $section, 'label_en', hp\get_array_value( $section, 'label' ) ) . '&#13;&#10;';
 
 			foreach ( $section['values'] as $value ) {
-				$report['content'] .= hp\get_array_value( $value, 'label_en', hp\get_array_value( $value, 'label' ) ) . ' ' . hp\get_array_value( $value, 'value_support', hp\get_array_value( $value, 'value' ) ) . '&#13;&#10;';
+				$status['content'] .= hp\get_array_value( $value, 'label_en', hp\get_array_value( $value, 'label' ) ) . ' ' . hp\get_array_value( $value, 'value_support', hp\get_array_value( $value, 'value' ) ) . '&#13;&#10;';
 			}
 
-			$report['content'] .= '&#13;&#10;';
+			$status['content'] .= '&#13;&#10;';
 		}
 
-		return $report;
+		return $status;
 	}
 
 	/**
