@@ -1102,11 +1102,6 @@ final class Admin extends Component {
 		if ( array_key_exists( hp\unprefix( $post_type . '_images' ), hivepress()->get_config( 'meta_boxes' ) ) ) {
 			remove_meta_box( 'postimagediv', $post_type, 'side' );
 		}
-
-		// Remove category metabox for listings.
-		if ( hp\prefix( 'listing' ) === $post_type ) {
-			remove_meta_box( 'hp_listing_categorydiv', $post_type, 'side' );
-		}
 	}
 
 	/**
