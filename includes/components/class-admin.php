@@ -65,6 +65,10 @@ final class Admin extends Component {
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
+			// Clear cache.
+			add_action( 'hivepress/v1/activate', [ $this, 'clear_extensions_cache' ] );
+			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
+
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
@@ -721,6 +725,13 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Clears cached themes.
+	 */
+	public function clear_themes_cache() {
+		hivepress()->cache->delete_cache( 'themes' );
+	}
+
+	/**
 	 * Gets HivePress extensions.
 	 *
 	 * @param string $status Extensions status.
@@ -879,6 +890,13 @@ final class Admin extends Component {
 		}
 
 		return $extensions;
+	}
+
+	/**
+	 * Clears cached extensions.
+	 */
+	public function clear_extensions_cache() {
+		hivepress()->cache->delete_cache( 'all_extensions' );
 	}
 
 	/**
