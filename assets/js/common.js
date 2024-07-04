@@ -805,7 +805,7 @@ var hivepress = {
 			}
 
 			if (renderSettings) {
-				form.on('change', function () {
+				form.on(renderSettings.event ? renderSettings.event : 'change', function () {
 					var container = $('[data-block=' + renderSettings.block + ']'),
 						data = new FormData(form.get(0)),
 						request = form.data('renderRequest');
@@ -840,7 +840,11 @@ var hivepress = {
 							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
 								var newContainer = $(response.data.html);
 
-								container.replaceWith(newContainer);
+								if (renderSettings.type === 'append') {
+									container.append(newContainer);
+								} else {
+									container.replaceWith(newContainer);
+								}
 
 								hivepress.initUI(newContainer);
 							}
