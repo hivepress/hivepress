@@ -855,6 +855,37 @@ var hivepress = {
 						},
 					}));
 				});
+
+				if (renderSettings.fetch_url && renderSettings.fetch_interval) {
+					var container = $('[data-block=' + renderSettings.block + ']');
+
+					setInterval(function () {
+						$.ajax({
+							url: renderSettings.fetch_url,
+							method: 'GET',
+							contentType: false,
+							processData: false,
+							beforeSend: function (xhr) {
+								if ($('body').hasClass('logged-in')) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								}
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON;
+
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									container.append(newContainer);
+
+									hivepress.initUI(newContainer);
+
+									renderSettings.fetch_url = response.data.fetch_url;
+								}
+							},
+						});
+					}, renderSettings.fetch_interval * 1000);
+				}
 			}
 
 			form.on('submit', function () {
