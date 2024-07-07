@@ -775,7 +775,7 @@ var hivepress = {
 										'week': 'MMM D, YYYY',
 									},
 								},
-							}
+							},
 						},
 					},
 					data: {
