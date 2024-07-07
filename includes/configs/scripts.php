@@ -76,6 +76,7 @@ return [
 		'handle' => 'chartjs-adapter-moment',
 		'src'    => hivepress()->get_url() . '/node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
 		'deps'   => [ 'chartjs', 'moment' ],
+		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'core'                   => [
