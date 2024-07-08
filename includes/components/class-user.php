@@ -57,7 +57,7 @@ final class User extends Component {
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 
             // Set user status.
-            add_action('init', [ $this, 'set_user_status' ] );
+            add_action( 'admin_init', [ $this, 'set_user_status' ] );
 		} else {
 
 			// Redirect author page.
@@ -67,7 +67,7 @@ final class User extends Component {
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 
             // Set user status.
-            add_action('admin_init', [ $this, 'set_user_status' ] );
+            add_action( 'init', [ $this, 'set_user_status' ] );
 		}
 
 		parent::__construct( $args );
