@@ -50,35 +50,10 @@ final class Vendor extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
 			add_filter( 'hivepress/v1/templates/user_edit_settings_page/blocks', [ $this, 'alter_user_edit_settings_page' ], 100, 2 );
-
-            // Set user status.
-            add_action('init', [ $this, 'set_user_status' ] );
-		} else {
-
-            // Set user status.
-            add_action('admin_init', [ $this, 'set_user_status' ] );
-        }
+		}
 
 		parent::__construct( $args );
 	}
-
-    /**
-     * Updates user online status.
-     */
-    public function set_user_status() {
-
-        // Get online users.
-        $online_users = (array) get_transient( 'online_users' );
-
-        // Get user ID.
-        $user_id = get_current_user_id();
-
-        if ( ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
-            $online_users[ $user_id ] = time();
-
-            set_transient( 'online_users', $online_users, 60 );
-        }
-    }
 
 	/**
 	 * Updates vendor.
