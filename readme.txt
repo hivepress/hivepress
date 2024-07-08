@@ -57,7 +57,7 @@ If you have at least basic coding skills, then look no further because HivePress
 - **Docs & Snippets** - Never get stuck with our collection of ready-made code snippets, API references, and docs.
 
 = Support & Community =
-HivePress is directly supported by its developers, people who know the plugin inside and out, so any issues are resolved in the best way possible. Join the [community](https://community.hivepress.io/) to report a bug, suggest a feature, or vote for suggestions to help us make HivePress better!
+HivePress is directly supported by its developers, people who know the plugin inside and out, so any issues are resolved in the optimal way possible. Join the [community](https://community.hivepress.io/) to report a bug, suggest a feature, or vote for suggestions to help us make HivePress better!
 
 == Changelog ==
 
