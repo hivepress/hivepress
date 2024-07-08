@@ -302,10 +302,10 @@ function call_class_method( $class, $method, $args = [] ) {
  *
  * @param array  $tokens Array of tokens.
  * @param string $text Text to be processed.
- * @param bool $is_attribute Is attribute display format.
+ * @param bool   $format Format values?
  * @return string
  */
-function replace_tokens( $tokens, $text, $is_attribute = false ) {
+function replace_tokens( $tokens, $text, $format = false ) {
 	foreach ( $tokens as $name => $value ) {
 		if ( is_object( $value ) && strpos( get_class( $value ), 'HivePress\Models\\' ) === 0 ) {
 			preg_match_all( '/%' . $name . '\.([a-z0-9_]+)%/', $text, $matches );
@@ -322,10 +322,12 @@ function replace_tokens( $tokens, $text, $is_attribute = false ) {
 						$field = get_array_value( $value->_get_fields(), $field_name );
 
 						if ( $field ) {
-							$field_value = $field->get_display_value();
-							
-							if ( $is_attribute || strtotime( '22 June 2024' ) > get_option( 'hp_installed_time' ) ) {
+
+							// @todo remove date check in the next major version.
+							if ( $format || get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' ) ) {
 								$field_value = $field->display();
+							} else {
+								$field_value = $field->get_display_value();
 							}
 						} elseif ( method_exists( $value, 'display_' . $field_name ) ) {
 							$field_value = call_user_func( [ $value, 'display_' . $field_name ] );
