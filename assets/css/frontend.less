@@ -1036,6 +1036,22 @@
 			vertical-align: middle;
 		}
 
+		&__online-status {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			display: inline-block;
+			vertical-align: middle;
+
+			&.online {
+				background-color: #00d46a;
+			}
+
+			&.offline {
+				background-color: #b8b8b8;
+			}
+		}
+
 		&__registered-date {
 			font-size: 80%;
 			display: block;
