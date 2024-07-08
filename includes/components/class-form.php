@@ -526,7 +526,9 @@ final class Form extends Component {
 			// Add form error.
 			if ( ! hp\get_array_value( $response, 'success', false ) ) {
 				$errors[] = esc_html__( 'Captcha is invalid.', 'hivepress' );
-			}
+			} elseif ( get_option( 'hp_recaptcha_version' ) === 'v3' && hp\get_array_value( $response, 'score', 0 ) < 0.5 ) {
+                $errors[] = esc_html__( 'You captcha score is too low.', 'hivepress' );
+            }
 		}
 
 		return $errors;
