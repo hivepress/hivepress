@@ -649,7 +649,7 @@ final class Admin extends Component {
 				}
 
 				// Cache purchases.
-				hivepress()->cache->set_cache( 'purchases', null, $purchases, HOUR_IN_SECONDS );
+				hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
 			}
 		}
 
@@ -1744,10 +1744,11 @@ final class Admin extends Component {
 
 		// Check valid purchases.
 		$purchases = $this->get_purchases();
-		$products  = array_filter(
+
+		$products = array_filter(
 			array_merge( $this->get_themes(), $this->get_extensions() ),
 			function( $product ) use ( $purchases ) {
-				return isset( $product['price'] ) && $product['slug'] !== 'bundle' && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
+				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
 			}
 		);
 
@@ -1756,8 +1757,8 @@ final class Admin extends Component {
 				'type'        => 'error',
 				'dismissible' => true,
 				'text'        => sprintf(
-					/* translators: %s: themes URL. */
-					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following premium products without valid licenses are about to be disabled automatically: %2$s.', 'hivepress' ) ),
+					/* translators: 1: settings URL, 2: unlicensed products. */
+					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
 					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
 					implode( ', ', array_column( $products, 'name' ) )
 				),
