@@ -98,32 +98,31 @@ final class Attribute extends Component {
      * @deprecated Since version 1.7.3
      */
     public function upgrade_attributes( $version ) {
-        if ( version_compare( $version, '1.7.3', '<' ) ) {
-            global $wpdb;
+        if ( ! version_compare( $version, '1.7.3', '<' ) ) {
+            return;
+        }
 
-            // Get attribute IDs.
-            $attribute_ids = $wpdb->get_results(
-                $wpdb->prepare(
-                    "
-                    SELECT attributes.ID
-                    FROM {$wpdb->posts} as attributes
-                        LEFT JOIN {$wpdb->postmeta} as formatted ON attributes.ID = formatted.post_id AND formatted.meta_key = %s
-                        INNER JOIN {$wpdb->postmeta} as number ON attributes.ID = number.post_id AND number.meta_key = %s AND number.meta_value = 'number'
-                    WHERE attributes.post_type LIKE %s
-                      AND attributes.post_status = 'publish'
-                      AND formatted.meta_id IS NULL
-                    ",
-                    hp\prefix( 'edit_field_formatted' ),
-                    hp\prefix( 'edit_field_type' ),
-                    hp\prefix( '%_attribute' )
-                ),
-                ARRAY_A
-            );
+        global $wpdb;
 
-            // Update attribute meta.
-            foreach ( $attribute_ids as $attribute_id ) {
-                update_post_meta( $attribute_id, hp\prefix( 'edit_field_formatted' ), true );
-            }
+        // Get attribute IDs.
+        $attribute_ids = $wpdb->get_results(
+            $wpdb->prepare(
+                "
+                SELECT attributes.ID
+                FROM {$wpdb->posts} as attributes
+                    LEFT JOIN {$wpdb->postmeta} as formatted ON attributes.ID = formatted.post_id AND formatted.meta_key = 'hp_edit_field_formatted'
+                    INNER JOIN {$wpdb->postmeta} as number ON attributes.ID = number.post_id AND number.meta_key = 'hp_edit_field_type' AND number.meta_value = 'number'
+                WHERE attributes.post_type LIKE 'hp_%_attribute'
+                  AND attributes.post_status = 'publish'
+                  AND formatted.meta_id IS NULL
+                "
+            ),
+            ARRAY_A
+        );
+
+        // Update attribute meta.
+        foreach ( $attribute_ids as $attribute_id ) {
+            update_post_meta( $attribute_id, hp\prefix( 'edit_field_formatted' ), 1 );
         }
     }
 
