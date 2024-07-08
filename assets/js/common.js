@@ -879,8 +879,6 @@ var hivepress = {
 									container.append(newContainer);
 
 									hivepress.initUI(newContainer);
-
-									renderSettings.fetch_url = response.data.fetch_url;
 								}
 							},
 						});
