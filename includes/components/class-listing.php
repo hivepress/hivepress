@@ -61,6 +61,9 @@ final class Listing extends Component {
 			// Alter meta boxes.
 			add_filter( 'hivepress/v1/meta_boxes/listing_settings', [ $this, 'alter_listing_settings_meta_box' ] );
 			add_filter( 'hivepress/v1/meta_boxes/listing_images', [ $this, 'alter_listing_images_meta_box' ] );
+
+            // Alter block.
+            add_filter( 'hivepress/v1/blocks/listings/meta', [ $this, 'alter_listing_block' ] );
 		} else {
 
 			// Set request context.
@@ -77,6 +80,27 @@ final class Listing extends Component {
 
 		parent::__construct( $args );
 	}
+
+    /**
+     * Alters listing block settings.
+     *
+     * @param array $meta Block meta.
+     * @return array
+     */
+    public function alter_listing_block( $meta ) {
+
+        $meta['settings'] = array_merge(
+            $meta['settings'],
+            array_filter(
+                hivepress()->attribute->get_attributes( 'listing' ),
+                function ( $attribute ) {
+                    return $attribute['searchable'];
+                }
+            )
+        );
+
+        return $meta;
+    }
 
 	/**
 	 * Updates listing.
