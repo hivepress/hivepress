@@ -103,9 +103,38 @@ final class Admin extends Component {
 
 			// Render footer.
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
+
+			// Disable extensions.
+			add_action( 'admin_init', [ $this, 'disable_extensions' ] );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Disables unlicensed extensions.
+	 */
+	public function disable_extensions() {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		// Check valid purchases.
+		$purchases = $this->get_purchases();
+
+		$extensions = array_filter(
+			$this->get_extensions(),
+			function( $product ) use ( $purchases ) {
+				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
+			}
+		);
+
+		foreach ( $extensions as $extension ) {
+			if ( ! is_plugin_active( $extension['file'] ) ) {
+				continue;
+			}
+
+			// Deactivate extension.
+			deactivate_plugins( $extension['file'] );
+		}
 	}
 
 	/**
@@ -1758,7 +1787,7 @@ final class Admin extends Component {
 				'dismissible' => true,
 				'text'        => sprintf(
 					/* translators: 1: settings URL, 2: unlicensed products. */
-					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
+					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses were disabled automatically: %2$s.', 'hivepress' ) ),
 					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
 					implode( ', ', array_column( $products, 'name' ) )
 				),
