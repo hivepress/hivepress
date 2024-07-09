@@ -40,6 +40,10 @@ return [
 				'required' => true,
 				'_alias'   => 'post_name',
 				'_order'   => 10,
+
+				'attributes'  => [
+					'data-render' => hivepress()->router->get_url( 'email_render_tokens', [ 'block' => 'email-details' ] ),
+				],
 			],
 		],
 	],
@@ -47,7 +51,13 @@ return [
 	'email_details'             => [
 		'title'  => hivepress()->translator->get_string( 'details' ),
 		'screen' => 'email',
-		'blocks' => [],
+		'blocks' => [
+			'email_details' => [
+				'type'    => 'content',
+				'content' => '<p data-block="email-details">' . esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ) . '</p>',
+				'_order'  => 10,
+			],
+		],
 	],
 
 	'listing_settings'          => [
