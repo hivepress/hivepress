@@ -976,7 +976,7 @@ var hivepress = {
 									});
 								}
 
-								if (container && renderSettings && typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+								if (container && typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
 									var newContainer = $(response.data.html);
 
 									if (renderSettings.type === 'append') {
