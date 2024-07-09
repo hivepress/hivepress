@@ -220,6 +220,11 @@ abstract class Field {
 	 */
 	protected function boot() {
 
+		// Set default value.
+		if ( isset( $this->args['default'] ) ) {
+			$this->set_value( $this->args['default'] );
+		}
+
 		// Set optional status.
 		if ( ! $this->required ) {
 			$this->statuses = array_merge( [ 'optional' => esc_html_x( 'optional', 'field', 'hivepress' ) ], $this->statuses );
