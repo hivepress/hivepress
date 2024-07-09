@@ -84,11 +84,14 @@ final class User extends Component {
 		// Get user ID.
 		$user_id = get_current_user_id();
 
-		if ( ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
-			$online_users[ $user_id ] = time();
-
-			set_transient( 'online_users', $online_users, 60 );
+		if ( in_array( $user_id, array_keys( $online_users ) ) && $online_users[ $user_id ] > time() - 60 ) {
+            return;
 		}
+
+        // Add user.
+        $online_users[ $user_id ] = time();
+
+        set_transient( 'online_users', $online_users, 60 );
 	}
 
 	/**
