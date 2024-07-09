@@ -56,8 +56,8 @@ final class User extends Component {
 			add_action( 'personal_options_update', [ $this, 'update_profile_fields' ], 100 );
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 
-            // Set user status.
-            add_action( 'admin_init', [ $this, 'set_user_status' ] );
+			// Set user status.
+			add_action( 'admin_init', [ $this, 'set_user_status' ] );
 		} else {
 
 			// Redirect author page.
@@ -66,30 +66,30 @@ final class User extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 
-            // Set user status.
-            add_action( 'init', [ $this, 'set_user_status' ] );
+			// Set user status.
+			add_action( 'init', [ $this, 'set_user_status' ] );
 		}
 
 		parent::__construct( $args );
 	}
 
-    /**
-     * Updates user online status.
-     */
-    public function set_user_status() {
+	/**
+	 * Updates user online status.
+	 */
+	public function set_user_status() {
 
-        // Get online users.
-        $online_users = (array) get_transient( 'online_users' );
+		// Get online users.
+		$online_users = (array) get_transient( 'online_users' );
 
-        // Get user ID.
-        $user_id = get_current_user_id();
+		// Get user ID.
+		$user_id = get_current_user_id();
 
-        if ( ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
-            $online_users[ $user_id ] = time();
+		if ( ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
+			$online_users[ $user_id ] = time();
 
-            set_transient( 'online_users', $online_users, 60 );
-        }
-    }
+			set_transient( 'online_users', $online_users, 60 );
+		}
+	}
 
 	/**
 	 * Registers user.
