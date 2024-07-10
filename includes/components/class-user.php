@@ -79,7 +79,7 @@ final class User extends Component {
 	public function set_user_status() {
 
 		// Get online users.
-		$online_users = (array) get_transient( 'online_users' );
+		$online_users = (array) hivepress()->cache->get_cache( 'online_users' );
 
 		// Get user ID.
 		$user_id = get_current_user_id();
@@ -91,7 +91,7 @@ final class User extends Component {
         // Add user.
         $online_users[ $user_id ] = time();
 
-        set_transient( 'online_users', $online_users, 60 );
+		hivepress()->cache->set_cache( 'online_users', null, $online_users, DAY_IN_SECONDS );
 	}
 
 	/**
