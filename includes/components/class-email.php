@@ -40,7 +40,7 @@ final class Email extends Component {
 			add_filter( 'wp_editor_settings', [ $this, 'disable_editor_settings' ], 10, 2 );
 
 			// Render email details.
-			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
+			add_filter( 'hivepress/v1/meta_boxes/email_settings', [ $this, 'render_email_details' ] );
 
 			// Set email defaults.
 			add_action( 'post_updated', [ $this, 'set_email_defaults' ], 10, 3 );

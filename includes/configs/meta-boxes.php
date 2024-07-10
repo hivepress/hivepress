@@ -42,19 +42,14 @@ return [
 				'_order'   => 10,
 
 				'attributes'  => [
-					'data-render' => hivepress()->router->get_url( 'email_render_tokens', [ 'block' => 'email-details' ] ),
+					'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => 'email_settings' ] ),
 				],
 			],
 		],
-	],
 
-	'email_details'             => [
-		'title'  => hivepress()->translator->get_string( 'details' ),
-		'screen' => 'email',
 		'blocks' => [
 			'email_details' => [
 				'type'    => 'content',
-				'content' => '<p data-block="email-details">' . esc_html__( 'Please choose email event to see available email tokens', 'hivepress' ) . '</p>',
 				'_order'  => 10,
 			],
 		],
