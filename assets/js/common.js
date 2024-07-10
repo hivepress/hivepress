@@ -857,12 +857,13 @@ var hivepress = {
 					}));
 				});
 
-				if (renderSettings.fetch_url && renderSettings.fetch_interval) {
-					var container = $('[data-block=' + renderSettings.block + ']');
+				if (renderSettings.block) {
+					var container = $('[data-block=' + renderSettings.block + ']'),
+						containerRenderSettings = container.data('render');
 
 					setInterval(function () {
 						$.ajax({
-							url: renderSettings.fetch_url,
+							url: containerRenderSettings.url,
 							method: 'GET',
 							contentType: false,
 							processData: false,
@@ -883,7 +884,7 @@ var hivepress = {
 								}
 							},
 						});
-					}, renderSettings.fetch_interval * 1000);
+					}, containerRenderSettings.interval * 1000);
 				}
 			}
 
