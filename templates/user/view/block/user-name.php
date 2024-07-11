@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 $display = get_option( 'hp_user_enable_display' );
 ?>
 
-<span class="hp-activity-badge <?php echo in_array( $user->get_id(), array_keys( (array) hivepress()->cache->get_cache( 'online_users' ) ) ) ? 'hp-activity-badge--online' : ''; ?>"></span>
+<span class="hp-activity-badge <?php echo in_array( $user->get_id(), array_keys( hivepress()->request->get_context( 'online_users' ) ) ) ? 'hp-activity-badge--online' : ''; ?>"></span>
 
 <?php
 if ( $display ) : ?>

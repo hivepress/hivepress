@@ -55,9 +55,6 @@ final class User extends Component {
 
 			add_action( 'personal_options_update', [ $this, 'update_profile_fields' ], 100 );
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
-
-			// Set user status.
-			add_action( 'admin_init', [ $this, 'set_user_status' ] );
 		} else {
 
 			// Redirect author page.
@@ -66,8 +63,8 @@ final class User extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 
-			// Set user status.
-			add_action( 'init', [ $this, 'set_user_status' ] );
+			// Set request context.
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_user_status' ] );
 		}
 
 		parent::__construct( $args );
@@ -75,23 +72,30 @@ final class User extends Component {
 
 	/**
 	 * Updates user online status.
+	 *
+	 * @param array $context Request context.
+	 * @return array
 	 */
-	public function set_user_status() {
+	public function set_user_status( $context ) {
 
 		// Get online users.
-		$online_users = (array) hivepress()->cache->get_cache( 'online_users' );
+		$online_users = hivepress()->cache->get_cache( 'online_users' );
 
 		// Get user ID.
 		$user_id = get_current_user_id();
 
-		if ( in_array( $user_id, array_keys( $online_users ) ) && $online_users[ $user_id ] > time() - 60 ) {
-            return;
+		if ( is_null( $online_users ) || ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
+
+			// Add user.
+			$online_users[ $user_id ] = time();
+
+			hivepress()->cache->set_cache( 'online_users', null, $online_users, DAY_IN_SECONDS );
 		}
 
-        // Add user.
-        $online_users[ $user_id ] = time();
+		// Set request context.
+		$context['online_users'] = $online_users;
 
-		hivepress()->cache->set_cache( 'online_users', null, $online_users, DAY_IN_SECONDS );
+		return $context;
 	}
 
 	/**
