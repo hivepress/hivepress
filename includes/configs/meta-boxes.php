@@ -143,6 +143,13 @@ return [
 				'type'    => 'checkbox',
 				'_order'  => 30,
 			],
+
+			'default_sort_option' => [
+				'label'   => esc_html__( 'Default Sort Option', 'hivepress' ),
+				'type'    => 'select',
+				'options' => [],
+				'_order'  => 40,
+			],
 		],
 	],
 

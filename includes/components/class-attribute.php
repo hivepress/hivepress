@@ -1717,27 +1717,6 @@ final class Attribute extends Component {
 							}
 						}
 					}
-
-                    if ( $this->models[ $model ]['searchable'] ) {
-
-                        // Create sort form.
-                        $sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
-
-                        if ( $sort_form ) {
-
-                            // Get sort options.
-                            $sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
-
-                            if ( $sort_options ) {
-                                $meta_box['fields']['default_sort_option'] = [
-                                    'label'   => esc_html__( 'Default Sort Option', 'hivepress' ),
-                                    'type'    => 'select',
-                                    'options' => $sort_options,
-                                    '_order'  => 20,
-                                ];
-                            }
-                        }
-                    }
 				}
 
 				// Add meta box.
