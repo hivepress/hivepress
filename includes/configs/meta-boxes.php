@@ -46,13 +46,6 @@ return [
 				],
 			],
 		],
-
-		'blocks' => [
-			'email_details' => [
-				'type'    => 'content',
-				'_order'  => 10,
-			],
-		],
 	],
 
 	'listing_settings'          => [
