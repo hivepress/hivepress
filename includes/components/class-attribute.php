@@ -1749,6 +1749,9 @@ final class Attribute extends Component {
 				// Get attributes.
 				$attributes = $this->get_attributes( $model, $category_ids );
 
+				// Remove meta boxes.
+				remove_meta_box( hp\prefix( $model . '_categorydiv' ), hp\prefix( $model ), 'side' );
+
 				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
 					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
 						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );

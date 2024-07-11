@@ -3,6 +3,7 @@
 		"@fancyapps/fancybox": "^3.5.7",
 		"blueimp-file-upload": "^10.32.0",
 		"chart.js": "^3.9.1",
+		"chartjs-adapter-moment": "^1.0.1",
 		"flatpickr": "^4.6.13",
 		"intl-tel-input": "^17.0.19",
 		"jquery-ui-touch-punch": "^0.2.3",
