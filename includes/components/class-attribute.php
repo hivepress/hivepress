@@ -1180,7 +1180,11 @@ final class Attribute extends Component {
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
 
 		// Set default option.
-		$default = get_option( hp\prefix( $model . '_default_order' ) );
+		if ( is_tax( hp\prefix( $model . '_category' ) ) ) {
+			$default = get_term_meta( get_queried_object()->term_id, hp\prefix( 'default_sort_option' ), true );
+		} else {
+			$default = get_option( hp\prefix( $model . '_default_order' ) );
+		}
 
 		if ( $default ) {
 			$form_args['fields']['_sort']['default'] = $default;
@@ -1722,6 +1726,68 @@ final class Attribute extends Component {
 				// Add meta box.
 				$meta_boxes[ $model . '_' . $meta_box_name ] = $meta_box;
 			}
+
+			// Set model category settings key.
+			$category_key = $model . '_category_settings';
+
+			if ( ! $this->models[ $model ]['searchable'] || ! in_array( $category_key, array_keys( $meta_boxes ), true ) ) {
+				continue;
+			}
+
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
+
+			// Check sort form.
+			if ( ! $sort_form ) {
+				continue;
+			}
+
+			// Get sort options.
+			$model_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+
+			// Add category options.
+			$category_options = [];
+
+			if ( isset( $_REQUEST['tag_ID'] ) ) {
+				foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
+					if ( ! $attribute['sortable'] || ! in_array( $_REQUEST['tag_ID'], $attribute['categories'] ) ) {
+						continue;
+					}
+
+					// Get sort order.
+					$order = hp\call_class_method( '\HivePress\Fields\\' . $attribute['edit_field']['type'], 'get_meta', [ 'sortable' ] );
+
+					if ( ! $order ) {
+						continue;
+					}
+
+					// Get option label.
+					$label = $attribute['edit_field']['label'];
+
+					// Add option.
+					if ( is_bool( $order ) ) {
+						$category_options[ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $label );
+						$category_options[ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $label );
+					} else {
+						$category_options[ $attribute_name . '__' . strtolower( $order ) ] = $label;
+					}
+				}
+			}
+
+			// Set model options.
+			$model_options = array_merge( $model_options, $category_options );
+
+			// Check model options.
+			if ( ! $model_options ) {
+				continue;
+			}
+
+			$meta_boxes[ $category_key ]['fields']['default_sort_option'] = [
+				'label'   => esc_html__( 'Default Sort Option', 'hivepress' ),
+				'type'    => 'select',
+				'options' => $model_options,
+				'_order'  => 40,
+			];
 		}
 
 		return $meta_boxes;
