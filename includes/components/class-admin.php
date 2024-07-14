@@ -908,7 +908,7 @@ final class Admin extends Component {
 			$extension_status = install_plugin_install_status( $extension );
 
 			// Set activation status.
-			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
+			if ( $extension_status['file'] && ! is_plugin_active( $extension_path ) ) {
 				$extension_status = array_merge(
 					$extension_status,
 					[
