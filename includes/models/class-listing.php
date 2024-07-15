@@ -216,8 +216,10 @@ class Listing extends Post {
 				}
 
 				// Get image IDs.
+				$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
+
 				foreach ( get_attached_media( $formats, $this->id ) as $image ) {
-					if ( 'images' === $image->hp_parent_field ) {
+					if ( 'images' === $image->hp_parent_field || $fallback ) {
 						$image_ids[] = $image->ID;
 					}
 				}
