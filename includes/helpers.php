@@ -334,7 +334,7 @@ function replace_tokens( $tokens, $text, $format = false ) {
 						}
 					}
 
-					$text = str_replace( '%' . $name . '.' . $field_name . '%', $field_value, $text );
+					$text = str_replace( '%' . $name . '.' . $field_name . '%', is_null( $field_value ) ? '' : $field_value, $text );
 				}
 			}
 		} elseif ( ! is_array( $value ) ) {
