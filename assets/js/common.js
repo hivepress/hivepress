@@ -139,6 +139,7 @@ var hivepress = {
 			var field = $(this),
 				settings = {
 					width: '100%',
+					closeOnSelect: false,
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
 					templateResult: function (state) {
