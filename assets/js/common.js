@@ -369,6 +369,10 @@ var hivepress = {
 				}
 			});
 
+			field.on('select2:opening', function() {
+				$(this).parent().find('.select2-search__field').attr('inputmode', 'none');
+			});
+
 			if (!field.data('select2-id')) {
 				field.select2(settings);
 			}
