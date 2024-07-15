@@ -807,6 +807,10 @@ var hivepress = {
 
 			if (renderSettings) {
 				form.on('change', function () {
+					if (renderSettings.event !== 'change') {
+						return;
+					}
+
 					var container = $('[data-block=' + renderSettings.block + ']'),
 						data = new FormData(form.get(0)),
 						request = form.data('renderRequest');
@@ -841,13 +845,47 @@ var hivepress = {
 							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
 								var newContainer = $(response.data.html);
 
-								container.replaceWith(newContainer);
+								if (renderSettings.type === 'append') {
+									container.append(newContainer);
+								} else {
+									container.replaceWith(newContainer);
+								}
 
 								hivepress.initUI(newContainer);
 							}
 						},
 					}));
 				});
+
+				if (renderSettings.block) {
+					var container = $('[data-block=' + renderSettings.block + ']'),
+						containerRenderSettings = container.data('render');
+
+					setInterval(function () {
+						$.ajax({
+							url: containerRenderSettings.url,
+							method: 'GET',
+							contentType: false,
+							processData: false,
+							beforeSend: function (xhr) {
+								if ($('body').hasClass('logged-in')) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								}
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON;
+
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									container.append(newContainer);
+
+									hivepress.initUI(newContainer);
+								}
+							},
+						});
+					}, containerRenderSettings.interval * 1000);
+				}
 			}
 
 			form.on('submit', function () {
@@ -860,16 +898,34 @@ var hivepress = {
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
 				form.on('submit', function (e) {
+					var data = new FormData(form.get(0)),
+						container = null;
+
 					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 
 					if (typeof tinyMCE !== 'undefined') {
 						tinyMCE.triggerSave();
 					}
 
+					if (renderSettings && renderSettings.event === 'submit' && renderSettings.url === form.data('action')) {
+						container = $('[data-block=' + renderSettings.block + ']');
+
+						if (container.length) {
+							if (container.attr('data-state') === 'loading') {
+								form.data('renderRequest').abort();
+							}
+
+							container.attr('data-state', 'loading');
+
+							data.append('_render', true);
+							data.delete('_wpnonce');
+						}
+					}
+
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
-						data: new FormData(form.get(0)),
+						data: data,
 						contentType: false,
 						processData: false,
 						beforeSend: function (xhr) {
@@ -889,6 +945,10 @@ var hivepress = {
 
 							submitButton.prop('disabled', false);
 							submitButton.attr('data-state', '');
+
+							if (container) {
+								container.attr('data-state', '');
+							}
 
 							if (typeof grecaptcha !== 'undefined' && captcha.length) {
 								grecaptcha.reset(captchaId);
@@ -915,6 +975,18 @@ var hivepress = {
 
 										responseContainer.html('');
 									});
+								}
+
+								if (container && typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									if (renderSettings.type === 'append') {
+										container.append(newContainer);
+									} else {
+										container.replaceWith(newContainer);
+									}
+
+									hivepress.initUI(newContainer);
 								}
 							} else if (response.hasOwnProperty('error')) {
 								if (response.error.hasOwnProperty('errors')) {
