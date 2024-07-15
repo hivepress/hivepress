@@ -171,11 +171,12 @@ final class Email extends Component {
 			return $meta_box;
 		}
 
-		$meta_box['blocks']['email_details'] = [
-			'type'   => 'email_details',
-			'event'  => $event,
-			'_order' => 10,
-		];
+		$meta_box['blocks']['email_details'] = array_merge(
+			$meta_box['blocks']['email_details'],
+			[
+				'event'  => $event,
+			]
+		);
 
 		return $meta_box;
 	}

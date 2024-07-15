@@ -56,7 +56,7 @@ class Email_Details extends Content {
 			return $output;
 		}
 
-		$this->content = $content;
+		$this->content = '<p>' . $content . '</p>';
 
 		return parent::render();
 	}
