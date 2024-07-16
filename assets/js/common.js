@@ -152,7 +152,8 @@ var hivepress = {
 
 						return template;
 					},
-				};
+				},
+				fieldOptions = field.data('options');
 
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
@@ -369,9 +370,15 @@ var hivepress = {
 				}
 			});
 
-			field.on('select2:opening', function() {
-				$(this).parent().find('.select2-search__field').attr('inputmode', 'none');
-			});
+			if (fieldOptions) {
+				if (fieldOptions.disable) {
+					field.on('select2:opening select2:closing', function() {
+						var $searchField = $(this).parent().find('.select2-search__field');
+						$searchField.prop('disabled', true);
+						$searchField.attr('inputmode','none')
+					});
+				}
+			}
 
 			if (!field.data('select2-id')) {
 				field.select2(settings);
