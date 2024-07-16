@@ -1268,8 +1268,33 @@ final class Admin extends Component {
 				foreach ( hp\sort_array( $meta_box['blocks'] ) as $block_name => $block_args ) {
 
 					// Set email details event.
-					if ( 'email_details' === $block_args['type'] && $defaults ) {
-						$block_args['event'] = $defaults['hp_event'];
+					if ( 'email_details' === $block_name && $defaults ) {
+
+						// Get email.
+						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $defaults['hp_event'] );
+
+						if ( ! $email || ! $email::get_meta( 'label' ) ) {
+							continue;
+						}
+
+						// Set content.
+						$content = '';
+
+						if ( $email::get_meta( 'description' ) ) {
+							$content .= $email::get_meta( 'description' ) . ' ';
+						}
+
+						if ( $email::get_meta( 'tokens' ) ) {
+							$content .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+						}
+
+						if ( $content ) {
+							$content = '<p>' . $content . '</p>';
+						}
+
+						$additional_output .= $content;
+
+						continue;
 					}
 
 					// Create block.
@@ -1278,11 +1303,7 @@ final class Admin extends Component {
 					if ( $block ) {
 
 						// Render block.
-						if ( 'email_details' === $block_args['type'] ) {
-							$additional_output .= $block->render();
-						} else {
-							$output .= $block->render();
-						}
+						$output .= $block->render();
 					}
 				}
 			}

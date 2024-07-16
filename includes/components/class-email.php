@@ -171,10 +171,26 @@ final class Email extends Component {
 			return $meta_box;
 		}
 
+		// Set content.
+		$content = '';
+
+		if ( $email::get_meta( 'description' ) ) {
+			$content .= $email::get_meta( 'description' ) . ' ';
+		}
+
+		if ( $email::get_meta( 'tokens' ) ) {
+			$content .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+		}
+
+		// Check content.
+		if ( ! $content ) {
+			return $meta_box;
+		}
+
 		$meta_box['blocks']['email_details'] = array_merge(
 			$meta_box['blocks']['email_details'],
 			[
-				'event'  => $event,
+				'content' => '<p>' . $content . '</p>',
 			]
 		);
 

@@ -49,7 +49,7 @@ return [
 
 		'blocks' => [
 			'email_details' => [
-				'type'    => 'email_details',
+				'type'    => 'content',
 				'_order'  => 10,
 			],
 		],
