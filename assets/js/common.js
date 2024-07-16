@@ -139,7 +139,6 @@ var hivepress = {
 			var field = $(this),
 				settings = {
 					width: '100%',
-					closeOnSelect: false,
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
 					templateResult: function (state) {
@@ -153,7 +152,12 @@ var hivepress = {
 
 						return template;
 					},
-				};
+				},
+				fieldOptions = field.data('options');
+
+			if (fieldOptions && fieldOptions.closeOnSelect) {
+				settings['closeOnSelect'] = false;
+			}
 
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
