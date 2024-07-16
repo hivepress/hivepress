@@ -1268,10 +1268,16 @@ final class Admin extends Component {
 				foreach ( hp\sort_array( $meta_box['blocks'] ) as $block_name => $block_args ) {
 
 					// Set email details event.
-					if ( 'email_details' === $block_name && $defaults ) {
+					if ( 'email_details' === $block_name ) {
+
+						if ( isset( $block_args['event'] ) ) {
+							$event = $block_args['event'];
+						} else {
+							$event = $defaults['hp_event'];
+						}
 
 						// Get email.
-						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $defaults['hp_event'] );
+						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $event );
 
 						if ( ! $email || ! $email::get_meta( 'label' ) ) {
 							continue;
