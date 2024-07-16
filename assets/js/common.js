@@ -152,7 +152,20 @@ var hivepress = {
 
 						return template;
 					},
-				};
+				},
+				fieldOptions = field.data('options');
+
+			if (fieldOptions && fieldOptions.disableSearch) {
+				$.extend(settings, {
+					minimumResultsForSearch: -1,
+				});
+
+				field.on('select2:opening select2:closing', function() {
+					var $searchField = $(this).parent().find('.select2-search__field');
+					$searchField.prop('disabled', true);
+					$searchField.attr('inputmode','none')
+				});
+			}
 
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
