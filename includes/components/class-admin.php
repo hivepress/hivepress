@@ -1270,14 +1270,8 @@ final class Admin extends Component {
 					// Set email details event.
 					if ( 'email_details' === $block_name ) {
 
-						// Set event.
-						$event = null;
-
-						if ( isset( $block_args['event'] ) ) {
-							$event = $block_args['event'];
-						} elseif ( isset( $defaults['hp_event'] ) ) {
-							$event = $defaults['hp_event'];
-						}
+						// Get event.
+						$event = hp\get_array_value( $block_args, 'event', hp\get_array_value( $defaults, 'hp_event', '' ) );
 
 						// Get email.
 						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $event );
