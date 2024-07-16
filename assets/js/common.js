@@ -155,6 +155,20 @@ var hivepress = {
 				},
 				fieldOptions = field.data('options');
 
+			if (fieldOptions) {
+				if (fieldOptions.disableSearch) {
+					$.extend(settings, {
+						minimumResultsForSearch: -1,
+					});
+
+					field.on('select2:opening select2:closing', function() {
+						var $searchField = $(this).parent().find('.select2-search__field');
+						$searchField.prop('disabled', true);
+						$searchField.attr('inputmode','none')
+					});
+				}
+			}
+
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
 			}
@@ -369,16 +383,6 @@ var hivepress = {
 					});
 				}
 			});
-
-			if (fieldOptions) {
-				if (fieldOptions.disable) {
-					field.on('select2:opening select2:closing', function() {
-						var $searchField = $(this).parent().find('.select2-search__field');
-						$searchField.prop('disabled', true);
-						$searchField.attr('inputmode','none')
-					});
-				}
-			}
 
 			if (!field.data('select2-id')) {
 				field.select2(settings);
