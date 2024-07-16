@@ -1270,9 +1270,12 @@ final class Admin extends Component {
 					// Set email details event.
 					if ( 'email_details' === $block_name ) {
 
+						// Set event.
+						$event = null;
+
 						if ( isset( $block_args['event'] ) ) {
 							$event = $block_args['event'];
-						} else {
+						} elseif ( isset( $defaults['hp_event'] ) ) {
 							$event = $defaults['hp_event'];
 						}
 
@@ -1298,9 +1301,7 @@ final class Admin extends Component {
 							$content = '<p>' . $content . '</p>';
 						}
 
-						$additional_output .= $content;
-
-						continue;
+						$block_args['content'] = $content;
 					}
 
 					// Create block.
@@ -1309,7 +1310,11 @@ final class Admin extends Component {
 					if ( $block ) {
 
 						// Render block.
-						$output .= $block->render();
+						if ( 'email_details' === $block_name ) {
+							$additional_output .= $block->render();
+						} else {
+							$output .= $block->render();
+						}
 					}
 				}
 			}
