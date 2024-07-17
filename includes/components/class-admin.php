@@ -1253,13 +1253,13 @@ final class Admin extends Component {
 		$meta_box_name = hp\unprefix( $args['id'] );
 
 		// Get defaults.
-		$defaults = hp\get_array_value( $args, 'defaults' );
+		$defaults = hp\get_array_value( $args, 'defaults', [] );
 
 		// Get meta box.
 		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type ), $meta_box_name );
 
-		// Set additional output.
-		$additional_output = '';
+		// Set block output.
+		$block_output = '';
 
 		if ( $meta_box ) {
 
@@ -1272,6 +1272,10 @@ final class Admin extends Component {
 
 						// Get event.
 						$event = hp\get_array_value( $block_args, 'event', hp\get_array_value( $defaults, 'hp_event', '' ) );
+
+						if ( ! $event ) {
+							continue;
+						}
 
 						// Get email.
 						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $event );
@@ -1305,7 +1309,7 @@ final class Admin extends Component {
 
 						// Render block.
 						if ( 'email_details' === $block_name ) {
-							$additional_output .= $block->render();
+							$block_output .= $block->render();
 						} else {
 							$output .= $block->render();
 						}
@@ -1391,8 +1395,8 @@ final class Admin extends Component {
 					}
 				}
 
-				if ( $additional_output ) {
-					$output .= '<tr><td colspan="2">' . $additional_output . '</td></tr>';
+				if ( $block_output ) {
+					$output .= '<tr><td class="padding--zero" colspan="2">' . $block_output . '</td></tr>';
 				}
 
 				$output .= '</table>';

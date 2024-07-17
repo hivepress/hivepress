@@ -174,7 +174,7 @@ final class Email extends Component {
 		$meta_box['blocks']['email_details'] = array_merge(
 			$meta_box['blocks']['email_details'],
 			[
-				'event'  => $event,
+				'event' => $event,
 			]
 		);
 
