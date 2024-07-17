@@ -40,14 +40,19 @@ return [
 				'required' => true,
 				'_alias'   => 'post_name',
 				'_order'   => 10,
+
+				'attributes'  => [
+					'data-render' => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => 'email_settings' ] ),
+				],
 			],
 		],
-	],
 
-	'email_details'             => [
-		'title'  => hivepress()->translator->get_string( 'details' ),
-		'screen' => 'email',
-		'blocks' => [],
+		'blocks' => [
+			'email_details' => [
+				'type'    => 'content',
+				'_order'  => 10,
+			],
+		],
 	],
 
 	'listing_settings'          => [

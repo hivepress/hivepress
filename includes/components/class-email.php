@@ -40,7 +40,7 @@ final class Email extends Component {
 			add_filter( 'wp_editor_settings', [ $this, 'disable_editor_settings' ], 10, 2 );
 
 			// Render email details.
-			add_filter( 'hivepress/v1/meta_boxes/email_details', [ $this, 'render_email_details' ] );
+			add_filter( 'hivepress/v1/meta_boxes/email_settings', [ $this, 'render_email_details' ] );
 
 			// Set email defaults.
 			add_action( 'post_updated', [ $this, 'set_email_defaults' ], 10, 3 );
@@ -161,28 +161,22 @@ final class Email extends Component {
 	 */
 	public function render_email_details( $meta_box ) {
 
+		// Get event.
+		$event = get_post_field( 'post_name' );
+
 		// Get email.
-		$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), get_post_field( 'post_name' ) );
+		$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $event );
 
-		if ( $email && $email::get_meta( 'label' ) ) {
-			$output = '';
-
-			if ( $email::get_meta( 'description' ) ) {
-				$output .= $email::get_meta( 'description' ) . ' ';
-			}
-
-			if ( $email::get_meta( 'tokens' ) ) {
-				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
-			}
-
-			if ( $output ) {
-				$meta_box['blocks']['email_details'] = [
-					'type'    => 'content',
-					'content' => '<p>' . trim( $output ) . '</p>',
-					'_order'  => 10,
-				];
-			}
+		if ( ! $email || ! $email::get_meta( 'label' ) ) {
+			return $meta_box;
 		}
+
+		$meta_box['blocks']['email_details'] = array_merge(
+			$meta_box['blocks']['email_details'],
+			[
+				'event' => $event,
+			]
+		);
 
 		return $meta_box;
 	}
