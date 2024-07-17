@@ -195,12 +195,35 @@ final class Attribute extends Controller {
 			}
 		}
 
+		// Set default attribute values.
+		$defaults = [];
+
+		// Get model object.
+		$model_object = hp\create_class_instance( '\HivePress\Models\\' . $model_name );
+
+		if ( $model_object ) {
+
+			// Get model.
+			$model = $model_object->query()->get_by_id( $post->ID );
+
+			if ( $model ) {
+
+				// Set default attribute values.
+				$defaults = array_intersect_key( $model->serialize(), hivepress()->attribute->get_attributes( $model_name ) );
+
+				foreach ( $defaults as $key => $value ) {
+					unset( $defaults[ $key ] );
+					$defaults[ hp\prefix( $key ) ] = $value;
+				}
+			}
+		}
+
 		// Render meta box.
 		$output = hivepress()->admin->render_meta_box(
 			$post,
 			[
 				'id'       => hp\prefix( $meta_box ),
-				'defaults' => $request->get_params(),
+				'defaults' => array_merge( $request->get_params(), $defaults ),
 				'echo'     => false,
 			]
 		);
