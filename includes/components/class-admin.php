@@ -1757,7 +1757,7 @@ final class Admin extends Component {
 			// Set product names.
 			$product_names = implode( ', ', array_column( $products, 'name' ) );
 
-			$notices[ md5( $product_names ) ] = [
+			$notices[ 'license_request_' . md5( $product_names ) ] = [
 				'type'        => 'error',
 				'dismissible' => true,
 				'text'        => sprintf(
