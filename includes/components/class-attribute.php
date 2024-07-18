@@ -281,13 +281,6 @@ final class Attribute extends Component {
 
 		foreach ( $this->get_models() as $model ) {
 
-			// Set defaults.
-			$this->models[ $model ]['searchable'] = false;
-
-			if ( 'user' !== $model ) {
-				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
-			}
-
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
@@ -348,6 +341,14 @@ final class Attribute extends Component {
 	 */
 	public function register_post_types( $post_types ) {
 		foreach ( $this->get_models() as $model ) {
+
+			// Set defaults.
+			$this->models[ $model ]['searchable'] = false;
+
+			if ( 'user' !== $model ) {
+				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			}
+
 			$post_types[ $model . '_attribute' ] = [
 				'public'       => false,
 				'show_ui'      => true,
