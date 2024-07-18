@@ -760,13 +760,12 @@ var hivepress = {
 					type: 'line',
 					options: {
 						scales: {
-							y: {
-								beginAtZero: true,
+							yAxes: [{
 								ticks: {
-									stepSize: 1,
+									beginAtZero: true,
 								},
-							},
-							x: {
+							}],
+							xAxes: [{
 								type: 'time',
 								time: {
 									tooltipFormat: 'MMM D, YYYY',
@@ -775,7 +774,7 @@ var hivepress = {
 										'week': 'MMM D, YYYY',
 									},
 								},
-							},
+							}],
 						},
 					},
 					data: {

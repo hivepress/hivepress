@@ -565,8 +565,7 @@ abstract class Field {
 					'value' => $value,
 				]
 			),
-			$this->display_template,
-			true
+			$this->display_template
 		);
 
 		if ( $shortcode ) {
