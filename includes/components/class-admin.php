@@ -49,6 +49,9 @@ final class Admin extends Component {
 		// Share usage data.
 		add_action( 'hivepress/v1/events/weekly', [ $this, 'share_usage_data' ] );
 
+		// Update license key.
+		add_action( 'update_option_hp_hivepress_license_key', [ $this, 'update_license_key' ] );
+
 		if ( is_admin() ) {
 
 			// Add admin pages.
@@ -66,9 +69,8 @@ final class Admin extends Component {
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
 			// Clear cache.
-			add_action( 'update_option_hp_hivepress_license_key', [ $this, 'clear_purchases_cache' ] );
-			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
 			add_action( 'hivepress/v1/activate', [ $this, 'clear_extensions_cache' ] );
+			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
 
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
@@ -601,66 +603,6 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
-	}
-
-	/**
-	 * Gets HivePress purchases.
-	 *
-	 * @return array
-	 */
-	protected function get_purchases() {
-
-		// Get license key.
-		$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
-
-		if ( ! $license_key ) {
-			return [];
-		}
-
-		// Get cached purchases.
-		$purchases = hivepress()->cache->get_cache( 'purchases' );
-
-		if ( is_null( $purchases ) ) {
-			$purchases = [];
-
-			// Get API response.
-			$response = json_decode(
-				wp_remote_retrieve_body(
-					wp_remote_get(
-						'https://store.hivepress.io/api/v1/products?' . http_build_query(
-							[
-								'license_key' => $license_key,
-							]
-						)
-					)
-				),
-				true
-			);
-
-			if ( is_array( $response ) && isset( $response['data'] ) ) {
-				foreach ( $response['data'] as $product ) {
-
-					// Add purchase.
-					$purchases[ $product['slug'] ] = [
-						'name' => $product['name'],
-						'slug' => $product['slug'],
-						'type' => $product['type'],
-					];
-				}
-
-				// Cache purchases.
-				hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
-			}
-		}
-
-		return $purchases;
-	}
-
-	/**
-	 * Clears cached purchases.
-	 */
-	public function clear_purchases_cache() {
-		hivepress()->cache->delete_cache( 'purchases' );
 	}
 
 	/**
@@ -1742,30 +1684,136 @@ final class Admin extends Component {
 		// Add default notices.
 		$notices = [];
 
-		// Check valid purchases.
-		$purchases = $this->get_purchases();
+		// Set installed themes.
+		$installed_themes = [];
 
+		// Set installed extensions.
+		$installed_extensions = [];
+
+		// Get cached purchased products.
+		$purchased_products = hivepress()->cache->get_cache( 'purchased_products' );
+
+		// Get products.
 		$products = array_filter(
-			array_merge( $this->get_themes(), $this->get_extensions() ),
-			function( $product ) use ( $purchases ) {
-				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
+			array_merge(
+				$this->get_themes(),
+				$this->get_extensions(),
+			),
+			function ( $product ) {
+				return isset( $product['price'] ) && in_array( $product['status'], [ 'activate', 'latest_installed' ], true ) && $product['slug'] !== 'bundle';
 			}
 		);
 
-		if ( $products ) {
-			$notices['license_request'] = [
-				'type'        => 'error',
-				'dismissible' => true,
-				'text'        => sprintf(
-					/* translators: 1: settings URL, 2: unlicensed products. */
-					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
-					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
-					implode( ', ', array_column( $products, 'name' ) )
+		foreach ( $products as $product ) {
+			if ( 'theme' === $product['type'] ) {
+				$installed_themes[ $product['slug'] ] = $product;
+			} elseif ( 'extension' === $product['type'] ) {
+				$installed_extensions[ $product['slug'] ] = $product;
+			}
+		}
+
+		if ( is_null( $purchased_products ) ) {
+
+			// Get license key.
+			$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+
+			// Set purchased themes.
+			$purchased_products = [];
+
+			// Check license key.
+			if ( $license_key ) {
+				// Get API response.
+				$response = json_decode(
+					wp_remote_retrieve_body(
+						wp_remote_get(
+							'https://store.hivepress.io/api/v1/products?' . http_build_query(
+								[
+									'license_key' => $license_key,
+								]
+							)
+						)
+					),
+					true
+				);
+
+				if ( is_array( $response ) && isset( $response['data'] ) ) {
+					foreach ( $response['data'] as $product ) {
+
+						// Add product.
+						$purchased_products[ $product['slug'] ] = [
+							'name' => $product['name'],
+							'type' => $product['type'],
+						];
+					}
+				}
+			}
+
+			// Cache products.
+			hivepress()->cache->set_cache( 'purchased_products', null, $purchased_products, WEEK_IN_SECONDS );
+		}
+
+		// Set unlicensed themes.
+		$unlicensed_themes = array_diff_key(
+			$installed_themes,
+			array_filter(
+				$purchased_products,
+				function ( $product ) {
+					return 'theme' === $product['type'];
+				}
+			)
+		);
+
+		// Set unlicensed extensions.
+		$unlicensed_extensions = array_diff_key(
+			$installed_extensions,
+			array_filter(
+				$purchased_products,
+				function ( $product ) {
+					return 'extension' === $product['type'];
+				}
+			)
+		);
+
+		if ( $unlicensed_themes ) {
+			$notices['unlicensed_themes'] = [
+				'type' => 'warning',
+				'text' => sprintf(
+				/* translators: 1: themes names, 2: URL. */
+					hp\sanitize_html( __( 'Please add a license keys for the %1$s themes before their features will be disabled. You can set license key in the <a href="%2$s">Settings</a>.', 'hivepress' ) ),
+					implode(
+						', ',
+						array_map(
+							function ( $theme ) {
+								return $theme['name'];
+							},
+							$unlicensed_themes
+						)
+					),
+					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) )
 				),
 			];
 		}
 
-		// Check theme support.
+		if ( $unlicensed_extensions ) {
+			$notices['unlicensed_extensions'] = [
+				'type' => 'warning',
+				'text' => sprintf(
+				/* translators: 1: extensions names, 2: URL. */
+					hp\sanitize_html( __( 'Please add a license keys for the %1$s extensions before their features will be disabled. You can set license key in the <a href="%2$s">Settings</a>.', 'hivepress' ) ),
+					implode(
+						', ',
+						array_map(
+							function ( $extension ) {
+								return hivepress()->get_name() . ' ' . $extension['name'];
+							},
+							$unlicensed_extensions
+						)
+					),
+					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) )
+				),
+			];
+		}
+
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type'        => 'warning',
@@ -1778,7 +1826,6 @@ final class Admin extends Component {
 			];
 		}
 
-		// Suggest adding review.
 		if ( $installed_time < time() - WEEK_IN_SECONDS * 2 ) {
 			$notices['review_request'] = [
 				'type'        => 'info',
@@ -1792,8 +1839,6 @@ final class Admin extends Component {
 		}
 
 		if ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
-
-			// Suggest premium products.
 			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
 				$notices['upgrade_request'] = [
 					'type'        => 'info',
@@ -1807,7 +1852,6 @@ final class Admin extends Component {
 				];
 			}
 
-			// Request usage sharing.
 			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
 				$notices['usage_tracking'] = [
 					'type'        => 'info',
@@ -1819,7 +1863,6 @@ final class Admin extends Component {
 			}
 		}
 
-		// Suggest website showcase.
 		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
 			$notices['showcase_request'] = [
 				'type'        => 'info',
@@ -1832,7 +1875,6 @@ final class Admin extends Component {
 			];
 		}
 
-		// Suggest expert program.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
 			$notices['expert_request'] = [
 				'type'        => 'info',
@@ -2150,5 +2192,14 @@ final class Admin extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Updates license key option.
+	 */
+	public function update_license_key() {
+
+		// Clear purchased extensions cache.
+		hivepress()->cache->delete_cache( 'purchased_products' );
 	}
 }

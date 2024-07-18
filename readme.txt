@@ -1,4 +1,4 @@
-=== HivePress - Business Directory & Classified Ads Plugin ===
+=== HivePress - Business Directory & Classified Ads WordPress Plugin ===
 Contributors: hivepress
 Tags: business directory, classifieds, listing, directory plugin, job board
 Requires at least: 5.0
@@ -48,7 +48,7 @@ Enhance your website functionality with just a few clicks using HivePress extens
 HivePress comes with a free [ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=wordpress.org) theme that is fully compatible with HivePress and its official extensions. Also, there are a few [premium themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) with more tailored design and functionality for various directory and marketplace niches.
 
 = Developer Features =
-If you have at least basic coding skills, then look no further because HivePress is powered by a highly customizable and extensible [framework](https://docs.hivepress.io/developer-docs/) for directory websites:
+If you have at least basic coding skills, then look no further because HivePress is powered by the most customizable and extensible [framework](https://docs.hivepress.io/developer-docs/) for directory websites:
 
 - **Structured Code** - We follow the WordPress coding standards, so the codebase is well-structured and readable.
 - **Easy Theming** - Styling and overriding layouts is very intuitive due to block-based templates and BEM CSS notation.
@@ -57,7 +57,7 @@ If you have at least basic coding skills, then look no further because HivePress
 - **Docs & Snippets** - Never get stuck with our collection of ready-made code snippets, API references, and docs.
 
 = Support & Community =
-HivePress is directly supported by its developers, people who know the plugin inside and out, so any issues are resolved in the optimal way possible. Join the [community](https://community.hivepress.io/) to report a bug, suggest a feature, or vote for suggestions to help us make HivePress better!
+HivePress is directly supported by its developers, people who know the plugin inside and out, so any issues are resolved in the best way possible. Join the [community](https://community.hivepress.io/) to report a bug, suggest a feature, or vote for suggestions to help us make HivePress better!
 
 == Changelog ==
 

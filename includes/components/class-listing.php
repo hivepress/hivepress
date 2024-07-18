@@ -196,7 +196,7 @@ final class Listing extends Component {
 		if ( get_option( 'hp_listing_allow_video' ) ) {
 			$image_ids = [];
 
-			foreach ( (array) $listing->get_images() as $image ) {
+			foreach ( $listing->get_images() as $image ) {
 				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
 					$image_ids[] = $image->get_id();
 
