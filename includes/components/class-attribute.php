@@ -282,10 +282,11 @@ final class Attribute extends Component {
 		foreach ( $this->get_models() as $model ) {
 
 			// Set defaults.
-			$this->models[ $model ]['searchable'] = false;
+			$this->models[ $model ]['searchable'] = true;
 
-			if ( 'user' !== $model ) {
-				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			// @todo check post type config instead.
+			if ( ! in_array( $model, [ 'listing', 'vendor', 'request' ] ) ) {
+				$this->models[ $model ]['searchable'] = false;
 			}
 
 			// Add field settings.
