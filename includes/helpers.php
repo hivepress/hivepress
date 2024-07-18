@@ -313,8 +313,6 @@ function replace_tokens( $tokens, $text, $format = false ) {
 			$fields = get_last_array_value( $matches );
 
 			if ( $fields ) {
-				$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
-
 				foreach ( $fields as $field_name ) {
 					$field_value = '';
 
@@ -326,7 +324,7 @@ function replace_tokens( $tokens, $text, $format = false ) {
 						if ( $field ) {
 
 							// @todo remove date check in the next major version.
-							if ( $format || $fallback ) {
+							if ( $format || get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' ) ) {
 								$field_value = $field->display();
 							} else {
 								$field_value = $field->get_display_value();
@@ -336,7 +334,7 @@ function replace_tokens( $tokens, $text, $format = false ) {
 						}
 					}
 
-					$text = str_replace( '%' . $name . '.' . $field_name . '%', is_null( $field_value ) ? '' : $field_value, $text );
+					$text = str_replace( '%' . $name . '.' . $field_name . '%', $field_value, $text );
 				}
 			}
 		} elseif ( ! is_array( $value ) ) {
