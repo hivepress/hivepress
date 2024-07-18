@@ -18,6 +18,13 @@ defined( 'ABSPATH' ) || exit;
 class Currency extends Number {
 
 	/**
+	 * Product ID.
+	 *
+	 * @var int
+	 */
+	protected $product;
+
+	/**
 	 * Class initializer.
 	 *
 	 * @param array $meta Class meta values.
@@ -57,7 +64,23 @@ class Currency extends Number {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) && hp\is_plugin_active( 'woocommerce' ) ) {
-			return hivepress()->woocommerce->format_price( $this->value );
+
+			// Get price.
+			$price = $this->value;
+
+			if ( $this->product ) {
+
+				// Get product.
+				$product = wc_get_product( $this->product );
+
+				if ( $product ) {
+
+					// Set price.
+					$price = wc_get_price_to_display( $product );
+				}
+			}
+
+			return hivepress()->woocommerce->format_price( $price );
 		}
 	}
 }
