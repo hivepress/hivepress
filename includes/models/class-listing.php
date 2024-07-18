@@ -217,7 +217,7 @@ class Listing extends Post {
 
 				// Get image IDs.
 				foreach ( get_attached_media( $formats, $this->id ) as $image ) {
-					if ( 'images' === $image->hp_parent_field ) {
+					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
 						$image_ids[] = $image->ID;
 					}
 				}

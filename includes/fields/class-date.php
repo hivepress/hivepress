@@ -316,7 +316,8 @@ class Date extends Field {
 				$date = date_create_from_format( $this->format, $value );
 
 				if ( false === $date ) {
-					$errors[] = sprintf( hivepress()->translator->get_string( 'field_contains_invalid_value' ), $this->get_label( true ) );
+					/* translators: %s: field label. */
+					$errors[] = sprintf( esc_html__( '"%s" field contains an invalid value.', 'hivepress' ), $this->get_label( true ) );
 				} else {
 					if ( ! is_null( $this->min_date ) ) {
 						$min_date = date_create( $this->min_date );

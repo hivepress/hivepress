@@ -95,24 +95,14 @@
 			var container = $(this),
 				images = container.find('img, video'),
 				url = container.data('url'),
-				isPreview = container.data('preview') !== false,
-				zoomAttribute = 'zoom';
+				isPreview = container.data('preview') !== false;
 
-			if (!images.first().is('[data-zoom]')) {
-				zoomAttribute = 'src';
-			}
-
-			if (images.length && images.first().data(zoomAttribute)) {
+			if (images.length && images.first().data('src')) {
 				var imageURLs = [];
 
 				images.each(function () {
-					if ('src' === zoomAttribute) {
-						$(this).attr('data-zoom', $(this).data('src'));
-						$(this).removeAttr('data-src');
-					}
-
 					imageURLs.push({
-						src: $(this).data(zoomAttribute),
+						src: $(this).data('src'),
 					});
 				});
 

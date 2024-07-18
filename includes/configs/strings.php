@@ -97,10 +97,6 @@ return [
 	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
 	/* translators: %s: field label. */
 	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
-	/* translators: 1: field label, 2: length. */
-	'field_longer_than_n_characters'            => esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ),
-	/* translators: 1: field label, 2: length. */
-	'field_shorter_than_n_characters'           => esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),

@@ -9,7 +9,6 @@
 		"phpcompatibility/phpcompatibility-wp": "^2.1.0"
 	},
 	"config": {
-		"autoloader-suffix": "21c39cc08ce52103df1d21bf943a415d",
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}

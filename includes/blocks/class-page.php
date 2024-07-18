@@ -50,12 +50,8 @@ class Page extends Container {
 		ob_end_clean();
 
 		// Query posts.
-		$query = hivepress()->request->get_context( 'post_query' );
-
-		if ( $query ) {
-			$query['hp_main'] = true;
-
-			query_posts( $query );
+		if ( hivepress()->request->get_context( 'post_query' ) ) {
+			query_posts( hivepress()->request->get_context( 'post_query' ) );
 		}
 
 		// Render content.
