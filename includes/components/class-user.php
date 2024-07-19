@@ -62,9 +62,44 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+
+			// Alter user fields.
+			add_filter( 'hivepress/v1/models/user', [ $this, 'alter_user_fields' ] );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Alters user fields.
+	 *
+	 * @param array $user Model arguments.
+	 * @return array
+	 */
+	public function alter_user_fields( $user ) {
+
+		// Set options.
+		$options = [];
+
+		foreach ( hivepress()->get_classes( 'emails' ) as $email_name => $email ) {
+			if ( ! $email::get_meta( 'allow_disable' ) ) {
+				continue;
+			}
+
+			if ( $email::get_meta( 'label' ) ) {
+				$options[ $email_name ] = $email::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		$options = array_merge( $user['fields']['allowed_emails']['options'], $options );
+
+		// Set options.
+		$user['fields']['allowed_emails']['options'] = $options;
+		$user['fields']['allowed_emails']['default'] = $options;
+
+		return $user;
 	}
 
 	/**

@@ -25,10 +25,11 @@ class Listing_Approve extends Email {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'       => hivepress()->translator->get_string( 'listing_approved' ),
-				'description' => esc_html__( 'This email is sent to users when listing is approved.', 'hivepress' ),
-				'recipient'   => hivepress()->translator->get_string( 'vendor' ),
-				'tokens'      => [ 'user_name', 'listing_title', 'listing_url', 'user', 'listing' ],
+				'allow_disable' => true,
+				'label'         => hivepress()->translator->get_string( 'listing_approved' ),
+				'description'   => esc_html__( 'This email is sent to users when listing is approved.', 'hivepress' ),
+				'recipient'     => hivepress()->translator->get_string( 'vendor' ),
+				'tokens'        => [ 'user_name', 'listing_title', 'listing_url', 'user', 'listing' ],
 			],
 			$meta
 		);

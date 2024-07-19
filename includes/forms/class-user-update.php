@@ -60,6 +60,10 @@ class User_Update extends Model_Form {
 						'_order' => 200,
 					],
 
+					'allowed_emails'   => [
+						'_order'   => 210,
+					],
+
 					'email'            => [
 						'_order' => 300,
 					],

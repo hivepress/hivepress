@@ -8,6 +8,7 @@
 namespace HivePress\Emails;
 
 use HivePress\Helpers as hp;
+use HivePress\Models\User;
 use HivePress\Traits;
 use HivePress\Blocks;
 
@@ -173,6 +174,22 @@ abstract class Email {
 	 * @return bool
 	 */
 	final public function send() {
+
+		if ( static::get_meta( 'allow_disable' ) ) {
+
+			// Get user object.
+			$user_object = get_user_by( 'email', $this->recipient );
+
+			if ( $user_object ) {
+
+				// Get user model.
+				$user = User::query()->get_by_id( $user_object->data->ID );
+
+				if ( $user && ! in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
+					return false;
+				}
+			}
+		}
 
 		/**
 		 * Fires when a new email is sent. The dynamic part of the hook refers to the email name (e.g. `listing_expire`). You can check the available emails in the `includes/emails` directory of HivePress.
