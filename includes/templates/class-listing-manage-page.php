@@ -47,18 +47,12 @@ abstract class Listing_Manage_Page extends Page_Wide {
 								],
 							],
 
-							'listing_dates'             => [
-								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-dates',
-								'_order' => 20,
-							],
-
 							'listing_actions_secondary' => [
 								'type'       => 'container',
 								'optional'   => true,
 								'blocks'     => [],
 								'_label'     => hivepress()->translator->get_string( 'actions' ),
-								'_order'     => 30,
+								'_order'     => 20,
 
 								'attributes' => [
 									'class' => [ 'hp-listing__actions', 'hp-listing__actions--secondary' ],
