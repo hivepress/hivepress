@@ -50,26 +50,14 @@ class Listing_Edit_Block extends Template {
 
 							'listing_created_date'    => [
 								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-created-date',
+								'path'   => 'listing/edit/block/listing-dates',
 								'_order' => 30,
-							],
-
-							'listing_expiration_date'    => [
-								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-expiration-date',
-								'_order' => 40,
-							],
-
-							'listing_featured_date'    => [
-								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-featured-date',
-								'_order' => 50,
 							],
 
 							'listing_status'          => [
 								'type'   => 'part',
 								'path'   => 'listing/edit/block/listing-status',
-								'_order' => 60,
+								'_order' => 40,
 							],
 
 							'listing_actions_primary' => [
