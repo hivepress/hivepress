@@ -8,7 +8,7 @@
 namespace HivePress\Emails;
 
 use HivePress\Helpers as hp;
-use HivePress\Models\User;
+use HivePress\Models;
 use HivePress\Traits;
 use HivePress\Blocks;
 
@@ -175,19 +175,17 @@ abstract class Email {
 	 */
 	final public function send() {
 
-		if ( static::get_meta( 'allow_disable' ) ) {
+		if ( static::get_meta( 'email_role' ) ) {
 
-			// Get user object.
-			$user_object = get_user_by( 'email', $this->recipient );
+			// Get user.
+			$user = Models\User::query()->filter(
+				[
+					'email' => $this->recipient
+				]
+			)->get_first();
 
-			if ( $user_object ) {
-
-				// Get user model.
-				$user = User::query()->get_by_id( $user_object->data->ID );
-
-				if ( $user && ! in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
-					return false;
-				}
+			if ( $user && ! in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
+				return false;
 			}
 		}
 

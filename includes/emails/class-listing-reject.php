@@ -25,7 +25,7 @@ class Listing_Reject extends Email {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'allow_disable' => true,
+				'email_role'    => 'vendor',
 				'label'         => hivepress()->translator->get_string( 'listing_rejected' ),
 				'description'   => esc_html__( 'This email is sent to users when listing is rejected.', 'hivepress' ),
 				'recipient'     => hivepress()->translator->get_string( 'vendor' ),

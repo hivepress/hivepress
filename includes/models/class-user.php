@@ -142,7 +142,6 @@ class User extends Model {
 						'type'      => 'select',
 						'options'   => [],
 						'multiple'  => true,
-						'_alias'    => 'allowed_emails',
 						'_external' => true,
 					],
 				],

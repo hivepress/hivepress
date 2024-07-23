@@ -81,8 +81,20 @@ final class User extends Component {
 		// Set options.
 		$options = [];
 
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
+				'user'   => get_current_user_id(),
+			]
+		)->get_first_id();
+
 		foreach ( hivepress()->get_classes( 'emails' ) as $email_name => $email ) {
-			if ( ! $email::get_meta( 'allow_disable' ) ) {
+
+			// Get mail role.
+			$role = $email::get_meta( 'email_role' );
+
+			if ( ! $role || ( 'vendor' === $role && ! $vendor ) ) {
 				continue;
 			}
 
