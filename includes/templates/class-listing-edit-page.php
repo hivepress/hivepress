@@ -44,6 +44,12 @@ class Listing_Edit_Page extends Listing_Manage_Page {
 				'blocks' => [
 					'page_content'              => [
 						'blocks' => [
+							'listing_dates'       => [
+								'type'   => 'part',
+								'path'   => 'listing/edit/page/listing-dates',
+								'_order' => 6,
+							],
+
 							'listing_update_form' => [
 								'type'   => 'form',
 								'form'   => 'listing_update',

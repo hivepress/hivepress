@@ -50,7 +50,7 @@ class Listing_Edit_Block extends Template {
 
 							'listing_created_date'    => [
 								'type'   => 'part',
-								'path'   => 'listing/edit/block/listing-created-date',
+								'path'   => 'listing/edit/block/listing-dates',
 								'_order' => 30,
 							],
 
