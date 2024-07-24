@@ -634,6 +634,17 @@
 			&-carousel {
 				direction: ltr;
 
+				.slick-slide {
+					height: 600px;
+
+					img,
+					video {
+						height: 100%;
+						object-fit: contain;
+						background-color: rgba(88, 88, 88, .1);
+					}
+				}
+
 				.slick-arrow {
 					position: absolute;
 					z-index: 1;
