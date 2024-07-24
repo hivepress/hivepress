@@ -175,20 +175,6 @@ abstract class Email {
 	 */
 	final public function send() {
 
-		if ( static::get_meta( 'email_role' ) ) {
-
-			// Get user.
-			$user = Models\User::query()->filter(
-				[
-					'email' => $this->recipient
-				]
-			)->get_first();
-
-			if ( $user && ! in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
-				return false;
-			}
-		}
-
 		/**
 		 * Fires when a new email is sent. The dynamic part of the hook refers to the email name (e.g. `listing_expire`). You can check the available emails in the `includes/emails` directory of HivePress.
 		 *
@@ -222,7 +208,22 @@ abstract class Email {
 			]
 		) )->render();
 
-		// Send email.
-		return wp_mail( $this->recipient, $this->subject, $content, $headers );
+		// Get user.
+		$user = Models\User::query()->filter(
+			[
+				'email' => $this->recipient
+			]
+		)->get_first();
+
+		// Get email role.
+		$role = static::get_meta( 'email_role' );
+
+		if ( ( $role && $user && in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) || ! $role || ! $user ) {
+
+			// Send email.
+			return wp_mail( $this->recipient, $this->subject, $content, $headers );
+		}
+
+		return false;
 	}
 }

@@ -25,6 +25,7 @@ class User_Register extends Email {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
+				'email_role'  => 'user',
 				'label'       => esc_html__( 'User Registered', 'hivepress' ),
 				'description' => esc_html__( 'This email is sent to users after registration.', 'hivepress' ),
 				'recipient'   => hivepress()->translator->get_string( 'user' ),

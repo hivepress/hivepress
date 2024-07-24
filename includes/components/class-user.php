@@ -109,7 +109,6 @@ final class User extends Component {
 
 		// Set options.
 		$user['fields']['allowed_emails']['options'] = $options;
-		$user['fields']['allowed_emails']['default'] = $options;
 
 		return $user;
 	}
