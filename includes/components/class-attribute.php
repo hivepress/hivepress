@@ -81,6 +81,9 @@ final class Attribute extends Component {
 		// Redirect archive page.
 		add_action( 'template_redirect', [ $this, 'redirect_archive_page' ] );
 
+		// Alter field options.
+		add_filter( 'hivepress/v1/fields/select/display_value', [ $this, 'alter_field_options' ], 10, 2 );
+
 		if ( ! is_admin() ) {
 
 			// Set search query.
@@ -89,6 +92,49 @@ final class Attribute extends Component {
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 		}
+	}
+
+	/**
+	 * Alters field options display.
+	 *
+	 * @param mixed  $value Field value.
+	 * @param object $field Field object.
+	 * @return mixed
+	 */
+	public function alter_field_options( $value, $field ) {
+
+		// Get field args.
+		$field_args = $field->get_args();
+
+		if ( ! $field_args['multiple'] ) {
+			return $value;
+		}
+
+		return implode( ', ', get_terms(
+			[
+				'taxonomy'   => $field_args['option_args']['taxonomy'],
+				'fields'     => 'names',
+				'hide_empty' => false,
+				'include'    => $field->get_value(),
+				'orderby'    => 'meta_value_num',
+
+				'meta_query' => [
+					'relation' => 'OR',
+
+					[
+						'key'     => 'hp_sort_order',
+						'type'    => 'NUMERIC',
+						'compare' => 'EXISTS',
+					],
+
+					[
+						'key'     => 'hp_sort_order',
+						'type'    => 'NUMERIC',
+						'compare' => 'NOT EXISTS',
+					],
+				],
+			]
+		) );
 	}
 
 	/**
