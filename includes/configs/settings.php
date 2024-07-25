@@ -401,6 +401,20 @@ return [
 						'_parent'    => 'recaptcha_forms[]',
 						'_order'     => 30,
 					],
+
+					'recaptcha_type'       => [
+						'label'   => esc_html__( 'Type', 'hivepress' ),
+						'type'    => 'select',
+						'default' => 'checkbox',
+
+						'options' => [
+							'checkbox'  => esc_html__( 'Checkbox', 'hivepress' ),
+							'invisible' => esc_html__( 'Invisible', 'hivepress' ),
+						],
+
+						'_parent' => 'recaptcha_forms[]',
+						'_order'  => 40,
+					],
 				],
 			],
 

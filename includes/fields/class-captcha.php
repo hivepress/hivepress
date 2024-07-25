@@ -23,12 +23,18 @@ class Captcha extends Field {
 	protected function boot() {
 
 		// Set attributes.
+		$attributes = [
+			'class'        => [ 'g-recaptcha' ],
+			'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
+		];
+
+		if ( 'invisible' === get_option( 'hp_recaptcha_type' ) ) {
+			$attributes['data-size'] = 'invisible';
+		}
+
 		$this->attributes = hp\merge_arrays(
 			$this->attributes,
-			[
-				'class'        => [ 'g-recaptcha' ],
-				'data-sitekey' => get_option( 'hp_recaptcha_site_key' ),
-			]
+			$attributes
 		);
 
 		parent::boot();
