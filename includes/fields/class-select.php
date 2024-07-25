@@ -225,7 +225,34 @@ class Select extends Field {
 		if ( ! is_null( $this->value ) ) {
 			$labels = [];
 
-			foreach ( (array) $this->value as $value ) {
+			// Get sorted options.
+			$values = get_terms(
+				[
+					'taxonomy'   => $this->args['option_args']['taxonomy'],
+					'fields'     => 'ids',
+					'hide_empty' => false,
+					'include'    => (array) $this->value,
+					'orderby'    => 'meta_value_num',
+
+					'meta_query' => [
+						'relation' => 'OR',
+
+						[
+							'key'     => 'hp_sort_order',
+							'type'    => 'NUMERIC',
+							'compare' => 'EXISTS',
+						],
+
+						[
+							'key'     => 'hp_sort_order',
+							'type'    => 'NUMERIC',
+							'compare' => 'NOT EXISTS',
+						],
+					],
+				]
+			);
+
+			foreach ( $values as $value ) {
 				$label = hp\get_array_value( $this->options, $value, '' );
 
 				if ( is_array( $label ) ) {
