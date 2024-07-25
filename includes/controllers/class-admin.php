@@ -57,12 +57,46 @@ final class Admin extends Controller {
 						'action' => [ $this, 'deactivate_plugin' ],
 						'rest'   => true,
 					],
+
+					'validate_meta_box'          => [
+						'base'   => 'admin_base',
+						'path'   => '/validate',
+						'method' => 'POST',
+						'action' => [ $this, 'validate_meta_box' ],
+						'rest'   => true,
+					],
 				],
 			],
 			$args
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Validates Gutenberg meta box.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function validate_meta_box( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		// Check template.
+		if ( ! $request->get_param( 'hp_template' ) ) {
+			return hp\rest_error( 400, esc_html__( 'Template field is required.', 'hivepress' ) );
+		}
+
+		return hp\rest_response( 200, [] );
 	}
 
 	/**
