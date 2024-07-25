@@ -41,6 +41,13 @@
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 						}
 					},
+					complete: function (xhr) {
+						var response = xhr.responseJSON;
+
+						if (button.data('refresh') && response && !response.hasOwnProperty('error')) {
+							window.location.reload(true);
+						}
+					},
 				});
 
 				e.preventDefault();

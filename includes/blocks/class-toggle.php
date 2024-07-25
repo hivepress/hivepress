@@ -67,6 +67,13 @@ class Toggle extends Block {
 	protected $active = false;
 
 	/**
+	 * Is need refresh?
+	 *
+	 * @var bool
+	 */
+	protected $refresh = false;
+
+	/**
 	 * Bootstraps block properties.
 	 */
 	protected function boot() {
@@ -115,6 +122,10 @@ class Toggle extends Block {
 			}
 		} else {
 			$attributes['href'] = '#user_login_modal';
+		}
+
+		if ( $this->refresh ) {
+			$attributes['data-refresh'] = 'true';
 		}
 
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
