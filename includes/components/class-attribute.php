@@ -283,10 +283,15 @@ final class Attribute extends Component {
 
 			// Set defaults.
 			$this->models[ $model ]['searchable'] = true;
+			$this->models[ $model ]['has_image'] = false;
 
 			// @todo check post type config instead.
 			if ( ! in_array( $model, [ 'listing', 'vendor', 'request' ] ) ) {
 				$this->models[ $model ]['searchable'] = false;
+			}
+
+			if ( in_array( $model, [ 'listing', 'vendor' ] ) ) {
+				$this->models[ $model ]['has_image'] = true;
 			}
 
 			// Add field settings.
@@ -302,6 +307,13 @@ final class Attribute extends Component {
 
 			// Add admin fields.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attributes', [ $this, 'add_admin_fields' ], 100 );
+
+			if ( $this->models[ $model ]['has_image'] ) {
+
+				// Add image placeholder.
+				add_filter( 'hivepress/v1/templates/' . $model . '_view_block/blocks', [ $this, 'set_model_image_placeholder', ], 10, 2 );
+				add_filter( 'hivepress/v1/templates/' . $model . '_view_page/blocks', [ $this, 'set_model_image_placeholder', ], 10, 2 );
+			}
 
 			if ( 'user' === $model ) {
 
@@ -339,6 +351,39 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Sets model image placeholder.
+	 *
+	 * @param array  $blocks Template arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function set_model_image_placeholder( $blocks, $template ) {
+
+		// Get model name.
+		$model_name = $template::get_meta( 'model' );
+
+		// Get model.
+		$model = $template->get_context( $model_name );
+
+		// Check model.
+		if ( ! $model ) {
+			return $blocks;
+		}
+
+		// Set image placeholder.
+		$image_placeholder = hp\get_first_array_value( wp_get_attachment_image_src( (int) get_option( 'hp_' . $model_name . '_image_placeholder' ) ) );
+
+		if ( ! $image_placeholder ) {
+			$image_placeholder = $model->_get_fields()['image_placeholder']->get_args()['default'];
+		}
+
+		// Set template context.
+		$template->set_context( 'image_placeholder', $image_placeholder );
+
+		return $blocks;
 	}
 
 	/**
@@ -942,6 +987,25 @@ final class Attribute extends Component {
 			];
 		}
 
+		// Add image placeholder.
+		if ( $this->models[ $model ]['has_image'] ) {
+
+			// Set placeholder.
+			$placeholder = '';
+
+			if ( 'listing' === $model ) {
+				$placeholder = hivepress()->get_url() . '/assets/images/placeholders/image-landscape.svg';
+			} elseif ( 'vendor' === $model ) {
+				$placeholder = hivepress()->get_url() . '/assets/images/placeholders/user-square.svg';
+			}
+
+			$fields['image_placeholder'] = [
+				'type'         => 'url',
+				'display_type' => 'hidden',
+				'default'      => $placeholder,
+			];
+		}
+
 		return $fields;
 	}
 
@@ -1479,6 +1543,16 @@ final class Attribute extends Component {
 	 */
 	public function add_settings( $settings ) {
 		foreach ( $this->models as $model_name => $model_args ) {
+
+			if ( $model_args['has_image'] && isset( $settings[ $model_name . 's' ]['sections']['display'] ) ) {
+
+				// Add field.
+				$settings[ $model_name . 's' ]['sections']['display']['fields'][ $model_name . '_image_placeholder' ] = [
+					'label'   => esc_html__( 'Image Placeholder', 'hivepress' ),
+					'type'    => 'attachment_select',
+					'_order'  => 100,
+				];
+			}
 
 			// Check model.
 			if ( ! $model_args['searchable'] ) {
