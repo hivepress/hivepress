@@ -107,6 +107,7 @@ final class User extends Component {
 
 		// Set options.
 		$user['fields']['allowed_emails']['options'] = $options;
+		$user['fields']['allowed_emails']['default'] = array_keys( $options );
 
 		return $user;
 	}
