@@ -105,8 +105,6 @@ final class User extends Component {
 
 		asort( $options );
 
-		$options = array_merge( $user['fields']['allowed_emails']['options'], $options );
-
 		// Set options.
 		$user['fields']['allowed_emails']['options'] = $options;
 
