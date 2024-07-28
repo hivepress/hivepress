@@ -218,7 +218,7 @@ abstract class Email {
 		// Get email role.
 		$role = static::get_meta( 'email_role' );
 
-		if ( ( $role && $user && in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) || ! $role || ! $user ) {
+		if ( ! $role || ! $user || in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
 
 			// Send email.
 			return wp_mail( $this->recipient, $this->subject, $content, $headers );
