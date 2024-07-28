@@ -62,9 +62,54 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+
+			// Alter user fields.
+			add_filter( 'hivepress/v1/models/user', [ $this, 'alter_user_fields' ] );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Alters user fields.
+	 *
+	 * @param array $user Model arguments.
+	 * @return array
+	 */
+	public function alter_user_fields( $user ) {
+
+		// Set options.
+		$options = [];
+
+		// Get vendor.
+		$vendor = Models\Vendor::query()->filter(
+			[
+				'status' => [ 'auto-draft', 'draft', 'publish' ],
+				'user'   => get_current_user_id(),
+			]
+		)->get_first_id();
+
+		foreach ( hivepress()->get_classes( 'emails' ) as $email_name => $email ) {
+
+			// Get mail role.
+			$role = $email::get_meta( 'email_role' );
+
+			if ( ! $role || ( 'vendor' === $role && ! $vendor ) ) {
+				continue;
+			}
+
+			if ( $email::get_meta( 'label' ) ) {
+				$options[ $email_name ] = $email::get_meta( 'label' );
+			}
+		}
+
+		asort( $options );
+
+		// Set options.
+		$user['fields']['allowed_emails']['options'] = $options;
+		$user['fields']['allowed_emails']['default'] = array_keys( $options );
+
+		return $user;
 	}
 
 	/**

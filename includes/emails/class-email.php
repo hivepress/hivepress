@@ -8,6 +8,7 @@
 namespace HivePress\Emails;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 use HivePress\Traits;
 use HivePress\Blocks;
 
@@ -207,7 +208,22 @@ abstract class Email {
 			]
 		) )->render();
 
-		// Send email.
-		return wp_mail( $this->recipient, $this->subject, $content, $headers );
+		// Get user.
+		$user = Models\User::query()->filter(
+			[
+				'email' => $this->recipient
+			]
+		)->get_first();
+
+		// Get email role.
+		$role = static::get_meta( 'email_role' );
+
+		if ( ! $role || ! $user || in_array( static::get_meta( 'name' ), (array) $user->get_allowed_emails(), true ) ) {
+
+			// Send email.
+			return wp_mail( $this->recipient, $this->subject, $content, $headers );
+		}
+
+		return false;
 	}
 }

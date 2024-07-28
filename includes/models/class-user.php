@@ -136,6 +136,14 @@ class User extends Model {
 						'_model'    => 'attachment',
 						'_external' => true,
 					],
+
+					'allowed_emails'  => [
+						'label'     => esc_html__( 'Allowed Emails', 'hivepress' ),
+						'type'      => 'select',
+						'options'   => [],
+						'multiple'  => true,
+						'_external' => true,
+					],
 				],
 			],
 			$args
