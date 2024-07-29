@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php if ( $vendor->get_image__url( 'hp_square_small' ) ) : ?>
 			<img src="<?php echo esc_url( $vendor->get_image__url( 'hp_square_small' ) ); ?>" alt="<?php echo esc_attr( $vendor->get_name() ); ?>" loading="lazy">
 		<?php else : ?>
-			<img src="<?php echo esc_url( hivepress()->get_url() . '/assets/images/placeholders/user-square.svg' ); ?>" alt="<?php echo esc_attr( $vendor->get_name() ); ?>" loading="lazy">
+			<img src="<?php echo esc_url( $image_placeholder ); ?>" alt="<?php echo esc_attr( $vendor->get_name() ); ?>" loading="lazy">
 		<?php endif; ?>
 	</a>
 </div>

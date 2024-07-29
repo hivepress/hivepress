@@ -24,7 +24,7 @@ $image_count = count( (array) $listing->get_images__id() );
 			<?php if ( $image_count >= 1 ) : ?>
 				<img src="<?php echo esc_url( $listing->get_image__url( 'hp_landscape_small' ) ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
 			<?php else : ?>
-				<img src="<?php echo esc_url( hivepress()->get_url() . '/assets/images/placeholders/image-landscape.svg' ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
+				<img src="<?php echo esc_url( $image_placeholder ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
 			<?php endif; ?>
 		</a>
 	<?php endif; ?>
