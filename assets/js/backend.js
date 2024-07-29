@@ -5,65 +5,52 @@
 
 		// Template
 		if (typeof wp !== 'undefined' && wp.hasOwnProperty('data')) {
-			var isSavedPost = false,
-				isSaving = false,
-				isValidating = false;
+			var isSavedPost = false;
 
 			wp.data.subscribe(function() {
 				var editor = wp.data.select('core/editor');
 
-				if (editor && 'hp_template' === editor.getCurrentPostType()) {
-					if (editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed() && !isSaving && !isValidating) {
-						var field = $('select[name=hp_template]');
+				if (editor && 'hp_template' === editor.getCurrentPostType() && editor.isSavingPost() && !editor.isAutosavingPost() && editor.didPostSaveRequestSucceed()) {
+					var field = $('select[name=hp_template]');
 
-						isSaving = true;
-						isValidating = true;
+					if (field.length && field.val() !== editor.getEditedPostSlug()) {
+						var interval = setInterval(function () {
+							if (!editor.isSavingPost() && !isSavedPost) {
+								$.ajax({
+									url: field.data('url'),
+									method: 'POST',
+									data: {
+										'hp_template': field.val(),
+									},
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+									},
+									complete: function (xhr) {
+										var response = xhr.responseJSON;
 
-						$.ajax({
-							url: field.data('url'),
-							method: 'POST',
-							data: {
-								'hp_template': field.val(),
-							},
-							beforeSend: function (xhr) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							},
-							complete: function (xhr) {
-								var response = xhr.responseJSON;
+										if (response && response.hasOwnProperty('error')) {
+											var message = '';
 
-								if (response && response.hasOwnProperty('error')) {
-									var message = '';
+											if (response.error.hasOwnProperty('errors')) {
 
-									if (response.error.hasOwnProperty('errors')) {
+												$.each(response.error.errors, function (index, error) {
+													message += error.message;
+												});
+											} else if (response.error.hasOwnProperty('message')) {
+												message += response.error.message;
+											}
 
-										$.each(response.error.errors, function (index, error) {
-											message += error.message;
-										});
-									} else if (response.error.hasOwnProperty('message')) {
-										message += response.error.message;
-									}
+											alert(message);
+										}
+									},
+								});
 
-									alert(message);
-								}
+								window.location.reload();
 
-								isValidating = false;
-							},
-						});
-
-						if (field.length && field.val() !== editor.getEditedPostSlug()) {
-							var interval = setInterval(function () {
-								if (!editor.isSavingPost() && !isSavedPost) {
-									window.location.reload();
-
-									isSavedPost = true;
-									clearInterval(interval);
-								}
-							}, 500);
-						}
-					}
-
-					if (!editor.isSavingPost()) {
-						isSaving = false;
+								isSavedPost = true;
+								clearInterval(interval);
+							}
+						}, 500);
 					}
 				}
 			});

@@ -1238,6 +1238,7 @@ final class Admin extends Component {
 						wp_update_post(
 							[
 								'ID'          => $post_id,
+								'post_type'   => 'hp_template',
 								'post_status' => 'draft',
 							]
 						);

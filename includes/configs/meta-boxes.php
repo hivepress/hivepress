@@ -26,7 +26,7 @@ return [
 				'_order'     => 10,
 
 				'attributes' => [
-					'data-url' => hivepress()->router->get_url( 'validate_meta_box' ),
+					'data-url' => hivepress()->router->get_url( 'validate_template_meta_box' ),
 				],
 			],
 		],

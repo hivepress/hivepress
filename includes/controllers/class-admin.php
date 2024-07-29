@@ -58,11 +58,11 @@ final class Admin extends Controller {
 						'rest'   => true,
 					],
 
-					'validate_meta_box'          => [
+					'validate_template_meta_box' => [
 						'base'   => 'admin_base',
-						'path'   => '/validate',
+						'path'   => '/validate-template',
 						'method' => 'POST',
-						'action' => [ $this, 'validate_meta_box' ],
+						'action' => [ $this, 'validate_template_meta_box' ],
 						'rest'   => true,
 					],
 				],
@@ -79,7 +79,7 @@ final class Admin extends Controller {
 	 * @param WP_REST_Request $request API request.
 	 * @return WP_Rest_Response
 	 */
-	public function validate_meta_box( $request ) {
+	public function validate_template_meta_box( $request ) {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -91,8 +91,11 @@ final class Admin extends Controller {
 			return hp\rest_error( 403 );
 		}
 
+		// Get template.
+		$template = $request->get_param( 'hp_template' );
+
 		// Check template.
-		if ( ! $request->get_param( 'hp_template' ) ) {
+		if ( ! $template || ! class_exists( '\HivePress\Templates\\' . $template ) ) {
 			return hp\rest_error( 400, esc_html__( 'Template field is required.', 'hivepress' ) );
 		}
 
