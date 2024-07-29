@@ -1729,7 +1729,7 @@ final class Attribute extends Component {
 			// Set model category settings key.
 			$category_key = $model . '_category_settings';
 
-			if ( ! $this->models[ $model ]['searchable'] || ! in_array( $category_key, array_keys( $meta_boxes ), true ) ) {
+			if ( ! isset( $_REQUEST['tag_ID'] ) || ! $this->models[ $model ]['searchable'] || ! in_array( $category_key, array_keys( $meta_boxes ), true ) ) {
 				continue;
 			}
 
@@ -1747,29 +1747,27 @@ final class Attribute extends Component {
 			// Add category options.
 			$category_options = [];
 
-			if ( isset( $_REQUEST['tag_ID'] ) ) {
-				foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
-					if ( ! $attribute['sortable'] || ! in_array( $_REQUEST['tag_ID'], $attribute['categories'] ) ) {
-						continue;
-					}
+			foreach ( $this->get_attributes( $model ) as $attribute_name => $attribute ) {
+				if ( ! $attribute['sortable'] || ! in_array( $_REQUEST['tag_ID'], $attribute['categories'] ) ) {
+					continue;
+				}
 
-					// Get sort order.
-					$order = hp\call_class_method( '\HivePress\Fields\\' . $attribute['edit_field']['type'], 'get_meta', [ 'sortable' ] );
+				// Get sort order.
+				$order = hp\call_class_method( '\HivePress\Fields\\' . $attribute['edit_field']['type'], 'get_meta', [ 'sortable' ] );
 
-					if ( ! $order ) {
-						continue;
-					}
+				if ( ! $order ) {
+					continue;
+				}
 
-					// Get option label.
-					$label = $attribute['edit_field']['label'];
+				// Get option label.
+				$label = $attribute['edit_field']['label'];
 
-					// Add option.
-					if ( is_bool( $order ) ) {
-						$category_options[ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $label );
-						$category_options[ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $label );
-					} else {
-						$category_options[ $attribute_name . '__' . strtolower( $order ) ] = $label;
-					}
+				// Add option.
+				if ( is_bool( $order ) ) {
+					$category_options[ $attribute_name . '__asc' ]  = sprintf( '%s &uarr;', $label );
+					$category_options[ $attribute_name . '__desc' ] = sprintf( '%s &darr;', $label );
+				} else {
+					$category_options[ $attribute_name . '__' . strtolower( $order ) ] = $label;
 				}
 			}
 
