@@ -207,12 +207,7 @@ final class Attribute extends Controller {
 			$model = $model_object->query()->get_by_id( $post->ID );
 
 			if ( $model ) {
-
-				// Set default attribute values.
-				$defaults = array_intersect_key( $model->serialize(), hivepress()->attribute->get_attributes( $model_name ) );
-
-				foreach ( $defaults as $key => $value ) {
-					unset( $defaults[ $key ] );
+				foreach ( array_intersect_key( $model->serialize(), hivepress()->attribute->get_attributes( $model_name ) ) as $key => $value ) {
 					$defaults[ hp\prefix( $key ) ] = $value;
 				}
 			}
