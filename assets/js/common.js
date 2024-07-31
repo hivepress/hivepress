@@ -154,6 +154,10 @@ var hivepress = {
 					},
 				};
 
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
+
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
 			}
