@@ -245,42 +245,63 @@ final class Listing extends Controller {
 	 */
 	public function get_listings( $request ) {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return hp\rest_error( 401 );
-		}
+		// Set params mapping.
+		$params_mapping = [
+			'_category' => 'categories',
+		];
 
-		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
-			return hp\rest_error( 403 );
-		}
+		// Set filters.
+		$filters = [
+			'status' => 'publish',
+		];
 
-		// Get search query.
-		$query = sanitize_text_field( $request->get_param( 'search' ) );
+		// Set args.
+		$args = [];
 
-		if ( strlen( $query ) < 3 ) {
-			return hp\rest_error( 400 );
+		// Set search.
+		$search = '';
+
+		foreach ( $request->get_params() as $key => $value ) {
+			if ( 's' === $key ) {
+				$search = sanitize_text_field( $value );
+			} else {
+				if ( in_array( $key, array_keys( $params_mapping ), true ) ) {
+					$filters[ $params_mapping[ $key ] ] = sanitize_text_field( $value );
+				} else {
+
+					// Sanitize value.
+					if ( is_array( $value ) ) {
+						$value = rest_sanitize_array( $value );
+					} else {
+						$value = sanitize_text_field( $value );
+					}
+
+					$args[ $key ] = $value;
+				}
+			}
 		}
 
 		// Get listings.
-		$listings = Models\Listing::query()->filter(
-			[
-				'status' => 'publish',
-			]
-		)->search( $query )
+		$listings = Models\Listing::query()
+		->filter( $filters )
+		->set_args( $args )
+		->search( $search )
 		->limit( 20 )
 		->get();
 
 		// Get results.
 		$results = [];
 
-		if ( $request->get_param( 'context' ) === 'list' ) {
-			foreach ( $listings as $listing ) {
-				$results[] = [
-					'id'   => $listing->get_id(),
-					'text' => $listing->get_title(),
-				];
+		foreach ( $listings as $listing ) {
+
+			// Set fields.
+			$fields = [];
+
+			foreach ( $listing->_get_fields() as $field_name => $field ) {
+				$fields[ $field_name ] = $field->get_value();
 			}
+
+			$results[] = $fields;
 		}
 
 		return hp\rest_response( 200, $results );
