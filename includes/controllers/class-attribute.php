@@ -183,7 +183,7 @@ final class Attribute extends Controller {
 			$taxonomy = hp\prefix( $model_name . '_category' );
 
 			if ( taxonomy_exists( $taxonomy ) ) {
-				wp_set_post_terms( $post->ID, [ absint( $request->get_param( hp\prefix( 'categories' ) ) ) ], $taxonomy );
+				wp_set_post_terms( $post->ID, array_map( 'absint', (array) $request->get_param( 'hp_categories' ) ), $taxonomy );
 			}
 		} else {
 
