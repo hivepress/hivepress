@@ -152,11 +152,10 @@ var hivepress = {
 
 						return template;
 					},
-				},
-				fieldOptions = field.data('options');
+				};
 
-			if (fieldOptions && fieldOptions.closeOnSelect) {
-				settings['closeOnSelect'] = false;
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
 			}
 
 			if (field.data('placeholder')) {
