@@ -504,7 +504,11 @@ var hivepress = {
 					$.each(ranges, function (index, range) {
 						if (range.start <= time && time < range.end) {
 							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
-							dayElem.className += ' flatpickr-status';
+							dayElem.className += ' flatpickr-status last-day';
+
+							if (!dayElem.classList.contains('selected')) {
+								dayElem.className += ' flatpickr-disabled';
+							}
 
 							if (range.hasOwnProperty('status')) {
 								dayElem.className += ' flatpickr-status--' + range.status;
@@ -528,7 +532,42 @@ var hivepress = {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
 						onChange: function (selectedDates, dateStr, instance) {
-							if (selectedDates.length === 2) {
+							if (selectedDates.length === 1) {
+								var days = instance.calendarContainer.querySelectorAll('.flatpickr-day'),
+									previousLastDayIndex = null,
+									nextLastDayIndex = null;
+
+								days.forEach((day, index) => {
+									if (day.dateObj.getTime() === selectedDates[0].getTime() && day.classList.contains('last-day')) {
+										instance.clear();
+										return;
+									}
+
+									if (day.dateObj < selectedDates[0]) {
+										if (day.classList.contains('last-day')) {
+											previousLastDayIndex = index;
+										}
+									} else if (day.dateObj > selectedDates[0]) {
+										if (day.classList.contains('last-day') && nextLastDayIndex === null) {
+											nextLastDayIndex = index;
+										}
+									}
+								});
+
+								for(let i = 0; i < days.length; i++) {
+									if (previousLastDayIndex !== null && i <= previousLastDayIndex) {
+										days[i].classList.add('flatpickr-disabled');
+									}
+
+									if (nextLastDayIndex !== null && i >= nextLastDayIndex) {
+										if (i === nextLastDayIndex) {
+											days[i].classList.remove('flatpickr-disabled');
+										} else {
+											days[i].classList.add('flatpickr-disabled');
+										}
+									}
+								}
+							} else if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
 										shift = 0;
