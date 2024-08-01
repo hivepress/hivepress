@@ -166,7 +166,7 @@
 						});
 					}
 
-					slider.addClass(containerClass + '-slider').slick(settings);
+					slider.addClass(containerClass + '-slider').addClass('hp-slider').slick(settings);
 
 					if (isPreview) {
 						carousel.addClass(containerClass + '-carousel').slick({
