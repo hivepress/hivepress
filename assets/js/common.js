@@ -504,10 +504,14 @@ var hivepress = {
 					$.each(ranges, function (index, range) {
 						if (range.start <= time && time < range.end) {
 							dayElem.innerHTML += '<span class="flatpickr-day-label">' + range.label + '</span>';
-							dayElem.className += ' flatpickr-status last-day';
+							dayElem.className += ' flatpickr-status';
 
-							if (!dayElem.classList.contains('selected')) {
-								dayElem.className += ' flatpickr-disabled';
+							if (range.hasOwnProperty('class')) {
+								dayElem.className += ' ' + range.class;
+
+								if (range.class === 'last-day' && !dayElem.classList.contains('selected')) {
+									dayElem.className += ' flatpickr-disabled';
+								}
 							}
 
 							if (range.hasOwnProperty('status')) {
