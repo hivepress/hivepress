@@ -347,7 +347,46 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_redirect_url() {
-		return wp_validate_redirect( hp\get_array_value( $_GET, 'redirect' ) );
+
+		// Get URL.
+		$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+		// Get redirect.
+		$redirect_param = hp\get_array_value( $_GET, 'redirect' );
+
+		// Check for infinite loop.
+		if ( $redirect_param && strpos( $redirect_param, $current_url ) !== false ) {
+			return wp_validate_redirect( $current_url );
+		}
+
+		// Parse URL.
+		$parsed_url = parse_url( $redirect_param );
+
+		// Set redirect URL.
+		$redirect_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . $parsed_url['path'];
+
+		// Parse query.
+		parse_str( $parsed_url['query'], $redirect_query_params );
+
+		// Set query params.
+		$query_params = $_GET;
+
+		// Remove redirect param.
+		unset( $query_params['redirect'] );
+
+		// Build query.
+		$query_string = http_build_query(
+			array_merge(
+				$query_params,
+				$redirect_query_params
+			)
+		);
+
+		if ( ! empty( $query_string ) ) {
+			$redirect_url .= ( strpos( $redirect_url, '?' ) === false ? '?' : '&' ) . $query_string;
+		}
+
+		return wp_validate_redirect( $redirect_url );
 	}
 
 	/**
