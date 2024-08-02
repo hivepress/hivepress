@@ -247,7 +247,7 @@ final class Listing extends Controller {
 
 		// Set params mapping.
 		$params_mapping = [
-			'_category' => 'categories',
+			'_category' => 'categories__in',
 		];
 
 		// Set filters.
@@ -261,23 +261,27 @@ final class Listing extends Controller {
 		// Set search.
 		$search = '';
 
+		// Get attributes.
+		$attributes = hivepress()->attribute->get_attributes( 'listing' );
+
 		foreach ( $request->get_params() as $key => $value ) {
-			if ( 's' === $key ) {
-				$search = sanitize_text_field( $value );
+
+			// Sanitize key.
+			$key = sanitize_key( $key );
+
+			// Sanitize value.
+			if ( is_array( $value ) ) {
+				$value = rest_sanitize_array( $value );
 			} else {
-				if ( in_array( $key, array_keys( $params_mapping ), true ) ) {
-					$filters[ $params_mapping[ $key ] ] = sanitize_text_field( $value );
-				} else {
+				$value = sanitize_text_field( $value );
+			}
 
-					// Sanitize value.
-					if ( is_array( $value ) ) {
-						$value = rest_sanitize_array( $value );
-					} else {
-						$value = sanitize_text_field( $value );
-					}
-
-					$args[ $key ] = $value;
-				}
+			if ( 's' === $key ) {
+				$search = $value;
+			} elseif ( in_array( $key, array_keys( $params_mapping ), true ) ) {
+				$filters[ $params_mapping[ $key ] ] = $value;
+			} elseif ( in_array( $key, array_keys( $attributes ), true ) && ( hp\get_array_value( $attributes[ $key ], 'searchable' ) || hp\get_array_value( $attributes[ $key ], 'filterable' ) ) ) {
+				$args[ $key ] = $value;
 			}
 		}
 
