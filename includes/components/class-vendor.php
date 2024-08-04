@@ -162,7 +162,7 @@ final class Vendor extends Component {
 			$user_object = get_userdata( $vendor->get_user__id() );
 
 			// Update user role.
-			if ( $user_object && array_intersect( (array) $user_object->roles, [ 'subscriber', 'customer' ] ) ) {
+			if ( $user_object && ! user_can( $user_object, 'edit_posts' ) ) {
 				$user_object->set_role( 'contributor' );
 			}
 		}
