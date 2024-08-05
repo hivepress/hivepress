@@ -107,7 +107,7 @@ final class Attribute extends Component {
 			// Set defaults.
 			$this->models[ $model ]['searchable'] = true;
 
-			if ( ! hp\get_array_value( hp\get_array_value( $post_types, $model, [] ), 'has_archive' ) ) {
+			if ( ! hp\get_array_value( hp\get_array_value( $post_types, $model, [] ), 'has_archive' ) || 'user' === $model ) {
 				$this->models[ $model ]['searchable'] = false;
 			}
 		}
