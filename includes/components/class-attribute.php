@@ -56,6 +56,9 @@ final class Attribute extends Component {
 	 */
 	protected function boot() {
 
+		// Init models properties.
+		add_action( 'after_setup_theme', [ $this, 'init_models_properties' ] );
+
 		// Register models.
 		add_action( 'hivepress/v1/setup', [ $this, 'register_models' ] );
 
@@ -88,6 +91,25 @@ final class Attribute extends Component {
 
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
+		}
+	}
+
+	/**
+	 * Inits models properties.
+	 */
+	public function init_models_properties() {
+
+		// Get post types.
+		$post_types = hivepress()->get_config( 'post_types' );
+
+		foreach ( $this->get_models() as $model ) {
+
+			// Set defaults.
+			$this->models[ $model ]['searchable'] = true;
+
+			if ( ! hp\get_array_value( hp\get_array_value( $post_types, $model, [] ), 'has_archive' ) || 'user' === $model ) {
+				$this->models[ $model ]['searchable'] = false;
+			}
 		}
 	}
 
@@ -280,14 +302,6 @@ final class Attribute extends Component {
 		}
 
 		foreach ( $this->get_models() as $model ) {
-
-			// Set defaults.
-			$this->models[ $model ]['searchable'] = true;
-
-			// @todo check post type config instead.
-			if ( ! in_array( $model, [ 'listing', 'vendor', 'request' ] ) ) {
-				$this->models[ $model ]['searchable'] = false;
-			}
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
