@@ -63,39 +63,43 @@ final class User extends Component {
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 
-			// Set request context.
-			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_user_status' ] );
+			// Update last seen.
+			add_action( 'wp_footer', [ $this, 'update_last_seen' ] );
 		}
 
 		parent::__construct( $args );
 	}
 
 	/**
-	 * Updates user online status.
-	 *
-	 * @param array $context Request context.
-	 * @return array
+	 * Updates user last seen.
 	 */
-	public function set_user_status( $context ) {
-
-		// Get online users.
-		$online_users = hivepress()->cache->get_cache( 'online_users' );
+	public function update_last_seen() {
 
 		// Get user ID.
 		$user_id = get_current_user_id();
 
-		if ( is_null( $online_users ) || ! in_array( $user_id, array_keys( $online_users ) ) || $online_users[ $user_id ] <= time() - 60 ) {
+		// Get cache.
+		$last_seen = hivepress()->cache->get_user_cache( $user_id, 'last_seen' );
 
-			// Add user.
-			$online_users[ $user_id ] = time();
+		if ( is_null( $last_seen ) || $last_seen < time() ) {
 
-			hivepress()->cache->set_cache( 'online_users', null, $online_users, DAY_IN_SECONDS );
+			// Get user.
+			$user = Models\User::query()->get_by_id( $user_id );
+
+			// Check user.
+			if ( ! $user ) {
+				return;
+			}
+
+			// Set last seen.
+			$last_seen = time() + 15 * 60;
+
+			// Update user.
+			$user->set_last_seen( $last_seen )->save_last_seen();
+
+			// Set cache.
+			hivepress()->cache->set_user_cache( $user_id, 'last_seen', null, $last_seen );
 		}
-
-		// Set request context.
-		$context['online_users'] = $online_users;
-
-		return $context;
 	}
 
 	/**

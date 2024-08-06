@@ -113,6 +113,13 @@ class User_View_Page extends Page_Sidebar_Left {
 												'_label' => hivepress()->translator->get_string( 'date' ),
 												'_order' => 10,
 											],
+
+											'user_last_seen_date'  => [
+												'type'   => 'part',
+												'path'   => 'user/view/user-last-seen-date',
+												'_label' => esc_html__( 'Last seen', 'hivepress' ),
+												'_order' => 20,
+											],
 										],
 									],
 

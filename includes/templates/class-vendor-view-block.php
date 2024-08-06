@@ -118,6 +118,12 @@ class Vendor_View_Block extends Template {
 												'path'   => 'vendor/view/vendor-registered-date',
 												'_order' => 10,
 											],
+
+											'vendor_last_seen_date'  => [
+												'type'   => 'part',
+												'path'   => 'vendor/view/vendor-last-seen-date',
+												'_order' => 20,
+											],
 										],
 									],
 
