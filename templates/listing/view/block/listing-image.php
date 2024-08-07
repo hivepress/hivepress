@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 $image_count = count( (array) $listing->get_images__id() );
 ?>
-<div class="hp-listing__image" data-component="carousel-slider" data-preview="false" data-zoom="false" data-url="<?php echo esc_url( hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ) ); ?>">
+<div class="hp-listing__image" data-component="carousel-slider" data-preview="false" data-url="<?php echo esc_url( hivepress()->router->get_url( 'listing_view_page', [ 'listing_id' => $listing->get_id() ] ) ); ?>">
 	<?php
 	if ( get_option( 'hp_listing_enable_image_preview' ) && $image_count > 1 ) :
 		foreach ( $listing->get_images() as $image ) :

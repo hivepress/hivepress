@@ -95,10 +95,9 @@
 			var container = $(this),
 				images = container.find('img, video'),
 				url = container.data('url'),
-				isPreview = container.data('preview') !== false,
-				isZoom = container.data('zoom') !== false;
+				isPreview = container.data('preview') !== false;
 
-			if (isZoom && images.length) {
+			if (images.length && !url) {
 				var zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
 				if (images.first().data(zoomAttribute)) {
