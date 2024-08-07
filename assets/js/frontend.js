@@ -95,39 +95,33 @@
 			var container = $(this),
 				images = container.find('img, video'),
 				url = container.data('url'),
-				isPreview = container.data('preview') !== false,
-				zoomAttribute = 'zoom';
+				isPreview = container.data('preview') !== false;
 
-			if (!images.first().is('[data-zoom]')) {
-				zoomAttribute = 'src';
-			}
+			if (images.length && !url) {
+				var zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
-			if (images.length && images.first().data(zoomAttribute)) {
-				var imageURLs = [];
+				if (images.first().data(zoomAttribute)) {
+					var imageURLs = [];
 
-				images.each(function () {
-					if ('src' === zoomAttribute) {
-						$(this).attr('data-zoom', $(this).data('src'));
-						$(this).removeAttr('data-src');
-					}
-
-					imageURLs.push({
-						src: $(this).data(zoomAttribute),
+					images.each(function () {
+						imageURLs.push({
+							src: $(this).data(zoomAttribute),
+						});
 					});
-				});
 
-				container.on('click', 'img, video', function (e) {
-					var index = container.find('img, video').index($(this).get(0));
+					container.on('click', 'img, video', function (e) {
+						var index = container.find('img, video').index($(this).get(0));
 
-					if (index < imageURLs.length) {
-						$.fancybox.open(imageURLs, {
-							loop: true,
-							buttons: ['close'],
-						}, index);
-					}
+						if (index < imageURLs.length) {
+							$.fancybox.open(imageURLs, {
+								loop: true,
+								buttons: ['close'],
+							}, index);
+						}
 
-					e.preventDefault();
-				});
+						e.preventDefault();
+					});
+				}
 			}
 
 			if (images.length > 1) {
