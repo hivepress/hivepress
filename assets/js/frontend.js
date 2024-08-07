@@ -96,30 +96,33 @@
 				images = container.find('img, video'),
 				url = container.data('url'),
 				isPreview = container.data('preview') !== false,
-				isZoom = container.data('zoom') !== false,
-				zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
+				isZoom = container.data('zoom') !== false;
 
-			if (isZoom && images.length && images.first().data(zoomAttribute)) {
-				var imageURLs = [];
+			if (isZoom && images.length) {
+				var zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
-				images.each(function () {
-					imageURLs.push({
-						src: $(this).data(zoomAttribute),
+				if (images.first().data(zoomAttribute)) {
+					var imageURLs = [];
+
+					images.each(function () {
+						imageURLs.push({
+							src: $(this).data(zoomAttribute),
+						});
 					});
-				});
 
-				container.on('click', 'img, video', function (e) {
-					var index = container.find('img, video').index($(this).get(0));
+					container.on('click', 'img, video', function (e) {
+						var index = container.find('img, video').index($(this).get(0));
 
-					if (index < imageURLs.length) {
-						$.fancybox.open(imageURLs, {
-							loop: true,
-							buttons: ['close'],
-						}, index);
-					}
+						if (index < imageURLs.length) {
+							$.fancybox.open(imageURLs, {
+								loop: true,
+								buttons: ['close'],
+							}, index);
+						}
 
-					e.preventDefault();
-				});
+						e.preventDefault();
+					});
+				}
 			}
 
 			if (images.length > 1) {
