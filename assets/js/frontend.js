@@ -96,21 +96,13 @@
 				images = container.find('img, video'),
 				url = container.data('url'),
 				isPreview = container.data('preview') !== false,
-				zoomAttribute = 'zoom';
+				isZoom = container.data('zoom') !== false,
+				zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
-			if (!images.first().is('[data-zoom]')) {
-				zoomAttribute = 'src';
-			}
-
-			if (images.length && images.first().data(zoomAttribute)) {
+			if (isZoom && images.length && images.first().data(zoomAttribute)) {
 				var imageURLs = [];
 
 				images.each(function () {
-					if ('src' === zoomAttribute) {
-						$(this).attr('data-zoom', $(this).data('src'));
-						$(this).removeAttr('data-src');
-					}
-
 					imageURLs.push({
 						src: $(this).data(zoomAttribute),
 					});
