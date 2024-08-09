@@ -101,12 +101,6 @@ class User_View_Block extends Template {
 												'path'   => 'user/view/user-registered-date',
 												'_order' => 10,
 											],
-
-											'user_last_seen_date'  => [
-												'type'   => 'part',
-												'path'   => 'user/view/user-last-seen-date',
-												'_order' => 20,
-											],
 										],
 									],
 
