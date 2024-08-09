@@ -136,6 +136,11 @@ class User extends Model {
 						'_model'    => 'attachment',
 						'_external' => true,
 					],
+
+					'last_seen'       => [
+						'type'      => 'number',
+						'_external' => true,
+					],
 				],
 			],
 			$args

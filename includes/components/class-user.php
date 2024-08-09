@@ -62,9 +62,44 @@ final class User extends Component {
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
+
+			// Update last seen.
+			add_action( 'wp_footer', [ $this, 'update_last_seen' ] );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Updates user last seen.
+	 */
+	public function update_last_seen() {
+
+		// Get user ID.
+		$user_id = get_current_user_id();
+
+		// Get cache.
+		$last_seen = hivepress()->cache->get_user_cache( $user_id, 'last_seen' );
+
+		if ( is_null( $last_seen ) || $last_seen < time() ) {
+
+			// Get user.
+			$user = Models\User::query()->get_by_id( $user_id );
+
+			// Check user.
+			if ( ! $user ) {
+				return;
+			}
+
+			// Set last seen.
+			$last_seen = time() + 15 * 60;
+
+			// Update user.
+			$user->set_last_seen( $last_seen )->save_last_seen();
+
+			// Set cache.
+			hivepress()->cache->set_user_cache( $user_id, 'last_seen', null, $last_seen );
+		}
 	}
 
 	/**
