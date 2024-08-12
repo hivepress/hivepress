@@ -137,7 +137,6 @@ var hivepress = {
 		// Select
 		container.find(hivepress.getSelector('select')).each(function () {
 			var field = $(this),
-				options = [],
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
@@ -215,8 +214,6 @@ var hivepress = {
 								results = response.data;
 							}
 
-							options = results;
-
 							return {
 								results: results,
 							};
@@ -282,7 +279,7 @@ var hivepress = {
 				}
 			}
 
-			field.on('select2:select', function (e) {
+			field.on('select2:select', function () {
 				var field = $(this);
 
 				if (field.data('multistep')) {
@@ -379,28 +376,6 @@ var hivepress = {
 			if (!field.data('select2-id')) {
 				field.select2(settings);
 			}
-
-			field.on('change', function (e, state) {
-				if (!options.length || (typeof state !== 'undefined' && state)) {
-					return;
-				}
-
-				var values = field.val().map(option => parseInt(option)),
-					firstIndex = options.findIndex(item => item.id === values[0]),
-					latIndex = options.findIndex(item => item.id === values[values.length > 0 ? values.length - 1 : 0]);
-
-				// values = values.sort((a, b) => a - b);
-
-				for (var i = 0; i < values.length; i++) {
-					var index = options.findIndex(item => item.id === values[i]);
-
-					if (firstIndex !== -1 && latIndex !== -1 && index !== firstIndex - i && index !== latIndex + i) {
-						values.splice(i, 1);
-					}
-				}
-
-				field.val(values).trigger('change', [ true ]);
-			});
 		});
 
 		// Phone
