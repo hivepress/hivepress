@@ -122,6 +122,6 @@ class Phone extends Text {
 	protected function sanitize() {
 		parent::sanitize();
 
-		$this->value = preg_replace( '/[\-\s]+/', '', $this->value );
+		$this->value = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})/', '$1 ($2) $3-$4', preg_replace( '/[\-\s]+/', '', $this->value ) );
 	}
 }
