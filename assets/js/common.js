@@ -384,9 +384,9 @@ var hivepress = {
 				}
 			});
 
-			if (field.data('multiple') === 'adjacent' && selectOptions.length) {
+			if (field.data('multiple') === 'adjacent') {
 				field.on('change', function (e, state) {
-					if (typeof state !== 'undefined' && state) {
+					if (!selectOptions.length || (typeof state !== 'undefined' && state)) {
 						return;
 					}
 
