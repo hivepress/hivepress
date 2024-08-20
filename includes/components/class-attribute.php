@@ -81,6 +81,9 @@ final class Attribute extends Component {
 		// Redirect archive page.
 		add_action( 'template_redirect', [ $this, 'redirect_archive_page' ] );
 
+		// Format phone.
+		add_filter( 'hivepress/v1/fields/phone/display_value', [ $this, 'format_phone_display' ] );
+
 		if ( ! is_admin() ) {
 
 			// Set search query.
@@ -89,6 +92,16 @@ final class Attribute extends Component {
 			// Disable Jetpack search.
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 		}
+	}
+
+	/**
+	 * Formats phone field value.
+	 *
+	 * @param string $value Phone value.
+	 * @return string
+	 */
+	public function format_phone_display( $value ) {
+		return preg_replace( '/(\d{2})(\d{3})(\d{3})(\d{4})/', '$1 ($2) $3-$4', $value );
 	}
 
 	/**
