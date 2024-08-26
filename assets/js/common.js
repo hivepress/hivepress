@@ -509,7 +509,7 @@ var hivepress = {
 							if (range.hasOwnProperty('class')) {
 								dayElem.className += ' ' + range.class;
 
-								if (range.class === 'last-day' && !dayElem.classList.contains('selected')) {
+								if (range.class === 'flatpickr-status--error' && !dayElem.classList.contains('selected')) {
 									dayElem.className += ' flatpickr-disabled';
 								}
 							}
@@ -536,42 +536,7 @@ var hivepress = {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
 						onChange: function (selectedDates, dateStr, instance) {
-							if (selectedDates.length === 1) {
-								var days = instance.calendarContainer.querySelectorAll('.flatpickr-day'),
-									previousLastDayIndex = null,
-									nextLastDayIndex = null;
-
-								days.forEach((day, index) => {
-									if (day.dateObj.getTime() === selectedDates[0].getTime() && day.classList.contains('last-day')) {
-										instance.clear();
-										return;
-									}
-
-									if (day.dateObj < selectedDates[0]) {
-										if (day.classList.contains('last-day')) {
-											previousLastDayIndex = index;
-										}
-									} else if (day.dateObj > selectedDates[0]) {
-										if (day.classList.contains('last-day') && nextLastDayIndex === null) {
-											nextLastDayIndex = index;
-										}
-									}
-								});
-
-								for(let i = 0; i < days.length; i++) {
-									if (previousLastDayIndex !== null && i <= previousLastDayIndex) {
-										days[i].classList.add('flatpickr-disabled');
-									}
-
-									if (nextLastDayIndex !== null && i >= nextLastDayIndex) {
-										if (i === nextLastDayIndex) {
-											days[i].classList.remove('flatpickr-disabled');
-										} else {
-											days[i].classList.add('flatpickr-disabled');
-										}
-									}
-								}
-							} else if (selectedDates.length === 2) {
+							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
 										shift = 0;
@@ -597,6 +562,41 @@ var hivepress = {
 								fields.eq(0).val(formattedDates[0]);
 								fields.eq(1).val(formattedDates[1]);
 							} else {
+								var days = instance.calendarContainer.querySelectorAll('.flatpickr-day'),
+									previousLastDayIndex = null,
+									nextLastDayIndex = null;
+
+								days.forEach((day, index) => {
+									if (day.dateObj.getTime() === selectedDates[0].getTime() && day.classList.contains('flatpickr-status--error')) {
+										instance.clear();
+										return;
+									}
+
+									if (day.dateObj < selectedDates[0]) {
+										if (day.classList.contains('flatpickr-status--error')) {
+											previousLastDayIndex = index;
+										}
+									} else if (day.dateObj > selectedDates[0]) {
+										if (day.classList.contains('flatpickr-status--error') && nextLastDayIndex === null) {
+											nextLastDayIndex = index;
+										}
+									}
+								});
+
+								for (let i = 0; i < days.length; i++) {
+									if (previousLastDayIndex !== null && i <= previousLastDayIndex) {
+										days[i].classList.add('flatpickr-disabled');
+									}
+
+									if (nextLastDayIndex !== null && i >= nextLastDayIndex) {
+										if (i === nextLastDayIndex) {
+											days[i].classList.remove('flatpickr-disabled');
+										} else {
+											days[i].classList.add('flatpickr-disabled');
+										}
+									}
+								}
+
 								fields.eq(0).val('');
 								fields.eq(1).val('');
 							}
