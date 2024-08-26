@@ -509,7 +509,7 @@ var hivepress = {
 							if (range.hasOwnProperty('class')) {
 								dayElem.className += ' ' + range.class;
 
-								if (range.class === 'last-day' && !dayElem.classList.contains('selected')) {
+								if (range.class === 'flatpickr-status--error' && !dayElem.classList.contains('selected')) {
 									dayElem.className += ' flatpickr-disabled';
 								}
 							}
@@ -569,17 +569,17 @@ var hivepress = {
 									nextLastDayIndex = null;
 
 								days.forEach((day, index) => {
-									if (day.dateObj.getTime() === selectedDates[0].getTime() && day.classList.contains('last-day')) {
+									if (day.dateObj.getTime() === selectedDates[0].getTime() && day.classList.contains('flatpickr-status--error')) {
 										instance.clear();
 										return;
 									}
 
 									if (day.dateObj < selectedDates[0]) {
-										if (day.classList.contains('last-day')) {
+										if (day.classList.contains('flatpickr-status--error')) {
 											previousLastDayIndex = index;
 										}
 									} else if (day.dateObj > selectedDates[0]) {
-										if (day.classList.contains('last-day') && nextLastDayIndex === null) {
+										if (day.classList.contains('flatpickr-status--error') && nextLastDayIndex === null) {
 											nextLastDayIndex = index;
 										}
 									}
