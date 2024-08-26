@@ -1181,6 +1181,8 @@ final class Attribute extends Component {
 		// Set default option.
 		if ( is_tax( hp\prefix( $model . '_category' ) ) ) {
 			$default = get_term_meta( get_queried_object()->term_id, hp\prefix( 'default_sort_option' ), true );
+		} elseif ( term_exists( $category_id ) ) {
+			$default = get_term_meta( $category_id, hp\prefix( 'default_sort_option' ), true );
 		} else {
 			$default = get_option( hp\prefix( $model . '_default_order' ) );
 		}
@@ -1941,6 +1943,21 @@ final class Attribute extends Component {
 
 			// Set form values.
 			$sort_form->set_values( $_GET, true );
+
+			// Get sort option.
+			$sort_option = hp\get_array_value( $_GET, '_sort' );
+
+			if ( ! $sort_option && $category_id ) {
+
+				// Get default sort option.
+				$default_sort_option = get_term_meta( $category_id, hp\prefix( 'default_sort_option' ), true );
+
+				if ( $default_sort_option ) {
+
+					// Set form sort option.
+					$sort_form->set_value( '_sort', $default_sort_option );
+				}
+			}
 
 			if ( $sort_form->validate() ) {
 
