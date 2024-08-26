@@ -196,10 +196,7 @@ final class Template extends Component {
 		// Get template name.
 		$template_name = '\HivePress\Templates\\' . $post->post_name;
 
-		// Create template.
-		$template = hp\create_class_instance( $template_name );
-
-		if ( ! $template || ! $template_name::get_meta( 'label' ) ) {
+		if ( ! class_exists( $template_name ) || ! $template_name::get_meta( 'label' ) ) {
 			return;
 		}
 
@@ -213,6 +210,9 @@ final class Template extends Component {
 
 		// Update content.
 		if ( ! $post->post_content ) {
+
+			// Create template.
+			$template = hp\create_class_instance( $template_name );
 
 			// Set content.
 			$content = '';
