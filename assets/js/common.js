@@ -137,6 +137,7 @@ var hivepress = {
 		// Select
 		container.find(hivepress.getSelector('select')).each(function () {
 			var field = $(this),
+				selectOptions = [],
 				settings = {
 					width: '100%',
 					dropdownAutoWidth: false,
@@ -208,11 +209,21 @@ var hivepress = {
 							};
 						},
 						processResults: function (response) {
-							var results = [];
+							var results = [],
+								options = field.find('option');
 
 							if (response && response.hasOwnProperty('data')) {
 								results = response.data;
 							}
+
+							if (field.data('multiple') === 'adjacent' && (options.length === 0 || (results.length > 0 && options.length !== results.length))) {
+								results.forEach(function(option) {
+									var newOption = new Option(option.text, option.id, false, false);
+									field.append(newOption).trigger('change');
+								});
+							}
+
+							selectOptions = results;
 
 							return {
 								results: results,
@@ -372,6 +383,27 @@ var hivepress = {
 					});
 				}
 			});
+
+			if (field.data('multiple') === 'adjacent') {
+				field.on('change', function (e, state) {
+					if (!selectOptions.length || (typeof state !== 'undefined' && state)) {
+						return;
+					}
+
+					var field = $(this),
+						values = field.val().map(option => parseInt(option)).sort((a, b) => a - b),
+						firstIndex = selectOptions.findIndex(item => item.id === values[0]),
+						lastIndex = selectOptions.findIndex(item => item.id === values[values.length > 0 ? values.length - 1 : 0]);
+
+					for (var i = firstIndex; i < lastIndex; i++) {
+						if (!values.includes(selectOptions[i].id)) {
+							values.push(selectOptions[i].id);
+						}
+					}
+
+					field.val(values.sort((a, b) => a - b).map(option => option.toString())).trigger('change', [ true ]);
+				});
+			}
 
 			if (!field.data('select2-id')) {
 				field.select2(settings);
