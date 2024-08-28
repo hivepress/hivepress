@@ -562,6 +562,14 @@ var hivepress = {
 				}
 			}
 
+			if (field.data('start-week')) {
+				$.extend(settings, {
+					locale: {
+						firstDayOfWeek: field.data('start-week'),
+					}
+				});
+			}
+
 			$.extend(settings, {
 				time_24hr: settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1,
 				parseDate: function (date, format) {
@@ -656,6 +664,14 @@ var hivepress = {
 
 			if (settings['altFormat'].indexOf('a') === -1 && settings['altFormat'].indexOf('A') === -1) {
 				settings['time_24hr'] = true;
+			}
+
+			if (field.data('start-week')) {
+				$.extend(settings, {
+					locale: {
+						firstDayOfWeek: field.data('start-week'),
+					}
+				});
 			}
 
 			field.flatpickr(settings);
