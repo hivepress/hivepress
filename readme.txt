@@ -3,7 +3,7 @@ Contributors: hivepress
 Tags: business directory, classifieds, listing, directory plugin, job board
 Requires at least: 5.0
 Tested up to: 6.6
-Requires PHP: 7.0
+Requires PHP: 7.4
 Stable tag: 1.7.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
