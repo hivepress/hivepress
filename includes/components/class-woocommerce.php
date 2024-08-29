@@ -89,6 +89,13 @@ final class WooCommerce extends Component {
 		update_option( 'woocommerce_enable_guest_checkout', 'no' );
 		update_option( 'woocommerce_enable_checkout_login_reminder', 'yes' );
 		update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
+
+		if ( get_option( 'hp_installed_time' ) > strtotime( '2024-07-08' ) ) {
+
+			// @todo Remove after HPOS integration.
+			update_option( 'woocommerce_custom_orders_table_enabled', 'no' );
+			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
+		}
 	}
 
 	/**
@@ -316,7 +323,7 @@ final class WooCommerce extends Component {
 	public function update_user_billing_name( $user_id, $value ) {
 
 		// Check field value.
-		if ( ! strlen( $value ) ) {
+		if ( ! $value ) {
 			return;
 		}
 
