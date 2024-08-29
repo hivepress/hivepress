@@ -81,9 +81,6 @@ class Time extends Number {
 		// Set component.
 		$attributes['data-component'] = 'time';
 
-		// Set start week.
-		$attributes['data-start-week'] = absint( get_option( 'start_of_week' ) );
-
 		$this->attributes = hp\merge_arrays( $this->attributes, $attributes );
 
 		Field::boot();

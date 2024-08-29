@@ -666,14 +666,6 @@ var hivepress = {
 				settings['time_24hr'] = true;
 			}
 
-			if (field.data('start-week')) {
-				$.extend(settings, {
-					locale: {
-						firstDayOfWeek: field.data('start-week'),
-					}
-				});
-			}
-
 			field.flatpickr(settings);
 		});
 
