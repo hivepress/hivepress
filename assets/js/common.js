@@ -435,6 +435,10 @@ var hivepress = {
 					}
 				};
 
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
+
 			if (field.is('div')) {
 				settings['wrap'] = true;
 				settings['altInputClass'] = '';
@@ -641,6 +645,10 @@ var hivepress = {
 						}
 					}
 				};
+
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
