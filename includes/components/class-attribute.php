@@ -1134,40 +1134,6 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Gets sort options.
-	 *
-	 * @param string $model Model name.
-	 * @return mixed
-	 */
-	protected function get_sort_options( $model ) {
-		$options = [];
-
-		// Check model.
-		if ( ! $this->models[ $model ]['searchable'] ) {
-			return $options;
-		}
-
-		// Create form.
-		$form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
-
-		if ( ! $form ) {
-			return $options;
-		}
-
-		// Get field.
-		$field = hp\get_array_value( $form->get_fields(), '_sort' );
-
-		if ( ! $field ) {
-			return $options;
-		}
-
-		// Get options.
-		$options = (array) $field->get_arg( 'options' );
-
-		return $options;
-	}
-
-	/**
 	 * Adds sort options.
 	 *
 	 * @param array  $form_args Form arguments.
@@ -1214,24 +1180,10 @@ final class Attribute extends Component {
 		$form_args['fields']['_sort']['options'] = array_merge( $form_args['fields']['_sort']['options'], $options );
 
 		// Set default option.
-		$default_order = get_option( hp\prefix( $model . '_default_order' ) );
+		$default = get_option( hp\prefix( $model . '_default_order' ) );
 
-		if ( $category_id ) {
-			$category_ids = array_merge( [ $category_id ], get_ancestors( $category_id, hp\prefix( $this->get_category_model( $model ) ), 'taxonomy' ) );
-
-			foreach ( $category_ids as $category_id ) {
-				$category_order = get_term_meta( $category_id, 'hp_default_order', true );
-
-				if ( $category_order ) {
-					$default_order = $category_order;
-
-					break;
-				}
-			}
-		}
-
-		if ( $default_order ) {
-			$form_args['fields']['_sort']['default'] = $default_order;
+		if ( $default ) {
+			$form_args['fields']['_sort']['default'] = $default;
 		}
 
 		return $form_args;
@@ -1526,18 +1478,35 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_settings( $settings ) {
-		foreach ( $this->get_models( 'post' ) as $model ) {
-			if ( isset( $settings[ $model . 's' ]['sections']['search'] ) ) {
-				$sort_options = $this->get_sort_options( $model );
+		foreach ( $this->models as $model_name => $model_args ) {
 
-				if ( $sort_options ) {
-					$settings[ $model . 's' ]['sections']['search']['fields'][ $model . '_default_order' ] = [
-						'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
-						'type'    => 'select',
-						'options' => $sort_options,
-						'_order'  => 20,
-					];
-				}
+			// Check model.
+			if ( ! $model_args['searchable'] ) {
+				continue;
+			}
+
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model_name . '_sort' );
+
+			if ( ! $sort_form ) {
+				continue;
+			}
+
+			// Get sort options.
+			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+
+			if ( ! $sort_options ) {
+				continue;
+			}
+
+			// Add field.
+			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
+				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
+					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'type'    => 'select',
+					'options' => $sort_options,
+					'_order'  => 20,
+				];
 			}
 		}
 
@@ -1674,9 +1643,8 @@ final class Attribute extends Component {
 			],
 		];
 
+		// Add meta boxes.
 		foreach ( $this->get_models() as $model ) {
-
-			// Add meta boxes.
 			foreach ( $meta_box_args as $meta_box_name => $meta_box ) {
 				if ( strpos( $meta_box_name, 'attribute' ) === 0 ) {
 
@@ -1753,20 +1721,6 @@ final class Attribute extends Component {
 
 				// Add meta box.
 				$meta_boxes[ $model . '_' . $meta_box_name ] = $meta_box;
-			}
-
-			// Update meta boxes.
-			if ( isset( $meta_boxes[ $model . '_category_settings' ] ) ) {
-				$sort_options = $this->get_sort_options( $model );
-
-				if ( $sort_options ) {
-					$meta_boxes[ $model . '_category_settings' ]['fields']['default_order'] = [
-						'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
-						'type'    => 'select',
-						'options' => $sort_options,
-						'_order'  => 123,
-					];
-				}
 			}
 		}
 
