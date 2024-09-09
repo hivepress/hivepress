@@ -131,6 +131,7 @@
 						settings = {
 							slidesToShow: 1,
 							slidesToScroll: 1,
+							infinite: false,
 							adaptiveHeight: true,
 						};
 
@@ -150,7 +151,6 @@
 
 						$.extend(settings, {
 							asNavFor: carousel,
-							infinite: false,
 							arrows: false,
 						});
 					} else {
@@ -161,6 +161,13 @@
 					}
 
 					slider.addClass(containerClass + '-slider').slick(settings);
+
+					var observer = new MutationObserver(function () {
+						slider.slick('resize');
+					}).observe(slider.get(0), {
+						subtree: true,
+						attributeFilter: ['src'],
+					});
 
 					if (isPreview) {
 						carousel.addClass(containerClass + '-carousel').slick({
