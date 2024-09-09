@@ -405,6 +405,7 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function () {
 			var field = $(this),
+				ranges = field.data('ranges'),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -488,17 +489,15 @@ var hivepress = {
 				var disabledDays = field.data('disabled-days');
 
 				if (disabledDays.length) {
-					function disableDates(date) {
+					function disableDate(date) {
 						return disabledDays.indexOf(date.getDay()) !== -1;
 					}
 
-					settings['disable'].push(disableDates);
+					settings['disable'].push(disableDate);
 				}
 			}
 
-			if (field.data('ranges')) {
-				var ranges = field.data('ranges');
-
+			if (ranges) {
 				settings['onDayCreate'] = function (dObj, dStr, fp, dayElem) {
 					if (dayElem.className.includes('disabled')) {
 						return;
@@ -529,10 +528,50 @@ var hivepress = {
 						minLength = field.data('min-length'),
 						maxLength = field.data('max-length');
 
+					function disableDates(selectedDates, instance) {
+						if (selectedDates.length !== 1 || !ranges) {
+							return;
+						}
+
+						var time = Math.floor(selectedDates[0].getTime() / 1000) - selectedDates[0].getTimezoneOffset() * 60,
+							prevTime = null,
+							nextTime = null;
+
+						$.each(ranges, function (index, range) {
+							if (range.hasOwnProperty('status') && range.status === 'error') {
+								if (range.start <= time && time < range.end) {
+									instance.clear();
+
+									return false;
+								} else if (time >= range.end) {
+									prevTime = range.end;
+								} else if (time < range.start) {
+									nextTime = range.start;
+
+									return false;
+								}
+							}
+						});
+
+						if (!prevTime && !nextTime) {
+							return;
+						}
+
+						$.each(instance.days.children, function (index, dayElem) {
+							var dayTime = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
+
+							if ((prevTime && dayTime < prevTime) || (nextTime && dayTime > nextTime)) {
+								dayElem.className += ' flatpickr-disabled';
+							}
+						});
+					}
+
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
 						onChange: function (selectedDates, dateStr, instance) {
+							disableDates(selectedDates, instance);
+
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
@@ -562,6 +601,9 @@ var hivepress = {
 								fields.eq(0).val('');
 								fields.eq(1).val('');
 							}
+						},
+						onMonthChange: function (selectedDates, dateStr, instance) {
+							disableDates(selectedDates, instance);
 						},
 					});
 				}
