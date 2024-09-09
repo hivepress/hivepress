@@ -542,6 +542,9 @@ var hivepress = {
 								if (range.start <= time && time < range.end) {
 									instance.clear();
 
+									prevTime = null;
+									nextTime = null;
+
 									return false;
 								} else if (time >= range.end) {
 									prevTime = range.end;
