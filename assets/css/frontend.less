@@ -671,6 +671,22 @@
 				&:not(:hover) .slick-arrow {
 					display: none !important;
 				}
+
+				.slick-slide:has(+.slick-current),
+				.slick-current+.slick-slide {
+					img {
+						position: relative;
+						z-index: -1;
+					}
+				}
+
+				.slick-slide:has(+.slick-current) img {
+					right: -1px;
+				}
+
+				.slick-current+.slick-slide img {
+					left: -1px;
+				}
 			}
 
 			&-carousel {

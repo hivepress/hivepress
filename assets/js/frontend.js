@@ -131,6 +131,7 @@
 						settings = {
 							slidesToShow: 1,
 							slidesToScroll: 1,
+							infinite: false,
 							adaptiveHeight: true,
 						};
 
@@ -150,7 +151,6 @@
 
 						$.extend(settings, {
 							asNavFor: carousel,
-							infinite: false,
 							arrows: false,
 						});
 					} else {
@@ -162,11 +162,17 @@
 
 					slider.addClass(containerClass + '-slider').slick(settings);
 
+					var observer = new MutationObserver(function () {
+						slider.slick('resize');
+					}).observe(slider.get(0), {
+						subtree: true,
+						attributeFilter: ['src'],
+					});
+
 					if (isPreview) {
 						carousel.addClass(containerClass + '-carousel').slick({
 							slidesToShow: 6,
 							slidesToScroll: 1,
-							infinite: false,
 							focusOnSelect: true,
 							prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
 							nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
