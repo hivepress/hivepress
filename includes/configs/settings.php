@@ -290,6 +290,7 @@ return [
 					'user_display_online' => [
 						'caption' => esc_html__( 'Display online status for users', 'hivepress' ),
 						'type'    => 'checkbox',
+						'_parent' => 'user_enable_display',
 						'_order'  => 20,
 					],
 
