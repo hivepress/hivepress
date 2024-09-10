@@ -39,6 +39,9 @@ final class User extends Component {
 		// Alter registration form.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'alter_register_form' ] );
 
+		// Alter model fields.
+		add_filter( 'hivepress/v1/models/user', [ $this, 'alter_model_fields' ] );
+
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
 
@@ -57,6 +60,9 @@ final class User extends Component {
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 		} else {
 
+			// Set request context.
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
 			// Redirect author page.
 			add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
 
@@ -70,49 +76,37 @@ final class User extends Component {
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
 
-		// Alter model fields.
-		add_filter( 'hivepress/v1/models/user', [ $this, 'alter_model_fields' ] );
-
-		// Set request context.
-		add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
-
 		parent::__construct( $args );
 	}
 
 	/**
-	 * Sets request context.
+	 * Checks online status.
 	 *
-	 * @param array $context Request context.
-	 * @return array
+	 * @param object $user User object.
+	 * @return bool
 	 */
-	public function set_request_context( $context ) {
-		if ( get_option( 'hp_user_display_online' ) ) {
-			$user = $context['user'];
-
-			if ( ! $this->is_online( $user ) ) {
-				$user->set_active_time( time() )->save_active_time();
-			}
-		}
-
-		return $context;
+	protected function is_online( $user ) {
+		return $user->get_active_time() > time() - 15 * MINUTE_IN_SECONDS;
 	}
 
 	/**
-	 * Alters model fields.
+	 * Gets online status.
 	 *
-	 * @param array $model Model arguments.
-	 * @return array
+	 * @param object $user User object.
+	 * @return string
 	 */
-	public function alter_model_fields( $model ) {
-		if ( get_option( 'hp_user_display_online' ) ) {
-			$model['fields']['active_time'] = [
-				'type'      => 'number',
-				'min_value' => 0,
-				'_external' => true,
-			];
+	protected function get_online_status( $user ) {
+		$status = __( 'Offline', 'hivepress' );
+
+		if ( $this->is_online( $user ) ) {
+			$status = __( 'Online', 'hivepress' );
+		} elseif ( $user->get_active_time() ) {
+
+			/* translators: %s: todo. */
+			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( time(), $user->get_active_time() ) );
 		}
 
-		return $model;
+		return $status;
 	}
 
 	/**
@@ -283,6 +277,24 @@ final class User extends Component {
 	}
 
 	/**
+	 * Alters model fields.
+	 *
+	 * @param array $model Model arguments.
+	 * @return array
+	 */
+	public function alter_model_fields( $model ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$model['fields']['active_time'] = [
+				'type'      => 'number',
+				'min_value' => 0,
+				'_external' => true,
+			];
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Renders user image.
 	 *
 	 * @param string $image Image HTML.
@@ -404,6 +416,24 @@ final class User extends Component {
 	}
 
 	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$user = $context['user'];
+
+			if ( ! $this->is_online( $user ) ) {
+				$user->set_active_time( time() )->save_active_time();
+			}
+		}
+
+		return $context;
+	}
+
+	/**
 	 * Redirect author page.
 	 */
 	public function redirect_author_page() {
@@ -417,23 +447,6 @@ final class User extends Component {
 		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
 
 		exit;
-	}
-
-	protected function is_online( $user ) {
-		return $user->get_active_time() > time() - 15 * MINUTE_IN_SECONDS;
-	}
-
-	protected function get_online_status( $user ) {
-		$status = __( 'Offline', 'hivepress' );
-
-		if ( $this->is_online( $user ) ) {
-			$status = __( 'Online', 'hivepress' );
-		} elseif ( $user->get_active_time() ) {
-			/* translators: %s: todo. */
-			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( time(), $user->get_active_time() ) );
-		}
-
-		return $status;
 	}
 
 	/**
