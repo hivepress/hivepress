@@ -288,7 +288,7 @@ return [
 					],
 
 					'user_display_online' => [
-						'caption' => esc_html__( 'Display online on the front-end', 'hivepress' ),
+						'caption' => esc_html__( 'Display online status for users', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 20,
 					],
