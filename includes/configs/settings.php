@@ -287,12 +287,18 @@ return [
 						'_order'  => 10,
 					],
 
+					'user_display_online' => [
+						'caption' => esc_html__( 'Display online on the front-end', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 20,
+					],
+
 					'user_display_name'   => [
 						'label'    => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 'first_name',
 						'required' => true,
-						'_order'   => 20,
+						'_order'   => 30,
 
 						'options'  => [
 							'username'         => esc_html__( 'Username', 'hivepress' ),

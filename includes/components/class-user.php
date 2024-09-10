@@ -61,10 +61,58 @@ final class User extends Component {
 			add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
 
 			// Alter templates.
+			add_filter( 'hivepress/v1/templates/user_view_block/blocks', [ $this, 'alter_user_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/user_view_page/blocks', [ $this, 'alter_user_view_blocks' ], 10, 2 );
+
+			add_filter( 'hivepress/v1/templates/vendor_view_block/blocks', [ $this, 'alter_vendor_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/vendor_view_page/blocks', [ $this, 'alter_vendor_view_blocks' ], 10, 2 );
+
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
 
+		// Alter model fields.
+		add_filter( 'hivepress/v1/models/user', [ $this, 'alter_model_fields' ] );
+
+		// Set request context.
+		add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$user = $context['user'];
+
+			if ( ! $this->is_online( $user ) ) {
+				$user->set_active_time( time() )->save_active_time();
+			}
+		}
+
+		return $context;
+	}
+
+	/**
+	 * Alters model fields.
+	 *
+	 * @param array $model Model arguments.
+	 * @return array
+	 */
+	public function alter_model_fields( $model ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$model['fields']['active_time'] = [
+				'type'      => 'number',
+				'min_value' => 0,
+				'_external' => true,
+			];
+		}
+
+		return $model;
 	}
 
 	/**
@@ -369,6 +417,103 @@ final class User extends Component {
 		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
 
 		exit;
+	}
+
+	protected function is_online( $user ) {
+		return $user->get_active_time() > time() - 15 * MINUTE_IN_SECONDS;
+	}
+
+	protected function get_online_status( $user ) {
+		$status = __( 'Offline', 'hivepress' );
+
+		if ( $this->is_online( $user ) ) {
+			$status = __( 'Online', 'hivepress' );
+		} elseif ( $user->get_active_time() ) {
+			/* translators: %s: todo. */
+			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( time(), $user->get_active_time() ) );
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Alters user view blocks.
+	 *
+	 * @param array  $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_view_blocks( $blocks, $template ) {
+
+		// Get user.
+		$user = $template->get_context( 'user' );
+
+		if ( $user && get_option( 'hp_user_display_online' ) ) {
+			$blocks = hivepress()->template->merge_blocks(
+				$blocks,
+				[
+					'user_name' => [
+						'blocks' => [
+							'user_online_badge' => [
+								'type'    => 'part',
+								'path'    => 'user/view/user-online-badge',
+								'_order'  => 5,
+
+								'context' => [
+									'online_status' => $this->is_online( $user ),
+									'online_label'  => $this->get_online_status( $user ),
+								],
+							],
+						],
+					],
+				]
+			);
+		}
+
+		return $blocks;
+	}
+
+	/**
+	 * Alters vendor view blocks.
+	 *
+	 * @param array  $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_vendor_view_blocks( $blocks, $template ) {
+
+		// Get vendor.
+		$vendor = $template->get_context( 'vendor' );
+
+		if ( $vendor ) {
+
+			// Get user.
+			$user = $vendor->get_user();
+
+			if ( $user && get_option( 'hp_user_display_online' ) ) {
+				$blocks = hivepress()->template->merge_blocks(
+					$blocks,
+					[
+						'vendor_name' => [
+							'blocks' => [
+								'user_online_badge' => [
+									'type'    => 'part',
+									'path'    => 'user/view/user-online-badge',
+									'_order'  => 5,
+
+									'context' => [
+										'online_status' => $this->is_online( $user ),
+										'online_label'  => $this->get_online_status( $user ),
+									],
+								],
+							],
+						],
+					]
+				);
+			}
+		}
+
+		return $blocks;
 	}
 
 	/**
