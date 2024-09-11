@@ -1046,6 +1046,24 @@
 			}
 		}
 
+		&__online-badge {
+			display: inline-block;
+			vertical-align: middle;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background-color: #c1c8d5;
+
+			&--active {
+				background-color: #15cd72;
+			}
+		}
+
+		&--view-page &__online-badge {
+			width: 10px;
+			height: 10px;
+		}
+
 		&__verified-badge {
 			color: #15cd72;
 			display: inline-block;
