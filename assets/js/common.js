@@ -45,17 +45,20 @@ var hivepress = {
 
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
-			var url = '#' + $(this).attr('id');
+			var id = $(this).attr('id'),
+				url = '#' + id;
 
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function (e) {
-				$.fancybox.close();
-				$.fancybox.open({
-					src: url,
-					touch: false,
+			if (id) {
+				$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function (e) {
+					$.fancybox.close();
+					$.fancybox.open({
+						src: url,
+						touch: false,
+					});
+
+					e.preventDefault();
 				});
-
-				e.preventDefault();
-			});
+			}
 		});
 
 		// Number
