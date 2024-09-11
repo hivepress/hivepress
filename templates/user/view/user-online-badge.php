@@ -4,6 +4,6 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <span class="hp-vendor__online-badge 
 <?php
-if ( $online_status ) :
+if ( $user_online ) :
 	?>
-	hp-vendor__online-badge--active<?php endif; ?>" title="<?php echo esc_attr( $online_label ); ?>"></span>
+	hp-vendor__online-badge--active<?php endif; ?>" title="<?php echo esc_attr( $user_online_status ); ?>"></span>

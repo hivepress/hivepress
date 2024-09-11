@@ -86,7 +86,7 @@ final class User extends Component {
 	 * @return bool
 	 */
 	protected function is_online( $user ) {
-		return $user->get_active_time() > time() - 15 * MINUTE_IN_SECONDS;
+		return $user->get_online_time() > time() - 15 * MINUTE_IN_SECONDS;
 	}
 
 	/**
@@ -100,10 +100,10 @@ final class User extends Component {
 
 		if ( $this->is_online( $user ) ) {
 			$status = __( 'Online', 'hivepress' );
-		} elseif ( $user->get_active_time() ) {
+		} elseif ( $user->get_online_time() ) {
 
-			/* translators: %s: todo. */
-			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( time(), $user->get_active_time() ) );
+			/* translators: %s: time. */
+			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( $user->get_online_time(), time() ) );
 		}
 
 		return $status;
@@ -284,7 +284,7 @@ final class User extends Component {
 	 */
 	public function alter_model_fields( $model ) {
 		if ( get_option( 'hp_user_display_online' ) ) {
-			$model['fields']['active_time'] = [
+			$model['fields']['online_time'] = [
 				'type'      => 'number',
 				'min_value' => 0,
 				'_external' => true,
@@ -426,7 +426,7 @@ final class User extends Component {
 			$user = $context['user'];
 
 			if ( ! $this->is_online( $user ) ) {
-				$user->set_active_time( time() )->save_active_time();
+				$user->set_online_time( time() )->save_online_time();
 			}
 		}
 
@@ -473,8 +473,8 @@ final class User extends Component {
 								'_order'  => 5,
 
 								'context' => [
-									'online_status' => $this->is_online( $user ),
-									'online_label'  => $this->get_online_status( $user ),
+									'user_online'        => $this->is_online( $user ),
+									'user_online_status' => $this->get_online_status( $user ),
 								],
 							],
 						],
@@ -498,12 +498,12 @@ final class User extends Component {
 		// Get vendor.
 		$vendor = $template->get_context( 'vendor' );
 
-		if ( $vendor ) {
+		if ( $vendor && get_option( 'hp_user_display_online' ) ) {
 
 			// Get user.
 			$user = $vendor->get_user();
 
-			if ( $user && get_option( 'hp_user_display_online' ) ) {
+			if ( $user ) {
 				$blocks = hivepress()->template->merge_blocks(
 					$blocks,
 					[
@@ -515,8 +515,8 @@ final class User extends Component {
 									'_order'  => 5,
 
 									'context' => [
-										'online_status' => $this->is_online( $user ),
-										'online_label'  => $this->get_online_status( $user ),
+										'user_online' => $this->is_online( $user ),
+										'user_online_status' => $this->get_online_status( $user ),
 									],
 								],
 							],
