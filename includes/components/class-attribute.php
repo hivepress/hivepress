@@ -1492,8 +1492,15 @@ final class Attribute extends Component {
 				continue;
 			}
 
+			// Get sort field.
+			$sort_field = hp\get_array_value( $sort_form->get_fields(), '_sort' );
+
+			if ( ! $sort_field ) {
+				continue;
+			}
+
 			// Get sort options.
-			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+			$sort_options = $sort_field->get_arg( 'options' );
 
 			if ( ! $sort_options ) {
 				continue;
