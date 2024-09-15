@@ -30,7 +30,6 @@ final class Vendor extends Component {
 		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 100, 2 );
 
 		// Update vendor.
-		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
 		add_action( 'hivepress/v1/models/vendor/update_status', [ $this, 'update_vendor_status' ], 10, 4 );
 
 		// Add vendor fields.
@@ -53,92 +52,6 @@ final class Vendor extends Component {
 		}
 
 		parent::__construct( $args );
-	}
-
-	/**
-	 * Updates vendor.
-	 *
-	 * @param int    $vendor_id Vendor ID.
-	 * @param object $vendor Vendor object.
-	 */
-	public function update_vendor( $vendor_id, $vendor ) {
-
-		// Remove action.
-		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
-
-		// Get attributes.
-		$attributes = array_filter(
-			hivepress()->attribute->get_attributes( 'listing' ),
-			function( $attribute ) {
-				return hp\get_array_value( $attribute, 'synced' );
-			}
-		);
-
-		if ( ! $attributes ) {
-			return;
-		}
-
-		// Get values.
-		$values = array_intersect_key( $vendor->serialize(), $attributes );
-
-		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) {
-				continue;
-			}
-
-			// Get field.
-			$attribute_field = hp\get_array_value( $vendor->_get_fields(), $attribute_name );
-
-			if ( ! $attribute_field || ! $attribute_field->get_value() ) {
-				continue;
-			}
-
-			// Get term names.
-			$term_names = get_terms(
-				[
-					'taxonomy'   => $attribute_field->get_arg( 'option_args' )['taxonomy'],
-					'include'    => (array) $attribute_field->get_value(),
-					'fields'     => 'names',
-					'hide_empty' => false,
-				]
-			);
-
-			if ( ! $term_names ) {
-				continue;
-			}
-
-			// Get term IDs.
-			$term_ids = get_terms(
-				[
-					'taxonomy'   => $attribute['edit_field']['option_args']['taxonomy'],
-					'name'       => $term_names,
-					'fields'     => 'ids',
-					'hide_empty' => false,
-				]
-			);
-
-			if ( ! $term_ids ) {
-				continue;
-			}
-
-			// Set value.
-			$values[ $attribute_name ] = $term_ids;
-		}
-
-		// Get listings.
-		$listings = Models\Listing::query()->filter(
-			[
-				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-				'user'       => $vendor->get_user__id(),
-			]
-		)->get();
-
-		// Update listings.
-		foreach ( $listings as $listing ) {
-			if ( array_intersect_key( $listing->serialize(), $attributes ) !== $values ) {
-				$listing->fill( $values )->save( array_keys( $values ) );
-			}
-		}
 	}
 
 	/**
@@ -258,8 +171,24 @@ final class Vendor extends Component {
 				// Get form.
 				$vendor_form = hp\create_class_instance( '\HivePress\Forms\\' . ( 'user_update_profile' === $form::get_meta( 'name' ) ? 'vendor_submit' : 'vendor_update' ), [ [ 'model' => $vendor ] ] );
 
+				// Get user attributes.
+				$user_attributes = array_keys( array_filter(
+					hivepress()->attribute->get_attributes( 'user' ),
+					function( $attribute ) {
+						return hp\get_array_value( $attribute, 'editable' );
+					}
+				) );
+
 				// Add fields.
 				foreach ( $vendor_form->get_fields() as $field_name => $field ) {
+					if ( in_array( $field_name, $user_attributes ) ) {
+
+						// Remove vendor field.
+						unset( $form_args['fields'][ $field_name ] );
+
+						continue;
+					}
+
 					if ( ! isset( $form_args['fields'][ $field_name ] ) ) {
 						$field_args = $field->get_args();
 

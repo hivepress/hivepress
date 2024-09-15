@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -41,8 +42,12 @@ final class Attribute extends Component {
 			[
 				'models' => [
 					'listing' => [],
-					'vendor'  => [],
-					'user'    => [],
+					'vendor'  => [
+						'sync' => 'listing',
+					],
+					'user'    => [
+						'sync' => 'vendor',
+					],
 				],
 			],
 			$args
@@ -309,6 +314,9 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/user_register', [ $this, 'add_register_fields' ], 100 );
 			} else {
 
+				// Sync model attributes.
+				add_action( 'hivepress/v1/models/' . $model . '/update', [ $this, 'sync_model_attributes' ], 100, 2 );
+
 				// Update attribute.
 				add_action( 'save_post_hp_' . $model . '_attribute', [ $this, 'update_attribute' ] );
 
@@ -337,6 +345,10 @@ final class Attribute extends Component {
 
 				// Set range values.
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
+			} else {
+
+				// Sync model attributes.
+				add_action( 'hivepress/v2/models/' . $model . '/update', [ $this, 'sync_model_attributes' ], 100, 2 );
 			}
 		}
 	}
@@ -1710,6 +1722,14 @@ final class Attribute extends Component {
 							'_parent' => 'editable',
 							'_order'  => 30,
 						];
+					} elseif ( 'user' === $model && 'attribute_edit' === $meta_box_name ) {
+						$meta_box['fields']['synced'] = [
+							'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
+							'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
+							'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
+							'type'        => 'checkbox',
+							'_order'      => 20,
+						];
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
@@ -2110,5 +2130,134 @@ final class Attribute extends Component {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Syncs attributes between models.
+	 *
+	 * @param int           $model_id Model ID.
+	 * @param object|string $model Model object.
+	 */
+	public function sync_model_attributes( $model_id, $model ) {
+
+		// Get sync model name.
+		$sync_model_name = hp\get_array_value( $this->models[ $model::_get_meta( 'name' ) ], 'sync', '' );
+
+		if ( ! $sync_model_name ) {
+			return;
+		}
+
+		// Get sync model.
+		$sync_model = hp\create_class_instance( '\HivePress\Models\\' . $sync_model_name );
+
+		// Check sync model.
+		if ( ! $sync_model ) {
+			return;
+		}
+
+		// Is user sync.
+		$is_user_sync = 'user' === $model::_get_meta( 'name' ) && 'vendor' === $sync_model_name;
+
+		// Get attributes.
+		$attributes      = [];
+		$sync_attributes = [];
+
+		if ( $is_user_sync ) {
+			$attributes = array_filter(
+				hivepress()->attribute->get_attributes( 'user' ),
+				function( $attribute ) {
+					return hp\get_array_value( $attribute, 'synced' );
+				}
+			);
+
+			$sync_attributes = hivepress()->attribute->get_attributes( 'vendor' );
+		} else {
+			$attributes = array_filter(
+				hivepress()->attribute->get_attributes( $sync_model_name ),
+				function( $attribute ) {
+					return hp\get_array_value( $attribute, 'synced' );
+				}
+			);
+
+			$sync_attributes = hivepress()->attribute->get_attributes( $model::_get_meta( 'name' ) );
+		}
+
+		// Check attributes.
+		if ( ! $attributes ) {
+			return;
+		}
+
+		// Get values.
+		$values = array_intersect_key( $model->serialize(), $attributes );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( ! isset( $attribute['edit_field']['options'] ) || isset( $attribute['edit_field']['_external'] ) ) {
+				continue;
+			}
+
+			// Get field.
+			$attribute_field = hp\get_array_value( $model->_get_fields(), $attribute_name );
+
+			if ( ! $attribute_field || ! $attribute_field->get_value() || ! isset( $sync_attributes[ $attribute_name ]['edit_field']['option_args']['taxonomy'] ) ) {
+				continue;
+			}
+
+			// Get taxonomy.
+			$term_names_taxonomy = $attribute['edit_field']['option_args']['taxonomy'];
+			$term_ids_taxonomy   = $sync_attributes[ $attribute_name ]['edit_field']['option_args']['taxonomy'];
+
+			if ( ! $is_user_sync ) {
+				$term_names_taxonomy = $sync_attributes[ $attribute_name ]['edit_field']['option_args']['taxonomy'];
+				$term_ids_taxonomy   = $attribute['edit_field']['option_args']['taxonomy'];
+			}
+
+			// Get term names.
+			$term_names = get_terms(
+				[
+					'taxonomy'   => $term_names_taxonomy,
+					'include'    => (array) $attribute_field->get_value(),
+					'fields'     => 'names',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_names ) {
+				continue;
+			}
+
+			// Get term IDs.
+			$term_ids = get_terms(
+				[
+					'taxonomy'   => $term_ids_taxonomy,
+					'name'       => $term_names,
+					'fields'     => 'ids',
+					'hide_empty' => false,
+				]
+			);
+
+			if ( ! $term_ids ) {
+				continue;
+			}
+
+			// Set value.
+			$values[ $attribute_name ] = $term_ids;
+		}
+
+		// Set filters.
+		$filters = [
+			'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+			'user'       => $model->get_id(),
+		];
+
+		if ( ! $is_user_sync ) {
+			$filters['user'] = $model->get_user__id();
+		}
+
+		// Update sync models.
+		foreach ( $sync_model::query()->filter( $filters )->get() as $sync_model ) {
+			if ( array_intersect_key( $sync_model->serialize(), $attributes ) !== $values ) {
+				$sync_model->fill( $values )->save( array_keys( $values ) );
+			}
+		}
 	}
 }
