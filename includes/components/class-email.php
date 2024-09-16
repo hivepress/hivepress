@@ -171,8 +171,45 @@ final class Email extends Component {
 				$output .= $email::get_meta( 'description' ) . ' ';
 			}
 
-			if ( $email::get_meta( 'tokens' ) ) {
-				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+			// Get tokens
+			$tokens = [];
+
+			foreach ( (array) $email::get_meta( 'tokens' ) as $name => $args ) {
+
+				// Get model name.
+				$model_name = hp\get_array_value( (array) $args, 'model' );
+
+				if ( ! $model_name ) {
+					$tokens[] = $args;
+					continue;
+				}
+
+				// Get class object.
+				$class = hp\create_class_instance( 'HivePress\Models\\' . $model_name );
+
+				if ( ! $class ) {
+					continue;
+				}
+
+				// Get model fields.
+				$model_fields = $class->_get_fields();
+
+				if ( ! $model_fields ) {
+					continue;
+				}
+
+				foreach ( $model_fields as $field_name => $field_args ) {
+					if ( $field_args->get_arg( '_model' ) ) {
+						continue;
+					}
+
+					// Add token.
+					$tokens[] = $name . '.' . $field_name;
+				}
+			}
+
+			if ( $tokens ) {
+				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $tokens ) . '%</code>' );
 			}
 
 			if ( $output ) {
