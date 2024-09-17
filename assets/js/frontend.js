@@ -97,27 +97,31 @@
 				url = container.data('url'),
 				isPreview = container.data('preview') !== false;
 
-			if (images.length && images.first().data('src')) {
-				var imageURLs = [];
+			if (images.length && !url) {
+				var zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
-				images.each(function () {
-					imageURLs.push({
-						src: $(this).data('src'),
+				if (images.first().data(zoomAttribute)) {
+					var imageURLs = [];
+
+					images.each(function () {
+						imageURLs.push({
+							src: $(this).data(zoomAttribute),
+						});
 					});
-				});
 
-				container.on('click', 'img, video', function (e) {
-					var index = container.find('img, video').index($(this).get(0));
+					container.on('click', 'img, video', function (e) {
+						var index = container.find('img, video').index($(this).get(0));
 
-					if (index < imageURLs.length) {
-						$.fancybox.open(imageURLs, {
-							loop: true,
-							buttons: ['close'],
-						}, index);
-					}
+						if (index < imageURLs.length) {
+							$.fancybox.open(imageURLs, {
+								loop: true,
+								buttons: ['close'],
+							}, index);
+						}
 
-					e.preventDefault();
-				});
+						e.preventDefault();
+					});
+				}
 			}
 
 			if (images.length > 1) {
@@ -127,6 +131,7 @@
 						settings = {
 							slidesToShow: 1,
 							slidesToScroll: 1,
+							infinite: false,
 							adaptiveHeight: true,
 						};
 
@@ -146,7 +151,6 @@
 
 						$.extend(settings, {
 							asNavFor: carousel,
-							infinite: false,
 							arrows: false,
 						});
 					} else {
@@ -157,6 +161,13 @@
 					}
 
 					slider.addClass(containerClass + '-slider').slick(settings);
+
+					var observer = new MutationObserver(function () {
+						slider.slick('resize');
+					}).observe(slider.get(0), {
+						subtree: true,
+						attributeFilter: ['src'],
+					});
 
 					if (isPreview) {
 						carousel.addClass(containerClass + '-carousel').slick({

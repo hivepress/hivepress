@@ -234,6 +234,15 @@ class Date extends Field {
 			$attributes['data-time'] = 'true';
 		}
 
+		// Set options.
+		$attributes['data-options'] = wp_json_encode(
+			[
+				'locale' => [
+					'firstDayOfWeek' => absint( get_option( 'start_of_week' ) ),
+				],
+			]
+		);
+
 		// Set component.
 		$attributes['data-component'] = 'date';
 
