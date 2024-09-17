@@ -160,6 +160,25 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Checks if category model required.
+	 *
+	 * @param string $model Model name.
+	 * @return bool
+	 */
+	protected function requires_category_model( $model ) {
+		$taxonomy = hp\prefix( $this->get_category_model( $model ) );
+
+		return taxonomy_exists( $taxonomy ) && get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'number'     => 1,
+				'fields'     => 'ids',
+				'hide_empty' => false,
+			]
+		);
+	}
+
+	/**
 	 * Gets category model IDs.
 	 *
 	 * @param string $model Model name.
@@ -263,10 +282,11 @@ final class Attribute extends Component {
 		foreach ( $this->get_models() as $model ) {
 
 			// Set defaults.
-			$this->models[ $model ]['searchable'] = false;
+			$this->models[ $model ]['searchable'] = true;
 
-			if ( 'user' !== $model ) {
-				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			// @todo check post type config instead.
+			if ( ! in_array( $model, [ 'listing', 'vendor', 'request' ] ) ) {
+				$this->models[ $model ]['searchable'] = false;
 			}
 
 			// Add field settings.
@@ -364,7 +384,13 @@ final class Attribute extends Component {
 			$taxonomy = $this->get_category_model( $model );
 
 			if ( isset( $taxonomies[ $taxonomy ] ) ) {
-				$taxonomies[ $taxonomy ]['post_type'][] = $model . '_attribute';
+				$taxonomies[ $taxonomy ] = hp\merge_arrays(
+					$taxonomies[ $taxonomy ],
+					[
+						'post_type'          => [ $model . '_attribute' ],
+						'show_in_quick_edit' => false,
+					]
+				);
 			}
 		}
 
@@ -1027,20 +1053,7 @@ final class Attribute extends Component {
 	 * @return array
 	 */
 	public function add_submit_fields( $form_args, $form ) {
-
-		// Get taxonomy.
-		$taxonomy = hp\prefix( $this->get_category_model( $form::get_meta( 'model' ) ) );
-
-		if ( taxonomy_exists( $taxonomy ) && get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'number'     => 1,
-				'fields'     => 'ids',
-				'hide_empty' => false,
-			]
-		) ) {
-
-			// Add field.
+		if ( $this->requires_category_model( $form::get_meta( 'model' ) ) ) {
 			$form_args['fields']['categories'] = [
 				'multiple'   => false,
 				'required'   => true,
@@ -1479,8 +1492,15 @@ final class Attribute extends Component {
 				continue;
 			}
 
+			// Get sort field.
+			$sort_field = hp\get_array_value( $sort_form->get_fields(), '_sort' );
+
+			if ( ! $sort_field ) {
+				continue;
+			}
+
 			// Get sort options.
-			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+			$sort_options = $sort_field->get_arg( 'options' );
 
 			if ( ! $sort_options ) {
 				continue;
@@ -1645,6 +1665,22 @@ final class Attribute extends Component {
 
 					if ( 'attributes' === $meta_box_name ) {
 						$meta_box['screen'] = $model;
+
+						if ( ! isset( $this->models[ $model ]['category_model'] ) && $this->requires_category_model( $model ) ) {
+							$meta_box['fields']['categories'] = [
+								'label'       => hivepress()->translator->get_string( 'category' ),
+								'type'        => 'select',
+								'options'     => 'terms',
+								'option_args' => [ 'taxonomy' => hp\prefix( $model . '_category' ) ],
+								'required'    => true,
+								'_order'      => 1,
+
+								'attributes'  => [
+									'data-multistep' => 'true',
+									'data-render'    => hivepress()->router->get_url( 'meta_box_resource', [ 'meta_box_name' => $model . '_' . $meta_box_name ] ),
+								],
+							];
+						}
 					} else {
 						$meta_box['screen'] = $model . '_attribute';
 
@@ -1719,6 +1755,9 @@ final class Attribute extends Component {
 
 				// Get attributes.
 				$attributes = $this->get_attributes( $model, $category_ids );
+
+				// Remove meta boxes.
+				remove_meta_box( hp\prefix( $model . '_categorydiv' ), hp\prefix( $model ), 'side' );
 
 				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
 					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {

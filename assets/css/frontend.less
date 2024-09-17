@@ -671,6 +671,22 @@
 				&:not(:hover) .slick-arrow {
 					display: none !important;
 				}
+
+				.slick-slide:has(+.slick-current),
+				.slick-current+.slick-slide {
+					img {
+						position: relative;
+						z-index: -1;
+					}
+				}
+
+				.slick-slide:has(+.slick-current) img {
+					right: -1px;
+				}
+
+				.slick-current+.slick-slide img {
+					left: -1px;
+				}
 			}
 
 			&-carousel {
@@ -708,7 +724,7 @@
 				width: 100%;
 				height: auto;
 
-				&[data-src^="http"] {
+				&[data-zoom^="http"] {
 					cursor: pointer;
 				}
 			}
@@ -1028,6 +1044,24 @@
 				text-decoration: none;
 				color: inherit;
 			}
+		}
+
+		&__online-badge {
+			display: inline-block;
+			vertical-align: middle;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background-color: #c1c8d5;
+
+			&--active {
+				background-color: #15cd72;
+			}
+		}
+
+		&--view-page &__online-badge {
+			width: 10px;
+			height: 10px;
 		}
 
 		&__verified-badge {
