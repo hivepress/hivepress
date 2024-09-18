@@ -38,6 +38,7 @@ class Listing_Category extends Term {
 						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
+						'html'       => true,
 						'_alias'     => 'description',
 					],
 
