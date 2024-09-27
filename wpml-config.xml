@@ -1,0 +1,41 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="1" display-as-translated="1">hp_email</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_template</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_listing</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_vendor</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_listing_attribute</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_vendor_attribute</custom-type>
+        <custom-type translate="1" display-as-translated="1">hp_user_attribute</custom-type>
+    </custom-types>  
+    <custom-fields>
+        <custom-field action="copy">hp_display_areas</custom-field>
+        <custom-field action="copy">hp_display_format</custom-field>
+        <custom-field action="copy">hp_drafted</custom-field>
+        <custom-field action="copy">hp_editable</custom-field>
+        <custom-field action="copy">hp_edit_field_decimals</custom-field>
+        <custom-field action="copy">hp_edit_field_description</custom-field>
+        <custom-field action="copy">hp_edit_field_max_length</custom-field>
+        <custom-field action="copy">hp_edit_field_min_value</custom-field>
+        <custom-field action="copy">hp_edit_field_required</custom-field>
+        <custom-field action="copy">hp_edit_field_type</custom-field>
+        <custom-field action="copy-once">hp_expired_time</custom-field>
+        <custom-field action="copy-once">hp_featured</custom-field>
+        <custom-field action="copy">hp_filterable</custom-field>
+        <custom-field action="copy">hp_icon</custom-field>
+        <custom-field action="copy">hp_indexable</custom-field>
+        <custom-field action="copy">hp_moderated</custom-field>
+        <custom-field action="copy">hp_public</custom-field>
+        <custom-field action="copy">hp_search_field_decimals</custom-field>
+        <custom-field action="copy">hp_search_field_type</custom-field>
+        <custom-field action="copy">hp_sortable</custom-field>
+        <custom-field action="copy">hp_vendor</custom-field>
+        <custom-field action="copy">hp_verified</custom-field>
+    </custom-fields>
+    <taxonomies>
+        <taxonomy translate="1" display-as-translated="1">hp_listing_category</taxonomy>
+        <taxonomy translate="1" display-as-translated="1">hp_vendor_category</taxonomy>
+    </taxonomies>
+</wpml-config>
+
+
