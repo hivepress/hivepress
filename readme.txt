@@ -18,7 +18,7 @@ HivePress is an easy-to-use, extensible, and highly customizable plugin that all
 
 Whether it’s a business directory, job board, real estate, classified ads, or staff directory, HivePress is an excellent choice for it!
 
-https://www.youtube.com/watch?v=-OzyG6vhR_o
+https://www.youtube.com/watch?v=WekAEV4LRbc
 
 This plugin comes with all the essential features for building a directory website to allow users easily add, manage and search listings:
 
