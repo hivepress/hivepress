@@ -54,7 +54,7 @@ final class Editor extends Component {
 		add_filter( 'block_categories_all', [ $this, 'register_block_categories' ] );
 
 		// Register default blocks.
-		add_action( 'init', [ $this, 'register_default_blocks' ] );
+		add_action( 'init', [ $this, 'register_default_blocks' ], 200 );
 
 		if ( is_admin() ) {
 
@@ -404,6 +404,9 @@ final class Editor extends Component {
 						$block_args = array_merge( [ 'context' => $this->context ], $block_args );
 					}
 				}
+
+				// todo.
+				$block_args['args'] = $block_args;
 
 				// Create block.
 				$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_type, [ $block_args ] );
