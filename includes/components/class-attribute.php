@@ -289,6 +289,8 @@ final class Attribute extends Component {
 				$this->models[ $model ]['searchable'] = false;
 			}
 
+			add_filter( 'hivepress/v1/blocks/' . $model . 's/meta', [ $this, 'todo' ], 100 );
+
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
@@ -339,6 +341,24 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 			}
 		}
+	}
+
+	/**
+	 * Alters listing block settings.
+	 *
+	 * @param array $meta Block meta.
+	 * @return array
+	 */
+	public function todo( $meta ) {
+		$attributes = $this->get_attributes( rtrim( $meta['name'], 's' ) );
+
+		foreach ( $attributes as $attribute_name => $attribute_args ) {
+			if ( ( $attribute_args['searchable'] || $attribute_args['filterable'] ) && ! isset( $meta['settings'][ $attribute_name ] ) ) {
+				$meta['settings'][ $attribute_name ] = $attribute_args['search_field'];
+			}
+		}
+
+		return $meta;
 	}
 
 	/**
