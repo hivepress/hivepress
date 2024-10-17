@@ -55,6 +55,10 @@ class Page extends Container {
 		if ( $query ) {
 			$query['hp_main'] = true;
 
+			if ( is_page() ) {
+				$query['hp_archive'] = true;
+			}
+
 			query_posts( $query );
 		}
 

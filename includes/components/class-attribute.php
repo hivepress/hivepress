@@ -1879,55 +1879,59 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Sort results.
-		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
+		if ( $query->is_main_query() || $query->get( 'hp_archive' ) ) {
 
-		if ( $sort_form ) {
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
 
-			// Set form values.
-			$sort_form->set_values( $_GET, true );
+			if ( $sort_form ) {
 
-			if ( $sort_form->validate() ) {
+				// Set form values.
+				$sort_form->set_values( $_GET, true );
 
-				// Get sort parameter.
-				$sort_param = $sort_form->get_value( '_sort' );
+				if ( $sort_form->validate() ) {
 
-				if ( 'title' === $sort_param ) {
+					// Get sort parameter.
+					$sort_param = $sort_form->get_value( '_sort' );
 
-					// Set sort order.
-					$query->set( 'orderby', 'title' );
-					$query->set( 'order', 'ASC' );
-				} else {
+					if ( 'title' === $sort_param ) {
 
-					// Get sort order.
-					$sort_order = 'ASC';
+						// Set sort order.
+						$query->set( 'orderby', 'title' );
+						$query->set( 'order', 'ASC' );
+					} else {
 
-					if ( strpos( $sort_param, '__' ) ) {
-						list($sort_param, $sort_order) = explode( '__', $sort_param );
-					}
+						// Get sort order.
+						$sort_order = 'ASC';
 
-					// Get sort attribute.
-					$sort_attribute = hp\get_array_value( $attributes, $sort_param );
+						if ( strpos( $sort_param, '__' ) ) {
+							list($sort_param, $sort_order) = explode( '__', $sort_param );
+						}
 
-					if ( $sort_attribute && $sort_attribute['sortable'] ) {
+						// Get sort attribute.
+						$sort_attribute = hp\get_array_value( $attributes, $sort_param );
 
-						// Get sort field.
-						$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
+						if ( $sort_attribute && $sort_attribute['sortable'] ) {
 
-						if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
+							// Get sort field.
+							$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
 
-							// Update field filter.
-							$sort_field->update_filter( true );
+							if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
 
-							// Add meta clause.
-							$meta_query[ $sort_param . '__order' ] = [
-								'key'     => hp\prefix( $sort_param ),
-								'compare' => 'EXISTS',
-								'type'    => hp\get_array_value( $sort_field->get_filter(), 'type' ),
-							];
+								// Update field filter.
+								$sort_field->update_filter( true );
 
-							// Set sort order.
-							$query->set( 'orderby', $sort_param . '__order' );
-							$query->set( 'order', strtoupper( $sort_order ) );
+								// Add meta clause.
+								$meta_query[ $sort_param . '__order' ] = [
+									'key'     => hp\prefix( $sort_param ),
+									'compare' => 'EXISTS',
+									'type'    => hp\get_array_value( $sort_field->get_filter(), 'type' ),
+								];
+
+								// Set sort order.
+								$query->set( 'orderby', $sort_param . '__order' );
+								$query->set( 'order', strtoupper( $sort_order ) );
+							}
 						}
 					}
 				}
