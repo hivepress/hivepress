@@ -1921,11 +1921,29 @@ final class Attribute extends Component {
 								// Update field filter.
 								$sort_field->update_filter( true );
 
+								// Set sort filter.
+								$sort_filter = [
+									'key'  => hp\prefix( $sort_param ),
+									'type' => hp\get_array_value( $sort_field->get_filter(), 'type' ),
+								];
+
 								// Add meta clause.
-								$meta_query[ $sort_param . '__order' ] = [
-									'key'     => hp\prefix( $sort_param ),
-									'compare' => 'EXISTS',
-									'type'    => hp\get_array_value( $sort_field->get_filter(), 'type' ),
+								$meta_query[] = [
+									'relation' => 'OR',
+
+									$sort_param . '__order' => array_merge(
+										$sort_filter,
+										[
+											'compare' => 'NOT EXISTS',
+										]
+									),
+
+									array_merge(
+										$sort_filter,
+										[
+											'compare' => 'EXISTS',
+										]
+									),
 								];
 
 								// Set sort order.
