@@ -292,10 +292,13 @@ abstract class Query extends \ArrayObject {
 						if ( $field ) {
 							if ( $field->get_arg( '_external' ) ) {
 
+								// Update field filter.
+								$field->update_filter( true );
+
 								// Set meta filter.
 								$filter = [
 									'key'  => $field->get_arg( '_alias' ),
-									'type' => $field::get_meta( 'type' ),
+									'type' => hp\get_array_value( $field->get_filter(), 'type' ),
 								];
 
 								// Add meta clause.
