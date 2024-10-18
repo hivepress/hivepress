@@ -292,11 +292,29 @@ abstract class Query extends \ArrayObject {
 						if ( $field ) {
 							if ( $field->get_arg( '_external' ) ) {
 
+								// Set meta filter.
+								$filter = [
+									'key'  => $field->get_arg( '_alias' ),
+									'type' => $field::get_meta( 'type' ),
+								];
+
 								// Add meta clause.
-								$this->args['meta_query'][ $name . '__order' ] = [
-									'key'     => $field->get_arg( '_alias' ),
-									'type'    => $field::get_meta( 'type' ),
-									'compare' => 'EXISTS',
+								$this->args['meta_query'][] = [
+									'relation'        => 'OR',
+
+									$name . '__order' => array_merge(
+										$filter,
+										[
+											'compare' => 'NOT EXISTS',
+										]
+									),
+
+									array_merge(
+										$filter,
+										[
+											'compare' => 'EXISTS',
+										]
+									),
 								];
 
 								// Set meta order.
