@@ -172,6 +172,7 @@ final class Vendor extends Component {
 		)->get()
 		->serialize();
 
+		// Update listings.
 		$this->update_listings( $vendor, $listings );
 	}
 
