@@ -289,6 +289,9 @@ final class Attribute extends Component {
 				$this->models[ $model ]['searchable'] = false;
 			}
 
+			// Add block settings.
+			add_filter( 'hivepress/v1/blocks/' . $model . 's/meta', [ $this, 'add_block_settings' ], 100 );
+
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_search', [ $this, 'add_field_settings' ], 100 );
@@ -688,6 +691,27 @@ final class Attribute extends Component {
 
 		// Refresh permalinks.
 		hivepress()->router->flush_rewrite_rules();
+	}
+
+	/**
+	 * Adds block settings.
+	 *
+	 * @param array $meta Block meta.
+	 * @return array
+	 */
+	public function add_block_settings( $meta ) {
+
+		// Get attributes.
+		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ) );
+
+		// Add settings.
+		foreach ( $attributes as $attribute_name => $attribute_args ) {
+			if ( ( $attribute_args['searchable'] || $attribute_args['filterable'] ) && ! isset( $meta['settings'][ $attribute_name ] ) ) {
+				$meta['settings'][ $attribute_name ] = $attribute_args['search_field'];
+			}
+		}
+
+		return $meta;
 	}
 
 	/**
