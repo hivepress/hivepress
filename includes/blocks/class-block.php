@@ -20,9 +20,16 @@ abstract class Block {
 	use Traits\Mutator;
 	use Traits\Context;
 
-	use Traits\Meta {
+	use Traits \Meta {
 		set_meta as _set_meta;
 	}
+
+	/**
+	 * Block arguments.
+	 *
+	 * @var array
+	 */
+	protected $args = [];
 
 	/**
 	 * Block name.
@@ -83,6 +90,9 @@ abstract class Block {
 			$args = apply_filters( 'hivepress/v1/blocks/' . hp\get_class_name( $class ), $args, $this );
 		}
 
+		// Set arguments.
+		$this->args = $args;
+
 		// Set properties.
 		foreach ( $args as $name => $value ) {
 			$this->set_property( $name, $value );
@@ -137,6 +147,25 @@ abstract class Block {
 		} else {
 			$this->context[ $name ] = $value;
 		}
+	}
+
+	/**
+	 * Get block arguments.
+	 *
+	 * @return array
+	 */
+	final public function get_args() {
+		return $this->args;
+	}
+
+	/**
+	 * Gets block argument.
+	 *
+	 * @param string $name Argument name.
+	 * @return mixed
+	 */
+	final public function get_arg( $name ) {
+		return hp\get_array_value( $this->args, $name );
 	}
 
 	/**
