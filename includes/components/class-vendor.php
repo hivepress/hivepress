@@ -26,6 +26,9 @@ final class Vendor extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Create listing.
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'create_listing' ], 10, 2 );
+
 		// Update user.
 		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 100, 2 );
 
@@ -56,15 +59,12 @@ final class Vendor extends Component {
 	}
 
 	/**
-	 * Updates vendor.
+	 * Updates listings.
 	 *
-	 * @param int    $vendor_id Vendor ID.
 	 * @param object $vendor Vendor object.
+	 * @param array  $listings Listing objects.
 	 */
-	public function update_vendor( $vendor_id, $vendor ) {
-
-		// Remove action.
-		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
+	protected function update_listings( $vendor, $listings ) {
 
 		// Get attributes.
 		$attributes = array_filter(
@@ -125,20 +125,54 @@ final class Vendor extends Component {
 			$values[ $attribute_name ] = $term_ids;
 		}
 
-		// Get listings.
-		$listings = Models\Listing::query()->filter(
-			[
-				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-				'user'       => $vendor->get_user__id(),
-			]
-		)->get();
-
 		// Update listings.
 		foreach ( $listings as $listing ) {
 			if ( array_intersect_key( $listing->serialize(), $attributes ) !== $values ) {
 				$listing->fill( $values )->save( array_keys( $values ) );
 			}
 		}
+	}
+
+	/**
+	 * Creates listing.
+	 *
+	 * @param int    $listing_id Listing ID.
+	 * @param object $listing Listing object.
+	 */
+	public function create_listing( $listing_id, $listing ) {
+
+		// Get vendor.
+		$vendor = $listing->get_vendor();
+
+		if ( ! $vendor ) {
+			return;
+		}
+
+		// Update listing.
+		$this->update_listings( $vendor, [ $listing ] );
+	}
+
+	/**
+	 * Updates vendor.
+	 *
+	 * @param int    $vendor_id Vendor ID.
+	 * @param object $vendor Vendor object.
+	 */
+	public function update_vendor( $vendor_id, $vendor ) {
+
+		// Remove action.
+		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
+
+		// Get listings.
+		$listings = Models\Listing::query()->filter(
+			[
+				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+				'user'       => $vendor->get_user__id(),
+			]
+		)->get()
+		->serialize();
+
+		$this->update_listings( $vendor, $listings );
 	}
 
 	/**
