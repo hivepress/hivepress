@@ -2117,7 +2117,7 @@ final class Attribute extends Component {
 			$query_args = $this->get_query_args( $model, $_GET );
 
 			$meta_query = array_merge( $meta_query, $query_args['meta_query'] );
-			$tax_query  = array_merge( $meta_query, $query_args['tax_query'] );
+			$tax_query  = array_merge( $tax_query, $query_args['tax_query'] );
 		}
 
 		// Set meta and taxonomy queries.
