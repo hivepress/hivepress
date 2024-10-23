@@ -20,7 +20,7 @@ abstract class Block {
 	use Traits\Mutator;
 	use Traits\Context;
 
-	use Traits\Meta {
+	use Traits \Meta {
 		set_meta as _set_meta;
 	}
 
@@ -144,6 +144,9 @@ abstract class Block {
 	final protected function set_context( $name, $value = null ) {
 		if ( is_array( $name ) ) {
 			$this->context = $name;
+
+			// @todo remove when optimized globally.
+			unset( $this->args['context'] );
 		} else {
 			$this->context[ $name ] = $value;
 		}
