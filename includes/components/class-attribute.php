@@ -854,7 +854,7 @@ final class Attribute extends Component {
 	public function add_block_settings( $meta ) {
 
 		// Get attributes.
-		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ) );
+		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ), [] );
 
 		// Add settings.
 		foreach ( $attributes as $attribute_name => $attribute_args ) {
