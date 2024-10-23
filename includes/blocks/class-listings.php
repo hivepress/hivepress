@@ -18,9 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Listings extends Block {
 
-	// todo.
-	protected $args = [];
-
 	/**
 	 * Template mode.
 	 *
@@ -196,7 +193,6 @@ class Listings extends Block {
 	public function render() {
 		global $wp_query;
 
-		error_log( print_r( $this->args, true ) );
 		$output = '';
 
 		if ( $this->number ) {
@@ -219,9 +215,6 @@ class Listings extends Block {
 							'status' => 'publish',
 						]
 					)->limit( $this->number );
-
-					$query->filter( [ 'bedrooms__gt' => 123 ] );
-					error_log( print_r( $query->get_args(), true ) );
 
 					// Set category.
 					if ( $this->category ) {
