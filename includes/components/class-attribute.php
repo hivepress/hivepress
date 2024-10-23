@@ -317,7 +317,7 @@ final class Attribute extends Component {
 	 * @param array  $values Attribute values.
 	 * @return array
 	 */
-	public function get_query_args( $model, $values ) {
+	public function get_query_args( $model, $values = [] ) {
 
 		// Set default arguments.
 		$query_args = [
@@ -326,7 +326,13 @@ final class Attribute extends Component {
 		];
 
 		// Get attribute fields.
-		$attribute_fields = $this->get_attribute_fields( $model, $values );
+		if ( is_array( $model ) ) {
+
+			// @todo replace temporary fix.
+			$attribute_fields = $model;
+		} else {
+			$attribute_fields = $this->get_attribute_fields( $model, $values );
+		}
 
 		// Set attribute filters.
 		foreach ( $attribute_fields as $attribute_name => $field ) {
@@ -2128,7 +2134,12 @@ final class Attribute extends Component {
 
 		// Filter results.
 		if ( $query->is_search() ) {
-			$query_args = $this->get_query_args( $model, $_GET );
+
+			// Get attribute fields.
+			$attribute_fields = $this->get_attribute_fields( $model, $_GET );
+
+			// Get query arguments.
+			$query_args = $this->get_query_args( $attribute_fields );
 
 			$meta_query = array_merge( $meta_query, $query_args['meta_query'] );
 			$tax_query  = array_merge( $tax_query, $query_args['tax_query'] );
@@ -2147,7 +2158,7 @@ final class Attribute extends Component {
 			 * @param {WP_Query} $query Search query.
 			 * @param {array} $fields Search fields.
 			 */
-			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $this->get_attribute_fields( $model, $_GET ) );
+			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
 		}
 
 		if ( $query->is_main_query() ) {
