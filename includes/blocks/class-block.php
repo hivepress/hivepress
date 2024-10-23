@@ -20,7 +20,7 @@ abstract class Block {
 	use Traits\Mutator;
 	use Traits\Context;
 
-	use Traits\Meta {
+	use Traits \Meta {
 		set_meta as _set_meta;
 	}
 
@@ -120,7 +120,7 @@ abstract class Block {
 		if ( $settings ) {
 			$meta['settings'] = [];
 
-			foreach ( $settings as $name => $args ) {
+			foreach ( hp\sort_array( $settings ) as $name => $args ) {
 
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
