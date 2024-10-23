@@ -121,7 +121,7 @@ class Listings extends Block {
 						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
-						'_order'   => 40,
+						'_order'   => 200,
 
 						'options'  => [
 							'created_date' => hivepress()->translator->get_string( 'by_date_added' ),
@@ -133,13 +133,13 @@ class Listings extends Block {
 					'featured' => [
 						'label'  => hivepress()->translator->get_string( 'display_only_featured_listings' ),
 						'type'   => 'checkbox',
-						'_order' => 50,
+						'_order' => 210,
 					],
 
 					'verified' => [
 						'label'  => hivepress()->translator->get_string( 'display_only_verified_listings' ),
 						'type'   => 'checkbox',
-						'_order' => 60,
+						'_order' => 220,
 					],
 				],
 			],

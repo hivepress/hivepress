@@ -107,7 +107,7 @@ class Vendors extends Block {
 						'label'    => hivepress()->translator->get_string( 'sort_order' ),
 						'type'     => 'select',
 						'required' => true,
-						'_order'   => 40,
+						'_order'   => 200,
 
 						'options'  => [
 							'registered_date' => hivepress()->translator->get_string( 'by_date_registered' ),
@@ -119,7 +119,7 @@ class Vendors extends Block {
 					'verified' => [
 						'label'  => hivepress()->translator->get_string( 'display_only_verified_vendors' ),
 						'type'   => 'checkbox',
-						'_order' => 50,
+						'_order' => 210,
 					],
 				],
 			],

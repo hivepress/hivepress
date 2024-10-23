@@ -120,7 +120,7 @@ abstract class Block {
 		if ( $settings ) {
 			$meta['settings'] = [];
 
-			foreach ( $settings as $name => $args ) {
+			foreach ( hp\sort_array( $settings ) as $name => $args ) {
 
 				// Create field.
 				$field = hp\create_class_instance( '\HivePress\Fields\\' . $args['type'], [ array_merge( $args, [ 'name' => $name ] ) ] );
@@ -144,6 +144,9 @@ abstract class Block {
 	final protected function set_context( $name, $value = null ) {
 		if ( is_array( $name ) ) {
 			$this->context = $name;
+
+			// @todo remove when optimized globally.
+			unset( $this->args['context'] );
 		} else {
 			$this->context[ $name ] = $value;
 		}

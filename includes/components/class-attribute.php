@@ -854,11 +854,13 @@ final class Attribute extends Component {
 	public function add_block_settings( $meta ) {
 
 		// Get attributes.
-		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ) );
+		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ), [] );
 
 		// Add settings.
 		foreach ( $attributes as $attribute_name => $attribute_args ) {
-			if ( ( $attribute_args['searchable'] || $attribute_args['filterable'] ) && ! isset( $meta['settings'][ $attribute_name ] ) ) {
+
+			// @todo remove type check when supported.
+			if ( ( $attribute_args['searchable'] || $attribute_args['filterable'] ) && ! isset( $meta['settings'][ $attribute_name ] ) && in_array( $attribute_args['search_field']['type'], [ 'text', 'number', 'select', 'checkbox' ] ) ) {
 				$meta['settings'][ $attribute_name ] = $attribute_args['search_field'];
 			}
 		}
