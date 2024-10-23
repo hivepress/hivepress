@@ -257,6 +257,138 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets query arguments.
+	 *
+	 * @param string $model Model name.
+	 * @param array  $values Attribute values.
+	 * @return array
+	 */
+	public function get_query_args( $model, $values ) {
+
+		// Set default arguments.
+		$query_args = [
+			'meta_query' => [],
+			'tax_query'  => [],
+		];
+
+		// Get category ID.
+		$category_id = isset( $values['_category'] ) ? absint( $values['_category'] ) : null;
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, (array) $category_id );
+
+		// Get attribute fields.
+		$attribute_fields = [];
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( $attribute['searchable'] || $attribute['filterable'] ) {
+
+				// Get field arguments.
+				$field_args = $attribute['search_field'];
+
+				if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
+					$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
+				} else {
+					$field_args['name'] = hp\prefix( $attribute_name );
+				}
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+
+				if ( $field && $field::get_meta( 'filterable' ) ) {
+
+					// Set field value.
+					$field->set_value( hp\get_array_value( $values, $attribute_name ) );
+
+					if ( $field->validate() ) {
+
+						// Check range values.
+						if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+							continue;
+						}
+
+						// Add field.
+						$attribute_fields[ $attribute_name ] = $field;
+					}
+				}
+			}
+		}
+
+		// Set attribute filters.
+		foreach ( $attribute_fields as $attribute_name => $field ) {
+			if ( $field->get_arg( '_parent' ) ) {
+
+				// Get parent field.
+				$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
+
+				if ( $parent_field ) {
+
+					// Set parent value.
+					$field->set_parent_value( $parent_field->get_value() );
+
+					// Update field filter.
+					$field->update_filter();
+				}
+			}
+
+			// Get field filter.
+			$field_filter = $field->get_filter();
+
+			if ( $field_filter ) {
+				if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
+
+					// Set taxonomy filter.
+					$field_filter = array_combine(
+						array_map(
+							function( $param ) {
+								return hp\get_array_value(
+									[
+										'name'  => 'taxonomy',
+										'value' => 'terms',
+									],
+									$param,
+									$param
+								);
+							},
+							array_keys( $field_filter )
+						),
+						$field_filter
+					);
+
+					unset( $field_filter['type'] );
+
+					// Add taxonomy clause.
+					$query_args['tax_query'][ $attribute_name ] = $field_filter;
+				} else {
+
+					// Set meta filter.
+					$field_filter = array_combine(
+						array_map(
+							function( $param ) {
+								return hp\get_array_value(
+									[
+										'name'     => 'key',
+										'operator' => 'compare',
+									],
+									$param,
+									$param
+								);
+							},
+							array_keys( $field_filter )
+						),
+						$field_filter
+					);
+
+					// Add meta clause.
+					$query_args['meta_query'][ $attribute_name ] = $field_filter;
+				}
+			}
+		}
+
+		return $query_args;
+	}
+
+	/**
 	 * Registers models.
 	 */
 	public function register_models() {
@@ -1982,114 +2114,10 @@ final class Attribute extends Component {
 
 		// Filter results.
 		if ( $query->is_search() ) {
+			$query_args = $this->get_query_args( $model, $_GET );
 
-			// Get attribute fields.
-			$attribute_fields = [];
-
-			foreach ( $attributes as $attribute_name => $attribute ) {
-				if ( $attribute['searchable'] || $attribute['filterable'] ) {
-
-					// Get field arguments.
-					$field_args = $attribute['search_field'];
-
-					if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
-						$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
-					} else {
-						$field_args['name'] = hp\prefix( $attribute_name );
-					}
-
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
-
-					if ( $field && $field::get_meta( 'filterable' ) ) {
-
-						// Set field value.
-						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
-
-						if ( $field->validate() ) {
-
-							// Check range values.
-							if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
-								continue;
-							}
-
-							// Add field.
-							$attribute_fields[ $attribute_name ] = $field;
-						}
-					}
-				}
-			}
-
-			// Set attribute filters.
-			foreach ( $attribute_fields as $attribute_name => $field ) {
-				if ( $field->get_arg( '_parent' ) ) {
-
-					// Get parent field.
-					$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
-
-					if ( $parent_field ) {
-
-						// Set parent value.
-						$field->set_parent_value( $parent_field->get_value() );
-
-						// Update field filter.
-						$field->update_filter();
-					}
-				}
-
-				// Get field filter.
-				$field_filter = $field->get_filter();
-
-				if ( $field_filter ) {
-					if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
-
-						// Set taxonomy filter.
-						$field_filter = array_combine(
-							array_map(
-								function( $param ) {
-									return hp\get_array_value(
-										[
-											'name'  => 'taxonomy',
-											'value' => 'terms',
-										],
-										$param,
-										$param
-									);
-								},
-								array_keys( $field_filter )
-							),
-							$field_filter
-						);
-
-						unset( $field_filter['type'] );
-
-						// Add taxonomy clause.
-						$tax_query[ $attribute_name ] = $field_filter;
-					} else {
-
-						// Set meta filter.
-						$field_filter = array_combine(
-							array_map(
-								function( $param ) {
-									return hp\get_array_value(
-										[
-											'name'     => 'key',
-											'operator' => 'compare',
-										],
-										$param,
-										$param
-									);
-								},
-								array_keys( $field_filter )
-							),
-							$field_filter
-						);
-
-						// Add meta clause.
-						$meta_query[ $attribute_name ] = $field_filter;
-					}
-				}
-			}
+			$meta_query = array_merge( $meta_query, $query_args['meta_query'] );
+			$tax_query  = array_merge( $meta_query, $query_args['tax_query'] );
 		}
 
 		// Set meta and taxonomy queries.

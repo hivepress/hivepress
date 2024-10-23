@@ -214,7 +214,13 @@ class Listings extends Block {
 						[
 							'status' => 'publish',
 						]
-					)->limit( $this->number );
+					)->limit( $this->number )
+					->set_args(
+						hivepress()->attribute->get_query_args(
+							'listing',
+							array_diff_key( $this->get_args(), get_object_vars( $this ) )
+						)
+					);
 
 					// Set category.
 					if ( $this->category ) {
