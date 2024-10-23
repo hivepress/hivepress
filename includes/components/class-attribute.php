@@ -129,6 +129,60 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets attribute fields.
+	 *
+	 * @param string $model Model name.
+	 * @param array  $values Attribute values.
+	 * @return array
+	 */
+	protected function get_attribute_fields( $model, $values ) {
+		$attribute_fields = [];
+
+		// Get category ID.
+		$category_id = isset( $values['_category'] ) ? absint( $values['_category'] ) : null;
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, (array) $category_id );
+
+		// Get fields.
+		foreach ( $attributes as $attribute_name => $attribute ) {
+			if ( $attribute['searchable'] || $attribute['filterable'] ) {
+
+				// Get field arguments.
+				$field_args = $attribute['search_field'];
+
+				if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
+					$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
+				} else {
+					$field_args['name'] = hp\prefix( $attribute_name );
+				}
+
+				// Create field.
+				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+
+				if ( $field && $field::get_meta( 'filterable' ) ) {
+
+					// Set field value.
+					$field->set_value( hp\get_array_value( $values, $attribute_name ) );
+
+					if ( $field->validate() ) {
+
+						// Check range values.
+						if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+							continue;
+						}
+
+						// Add field.
+						$attribute_fields[ $attribute_name ] = $field;
+					}
+				}
+			}
+		}
+
+		return $attribute_fields;
+	}
+
+	/**
 	 * Gets model names.
 	 *
 	 * @param string $type Model type.
@@ -271,48 +325,8 @@ final class Attribute extends Component {
 			'tax_query'  => [],
 		];
 
-		// Get category ID.
-		$category_id = isset( $values['_category'] ) ? absint( $values['_category'] ) : null;
-
-		// Get attributes.
-		$attributes = $this->get_attributes( $model, (array) $category_id );
-
 		// Get attribute fields.
-		$attribute_fields = [];
-
-		foreach ( $attributes as $attribute_name => $attribute ) {
-			if ( $attribute['searchable'] || $attribute['filterable'] ) {
-
-				// Get field arguments.
-				$field_args = $attribute['search_field'];
-
-				if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
-					$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
-				} else {
-					$field_args['name'] = hp\prefix( $attribute_name );
-				}
-
-				// Create field.
-				$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
-
-				if ( $field && $field::get_meta( 'filterable' ) ) {
-
-					// Set field value.
-					$field->set_value( hp\get_array_value( $values, $attribute_name ) );
-
-					if ( $field->validate() ) {
-
-						// Check range values.
-						if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
-							continue;
-						}
-
-						// Add field.
-						$attribute_fields[ $attribute_name ] = $field;
-					}
-				}
-			}
-		}
+		$attribute_fields = $this->get_attribute_fields( $model, $values );
 
 		// Set attribute filters.
 		foreach ( $attribute_fields as $attribute_name => $field ) {
@@ -2133,7 +2147,7 @@ final class Attribute extends Component {
 			 * @param {WP_Query} $query Search query.
 			 * @param {array} $fields Search fields.
 			 */
-			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
+			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $this->get_attribute_fields( $model, $_GET ) );
 		}
 
 		if ( $query->is_main_query() ) {
