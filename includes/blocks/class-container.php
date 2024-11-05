@@ -91,6 +91,9 @@ class Container extends Block {
 				}
 			}
 		}
+
+		// @todo remove when optimized globally.
+		unset( $this->args['blocks'] );
 	}
 
 	/**

@@ -65,6 +65,11 @@ final class Admin extends Component {
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
+			// Clear cache.
+			add_action( 'update_option_hp_hivepress_license_key', [ $this, 'clear_purchases_cache' ] );
+			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
+			add_action( 'hivepress/v1/activate', [ $this, 'clear_extensions_cache' ] );
+
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
@@ -455,7 +460,7 @@ final class Admin extends Component {
 
 		// Render description.
 		if ( isset( $section['description'] ) ) {
-			echo '<p>' . esc_html( $section['description'] ) . '</p>';
+			echo '<p>' . hp\sanitize_html( $section['description'] ) . '</p>';
 		}
 	}
 
@@ -599,6 +604,66 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Gets HivePress purchases.
+	 *
+	 * @return array
+	 */
+	protected function get_purchases() {
+
+		// Get license key.
+		$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+
+		if ( ! $license_key ) {
+			return [];
+		}
+
+		// Get cached purchases.
+		$purchases = hivepress()->cache->get_cache( 'purchases' );
+
+		if ( is_null( $purchases ) ) {
+			$purchases = [];
+
+			// Get API response.
+			$response = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get(
+						'https://store.hivepress.io/api/v1/products?' . http_build_query(
+							[
+								'license_key' => $license_key,
+							]
+						)
+					)
+				),
+				true
+			);
+
+			if ( is_array( $response ) && isset( $response['data'] ) ) {
+				foreach ( $response['data'] as $product ) {
+
+					// Add purchase.
+					$purchases[ $product['slug'] ] = [
+						'name' => $product['name'],
+						'slug' => $product['slug'],
+						'type' => $product['type'],
+					];
+				}
+
+				// Cache purchases.
+				hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
+			}
+		}
+
+		return $purchases;
+	}
+
+	/**
+	 * Clears cached purchases.
+	 */
+	public function clear_purchases_cache() {
+		hivepress()->cache->delete_cache( 'purchases' );
+	}
+
+	/**
 	 * Gets HivePress themes.
 	 *
 	 * @return array
@@ -715,6 +780,13 @@ final class Admin extends Component {
 		}
 
 		return $themes;
+	}
+
+	/**
+	 * Clears cached themes.
+	 */
+	public function clear_themes_cache() {
+		hivepress()->cache->delete_cache( 'themes' );
 	}
 
 	/**
@@ -836,7 +908,7 @@ final class Admin extends Component {
 			$extension_status = install_plugin_install_status( $extension );
 
 			// Set activation status.
-			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
+			if ( $extension_status['file'] && ! is_plugin_active( $extension_path ) ) {
 				$extension_status = array_merge(
 					$extension_status,
 					[
@@ -876,6 +948,13 @@ final class Admin extends Component {
 		}
 
 		return $extensions;
+	}
+
+	/**
+	 * Clears cached extensions.
+	 */
+	public function clear_extensions_cache() {
+		hivepress()->cache->delete_cache( 'all_extensions' );
 	}
 
 	/**
@@ -1424,7 +1503,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p>' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</div>';
@@ -1461,7 +1540,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p class="description">' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</td>';
@@ -1598,7 +1677,7 @@ final class Admin extends Component {
 
 					// Render description.
 					if ( $field->get_description() ) {
-						$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+						$output .= '<p class="description">' . do_shortcode( wp_kses_post( $field->get_description() ) ) . '</p>';
 					}
 
 					$output .= '</td>';
@@ -1663,6 +1742,30 @@ final class Admin extends Component {
 		// Add default notices.
 		$notices = [];
 
+		// Check valid purchases.
+		$purchases = $this->get_purchases();
+
+		$products = array_filter(
+			array_merge( $this->get_themes(), $this->get_extensions() ),
+			function( $product ) use ( $purchases ) {
+				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
+			}
+		);
+
+		if ( $products ) {
+			$notices['license_request'] = [
+				'type'        => 'error',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: 1: settings URL, 2: unlicensed products. */
+					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
+					implode( ', ', array_column( $products, 'name' ) )
+				),
+			];
+		}
+
+		// Check theme support.
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type'        => 'warning',
@@ -1675,6 +1778,7 @@ final class Admin extends Component {
 			];
 		}
 
+		// Suggest adding review.
 		if ( $installed_time < time() - WEEK_IN_SECONDS * 2 ) {
 			$notices['review_request'] = [
 				'type'        => 'info',
@@ -1688,6 +1792,8 @@ final class Admin extends Component {
 		}
 
 		if ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+
+			// Suggest premium products.
 			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
 				$notices['upgrade_request'] = [
 					'type'        => 'info',
@@ -1701,6 +1807,7 @@ final class Admin extends Component {
 				];
 			}
 
+			// Request usage sharing.
 			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
 				$notices['usage_tracking'] = [
 					'type'        => 'info',
@@ -1712,6 +1819,7 @@ final class Admin extends Component {
 			}
 		}
 
+		// Suggest website showcase.
 		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
 			$notices['showcase_request'] = [
 				'type'        => 'info',
@@ -1724,6 +1832,7 @@ final class Admin extends Component {
 			];
 		}
 
+		// Suggest expert program.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
 			$notices['expert_request'] = [
 				'type'        => 'info',
@@ -1843,7 +1952,7 @@ final class Admin extends Component {
 		if ( $text ) {
 			$output .= '<div class="hp-tooltip">';
 			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
-			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '<div class="hp-tooltip__text">' . do_shortcode( wp_kses_post( $text ) ) . '</div>';
 			$output .= '</div>';
 		}
 
