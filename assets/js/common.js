@@ -145,7 +145,7 @@ var hivepress = {
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
 					templateResult: function (state) {
-						if (state.error) {
+						if (state.hasOwnProperty('error')) {
 							return state.error;
 						}
 
