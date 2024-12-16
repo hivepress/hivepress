@@ -871,48 +871,56 @@ var hivepress = {
 			}
 
 			if (renderSettings) {
-				form.on('change', function () {
-					var container = $('[data-block=' + renderSettings.block + ']'),
-						data = new FormData(form.get(0)),
-						request = form.data('renderRequest');
+				renderSettings = $.extend({ event: 'change', type: 'replace' }, renderSettings);
 
-					if (!container.length) {
-						return;
-					}
+				if ('change' === renderSettings.event) {
+					form.on('change', function () {
+						var container = $('[data-block=' + renderSettings.block + ']'),
+							data = new FormData(form.get(0)),
+							request = form.data('renderRequest');
 
-					if (container.attr('data-state') === 'loading') {
-						request.abort();
-					}
+						if (!container.length) {
+							return;
+						}
 
-					container.attr('data-state', 'loading');
+						if (container.attr('data-state') === 'loading') {
+							request.abort();
+						}
 
-					data.append('_render', true);
-					data.delete('_wpnonce');
+						container.attr('data-state', 'loading');
 
-					form.data('renderRequest', $.ajax({
-						url: renderSettings.url,
-						method: 'POST',
-						data: data,
-						contentType: false,
-						processData: false,
-						beforeSend: function (xhr) {
-							if ($('body').hasClass('logged-in')) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							}
-						},
-						complete: function (xhr) {
-							var response = xhr.responseJSON;
+						data.append('_render', true);
+						data.delete('_wpnonce');
 
-							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
-								var newContainer = $(response.data.html);
+						form.data('renderRequest', $.ajax({
+							url: renderSettings.url,
+							method: 'POST',
+							data: data,
+							contentType: false,
+							processData: false,
+							beforeSend: function (xhr) {
+								if ($('body').hasClass('logged-in')) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								}
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON;
 
-								container.replaceWith(newContainer);
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
 
-								hivepress.initUI(newContainer);
-							}
-						},
-					}));
-				});
+									if ('append' === renderSettings.type) {
+										container.append(newContainer);
+									} else {
+										container.replaceWith(newContainer);
+									}
+
+									hivepress.initUI(newContainer);
+								}
+							},
+						}));
+					});
+				}
 			}
 
 			form.on('submit', function () {
@@ -925,16 +933,28 @@ var hivepress = {
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
 				form.on('submit', function (e) {
+					var formData = new FormData(form.get(0));
+
 					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 
 					if (typeof tinyMCE !== 'undefined') {
 						tinyMCE.triggerSave();
 					}
 
+					if (renderSettings && renderSettings.event === 'submit') {
+						var renderContainer = $('[data-block=' + renderSettings.block + ']');
+
+						if (renderContainer.length) {
+							renderContainer.attr('data-state', 'loading');
+
+							formData.append('_render', true);
+						}
+					}
+
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
-						data: new FormData(form.get(0)),
+						data: formData,
 						contentType: false,
 						processData: false,
 						beforeSend: function (xhr) {
@@ -999,6 +1019,22 @@ var hivepress = {
 								$('html, body').animate({
 									scrollTop: form.offset().top,
 								}, 500);
+							}
+
+							if (renderSettings && renderSettings.event === 'submit' && renderContainer.length) {
+								renderContainer.attr('data-state', '');
+
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									if ('append' === renderSettings.type) {
+										renderContainer.append(newContainer);
+									} else {
+										renderContainer.replaceWith(newContainer);
+									}
+
+									hivepress.initUI(newContainer);
+								}
 							}
 						},
 					});
