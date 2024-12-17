@@ -850,6 +850,59 @@ var hivepress = {
 				});
 		});
 
+		// Interval
+		container.find('[data-render]').each(function () {
+			var renderSettings = $(this).data('render');
+
+			if (renderSettings && renderSettings.hasOwnProperty('interval')) {
+				renderSettings = $.extend({ type: 'replace' }, renderSettings);
+
+				var renderInterval = setInterval(function () {
+					var url = new URL(renderSettings.url),
+						container = $('[data-block=' + renderSettings.block + ']');
+
+					if (!container.length) {
+						clearInterval(renderInterval);
+
+						return;
+					}
+
+					container.attr('data-state', 'loading');
+
+					url.searchParams.set('_render', true);
+
+					$.ajax({
+						url: url,
+						method: 'GET',
+						contentType: false,
+						processData: false,
+						beforeSend: function (xhr) {
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
+						},
+						complete: function (xhr) {
+							var response = xhr.responseJSON;
+
+							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+								var newContainer = $(response.data.html);
+
+								if ('append' === renderSettings.type) {
+									container.attr('data-state', '');
+
+									container.append(newContainer);
+								} else {
+									container.replaceWith(newContainer);
+								}
+
+								hivepress.initUI(newContainer);
+							}
+						},
+					});
+				}, renderSettings.interval * 1000);
+			}
+		});
+
 		// Form
 		var forms = container.find(hivepress.getSelector('form'));
 
@@ -910,6 +963,8 @@ var hivepress = {
 									var newContainer = $(response.data.html);
 
 									if ('append' === renderSettings.type) {
+										container.attr('data-state', '');
+
 										container.append(newContainer);
 									} else {
 										container.replaceWith(newContainer);
