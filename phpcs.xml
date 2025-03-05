@@ -14,10 +14,10 @@
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 	</rule>
 
-	<config name="testVersion" value="7.0-"/>
+	<config name="testVersion" value="8.0-"/>
 	<rule ref="PHPCompatibility"/>
 
-	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+	<rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
