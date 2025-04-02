@@ -69,7 +69,7 @@ final class Vendor extends Component {
 		// Get attributes.
 		$attributes = array_filter(
 			hivepress()->attribute->get_attributes( 'listing' ),
-			function( $attribute ) {
+			function ( $attribute ) {
 				return hp\get_array_value( $attribute, 'synced' );
 			}
 		);
@@ -350,12 +350,12 @@ final class Vendor extends Component {
 
 						// Get values.
 						$vendor_values = array_map(
-							function( $field ) {
+							function ( $field ) {
 								return $field->get_value();
 							},
 							array_filter(
 								$form->get_fields(),
-								function( $field ) use ( $vendor_fields ) {
+								function ( $field ) use ( $vendor_fields ) {
 									return ! $field->is_disabled() && in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
 								}
 							)
@@ -404,6 +404,7 @@ final class Vendor extends Component {
 		}
 
 		// Set request context.
+		// todo make available in REST API
 		$context['vendor_id'] = $vendor_id;
 
 		return $context;

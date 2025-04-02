@@ -13,8 +13,11 @@
 	&-link {
 		display: inline-flex;
 		align-items: center;
-		cursor: pointer;
 		text-decoration: none;
+
+		&:not(span) {
+			cursor: pointer;
+		}
 
 		&:not(:hover) {
 			color: inherit;

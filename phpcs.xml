@@ -17,8 +17,13 @@
 	<config name="testVersion" value="8.0-"/>
 	<rule ref="PHPCompatibility"/>
 
+	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+		<severity>0</severity>
+	</rule>
+
 	<rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
+	
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
 </ruleset>
