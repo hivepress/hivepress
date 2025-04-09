@@ -114,7 +114,6 @@ return [
 	'listings_by_vendor'                        => esc_html__( 'Listings by %s', 'hivepress' ),
 	'featuring_of_listings'                     => esc_html__( 'Featuring of Listings', 'hivepress' ),
 	'featured_listings'                         => esc_html__( 'Featured Listings', 'hivepress' ),
-	'featuring_period'                          => esc_html__( 'Featuring Period', 'hivepress' ),
 	'view_listings'                             => esc_html__( 'View Listings', 'hivepress' ),
 	'search_listings'                           => esc_html__( 'Search Listings', 'hivepress' ),
 	'no_listings_found'                         => esc_html__( 'No listings found.', 'hivepress' ),
