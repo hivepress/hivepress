@@ -54,14 +54,6 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
-		// Hide order item meta.
-		// todo
-		add_filter( 'woocommerce_hidden_order_itemmeta', [ $this, 'hide_order_item_meta' ] );
-
-		// Set order item meta.
-		// todo
-		add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'set_order_item_meta2' ], 10, 3 );
-
 		// Update user billing name.
 		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user_billing_name' ], 10, 2 );
 		add_action( 'hivepress/v1/models/user/update_last_name', [ $this, 'update_user_billing_name' ], 10, 2 );
@@ -88,33 +80,6 @@ final class WooCommerce extends Component {
 		}
 
 		parent::__construct( $args );
-	}
-
-	// todo
-	/**
-	 * Hides order item meta.
-	 *
-	 * @param array $meta Meta values.
-	 * @return array
-	 * @deprecated Since core version 1.3.2
-	 */
-	public function hide_order_item_meta( $meta ) {
-		return array_merge( $meta, [ '_hp_listing' ] );
-	}
-
-	// todo
-	/**
-	 * Sets order item meta.
-	 *
-	 * @param WC_Order_Item_Product $item Order item.
-	 * @param string                $cart_item_key Cart item key.
-	 * @param array                 $meta Meta values.
-	 * @deprecated Since core version 1.3.2
-	 */
-	public function set_order_item_meta2( $item, $cart_item_key, $meta ) {
-		if ( isset( $meta['_hp_listing'] ) ) {
-			$item->update_meta_data( '_hp_listing', $meta['_hp_listing'] );
-		}
 	}
 
 	/**
@@ -175,7 +140,7 @@ final class WooCommerce extends Component {
 	 */
 	public function get_order_product_ids( $order ) {
 		return array_map(
-			function( $item ) {
+			function ( $item ) {
 				return $item->get_product_id();
 			},
 			$order->get_items()
@@ -288,7 +253,7 @@ final class WooCommerce extends Component {
 		// Filter meta.
 		$meta = array_filter(
 			array_map(
-				function( $args ) use ( $fields ) {
+				function ( $args ) use ( $fields ) {
 					if ( strpos( $args->key, 'hp_' ) === 0 ) {
 
 						// Get field.
