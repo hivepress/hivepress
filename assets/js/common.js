@@ -1113,10 +1113,11 @@ var hivepress = {
 
 		// Field
 		container.find(hivepress.getSelector('field')).each(function () {
-			var field = $(this);
+			var field = $(this),
+				parentName = field.data('parent');
 
-			if (field.data('parent')) {
-				var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
+			if (parentName) {
+				var parentField = field.closest('form').find(':input[name="' + parentName + '"],:input[name="' + parentName + '[]"]');
 
 				if (field.parent().is('td')) {
 					field = field.closest('tr');
@@ -1125,12 +1126,12 @@ var hivepress = {
 				}
 
 				if (parentField.length) {
-					if (!parentField.val() || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
+					if ($.isEmptyObject(parentField.val()) || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
 						field.hide();
 					}
 
-					parentField.on('change', function () {
-						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
+					parentField.on('input change', function () {
+						if ($.isEmptyObject($(this).val()) || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
 							field.hide();
 						} else {
 							field.show();
