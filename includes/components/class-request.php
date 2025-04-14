@@ -44,7 +44,7 @@ final class Request extends Component {
 		// Filter parameters.
 		$params = array_filter(
 			$wp_query->query_vars,
-			function( $param ) {
+			function ( $param ) {
 				return strpos( $param, 'hp_' ) === 0;
 			},
 			ARRAY_FILTER_USE_KEY

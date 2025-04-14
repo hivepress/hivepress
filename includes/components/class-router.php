@@ -258,7 +258,7 @@ final class Router extends Component {
 
 					// Add query variables.
 					if ( $vars && ! $filter ) {
-						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
+						$url = add_query_arg( array_map( 'rawurlencode', array_map( 'strval', $vars ) ), $url );
 					}
 				}
 			}
@@ -288,14 +288,18 @@ final class Router extends Component {
 	 * Gets return URL.
 	 *
 	 * @param string $name Route name.
+	 * @param array  $query URL query.
 	 * @return string
 	 */
-	public function get_return_url( $name ) {
+	public function get_return_url( $name, $query = [] ) {
 		return $this->get_url(
 			$name,
-			[
-				'redirect' => $this->get_current_url(),
-			]
+			array_merge(
+				$query,
+				[
+					'redirect' => $this->get_current_url(),
+				]
+			)
 		);
 	}
 
@@ -347,7 +351,7 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_redirect_url() {
-		return wp_validate_redirect( hp\get_array_value( $_GET, 'redirect' ) );
+		return wp_validate_redirect( (string) hp\get_array_value( $_GET, 'redirect' ) );
 	}
 
 	/**
@@ -371,7 +375,7 @@ final class Router extends Component {
 		// Sort callbacks.
 		$callbacks = array_filter(
 			array_map(
-				function( $args ) {
+				function ( $args ) {
 					return hp\get_array_value( $args, 'callback' );
 				},
 				hp\sort_array( $callbacks )
@@ -422,7 +426,7 @@ final class Router extends Component {
 					implode(
 						'&',
 						array_map(
-							function( $index, $param ) {
+							function ( $index, $param ) {
 								return hp\prefix( $param ) . '=$matches[' . ( $index + 1 ) . ']';
 							},
 							array_keys( $params ),

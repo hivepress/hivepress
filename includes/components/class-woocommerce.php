@@ -140,7 +140,7 @@ final class WooCommerce extends Component {
 	 */
 	public function get_order_product_ids( $order ) {
 		return array_map(
-			function( $item ) {
+			function ( $item ) {
 				return $item->get_product_id();
 			},
 			$order->get_items()
@@ -253,7 +253,7 @@ final class WooCommerce extends Component {
 		// Filter meta.
 		$meta = array_filter(
 			array_map(
-				function( $args ) use ( $fields ) {
+				function ( $args ) use ( $fields ) {
 					if ( strpos( $args->key, 'hp_' ) === 0 ) {
 
 						// Get field.

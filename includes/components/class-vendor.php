@@ -48,7 +48,7 @@ final class Vendor extends Component {
 		if ( ! is_admin() ) {
 
 			// Set request context.
-			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+			add_action( 'init', [ $this, 'set_request_context' ], 200 );
 
 			// Alter templates.
 			add_filter( 'hivepress/v1/templates/listing_view_page', [ $this, 'alter_listing_view_page' ] );
@@ -69,7 +69,7 @@ final class Vendor extends Component {
 		// Get attributes.
 		$attributes = array_filter(
 			hivepress()->attribute->get_attributes( 'listing' ),
-			function( $attribute ) {
+			function ( $attribute ) {
 				return hp\get_array_value( $attribute, 'synced' );
 			}
 		);
@@ -350,12 +350,12 @@ final class Vendor extends Component {
 
 						// Get values.
 						$vendor_values = array_map(
-							function( $field ) {
+							function ( $field ) {
 								return $field->get_value();
 							},
 							array_filter(
 								$form->get_fields(),
-								function( $field ) use ( $vendor_fields ) {
+								function ( $field ) use ( $vendor_fields ) {
 									return ! $field->is_disabled() && in_array( $field->get_name(), $vendor_fields, true ) && hp\get_array_value( $field->get_args(), '_separate' );
 								}
 							)
@@ -375,15 +375,17 @@ final class Vendor extends Component {
 
 	/**
 	 * Sets request context.
-	 *
-	 * @param array $context Request context.
-	 * @return array
 	 */
-	public function set_request_context( $context ) {
+	public function set_request_context() {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 
 		// Check permissions.
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return $context;
+			return;
 		}
 
 		// Get cached vendor ID.
@@ -404,9 +406,8 @@ final class Vendor extends Component {
 		}
 
 		// Set request context.
-		$context['vendor_id'] = $vendor_id;
-
-		return $context;
+		// @todo set via the context filter when REST API scope is added.
+		hivepress()->request->set_context( 'vendor_id', $vendor_id );
 	}
 
 	/**

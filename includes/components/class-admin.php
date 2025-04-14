@@ -1135,7 +1135,7 @@ final class Admin extends Component {
 	public function add_meta_boxes( $post_type, $post ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+		if ( is_null( $post ) || ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
