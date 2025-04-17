@@ -34,7 +34,6 @@ final class Vendor extends Component {
 
 		// Update vendor.
 		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
-		add_action( 'hivepress/v1/models/vendor/update_status', [ $this, 'update_vendor_status' ], 10, 4 );
 
 		// Add vendor fields.
 		add_filter( 'hivepress/v1/forms/user_update', [ $this, 'add_vendor_fields' ], 100, 2 );
@@ -163,6 +162,17 @@ final class Vendor extends Component {
 		// Remove action.
 		remove_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ] );
 
+		if ( $vendor->get_user__id() && $vendor->get_status() === 'publish' ) {
+
+			// Get user.
+			$user = get_userdata( $vendor->get_user__id() );
+
+			// Update role.
+			if ( $user && ! user_can( $user, 'edit_posts' ) ) {
+				$user->set_role( 'contributor' );
+			}
+		}
+
 		// Get listings.
 		$listings = Models\Listing::query()->filter(
 			[
@@ -174,33 +184,6 @@ final class Vendor extends Component {
 
 		// Update listings.
 		$this->update_listings( $vendor, $listings );
-	}
-
-	/**
-	 * Updates vendor status.
-	 *
-	 * @param int    $vendor_id Vendor ID.
-	 * @param string $new_status New status.
-	 * @param string $old_status Old status.
-	 * @param object $vendor Vendor object.
-	 */
-	public function update_vendor_status( $vendor_id, $new_status, $old_status, $vendor ) {
-
-		// Check user.
-		if ( ! $vendor->get_user__id() ) {
-			return;
-		}
-
-		if ( 'publish' === $new_status ) {
-
-			// Get user object.
-			$user_object = get_userdata( $vendor->get_user__id() );
-
-			// Update user role.
-			if ( $user_object && ! user_can( $user_object, 'edit_posts' ) ) {
-				$user_object->set_role( 'contributor' );
-			}
-		}
 	}
 
 	/**
