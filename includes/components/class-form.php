@@ -380,19 +380,27 @@ final class Form extends Component {
 	 * @return array
 	 */
 	protected function get_days( $args, $value ) {
+		$days = [
+			0 => 'sunday',
+			1 => 'monday',
+			2 => 'tuesday',
+			3 => 'wednesday',
+			4 => 'thursday',
+			5 => 'friday',
+			6 => 'saturday',
+		];
+
+		$start = absint( get_option( 'start_of_week' ) );
+
+		if ( $start > 0 ) {
+			$days = array_slice( $days, $start, null, true ) + array_slice( $days, 0, $start, true );
+		}
+
 		return array_map(
-			function( $day ) {
+			function ( $day ) {
 				return date_i18n( 'D', strtotime( $day ) );
 			},
-			[
-				1 => 'monday',
-				2 => 'tuesday',
-				3 => 'wednesday',
-				4 => 'thursday',
-				5 => 'friday',
-				6 => 'saturday',
-				0 => 'sunday',
-			]
+			$days
 		);
 	}
 
