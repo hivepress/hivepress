@@ -2115,7 +2115,7 @@ final class Admin extends Component {
 		$data['options'] = array_filter(
 			wp_load_alloptions(),
 			function ( $value, $option ) use ( $options ) {
-				return in_array( $option, $options ) && strlen( $value );
+				return in_array( $option, $options ) && strlen( (string) $value );
 			},
 			ARRAY_FILTER_USE_BOTH
 		);
