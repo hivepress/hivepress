@@ -180,7 +180,7 @@ final class Admin extends Component {
 			// Filter menu items.
 			$menu = array_filter(
 				$menu,
-				function( $name ) use ( $pages ) {
+				function ( $name ) use ( $pages ) {
 					return ! in_array( $name, $pages, true );
 				}
 			);
@@ -373,7 +373,7 @@ final class Admin extends Component {
 					get_post_types( [ 'public' => true ], 'objects' ),
 					get_taxonomies( [ 'public' => true ], 'objects' )
 				),
-				function( $type_args ) {
+				function ( $type_args ) {
 					return strpos( $type_args->name, 'hp_' ) === 0;
 				}
 			);
@@ -574,7 +574,7 @@ final class Admin extends Component {
 	 */
 	protected function get_settings_tabs() {
 		return array_map(
-			function( $tab ) {
+			function ( $tab ) {
 				return hp\get_array_value( $tab, 'title' );
 			},
 			hp\sort_array( hivepress()->get_config( 'settings' ) )
@@ -704,7 +704,7 @@ final class Admin extends Component {
 				$themes = array_merge(
 					$themes,
 					array_map(
-						function( $theme ) {
+						function ( $theme ) {
 							$theme = (array) $theme;
 
 							return array_merge(
@@ -722,7 +722,7 @@ final class Admin extends Component {
 
 			// Set theme URLs.
 			$themes = array_map(
-				function( $theme ) {
+				function ( $theme ) {
 					$slug = sanitize_key( $theme['slug'] );
 
 					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
@@ -837,7 +837,7 @@ final class Admin extends Component {
 					$extensions,
 					array_filter(
 						array_map(
-							function( $extension ) {
+							function ( $extension ) {
 								$extension = (array) $extension;
 
 								return array_merge(
@@ -850,7 +850,7 @@ final class Admin extends Component {
 							},
 							$free_extensions->plugins
 						),
-						function( $extension ) {
+						function ( $extension ) {
 							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication' ], true );
 						}
 					)
@@ -868,7 +868,7 @@ final class Admin extends Component {
 
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) use ( $referral ) {
+				function ( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					if ( $referral ) {
@@ -941,7 +941,7 @@ final class Admin extends Component {
 		if ( 'all' !== $status ) {
 			$extensions = array_filter(
 				$extensions,
-				function( $extension ) use ( $status ) {
+				function ( $extension ) use ( $status ) {
 					return 'installed' === $status && 'install' !== $extension['status'];
 				}
 			);
@@ -986,7 +986,7 @@ final class Admin extends Component {
 		$tabs['installed']['count'] = count(
 			array_filter(
 				$extensions,
-				function( $extension ) {
+				function ( $extension ) {
 					return 'install' !== $extension['status'];
 				}
 			)
@@ -995,7 +995,7 @@ final class Admin extends Component {
 		// Filter tabs.
 		$tabs = array_filter(
 			$tabs,
-			function( $tab ) {
+			function ( $tab ) {
 				return 0 !== $tab['count'];
 			}
 		);
@@ -1135,7 +1135,7 @@ final class Admin extends Component {
 	public function add_meta_boxes( $post_type, $post ) {
 
 		// Check permissions.
-		if ( is_null( $post ) || ! current_user_can( 'edit_post', $post->ID ) ) {
+		if ( ! hp\is_class_instance( $post, 'WP_Post' ) || ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
@@ -1747,7 +1747,7 @@ final class Admin extends Component {
 
 		$products = array_filter(
 			array_merge( $this->get_themes(), $this->get_extensions() ),
-			function( $product ) use ( $purchases ) {
+			function ( $product ) use ( $purchases ) {
 				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
 			}
 		);
@@ -2042,7 +2042,7 @@ final class Admin extends Component {
 							'author_url',
 						],
 						array_map(
-							function( $header ) use ( $theme ) {
+							function ( $header ) use ( $theme ) {
 								return $theme->get( $header );
 							},
 							[
@@ -2114,8 +2114,8 @@ final class Admin extends Component {
 
 		$data['options'] = array_filter(
 			wp_load_alloptions(),
-			function( $value, $option ) use ( $options ) {
-				return in_array( $option, $options ) && strlen( $value );
+			function ( $value, $option ) use ( $options ) {
+				return in_array( $option, $options ) && strlen( (string) $value );
 			},
 			ARRAY_FILTER_USE_BOTH
 		);
@@ -2131,7 +2131,7 @@ final class Admin extends Component {
 		$data['php'] = array_combine(
 			$configs,
 			array_map(
-				function( $config ) {
+				function ( $config ) {
 					return ini_get( $config );
 				},
 				$configs
