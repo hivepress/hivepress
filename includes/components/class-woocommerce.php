@@ -44,7 +44,7 @@ final class WooCommerce extends Component {
 		add_action( 'hivepress/v1/activate', [ $this, 'update_options' ] );
 
 		// Disable HPOS.
-		add_action( 'hivepress/v1/components/woocommerce/setup', [ $this, 'disable_hpos' ] );
+		add_action( 'woocommerce_custom_orders_table_background_sync', [ $this, 'disable_hpos' ] );
 
 		// Update order status.
 		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
@@ -99,7 +99,7 @@ final class WooCommerce extends Component {
 			// @todo Remove after HPOS integration.
 			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'yes' );
 
-			hivepress()->scheduler->add_action( 'hivepress/v1/components/woocommerce/setup' );
+			$this->disable_hpos();
 		}
 	}
 
@@ -110,12 +110,8 @@ final class WooCommerce extends Component {
 	 */
 	public function disable_hpos() {
 		if ( OrderUtil::is_custom_order_tables_in_sync() ) {
-			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
 			update_option( 'woocommerce_custom_orders_table_enabled', 'no' );
-		} else {
-			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'yes' );
-
-			hivepress()->scheduler->add_action( 'hivepress/v1/components/woocommerce/setup', [], time() + 5 * MINUTE_IN_SECONDS );
+			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
 		}
 	}
 
