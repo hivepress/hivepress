@@ -155,6 +155,13 @@ abstract class Form {
 			$args
 		);
 
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$args['fields']['lang'] = [
+				'type'    => 'hidden',
+				'default' => apply_filters( 'wpml_current_language', null ),
+			];
+		}
+
 		// Filter properties.
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
