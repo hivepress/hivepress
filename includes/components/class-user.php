@@ -76,6 +76,9 @@ final class User extends Component {
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
 
+		// Send user verification email.
+		add_action( 'hivepress/v1/models/user/send-verification-email', [ $this, 'send_verification_email' ], 10, 4 );
+
 		parent::__construct( $args );
 	}
 
@@ -225,8 +228,7 @@ final class User extends Component {
 		if ( get_option( 'hp_user_verify_email' ) ) {
 
 			// Set form message.
-			$form['message']  = esc_html__( 'Please check your email to activate your account.', 'hivepress' );
-			$form['redirect'] = false;
+			$form['redirect'] = hivepress()->router->get_url( 'user_resend_email_verify_page' );
 
 			// Add redirect field.
 			$form['fields']['_redirect'] = [
@@ -584,5 +586,66 @@ final class User extends Component {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Send user verification email.
+	 *
+	 * @param mixed  $user User object or user ID.
+	 * @param string $email User email.
+	 * @param string $redirect Redirect URL.
+	 * @param bool   $email_changed Is email changed.
+	 */
+	public function send_verification_email( $user, $email, $redirect = null, $email_changed = false ) {
+
+		// Check permission.
+		if ( ( is_user_logged_in() && ! $email_changed ) || ! get_option( 'hp_user_verify_email' ) ) {
+			return;
+		}
+
+		if ( ! is_object( $user ) ) {
+
+			// Get user.
+			$user = Models\User::query()->get_by_id( $user );
+
+			if ( ! $user ) {
+				return;
+			}
+		}
+
+		// Set email key.
+		$email_key = md5( $email . time() . wp_rand() );
+
+		update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
+
+		// Set email redirect.
+		$email_redirect = wp_validate_redirect( $redirect );
+
+		if ( $email_redirect ) {
+			update_user_meta( $user->get_id(), 'hp_email_verify_redirect', $email_redirect );
+		}
+
+		if ( $email_changed ) {
+			update_user_meta( $user->get_id(), 'hp_email_verify_address', $email );
+		}
+
+		// Send email.
+		( new Emails\User_Email_Verify(
+			[
+				'recipient' => $email,
+
+				'tokens'    => [
+					'user'             => $user,
+					'user_name'        => $user->get_username(),
+					'email_verify_url' => hivepress()->router->get_url(
+						'user_email_verify_page',
+						[
+							'username'         => $user->get_username(),
+							'email_verify_key' => $email_key,
+						]
+					),
+				],
+			]
+		) )->send();
 	}
 }
