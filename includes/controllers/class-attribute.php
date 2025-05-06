@@ -159,7 +159,9 @@ final class Attribute extends Controller {
 			hivepress()->attribute->get_models( 'post' )
 		);
 
-		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_attributes', $model_name . '_edit', $model_name . '_search' ] ) ) {
+		$model_names[] = 'email';
+
+		if ( ! in_array( $model_name, $model_names ) || ! in_array( $meta_box, [ $model_name . '_attributes', $model_name . '_edit', $model_name . '_search', 'email_settings' ] ) ) {
 			return hp\rest_error( 400 );
 		}
 

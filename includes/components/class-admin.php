@@ -1252,8 +1252,14 @@ final class Admin extends Component {
 		// Get meta box name.
 		$meta_box_name = hp\unprefix( $args['id'] );
 
+		// Get defaults.
+		$defaults = hp\get_array_value( $args, 'defaults', [] );
+
 		// Get meta box.
 		$meta_box = hp\get_array_value( $this->get_meta_boxes( $post->post_type ), $meta_box_name );
+
+		// Set block output.
+		$block_output = '';
 
 		if ( $meta_box ) {
 
@@ -1261,13 +1267,52 @@ final class Admin extends Component {
 			if ( $meta_box['blocks'] ) {
 				foreach ( hp\sort_array( $meta_box['blocks'] ) as $block_name => $block_args ) {
 
+					// Set email details event.
+					if ( 'email_details' === $block_name ) {
+
+						// Get event.
+						$event = hp\get_array_value( $block_args, 'event', hp\get_array_value( $defaults, 'hp_event', '' ) );
+
+						if ( ! $event ) {
+							continue;
+						}
+
+						// Get email.
+						$email = hp\get_array_value( hivepress()->get_classes( 'emails' ), $event );
+
+						if ( ! $email || ! $email::get_meta( 'label' ) ) {
+							continue;
+						}
+
+						// Set content.
+						$content = '';
+
+						if ( $email::get_meta( 'description' ) ) {
+							$content .= $email::get_meta( 'description' ) . ' ';
+						}
+
+						if ( $email::get_meta( 'tokens' ) ) {
+							$content .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+						}
+
+						if ( $content ) {
+							$content = '<p>' . $content . '</p>';
+						}
+
+						$block_args['content'] = $content;
+					}
+
 					// Create block.
 					$block = hp\create_class_instance( '\HivePress\Blocks\\' . $block_args['type'], [ array_merge( $block_args, [ 'name' => $block_name ] ) ] );
 
 					if ( $block ) {
 
 						// Render block.
-						$output .= $block->render();
+						if ( 'email_details' === $block_name ) {
+							$block_output .= $block->render();
+						} else {
+							$output .= $block->render();
+						}
 					}
 				}
 			}
@@ -1289,8 +1334,8 @@ final class Admin extends Component {
 						// Get field value.
 						$value = '';
 
-						if ( isset( $args['defaults'] ) ) {
-							$value = hp\get_array_value( $args['defaults'], $field_name, '' );
+						if ( $defaults ) {
+							$value = hp\get_array_value( $defaults, $field_name, '' );
 						} elseif ( $field->get_arg( '_external' ) ) {
 							$taxonomy = hp\get_array_value( $field->get_arg( 'option_args' ), 'taxonomy' );
 
@@ -1348,6 +1393,10 @@ final class Admin extends Component {
 							$output .= '</tr>';
 						}
 					}
+				}
+
+				if ( $block_output ) {
+					$output .= '<tr><td class="padding--zero" colspan="2">' . $block_output . '</td></tr>';
 				}
 
 				$output .= '</table>';
