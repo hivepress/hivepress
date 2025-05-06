@@ -62,24 +62,35 @@ class Template extends Block {
 					]
 				);
 
-				// Set blocks.
-				$blocks = [
-					'page_container' => [
-						'type'       => 'page',
-						'attributes' => $template->get_attributes(),
-						'_order'     => 10,
+				// Get template blocks.
+				$template_blocks = apply_filters(
+					'hivepress/v1/templates/' . $this->template . '/page_blocks',
+					[
+						'page_container' => [
+							'type'       => 'page',
+							'attributes' => $template->get_attributes(),
+							'_order'     => 10,
 
-						'blocks'     => [
-							'page_content' => [
-								'type'     => 'callback',
-								'callback' => 'apply_filters',
-								'params'   => [ 'the_content', $content->post_content ],
-								'return'   => true,
-								'_order'   => 10,
+							'blocks'     => [
+								'page_content' => [
+									'type'     => 'callback',
+									'callback' => 'apply_filters',
+									'params'   => [ 'the_content', $content->post_content ],
+									'return'   => true,
+									'_order'   => 10,
+								],
 							],
 						],
 					],
-				];
+					$template->get_blocks(),
+					$template->get_context()
+				);
+
+				// Set blocks.
+				$blocks = $template_blocks;
+
+				// Set context.
+				$context = $template->get_context();
 			}
 		}
 
