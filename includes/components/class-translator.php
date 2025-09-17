@@ -18,6 +18,21 @@ defined( 'ABSPATH' ) || exit;
 final class Translator extends Component {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
+	 */
+	public function __construct( $args = [] ) {
+		if ( $this->is_multilingual() ) {
+
+			// Register options.
+			add_filter( 'alloptions', [ $this, 'register_options' ] );
+		}
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Gets language code.
 	 *
 	 * @return string
@@ -47,5 +62,43 @@ final class Translator extends Component {
 	 */
 	public function get_string( $key ) {
 		return hp\get_array_value( hivepress()->get_config( 'strings' ), $key );
+	}
+
+	/**
+	 * Checks multilingual status.
+	 *
+	 * @return bool
+	 */
+	public function is_multilingual() {
+		return defined( 'ICL_SITEPRESS_VERSION' );
+	}
+
+	/**
+	 * Registers options.
+	 *
+	 * @param array $options Options.
+	 * @return array
+	 */
+	public function register_options( $options ) {
+		remove_filter( 'alloptions', [ $this, 'register_options' ] );
+
+		foreach ( $options as $name => $value ) {
+			if ( strpos( $name, 'hp_page_' ) === 0 && absint( $value ) > 1 ) {
+				add_filter( 'option_' . $name, [ $this, 'get_object_id' ] );
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Gets translated object ID.
+	 *
+	 * @param int    $id Object ID.
+	 * @param string $type Object type.
+	 * @return int
+	 */
+	public function get_object_id( $id, $type = 'page' ) {
+		return apply_filters( 'wpml_object_id', $id, $type );
 	}
 }
