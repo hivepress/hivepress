@@ -24,6 +24,10 @@
 	<rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
-	
+
+	<rule ref="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction">
+		<severity>0</severity>
+	</rule>
+
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
 </ruleset>
