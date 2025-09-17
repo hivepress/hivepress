@@ -50,6 +50,7 @@ class Post extends Query {
 					'posts_per_page'      => -1,
 					'orderby'             => [ 'ID' => 'ASC' ],
 					'ignore_sticky_posts' => true,
+					'suppress_filters'    => ! hivepress()->translator->is_multilingual(),
 				],
 			],
 			$args
