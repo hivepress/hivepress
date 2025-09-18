@@ -560,11 +560,12 @@ final class Attribute extends Component {
 
 			// Set query arguments.
 			$query_args = [
-				'post_type'      => hp\prefix( $model . '_attribute' ),
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'menu_order',
-				'order'          => 'ASC',
+				'post_type'        => hp\prefix( $model . '_attribute' ),
+				'post_status'      => 'publish',
+				'posts_per_page'   => -1,
+				'orderby'          => 'menu_order',
+				'order'            => 'ASC',
+				'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 			];
 
 			// Get cache group.
@@ -1558,12 +1559,13 @@ final class Attribute extends Component {
 
 		// Set query arguments.
 		$query_args = [
-			'post_type'      => hp\prefix( $model ),
-			'post_status'    => 'publish',
-			'meta_key'       => hp\prefix( $field ),
-			'orderby'        => 'meta_value_num',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
+			'post_type'        => hp\prefix( $model ),
+			'post_status'      => 'publish',
+			'meta_key'         => hp\prefix( $field ),
+			'orderby'          => 'meta_value_num',
+			'posts_per_page'   => 1,
+			'fields'           => 'ids',
+			'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 		];
 
 		// Get cached range.
