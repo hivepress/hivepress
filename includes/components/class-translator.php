@@ -38,7 +38,13 @@ final class Translator extends Component {
 	 * @return string
 	 */
 	public function get_language() {
-		return hp\get_first_array_value( explode( '_', get_locale() ) );
+		$language = hp\get_first_array_value( explode( '_', get_locale() ) );
+
+		if ( $this->is_multilingual() ) {
+			$language = apply_filters( 'wpml_current_language', $language );
+		}
+
+		return $language;
 	}
 
 	/**
