@@ -27,6 +27,9 @@ final class Translator extends Component {
 
 			// Register options.
 			add_filter( 'alloptions', [ $this, 'register_options' ] );
+
+			// Register post.
+			add_action( 'hivepress/v1/models/post/create', [ $this, 'register_post' ], 10, 2 );
 		}
 
 		parent::__construct( $args );
@@ -71,6 +74,17 @@ final class Translator extends Component {
 	}
 
 	/**
+	 * Gets translated object ID.
+	 *
+	 * @param int    $id Object ID.
+	 * @param string $type Object type.
+	 * @return int
+	 */
+	public function get_object_id( $id, $type = 'page' ) {
+		return apply_filters( 'wpml_object_id', $id, $type );
+	}
+
+	/**
 	 * Checks multilingual status.
 	 *
 	 * @return bool
@@ -98,13 +112,32 @@ final class Translator extends Component {
 	}
 
 	/**
-	 * Gets translated object ID.
+	 * Registers post.
 	 *
-	 * @param int    $id Object ID.
-	 * @param string $type Object type.
-	 * @return int
+	 * @param int    $post_id Post ID.
+	 * @param string $post_type Post type.
 	 */
-	public function get_object_id( $id, $type = 'page' ) {
-		return apply_filters( 'wpml_object_id', $id, $type );
+	public function register_post( $post_id, $post_type ) {
+
+		// Check request.
+		if ( is_admin() ) {
+			return;
+		}
+
+		// Check status.
+		if ( get_post_status( $post_id ) !== 'auto-draft' ) {
+			return;
+		}
+
+		// Set translation.
+		do_action(
+			'wpml_set_element_language_details',
+			[
+				'element_id'    => $post_id,
+				'element_type'  => 'post_' . $post_type,
+				'trid'          => false,
+				'language_code' => $this->get_language(),
+			]
+		);
 	}
 }
