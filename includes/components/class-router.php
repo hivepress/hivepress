@@ -285,6 +285,15 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets referer URL.
+	 *
+	 * @return string
+	 */
+	public function get_referer_url() {
+		return wp_validate_redirect( hp\get_array_value( $_SERVER, 'HTTP_REFERER' ) );
+	}
+
+	/**
 	 * Gets return URL.
 	 *
 	 * @param string $name Route name.

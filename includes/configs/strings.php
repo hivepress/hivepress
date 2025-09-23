@@ -50,6 +50,7 @@ return [
 	'completed'                                 => esc_html__( 'Completed', 'hivepress' ),
 	'profile'                                   => esc_html__( 'Profile', 'hivepress' ),
 	'pagination'                                => esc_html__( 'Pagination', 'hivepress' ),
+	'performance'                               => esc_html__( 'Performance', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),

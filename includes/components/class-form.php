@@ -146,11 +146,12 @@ final class Form extends Component {
 		// Set default arguments.
 		$args = array_merge(
 			[
-				'post_type'      => 'post',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'post_type'        => 'post',
+				'post_status'      => 'publish',
+				'posts_per_page'   => -1,
+				'orderby'          => 'title',
+				'order'            => 'ASC',
+				'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 			],
 			$args
 		);
