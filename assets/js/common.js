@@ -81,6 +81,20 @@ var hivepress = {
 					e.preventDefault();
 				}
 			});
+
+			if (field.data('mode') === 'range' && field.is(':visible')) {
+				field.wrap('<div class="' + field.attr('class').split(' ')[0] + '--number-range" />');
+
+				$('<div />').insertAfter(field).slider({
+					min: Number(field.attr('min')),
+					max: Number(field.attr('max')),
+					value: Number(field.val()),
+
+					slide: function (e, ui) {
+						field.val(ui.value);
+					},
+				}).wrap('<div />');
+			}
 		});
 
 		// Repeater
