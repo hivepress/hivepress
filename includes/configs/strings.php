@@ -53,6 +53,7 @@ return [
 	'performance'                               => esc_html__( 'Performance', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
+	'version'                                   => esc_html__( 'Version', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
 	'secret_key'                                => esc_html__( 'Secret Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
