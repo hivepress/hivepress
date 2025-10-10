@@ -26,6 +26,7 @@ return [
 	'status'                                    => esc_html__( 'Status', 'hivepress' ),
 	'image'                                     => esc_html__( 'Image', 'hivepress' ),
 	'images'                                    => esc_html__( 'Images', 'hivepress' ),
+	'select_image'                              => esc_html__( 'Select Image', 'hivepress' ),
 	'select_images'                             => esc_html__( 'Select Images', 'hivepress' ),
 	'description'                               => esc_html__( 'Description', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
@@ -53,6 +54,7 @@ return [
 	'performance'                               => esc_html__( 'Performance', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
+	'version'                                   => esc_html__( 'Version', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
 	'secret_key'                                => esc_html__( 'Secret Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
@@ -209,5 +211,6 @@ return [
 	'attachment'                                => esc_html__( 'Attachment', 'hivepress' ),
 	'attachments'                               => esc_html__( 'Attachments', 'hivepress' ),
 	'allow_file_attachments'                    => esc_html__( 'Allow file attachments', 'hivepress' ),
+	'allow_attaching_images'                    => esc_html__( 'Allow attaching images', 'hivepress' ),
 	'allowed_file_types'                        => esc_html__( 'Allowed File Types', 'hivepress' ),
 ];

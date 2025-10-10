@@ -43,6 +43,17 @@ var hivepress = {
 			}
 		});
 
+		// Image
+		container.find(hivepress.getSelector('image')).each(function () {
+			var image = $(this);
+
+			image.on('click', function () {
+				$.fancybox.open({ src: image.data('zoom') }, {
+					buttons: ['close'],
+				});
+			});
+		});
+
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
 			var id = $(this).attr('id'),
@@ -81,6 +92,20 @@ var hivepress = {
 					e.preventDefault();
 				}
 			});
+
+			if (field.data('mode') === 'range' && field.is(':visible')) {
+				field.wrap('<div class="' + field.attr('class').split(' ')[0] + '--number-range" />');
+
+				$('<div />').insertAfter(field).slider({
+					min: Number(field.attr('min')),
+					max: Number(field.attr('max')),
+					value: Number(field.val()),
+
+					slide: function (e, ui) {
+						field.val(ui.value);
+					},
+				}).wrap('<div />');
+			}
 		});
 
 		// Repeater
