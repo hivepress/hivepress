@@ -43,6 +43,17 @@ var hivepress = {
 			}
 		});
 
+		// Image
+		container.find(hivepress.getSelector('image')).each(function () {
+			var image = $(this);
+
+			image.on('click', function () {
+				$.fancybox.open({ src: image.data('zoom') }, {
+					buttons: ['close'],
+				});
+			});
+		});
+
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
 			var id = $(this).attr('id'),
