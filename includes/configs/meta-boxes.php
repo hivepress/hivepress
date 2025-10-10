@@ -121,8 +121,8 @@ return [
 
 		'fields' => [
 			'image'                 => [
-				'label'   => esc_html__( 'Image', 'hivepress' ),
-				'caption' => esc_html__( 'Select Image', 'hivepress' ),
+				'label'   => hivepress()->translator->get_string( 'image' ),
+				'caption' => hivepress()->translator->get_string( 'select_image' ),
 				'type'    => 'attachment_select',
 				'formats' => [ 'jpg', 'jpeg', 'png' ],
 				'_order'  => 10,
