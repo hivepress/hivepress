@@ -1689,7 +1689,7 @@ final class Attribute extends Component {
 			// Add field.
 			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
 				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
-					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'label'   => hivepress()->translator->get_string( 'default_sorting' ),
 					'type'    => 'select',
 					'options' => $sort_options,
 					'_order'  => 20,
