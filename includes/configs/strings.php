@@ -19,6 +19,8 @@ return [
 	'search'                                    => esc_html__( 'Search', 'hivepress' ),
 	'filter'                                    => esc_html__( 'Filter', 'hivepress' ),
 	'sort_by'                                   => esc_html__( 'Sort by', 'hivepress' ),
+	'sorting'                                   => esc_html__( 'Sorting', 'hivepress' ),
+	'default_sorting'                           => esc_html__( 'Default Sorting', 'hivepress' ),
 	'keywords'                                  => esc_html__( 'Keywords', 'hivepress' ),
 	'title'                                     => esc_html__( 'Title', 'hivepress' ),
 	'name'                                      => esc_html__( 'Name', 'hivepress' ),
@@ -51,6 +53,7 @@ return [
 	'completed'                                 => esc_html__( 'Completed', 'hivepress' ),
 	'profile'                                   => esc_html__( 'Profile', 'hivepress' ),
 	'pagination'                                => esc_html__( 'Pagination', 'hivepress' ),
+	'load_more'                                 => esc_html__( 'Load More', 'hivepress' ),
 	'performance'                               => esc_html__( 'Performance', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
@@ -111,6 +114,7 @@ return [
 	'listings'                                  => esc_html__( 'Listings', 'hivepress' ),
 	'all_listings'                              => esc_html__( 'All Listings', 'hivepress' ),
 	'related_listings'                          => esc_html__( 'Related Listings', 'hivepress' ),
+	'related_listing_criteria'                  => esc_html__( 'Related Listing Criteria', 'hivepress' ),
 	/* translators: %s: Listings number. */
 	'n_listings'                                => _n_noop( '%s Listing', '%s Listings', 'hivepress' ),
 	/* translators: %s: Vendor name. */

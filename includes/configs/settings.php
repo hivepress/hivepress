@@ -64,6 +64,19 @@ return [
 						'_order'    => 50,
 					],
 
+					'listing_related_criteria'         => [
+						'label'       => hivepress()->translator->get_string( 'related_listing_criteria' ),
+						'description' => esc_html__( 'Select the criteria used to determine which related listings are shown on the listing page.', 'hivepress' ),
+						'type'        => 'select',
+						'multiple'    => true,
+						'default'     => [ 'category' ],
+						'_order'      => 55,
+
+						'options'     => [
+							'category' => hivepress()->translator->get_string( 'categories' ),
+						],
+					],
+
 					'listing_title_format'             => [
 						'label'       => hivepress()->translator->get_string( 'title' ),
 						'description' => hivepress()->translator->get_string( 'set_title_format_based_on_attributes' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%listing%, %vendor%' ),
