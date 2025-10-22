@@ -2,7 +2,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 ?>
-<nav class="hp-pagination">
+<div class="hp-pagination">
 	<?php
 	the_posts_pagination(
 		[
@@ -11,4 +11,4 @@ defined( 'ABSPATH' ) || exit;
 		]
 	);
 	?>
-</nav>
+</div>
