@@ -875,26 +875,44 @@ var hivepress = {
 				});
 		});
 
-		// Interval
+		// Render
 		container.find('[data-render]').each(function () {
-			var renderSettings = $(this).data('render');
+			var element = $(this),
+				renderSettings = element.data('render');
 
-			if (renderSettings && renderSettings.hasOwnProperty('interval')) {
+			if (renderSettings && !element.is('form, input, select, textarea')) {
+				var currentPage = 1,
+					maxPage = 1;
+
+				if (renderSettings.hasOwnProperty('pages')) {
+					maxPage = renderSettings.pages;
+				}
+
 				renderSettings = $.extend({ type: 'replace' }, renderSettings);
 
-				var renderInterval = setInterval(function () {
+				function renderBlock() {
 					var url = new URL(renderSettings.url),
 						container = $('[data-block=' + renderSettings.block + ']');
 
 					if (!container.length) {
-						clearInterval(renderInterval);
+						if (renderSettings.hasOwnProperty('interval')) {
+							clearInterval(renderInterval);
+						}
 
 						return;
+					}
+
+					if (element.is('button')) {
+						element.attr('data-state', 'loading');
 					}
 
 					container.attr('data-state', 'loading');
 
 					url.searchParams.set('_render', true);
+
+					if (currentPage < maxPage) {
+						url.searchParams.set('_page', currentPage + 1);
+					}
 
 					$.ajax({
 						url: url,
@@ -912,6 +930,10 @@ var hivepress = {
 							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
 								var newContainer = $(response.data.html);
 
+								if (element.is('button')) {
+									element.attr('data-state', '');
+								}
+
 								if ('append' === renderSettings.type) {
 									container.attr('data-state', '');
 
@@ -920,11 +942,27 @@ var hivepress = {
 									container.replaceWith(newContainer);
 								}
 
+								if (currentPage < maxPage - 1) {
+									currentPage++;
+								} else if (maxPage > 1) {
+									element.remove();
+								}
+
 								hivepress.initUI(newContainer);
 							}
 						},
 					});
-				}, renderSettings.interval * 1000);
+				}
+
+				if (renderSettings.hasOwnProperty('interval')) {
+					var renderInterval = setInterval(renderBlock, renderSettings.interval * 1000);
+				} else {
+					element.on('click', function (e) {
+						e.preventDefault();
+
+						renderBlock();
+					});
+				}
 			}
 		});
 
