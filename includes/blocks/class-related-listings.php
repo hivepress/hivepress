@@ -74,7 +74,6 @@ class Related_Listings extends Listings {
 
 			// Set categories.
 			if ( $listing->get_categories__id() && in_array( 'category', (array) get_option( 'hp_listing_related_criteria', [ 'category' ] ) ) ) {
-				error_log( 123 );
 				$query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
 			}
 
