@@ -1745,7 +1745,7 @@ final class Admin extends Component {
 		// Add default notices.
 		$notices = [];
 
-		if ( strpos( $page, 'hp_' ) === 0 ) {
+		if ( 'admin.php' === $pagenow && strpos( $page, 'hp_' ) === 0 ) {
 
 			// Get cached notices.
 			$notices = hivepress()->cache->get_cache( 'notices' );
