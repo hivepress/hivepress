@@ -69,14 +69,6 @@ class Related_Listings extends Listings {
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
 
-			// Exclude listing.
-			$query->filter( [ 'id__not_in' => [ $listing->get_id() ] ] );
-
-			// Set categories.
-			if ( $listing->get_categories__id() && in_array( 'category', (array) get_option( 'hp_listing_related_criteria', [ 'category' ] ) ) ) {
-				$query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
-			}
-
 			/**
 			 * Fires when related models are being queried. The dynamic part of the hook refers to the model name (e.g. `listing`).
 			 *
