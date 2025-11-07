@@ -72,6 +72,27 @@ var hivepress = {
 			}
 		});
 
+		// Copy
+		container.find(hivepress.getSelector('copy')).each(function () {
+			var element = $(this);
+
+			element.on('click', function () {
+				var input = $('<input type="text">');
+
+				input.appendTo($('body')).val(element.text()).select();
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(element.text()).catch(() => {
+						document.execCommand('copy');
+					});
+				} else {
+					document.execCommand('copy');
+				}
+
+				input.remove();
+			});
+		});
+
 		// Number
 		container.find(hivepress.getSelector('number')).each(function () {
 			var field = $(this),
