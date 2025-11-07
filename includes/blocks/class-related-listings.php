@@ -61,8 +61,16 @@ class Related_Listings extends Listings {
 			[
 				'status' => 'publish',
 			]
-		)->order( 'random' )
-		->limit( $this->number );
+		)->limit( $this->number );
+
+		// Set order.
+		if ( 'title' === $this->order ) {
+			$query->order( [ 'title' => 'asc' ] );
+		} elseif ( 'random' === $this->order ) {
+			$query->order( 'random' );
+		} else {
+			$query->order( [ 'created_date' => 'desc' ] );
+		}
 
 		// Get listing.
 		$listing = $this->get_context( 'listing' );
