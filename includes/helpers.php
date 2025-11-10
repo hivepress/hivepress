@@ -312,8 +312,6 @@ function replace_tokens( $tokens, $text, $format = false ) {
 		$is_model = is_object( $token_value ) && strpos( get_class( $token_value ), 'HivePress\Models\\' ) === 0;
 
 		// Get matches.
-		$matches = [];
-
 		$regex = '/%' . $token_name;
 
 		if ( $is_model ) {
