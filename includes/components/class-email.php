@@ -187,6 +187,9 @@ final class Email extends Component {
 						// Remove token.
 						unset( $tokens[ $index ] );
 
+						// Add tokens.
+						$tokens[] = $token . '.id';
+
 						foreach ( $model->_get_fields() as $field ) {
 							if ( ! $field->get_arg( '_model' ) && ! in_array(
 								$field::get_meta( 'name' ),
@@ -202,8 +205,6 @@ final class Email extends Component {
 									'attachment_upload',
 								]
 							) ) {
-
-								// Add token.
 								$tokens[] = $token . '.' . $field->get_name();
 							}
 						}
