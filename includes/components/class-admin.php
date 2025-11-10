@@ -1736,11 +1736,49 @@ final class Admin extends Component {
 
 		$output = '';
 
+		// Get current page.
+		$page = sanitize_key( hp\get_array_value( $_GET, 'page' ) );
+
 		// Get installation time.
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
 		$notices = [];
+
+		if ( 'admin.php' === $pagenow && strpos( $page, 'hp_' ) === 0 ) {
+
+			// Get cached notices.
+			$notices = hivepress()->cache->get_cache( 'notices' );
+
+			if ( is_null( $notices ) ) {
+				$notices = [];
+
+				// Get API response.
+				$response = json_decode(
+					wp_remote_retrieve_body(
+						wp_remote_get( 'https://store.hivepress.io/api/v1/notices' )
+					),
+					true
+				);
+
+				if ( is_array( $response ) && isset( $response['data'] ) ) {
+					foreach ( $response['data'] as $notice ) {
+
+						// Add notice.
+						$notices[ 'notice_' . absint( $notice['id'] ) ] = [
+							'type'        => sanitize_key( $notice['type'] ),
+							'dismissible' => true,
+							'text'        => hp\sanitize_html( $notice['text'] ),
+						];
+
+						break;
+					}
+
+					// Cache notices.
+					hivepress()->cache->set_cache( 'notices', null, $notices, DAY_IN_SECONDS );
+				}
+			}
+		}
 
 		// Check valid purchases.
 		$purchases = $this->get_purchases();
@@ -1863,7 +1901,7 @@ final class Admin extends Component {
 		}
 
 		// Render settings errors.
-		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
+		if ( 'admin.php' === $pagenow && 'hp_settings' === $page ) {
 			ob_start();
 
 			settings_errors();
