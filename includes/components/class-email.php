@@ -215,6 +215,9 @@ final class Email extends Component {
 
 				// Add tokens.
 				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), $tag . '%' . implode( '%</code>, ' . $tag . '%', $tokens ) . '%</code>' );
+
+				/* translators: 1: |, 2: %. */
+				$output .= ' ' . sprintf( esc_html__( 'You can add fallback values for empty tokens, separated with %1$s from the token name and placed before the ending %2$s.', 'hivepress' ), '<code>|</code>', '<code>%</code>' );
 			}
 
 			if ( $output ) {
