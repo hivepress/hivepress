@@ -92,6 +92,7 @@ class Select extends Field {
 						'_order'     => 100,
 					],
 
+					// @todo remove prefix from parent.
 					'display_format'  => [
 						'label'       => ' ',
 						'statuses'    => [ 'optional' => null ],
@@ -101,6 +102,7 @@ class Select extends Field {
 						'max_length'  => 2048,
 						'html'        => true,
 						'_context'    => 'display',
+						'_parent'     => 'edit_field_multiple',
 						'_order'      => 101,
 					],
 

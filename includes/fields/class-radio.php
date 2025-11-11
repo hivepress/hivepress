@@ -29,6 +29,7 @@ class Radio extends Select {
 
 				'settings' => [
 					'placeholder'     => null,
+					'display_format'  => null,
 					'multiple'        => null,
 					'max_values'      => null,
 					'filter_operator' => null,
