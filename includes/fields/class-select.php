@@ -25,6 +25,13 @@ class Select extends Field {
 	protected $placeholder;
 
 	/**
+	 * Displayed option format.
+	 *
+	 * @var string
+	 */
+	protected $display_format;
+
+	/**
 	 * Selectable options.
 	 *
 	 * @var array
@@ -83,6 +90,18 @@ class Select extends Field {
 						'type'       => 'text',
 						'max_length' => 256,
 						'_order'     => 100,
+					],
+
+					'display_format'  => [
+						'label'       => ' ',
+						'statuses'    => [ 'optional' => null ],
+						'description' => esc_html__( 'Set the option display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %slug%, %id%' ),
+						'type'        => 'textarea',
+						'default'     => '%label%,',
+						'max_length'  => 2048,
+						'html'        => true,
+						'_context'    => 'display',
+						'_order'      => 101,
 					],
 
 					'multiple'        => [
@@ -223,22 +242,69 @@ class Select extends Field {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
-			$labels = [];
 
-			foreach ( (array) $this->value as $value ) {
-				$label = hp\get_array_value( $this->options, $value, '' );
+			// Get options.
+			$options = array_intersect_key( $this->options, array_flip( (array) $this->value ) );
 
-				if ( is_array( $label ) ) {
-					$label = hp\get_array_value( $label, 'label', '' );
+			foreach ( $options as $index => $option ) {
+
+				// Convert option.
+				if ( ! is_array( $option ) ) {
+					$option = [
+						'label' => $option,
+					];
+				} else {
+					unset( $option['parent'] );
 				}
 
-				if ( strlen( $label ) ) {
-					$labels[] = $label;
+				// Check label.
+				if ( ! strlen( hp\get_array_value( $option, 'label', '' ) ) ) {
+					unset( $options[ $index ] );
+
+					continue;
 				}
+
+				// Add tokens.
+				if ( isset( $option['slug'] ) ) {
+					$option['id'] = $index;
+				}
+
+				if ( isset( $option['icon'] ) ) {
+					$option['icon'] = '<i class="hp-icon fas fa-fw fa-' . esc_attr( $option['icon'] ) . '"></i>';
+				}
+
+				// Update option.
+				$options[ $index ] = $option;
 			}
 
-			if ( $labels ) {
-				return implode( ', ', $labels );
+			if ( $options ) {
+				$output = '';
+
+				if ( $this->display_format ) {
+
+					// Check comma.
+					$has_comma = substr( $this->display_format, -1 ) === ',';
+
+					if ( $has_comma ) {
+						$this->display_format .= ' ';
+					}
+
+					// Render options.
+					foreach ( $options as $option ) {
+						$output .= hp\replace_tokens( array_merge( $this->context, $option ), $this->display_format, true );
+					}
+
+					// Trim comma.
+					if ( $has_comma ) {
+						$output = rtrim( $output, ', ' );
+					}
+				} else {
+
+					// Render options.
+					$output = implode( ', ', array_column( $options, 'label' ) );
+				}
+
+				return $output;
 			}
 		}
 	}
