@@ -108,6 +108,9 @@ final class Attribute extends Controller {
 		// Update categories.
 		$model->set_categories( $request->get_param( 'categories' ) )->save_categories();
 
+		// Refresh model.
+		$model = hivepress()->model->get_model_object( $model_name, $model_id );
+
 		// Create form.
 		$form = null;
 

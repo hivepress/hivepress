@@ -27,7 +27,8 @@ final class Vendor extends Component {
 	public function __construct( $args = [] ) {
 
 		// Create listing.
-		add_action( 'hivepress/v1/models/listing/create', [ $this, 'create_listing' ], 10, 2 );
+		add_action( 'hivepress/v1/models/listing/create', [ $this, 'create_listing' ] );
+		add_action( 'hivepress/v1/models/listing/update_categories', [ $this, 'create_listing' ] );
 
 		// Update user.
 		add_action( 'hivepress/v2/models/user/update', [ $this, 'update_user' ], 100, 2 );
@@ -135,10 +136,16 @@ final class Vendor extends Component {
 	/**
 	 * Creates listing.
 	 *
-	 * @param int    $listing_id Listing ID.
-	 * @param object $listing Listing object.
+	 * @param int $listing_id Listing ID.
 	 */
-	public function create_listing( $listing_id, $listing ) {
+	public function create_listing( $listing_id ) {
+
+		// Get listing.
+		$listing = Models\Listing::query()->get_by_id( $listing_id );
+
+		if ( ! $listing ) {
+			return;
+		}
 
 		// Get vendor.
 		$vendor = $listing->get_vendor();
