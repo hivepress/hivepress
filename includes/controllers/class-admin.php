@@ -84,7 +84,7 @@ final class Admin extends Controller {
 		}
 
 		// Get notice name.
-		$notice_name = substr( sanitize_key( $request->get_param( 'notice_name' ) ), 0, 32 );
+		$notice_name = substr( sanitize_key( $request->get_param( 'notice_name' ) ), 0, 64 );
 
 		if ( $notice_name && $request->get_param( 'dismissed' ) ) {
 

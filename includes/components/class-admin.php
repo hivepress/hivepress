@@ -1791,8 +1791,6 @@ final class Admin extends Component {
 		);
 
 		if ( $products ) {
-
-			// Set product names.
 			$product_names = implode( ', ', array_column( $products, 'name' ) );
 
 			$notices[ 'license_request_' . md5( $product_names ) ] = [
