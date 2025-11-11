@@ -895,8 +895,11 @@ final class Attribute extends Component {
 		// Get field context.
 		$field_context = hp\get_last_array_value( explode( '_', $meta_box['name'] ) );
 
+		// Get field prefix.
+		$field_prefix = 'display' === $field_context ? 'edit' : $field_context;
+
 		// Get field type.
-		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( ( 'display' === $field_context ? 'edit' : $field_context ) . '_field_type' ), true ) );
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_prefix . '_field_type' ), true ) );
 
 		if ( $field_type ) {
 
@@ -906,7 +909,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			if ( $field_settings ) {
 				foreach ( $field_settings as $field_name => $field ) {
-					if ( ( 'edit' === $field_context && 'search' !== $field->get_arg( '_context' ) ) || ( 'search' === $field_context && 'edit' !== $field->get_arg( '_context' ) ) ) {
+					if ( ( ! $field->get_arg( '_context' ) && 'display' !== $field_context ) || $field->get_arg( '_context' ) === $field_context ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();
@@ -952,13 +955,14 @@ final class Attribute extends Component {
 						}
 
 						// Add field.
-						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
+						$meta_box['fields'][ $field_prefix . '_field_' . $field_name ] = $field_args;
 					}
 				}
 
-				// @todo replace temporary fix.
 				if ( 'edit' === $field_context ) {
-					$meta_box['fields'][ $field_context . '_field_description' ] = [
+
+					// @todo replace temporary fix.
+					$meta_box['fields'][ $field_prefix . '_field_description' ] = [
 						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
@@ -1008,7 +1012,7 @@ final class Attribute extends Component {
 				}
 
 				// Add field.
-				$meta_box['fields']['edit_field_name'] = $field_args;
+				$meta_box['fields'][ $field_prefix . '_field_name' ] = $field_args;
 			}
 
 			// @todo replace temporary fix.
@@ -1823,7 +1827,7 @@ final class Attribute extends Component {
 						'default'     => '%value%',
 						'html'        => true,
 						'_parent'     => 'display_areas[]',
-						'_order'      => 30,
+						'_order'      => 100,
 					],
 				],
 			],
@@ -1832,13 +1836,21 @@ final class Attribute extends Component {
 				'screen' => [],
 
 				'fields' => [
+					'icon'       => [
+						'label'       => esc_html__( 'Icon', 'hivepress' ),
+						'description' => esc_html__( 'Choose an icon to include in the display format with the %icon% token.', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'icons',
+						'_order'      => 10,
+					],
+
 					'sort_order' => [
 						'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
 						'default'   => 0,
 						'required'  => true,
-						'_order'    => 10,
+						'_order'    => 20,
 					],
 				],
 			],
