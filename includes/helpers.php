@@ -306,41 +306,69 @@ function call_class_method( $class, $method, $args = [] ) {
  * @return string
  */
 function replace_tokens( $tokens, $text, $format = false ) {
-	foreach ( $tokens as $name => $value ) {
-		if ( is_object( $value ) && strpos( get_class( $value ), 'HivePress\Models\\' ) === 0 ) {
-			preg_match_all( '/%' . $name . '\.([a-z0-9_]+)%/', $text, $matches );
+	$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
 
-			$fields = get_last_array_value( $matches );
+	foreach ( $tokens as $token_name => $token_value ) {
+		$is_model = is_object( $token_value ) && strpos( get_class( $token_value ), 'HivePress\Models\\' ) === 0;
 
-			if ( $fields ) {
-				$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
+		// Get matches.
+		$regex = '/%' . $token_name;
 
-				foreach ( $fields as $field_name ) {
-					$field_value = '';
+		if ( $is_model ) {
+			$regex .= '\.([a-z0-9_]+)';
+		}
 
-					if ( 'id' === $field_name ) {
-						$field_value = $value->get_id();
-					} else {
-						$field = get_array_value( $value->_get_fields(), $field_name );
+		$regex .= '(\s*\|[^%]+)?%/';
 
-						if ( $field ) {
+		preg_match_all( $regex, $text, $matches );
 
-							// @todo remove date check in the next major version.
-							if ( $format || $fallback ) {
-								$field_value = $field->display();
-							} else {
-								$field_value = $field->get_display_value();
-							}
-						} elseif ( method_exists( $value, 'display_' . $field_name ) ) {
-							$field_value = call_user_func( [ $value, 'display_' . $field_name ] );
-						}
-					}
+		$matches = array_unique( get_first_array_value( $matches ) );
 
-					$text = str_replace( '%' . $name . '.' . $field_name . '%', is_null( $field_value ) ? '' : $field_value, $text );
-				}
+		foreach ( $matches as $match ) {
+
+			// Get name.
+			$match_name = trim( $match, '%' );
+
+			// Get default.
+			$match_default = '';
+
+			$parts = explode( '|', $match_name, 2 );
+
+			if ( count( $parts ) > 1 ) {
+				$match_name = trim( get_first_array_value( $parts ) );
+
+				$match_default = trim( get_last_array_value( $parts ) );
 			}
-		} elseif ( ! is_array( $value ) ) {
-			$text = str_replace( '%' . $name . '%', is_null( $value ) ? '' : $value, $text );
+
+			// Get value.
+			$match_value = null;
+
+			if ( $is_model ) {
+				$field_name = get_last_array_value( explode( '.', $match_name ) );
+
+				if ( 'id' === $field_name ) {
+					$match_value = $token_value->get_id();
+				} else {
+					$field = get_array_value( $token_value->_get_fields(), $field_name );
+
+					if ( $field ) {
+
+						// @todo remove date check in the next major version.
+						if ( $format || $fallback ) {
+							$match_value = $field->display();
+						} else {
+							$match_value = $field->get_display_value();
+						}
+					} elseif ( method_exists( $token_value, 'display_' . $field_name ) ) {
+						$match_value = call_user_func( [ $token_value, 'display_' . $field_name ] );
+					}
+				}
+			} elseif ( ! is_array( $token_value ) ) {
+				$match_value = $token_value;
+			}
+
+			// Replace match.
+			$text = str_replace( $match, is_null( $match_value ) ? $match_default : $match_value, $text );
 		}
 	}
 

@@ -54,7 +54,7 @@ final class Editor extends Component {
 		add_filter( 'block_categories_all', [ $this, 'register_block_categories' ] );
 
 		// Register default blocks.
-		add_action( 'init', [ $this, 'register_default_blocks' ] );
+		add_action( 'init', [ $this, 'register_default_blocks' ], 200 );
 
 		if ( is_admin() ) {
 

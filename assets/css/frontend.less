@@ -27,6 +27,21 @@
 	}
 
 	/*--------------------------------------------------------------
+	Images
+	--------------------------------------------------------------*/
+	&-image {
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+
+			&[data-zoom] {
+				cursor: pointer;
+			}
+		}
+	}
+
+	/*--------------------------------------------------------------
 	Meta
 	--------------------------------------------------------------*/
 	&-meta {
@@ -192,15 +207,6 @@
 		&--checkbox {
 			span {
 				cursor: pointer;
-			}
-		}
-
-		&--checkbox&--readonly {
-			pointer-events: none;
-
-			input[type="checkbox"]:checked+span::before {
-				background-color: #ccc;
-				border-color: #ccc;
 			}
 		}
 
@@ -422,6 +428,14 @@
 	Pagination
 	--------------------------------------------------------------*/
 	&-pagination {
+		&:not(:last-child) {
+			margin-bottom: 2rem;
+		}
+
+		&:empty {
+			margin-bottom: 0;
+		}
+
 		.nav-links {
 			display: flex;
 			justify-content: center;
@@ -671,6 +685,22 @@
 				&:not(:hover) .slick-arrow {
 					display: none !important;
 				}
+
+				.slick-slide:has(+.slick-current),
+				.slick-current+.slick-slide {
+					img {
+						position: relative;
+						z-index: -1;
+					}
+				}
+
+				.slick-slide:has(+.slick-current) img {
+					right: -1px;
+				}
+
+				.slick-current+.slick-slide img {
+					left: -1px;
+				}
 			}
 
 			&-carousel {
@@ -710,6 +740,10 @@
 
 				&[data-zoom^="http"] {
 					cursor: pointer;
+				}
+
+				.wp-block &:not(:first-child) {
+					display: none;
 				}
 			}
 		}
@@ -1028,6 +1062,24 @@
 				text-decoration: none;
 				color: inherit;
 			}
+		}
+
+		&__online-badge {
+			display: inline-block;
+			vertical-align: middle;
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			background-color: #c1c8d5;
+
+			&--active {
+				background-color: #15cd72;
+			}
+		}
+
+		&--view-page &__online-badge {
+			width: 10px;
+			height: 10px;
 		}
 
 		&__verified-badge {

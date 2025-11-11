@@ -7,6 +7,7 @@
 
 namespace HivePress\Components;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
 use HivePress\Helpers as hp;
 
 // Exit if accessed directly.
@@ -41,6 +42,9 @@ final class WooCommerce extends Component {
 
 		// Update options.
 		add_action( 'hivepress/v1/activate', [ $this, 'update_options' ] );
+
+		// Disable HPOS.
+		add_action( 'woocommerce_custom_orders_table_background_sync', [ $this, 'disable_hpos' ] );
 
 		// Update order status.
 		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
@@ -93,6 +97,19 @@ final class WooCommerce extends Component {
 		if ( get_option( 'hp_installed_time' ) > strtotime( '2024-07-08' ) ) {
 
 			// @todo Remove after HPOS integration.
+			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'yes' );
+
+			$this->disable_hpos();
+		}
+	}
+
+	/**
+	 * Disables HPOS.
+	 *
+	 * @todo Remove after HPOS integration.
+	 */
+	public function disable_hpos() {
+		if ( OrderUtil::is_custom_order_tables_in_sync() ) {
 			update_option( 'woocommerce_custom_orders_table_enabled', 'no' );
 			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
 		}
@@ -140,7 +157,7 @@ final class WooCommerce extends Component {
 	 */
 	public function get_order_product_ids( $order ) {
 		return array_map(
-			function( $item ) {
+			function ( $item ) {
 				return $item->get_product_id();
 			},
 			$order->get_items()
@@ -253,7 +270,7 @@ final class WooCommerce extends Component {
 		// Filter meta.
 		$meta = array_filter(
 			array_map(
-				function( $args ) use ( $fields ) {
+				function ( $args ) use ( $fields ) {
 					if ( strpos( $args->key, 'hp_' ) === 0 ) {
 
 						// Get field.

@@ -125,7 +125,7 @@ class Textarea extends Text {
 
 			// Render editor.
 			wp_editor(
-				$this->value,
+				(string) $this->value,
 				$this->name,
 				[
 					'textarea_rows' => 5,

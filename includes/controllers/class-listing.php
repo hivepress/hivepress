@@ -172,7 +172,13 @@ final class Listing extends Controller {
 
 					'listing_submit_page'          => [
 						'path'     => '/submit-listing',
-						'redirect' => [ $this, 'redirect_listing_submit_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listing_submit_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					// @deprecated since version 1.3.0.
@@ -215,7 +221,13 @@ final class Listing extends Controller {
 					'listing_renew_page'           => [
 						'base'     => 'listing_edit_page',
 						'path'     => '/renew',
-						'redirect' => [ $this, 'redirect_listing_renew_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listing_renew_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listing_renew_complete_page'  => [

@@ -25,6 +25,13 @@ class Form extends Block {
 	protected $form;
 
 	/**
+	 * Success message.
+	 *
+	 * @var string
+	 */
+	protected $message;
+
+	/**
 	 * Redirect URL.
 	 *
 	 * @var mixed
@@ -75,6 +82,11 @@ class Form extends Block {
 
 		if ( $model ) {
 			$form_args['model'] = $this->get_context( $model );
+		}
+
+		// Set message.
+		if ( is_string( $this->message ) ) {
+			$form_args['message'] = $this->message;
 		}
 
 		// Set redirect.

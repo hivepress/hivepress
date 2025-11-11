@@ -129,6 +129,67 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets attribute fields.
+	 *
+	 * @param string $model Model name.
+	 * @param array  $values Attribute values.
+	 * @param string $context Field context.
+	 * @return array
+	 */
+	protected function get_attribute_fields( $model, $values, $context = 'search' ) {
+		$attribute_fields = [];
+
+		// Get category IDs.
+		if ( 'search' === $context ) {
+			$category_ids = isset( $values['_category'] ) ? [ absint( $values['_category'] ) ] : [];
+		} else {
+			$category_ids = array_map( 'absint', (array) hp\get_array_value( $values, 'categories' ) );
+		}
+
+		// Get attributes.
+		$attributes = $this->get_attributes( $model, $category_ids );
+
+		foreach ( $attributes as $attribute_name => $attribute ) {
+
+			// Check attribute.
+			if ( ( 'search' === $context && ! $attribute['searchable'] && ! $attribute['filterable'] ) || ( 'edit' === $context && ! $attribute['related'] ) ) {
+				continue;
+			}
+
+			// Get field arguments.
+			$field_args = $attribute[ $context . '_field' ];
+
+			if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
+				$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
+			} else {
+				$field_args['name'] = hp\prefix( $attribute_name );
+			}
+
+			// Create field.
+			$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
+
+			if ( $field && $field::get_meta( 'filterable' ) ) {
+
+				// Set field value.
+				$field->set_value( hp\get_array_value( $values, $attribute_name ) );
+
+				if ( $field->validate() ) {
+
+					// Check range values.
+					if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+						continue;
+					}
+
+					// Add field.
+					$attribute_fields[ $attribute_name ] = $field;
+				}
+			}
+		}
+
+		return $attribute_fields;
+	}
+
+	/**
 	 * Gets model names.
 	 *
 	 * @param string $type Model type.
@@ -257,6 +318,104 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Gets query arguments.
+	 *
+	 * @param string $model Model name.
+	 * @param array  $values Attribute values.
+	 * @return array
+	 */
+	public function get_query_args( $model, $values = [] ) {
+
+		// Set default arguments.
+		$query_args = [
+			'meta_query' => [],
+			'tax_query'  => [],
+		];
+
+		// Get attribute fields.
+		if ( is_array( $model ) ) {
+
+			// @todo replace temporary fix.
+			$attribute_fields = $model;
+		} else {
+			$attribute_fields = $this->get_attribute_fields( $model, $values );
+		}
+
+		// Set attribute filters.
+		foreach ( $attribute_fields as $attribute_name => $field ) {
+			if ( $field->get_arg( '_parent' ) ) {
+
+				// Get parent field.
+				$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
+
+				if ( $parent_field ) {
+
+					// Set parent value.
+					$field->set_parent_value( $parent_field->get_value() );
+
+					// Update field filter.
+					$field->update_filter();
+				}
+			}
+
+			// Get field filter.
+			$field_filter = $field->get_filter();
+
+			if ( $field_filter ) {
+				if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
+
+					// Set taxonomy filter.
+					$field_filter = array_combine(
+						array_map(
+							function( $param ) {
+								return hp\get_array_value(
+									[
+										'name'  => 'taxonomy',
+										'value' => 'terms',
+									],
+									$param,
+									$param
+								);
+							},
+							array_keys( $field_filter )
+						),
+						$field_filter
+					);
+
+					unset( $field_filter['type'] );
+
+					// Add taxonomy clause.
+					$query_args['tax_query'][ $attribute_name ] = $field_filter;
+				} else {
+
+					// Set meta filter.
+					$field_filter = array_combine(
+						array_map(
+							function( $param ) {
+								return hp\get_array_value(
+									[
+										'name'     => 'key',
+										'operator' => 'compare',
+									],
+									$param,
+									$param
+								);
+							},
+							array_keys( $field_filter )
+						),
+						$field_filter
+					);
+
+					// Add meta clause.
+					$query_args['meta_query'][ $attribute_name ] = $field_filter;
+				}
+			}
+		}
+
+		return $query_args;
+	}
+
+	/**
 	 * Registers models.
 	 */
 	public function register_models() {
@@ -282,11 +441,15 @@ final class Attribute extends Component {
 		foreach ( $this->get_models() as $model ) {
 
 			// Set defaults.
-			$this->models[ $model ]['searchable'] = false;
+			$this->models[ $model ]['searchable'] = true;
 
-			if ( 'user' !== $model ) {
-				$this->models[ $model ]['searchable'] = (bool) hp\get_array_value( hivepress()->get_config( 'post_types' )[ $model ], 'has_archive' );
+			// @todo check post type config instead.
+			if ( ! in_array( $model, [ 'listing', 'vendor', 'request' ] ) ) {
+				$this->models[ $model ]['searchable'] = false;
 			}
+
+			// Add block settings.
+			add_filter( 'hivepress/v1/blocks/' . $model . 's/meta', [ $this, 'add_block_settings' ], 100 );
 
 			// Add field settings.
 			add_filter( 'hivepress/v1/meta_boxes/' . $model . '_attribute_edit', [ $this, 'add_field_settings' ], 100 );
@@ -336,6 +499,9 @@ final class Attribute extends Component {
 
 				// Set range values.
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
+
+				// Set related query.
+				add_action( 'hivepress/v1/models/' . $model . '/relate', [ $this, 'set_related_query' ], 100, 2 );
 			}
 		}
 	}
@@ -404,11 +570,12 @@ final class Attribute extends Component {
 
 			// Set query arguments.
 			$query_args = [
-				'post_type'      => hp\prefix( $model . '_attribute' ),
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'menu_order',
-				'order'          => 'ASC',
+				'post_type'        => hp\prefix( $model . '_attribute' ),
+				'post_status'      => 'publish',
+				'posts_per_page'   => -1,
+				'orderby'          => 'menu_order',
+				'order'            => 'ASC',
+				'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 			];
 
 			// Get cache group.
@@ -439,6 +606,7 @@ final class Attribute extends Component {
 						'searchable'     => (bool) $attribute_object->hp_searchable,
 						'filterable'     => (bool) $attribute_object->hp_filterable,
 						'sortable'       => (bool) $attribute_object->hp_sortable,
+						'related'        => (bool) $attribute_object->hp_related,
 						'categories'     => [],
 						'edit_field'     => [],
 						'search_field'   => [],
@@ -632,6 +800,7 @@ final class Attribute extends Component {
 							'searchable'     => false,
 							'filterable'     => false,
 							'sortable'       => false,
+							'related'        => false,
 							'categories'     => [],
 							'edit_field'     => [],
 							'search_field'   => [],
@@ -690,6 +859,29 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Adds block settings.
+	 *
+	 * @param array $meta Block meta.
+	 * @return array
+	 */
+	public function add_block_settings( $meta ) {
+
+		// Get attributes.
+		$attributes = $this->get_attributes( substr( $meta['name'], 0, -1 ), [] );
+
+		// Add settings.
+		foreach ( $attributes as $attribute_name => $attribute_args ) {
+
+			// @todo remove type check when supported.
+			if ( ( $attribute_args['searchable'] || $attribute_args['filterable'] ) && ! isset( $meta['settings'][ $attribute_name ] ) && in_array( $attribute_args['search_field']['type'], [ 'text', 'number', 'select', 'checkbox' ] ) ) {
+				$meta['settings'][ $attribute_name ] = $attribute_args['search_field'];
+			}
+		}
+
+		return $meta;
+	}
+
+	/**
 	 * Adds field settings.
 	 *
 	 * @param array $meta_box Meta box arguments.
@@ -703,8 +895,11 @@ final class Attribute extends Component {
 		// Get field context.
 		$field_context = hp\get_last_array_value( explode( '_', $meta_box['name'] ) );
 
+		// Get field prefix.
+		$field_prefix = 'display' === $field_context ? 'edit' : $field_context;
+
 		// Get field type.
-		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( ( 'display' === $field_context ? 'edit' : $field_context ) . '_field_type' ), true ) );
+		$field_type = sanitize_key( get_post_meta( get_the_ID(), hp\prefix( $field_prefix . '_field_type' ), true ) );
 
 		if ( $field_type ) {
 
@@ -714,7 +909,7 @@ final class Attribute extends Component {
 			// Add field settings.
 			if ( $field_settings ) {
 				foreach ( $field_settings as $field_name => $field ) {
-					if ( ( 'edit' === $field_context && 'search' !== $field->get_arg( '_context' ) ) || ( 'search' === $field_context && 'edit' !== $field->get_arg( '_context' ) ) ) {
+					if ( ( ! $field->get_arg( '_context' ) && 'display' !== $field_context ) || $field->get_arg( '_context' ) === $field_context ) {
 
 						// Get field arguments.
 						$field_args = $field->get_args();
@@ -760,13 +955,14 @@ final class Attribute extends Component {
 						}
 
 						// Add field.
-						$meta_box['fields'][ $field_context . '_field_' . $field_name ] = $field_args;
+						$meta_box['fields'][ $field_prefix . '_field_' . $field_name ] = $field_args;
 					}
 				}
 
-				// @todo replace temporary fix.
 				if ( 'edit' === $field_context ) {
-					$meta_box['fields'][ $field_context . '_field_description' ] = [
+
+					// @todo replace temporary fix.
+					$meta_box['fields'][ $field_prefix . '_field_description' ] = [
 						'label'      => hivepress()->translator->get_string( 'description' ),
 						'type'       => 'textarea',
 						'max_length' => 2048,
@@ -782,10 +978,11 @@ final class Attribute extends Component {
 					];
 				} elseif ( 'display' === $field_context && isset( $field_settings['options'] ) && 'user' !== $model ) {
 					$meta_box['fields']['public'] = [
-						'label'   => esc_html__( 'Pages', 'hivepress' ),
-						'caption' => esc_html__( 'Create a page for each attribute option', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 5,
+						'label'       => esc_html__( 'Pages', 'hivepress' ),
+						'caption'     => esc_html__( 'Create a page for each option', 'hivepress' ),
+						'description' => esc_html__( 'Check this option to enable a category-like page for each attribute option.', 'hivepress' ),
+						'type'        => 'checkbox',
+						'_order'      => 1,
 					];
 				}
 			}
@@ -815,7 +1012,7 @@ final class Attribute extends Component {
 				}
 
 				// Add field.
-				$meta_box['fields']['edit_field_name'] = $field_args;
+				$meta_box['fields'][ $field_prefix . '_field_name' ] = $field_args;
 			}
 
 			// @todo replace temporary fix.
@@ -1379,12 +1576,13 @@ final class Attribute extends Component {
 
 		// Set query arguments.
 		$query_args = [
-			'post_type'      => hp\prefix( $model ),
-			'post_status'    => 'publish',
-			'meta_key'       => hp\prefix( $field ),
-			'orderby'        => 'meta_value_num',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
+			'post_type'        => hp\prefix( $model ),
+			'post_status'      => 'publish',
+			'meta_key'         => hp\prefix( $field ),
+			'orderby'          => 'meta_value_num',
+			'posts_per_page'   => 1,
+			'fields'           => 'ids',
+			'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 		];
 
 		// Get cached range.
@@ -1491,8 +1689,15 @@ final class Attribute extends Component {
 				continue;
 			}
 
+			// Get sort field.
+			$sort_field = hp\get_array_value( $sort_form->get_fields(), '_sort' );
+
+			if ( ! $sort_field ) {
+				continue;
+			}
+
 			// Get sort options.
-			$sort_options = $sort_form->get_fields()['_sort']->get_arg( 'options' );
+			$sort_options = $sort_field->get_arg( 'options' );
 
 			if ( ! $sort_options ) {
 				continue;
@@ -1501,7 +1706,7 @@ final class Attribute extends Component {
 			// Add field.
 			if ( isset( $settings[ $model_name . 's' ]['sections']['search'] ) ) {
 				$settings[ $model_name . 's' ]['sections']['search']['fields'][ $model_name . '_default_order' ] = [
-					'label'   => esc_html__( 'Default Sorting', 'hivepress' ),
+					'label'   => hivepress()->translator->get_string( 'default_sorting' ),
 					'type'    => 'select',
 					'options' => $sort_options,
 					'_order'  => 20,
@@ -1606,11 +1811,12 @@ final class Attribute extends Component {
 					],
 
 					'icon'           => [
-						'label'   => esc_html__( 'Icon', 'hivepress' ),
-						'type'    => 'select',
-						'options' => 'icons',
-						'_parent' => 'display_areas[]',
-						'_order'  => 20,
+						'label'       => esc_html__( 'Icon', 'hivepress' ),
+						'description' => esc_html__( 'Choose an icon for this attribute to include in the display format with the %icon% token.', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'icons',
+						'_parent'     => 'display_areas[]',
+						'_order'      => 20,
 					],
 
 					'display_format' => [
@@ -1621,7 +1827,7 @@ final class Attribute extends Component {
 						'default'     => '%value%',
 						'html'        => true,
 						'_parent'     => 'display_areas[]',
-						'_order'      => 30,
+						'_order'      => 100,
 					],
 				],
 			],
@@ -1630,13 +1836,21 @@ final class Attribute extends Component {
 				'screen' => [],
 
 				'fields' => [
+					'icon'       => [
+						'label'       => esc_html__( 'Icon', 'hivepress' ),
+						'description' => esc_html__( 'Choose an icon to include in the display format with the %icon% token.', 'hivepress' ),
+						'type'        => 'select',
+						'options'     => 'icons',
+						'_order'      => 10,
+					],
+
 					'sort_order' => [
 						'label'     => esc_html_x( 'Order', 'sort priority', 'hivepress' ),
 						'type'      => 'number',
 						'min_value' => 0,
 						'default'   => 0,
 						'required'  => true,
-						'_order'    => 10,
+						'_order'    => 20,
 					],
 				],
 			],
@@ -1686,22 +1900,32 @@ final class Attribute extends Component {
 					}
 
 					// @todo replace temporary fix.
-					if ( 'listing' === $model && 'attribute_edit' === $meta_box_name ) {
-						$meta_box['fields']['synced'] = [
-							'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
-							'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
-							'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
-							'type'        => 'checkbox',
-							'_order'      => 20,
-						];
+					if ( 'listing' === $model ) {
+						if ( 'attribute_edit' === $meta_box_name ) {
+							$meta_box['fields']['synced'] = [
+								'label'       => esc_html_x( 'Synced', 'attribute', 'hivepress' ),
+								'caption'     => esc_html__( 'Sync with the vendor field', 'hivepress' ),
+								'description' => esc_html__( 'Check this option to sync the value with the vendor field of the same name.', 'hivepress' ),
+								'type'        => 'checkbox',
+								'_order'      => 20,
+							];
 
-						$meta_box['fields']['moderated'] = [
-							'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
-							'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
-							'type'    => 'checkbox',
-							'_parent' => 'editable',
-							'_order'  => 30,
-						];
+							$meta_box['fields']['moderated'] = [
+								'label'   => esc_html_x( 'Moderated', 'attribute', 'hivepress' ),
+								'caption' => esc_html__( 'Manually approve changes', 'hivepress' ),
+								'type'    => 'checkbox',
+								'_parent' => 'editable',
+								'_order'  => 30,
+							];
+						} elseif ( 'attribute_display' === $meta_box_name ) {
+							$meta_box['fields']['related'] = [
+								'label'       => esc_html_x( 'Related', 'attribute', 'hivepress' ),
+								'caption'     => esc_html__( 'Include in related criteria', 'hivepress' ),
+								'description' => esc_html__( 'Check this option if you want this attribute to determine related listings.', 'hivepress' ),
+								'type'        => 'checkbox',
+								'_order'      => 5,
+							];
+						}
 					}
 				} elseif ( 'option_settings' === $meta_box_name ) {
 					foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
@@ -1794,7 +2018,33 @@ final class Attribute extends Component {
 	}
 
 	/**
-	 * Sets WP search query.
+	 * Sets related query.
+	 *
+	 * @param object $query Query object.
+	 * @param object $model Model object.
+	 */
+	public function set_related_query( $query, $model ) {
+
+		// Exclude ID.
+		$query->filter( [ 'id__not_in' => [ $model->get_id() ] ] );
+
+		// Set categories.
+		if ( $model->get_categories__id() && in_array( 'category', (array) get_option( 'hp_' . $model::_get_meta( 'name' ) . '_related_criteria', [ 'category' ] ) ) ) {
+			$query->filter( [ 'categories__in' => $model->get_categories__id() ] );
+		}
+
+		// Get attribute fields.
+		$fields = $this->get_attribute_fields( $model::_get_meta( 'name' ), $model->serialize(), 'edit' );
+
+		if ( $fields ) {
+
+			// Set query arguments.
+			$query->set_args( $this->get_query_args( $fields ) );
+		}
+	}
+
+	/**
+	 * Sets search query.
 	 *
 	 * @param WP_Query $query Search query.
 	 */
@@ -1871,55 +2121,77 @@ final class Attribute extends Component {
 		$attributes = $this->get_attributes( $model, (array) $category_id );
 
 		// Sort results.
-		$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
+		if ( $query->is_main_query() || $query->get( 'hp_archive' ) ) {
 
-		if ( $sort_form ) {
+			// Create sort form.
+			$sort_form = hp\create_class_instance( '\HivePress\Forms\\' . $model . '_sort' );
 
-			// Set form values.
-			$sort_form->set_values( $_GET, true );
+			if ( $sort_form ) {
 
-			if ( $sort_form->validate() ) {
+				// Set form values.
+				$sort_form->set_values( $_GET, true );
 
-				// Get sort parameter.
-				$sort_param = $sort_form->get_value( '_sort' );
+				if ( $sort_form->validate() ) {
 
-				if ( 'title' === $sort_param ) {
+					// Get sort parameter.
+					$sort_param = $sort_form->get_value( '_sort' );
 
-					// Set sort order.
-					$query->set( 'orderby', 'title' );
-					$query->set( 'order', 'ASC' );
-				} else {
+					if ( 'title' === $sort_param ) {
 
-					// Get sort order.
-					$sort_order = 'ASC';
+						// Set sort order.
+						$query->set( 'orderby', 'title' );
+						$query->set( 'order', 'ASC' );
+					} else {
 
-					if ( strpos( $sort_param, '__' ) ) {
-						list($sort_param, $sort_order) = explode( '__', $sort_param );
-					}
+						// Get sort order.
+						$sort_order = 'ASC';
 
-					// Get sort attribute.
-					$sort_attribute = hp\get_array_value( $attributes, $sort_param );
+						if ( strpos( $sort_param, '__' ) ) {
+							list($sort_param, $sort_order) = explode( '__', $sort_param );
+						}
 
-					if ( $sort_attribute && $sort_attribute['sortable'] ) {
+						// Get sort attribute.
+						$sort_attribute = hp\get_array_value( $attributes, $sort_param );
 
-						// Get sort field.
-						$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
+						if ( $sort_attribute && $sort_attribute['sortable'] ) {
 
-						if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
+							// Get sort field.
+							$sort_field = hp\create_class_instance( '\HivePress\Fields\\' . $sort_attribute['edit_field']['type'], [ $sort_attribute['edit_field'] ] );
 
-							// Update field filter.
-							$sort_field->update_filter( true );
+							if ( $sort_field && $sort_field::get_meta( 'sortable' ) ) {
 
-							// Add meta clause.
-							$meta_query[ $sort_param . '__order' ] = [
-								'key'     => hp\prefix( $sort_param ),
-								'compare' => 'EXISTS',
-								'type'    => hp\get_array_value( $sort_field->get_filter(), 'type' ),
-							];
+								// Update field filter.
+								$sort_field->update_filter( true );
 
-							// Set sort order.
-							$query->set( 'orderby', $sort_param . '__order' );
-							$query->set( 'order', strtoupper( $sort_order ) );
+								// Set sort filter.
+								$sort_filter = [
+									'key'  => hp\prefix( $sort_param ),
+									'type' => hp\get_array_value( $sort_field->get_filter(), 'type' ),
+								];
+
+								// Add meta clause.
+								$meta_query[] = [
+									'relation' => 'OR',
+
+									$sort_param . '__order' => array_merge(
+										$sort_filter,
+										[
+											'compare' => 'NOT EXISTS',
+										]
+									),
+
+									array_merge(
+										$sort_filter,
+										[
+											'compare' => 'EXISTS',
+										]
+									),
+								];
+
+								// Set sort order.
+								$query->set( 'orderby', $sort_param . '__order' );
+								$query->set( 'order', strtoupper( $sort_order ) );
+							}
 						}
 					}
 				}
@@ -1930,112 +2202,13 @@ final class Attribute extends Component {
 		if ( $query->is_search() ) {
 
 			// Get attribute fields.
-			$attribute_fields = [];
+			$attribute_fields = $this->get_attribute_fields( $model, $_GET );
 
-			foreach ( $attributes as $attribute_name => $attribute ) {
-				if ( $attribute['searchable'] || $attribute['filterable'] ) {
+			// Get query arguments.
+			$query_args = $this->get_query_args( $attribute_fields );
 
-					// Get field arguments.
-					$field_args = $attribute['search_field'];
-
-					if ( isset( $field_args['options'] ) && ! isset( $field_args['_external'] ) ) {
-						$field_args['name'] = hp\prefix( $model . '_' . $attribute_name );
-					} else {
-						$field_args['name'] = hp\prefix( $attribute_name );
-					}
-
-					// Create field.
-					$field = hp\create_class_instance( '\HivePress\Fields\\' . $field_args['type'], [ $field_args ] );
-
-					if ( $field && $field::get_meta( 'filterable' ) ) {
-
-						// Set field value.
-						$field->set_value( hp\get_array_value( $_GET, $attribute_name ) );
-
-						if ( $field->validate() ) {
-
-							// Check range values.
-							if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
-								continue;
-							}
-
-							// Add field.
-							$attribute_fields[ $attribute_name ] = $field;
-						}
-					}
-				}
-			}
-
-			// Set attribute filters.
-			foreach ( $attribute_fields as $attribute_name => $field ) {
-				if ( $field->get_arg( '_parent' ) ) {
-
-					// Get parent field.
-					$parent_field = hp\get_array_value( $attribute_fields, $field->get_arg( '_parent' ) );
-
-					if ( $parent_field ) {
-
-						// Set parent value.
-						$field->set_parent_value( $parent_field->get_value() );
-
-						// Update field filter.
-						$field->update_filter();
-					}
-				}
-
-				// Get field filter.
-				$field_filter = $field->get_filter();
-
-				if ( $field_filter ) {
-					if ( ! is_null( $field->get_arg( 'options' ) ) && ! $field->get_arg( '_external' ) ) {
-
-						// Set taxonomy filter.
-						$field_filter = array_combine(
-							array_map(
-								function( $param ) {
-									return hp\get_array_value(
-										[
-											'name'  => 'taxonomy',
-											'value' => 'terms',
-										],
-										$param,
-										$param
-									);
-								},
-								array_keys( $field_filter )
-							),
-							$field_filter
-						);
-
-						unset( $field_filter['type'] );
-
-						// Add taxonomy clause.
-						$tax_query[ $attribute_name ] = $field_filter;
-					} else {
-
-						// Set meta filter.
-						$field_filter = array_combine(
-							array_map(
-								function( $param ) {
-									return hp\get_array_value(
-										[
-											'name'     => 'key',
-											'operator' => 'compare',
-										],
-										$param,
-										$param
-									);
-								},
-								array_keys( $field_filter )
-							),
-							$field_filter
-						);
-
-						// Add meta clause.
-						$meta_query[ $attribute_name ] = $field_filter;
-					}
-				}
-			}
+			$meta_query = array_merge( $meta_query, $query_args['meta_query'] );
+			$tax_query  = array_merge( $tax_query, $query_args['tax_query'] );
 		}
 
 		// Set meta and taxonomy queries.

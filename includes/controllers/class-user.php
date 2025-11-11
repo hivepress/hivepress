@@ -221,8 +221,14 @@ final class User extends Controller {
 					'user_view_page'               => [
 						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
 						'title'    => [ $this, 'get_user_view_title' ],
-						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_user_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 				],
 			],

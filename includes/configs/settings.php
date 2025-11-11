@@ -64,6 +64,19 @@ return [
 						'_order'    => 50,
 					],
 
+					'listing_related_criteria'         => [
+						'label'       => hivepress()->translator->get_string( 'related_listing_criteria' ),
+						'description' => esc_html__( 'Select the criteria used to determine which related listings are shown on the listing page.', 'hivepress' ),
+						'type'        => 'select',
+						'multiple'    => true,
+						'default'     => [ 'category' ],
+						'_order'      => 55,
+
+						'options'     => [
+							'category' => hivepress()->translator->get_string( 'categories' ),
+						],
+					],
+
 					'listing_title_format'             => [
 						'label'       => hivepress()->translator->get_string( 'title' ),
 						'description' => hivepress()->translator->get_string( 'set_title_format_based_on_attributes' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%listing%, %vendor%' ),
@@ -287,12 +300,19 @@ return [
 						'_order'  => 10,
 					],
 
+					'user_display_online' => [
+						'caption' => esc_html__( 'Display online status for users', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_parent' => 'user_enable_display',
+						'_order'  => 20,
+					],
+
 					'user_display_name'   => [
 						'label'    => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 'first_name',
 						'required' => true,
-						'_order'   => 20,
+						'_order'   => 30,
 
 						'options'  => [
 							'username'         => esc_html__( 'Username', 'hivepress' ),

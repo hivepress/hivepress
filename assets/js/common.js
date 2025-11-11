@@ -43,18 +43,53 @@ var hivepress = {
 			}
 		});
 
+		// Image
+		container.find(hivepress.getSelector('image')).each(function () {
+			var image = $(this);
+
+			image.on('click', function () {
+				$.fancybox.open({ src: image.data('zoom') }, {
+					buttons: ['close'],
+				});
+			});
+		});
+
 		// Modal
 		container.find(hivepress.getSelector('modal')).each(function () {
-			var url = '#' + $(this).attr('id');
+			var id = $(this).attr('id'),
+				url = '#' + id;
 
-			$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function (e) {
-				$.fancybox.close();
-				$.fancybox.open({
-					src: url,
-					touch: false,
+			if (id) {
+				$('a[href="' + url + '"], button[data-url="' + url + '"]').on('click', function (e) {
+					$.fancybox.close();
+					$.fancybox.open({
+						src: url,
+						touch: false,
+					});
+
+					e.preventDefault();
 				});
+			}
+		});
 
-				e.preventDefault();
+		// Copy
+		container.find(hivepress.getSelector('copy')).each(function () {
+			var element = $(this);
+
+			element.on('click', function () {
+				var input = $('<input type="text">');
+
+				input.appendTo($('body')).val(element.text()).select();
+
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(element.text()).catch(() => {
+						document.execCommand('copy');
+					});
+				} else {
+					document.execCommand('copy');
+				}
+
+				input.remove();
 			});
 		});
 
@@ -78,6 +113,20 @@ var hivepress = {
 					e.preventDefault();
 				}
 			});
+
+			if (field.data('mode') === 'range' && field.is(':visible')) {
+				field.wrap('<div class="' + field.attr('class').split(' ')[0] + '--number-range" />');
+
+				$('<div />').insertAfter(field).slider({
+					min: Number(field.attr('min')),
+					max: Number(field.attr('max')),
+					value: Number(field.val()),
+
+					slide: function (e, ui) {
+						field.val(ui.value);
+					},
+				}).wrap('<div />');
+			}
 		});
 
 		// Repeater
@@ -142,6 +191,10 @@ var hivepress = {
 					dropdownAutoWidth: false,
 					minimumResultsForSearch: 20,
 					templateResult: function (state) {
+						if (state.hasOwnProperty('error')) {
+							return state.error;
+						}
+
 						var template = state.text,
 							level = 0;
 
@@ -153,6 +206,10 @@ var hivepress = {
 						return template;
 					},
 				};
+
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
 
 			if (field.data('placeholder')) {
 				settings['placeholder'] = field.data('placeholder');
@@ -223,6 +280,7 @@ var hivepress = {
 					if (parentField.length) {
 						parentField.on('change', function () {
 							field.data('parent-value', $(this).val());
+							field.val(null).trigger('change');
 						});
 					}
 				} else {
@@ -400,6 +458,7 @@ var hivepress = {
 		// Date
 		container.find(hivepress.getSelector('date')).each(function () {
 			var field = $(this),
+				ranges = field.data('ranges'),
 				settings = {
 					allowInput: true,
 					altInput: true,
@@ -429,6 +488,10 @@ var hivepress = {
 						}
 					}
 				};
+
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -479,17 +542,15 @@ var hivepress = {
 				var disabledDays = field.data('disabled-days');
 
 				if (disabledDays.length) {
-					function disableDates(date) {
+					function disableDate(date) {
 						return disabledDays.indexOf(date.getDay()) !== -1;
 					}
 
-					settings['disable'].push(disableDates);
+					settings['disable'].push(disableDate);
 				}
 			}
 
-			if (field.data('ranges')) {
-				var ranges = field.data('ranges');
-
+			if (ranges) {
 				settings['onDayCreate'] = function (dObj, dStr, fp, dayElem) {
 					if (dayElem.className.includes('disabled')) {
 						return;
@@ -520,10 +581,53 @@ var hivepress = {
 						minLength = field.data('min-length'),
 						maxLength = field.data('max-length');
 
+					function disableDates(selectedDates, instance) {
+						if (selectedDates.length !== 1 || !ranges) {
+							return;
+						}
+
+						var time = Math.floor(selectedDates[0].getTime() / 1000) - selectedDates[0].getTimezoneOffset() * 60,
+							prevTime = null,
+							nextTime = null;
+
+						$.each(ranges, function (index, range) {
+							if (range.hasOwnProperty('status') && range.status === 'error') {
+								if (range.start <= time && time < range.end) {
+									instance.clear();
+
+									prevTime = null;
+									nextTime = null;
+
+									return false;
+								} else if (time >= range.end) {
+									prevTime = range.end;
+								} else if (time < range.start) {
+									nextTime = range.start;
+
+									return false;
+								}
+							}
+						});
+
+						if (!prevTime && !nextTime) {
+							return;
+						}
+
+						$.each(instance.days.children, function (index, dayElem) {
+							var dayTime = Math.floor(dayElem.dateObj.getTime() / 1000) - dayElem.dateObj.getTimezoneOffset() * 60;
+
+							if ((prevTime && dayTime < prevTime) || (nextTime && dayTime > nextTime)) {
+								dayElem.className += ' flatpickr-disabled';
+							}
+						});
+					}
+
 					$.extend(settings, {
 						defaultDate: [fields.eq(0).val(), fields.eq(1).val()],
 						errorHandler: function (error) { },
 						onChange: function (selectedDates, dateStr, instance) {
+							disableDates(selectedDates, instance);
+
 							if (selectedDates.length === 2) {
 								if (minLength || maxLength) {
 									var length = Math.floor((selectedDates[1].getTime() - selectedDates[0].getTime()) / (1000 * 86400)),
@@ -553,6 +657,9 @@ var hivepress = {
 								fields.eq(0).val('');
 								fields.eq(1).val('');
 							}
+						},
+						onMonthChange: function (selectedDates, dateStr, instance) {
+							disableDates(selectedDates, instance);
 						},
 					});
 				}
@@ -636,6 +743,10 @@ var hivepress = {
 						}
 					}
 				};
+
+			if (field.data('options')) {
+				$.extend(settings, field.data('options'));
+			}
 
 			if (field.is('div')) {
 				settings['wrap'] = true;
@@ -785,6 +896,97 @@ var hivepress = {
 				});
 		});
 
+		// Render
+		container.find('[data-render]').each(function () {
+			var element = $(this),
+				renderSettings = element.data('render');
+
+			if (renderSettings && !element.is('form, input, select, textarea')) {
+				var currentPage = 1,
+					maxPage = 1;
+
+				if (renderSettings.hasOwnProperty('pages')) {
+					maxPage = renderSettings.pages;
+				}
+
+				renderSettings = $.extend({ type: 'replace' }, renderSettings);
+
+				function renderBlock() {
+					var url = new URL(renderSettings.url),
+						container = $('[data-block=' + renderSettings.block + ']');
+
+					if (!container.length) {
+						if (renderSettings.hasOwnProperty('interval')) {
+							clearInterval(renderInterval);
+						}
+
+						return;
+					}
+
+					if (element.is('button')) {
+						element.attr('data-state', 'loading');
+					}
+
+					container.attr('data-state', 'loading');
+
+					url.searchParams.set('_render', true);
+
+					if (currentPage < maxPage) {
+						url.searchParams.set('_page', currentPage + 1);
+					}
+
+					$.ajax({
+						url: url,
+						method: 'GET',
+						contentType: false,
+						processData: false,
+						beforeSend: function (xhr) {
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
+						},
+						complete: function (xhr) {
+							var response = xhr.responseJSON;
+
+							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+								var newContainer = $(response.data.html);
+
+								if (element.is('button')) {
+									element.attr('data-state', '');
+								}
+
+								if ('append' === renderSettings.type) {
+									container.attr('data-state', '');
+
+									container.append(newContainer);
+								} else {
+									container.replaceWith(newContainer);
+								}
+
+								if (currentPage < maxPage - 1) {
+									currentPage++;
+								} else if (maxPage > 1) {
+									element.remove();
+								}
+
+								hivepress.initUI(newContainer);
+							}
+						},
+					});
+				}
+
+				if (renderSettings.hasOwnProperty('interval')) {
+					var renderInterval = setInterval(renderBlock, renderSettings.interval * 1000);
+				} else {
+					element.on('click', function (e) {
+						e.preventDefault();
+
+						renderBlock();
+					});
+				}
+			}
+		});
+
 		// Form
 		var forms = container.find(hivepress.getSelector('form'));
 
@@ -806,48 +1008,58 @@ var hivepress = {
 			}
 
 			if (renderSettings) {
-				form.on('change', function () {
-					var container = $('[data-block=' + renderSettings.block + ']'),
-						data = new FormData(form.get(0)),
-						request = form.data('renderRequest');
+				renderSettings = $.extend({ event: 'change', type: 'replace' }, renderSettings);
 
-					if (!container.length) {
-						return;
-					}
+				if ('change' === renderSettings.event) {
+					form.on('change', function () {
+						var container = $('[data-block=' + renderSettings.block + ']'),
+							data = new FormData(form.get(0)),
+							request = form.data('renderRequest');
 
-					if (container.attr('data-state') === 'loading') {
-						request.abort();
-					}
+						if (!container.length) {
+							return;
+						}
 
-					container.attr('data-state', 'loading');
+						if (container.attr('data-state') === 'loading') {
+							request.abort();
+						}
 
-					data.append('_render', true);
-					data.delete('_wpnonce');
+						container.attr('data-state', 'loading');
 
-					form.data('renderRequest', $.ajax({
-						url: renderSettings.url,
-						method: 'POST',
-						data: data,
-						contentType: false,
-						processData: false,
-						beforeSend: function (xhr) {
-							if ($('body').hasClass('logged-in')) {
-								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-							}
-						},
-						complete: function (xhr) {
-							var response = xhr.responseJSON;
+						data.append('_render', true);
+						data.delete('_wpnonce');
 
-							if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
-								var newContainer = $(response.data.html);
+						form.data('renderRequest', $.ajax({
+							url: renderSettings.url,
+							method: 'POST',
+							data: data,
+							contentType: false,
+							processData: false,
+							beforeSend: function (xhr) {
+								if ($('body').hasClass('logged-in')) {
+									xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+								}
+							},
+							complete: function (xhr) {
+								var response = xhr.responseJSON;
 
-								container.replaceWith(newContainer);
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
 
-								hivepress.initUI(newContainer);
-							}
-						},
-					}));
-				});
+									if ('append' === renderSettings.type) {
+										container.attr('data-state', '');
+
+										container.append(newContainer);
+									} else {
+										container.replaceWith(newContainer);
+									}
+
+									hivepress.initUI(newContainer);
+								}
+							},
+						}));
+					});
+				}
 			}
 
 			form.on('submit', function () {
@@ -860,16 +1072,28 @@ var hivepress = {
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
 				form.on('submit', function (e) {
+					var formData = new FormData(form.get(0));
+
 					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 
 					if (typeof tinyMCE !== 'undefined') {
 						tinyMCE.triggerSave();
 					}
 
+					if (renderSettings && renderSettings.event === 'submit') {
+						var renderContainer = $('[data-block=' + renderSettings.block + ']');
+
+						if (renderContainer.length) {
+							renderContainer.attr('data-state', 'loading');
+
+							formData.append('_render', true);
+						}
+					}
+
 					$.ajax({
 						url: form.data('action'),
 						method: 'POST',
-						data: new FormData(form.get(0)),
+						data: formData,
 						contentType: false,
 						processData: false,
 						beforeSend: function (xhr) {
@@ -935,6 +1159,22 @@ var hivepress = {
 									scrollTop: form.offset().top,
 								}, 500);
 							}
+
+							if (renderSettings && renderSettings.event === 'submit' && renderContainer.length) {
+								renderContainer.attr('data-state', '');
+
+								if (typeof response !== 'undefined' && response.hasOwnProperty('data') && response.data.hasOwnProperty('html')) {
+									var newContainer = $(response.data.html);
+
+									if ('append' === renderSettings.type) {
+										renderContainer.append(newContainer);
+									} else {
+										renderContainer.replaceWith(newContainer);
+									}
+
+									hivepress.initUI(newContainer);
+								}
+							}
 						},
 					});
 
@@ -957,10 +1197,11 @@ var hivepress = {
 
 		// Field
 		container.find(hivepress.getSelector('field')).each(function () {
-			var field = $(this);
+			var field = $(this),
+				parentName = field.data('parent');
 
-			if (field.data('parent')) {
-				var parentField = field.closest('form').find(':input[name="' + field.data('parent') + '"]');
+			if (parentName) {
+				var parentField = field.closest('form').find(':input[name="' + parentName + '"],:input[name="' + parentName + '[]"]');
 
 				if (field.parent().is('td')) {
 					field = field.closest('tr');
@@ -969,12 +1210,12 @@ var hivepress = {
 				}
 
 				if (parentField.length) {
-					if (!parentField.val() || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
+					if ($.isEmptyObject(parentField.val()) || (parentField.is(':checkbox, :radio') && !parentField.prop('checked'))) {
 						field.hide();
 					}
 
-					parentField.on('change', function () {
-						if (!$(this).val() || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
+					parentField.on('input change', function () {
+						if ($.isEmptyObject($(this).val()) || ($(this).is(':checkbox, :radio') && !$(this).prop('checked'))) {
 							field.hide();
 						} else {
 							field.show();

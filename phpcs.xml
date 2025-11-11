@@ -14,11 +14,20 @@
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 	</rule>
 
-	<config name="testVersion" value="7.0-"/>
+	<config name="testVersion" value="8.4-"/>
 	<rule ref="PHPCompatibility"/>
 
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
+
+	<rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
+		<severity>0</severity>
+	</rule>
+
+	<rule ref="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction">
+		<severity>0</severity>
+	</rule>
+
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"/>
 </ruleset>

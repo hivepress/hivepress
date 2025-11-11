@@ -168,14 +168,62 @@ final class Email extends Component {
 			$output = '';
 
 			if ( $email::get_meta( 'description' ) ) {
+
+				// Add description.
 				$output .= $email::get_meta( 'description' ) . ' ';
 			}
 
-			if ( $email::get_meta( 'tokens' ) ) {
-				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '<code>%' . implode( '%</code>, <code>%', $email::get_meta( 'tokens' ) ) . '%</code>' );
+			// Get tokens.
+			$tokens = $email::get_meta( 'tokens' );
+
+			if ( $tokens ) {
+				foreach ( $tokens as $index => $token ) {
+
+					// Create model.
+					$model = hp\create_class_instance( '\HivePress\Models\\' . $token );
+
+					if ( $model ) {
+
+						// Remove token.
+						unset( $tokens[ $index ] );
+
+						// Add tokens.
+						$tokens[] = $token . '.id';
+
+						foreach ( $model->_get_fields() as $field ) {
+							if ( ! $field->get_arg( '_model' ) && ! in_array(
+								$field::get_meta( 'name' ),
+								[
+									// @todo replace with a common check when available.
+									'id',
+									'hidden',
+									'file',
+									'password',
+									'checkbox',
+									'repeater',
+									'attachment_select',
+									'attachment_upload',
+								]
+							) ) {
+								$tokens[] = $token . '.' . $field->get_name();
+							}
+						}
+					}
+				}
+
+				// Set wrapper.
+				$tag = '<code title="' . esc_attr__( 'Click to copy', 'hivepress' ) . '" data-component="copy">';
+
+				// Add tokens.
+				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), $tag . '%' . implode( '%</code>, ' . $tag . '%', $tokens ) . '%</code>' );
+
+				/* translators: 1: |, 2: %. */
+				$output .= ' ' . sprintf( esc_html__( 'You can add fallback values for empty tokens, separated with %1$s from the token name and placed before the ending %2$s.', 'hivepress' ), '<code>|</code>', '<code>%</code>' );
 			}
 
 			if ( $output ) {
+
+				// Add block.
 				$meta_box['blocks']['email_details'] = [
 					'type'    => 'content',
 					'content' => '<p>' . trim( $output ) . '</p>',
