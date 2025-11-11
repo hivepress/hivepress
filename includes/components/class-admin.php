@@ -1791,14 +1791,16 @@ final class Admin extends Component {
 		);
 
 		if ( $products ) {
-			$notices['license_request'] = [
+			$product_names = implode( ', ', array_column( $products, 'name' ) );
+
+			$notices[ 'license_request_' . md5( $product_names ) ] = [
 				'type'        => 'error',
 				'dismissible' => true,
 				'text'        => sprintf(
 					/* translators: 1: settings URL, 2: unlicensed products. */
 					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
 					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
-					implode( ', ', array_column( $products, 'name' ) )
+					$product_names
 				),
 			];
 		}
