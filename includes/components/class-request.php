@@ -88,6 +88,40 @@ final class Request extends Component {
 	}
 
 	/**
+	 * Sets the current post.
+	 *
+	 * @param WP_Post $current_post Post object.
+	 */
+	public function set_post( $current_post ) {
+		global $post;
+
+		$this->set_context( 'post', $post );
+
+		$post = $current_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		setup_postdata( $post );
+	}
+
+	/**
+	 * Resets the default post.
+	 */
+	public function reset_post() {
+		global $post;
+
+		$default_post = $this->get_context( 'post' );
+
+		if ( ! $default_post ) {
+			return;
+		}
+
+		$post = $default_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		wp_reset_postdata();
+
+		$this->set_context( 'post', null );
+	}
+
+	/**
 	 * Gets the current page number.
 	 *
 	 * @return int
