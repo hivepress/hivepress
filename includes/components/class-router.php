@@ -290,7 +290,7 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_referer_url() {
-		return wp_validate_redirect( hp\get_array_value( $_SERVER, 'HTTP_REFERER' ) );
+		return wp_validate_redirect( (string) hp\get_array_value( $_SERVER, 'HTTP_REFERER' ) );
 	}
 
 	/**

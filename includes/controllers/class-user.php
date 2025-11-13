@@ -374,7 +374,7 @@ final class User extends Controller {
 			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
 
 			// Set email redirect.
-			$email_redirect = wp_validate_redirect( $form->get_value( '_redirect' ) );
+			$email_redirect = wp_validate_redirect( (string) $form->get_value( '_redirect' ) );
 
 			if ( $email_redirect ) {
 				update_user_meta( $user->get_id(), 'hp_email_verify_redirect', $email_redirect );
