@@ -24,7 +24,8 @@ final class Asset extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
-		// Add image sizes.
+		// Manage image sizes.
+		add_filter( 'hivepress/v1/image_sizes', [ $this, 'set_image_sizes' ] );
 		add_action( 'after_setup_theme', [ $this, 'add_image_sizes' ] );
 
 		// Enqueue styles.
@@ -42,12 +43,65 @@ final class Asset extends Component {
 	}
 
 	/**
+	 * Gets aspect ratio.
+	 *
+	 * @param string $image_size Image size.
+	 * @return float
+	 */
+	public function get_aspect_ratio( $image_size ) {
+
+		// Get image size.
+		$args = hp\get_array_value( hivepress()->get_config( 'image_sizes' ), $image_size );
+
+		if ( ! $args || hp\get_array_value( $args, 'crop' ) ) {
+			return;
+		}
+
+		// Get width and height.
+		$width  = hp\get_array_value( $args, 'width', 0 );
+		$height = hp\get_array_value( $args, 'height', 0 );
+
+		if ( ! $width || ! $height ) {
+			return;
+		}
+
+		return round( $width / $height, 4 );
+	}
+
+	/**
+	 * Sets image sizes.
+	 *
+	 * @param array $image_sizes Image sizes.
+	 * @return array
+	 */
+	public function set_image_sizes( $image_sizes ) {
+		if ( get_option( 'hp_installed_time' ) < strtotime( '2025-11-14' ) ) {
+
+			// Enable for compatibility.
+			$image_sizes['landscape_small']['crop'] = true;
+			$image_sizes['landscape_large']['crop'] = true;
+		}
+
+		foreach ( $image_sizes as $name => $args ) {
+
+			// Get settings.
+			$settings = get_option( hp\prefix( 'image_size_' . $name ) );
+
+			if ( is_array( $settings ) ) {
+
+				// Set image size.
+				$image_sizes[ $name ] = array_merge( $args, $settings );
+			}
+		}
+
+		return $image_sizes;
+	}
+
+	/**
 	 * Adds image sizes.
 	 */
 	public function add_image_sizes() {
 		foreach ( hivepress()->get_config( 'image_sizes' ) as $name => $args ) {
-			$args = get_option( hp\prefix( 'image_size_' . $name ), $args );
-
 			add_image_size(
 				hp\prefix( $name ),
 				hp\get_array_value( $args, 'width', 0 ),
