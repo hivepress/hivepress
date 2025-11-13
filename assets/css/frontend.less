@@ -1217,10 +1217,18 @@ Select2
 .select2 {
 	&-container {
 		min-width: 4.5rem;
+
+		.woocommerce-js & {
+			width: auto;
+		}
 	}
 
 	&-dropdown {
 		z-index: 99999;
+	}
+
+	.woocommerce-js &-container--default &-selection &-selection__arrow {
+		top: 0;
 	}
 }
 

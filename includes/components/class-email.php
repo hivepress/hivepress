@@ -60,9 +60,20 @@ final class Email extends Component {
 		if ( $email::get_meta( 'label' ) && ! hp\get_array_value( $args, 'default' ) ) {
 
 			// Get content.
-			$content = get_page_by_path( $email::get_meta( 'name' ), OBJECT, 'hp_email' );
+			$content = hp\get_first_array_value(
+				get_posts(
+					[
+						'name'             => $email::get_meta( 'name' ),
+						'post_type'        => 'hp_email',
+						'post_status'      => 'publish',
+						'posts_per_page'   => 1,
+						'suppress_filters' => ! hivepress()->translator->is_multilingual(),
+					]
+				)
+			);
 
-			if ( $content && 'publish' === $content->post_status ) {
+			if ( $content ) {
+				hivepress()->request->set_post( $content );
 
 				// Set subject.
 				if ( $content->post_title ) {
@@ -71,6 +82,8 @@ final class Email extends Component {
 
 				// Set body.
 				$args['body'] = apply_filters( 'the_content', $content->post_content );
+
+				hivepress()->request->reset_post();
 			}
 		}
 
