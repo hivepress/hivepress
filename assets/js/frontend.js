@@ -95,6 +95,7 @@
 			container.find(hivepress.getSelector('carousel-slider')).each(function () {
 				var container = $(this),
 					images = container.find('img, video'),
+					aspectRatio = Number(container.data('aspect-ratio')),
 					url = container.data('url'),
 					isPreview = container.data('preview') !== false;
 
@@ -150,6 +151,12 @@
 							carousel.find('video').removeAttr('controls');
 							carousel.appendTo(container);
 
+							carousel.on('init', function (event, slick) {
+								if (aspectRatio) {
+									slick.$slides.css('aspect-ratio', aspectRatio);
+								}
+							});
+
 							$.extend(settings, {
 								asNavFor: carousel,
 								arrows: false,
@@ -160,6 +167,12 @@
 								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
 							});
 						}
+
+						slider.on('init', function (event, slick) {
+							if (aspectRatio) {
+								slick.$slides.css('aspect-ratio', aspectRatio);
+							}
+						});
 
 						slider.addClass(containerClass + '-slider').slick(settings);
 
@@ -201,6 +214,8 @@
 							});
 						}
 					});
+				} else if (aspectRatio) {
+					container.css('aspect-ratio', aspectRatio);
 				}
 			});
 		}

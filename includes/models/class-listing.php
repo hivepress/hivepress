@@ -148,7 +148,6 @@ class Listing extends Post {
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
 						'multiple'    => true,
-						'required'    => true,
 						'_indexable'  => true,
 						'_model'      => 'listing_category',
 						'_relation'   => 'many_to_many',

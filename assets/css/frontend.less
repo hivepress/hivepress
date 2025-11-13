@@ -711,7 +711,7 @@
 				}
 
 				.slick-slide {
-					padding: 0 0.5rem;
+					margin: 0 0.5rem;
 					outline: none;
 					cursor: pointer;
 
@@ -736,7 +736,9 @@
 			video {
 				display: block;
 				width: 100%;
-				height: auto;
+				height: 100%;
+				object-fit: contain;
+				background-color: #f2f2f2;
 
 				&[data-zoom^="http"] {
 					cursor: pointer;
