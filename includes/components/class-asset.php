@@ -75,11 +75,16 @@ final class Asset extends Component {
 	 * @return array
 	 */
 	public function set_image_sizes( $image_sizes ) {
-		if ( get_option( 'hp_installed_time' ) < strtotime( '2025-11-14' ) ) {
 
-			// Enable for compatibility.
-			$image_sizes['landscape_small']['crop'] = true;
-			$image_sizes['landscape_large']['crop'] = true;
+		// Enable cropping.
+		if ( get_option( 'hp_installed_time' ) < strtotime( '2025-11-14' ) ) {
+			if ( isset( $image_sizes['landscape_small'] ) ) {
+				$image_sizes['landscape_small']['crop'] = true;
+			}
+
+			if ( isset( $image_sizes['landscape_large'] ) ) {
+				$image_sizes['landscape_large']['crop'] = true;
+			}
 		}
 
 		foreach ( $image_sizes as $name => $args ) {
