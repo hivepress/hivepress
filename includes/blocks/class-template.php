@@ -116,13 +116,23 @@ class Template extends Block {
 			}
 		}
 
+		if ( isset( $content ) ) {
+			hivepress()->request->set_post( $content );
+		}
+
 		// Render template.
-		return ( new Container(
+		$output = ( new Container(
 			[
 				'tag'     => false,
 				'context' => $context,
 				'blocks'  => $blocks,
 			]
 		) )->render();
+
+		if ( isset( $content ) ) {
+			hivepress()->request->reset_post();
+		}
+
+		return $output;
 	}
 }
