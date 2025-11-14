@@ -69,6 +69,9 @@ final class Router extends Component {
 
 			// Disable page redirect.
 			add_filter( 'redirect_canonical', [ $this, 'disable_page_redirect' ] );
+
+			// Disable page query.
+			add_filter( 'posts_request', [ $this, 'disable_page_query' ], 10, 2 );
 		}
 
 		parent::__construct( $args );
@@ -693,5 +696,19 @@ final class Router extends Component {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Disables page query.
+	 *
+	 * @param string   $request SQL request.
+	 * @param WP_Query $query Query object.
+	 */
+	public function disable_page_query( $request, $query ) {
+		if ( $query->is_main_query() && ! $query->get( 'post_type' ) && $query->get( 'hp_route' ) ) {
+			$request = '';
+		}
+
+		return $request;
 	}
 }

@@ -91,9 +91,14 @@ final class Request extends Component {
 	 * Sets the current post.
 	 *
 	 * @param WP_Post $current_post Post object.
+	 * @param bool    $force Force override?
 	 */
-	public function set_post( $current_post ) {
+	public function set_post( $current_post, $force = true ) {
 		global $post;
+
+		if ( $post && ! $force ) {
+			return;
+		}
 
 		$this->set_context( 'post', $post );
 
