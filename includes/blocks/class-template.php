@@ -117,7 +117,7 @@ class Template extends Block {
 		}
 
 		if ( isset( $content ) ) {
-			hivepress()->request->set_post( $content );
+			hivepress()->request->set_post( $content, false );
 		}
 
 		// Render template.
