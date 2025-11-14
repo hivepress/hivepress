@@ -56,6 +56,9 @@ final class Attribute extends Component {
 	 */
 	protected function boot() {
 
+        // Update attributes.
+        add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ] );
+
 		// Register models.
 		add_action( 'hivepress/v1/setup', [ $this, 'register_models' ] );
 
@@ -90,6 +93,41 @@ final class Attribute extends Component {
 			add_filter( 'jetpack_search_should_handle_query', [ $this, 'disable_jetpack_search' ], 10, 2 );
 		}
 	}
+
+    /**
+     * Upgrades attributes.
+     *
+     * @param string $version Old version.
+     * @deprecated Since version 1.7.3
+     */
+    public function upgrade_attributes( $version ) {
+        if ( ! version_compare( $version, '1.7.3', '<' ) ) {
+            return;
+        }
+
+        global $wpdb;
+
+        // Get attribute IDs.
+        $attribute_ids = $wpdb->get_results(
+            $wpdb->prepare(
+                "
+                SELECT attributes.ID
+                FROM {$wpdb->posts} as attributes
+                    LEFT JOIN {$wpdb->postmeta} as formatted ON attributes.ID = formatted.post_id AND formatted.meta_key = 'hp_edit_field_formatted'
+                    INNER JOIN {$wpdb->postmeta} as number ON attributes.ID = number.post_id AND number.meta_key = 'hp_edit_field_type' AND number.meta_value = 'number'
+                WHERE attributes.post_type LIKE 'hp_%_attribute'
+                  AND attributes.post_status = 'publish'
+                  AND formatted.meta_id IS NULL
+                "
+            ),
+            ARRAY_A
+        );
+
+        // Update attribute meta.
+        foreach ( $attribute_ids as $attribute_id ) {
+            update_post_meta( $attribute_id, hp\prefix( 'edit_field_formatted' ), 1 );
+        }
+    }
 
 	/**
 	 * Gets attribute name.
