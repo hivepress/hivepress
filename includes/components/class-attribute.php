@@ -1973,11 +1973,12 @@ final class Attribute extends Component {
 				$attributes = $this->get_attributes( $model, $category_ids );
 
 				// Remove meta boxes.
-				remove_meta_box( hp\prefix( $model . '_categorydiv' ), hp\prefix( $model ), 'side' );
+				remove_meta_box( 'commentsdiv', $post_type, 'normal' );
+				remove_meta_box( hp\prefix( $model . '_categorydiv' ), $post_type, 'side' );
 
 				foreach ( $this->attributes[ $model ] as $attribute_name => $attribute ) {
 					if ( ! isset( $attributes[ $attribute_name ] ) && isset( $attribute['edit_field']['options'] ) && ! isset( $attribute['edit_field']['_external'] ) ) {
-						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), hp\prefix( $model ), 'side' );
+						remove_meta_box( hp\prefix( $model . '_' . $attribute_name . 'div' ), $post_type, 'side' );
 					}
 				}
 			}
