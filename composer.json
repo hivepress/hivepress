@@ -1,8 +1,8 @@
 {
 	"require": {
-		"league/oauth2-client": "2.7.0",
+		"league/oauth2-client": "^2.9.0",
 		"league/oauth2-google": "^3.0",
-		"woocommerce/action-scheduler": "^3.4"
+		"woocommerce/action-scheduler": "^3.9.0"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
