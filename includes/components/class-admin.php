@@ -65,6 +65,11 @@ final class Admin extends Component {
 			// Register settings.
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 
+			// Clear cache.
+			add_action( 'update_option_hp_hivepress_license_key', [ $this, 'clear_purchases_cache' ] );
+			add_action( 'switch_theme', [ $this, 'clear_themes_cache' ] );
+			add_action( 'hivepress/v1/activate', [ $this, 'clear_extensions_cache' ] );
+
 			// Manage post states.
 			add_action( 'init', [ $this, 'register_post_states' ] );
 			add_filter( 'display_post_states', [ $this, 'add_post_states' ], 10, 2 );
@@ -175,7 +180,7 @@ final class Admin extends Component {
 			// Filter menu items.
 			$menu = array_filter(
 				$menu,
-				function( $name ) use ( $pages ) {
+				function ( $name ) use ( $pages ) {
 					return ! in_array( $name, $pages, true );
 				}
 			);
@@ -368,7 +373,7 @@ final class Admin extends Component {
 					get_post_types( [ 'public' => true ], 'objects' ),
 					get_taxonomies( [ 'public' => true ], 'objects' )
 				),
-				function( $type_args ) {
+				function ( $type_args ) {
 					return strpos( $type_args->name, 'hp_' ) === 0;
 				}
 			);
@@ -455,7 +460,7 @@ final class Admin extends Component {
 
 		// Render description.
 		if ( isset( $section['description'] ) ) {
-			echo '<p>' . esc_html( $section['description'] ) . '</p>';
+			echo '<p>' . hp\sanitize_html( $section['description'] ) . '</p>';
 		}
 	}
 
@@ -569,7 +574,7 @@ final class Admin extends Component {
 	 */
 	protected function get_settings_tabs() {
 		return array_map(
-			function( $tab ) {
+			function ( $tab ) {
 				return hp\get_array_value( $tab, 'title' );
 			},
 			hp\sort_array( hivepress()->get_config( 'settings' ) )
@@ -596,6 +601,66 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
+	}
+
+	/**
+	 * Gets HivePress purchases.
+	 *
+	 * @return array
+	 */
+	protected function get_purchases() {
+
+		// Get license key.
+		$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+
+		if ( ! $license_key ) {
+			return [];
+		}
+
+		// Get cached purchases.
+		$purchases = hivepress()->cache->get_cache( 'purchases' );
+
+		if ( is_null( $purchases ) ) {
+			$purchases = [];
+
+			// Get API response.
+			$response = json_decode(
+				wp_remote_retrieve_body(
+					wp_remote_get(
+						'https://store.hivepress.io/api/v1/products?' . http_build_query(
+							[
+								'license_key' => $license_key,
+							]
+						)
+					)
+				),
+				true
+			);
+
+			if ( is_array( $response ) && isset( $response['data'] ) ) {
+				foreach ( $response['data'] as $product ) {
+
+					// Add purchase.
+					$purchases[ $product['slug'] ] = [
+						'name' => $product['name'],
+						'slug' => $product['slug'],
+						'type' => $product['type'],
+					];
+				}
+
+				// Cache purchases.
+				hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
+			}
+		}
+
+		return $purchases;
+	}
+
+	/**
+	 * Clears cached purchases.
+	 */
+	public function clear_purchases_cache() {
+		hivepress()->cache->delete_cache( 'purchases' );
 	}
 
 	/**
@@ -639,7 +704,7 @@ final class Admin extends Component {
 				$themes = array_merge(
 					$themes,
 					array_map(
-						function( $theme ) {
+						function ( $theme ) {
 							$theme = (array) $theme;
 
 							return array_merge(
@@ -657,7 +722,7 @@ final class Admin extends Component {
 
 			// Set theme URLs.
 			$themes = array_map(
-				function( $theme ) {
+				function ( $theme ) {
 					$slug = sanitize_key( $theme['slug'] );
 
 					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
@@ -718,6 +783,13 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Clears cached themes.
+	 */
+	public function clear_themes_cache() {
+		hivepress()->cache->delete_cache( 'themes' );
+	}
+
+	/**
 	 * Gets HivePress extensions.
 	 *
 	 * @param string $status Extensions status.
@@ -765,7 +837,7 @@ final class Admin extends Component {
 					$extensions,
 					array_filter(
 						array_map(
-							function( $extension ) {
+							function ( $extension ) {
 								$extension = (array) $extension;
 
 								return array_merge(
@@ -778,7 +850,7 @@ final class Admin extends Component {
 							},
 							$free_extensions->plugins
 						),
-						function( $extension ) {
+						function ( $extension ) {
 							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication' ], true );
 						}
 					)
@@ -796,7 +868,7 @@ final class Admin extends Component {
 
 			// Set extension URLs.
 			$extensions = array_map(
-				function( $extension ) use ( $referral ) {
+				function ( $extension ) use ( $referral ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					if ( $referral ) {
@@ -836,7 +908,7 @@ final class Admin extends Component {
 			$extension_status = install_plugin_install_status( $extension );
 
 			// Set activation status.
-			if ( ! in_array( $extension_status['status'], [ 'install', 'update_available' ], true ) && ! is_plugin_active( $extension_path ) ) {
+			if ( $extension_status['file'] && ! is_plugin_active( $extension_path ) ) {
 				$extension_status = array_merge(
 					$extension_status,
 					[
@@ -869,13 +941,20 @@ final class Admin extends Component {
 		if ( 'all' !== $status ) {
 			$extensions = array_filter(
 				$extensions,
-				function( $extension ) use ( $status ) {
+				function ( $extension ) use ( $status ) {
 					return 'installed' === $status && 'install' !== $extension['status'];
 				}
 			);
 		}
 
 		return $extensions;
+	}
+
+	/**
+	 * Clears cached extensions.
+	 */
+	public function clear_extensions_cache() {
+		hivepress()->cache->delete_cache( 'all_extensions' );
 	}
 
 	/**
@@ -907,7 +986,7 @@ final class Admin extends Component {
 		$tabs['installed']['count'] = count(
 			array_filter(
 				$extensions,
-				function( $extension ) {
+				function ( $extension ) {
 					return 'install' !== $extension['status'];
 				}
 			)
@@ -916,7 +995,7 @@ final class Admin extends Component {
 		// Filter tabs.
 		$tabs = array_filter(
 			$tabs,
-			function( $tab ) {
+			function ( $tab ) {
 				return 0 !== $tab['count'];
 			}
 		);
@@ -1056,7 +1135,7 @@ final class Admin extends Component {
 	public function add_meta_boxes( $post_type, $post ) {
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+		if ( ! hp\is_class_instance( $post, 'WP_Post' ) || ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 
@@ -1424,7 +1503,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p>' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p>' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</div>';
@@ -1461,7 +1540,7 @@ final class Admin extends Component {
 
 						// Render description.
 						if ( $field->get_description() ) {
-							$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+							$output .= '<p class="description">' . hp\sanitize_html( $field->get_description() ) . '</p>';
 						}
 
 						$output .= '</td>';
@@ -1598,7 +1677,7 @@ final class Admin extends Component {
 
 					// Render description.
 					if ( $field->get_description() ) {
-						$output .= '<p class="description">' . esc_html( $field->get_description() ) . '</p>';
+						$output .= '<p class="description">' . do_shortcode( wp_kses_post( $field->get_description() ) ) . '</p>';
 					}
 
 					$output .= '</td>';
@@ -1657,12 +1736,76 @@ final class Admin extends Component {
 
 		$output = '';
 
+		// Get current page.
+		$page = sanitize_key( hp\get_array_value( $_GET, 'page' ) );
+
 		// Get installation time.
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
 		$notices = [];
 
+		if ( 'admin.php' === $pagenow && strpos( $page, 'hp_' ) === 0 ) {
+
+			// Get cached notices.
+			$notices = hivepress()->cache->get_cache( 'notices' );
+
+			if ( is_null( $notices ) ) {
+				$notices = [];
+
+				// Get API response.
+				$response = json_decode(
+					wp_remote_retrieve_body(
+						wp_remote_get( 'https://store.hivepress.io/api/v1/notices' )
+					),
+					true
+				);
+
+				if ( is_array( $response ) && isset( $response['data'] ) ) {
+					foreach ( $response['data'] as $notice ) {
+
+						// Add notice.
+						$notices[ 'notice_' . absint( $notice['id'] ) ] = [
+							'type'        => sanitize_key( $notice['type'] ),
+							'dismissible' => true,
+							'text'        => hp\sanitize_html( $notice['text'] ),
+						];
+
+						break;
+					}
+
+					// Cache notices.
+					hivepress()->cache->set_cache( 'notices', null, $notices, DAY_IN_SECONDS );
+				}
+			}
+		}
+
+		// Check valid purchases.
+		$purchases = $this->get_purchases();
+
+		$products = array_filter(
+			array_merge( $this->get_themes(), $this->get_extensions() ),
+			function ( $product ) use ( $purchases ) {
+				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
+			}
+		);
+
+		if ( $products ) {
+			$product_names = implode( ', ', array_column( $products, 'name' ) );
+
+			$notices[ 'license_request_' . md5( $product_names ) ] = [
+				'type'        => 'error',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: 1: settings URL, 2: unlicensed products. */
+					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
+					$product_names
+				),
+			];
+		}
+
+		// Check theme support.
 		if ( ! current_theme_supports( 'hivepress' ) ) {
 			$notices['incompatible_theme'] = [
 				'type'        => 'warning',
@@ -1675,6 +1818,7 @@ final class Admin extends Component {
 			];
 		}
 
+		// Suggest adding review.
 		if ( $installed_time < time() - WEEK_IN_SECONDS * 2 ) {
 			$notices['review_request'] = [
 				'type'        => 'info',
@@ -1688,6 +1832,8 @@ final class Admin extends Component {
 		}
 
 		if ( $installed_time < time() - DAY_IN_SECONDS * 2 ) {
+
+			// Suggest premium products.
 			if ( get_template() === 'listinghive' && ! get_option( 'hp_hivepress_license_key' ) ) {
 				$notices['upgrade_request'] = [
 					'type'        => 'info',
@@ -1701,6 +1847,7 @@ final class Admin extends Component {
 				];
 			}
 
+			// Request usage sharing.
 			if ( ! get_option( 'hp_hivepress_allow_tracking' ) ) {
 				$notices['usage_tracking'] = [
 					'type'        => 'info',
@@ -1712,6 +1859,7 @@ final class Admin extends Component {
 			}
 		}
 
+		// Suggest website showcase.
 		if ( $installed_time < time() - MONTH_IN_SECONDS * 2 ) {
 			$notices['showcase_request'] = [
 				'type'        => 'info',
@@ -1724,6 +1872,7 @@ final class Admin extends Component {
 			];
 		}
 
+		// Suggest expert program.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $installed_time < time() - WEEK_IN_SECONDS ) {
 			$notices['expert_request'] = [
 				'type'        => 'info',
@@ -1754,7 +1903,7 @@ final class Admin extends Component {
 		}
 
 		// Render settings errors.
-		if ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) {
+		if ( 'admin.php' === $pagenow && 'hp_settings' === $page ) {
 			ob_start();
 
 			settings_errors();
@@ -1843,7 +1992,7 @@ final class Admin extends Component {
 		if ( $text ) {
 			$output .= '<div class="hp-tooltip">';
 			$output .= '<span class="hp-tooltip__icon dashicons dashicons-editor-help"></span>';
-			$output .= '<div class="hp-tooltip__text">' . wp_kses_post( $text ) . '</div>';
+			$output .= '<div class="hp-tooltip__text">' . do_shortcode( wp_kses_post( $text ) ) . '</div>';
 			$output .= '</div>';
 		}
 
@@ -1933,7 +2082,7 @@ final class Admin extends Component {
 							'author_url',
 						],
 						array_map(
-							function( $header ) use ( $theme ) {
+							function ( $header ) use ( $theme ) {
 								return $theme->get( $header );
 							},
 							[
@@ -2005,8 +2154,8 @@ final class Admin extends Component {
 
 		$data['options'] = array_filter(
 			wp_load_alloptions(),
-			function( $value, $option ) use ( $options ) {
-				return in_array( $option, $options ) && strlen( $value );
+			function ( $value, $option ) use ( $options ) {
+				return in_array( $option, $options ) && strlen( (string) $value );
 			},
 			ARRAY_FILTER_USE_BOTH
 		);
@@ -2022,7 +2171,7 @@ final class Admin extends Component {
 		$data['php'] = array_combine(
 			$configs,
 			array_map(
-				function( $config ) {
+				function ( $config ) {
 					return ini_get( $config );
 				},
 				$configs

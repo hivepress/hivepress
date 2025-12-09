@@ -7,6 +7,7 @@
 
 namespace HivePress\Components;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
 use HivePress\Helpers as hp;
 
 // Exit if accessed directly.
@@ -42,6 +43,9 @@ final class WooCommerce extends Component {
 		// Update options.
 		add_action( 'hivepress/v1/activate', [ $this, 'update_options' ] );
 
+		// Disable HPOS.
+		add_action( 'woocommerce_custom_orders_table_background_sync', [ $this, 'disable_hpos' ] );
+
 		// Update order status.
 		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
 
@@ -54,6 +58,10 @@ final class WooCommerce extends Component {
 		// Format cart item meta.
 		add_filter( 'woocommerce_get_item_data', [ $this, 'format_cart_item_meta' ], 10, 2 );
 
+		// Update user billing name.
+		add_action( 'hivepress/v1/models/user/update_first_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+		add_action( 'hivepress/v1/models/user/update_last_name', [ $this, 'update_user_billing_name' ], 10, 2 );
+
 		// Set countries configuration.
 		add_filter( 'hivepress/v1/countries', [ $this, 'set_countries' ] );
 
@@ -62,11 +70,11 @@ final class WooCommerce extends Component {
 			// Set request context.
 			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
 
+			// Redirect pages.
+			add_action( 'template_redirect', [ $this, 'redirect_pages' ] );
+
 			// Set account template.
 			add_filter( 'wc_get_template', [ $this, 'set_account_template' ], 10, 2 );
-
-			// Redirect account page.
-			add_action( 'template_redirect', [ $this, 'redirect_account_page' ] );
 
 			// Alter account menu.
 			add_filter( 'hivepress/v1/menus/user_account', [ $this, 'alter_account_menu' ] );
@@ -85,6 +93,26 @@ final class WooCommerce extends Component {
 		update_option( 'woocommerce_enable_guest_checkout', 'no' );
 		update_option( 'woocommerce_enable_checkout_login_reminder', 'yes' );
 		update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
+
+		if ( get_option( 'hp_installed_time' ) > strtotime( '2024-07-08' ) ) {
+
+			// @todo Remove after HPOS integration.
+			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'yes' );
+
+			$this->disable_hpos();
+		}
+	}
+
+	/**
+	 * Disables HPOS.
+	 *
+	 * @todo Remove after HPOS integration.
+	 */
+	public function disable_hpos() {
+		if ( OrderUtil::is_custom_order_tables_in_sync() ) {
+			update_option( 'woocommerce_custom_orders_table_enabled', 'no' );
+			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
+		}
 	}
 
 	/**
@@ -129,7 +157,7 @@ final class WooCommerce extends Component {
 	 */
 	public function get_order_product_ids( $order ) {
 		return array_map(
-			function( $item ) {
+			function ( $item ) {
 				return $item->get_product_id();
 			},
 			$order->get_items()
@@ -242,7 +270,7 @@ final class WooCommerce extends Component {
 		// Filter meta.
 		$meta = array_filter(
 			array_map(
-				function( $args ) use ( $fields ) {
+				function ( $args ) use ( $fields ) {
 					if ( strpos( $args->key, 'hp_' ) === 0 ) {
 
 						// Get field.
@@ -304,6 +332,26 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Updates user billing name.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $value Value.
+	 */
+	public function update_user_billing_name( $user_id, $value ) {
+
+		// Check field value.
+		if ( ! $value ) {
+			return;
+		}
+
+		// Get field name.
+		$field_name = substr( hp\get_last_array_value( explode( '/', current_filter() ) ), strlen( 'update_' ) );
+
+		// Update field value.
+		update_user_meta( $user_id, 'billing_' . $field_name, $value );
+	}
+
+	/**
 	 * Sets countries configuration.
 	 *
 	 * @param array $countries Countries array.
@@ -340,6 +388,33 @@ final class WooCommerce extends Component {
 	}
 
 	/**
+	 * Redirects pages.
+	 */
+	public function redirect_pages() {
+		$url = null;
+
+		// Redirect account page.
+		if ( ! is_user_logged_in() && is_account_page() ) {
+			$url = hivepress()->router->get_return_url( 'user_login_page' );
+		}
+
+		// Redirect product page.
+		if ( is_product() ) {
+			$parent = get_post_parent();
+
+			if ( $parent && strpos( $parent->post_type, 'hp_' ) === 0 ) {
+				$url = get_permalink( $parent->ID );
+			}
+		}
+
+		if ( $url ) {
+			wp_safe_redirect( $url );
+
+			exit;
+		}
+	}
+
+	/**
 	 * Sets account page template.
 	 *
 	 * @param string $path Template filepath.
@@ -352,17 +427,6 @@ final class WooCommerce extends Component {
 		}
 
 		return $path;
-	}
-
-	/**
-	 * Redirects account page.
-	 */
-	public function redirect_account_page() {
-		if ( ! is_user_logged_in() && is_account_page() ) {
-			wp_safe_redirect( hivepress()->router->get_return_url( 'user_login_page' ) );
-
-			exit;
-		}
 	}
 
 	/**

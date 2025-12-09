@@ -61,21 +61,21 @@ class Related_Listings extends Listings {
 			[
 				'status' => 'publish',
 			]
-		)->order( 'random' )
-		->limit( $this->number );
+		)->limit( $this->number );
+
+		// Set order.
+		if ( 'title' === $this->order ) {
+			$query->order( [ 'title' => 'asc' ] );
+		} elseif ( 'random' === $this->order ) {
+			$query->order( 'random' );
+		} else {
+			$query->order( [ 'created_date' => 'desc' ] );
+		}
 
 		// Get listing.
 		$listing = $this->get_context( 'listing' );
 
 		if ( hp\is_class_instance( $listing, '\HivePress\Models\Listing' ) ) {
-
-			// Exclude listing.
-			$query->filter( [ 'id__not_in' => [ $listing->get_id() ] ] );
-
-			// Set categories.
-			if ( $listing->get_categories__id() ) {
-				$query->filter( [ 'categories__in' => $listing->get_categories__id() ] );
-			}
 
 			/**
 			 * Fires when related models are being queried. The dynamic part of the hook refers to the model name (e.g. `listing`).

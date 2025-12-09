@@ -49,9 +49,19 @@ class Template extends Block {
 		if ( $count->publish && class_exists( $class ) && $class::get_meta( 'label' ) ) {
 
 			// Get template content.
-			$content = get_page_by_path( $class::get_meta( 'name' ), OBJECT, 'hp_template' );
+			$content = hp\get_first_array_value(
+				get_posts(
+					[
+						'name'             => $class::get_meta( 'name' ),
+						'post_type'        => 'hp_template',
+						'post_status'      => 'publish',
+						'posts_per_page'   => 1,
+						'suppress_filters' => ! hivepress()->translator->is_multilingual(),
+					]
+				)
+			);
 
-			if ( $content && 'publish' === $content->post_status ) {
+			if ( $content ) {
 
 				// Register blocks.
 				$template = hivepress()->editor->register_template_blocks(
@@ -106,13 +116,23 @@ class Template extends Block {
 			}
 		}
 
+		if ( isset( $content ) ) {
+			hivepress()->request->set_post( $content, false );
+		}
+
 		// Render template.
-		return ( new Container(
+		$output = ( new Container(
 			[
 				'tag'     => false,
 				'context' => $context,
 				'blocks'  => $blocks,
 			]
 		) )->render();
+
+		if ( isset( $content ) ) {
+			hivepress()->request->reset_post();
+		}
+
+		return $output;
 	}
 }

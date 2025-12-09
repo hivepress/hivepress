@@ -196,7 +196,7 @@ final class Listing extends Component {
 		if ( get_option( 'hp_listing_allow_video' ) ) {
 			$image_ids = [];
 
-			foreach ( $listing->get_images() as $image ) {
+			foreach ( (array) $listing->get_images() as $image ) {
 				if ( strpos( $image->get_mime_type(), 'image' ) === 0 ) {
 					$image_ids[] = $image->get_id();
 
@@ -534,8 +534,8 @@ final class Listing extends Component {
 			$output = '&mdash;';
 
 			// Get name and URL.
-			$name = null;
-			$url  = null;
+			$name = '';
+			$url  = '';
 
 			// Get vendor ID.
 			$vendor_id = wp_get_post_parent_id( $listing_id );

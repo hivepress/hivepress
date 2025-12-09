@@ -91,85 +91,148 @@
 		});
 
 		// Carousel slider
-		hivepress.getComponent('carousel-slider').each(function () {
-			var container = $(this),
-				images = container.find('img, video');
+		function initSliders(container) {
+			container.find(hivepress.getSelector('carousel-slider')).each(function () {
+				var container = $(this),
+					images = container.find('img, video'),
+					aspectRatio = Number(container.data('aspect-ratio')),
+					url = container.data('url'),
+					isPreview = container.data('preview') !== false;
 
-			if (images.length && images.first().data('src')) {
-				var imageURLs = [];
+				if (images.length && !url) {
+					var zoomAttribute = images.first().is('[data-zoom]') ? 'zoom' : 'src';
 
-				images.each(function () {
-					imageURLs.push({
-						src: $(this).data('src'),
-					});
-				});
+					if (images.first().data(zoomAttribute)) {
+						var imageURLs = [];
 
-				container.on('click', 'img, video', function (e) {
-					var index = container.find('img, video').index($(this).get(0));
+						images.each(function () {
+							imageURLs.push({
+								src: $(this).data(zoomAttribute),
+							});
+						});
 
-					if (index < imageURLs.length) {
-						$.fancybox.open(imageURLs, {
-							loop: true,
-							buttons: ['close'],
-						}, index);
+						container.on('click', 'img, video', function (e) {
+							var index = container.find('img, video').index($(this).get(0));
+
+							if (index < imageURLs.length) {
+								$.fancybox.open(imageURLs, {
+									loop: true,
+									buttons: ['close'],
+								}, index);
+							}
+
+							e.preventDefault();
+						});
 					}
+				}
 
-					e.preventDefault();
-				});
-			}
+				if (images.length > 1) {
+					container.imagesLoaded(function () {
+						var containerClass = container.attr('class').split(' ')[0],
+							slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
+							settings = {
+								slidesToShow: 1,
+								slidesToScroll: 1,
+								infinite: false,
+								adaptiveHeight: true,
+							};
 
-			if (images.length > 1) {
-				container.imagesLoaded(function () {
-					var containerClass = container.attr('class').split(' ')[0],
-						slider = images.wrap('<div />').parent().wrapAll('<div />').parent(),
-						carousel = slider.clone();
+						container.html('');
 
-					container.html('');
+						if (url) {
+							slider.find('img, video').wrap('<a href="' + url + '" />');
+						}
 
-					slider.appendTo(container);
+						slider.appendTo(container);
 
-					carousel.find('video').removeAttr('controls');
-					carousel.appendTo(container);
+						if (isPreview) {
+							var carousel = slider.clone();
 
-					slider.addClass(containerClass + '-slider').slick({
-						slidesToShow: 1,
-						slidesToScroll: 1,
-						adaptiveHeight: true,
-						infinite: false,
-						arrows: false,
-						asNavFor: carousel,
+							carousel.find('video').removeAttr('controls');
+							carousel.appendTo(container);
+
+							carousel.on('init', function (event, slick) {
+								if (aspectRatio) {
+									slick.$slides.css('aspect-ratio', aspectRatio);
+								}
+							});
+
+							$.extend(settings, {
+								asNavFor: carousel,
+								arrows: false,
+							});
+						} else {
+							$.extend(settings, {
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+							});
+						}
+
+						slider.on('init', function (event, slick) {
+							if (aspectRatio) {
+								slick.$slides.css('aspect-ratio', aspectRatio);
+							}
+						});
+
+						slider.addClass(containerClass + '-slider').slick(settings);
+
+						var observer = new MutationObserver(function () {
+							slider.slick('resize');
+						}).observe(slider.get(0), {
+							subtree: true,
+							attributeFilter: ['src'],
+						});
+
+						if (isPreview) {
+							carousel.addClass(containerClass + '-carousel').slick({
+								slidesToShow: 6,
+								slidesToScroll: 1,
+								infinite: false,
+								focusOnSelect: true,
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+								asNavFor: slider,
+								responsive: [{
+									breakpoint: 1025,
+									settings: {
+										slidesToShow: 5,
+									},
+								},
+								{
+									breakpoint: 769,
+									settings: {
+										slidesToShow: 4,
+									},
+								},
+								{
+									breakpoint: 481,
+									settings: {
+										slidesToShow: 3,
+									},
+								},
+								],
+							});
+						}
 					});
+				} else if (aspectRatio) {
+					container.css('aspect-ratio', aspectRatio);
+				}
+			});
+		}
 
-					carousel.addClass(containerClass + '-carousel').slick({
-						slidesToShow: 6,
-						slidesToScroll: 1,
-						infinite: false,
-						focusOnSelect: true,
-						prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-						nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
-						asNavFor: slider,
-						responsive: [{
-							breakpoint: 1025,
-							settings: {
-								slidesToShow: 5,
-							},
-						},
-						{
-							breakpoint: 769,
-							settings: {
-								slidesToShow: 4,
-							},
-						},
-						{
-							breakpoint: 481,
-							settings: {
-								slidesToShow: 3,
-							},
-						},
-						],
-					});
-				});
+		initSliders($('body'));
+
+		var observer = new MutationObserver(function (mutations) {
+			for (const { addedNodes } of mutations) {
+				for (const node of addedNodes) {
+					if (node.tagName === 'DIV' && node.classList.contains('slick-cloned')) {
+						initSliders($(node));
+					}
+				}
 			}
+		}).observe(document, {
+			subtree: true,
+			childList: true,
 		});
 
 		// Buttons

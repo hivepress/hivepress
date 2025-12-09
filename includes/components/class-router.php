@@ -69,6 +69,9 @@ final class Router extends Component {
 
 			// Disable page redirect.
 			add_filter( 'redirect_canonical', [ $this, 'disable_page_redirect' ] );
+
+			// Disable page query.
+			add_action( 'pre_get_posts', [ $this, 'disable_page_query' ] );
 		}
 
 		parent::__construct( $args );
@@ -241,7 +244,7 @@ final class Router extends Component {
 					// Set URL path.
 					if ( get_option( 'permalink_structure' ) || hp\get_array_value( $route, 'rest' ) ) {
 						foreach ( $params as $param ) {
-							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', $query[ $param ], $path );
+							$path = preg_replace( '/\(\?P<' . preg_quote( $param, '/' ) . '>[^\)]+\)\??/', hp\get_array_value( $query, $param, '' ), $path );
 						}
 
 						$path = rtrim( str_replace( '/?', '/', $path ), '/' ) . '/';
@@ -258,7 +261,7 @@ final class Router extends Component {
 
 					// Add query variables.
 					if ( $vars && ! $filter ) {
-						$url = add_query_arg( array_map( 'rawurlencode', $vars ), $url );
+						$url = add_query_arg( array_map( 'rawurlencode', array_map( 'strval', $vars ) ), $url );
 					}
 				}
 			}
@@ -285,17 +288,30 @@ final class Router extends Component {
 	}
 
 	/**
+	 * Gets referer URL.
+	 *
+	 * @return string
+	 */
+	public function get_referer_url() {
+		return wp_validate_redirect( (string) hp\get_array_value( $_SERVER, 'HTTP_REFERER' ) );
+	}
+
+	/**
 	 * Gets return URL.
 	 *
 	 * @param string $name Route name.
+	 * @param array  $query URL query.
 	 * @return string
 	 */
-	public function get_return_url( $name ) {
+	public function get_return_url( $name, $query = [] ) {
 		return $this->get_url(
 			$name,
-			[
-				'redirect' => $this->get_current_url(),
-			]
+			array_merge(
+				$query,
+				[
+					'redirect' => $this->get_current_url(),
+				]
+			)
 		);
 	}
 
@@ -347,7 +363,7 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_redirect_url() {
-		return wp_validate_redirect( hp\get_array_value( $_GET, 'redirect' ) );
+		return wp_validate_redirect( (string) hp\get_array_value( $_GET, 'redirect' ) );
 	}
 
 	/**
@@ -371,7 +387,7 @@ final class Router extends Component {
 		// Sort callbacks.
 		$callbacks = array_filter(
 			array_map(
-				function( $args ) {
+				function ( $args ) {
 					return hp\get_array_value( $args, 'callback' );
 				},
 				hp\sort_array( $callbacks )
@@ -422,7 +438,7 @@ final class Router extends Component {
 					implode(
 						'&',
 						array_map(
-							function( $index, $param ) {
+							function ( $index, $param ) {
 								return hp\prefix( $param ) . '=$matches[' . ( $index + 1 ) . ']';
 							},
 							array_keys( $params ),
@@ -680,5 +696,16 @@ final class Router extends Component {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Disables page query.
+	 *
+	 * @param WP_Query $query Query object.
+	 */
+	public function disable_page_query( $query ) {
+		if ( $query->is_main_query() && ! $query->get( 'post_type' ) && $query->get( 'hp_route' ) ) {
+			$query->set( 'post__in', [ 0 ] );
+		}
 	}
 }

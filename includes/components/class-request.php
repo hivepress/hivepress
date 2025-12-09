@@ -44,7 +44,7 @@ final class Request extends Component {
 		// Filter parameters.
 		$params = array_filter(
 			$wp_query->query_vars,
-			function( $param ) {
+			function ( $param ) {
 				return strpos( $param, 'hp_' ) === 0;
 			},
 			ARRAY_FILTER_USE_KEY
@@ -85,6 +85,45 @@ final class Request extends Component {
 	 */
 	public function get_user() {
 		return $this->get_context( 'user' );
+	}
+
+	/**
+	 * Sets the current post.
+	 *
+	 * @param WP_Post $current_post Post object.
+	 * @param bool    $force Force override?
+	 */
+	public function set_post( $current_post, $force = true ) {
+		global $post;
+
+		if ( $post && ! $force ) {
+			return;
+		}
+
+		$this->set_context( 'post', $post );
+
+		$post = $current_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		setup_postdata( $post );
+	}
+
+	/**
+	 * Resets the default post.
+	 */
+	public function reset_post() {
+		global $post;
+
+		$default_post = $this->get_context( 'post' );
+
+		if ( ! $default_post ) {
+			return;
+		}
+
+		$post = $default_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		wp_reset_postdata();
+
+		$this->set_context( 'post', null );
 	}
 
 	/**

@@ -39,6 +39,9 @@ final class User extends Component {
 		// Alter registration form.
 		add_filter( 'hivepress/v1/forms/user_register', [ $this, 'alter_register_form' ] );
 
+		// Alter model fields.
+		add_filter( 'hivepress/v1/models/user', [ $this, 'alter_model_fields' ] );
+
 		// Render user image.
 		add_filter( 'get_avatar', [ $this, 'render_user_image' ], 1, 5 );
 
@@ -57,11 +60,53 @@ final class User extends Component {
 			add_action( 'edit_user_profile_update', [ $this, 'update_profile_fields' ], 100 );
 		} else {
 
+			// Set request context.
+			add_filter( 'hivepress/v1/components/request/context', [ $this, 'set_request_context' ] );
+
+			// Redirect author page.
+			add_action( 'template_redirect', [ $this, 'redirect_author_page' ] );
+
 			// Alter templates.
+			add_filter( 'hivepress/v1/templates/user_view_block/blocks', [ $this, 'alter_user_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/user_view_page/blocks', [ $this, 'alter_user_view_blocks' ], 10, 2 );
+
+			add_filter( 'hivepress/v1/templates/vendor_view_block/blocks', [ $this, 'alter_vendor_view_blocks' ], 10, 2 );
+			add_filter( 'hivepress/v1/templates/vendor_view_page/blocks', [ $this, 'alter_vendor_view_blocks' ], 10, 2 );
+
 			add_filter( 'hivepress/v1/templates/site_footer_block', [ $this, 'alter_site_footer_block' ] );
 		}
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Checks online status.
+	 *
+	 * @param object $user User object.
+	 * @return bool
+	 */
+	protected function is_online( $user ) {
+		return $user->get_online_time() > time() - 15 * MINUTE_IN_SECONDS;
+	}
+
+	/**
+	 * Gets online status.
+	 *
+	 * @param object $user User object.
+	 * @return string
+	 */
+	protected function get_online_status( $user ) {
+		$status = __( 'Offline', 'hivepress' );
+
+		if ( $this->is_online( $user ) ) {
+			$status = __( 'Online', 'hivepress' );
+		} elseif ( $user->get_online_time() ) {
+
+			/* translators: %s: time. */
+			$status = sprintf( __( 'Last seen %s ago', 'hivepress' ), human_time_diff( $user->get_online_time(), time() ) );
+		}
+
+		return $status;
 	}
 
 	/**
@@ -232,6 +277,24 @@ final class User extends Component {
 	}
 
 	/**
+	 * Alters model fields.
+	 *
+	 * @param array $model Model arguments.
+	 * @return array
+	 */
+	public function alter_model_fields( $model ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$model['fields']['online_time'] = [
+				'type'      => 'number',
+				'min_value' => 0,
+				'_external' => true,
+			];
+		}
+
+		return $model;
+	}
+
+	/**
 	 * Renders user image.
 	 *
 	 * @param string $image Image HTML.
@@ -242,6 +305,11 @@ final class User extends Component {
 	 * @return string
 	 */
 	public function render_user_image( $image, $id_or_email, $size, $default, $alt ) {
+
+		// Check ID.
+		if ( ! $id_or_email ) {
+			return $image;
+		}
 
 		// Get user.
 		$user_object = null;
@@ -345,6 +413,120 @@ final class User extends Component {
 			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
 		}
+	}
+
+	/**
+	 * Sets request context.
+	 *
+	 * @param array $context Request context.
+	 * @return array
+	 */
+	public function set_request_context( $context ) {
+		if ( get_option( 'hp_user_display_online' ) ) {
+			$user = $context['user'];
+
+			if ( ! $this->is_online( $user ) ) {
+				$user->set_online_time( time() )->save_online_time();
+			}
+		}
+
+		return $context;
+	}
+
+	/**
+	 * Redirect author page.
+	 */
+	public function redirect_author_page() {
+
+		// Check settings.
+		if ( ! get_option( 'hp_user_enable_display' ) || ! is_author() ) {
+			return;
+		}
+
+		// Redirect user.
+		wp_safe_redirect( hivepress()->router->get_url( 'user_view_page', [ 'username' => get_the_author_meta( 'user_login' ) ] ) );
+
+		exit;
+	}
+
+	/**
+	 * Alters user view blocks.
+	 *
+	 * @param array  $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_user_view_blocks( $blocks, $template ) {
+
+		// Get user.
+		$user = $template->get_context( 'user' );
+
+		if ( $user && get_option( 'hp_user_display_online' ) ) {
+			$blocks = hivepress()->template->merge_blocks(
+				$blocks,
+				[
+					'user_name' => [
+						'blocks' => [
+							'user_online_badge' => [
+								'type'    => 'part',
+								'path'    => 'user/view/user-online-badge',
+								'_order'  => 5,
+
+								'context' => [
+									'user_online'        => $this->is_online( $user ),
+									'user_online_status' => $this->get_online_status( $user ),
+								],
+							],
+						],
+					],
+				]
+			);
+		}
+
+		return $blocks;
+	}
+
+	/**
+	 * Alters vendor view blocks.
+	 *
+	 * @param array  $blocks Block arguments.
+	 * @param object $template Template object.
+	 * @return array
+	 */
+	public function alter_vendor_view_blocks( $blocks, $template ) {
+
+		// Get vendor.
+		$vendor = $template->get_context( 'vendor' );
+
+		if ( $vendor && get_option( 'hp_user_display_online' ) ) {
+
+			// Get user.
+			$user = $vendor->get_user();
+
+			if ( $user ) {
+				$blocks = hivepress()->template->merge_blocks(
+					$blocks,
+					[
+						'vendor_name' => [
+							'blocks' => [
+								'user_online_badge' => [
+									'type'    => 'part',
+									'path'    => 'user/view/user-online-badge',
+									'_order'  => 5,
+
+									'context' => [
+										'user_online' => $this->is_online( $user ),
+										'user_online_status' => $this->get_online_status( $user ),
+									],
+								],
+							],
+						],
+					]
+				);
+			}
+		}
+
+		return $blocks;
 	}
 
 	/**

@@ -187,8 +187,8 @@ final class Attachment extends Controller {
 		$file_callback = null;
 
 		if ( $parent_field->is_protected() ) {
-			$file_callback = function( $dir, $filename, $ext ) {
-				if ( strlen( $filename ) ) {
+			$file_callback = function ( $dir, $filename, $ext ) {
+				if ( strlen( (string) $filename ) ) {
 
 					/**
 					 * Filters the attachment filename before the uploading.

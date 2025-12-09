@@ -350,6 +350,12 @@ final class Cache extends Component {
 			$version = $this->update_cache_version( $group );
 		}
 
+		if ( hivepress()->translator->is_multilingual() ) {
+
+			// Add language.
+			$version .= hivepress()->translator->get_language();
+		}
+
 		return $version;
 	}
 
@@ -366,6 +372,12 @@ final class Cache extends Component {
 
 		if ( is_null( $version ) ) {
 			$version = $this->update_meta_cache_version( $type, $id, $group );
+		}
+
+		if ( hivepress()->translator->is_multilingual() ) {
+
+			// Add language.
+			$version .= hivepress()->translator->get_language();
 		}
 
 		return $version;

@@ -19,6 +19,8 @@ return [
 	'search'                                    => esc_html__( 'Search', 'hivepress' ),
 	'filter'                                    => esc_html__( 'Filter', 'hivepress' ),
 	'sort_by'                                   => esc_html__( 'Sort by', 'hivepress' ),
+	'sorting'                                   => esc_html__( 'Sorting', 'hivepress' ),
+	'default_sorting'                           => esc_html__( 'Default Sorting', 'hivepress' ),
 	'keywords'                                  => esc_html__( 'Keywords', 'hivepress' ),
 	'title'                                     => esc_html__( 'Title', 'hivepress' ),
 	'name'                                      => esc_html__( 'Name', 'hivepress' ),
@@ -26,6 +28,7 @@ return [
 	'status'                                    => esc_html__( 'Status', 'hivepress' ),
 	'image'                                     => esc_html__( 'Image', 'hivepress' ),
 	'images'                                    => esc_html__( 'Images', 'hivepress' ),
+	'select_image'                              => esc_html__( 'Select Image', 'hivepress' ),
 	'select_images'                             => esc_html__( 'Select Images', 'hivepress' ),
 	'description'                               => esc_html__( 'Description', 'hivepress' ),
 	'details'                                   => esc_html__( 'Details', 'hivepress' ),
@@ -50,8 +53,11 @@ return [
 	'completed'                                 => esc_html__( 'Completed', 'hivepress' ),
 	'profile'                                   => esc_html__( 'Profile', 'hivepress' ),
 	'pagination'                                => esc_html__( 'Pagination', 'hivepress' ),
+	'load_more'                                 => esc_html__( 'Load More', 'hivepress' ),
+	'performance'                               => esc_html__( 'Performance', 'hivepress' ),
 	'storage'                                   => esc_html__( 'Storage', 'hivepress' ),
 	'storage_period'                            => esc_html__( 'Storage Period', 'hivepress' ),
+	'version'                                   => esc_html__( 'Version', 'hivepress' ),
 	'api_key'                                   => esc_html__( 'API Key', 'hivepress' ),
 	'secret_key'                                => esc_html__( 'Secret Key', 'hivepress' ),
 	'client_id'                                 => esc_html__( 'Client ID', 'hivepress' ),
@@ -65,6 +71,7 @@ return [
 	'changes_have_been_saved'                   => esc_html__( 'Changes have been saved.', 'hivepress' ),
 	'something_went_wrong'                      => esc_html__( 'Something went wrong.', 'hivepress' ),
 	'user'                                      => esc_html__( 'User', 'hivepress' ),
+	'users'                                     => esc_html__( 'Users', 'hivepress' ),
 	'all_users'                                 => esc_html__( 'All Users', 'hivepress' ),
 	'registered_users'                          => esc_html__( 'Registered Users', 'hivepress' ),
 	'columns_number'                            => esc_html_x( 'Columns', 'quantity', 'hivepress' ),
@@ -73,6 +80,7 @@ return [
 	'widgets'                                   => esc_html__( 'Widgets', 'hivepress' ),
 	'primary_plural'                            => esc_html_x( 'Primary', 'plural', 'hivepress' ),
 	'secondary_plural'                          => esc_html_x( 'Secondary', 'plural', 'hivepress' ),
+	'ternary_plural'                            => esc_html_x( 'Ternary', 'plural', 'hivepress' ),
 	'related_plural'                            => esc_html_x( 'Related', 'plural', 'hivepress' ),
 	'by_items_number'                           => esc_html_x( 'Item Count', 'sort order', 'hivepress' ),
 	'by_name'                                   => esc_html_x( 'Name', 'sort order', 'hivepress' ),
@@ -96,12 +104,17 @@ return [
 	'field_contains_invalid_value'              => esc_html__( '"%s" field contains an invalid value.', 'hivepress' ),
 	/* translators: %s: field label. */
 	'field_contains_too_many_values'            => esc_html__( '"%s" field contains too many values.', 'hivepress' ),
+	/* translators: 1: field label, 2: length. */
+	'field_longer_than_n_characters'            => esc_html__( '"%1$s" can\'t be longer than %2$s characters.', 'hivepress' ),
+	/* translators: 1: field label, 2: length. */
+	'field_shorter_than_n_characters'           => esc_html__( '"%1$s" should be at least %2$s characters long.', 'hivepress' ),
 
 	// Listings.
 	'listing'                                   => esc_html__( 'Listing', 'hivepress' ),
 	'listings'                                  => esc_html__( 'Listings', 'hivepress' ),
 	'all_listings'                              => esc_html__( 'All Listings', 'hivepress' ),
 	'related_listings'                          => esc_html__( 'Related Listings', 'hivepress' ),
+	'related_listing_criteria'                  => esc_html__( 'Related Listing Criteria', 'hivepress' ),
 	/* translators: %s: Listings number. */
 	'n_listings'                                => _n_noop( '%s Listing', '%s Listings', 'hivepress' ),
 	/* translators: %s: Vendor name. */
@@ -202,5 +215,6 @@ return [
 	'attachment'                                => esc_html__( 'Attachment', 'hivepress' ),
 	'attachments'                               => esc_html__( 'Attachments', 'hivepress' ),
 	'allow_file_attachments'                    => esc_html__( 'Allow file attachments', 'hivepress' ),
+	'allow_attaching_images'                    => esc_html__( 'Allow attaching images', 'hivepress' ),
 	'allowed_file_types'                        => esc_html__( 'Allowed File Types', 'hivepress' ),
 ];

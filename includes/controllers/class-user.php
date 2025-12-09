@@ -221,8 +221,14 @@ final class User extends Controller {
 					'user_view_page'               => [
 						'path'     => '/user/(?P<username>[A-Za-z0-9 _.\-@]+)',
 						'title'    => [ $this, 'get_user_view_title' ],
-						'redirect' => [ $this, 'redirect_user_view_page' ],
 						'action'   => [ $this, 'render_user_view_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_user_view_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 				],
 			],
@@ -333,7 +339,12 @@ final class User extends Controller {
 		}
 
 		// Register user.
-		$user = ( new Models\User() )->fill(
+		$user = new Models\User();
+
+		// @todo remove temporary fix when updated.
+		$user->set_id( null );
+
+		$user->fill(
 			array_merge(
 				$form->get_values(),
 				[
@@ -363,7 +374,7 @@ final class User extends Controller {
 			update_user_meta( $user->get_id(), 'hp_email_verify_key', $email_key );
 
 			// Set email redirect.
-			$email_redirect = wp_validate_redirect( $form->get_value( '_redirect' ) );
+			$email_redirect = wp_validate_redirect( (string) $form->get_value( '_redirect' ) );
 
 			if ( $email_redirect ) {
 				update_user_meta( $user->get_id(), 'hp_email_verify_redirect', $email_redirect );
@@ -716,6 +727,11 @@ final class User extends Controller {
 			return hp\rest_error( 401 );
 		}
 
+		// Check settings.
+		if ( ! get_option( 'hp_user_allow_deletion', true ) ) {
+			return hp\rest_error( 403 );
+		}
+
 		// Get user.
 		$user = Models\User::query()->get_by_id( $request->get_param( 'user_id' ) );
 
@@ -1017,6 +1033,10 @@ final class User extends Controller {
 
 		if ( ! $user ) {
 			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+		}
+
+		if ( get_option( 'hp_user_verify_email' ) && get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
+			return true;
 		}
 
 		// Get vendor ID.

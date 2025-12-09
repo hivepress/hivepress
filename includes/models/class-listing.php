@@ -148,7 +148,6 @@ class Listing extends Post {
 						'options'     => 'terms',
 						'option_args' => [ 'taxonomy' => 'hp_listing_category' ],
 						'multiple'    => true,
-						'required'    => true,
 						'_indexable'  => true,
 						'_model'      => 'listing_category',
 						'_relation'   => 'many_to_many',
@@ -216,8 +215,10 @@ class Listing extends Post {
 				}
 
 				// Get image IDs.
+				$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
+
 				foreach ( get_attached_media( $formats, $this->id ) as $image ) {
-					if ( ! $image->hp_parent_field || 'images' === $image->hp_parent_field ) {
+					if ( 'images' === $image->hp_parent_field || ( $fallback && ! $image->hp_parent_field ) ) {
 						$image_ids[] = $image->ID;
 					}
 				}

@@ -9,18 +9,18 @@ if ( $listing->get_images__id() ) :
 		$image_urls = $listing->get_images__url( 'large' );
 	endif;
 	?>
-	<div class="hp-listing__images" data-component="carousel-slider">
+	<div class="hp-listing__images" data-component="carousel-slider" data-aspect-ratio="<?php echo esc_attr( hivepress()->asset->get_aspect_ratio( 'landscape_large' ) ); ?>">
 		<?php
 		foreach ( $listing->get_images() as $image_index => $image ) :
-			$image_url = hivepress()->helper->get_array_value( $image_urls, $image_index );
+			$image_url = hivepress()->helper->get_array_value( $image_urls, $image_index, '' );
 
 			if ( strpos( $image->get_mime_type(), 'video' ) === 0 ) :
 				?>
-				<video data-src="<?php echo esc_url( $image_url ); ?>" controls>
-					<source src="<?php echo esc_url( $image->get_url() ); ?>" type="<?php echo esc_attr( $image->get_mime_type() ); ?>">
+				<video data-zoom="<?php echo esc_url( $image_url ); ?>" controls>
+					<source src="<?php echo esc_url( $image->get_url() ); ?>#t=0.001" type="<?php echo esc_attr( $image->get_mime_type() ); ?>">
 				</video>
 			<?php else : ?>
-				<img src="<?php echo esc_url( $image->get_url( 'hp_landscape_large' ) ); ?>" data-src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
+				<img src="<?php echo esc_url( $image->get_url( 'hp_landscape_large' ) ); ?>" data-zoom="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $listing->get_title() ); ?>" loading="lazy">
 				<?php
 			endif;
 		endforeach;

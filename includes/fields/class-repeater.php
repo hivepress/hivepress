@@ -18,11 +18,34 @@ defined( 'ABSPATH' ) || exit;
 class Repeater extends Field {
 
 	/**
+	 * Button caption.
+	 *
+	 * @var string
+	 */
+	protected $caption;
+
+	/**
 	 * Inner fields.
 	 *
 	 * @var array
 	 */
 	protected $fields = [];
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function __construct( $args = [] ) {
+		$args = hp\merge_arrays(
+			[
+				'caption' => esc_html__( 'Add Item', 'hivepress' ),
+			],
+			$args
+		);
+
+		parent::__construct( $args );
+	}
 
 	/**
 	 * Bootstraps field properties.
@@ -172,7 +195,7 @@ class Repeater extends Field {
 		// Render add button.
 		$output .= ( new Button(
 			[
-				'label'      => esc_html__( 'Add Item', 'hivepress' ),
+				'label'      => $this->caption,
 
 				'attributes' => [
 					'data-add' => 'true',

@@ -236,7 +236,7 @@ abstract class Field {
 		if ( 'hidden' === $this->display_type ) {
 			$this->attributes = array_filter(
 				$this->attributes,
-				function( $name ) {
+				function ( $name ) {
 					return strpos( $name, 'data-' ) === 0;
 				},
 				ARRAY_FILTER_USE_KEY
@@ -547,6 +547,7 @@ abstract class Field {
 			 *
 			 * @hook hivepress/v1/fields/{field_type}/display_value
 			 * @param {string} $value Display value.
+			 * @param {object} $field Field object.
 			 * @return {string} Display value.
 			 */
 			$value = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/display_value', $value, $this );
@@ -565,7 +566,8 @@ abstract class Field {
 					'value' => $value,
 				]
 			),
-			$this->display_template
+			$this->display_template,
+			true
 		);
 
 		if ( $shortcode ) {
