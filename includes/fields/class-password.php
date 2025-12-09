@@ -52,6 +52,17 @@ class Password extends Text {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function boot() {
+
+		// Set component.
+		$this->attributes['data-component'] = 'password';
+
+		parent::boot();
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}

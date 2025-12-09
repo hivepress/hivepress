@@ -235,6 +235,47 @@
 			childList: true,
 		});
 
+		// Password
+		hivepress.getComponent('password').each(function () {
+			var field = $(this);
+
+			if (field.attr('autocomplete') === 'new-password') {
+				var label = $('<small />').appendTo(field.prev('label'));
+
+				field.on('input', function () {
+					var text = pwsL10n.short,
+						color = '#e65054';
+
+					switch (wp.passwordStrength.meter(field.val(), [])) {
+						case 2:
+							text = pwsL10n.bad;
+							color = '#f86368';
+
+							break;
+
+						case 3:
+							text = pwsL10n.good;
+							color = '#f0c33c';
+
+							break;
+
+						case 4:
+							text = pwsL10n.strong;
+							color = '#68de7c';
+
+							break;
+
+						case 5:
+							text = pwsL10n.mismatch;
+
+							break;
+					}
+
+					label.text(' (' + text.toLowerCase() + ')').css('color', color);
+				});
+			}
+		});
+
 		// Buttons
 		$(window).on('pageshow', function (e) {
 			if (e.originalEvent.persisted) {
