@@ -33,15 +33,17 @@
 					button.attr('data-state', '');
 				}
 
-				$.ajax({
-					url: button.data('url'),
-					method: 'POST',
-					beforeSend: function (xhr) {
-						if ($('body').hasClass('logged-in')) {
-							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-						}
-					},
-				});
+				if (button.data('url')) {
+					$.ajax({
+						url: button.data('url'),
+						method: 'POST',
+						beforeSend: function (xhr) {
+							if ($('body').hasClass('logged-in')) {
+								xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+							}
+						},
+					});
+				}
 
 				e.preventDefault();
 			});
@@ -237,31 +239,54 @@
 
 		// Password
 		hivepress.getComponent('password').each(function () {
-			var field = $(this);
+			var field = $(this),
+				label = field.prev('label'),
+				button = field.next('a');
 
-			if (field.attr('autocomplete') === 'new-password') {
-				var label = $('<small />').appendTo(field.prev('label'));
+			if (button.length) {
+				if (!field.val()) {
+					button.hide();
+				}
+
+				field.on('input', function () {
+					if (field.val()) {
+						button.show();
+					} else {
+						button.hide();
+					}
+				});
+
+				button.on('click', function () {
+					if (field.attr('type') === 'password') {
+						field.attr('type', 'text');
+					} else {
+						field.attr('type', 'password');
+					}
+				});
+			}
+
+			if (label.length && field.attr('autocomplete') === 'new-password') {
+				var status = $('<small />').appendTo(label);
 
 				field.on('input', function () {
 					var text = pwsL10n.short,
-						color = '#e65054';
+						color = '#ff3860';
 
 					switch (wp.passwordStrength.meter(field.val(), [])) {
 						case 2:
 							text = pwsL10n.bad;
-							color = '#f86368';
 
 							break;
 
 						case 3:
 							text = pwsL10n.good;
-							color = '#f0c33c';
+							color = '#ff8a00';
 
 							break;
 
 						case 4:
 							text = pwsL10n.strong;
-							color = '#68de7c';
+							color = '#15cd72';
 
 							break;
 
@@ -271,7 +296,13 @@
 							break;
 					}
 
-					label.text(' (' + text.toLowerCase() + ')').css('color', color);
+					if (field.val()) {
+						status.text(' (' + text.toLowerCase() + ')').css('color', color);
+
+						status.show();
+					} else {
+						status.hide();
+					}
 				});
 			}
 		});
