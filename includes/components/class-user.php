@@ -211,6 +211,10 @@ final class User extends Component {
 			$display_name = $user->get_username();
 		}
 
+		if ( $user->get_display_name() === $display_name ) {
+			return;
+		}
+
 		// Update display name.
 		$user->set_display_name( $display_name )->save_display_name();
 	}
