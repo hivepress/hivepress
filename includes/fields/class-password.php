@@ -52,6 +52,17 @@ class Password extends Text {
 	}
 
 	/**
+	 * Bootstraps field properties.
+	 */
+	protected function boot() {
+
+		// Set component.
+		$this->attributes['data-component'] = 'password';
+
+		parent::boot();
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}
@@ -62,6 +73,13 @@ class Password extends Text {
 	 * @return string
 	 */
 	public function render() {
-		return '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Render field.
+		$output = '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
+
+		// Render button.
+		$output .= '<a href="#" title="' . esc_attr__( 'Show', 'hivepress' ) . '" data-component="toggle" data-icon="eye-slash" data-caption="' . esc_attr__( 'Hide', 'hivepress' ) . '" class="hp-field__icon hp-link"><i class="hp-icon fas fa-eye"></i></a>';
+
+		return $output;
 	}
 }

@@ -238,15 +238,25 @@ final class Vendor extends Component {
 			}
 		}
 
+		// Get field values.
+		$values = [
+			'name'        => $name,
+			'description' => $user->get_description(),
+			'slug'        => $slug,
+			'image'       => $user->get_image__id(),
+		];
+
+		if ( [
+			'name'        => $vendor->get_name(),
+			'description' => $vendor->get_description(),
+			'slug'        => $vendor->get_slug(),
+			'image'       => $vendor->get_image__id(),
+		] === $values ) {
+			return;
+		}
+
 		// Update vendor.
-		$vendor->fill(
-			[
-				'name'        => $name,
-				'description' => $user->get_description(),
-				'slug'        => $slug,
-				'image'       => $user->get_image__id(),
-			]
-		)->save(
+		$vendor->fill( $values )->save(
 			[
 				'name',
 				'description',

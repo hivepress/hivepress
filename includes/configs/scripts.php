@@ -95,7 +95,7 @@ return [
 	'core_frontend'          => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/js/frontend.min.js',
-		'deps'   => [ 'hivepress-core', 'jquery-ui-slider', 'imagesloaded', 'slick', 'sticky-sidebar' ],
+		'deps'   => [ 'hivepress-core', 'password-strength-meter', 'jquery-ui-slider', 'imagesloaded', 'slick', 'sticky-sidebar' ],
 	],
 
 	'core_backend'           => [
