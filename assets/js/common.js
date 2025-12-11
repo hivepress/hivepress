@@ -367,8 +367,7 @@ var hivepress = {
 				if (field.data('render')) {
 					var container = field.closest('[data-model]'),
 						data = new FormData(field.closest('form').get(0)),
-						tinymceSettings = [],
-						tinymceIDs = [];
+						editors = [];
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -386,14 +385,15 @@ var hivepress = {
 							xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
 
 							if (typeof tinyMCE !== 'undefined') {
-								$.each(tinymce.editors, function (index, configs) {
-									tinymceSettings.push(configs.settings);
-									tinymceIDs.push(configs.id);
+								$.each(tinymce.editors, function (index, editor) {
+									editors.push({
+										id: editor.id,
+										settings: editor.settings,
+										content: editor.getContent(),
+									});
 								});
 
-								$.each(tinymceIDs, function (index, id) {
-									tinymce.remove('#' + id);
-								});
+								tinymce.remove();
 							}
 						},
 						complete: function (xhr) {
@@ -407,8 +407,15 @@ var hivepress = {
 								hivepress.initUI(newContainer);
 
 								if (typeof tinyMCE !== 'undefined') {
-									$.each(tinymceSettings, function (index, configs) {
-										tinymce.init(configs);
+									$.each(editors, function (index, editor) {
+										tinymce.init($.extend(editor.settings, {
+											selector: '#' + editor.id,
+											setup: function (instance) {
+												instance.on('init', function () {
+													instance.setContent(editor.content);
+												});
+											}
+										}));
 									});
 								}
 
@@ -1072,13 +1079,13 @@ var hivepress = {
 					messageClass = messageContainer.attr('class').split(' ')[0];
 
 				form.on('submit', function (e) {
-					var formData = new FormData(form.get(0));
-
-					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
-
 					if (typeof tinyMCE !== 'undefined') {
 						tinyMCE.triggerSave();
 					}
+
+					var formData = new FormData(form.get(0));
+
+					messageContainer.hide().html('').removeClass(messageClass + '--success ' + messageClass + '--error');
 
 					if (renderSettings && renderSettings.event === 'submit') {
 						var renderContainer = $('[data-block=' + renderSettings.block + ']');
