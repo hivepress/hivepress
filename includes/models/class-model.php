@@ -273,11 +273,11 @@ abstract class Model {
 				if ( is_array( $value ) ) {
 					$value = array_map(
 						function( $object ) {
-							return is_object( $object ) ? $object->get_id() : $object;
+							return hp\is_namespace_instance( $object, 'models' ) ? $object->get_id() : $object;
 						},
 						$value
 					);
-				} elseif ( is_object( $value ) ) {
+				} elseif ( hp\is_namespace_instance( $value, 'models' ) ) {
 					$value = $value->get_id();
 				}
 			}

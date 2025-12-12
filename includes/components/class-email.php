@@ -197,6 +197,9 @@ final class Email extends Component {
 
 					if ( $model ) {
 
+						// @todo remove temporary fix when updated.
+						$model->set_id( null );
+
 						// Remove token.
 						unset( $tokens[ $index ] );
 

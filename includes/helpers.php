@@ -263,6 +263,17 @@ function is_class_instance( $object, $class ) {
 }
 
 /**
+ * Checks if object is a namespace instance.
+ *
+ * @param object $object Class object.
+ * @param string $namespace Namespace name.
+ * @return bool
+ */
+function is_namespace_instance( $object, $namespace ) {
+	return is_object( $object ) && stripos( get_class( $object ), 'HivePress\\' . $namespace . '\\' ) === 0;
+}
+
+/**
  * Creates a class instance.
  *
  * @param string $class Class name.
@@ -309,7 +320,7 @@ function replace_tokens( $tokens, $text, $format = false ) {
 	$fallback = get_option( 'hp_installed_time' ) < strtotime( '2024-07-08' );
 
 	foreach ( $tokens as $token_name => $token_value ) {
-		$is_model = is_object( $token_value ) && strpos( get_class( $token_value ), 'HivePress\Models\\' ) === 0;
+		$is_model = is_namespace_instance( $token_value, 'models' );
 
 		// Get matches.
 		$regex = '/%' . $token_name;
