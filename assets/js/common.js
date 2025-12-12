@@ -386,14 +386,22 @@ var hivepress = {
 
 							if (typeof tinyMCE !== 'undefined') {
 								$.each(tinymce.editors, function (index, editor) {
-									editors.push({
-										id: editor.id,
-										settings: editor.settings,
-										content: editor.getContent(),
-									});
+									if (container.has(editor.targetElm).length) {
+										editors.push({
+											id: editor.id,
+											settings: editor.settings,
+											content: editor.getContent(),
+										});
+									}
 								});
 
-								tinymce.remove();
+								$.each(editors, function (index, editor) {
+									var instance = tinymce.get(editor.id);
+
+									if (instance) {
+										tinymce.remove(instance);
+									}
+								});
 							}
 						},
 						complete: function (xhr) {
