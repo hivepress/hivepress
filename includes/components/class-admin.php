@@ -851,7 +851,7 @@ final class Admin extends Component {
 							$free_extensions->plugins
 						),
 						function ( $extension ) {
-							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication' ], true );
+							return ! in_array( $extension['slug'], [ 'hivepress', 'hivepress-authentication', 'hivepress-paid-listings' ], true );
 						}
 					)
 				);
