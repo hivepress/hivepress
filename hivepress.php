@@ -3,7 +3,7 @@
  * Plugin Name: HivePress
  * Plugin URI: https://hivepress.io/
  * Description: Multipurpose directory, listing & classifieds plugin.
- * Version: 1.7.18
+ * Version: 1.7.19
  * Author: HivePress
  * Author URI: https://hivepress.io/
  * Text Domain: hivepress
