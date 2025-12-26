@@ -1024,7 +1024,12 @@ final class Listing extends Controller {
 		// Check redirect.
 		// @todo remove temporary fix.
 		if ( isset( $_GET['redirect'] ) ) {
-			wp_set_post_terms( $listing->get_id(), [], 'hp_listing_category' );
+			wp_update_post(
+				[
+					'ID'         => $listing->get_id(),
+					'post_title' => '',
+				]
+			);
 
 			return hivepress()->router->get_url( 'listing_submit_details_page' );
 		}
