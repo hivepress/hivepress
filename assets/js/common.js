@@ -366,8 +366,13 @@ var hivepress = {
 
 				if (field.data('render')) {
 					var container = field.closest('[data-model]'),
-						data = new FormData(field.closest('form').get(0)),
+						form = field.closest('form'),
+						data = new FormData(form.get(0)),
 						editors = [];
+
+					form.find(hivepress.getSelector('phone')).each(function () {
+						data.set($(this).data('name'), this._iti.getNumber());
+					});
 
 					data.append('_id', container.data('id'));
 					data.append('_model', container.data('model'));
@@ -450,13 +455,19 @@ var hivepress = {
 		// Phone
 		container.find(hivepress.getSelector('phone')).each(function () {
 			var field = $(this),
+				fieldName = field.attr('name'),
 				settings = {
-					hiddenInput: field.attr('name'),
-					preferredCountries: [],
+					strictMode: true,
 					separateDialCode: true,
-					utilsScript: field.data('utils'),
+					i18n: window.intlTelInputi18n,
+					loadUtils: () => import(field.data('utils')),
+
+					hiddenInput: (telInputName) => ({
+						phone: fieldName,
+					}),
 				};
 
+			field.data('name', fieldName);
 			field.removeAttr('name');
 
 			if (field.data('countries')) {
@@ -467,7 +478,7 @@ var hivepress = {
 				settings['initialCountry'] = field.data('country');
 			}
 
-			window.intlTelInput(field.get(0), settings);
+			this._iti = window.intlTelInput(field.get(0), settings);
 		});
 
 		// Date

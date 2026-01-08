@@ -639,13 +639,11 @@ Phone
 .iti {
 	display: block;
 
-	&__flag {
-		background-image: url("../../node_modules/intl-tel-input/build/img/flags.png");
-
-		@media (-webkit-min-device-pixel-ratio: 2),
-		(min-resolution: 192dpi) {
-			background-image: url("../../node_modules/intl-tel-input/build/img/flags@2x.png");
-		}
+	& &__search-input {
+		border-width: 0;
+		border-radius: 3px;
+		padding-left: 30px;
+		padding-right: 28px;
 	}
 
 	input[type=tel] {

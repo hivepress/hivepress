@@ -41,6 +41,9 @@ final class Form extends Component {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
+		// Print scripts.
+		add_action( 'wp_print_footer_scripts', [ $this, 'print_scripts' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -606,5 +609,28 @@ final class Form extends Component {
 				wp_script_add_data( 'recaptcha', 'defer', true );
 			}
 		}
+	}
+
+	/**
+	 * Prints scripts.
+	 */
+	public function print_scripts() {
+		$scripts = '';
+
+		// Get language.
+		$language = hivepress()->translator->get_language();
+
+		// Enqueue intlTelInput.
+		$filepath = '/node_modules/intl-tel-input/build/js/i18n/' . $language . '/index.js';
+
+		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
+			$scripts = '<script type="module">
+				import language from "' . esc_url( hivepress()->get_url() . $filepath ) . '";
+
+				window.intlTelInputi18n = language;
+			</script>';
+		}
+
+		echo $scripts;
 	}
 }
