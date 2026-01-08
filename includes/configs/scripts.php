@@ -64,6 +64,10 @@ return [
 		'handle' => 'intl-tel-input',
 		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/intlTelInput.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
+
+		'data'   => [
+			'utilsURL' => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/utils.js',
+		],
 	],
 
 	'chartjs'                => [

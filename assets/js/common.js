@@ -460,7 +460,7 @@ var hivepress = {
 					strictMode: true,
 					separateDialCode: true,
 					i18n: window.intlTelInputi18n,
-					loadUtils: () => import(field.data('utils')),
+					loadUtils: () => import(intlTelInputData.utilsURL),
 
 					hiddenInput: (telInputName) => ({
 						phone: fieldName,
