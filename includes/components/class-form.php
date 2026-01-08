@@ -42,6 +42,7 @@ final class Form extends Component {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 		// Print scripts.
+		add_action( 'admin_print_footer_scripts', [ $this, 'print_scripts' ] );
 		add_action( 'wp_print_footer_scripts', [ $this, 'print_scripts' ] );
 
 		parent::__construct( $args );
