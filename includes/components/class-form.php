@@ -621,6 +621,10 @@ final class Form extends Component {
 		// Get language.
 		$language = hivepress()->translator->get_language();
 
+		if ( ! $language ) {
+			return;
+		}
+
 		// Enqueue intlTelInput.
 		$filepath = '/node_modules/intl-tel-input/build/js/i18n/' . $language . '/index.js';
 
