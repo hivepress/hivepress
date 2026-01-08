@@ -64,6 +64,10 @@ return [
 		'handle' => 'intl-tel-input',
 		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/intlTelInput.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
+
+		'data'   => [
+			'utilsURL' => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/utils.js',
+		],
 	],
 
 	'chartjs'                => [
@@ -82,7 +86,7 @@ return [
 	'core'                   => [
 		'handle' => 'hivepress-core',
 		'src'    => hivepress()->get_url() . '/assets/js/common.min.js',
-		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload', 'fancybox' ],
+		'deps'   => [ 'jquery', 'flatpickr', 'select2-full', 'jquery-ui-touch-punch', 'jquery-ui-sortable', 'fileupload', 'fancybox', 'intl-tel-input' ],
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
