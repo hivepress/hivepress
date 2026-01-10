@@ -128,9 +128,11 @@ class Phone extends Text {
 	 * @param array $countries Country codes.
 	 */
 	protected function set_countries( $countries ) {
+		if ( $countries ) {
 
-		// Set display template.
-		$this->display_template = str_replace( 'data-component', 'data-countries="' . hp\esc_json( wp_json_encode( $countries ) ) . '" data-component', $this->display_template );
+			// Set display template.
+			$this->display_template = str_replace( 'data-component', 'data-countries="' . hp\esc_json( wp_json_encode( $countries ) ) . '" data-component', $this->display_template );
+		}
 
 		$this->countries = $countries;
 	}
