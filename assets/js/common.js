@@ -454,31 +454,60 @@ var hivepress = {
 
 		// Phone
 		container.find(hivepress.getSelector('phone')).each(function () {
-			var field = $(this),
+			var element = $(this),
+				field = element,
 				fieldName = field.attr('name'),
 				settings = {
 					strictMode: true,
 					separateDialCode: true,
-					i18n: window.intlTelInputi18n,
+					onlyCountries: [],
+
 					loadUtils: () => import(intlTelInputData.utilsURL),
+				};
+
+			if (element.data('countries')) {
+				settings['onlyCountries'] = element.data('countries');
+			}
+
+			if (element.data('country')) {
+				settings['initialCountry'] = element.data('country');
+			}
+
+			if (element.is('input')) {
+				$.extend(settings, {
+					i18n: window.intlTelInputi18n,
 
 					hiddenInput: (telInputName) => ({
 						phone: fieldName,
 					}),
-				};
+				});
 
-			field.data('name', fieldName);
-			field.removeAttr('name');
+				field.data('name', fieldName);
+				field.removeAttr('name');
+			} else {
+				field = $('<input>');
 
-			if (field.data('countries')) {
-				settings['onlyCountries'] = field.data('countries');
+				field.val(element.text());
 			}
 
-			if (field.data('country')) {
-				settings['initialCountry'] = field.data('country');
-			}
+			var iti = window.intlTelInput(field.get(0), settings);
 
-			this._iti = window.intlTelInput(field.get(0), settings);
+			if (element.is('input')) {
+				this._iti = iti;
+			} else {
+				iti.promise.then(() => {
+					var formattedNumber = field.val(),
+						countryData = iti.getSelectedCountryData();
+
+					if (settings.onlyCountries.length !== 1 && countryData && countryData.dialCode) {
+						formattedNumber = '+' + countryData.dialCode + ' ' + formattedNumber;
+					}
+
+					element.text(formattedNumber);
+
+					iti.destroy();
+				});
+			}
 		});
 
 		// Date

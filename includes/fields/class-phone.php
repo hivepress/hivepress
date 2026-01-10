@@ -114,6 +114,28 @@ class Phone extends Text {
 	}
 
 	/**
+	 * Sets field display template.
+	 *
+	 * @param string $display_template Display template.
+	 */
+	protected function set_display_template( $display_template ) {
+		$this->display_template = str_replace( '%value%', '<span data-component="phone">%value%</span>', $display_template );
+	}
+
+	/**
+	 * Sets field countries.
+	 *
+	 * @param array $countries Country codes.
+	 */
+	protected function set_countries( $countries ) {
+
+		// Set display template.
+		$this->display_template = str_replace( 'data-component', 'data-countries="' . hp\esc_json( wp_json_encode( $countries ) ) . '" data-component', $this->display_template );
+
+		$this->countries = $countries;
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
