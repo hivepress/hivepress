@@ -371,7 +371,9 @@ var hivepress = {
 						editors = [];
 
 					form.find(hivepress.getSelector('phone')).each(function () {
-						data.set($(this).data('name'), this._iti.getNumber());
+						if (this.hasOwnProperty('_iti')) {
+							data.set($(this).data('name'), this._iti.getNumber());
+						}
 					});
 
 					data.append('_id', container.data('id'));
@@ -490,7 +492,15 @@ var hivepress = {
 				field.val(element.text());
 			}
 
-			var iti = window.intlTelInput(field.get(0), settings);
+			try {
+				var iti = window.intlTelInput(field.get(0), settings);
+			} catch (error) {
+				field.siblings('input[name="' + fieldName + '"]').remove();
+
+				field.attr('name', fieldName);
+
+				return;
+			}
 
 			if (element.is('input')) {
 				this._iti = iti;
