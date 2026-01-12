@@ -310,8 +310,12 @@ final class Attribute extends Component {
 	protected function get_term_id( $model ) {
 		$term_id = null;
 
-		if ( is_tax() && strpos( get_queried_object()->taxonomy, hp\prefix( $model . '_' ) ) === 0 ) {
-			$term_id = get_queried_object_id();
+		if ( is_tax() ) {
+			$term = get_queried_object();
+
+			if ( $term && strpos( $term->taxonomy, hp\prefix( $model . '_' ) ) === 0 ) {
+				$term_id = get_queried_object_id();
+			}
 		}
 
 		return $term_id;
