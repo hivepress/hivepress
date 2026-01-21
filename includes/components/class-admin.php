@@ -93,7 +93,7 @@ final class Admin extends Component {
 			add_action( 'admin_init', [ $this, 'check_access' ] );
 
 			// Enqueue scripts.
-			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ], 11 );
 
 			// Render links.
 			add_filter( 'plugin_action_links_hivepress/hivepress.php', [ $this, 'render_links' ] );
@@ -1711,6 +1711,46 @@ final class Admin extends Component {
 		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
 			wp_enqueue_media();
 		}
+
+		// Get pointers.
+		$pointers = apply_filters( 'hivepress/v1/components/admin/tooltips', [] );
+
+		if ( ! $pointers ) {
+			return;
+		}
+
+		// Get dismissed pointers.
+		$dismissed = (array) get_user_meta( get_current_user_id(), 'hp_dismissed_pointers', true );
+
+		// Set valid pointers.
+		$valid_pointers = [];
+
+		// Check pointers.
+		foreach ( $pointers as $pointer_id => $pointer ) {
+			if ( ! $pointer_id || in_array( $pointer_id, $dismissed ) || ! hp\search_array_value( (array) $pointer, [ 'title', 'content', 'target', 'options' ] ) ) {
+				continue;
+			}
+
+			// Add pointer ID.
+			$pointer['pointer_id'] = $pointer_id;
+
+			// Add pointer content.
+			$pointer['content'] = '<h3>' . $pointer['title'] . '</h3><p>' . $pointer['content'] . '</p>';
+
+			// Add pointer handler.
+			$pointer['handler'] = hivepress()->router->get_url( 'pointer_dismiss_action', [ 'user_id' => get_current_user_id() ] );
+
+			// Add valid pointer.
+			$valid_pointers['pointers'][] = $pointer;
+		}
+
+		if ( ! $valid_pointers ) {
+			return;
+		}
+
+		wp_enqueue_style( 'wp-pointer' );
+		wp_enqueue_script( 'wp-pointer' );
+		wp_localize_script( 'hivepress-core-backend', 'hpPointers', [ 'pointers' => $valid_pointers ] );
 	}
 
 	/**
