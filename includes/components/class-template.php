@@ -157,6 +157,27 @@ final class Template extends Component {
 	}
 
 	/**
+	 * Gets all nested template Gutenberg blocks.
+	 *
+	 * @param array $blocks Template blocks.
+	 * @param array $result Result array.
+	 * @return array
+	 */
+	protected function get_template_gutenberg_blocks( $blocks, $result = [] ) {
+		if ( isset( $blocks['blocks'] ) && is_array( $blocks['blocks'] ) ) {
+			foreach ( $blocks['blocks'] as $name => $block ) {
+				if ( isset( $block['_label'] ) && $block['_label'] ) {
+					$result[ $name ] = $block['type'];
+				}
+
+				$result = $this->get_template_gutenberg_blocks( $block, $result );
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Sets template title.
 	 *
 	 * @param int    $post_id Post ID.
@@ -172,20 +193,45 @@ final class Template extends Component {
 		// Get post.
 		$post = get_post( $post_id );
 
-		// Get template.
-		$template = '\HivePress\Templates\\' . $post->post_name;
+		// Get template name.
+		$template_name = '\HivePress\Templates\\' . $post->post_name;
 
-		if ( ! class_exists( $template ) || ! $template::get_meta( 'label' ) ) {
+		if ( ! class_exists( $template_name ) || ! $template_name::get_meta( 'label' ) ) {
 			return;
 		}
 
+		// Set data.
+		$data = [];
+
 		// Update title.
-		if ( $post->post_title !== $template::get_meta( 'label' ) ) {
+		if ( $post->post_title !== $template_name::get_meta( 'label' ) ) {
+			$data['post_title'] = $template_name::get_meta( 'label' );
+		}
+
+		// Update content.
+		if ( ! $post->post_content ) {
+
+			// Create template.
+			$template = hp\create_class_instance( $template_name );
+
+			// Set content.
+			$content = '';
+
+			foreach ( $this->get_template_gutenberg_blocks( $template->get_blocks()['page_container'] ) as $block_name => $block_type ) {
+				$content .= '<!-- wp:hivepress/' . hp\sanitize_slug( $block_name ? $block_name : $block_type ) . ' /-->';
+			}
+
+			$data['post_content'] = $content;
+		}
+
+		if ( $data ) {
 			wp_update_post(
-				[
-					'ID'         => $post->ID,
-					'post_title' => $template::get_meta( 'label' ),
-				]
+				array_merge(
+					[
+						'ID' => $post->ID,
+					],
+					$data
+				)
 			);
 		}
 	}
