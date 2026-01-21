@@ -765,6 +765,18 @@ final class User extends Controller {
 			return hp\rest_error( 400 );
 		}
 
+		// Send email.
+		( new Emails\User_Delete(
+			[
+				'recipient' => $user->get_email(),
+
+				'tokens'    => [
+					'user'      => $user,
+					'user_name' => $user->get_display_name(),
+				],
+			]
+		) )->send();
+
 		return hp\rest_response( 204 );
 	}
 
