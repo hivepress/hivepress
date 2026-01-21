@@ -14,8 +14,37 @@
 					var field = $('select[name=hp_template]');
 
 					if (field.length && field.val() !== editor.getEditedPostSlug()) {
-						var interval = setInterval(function() {
+						var interval = setInterval(function () {
 							if (!editor.isSavingPost() && !isSavedPost) {
+								$.ajax({
+									url: field.data('url'),
+									method: 'POST',
+									data: {
+										'hp_template': field.val(),
+									},
+									beforeSend: function (xhr) {
+										xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+									},
+									complete: function (xhr) {
+										var response = xhr.responseJSON;
+
+										if (response && response.hasOwnProperty('error')) {
+											var message = '';
+
+											if (response.error.hasOwnProperty('errors')) {
+
+												$.each(response.error.errors, function (index, error) {
+													message += error.message;
+												});
+											} else if (response.error.hasOwnProperty('message')) {
+												message += response.error.message;
+											}
+
+											alert(message);
+										}
+									},
+								});
+
 								window.location.reload();
 
 								isSavedPost = true;
