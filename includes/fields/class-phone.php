@@ -119,7 +119,15 @@ class Phone extends Text {
 	 * @param string $display_template Display template.
 	 */
 	protected function set_display_template( $display_template ) {
-		$this->display_template = str_replace( '%value%', '<span data-component="phone">%value%</span>', $display_template );
+		if ( ! hp\has_shortcode( $display_template ) ) {
+			if ( strpos( $display_template, '<a ' ) === false ) {
+				$display_template = str_replace( '%value%', '<span data-component="phone">%value%</span>', $display_template );
+			} else {
+				$display_template = str_replace( '<a ', '<a data-component="phone" ', $display_template );
+			}
+		}
+
+		$this->display_template = $display_template;
 	}
 
 	/**
