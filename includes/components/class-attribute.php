@@ -227,16 +227,35 @@ final class Attribute extends Component {
 	 * @return bool
 	 */
 	protected function requires_category_model( $model ) {
-		$taxonomy = hp\prefix( $this->get_category_model( $model ) );
 
-		return taxonomy_exists( $taxonomy ) && get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'number'     => 1,
-				'fields'     => 'ids',
-				'hide_empty' => false,
-			]
-		);
+		// Get category model.
+		$category_model = $this->get_category_model( $model );
+
+		// Set query arguments.
+		$args = [
+			'taxonomy'   => hp\prefix( $category_model ),
+			'number'     => 1,
+			'fields'     => 'ids',
+			'hide_empty' => false,
+		];
+
+		// Check taxonomy.
+		if ( ! taxonomy_exists( $args['taxonomy'] ) ) {
+			return false;
+		}
+
+		// Get category IDs.
+		$category_ids = hivepress()->cache->get_cache( $args, 'models/' . $category_model );
+
+		if ( is_null( $category_ids ) ) {
+			$category_ids = get_terms( $args );
+
+			if ( is_array( $category_ids ) ) {
+				hivepress()->cache->set_cache( $args, 'models/' . $category_model, $category_ids );
+			}
+		}
+
+		return (bool) $category_ids;
 	}
 
 	/**
@@ -572,6 +591,9 @@ final class Attribute extends Component {
 	public function register_attributes() {
 		foreach ( $this->get_models() as $model ) {
 
+			// Get category model.
+			$category_model = $this->get_category_model( $model );
+
 			// Set query arguments.
 			$query_args = [
 				'post_type'        => hp\prefix( $model . '_attribute' ),
@@ -626,8 +648,8 @@ final class Attribute extends Component {
 					$attribute_args['display_format'] = str_replace( '%icon%', $icon, $attribute_args['display_format'] );
 
 					// Set categories.
-					if ( taxonomy_exists( hp\prefix( $this->get_category_model( $model ) ) ) ) {
-						$attribute_args['categories'] = wp_get_post_terms( $attribute_object->ID, hp\prefix( $this->get_category_model( $model ) ), [ 'fields' => 'ids' ] );
+					if ( taxonomy_exists( hp\prefix( $category_model ) ) ) {
+						$attribute_args['categories'] = wp_get_post_terms( $attribute_object->ID, hp\prefix( $category_model ), [ 'fields' => 'ids' ] );
 					}
 
 					// Get fields.
@@ -762,7 +784,7 @@ final class Attribute extends Component {
 
 			// Set categories.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
-				$taxonomy_name = hp\prefix( $this->get_category_model( $model ) );
+				$taxonomy_name = hp\prefix( $category_model );
 
 				if ( ! taxonomy_exists( $taxonomy_name ) ) {
 					continue;
@@ -1064,6 +1086,9 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $object::_get_meta( 'name' );
 
+		// Get category model.
+		$category_model = $this->get_category_model( $model );
+
 		// Get category IDs.
 		$category_ids = null;
 
@@ -1071,15 +1096,20 @@ final class Attribute extends Component {
 			$category_ids = null;
 
 			if ( $object->get_id() ) {
-				$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ) );
+				$category_ids = hivepress()->cache->get_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $category_model );
 			}
 
 			if ( is_null( $category_ids ) ) {
 				$category_ids = $this->get_category_ids( $model, $object );
 
 				if ( $object->get_id() && is_array( $category_ids ) && count( $category_ids ) <= 100 ) {
-					hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $this->get_category_model( $model ), $category_ids );
+					hivepress()->cache->set_post_cache( $object->get_id(), [ 'fields' => 'ids' ], 'models/' . $category_model, $category_ids );
 				}
+			}
+
+			// Make category required.
+			if ( isset( $fields['categories'] ) && $this->requires_category_model( $model ) ) {
+				$fields['categories']['required'] = true;
 			}
 		}
 
@@ -1120,7 +1150,7 @@ final class Attribute extends Component {
 					$field_args = array_merge(
 						$field_args,
 						[
-							'_model'    => $this->get_category_model( $model ),
+							'_model'    => $category_model,
 							'_alias'    => hp\prefix( $model . '_' . $attribute_name ),
 							'_relation' => 'many_to_many',
 						]
@@ -1401,8 +1431,11 @@ final class Attribute extends Component {
 		// Get model.
 		$model = $form::get_meta( 'model' );
 
+		// Get category model.
+		$category_model = $this->get_category_model( $model );
+
 		// Check category option.
-		if ( ! taxonomy_exists( hp\prefix( $this->get_category_model( $model ) ) ) || in_array( 'category', (array) get_option( hp\prefix( $model . '_search_fields' ) ), true ) ) {
+		if ( ! taxonomy_exists( hp\prefix( $category_model ) ) || in_array( 'category', (array) get_option( hp\prefix( $model . '_search_fields' ) ), true ) ) {
 			return $form_args;
 		}
 
@@ -1411,7 +1444,7 @@ final class Attribute extends Component {
 
 		// Set query arguments.
 		$query_args = [
-			'taxonomy'   => hp\prefix( $this->get_category_model( $model ) ),
+			'taxonomy'   => hp\prefix( $category_model ),
 			'parent'     => $category_id,
 			'fields'     => 'ids',
 			'hide_empty' => false,
@@ -1426,7 +1459,7 @@ final class Attribute extends Component {
 					'format' => 'tree',
 				]
 			),
-			'models/' . $this->get_category_model( $model )
+			'models/' . $category_model
 		);
 
 		if ( is_null( $options ) ) {
@@ -1436,7 +1469,7 @@ final class Attribute extends Component {
 			$category_ids = get_terms( $query_args );
 
 			if ( $category_id ) {
-				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $this->get_category_model( $model ) ), 'taxonomy' ) );
+				$category_ids = array_merge( $category_ids, [ $category_id ], get_ancestors( $category_id, hp\prefix( $category_model ), 'taxonomy' ) );
 			}
 
 			if ( $category_ids ) {
@@ -1512,7 +1545,7 @@ final class Attribute extends Component {
 							'format' => 'tree',
 						]
 					),
-					'models/' . $this->get_category_model( $model ),
+					'models/' . $category_model,
 					$options
 				);
 			}
