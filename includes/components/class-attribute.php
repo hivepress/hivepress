@@ -2253,13 +2253,21 @@ final class Attribute extends Component {
 		$query->set( 'meta_query', $meta_query );
 		$query->set( 'tax_query', $tax_query );
 
+		/**
+		 * Fires when models are being queried (e.g. on the archive, category, or search pages). The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
+		 *
+		 * @hook hivepress/v1/models/{model_name}/query
+		 * @param {WP_Query} $query Query object.
+		 */
+		do_action( 'hivepress/v1/models/' . $model . '/query', $query );
+
 		if ( $query->is_search() ) {
 
 			/**
 			 * Fires when models are being searched. The dynamic part of the hook refers to the model name (e.g. `listing`, `vendor`).
 			 *
 			 * @hook hivepress/v1/models/{model_name}/search
-			 * @param {WP_Query} $query Search query.
+			 * @param {WP_Query} $query Query object.
 			 * @param {array} $fields Search fields.
 			 */
 			do_action( 'hivepress/v1/models/' . $model . '/search', $query, $attribute_fields );
