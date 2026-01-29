@@ -27,12 +27,31 @@ final class Attribute extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
-					'forms_resource'      => [
+					'attributes_resource'        => [
+						'path' => '/attributes',
+						'rest' => true,
+					],
+
+					'attribute_resource'         => [
+						'base' => 'attributes_resource',
+						'path' => '/(?P<attribute_id>\d+)',
+						'rest' => true,
+					],
+
+					'attribute_options_resource' => [
+						'base'   => 'attribute_resource',
+						'path'   => '/options',
+						'method' => 'GET',
+						'action' => [ $this, 'get_attribute_options' ],
+						'rest'   => true,
+					],
+
+					'forms_resource'             => [
 						'path' => '/forms',
 						'rest' => true,
 					],
 
-					'form_resource'       => [
+					'form_resource'              => [
 						'base'   => 'forms_resource',
 						'path'   => '/(?P<form_name>[a-z0-9_]+)',
 						'method' => 'POST',
@@ -40,12 +59,12 @@ final class Attribute extends Controller {
 						'rest'   => true,
 					],
 
-					'meta_boxes_resource' => [
+					'meta_boxes_resource'        => [
 						'path' => '/meta-boxes',
 						'rest' => true,
 					],
 
-					'meta_box_resource'   => [
+					'meta_box_resource'          => [
 						'base'   => 'meta_boxes_resource',
 						'path'   => '/(?P<meta_box_name>[a-z0-9_]+)',
 						'method' => 'POST',
@@ -58,6 +77,83 @@ final class Attribute extends Controller {
 		);
 
 		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets attribute options.
+	 *
+	 * @param WP_REST_Request $request API request.
+	 * @return WP_Rest_Response
+	 */
+	public function get_attribute_options( $request ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return hp\rest_error( 401 );
+		}
+
+		// Get search query.
+		$query = sanitize_text_field( $request->get_param( 'search' ) );
+
+		if ( strlen( $query ) < 3 ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get attribute ID.
+		$attribute_id = absint( $request->get_param( 'attribute_id' ) );
+
+		if ( ! $attribute_id ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get attribute.
+		$attribute = null;
+
+		foreach ( hivepress()->attribute->get_models() as $model ) {
+			foreach ( hivepress()->attribute->get_attributes( $model ) as $attribute_args ) {
+				if ( hp\get_array_value( $attribute_args, 'id' ) === $attribute_id ) {
+					$attribute = $attribute_args;
+
+					break 2;
+				}
+			}
+		}
+
+		if ( ! $attribute || ! isset( $attribute['edit_field']['source'] ) ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Get taxonomy.
+		$taxonomy = hp\get_array_value( hp\get_array_value( $attribute['edit_field'], 'option_args' ), 'taxonomy' );
+
+		if ( ! $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+			return hp\rest_error( 404 );
+		}
+
+		// Get terms.
+		$terms = get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'search'     => $query,
+				'number'     => 20,
+				'fields'     => 'id=>name',
+				'hide_empty' => false,
+			]
+		);
+
+		// Get results.
+		$results = [];
+
+		if ( $request->get_param( 'context' ) === 'list' ) {
+			foreach ( $terms as $id => $name ) {
+				$results[] = [
+					'id'   => $id,
+					'text' => $name,
+				];
+			}
+		}
+
+		return hp\rest_response( 200, $results );
 	}
 
 	/**

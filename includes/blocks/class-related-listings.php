@@ -81,7 +81,7 @@ class Related_Listings extends Listings {
 			 * Fires when related models are being queried. The dynamic part of the hook refers to the model name (e.g. `listing`).
 			 *
 			 * @hook hivepress/v1/models/{model_name}/relate
-			 * @param {object} $query Related query.
+			 * @param {object} $query Query object.
 			 * @param {object} $object Model object.
 			 */
 			do_action( 'hivepress/v1/models/listing/relate', $query, $listing );
