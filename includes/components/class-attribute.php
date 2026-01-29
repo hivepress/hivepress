@@ -589,6 +589,10 @@ final class Attribute extends Component {
 	 * Registers attributes.
 	 */
 	public function register_attributes() {
+
+		// Set field contexts.
+		$field_contexts = [ 'edit', 'search' ];
+
 		foreach ( $this->get_models() as $model ) {
 
 			// Get category model.
@@ -653,8 +657,6 @@ final class Attribute extends Component {
 					}
 
 					// Get fields.
-					$field_contexts = [ 'edit', 'search' ];
-
 					foreach ( $field_contexts as $field_context ) {
 
 						// Set defaults.
@@ -736,6 +738,7 @@ final class Attribute extends Component {
 					$taxonomy_name = hp\prefix( $model . '_' . $attribute_name );
 					$taxonomy_type = hp\prefix( $model );
 
+					// Set taxonomy arguments.
 					$taxonomy_args = [
 						'hierarchical'       => true,
 						'public'             => false,
@@ -768,7 +771,36 @@ final class Attribute extends Component {
 					}
 
 					if ( ! taxonomy_exists( $taxonomy_name ) ) {
+
+						// Register taxonomy.
 						register_taxonomy( $taxonomy_name, $taxonomy_type, $taxonomy_args );
+
+						// Set term arguments.
+						$term_args = [
+							'taxonomy'   => $taxonomy_name,
+							'fields'     => 'count',
+							'hide_empty' => false,
+						];
+
+						// Get cache group.
+						$cache_group = hivepress()->model->get_cache_group( 'term', $taxonomy_name );
+
+						// Get term count.
+						$term_count = hivepress()->cache->get_cache( $term_args, $cache_group );
+
+						if ( is_null( $term_count ) ) {
+							$term_count = get_terms( $term_args );
+
+							hivepress()->cache->set_cache( $term_args, $cache_group, $term_count );
+						}
+
+						if ( $term_count > 100 ) {
+							foreach ( $field_contexts as $field_context ) {
+
+								// Set field source.
+								$attributes[ $attribute_name ][ $field_context . '_field' ]['source'] = hivepress()->router->get_url( 'attribute_options_resource', [ 'attribute_id' => $attribute_args['id'] ] );
+							}
+						}
 					}
 				}
 			}
