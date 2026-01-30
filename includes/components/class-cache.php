@@ -24,11 +24,15 @@ final class Cache extends Component {
 	 */
 	public function __construct( $args = [] ) {
 
+		// Schedule cache cleanup.
+		add_action( 'hivepress/v1/activate', [ $this, 'schedule_cleanup' ] );
+		add_action( 'hivepress/v1/update', [ $this, 'schedule_cleanup' ] );
+
 		// Clear transient cache.
 		add_action( 'import_end', [ $this, 'clear_transient_cache' ] );
 
 		// Clear meta cache.
-		add_action( 'hivepress/v1/events/hourly', [ $this, 'clear_meta_cache' ] );
+		add_action( 'hivepress/v1/components/cache/clear', [ $this, 'clear_meta_cache' ] );
 
 		// Clear user cache.
 		add_action( 'hivepress/v1/models/user/create', [ $this, 'clear_user_cache' ], 1000 );
@@ -456,6 +460,20 @@ final class Cache extends Component {
 	}
 
 	/**
+	 * Schedules cache cleanup.
+	 */
+	public function schedule_cleanup() {
+
+		// Check status.
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+
+		// Schedule action.
+		hivepress()->scheduler->add_action( 'hivepress/v1/components/cache/clear', [], null, HOUR_IN_SECONDS );
+	}
+
+	/**
 	 * Clears transient cache.
 	 */
 	public function clear_transient_cache() {
@@ -493,7 +511,10 @@ final class Cache extends Component {
 
 				$meta_values = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT {$column}, meta_key FROM {$table} WHERE meta_key LIKE %s AND CAST(meta_value AS SIGNED) <= %d;",
+						"SELECT {$column}, meta_key FROM {$table} 
+						WHERE meta_key LIKE %s AND CAST(meta_value AS SIGNED) <= %d 
+						ORDER BY RAND() 
+						LIMIT 1000;",
 						'\_transient\_timeout\_%',
 						time()
 					),
