@@ -295,7 +295,9 @@ final class Listing extends Component {
 				'status__in'        => [ 'pending', 'publish' ],
 				'expired_time__lte' => time(),
 			]
-		)->get();
+		)->order( 'random' )
+		->limit( 10 )
+		->get();
 
 		// Update expired listings.
 		foreach ( $expired_listings as $listing ) {
@@ -334,7 +336,9 @@ final class Listing extends Component {
 					'status'            => 'draft',
 					'expired_time__lte' => time() - DAY_IN_SECONDS * $storage_period,
 				]
-			)->trash();
+			)->order( 'random' )
+			->limit( 10 )
+			->trash();
 		}
 
 		// Get featured listings.
@@ -343,7 +347,9 @@ final class Listing extends Component {
 				'status__in'         => [ 'draft', 'pending', 'publish' ],
 				'featured_time__lte' => time(),
 			]
-		)->get();
+		)->order( 'random' )
+		->limit( 10 )
+		->get();
 
 		// Update featured listings.
 		foreach ( $featured_listings as $listing ) {
