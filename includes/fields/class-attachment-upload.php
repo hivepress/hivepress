@@ -85,6 +85,25 @@ class Attachment_Upload extends Field {
 						'type'    => 'checkbox',
 						'_order'  => 120,
 					],
+
+					'multiple'  => [
+						'label'   => esc_html_x( 'Multiple', 'selection', 'hivepress' ),
+						'caption' => esc_html__( 'Allow multiple selection', 'hivepress' ),
+						'type'    => 'checkbox',
+						'_order'  => 130,
+					],
+
+					'max_files' => [
+						'label'     => esc_html__( 'Maximum Files', 'hivepress' ),
+						'type'      => 'number',
+						'required'  => true,
+						'default'   => 1,
+						'min_value' => 1,
+						'max_value' => 10,
+						'_context'  => 'edit',
+						'_parent'   => 'edit_field_multiple',
+						'_order'    => 140,
+					],
 				],
 			],
 			$meta
