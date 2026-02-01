@@ -143,6 +143,7 @@ final class Admin extends Component {
 		add_submenu_page( 'hp_settings', hivepress()->translator->get_string( 'settings' ) . $title, hivepress()->translator->get_string( 'settings' ), 'manage_options', 'hp_settings', [ $this, 'render_settings' ], 0 );
 		add_submenu_page( 'hp_settings', esc_html__( 'Themes', 'hivepress' ) . $title, esc_html__( 'Themes', 'hivepress' ), 'install_themes', 'hp_themes', [ $this, 'render_themes' ] );
 		add_submenu_page( 'hp_settings', esc_html__( 'Extensions', 'hivepress' ) . $title, esc_html__( 'Extensions', 'hivepress' ), 'install_plugins', 'hp_extensions', [ $this, 'render_extensions' ] );
+		add_submenu_page( 'hp_settings', esc_html__( 'Status', 'hivepress' ) . $title, esc_html__( 'Status', 'hivepress' ), 'manage_options', 'hp_status', [ $this, 'render_status' ] );
 
 		// Add counts.
 		foreach ( $menu as $item_index => $item_args ) {
@@ -217,6 +218,8 @@ final class Admin extends Component {
 					$extensions  = $this->get_extensions( $current_tab );
 				} elseif ( 'themes' === $template_name ) {
 					$themes = $this->get_themes();
+				} elseif ( 'status' === $template_name ) {
+					$status = $this->get_status();
 				}
 
 				include $template_path;
@@ -1023,6 +1026,320 @@ final class Admin extends Component {
 		}
 
 		return $current_tab;
+	}
+
+	/**
+	 * Gets system status.
+	 *
+	 * @return array
+	 */
+	protected function get_status() {
+		global $wpdb;
+
+		// Get cURL version.
+		$curl_version = '-';
+
+		if ( function_exists( 'curl_version' ) ) {
+			$curl_version = hp\get_array_value( curl_version(), 'version' ) . ', ' . hp\get_array_value( curl_version(), 'ssl_version' );
+		}
+
+		// Get post types count.
+		$post_types = [];
+
+		foreach ( get_post_types() as $post_type_name => $post_type_label ) {
+			$post_count = array_sum( (array) wp_count_posts( $post_type_name ) );
+
+			if ( ! $post_count ) {
+				continue;
+			}
+
+			$post_types[ $post_type_name ] = [
+				'label' => $post_type_label,
+				'value' => $post_count,
+			];
+		}
+
+		ksort( $post_types );
+
+		// Get active plugins.
+		$active_plugins = array_filter(
+			array_map(
+				function ( $plugin ) {
+					$file = WP_PLUGIN_DIR . '/' . $plugin;
+
+					if ( file_exists( $file ) ) {
+						$headers = array_filter(
+							get_file_data(
+								$file,
+								[
+									'name'    => 'Plugin Name',
+									'version' => 'Version',
+									'url'     => 'Plugin URI',
+									'author'  => 'Author',
+								]
+							)
+						);
+
+						$value = [
+							'label' => hp\get_array_value( $headers, 'name' ),
+							'value' => sprintf( esc_html__( 'by %1$s - %2$s', 'hivepress' ), hp\get_array_value( $headers, 'author' ), hp\get_array_value( $headers, 'version' ) ),
+							'url'   => hp\get_array_value( $headers, 'url' ),
+						];
+
+						return $value;
+					}
+				},
+				(array) get_option( 'active_plugins' )
+			)
+		);
+
+		// Get theme info.
+		$theme = wp_get_theme( get_template() );
+
+		$theme_info = [
+			[
+				'label'    => esc_html__( 'Name' ),
+				'label_en' => 'Name',
+				'value'    => $theme->get( 'Name' ),
+			],
+			[
+				'label'    => esc_html__( 'Version' ),
+				'label_en' => 'Version',
+				'value'    => $theme->get( 'Version' ),
+			],
+			[
+				'label'    => esc_html__( 'Author URL', 'hivepress' ),
+				'label_en' => 'Author URL',
+				'value'    => $theme->get( 'AuthorURI' ),
+			],
+			[
+				'label'    => esc_html__( 'Child theme', 'hivepress' ),
+				'label_en' => 'Child theme',
+				'value'    => is_child_theme() ? '+' : '-',
+			],
+		];
+
+		if ( is_child_theme() ) {
+			$parent_theme = wp_get_theme( $theme->template );
+
+			$theme_info = array_merge(
+				$theme_info,
+				[
+					[
+						'label'    => esc_html__( 'Parent Theme Name', 'hivepress' ),
+						'label_en' => 'Parent Theme Name',
+						'value'    => $parent_theme->name,
+					],
+					[
+						'label'    => esc_html__( 'Parent Theme Version', 'hivepress' ),
+						'label_en' => 'Parent Theme Version',
+						'value'    => $parent_theme->version,
+					],
+				]
+			);
+		}
+
+		$theme_info[] = [
+			'label'    => sprintf( esc_html__( '%s support', 'hivepress' ), 'HivePress' ),
+			'label_en' => 'HivePress support',
+			'value'    => current_theme_supports( 'hivepress' ) ? '+' : '-',
+		];
+
+		// Check GET request
+		$is_remote_get = false;
+
+		// Use wp_remote_get to send the GET request
+		$response_get = wp_remote_get( 'https://api.wordpress.org/core/version-check/1.7/' );
+
+		// Check for any errors
+		if ( ! is_wp_error( $response_get ) && $response_get['response']['code'] >= 200 && $response_get['response']['code'] < 300 ) {
+			$is_remote_get = true;
+		}
+
+		// Check GET request
+		$is_remote_post = false;
+
+		$response_post = wp_remote_post( 'https://api.wordpress.org/core/version-check/1.7/' );
+
+		// Check for any errors
+		if ( ! is_wp_error( $response_post ) && $response_post['response']['code'] >= 200 && $response_post['response']['code'] < 300 ) {
+			$is_remote_post = true;
+		}
+
+		// Get status.
+		$status = [
+			'content'  => '',
+			'sections' => [
+				[
+					'label'    => esc_html__( 'WordPress enviroment', 'hivepress' ),
+					'label_en' => 'WordPress enviroment',
+					'values'   => [
+						[
+							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'HivePress' ),
+							'label_en' => 'HivePress version',
+							'value'    => hivepress()->get_version(),
+						],
+						[
+							'label'         => sprintf( esc_html__( '%s package', 'hivepress' ), 'Action Scheduler' ),
+							'value'         => class_exists( 'ActionScheduler_Versions' ) && class_exists( 'ActionScheduler' ) ? \ActionScheduler_Versions::instance()->latest_version() . ' ' . \ActionScheduler::plugin_path( '' ) : '-',
+							'value_support' => class_exists( 'ActionScheduler_Versions' ) && class_exists( 'ActionScheduler' ) ? \ActionScheduler_Versions::instance()->latest_version() : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'WordPress' ),
+							'label_en' => 'WordPress version',
+							'value'    => get_bloginfo( 'version' ),
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s multisite', 'hivepress' ), 'WordPress' ),
+							'label_en' => 'WordPress multisite',
+							'value'    => is_multisite() ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s memory limit', 'hivepress' ), 'WordPress' ),
+							'label_en' => 'WordPress memory limit',
+							'value'    => WP_MEMORY_LIMIT,
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s debug mode', 'hivepress' ), 'WordPress' ),
+							'label_en' => 'WordPress debug mode',
+							'value'    => ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s cron', 'hivepress' ), 'WordPress' ),
+							'label_en' => 'WordPress cron',
+							'value'    => ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ? '+' : '-',
+						],
+						[
+							'label'    => esc_html__( 'Language' ),
+							'label_en' => 'Language',
+							'value'    => get_locale(),
+						],
+						[
+							'label'    => esc_html__( 'External object cache', 'hivepress' ),
+							'label_en' => 'External object cache',
+							'value'    => wp_using_ext_object_cache() ? '+' : '-',
+						],
+					],
+				],
+				[
+					'label'    => esc_html__( 'Server environment', 'hivepress' ),
+					'label_en' => 'Server environment',
+					'values'   => [
+						[
+							'label'    => esc_html__( 'Server info', 'hivepress' ),
+							'label_en' => 'Server info',
+							'value'    => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP version',
+							'value'    => phpversion(),
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s post max size', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP post max size',
+							'value'    => ini_get( 'post_max_size' ),
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s time limit', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP time limit',
+							'value'    => (int) ini_get( 'max_execution_time' ),
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s max input vars', 'hivepress' ), 'PHP' ),
+							'label_en' => 'PHP max input vars',
+							'value'    => (int) ini_get( 'max_input_vars' ),
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'cURL' ),
+							'label_en' => 'cURL version',
+							'value'    => $curl_version,
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s installed', 'hivepress' ), 'SUHOSIN' ),
+							'label_en' => 'SUHOSIN installed',
+							'value'    => extension_loaded( 'suhosin' ) ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s version', 'hivepress' ), 'MySQL' ),
+							'label_en' => 'MySQL version',
+							'value'    => $wpdb->db_server_info(),
+						],
+						[
+							'label'    => 'Max upload size',
+							'label'    => esc_html__( 'Max upload size', 'hivepress' ),
+							'label_en' => 'Max upload size',
+							'value'    => size_format( wp_max_upload_size() ),
+						],
+						[
+							'label'    => esc_html__( 'PHP Default timezone' ),
+							'label_en' => 'PHP Default timezone',
+							'value'    => date_default_timezone_get(),
+						],
+						[
+							'label' => 'fsockopen/cURL',
+							'value' => function_exists( 'fsockopen' ) || function_exists( 'curl_init' ) ? '+' : '-',
+						],
+						[
+							'label' => 'SoapClient',
+							'value' => class_exists( 'SoapClient' ) ? '+' : '-',
+						],
+						[
+							'label' => 'DOMDocument',
+							'value' => class_exists( 'DOMDocument' ) ? '+' : '-',
+						],
+						[
+							'label' => 'GZip',
+							'value' => is_callable( 'gzopen' ) ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( '%s string', 'hivepress' ), 'Multibyte' ),
+							'label_en' => 'Multibyte string',
+							'value'    => extension_loaded( 'mbstring' ) ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'POST' ),
+							'label_en' => 'Remote POST',
+							'value'    => $is_remote_post ? '+' : '-',
+						],
+						[
+							'label'    => sprintf( esc_html__( 'Remote %s', 'hivepress' ), 'GET' ),
+							'label_en' => 'Remote GET',
+							'value'    => $is_remote_get ? '+' : '-',
+						],
+					],
+				],
+				[
+					'label'    => esc_html__( 'Post Type Counts', 'hivepress' ),
+					'label_en' => 'Post Type Counts',
+					'values'   => $post_types,
+				],
+				[
+					'label'    => esc_html__( 'Active plugins', 'hivepress' ),
+					'label_en' => 'Active plugins',
+					'values'   => $active_plugins,
+				],
+				[
+					'label'    => esc_html__( 'Theme', 'hivepress' ),
+					'label_en' => 'Theme',
+					'values'   => $theme_info,
+				],
+			],
+		];
+
+		foreach ( $status['sections'] as $section ) {
+
+			// Get status content.
+			$status['content'] .= hp\get_array_value( $section, 'label_en', hp\get_array_value( $section, 'label' ) ) . '&#13;&#10;';
+
+			foreach ( $section['values'] as $value ) {
+				$status['content'] .= hp\get_array_value( $value, 'label_en', hp\get_array_value( $value, 'label' ) ) . ' ' . hp\get_array_value( $value, 'value_support', hp\get_array_value( $value, 'value' ) ) . '&#13;&#10;';
+			}
+
+			$status['content'] .= '&#13;&#10;';
+		}
+
+		return $status;
 	}
 
 	/**
