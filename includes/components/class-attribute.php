@@ -628,6 +628,7 @@ final class Attribute extends Component {
 						'label'          => $attribute_object->post_title,
 						'display_areas'  => array_filter( (array) $attribute_object->hp_display_areas ),
 						'display_format' => (string) $attribute_object->hp_display_format,
+                        'default'        => (string) $attribute_object->hp_default,
 						'public'         => (bool) $attribute_object->hp_public,
 						'editable'       => (bool) $attribute_object->hp_editable,
 						'synced'         => (bool) $attribute_object->hp_synced,
@@ -850,6 +851,7 @@ final class Attribute extends Component {
 							'label'          => '',
 							'display_areas'  => [],
 							'display_format' => '%value%',
+                            'default'        => '',
 							'protected'      => false,
 							'editable'       => false,
 							'synced'         => false,
@@ -1027,6 +1029,14 @@ final class Attribute extends Component {
 						'html'       => true,
 						'_order'     => 120,
 					];
+
+					if ( in_array( $field_type, [ 'number', 'text' ], true ) ) {
+						$meta_box['fields']['default'] = [
+							'label'  => esc_html__( 'Default Value', 'hivepress' ),
+							'type'   => $field_type,
+							'_order' => 210,
+						];
+					}
 				} elseif ( 'search' === $field_context && in_array( $field_type, [ 'select', 'number', 'date', 'date_range' ], true ) ) {
 					$meta_box['fields']['searchable'] = [
 						'label'   => esc_html_x( 'Searchable', 'attribute', 'hivepress' ),
@@ -1274,14 +1284,20 @@ final class Attribute extends Component {
 	 */
 	public function add_edit_fields( $form_args, $form ) {
 
+		// Get model name.
+		$model_name = $form::get_meta( 'model' );
+
 		// Get model.
-		$model = $form::get_meta( 'model' );
+		$model = $form->get_model();
 
 		// Get category IDs.
-		$category_ids = $this->get_category_ids( $model, $form->get_model() );
+		$category_ids = $this->get_category_ids( $model_name, $model );
 
 		// Get attributes.
-		$attributes = $this->get_attributes( $model, $category_ids );
+		$attributes = $this->get_attributes( $model_name, $category_ids );
+
+        // Get model fields.
+        $fields = $model->_get_fields();
 
 		foreach ( $attributes as $attribute_name => $attribute ) {
 			if ( $attribute['editable'] && ! isset( $form_args['fields'][ $attribute_name ] ) ) {
@@ -1289,7 +1305,7 @@ final class Attribute extends Component {
 				// Get field arguments.
 				$field_args = $attribute['edit_field'];
 
-				if ( $attribute['moderated'] && $model . '_update' === $form::get_meta( 'name' ) ) {
+				if ( $attribute['moderated'] && $model_name . '_update' === $form::get_meta( 'name' ) ) {
 					$field_args = hp\merge_arrays(
 						$field_args,
 						[
@@ -1301,6 +1317,11 @@ final class Attribute extends Component {
 
 				// Add field.
 				$form_args['fields'][ $attribute_name ] = $field_args;
+
+                // Set field default.
+                if ( isset( $attribute['default'] ) && in_array( $attribute_name, array_keys( $fields ) ) && ! call_user_func( [ $model, 'get_' . $attribute_name ] ) && in_array( $model::get_meta( 'name' ), $this->get_models( 'post' ), true ) && in_array( $model->get_status(), [ 'draft', 'auto-draft' ], true ) ) {
+                    call_user_func( [ $model, 'set_' . $attribute_name ], $attribute['default'] );
+                }
 			}
 		}
 
