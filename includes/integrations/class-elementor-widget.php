@@ -127,6 +127,14 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 			if ( 'checkbox' === $field_args['type'] ) {
 				$field_args['type'] = 'switcher';
 			} elseif ( isset( $field_args['options'] ) ) {
+
+				// @todo replace temporary fix.
+				if ( isset( $field_args['source'] ) && ! is_array( $field_args['options'] ) ) {
+					unset( $field_args['source'] );
+
+					$field_args = hivepress()->form->set_field_arguments( $field_args );
+				}
+
 				if ( is_array( hp\get_first_array_value( $field_args['options'] ) ) ) {
 					$field_args['options'] = wp_list_pluck( $field_args['options'], 'label' );
 				}
