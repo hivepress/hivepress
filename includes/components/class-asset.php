@@ -39,6 +39,9 @@ final class Asset extends Component {
 		// Add script attributes.
 		add_filter( 'script_loader_tag', [ $this, 'add_script_attributes' ], 10, 2 );
 
+		// Alter scripts.
+		add_filter( 'hivepress/v1/scripts', [ $this, 'alter_scripts' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -205,5 +208,21 @@ final class Asset extends Component {
 		}
 
 		return $tag;
+	}
+
+	/**
+	 * Alters scripts.
+	 *
+	 * @param array $scripts Scripts.
+	 * @return array
+	 */
+	public function alter_scripts( $scripts ) {
+		if ( isset( $scripts['chartjs_adapter_moment'] ) && isset( $scripts['chartjs']['scope'] ) ) {
+
+			// @todo replace temporary fix.
+			$scripts['chartjs_adapter_moment']['scope'] = $scripts['chartjs']['scope'];
+		}
+
+		return $scripts;
 	}
 }
