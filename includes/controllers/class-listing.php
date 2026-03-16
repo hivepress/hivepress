@@ -1141,7 +1141,7 @@ final class Listing extends Controller {
 		// Get listing.
 		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
-		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
+		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || ! in_array( $listing->get_status(), [ 'pending', 'draft' ] ) || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
 			return home_url();
 		}
 
