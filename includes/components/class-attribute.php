@@ -314,7 +314,7 @@ final class Attribute extends Component {
 		if ( isset( $_GET['_category'] ) ) {
 			$category_id = absint( $_GET['_category'] );
 
-			if ( $category_id && ! term_exists( $category_id, $this->get_category_model( $model ) ) ) {
+			if ( $category_id && ! term_exists( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) ) {
 				$category_id = null;
 			}
 		} elseif ( is_tax( hp\prefix( $this->get_category_model( $model ) ) ) ) {
