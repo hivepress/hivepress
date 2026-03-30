@@ -308,11 +308,15 @@ final class Attribute extends Component {
 	 * @param string $model Model name.
 	 * @return mixed
 	 */
-	protected function get_category_id( $model ) {
+	public function get_category_id( $model ) {
 		$category_id = null;
 
 		if ( isset( $_GET['_category'] ) ) {
 			$category_id = absint( $_GET['_category'] );
+
+			if ( $category_id && ! term_exists( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) ) {
+				$category_id = null;
+			}
 		} elseif ( is_tax( hp\prefix( $this->get_category_model( $model ) ) ) ) {
 			$category_id = get_queried_object_id();
 		}

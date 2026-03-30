@@ -49,6 +49,19 @@ class Listing_Submit_Details_Page extends Listing_Submit_Page {
 								'form'   => 'listing_submit',
 								'_label' => hivepress()->translator->get_string( 'form' ),
 								'_order' => 10,
+
+								'footer' => [
+									'form_actions' => [
+										'type'       => 'container',
+										'optional'   => true,
+										'blocks'     => [],
+										'_order'     => 10,
+
+										'attributes' => [
+											'class' => [ 'hp-form__actions' ],
+										],
+									],
+								],
 							],
 						],
 					],

@@ -206,8 +206,14 @@ final class Listing extends Controller {
 						'title'    => hivepress()->translator->get_string( 'add_details_imperative' ),
 						'base'     => 'listing_submit_page',
 						'path'     => '/details',
-						'redirect' => [ $this, 'redirect_listing_submit_details_page' ],
 						'action'   => [ $this, 'render_listing_submit_details_page' ],
+
+						'redirect' => [
+							[
+								'callback' => [ $this, 'redirect_listing_submit_details_page' ],
+								'_order'   => 5,
+							],
+						],
 					],
 
 					'listing_submit_complete_page' => [
@@ -224,8 +230,13 @@ final class Listing extends Controller {
 
 						'redirect' => [
 							[
-								'callback' => [ $this, 'redirect_listing_renew_page' ],
+								'callback' => [ $this, 'pre_redirect_listing_renew_page' ],
 								'_order'   => 5,
+							],
+
+							[
+								'callback' => [ $this, 'post_redirect_listing_renew_page' ],
+								'_order'   => 100,
 							],
 						],
 					],
@@ -1024,12 +1035,7 @@ final class Listing extends Controller {
 		// Check redirect.
 		// @todo remove temporary fix.
 		if ( isset( $_GET['redirect'] ) ) {
-			wp_update_post(
-				[
-					'ID'         => $listing->get_id(),
-					'post_title' => '',
-				]
-			);
+			wp_set_post_terms( $listing->get_id(), [], 'hp_listing_category' );
 
 			return hivepress()->router->get_url( 'listing_submit_details_page' );
 		}
@@ -1131,7 +1137,7 @@ final class Listing extends Controller {
 	 *
 	 * @return mixed
 	 */
-	public function redirect_listing_renew_page() {
+	public function pre_redirect_listing_renew_page() {
 
 		// Check authentication.
 		if ( ! is_user_logged_in() ) {
@@ -1142,12 +1148,19 @@ final class Listing extends Controller {
 		$listing = Models\Listing::query()->get_by_id( hivepress()->request->get_param( 'listing_id' ) );
 
 		if ( empty( $listing ) || get_current_user_id() !== $listing->get_user__id() || $listing->get_status() !== 'draft' || ! $listing->get_expired_time() || $listing->get_expired_time() > time() ) {
-			return home_url();
+			return hivepress()->router->get_url( 'listings_edit_page' );
 		}
 
 		// Set request context.
 		hivepress()->request->set_context( 'listing', $listing );
+	}
 
+	/**
+	 * Redirects listing renew page.
+	 *
+	 * @return mixed
+	 */
+	public function post_redirect_listing_renew_page() {
 		return true;
 	}
 
