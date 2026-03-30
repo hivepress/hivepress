@@ -213,6 +213,15 @@ class Select extends Field {
 	}
 
 	/**
+	 * Gets selectable options.
+	 *
+	 * @return array
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
+	/**
 	 * Sets field value.
 	 *
 	 * @param mixed $value Field value.
