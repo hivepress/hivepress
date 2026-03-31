@@ -306,18 +306,24 @@ final class Attribute extends Component {
 	 * Gets current category ID.
 	 *
 	 * @param string $model Model name.
+	 * @param bool   $validate Validate ID?
 	 * @return mixed
 	 */
-	public function get_category_id( $model ) {
+	public function get_category_id( $model, $validate = false ) {
+
+		// Get taxonomy.
+		$taxonomy = hp\prefix( $this->get_category_model( $model ) );
+
+		// Get category ID.
 		$category_id = null;
 
 		if ( isset( $_GET['_category'] ) ) {
 			$category_id = absint( $_GET['_category'] );
 
-			if ( $category_id && ! term_exists( $category_id, hp\prefix( $this->get_category_model( $model ) ) ) ) {
+			if ( $validate && $category_id && ! term_exists( $category_id, $taxonomy ) ) {
 				$category_id = null;
 			}
-		} elseif ( is_tax( hp\prefix( $this->get_category_model( $model ) ) ) ) {
+		} elseif ( is_tax( $taxonomy ) ) {
 			$category_id = get_queried_object_id();
 		}
 
