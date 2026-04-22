@@ -8,11 +8,11 @@ Stable tag: 1.7.24
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A simple yet powerful plugin to create a business directory, job board, real estate, classified ads, or basically any type of directory website.
+A simple yet powerful plugin to create a business directory, job board, real estate, classifieds, or basically any type of listing website.
 
 == Description ==
 
-HivePress is an all-in-one directory plugin that allows you to create any type of directory website. From business directories and job boards to real estate listings, classified ads, or staff directories – HivePress has got you covered.
+HivePress is an all-in-one directory plugin that allows you to create any type of listing website. From business directories and job boards to real estate listings, classified ads, or staff directories – HivePress has got you covered.
 
 [Demo](https://listinghive.hivepress.io/) | [Themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) | [Extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) | [Docs](https://help.hivepress.io/) | [Support](https://community.hivepress.io/)
 
@@ -30,13 +30,13 @@ This plugin comes with all the essential features for building a directory, mark
 - **Template Editor** – if needed, you can easily customize any page layouts of your directory without coding skills using the familiar WordPress block editor.
 - **Email Editor** – similarly to templates, you can override any default email notifications and customize them directly in your WordPress dashboard.
 
-Note that HivePress is not limited to its core functionality, since it is designed to be modular and allows you to extend its functionality by installing add-ons. For example, you can install add-ons available in the WordPress plugin repository to enable features such as **Favorites**, **Messages**, **Geolocation**, or **Reviews** for your directory in just a few clicks.
+Note that HivePress is not limited to its core functionality, since it is designed to be modular and allows you to extend its functionality by installing add-ons. For example, you can install free add-ons available in the WordPress plugin repository to enable features such as **Favorites**, **Messages**, **Geolocation**, or **Reviews** for your directory in just a few clicks.
 
 = One solution for any niche =
 HivePress is not just a directory plugin – it’s a versatile framework for building marketplaces, directories, and classifieds across any business niche. Below are just a few examples of websites that can be built with HivePress, its themes, and extensions:
 
 - **Business Directory** – create a “yellow pages”-style directory where businesses can list themselves, and potential customers can easily find and contact them.
-- **Classifieds Website** – create a fully featured platform where users can post and manage various classified ads, from items for sale to services.
+- **Classifieds Website** – build a fully featured platform where users can post and manage various classified ads, from items for sale to services.
 - **Service Marketplace** – launch a multi-vendor marketplace that connects customers with service providers, allowing users to browse and book services.
 - **Job Board** – build a job listing portal that allows candidates to easily browse companies and job listings, and apply for open positions.
 - **Neighborhood Directory** – start a local community where residents can discover and connect with businesses and other people in their area.
@@ -49,7 +49,7 @@ HivePress is not just a directory plugin – it’s a versatile framework for bu
 - **Member Directory** – run a member-only directory where listings represent member profiles, enabling members to search for and contact each other.
 - **Church Directory** – create a directory that features local churches, including service times, locations, contact details, and community information.
 - **Lawyer Directory** – launch a professional directory where law firms and individual lawyers can list their services, allowing users to easily find legal experts.
-- **Real Estate** – launch a real estate or vacation rental directory, allowing users to list properties for rent or sale with detailed descriptions, photos, and pricing details.
+- **Real Estate** – create a real estate or vacation rental directory, allowing users to list properties for rent or sale with detailed descriptions, photos, and pricing details.
 - **Beauty & Health** – build a doctor directory or list beauty specialists, helping users quickly find experts, view profiles, and check reviews before making a choice.
 
 Of course, the above list is not complete, as we have listed the most common ones – there are dozens of different directory and marketplace niches and business models out there, and by choosing the right plugin, backed by the right theme and add-ons, you can build your own.
@@ -65,6 +65,18 @@ With HivePress and its add-ons, you can build a business, not just a listings we
 - **Ad Placement** – the most common, simple yet effective way to monetize a directory website once you reach decent traffic.
 
 The above list is not exhaustive, and you can combine different options into unique monetization models. For example, you can enable bookings for marketplace listings or charge a commission on custom offers.
+
+= Switch designs with ease =
+There are [free and premium themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) officially integrated with HivePress, ensuring maximum compatibility, so you can start with a design that matches your requirements or switch your directory website’s design later without losing any data.
+
+- **[ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=wordpress.org)** – a free multipurpose directory and classified ads theme, suitable for creating directory websites of any type, such as Yelp or Craigslist.
+- **[RentalHive](https://hivepress.io/themes/rentalhive/?utm_medium=referral&utm_source=wordpress.org)** – a versatile theme for any kind of rental and booking marketplace that allows you to launch rental marketplaces similar to Airbnb or Vrbo.
+- **[ExpertHive](https://hivepress.io/themes/experthive/?utm_medium=referral&utm_source=wordpress.org)** – an on-demand services marketplace theme, suitable for building platforms with business models similar to TaskRabbit or Thumbtack.
+- **[MeetingHive](https://hivepress.io/themes/meetinghive/?utm_medium=referral&utm_source=wordpress.org)** – a modern theme for various appointment booking platforms that makes it possible to launch a marketplace similar to Booksy or Preply.
+- **[TaskHive](https://hivepress.io/themes/taskhive/?utm_medium=referral&utm_source=wordpress.org)** – a fully featured freelance marketplace theme for creating platforms similar to Fiverr or Upwork, or digital marketplaces like Creative Market.
+- **[JobHive](https://hivepress.io/themes/jobhive/?utm_medium=referral&utm_source=wordpress.org)** – a clean and modern theme for building job boards and job portals, enabling you to launch job search websites similar to Indeed or Monster.
+
+The platforms and services mentioned above are used only as examples of possible business models. With HivePress themes, you can also build websites for a wide range of other business models. All mentioned names remain the property of their respective owners and do not imply any affiliation or endorsement.
 
 = Do more with extensions =
 HivePress is extensible by design, which means you can build websites with different functionality using various combinations of extensions, while avoiding bloat by keeping only the features you need. There are numerous [free and premium extensions](https://hivepress.io/extensions/?utm_medium=referral&utm_source=wordpress.org) available for HivePress, with many more on the way:
@@ -89,20 +101,20 @@ HivePress is extensible by design, which means you can build websites with diffe
 
 Since HivePress is open-source and has a flexible API, there is a growing ecosystem of custom-built HivePress extensions and ready-made code snippets shared by developers on the [community forum](https://community.hivepress.io/). Therefore, the above list of add-ons is not exhaustive, and you can benefit from third-party HivePress solutions or even contribute by developing your own.
 
-= Switch designs with ease =
-There are [free and premium themes](https://hivepress.io/themes/?utm_medium=referral&utm_source=wordpress.org) officially integrated with HivePress, ensuring maximum compatibility, so you can start with a design that matches your requirements or switch your directory website’s design later without losing any data.
+= Help when you need it =
+This directory plugin is directly supported by its developers, the people who know it best, so any issues are handled with a deep understanding of how it works. Plus, there’s an [AI Assistant](https://www.chatbase.co/PdfFucPZ0vUmh3dfM-oe1/help) familiar with all the resources and solutions we’ve provided over the years, ready to assist you 24/7, from help with setting up to general developer guidance.
 
-- **[ListingHive](https://hivepress.io/themes/listinghive/?utm_medium=referral&utm_source=wordpress.org)** – a free multipurpose directory and classified ads theme, suitable for creating directory websites of any type, such as Yelp or Craigslist.
-- **[RentalHive](https://hivepress.io/themes/rentalhive/?utm_medium=referral&utm_source=wordpress.org)** – a versatile theme for any kind of rental and booking marketplace that allows you to launch rental marketplaces similar to Airbnb or Vrbo.
-- **[ExpertHive](https://hivepress.io/themes/experthive/?utm_medium=referral&utm_source=wordpress.org)** – an on-demand services marketplace theme, suitable for building platforms with business models similar to TaskRabbit or Thumbtack.
-- **[MeetingHive](https://hivepress.io/themes/meetinghive/?utm_medium=referral&utm_source=wordpress.org)** – a modern theme for various appointment booking platforms that makes it possible to launch a marketplace similar to Booksy or Preply.
-- **[TaskHive](https://hivepress.io/themes/taskhive/?utm_medium=referral&utm_source=wordpress.org)** – a fully featured freelance marketplace theme for creating platforms similar to Fiverr or Upwork, or digital marketplaces like Creative Market.
-- **[JobHive](https://hivepress.io/themes/jobhive/?utm_medium=referral&utm_source=wordpress.org)** – a clean and modern theme for building job boards and job portals, enabling you to launch job search websites similar to Indeed or Monster.
+Beyond support, HivePress comes with various resources to help you along the way:
 
-The platforms and services mentioned above are used only as examples of possible business models. With HivePress themes, you can also build websites for a wide range of other business models. All mentioned names remain the property of their respective owners and do not imply any affiliation or endorsement.
+- A comprehensive [knowledge base](https://help.hivepress.io/) where you can find guidance and solutions to the most common issues.
+- The [HivePress blog](https://hivepress.io/blog/?utm_medium=referral&utm_source=wordpress.org), where we post detailed tutorials on how to build and monetize directory websites for different niches.
+- A [YouTube channel](https://www.youtube.com/hivepress) with detailed video courses and screencasts about setting up and using HivePress with its themes.
+- A collection of ready-made [code snippets](https://gist.github.com/search?q=user%3Ahivepress) that you can simply copy and paste to customize HivePress functionality.
+
+You can also join the [community forum](https://community.hivepress.io/) to report bugs, suggest features, or simply exchange experiences with other website owners and developers, helping improve HivePress together.
 
 = Built to be customizable =
-If you have at least basic coding skills, then look no further – HivePress is powered by a highly customizable and extensible framework for directory websites:
+If you need to customize your directory beyond the available features and have at least basic coding skills, then look no further – HivePress is powered by a highly customizable and extensible framework for directory websites:
 
 - **Structured Code** – we follow WordPress coding standards, so the codebase is well-structured, readable, and easy to navigate.
 - **Easy Theming** – styling and overriding layouts is intuitive thanks to block-based templates, clean HTML markup and CSS notation.
@@ -126,25 +138,13 @@ When developing HivePress, we follow WordPress coding standards and best securit
 
 Moreover, since HivePress is open-source and self-hosted software, unlike SaaS alternatives, you fully own your directory data, which is stored entirely in your website’s database, giving you more control over your data, security, and privacy.
 
-= Help when you need it =
-This directory plugin is directly supported by its developers, the people who know it best, so any issues are handled with a deep understanding of how it works. Plus, there’s an [AI Assistant](https://www.chatbase.co/PdfFucPZ0vUmh3dfM-oe1/help) familiar with all the resources and solutions we’ve provided over the years, ready to assist you 24/7, from help with setting up to general developer guidance.
-
-Beyond support, HivePress comes with various resources to help you along the way:
-
-- A comprehensive [knowledge base](https://help.hivepress.io/) where you can find guidance and solutions to the most common issues.
-- The [HivePress blog](https://hivepress.io/blog/?utm_medium=referral&utm_source=wordpress.org), where we post detailed tutorials on how to build and monetize directory websites for different niches.
-- A [YouTube channel](https://www.youtube.com/hivepress) with detailed video courses and screencasts about setting up and using HivePress with its themes.
-- A collection of ready-made [code snippets](https://gist.github.com/search?q=user%3Ahivepress) that you can simply copy and paste to customize HivePress functionality.
-
-You can also join the [community forum](https://community.hivepress.io/) to report bugs, suggest features, or simply exchange experiences with other website owners and developers, helping improve HivePress together.
-
 == Frequently Asked Questions ==
 
 = What types of directory websites can I build with HivePress? =
 HivePress allows you to create directory websites of any type, from business directories and classified ads sites to job boards and real estate listings. There are no hard-coded fields or categories, so you can easily tailor it to your needs.
 
 = Can I monetize a directory built with HivePress? =
-Sure, depending on your monetization model, you can enable monetization with extensions such as Memberships or Marketplace. For payments, HivePress is integrated with the WooCommerce plugin, so you can use any payment gateways available for it.
+Yes, depending on your monetization model, you can enable monetization with extensions such as [Memberships](https://hivepress.io/extensions/memberships/?utm_medium=referral&utm_source=wordpress.org) or [Marketplace](https://hivepress.io/extensions/marketplace/?utm_medium=referral&utm_source=wordpress.org). For payments, HivePress is integrated with the [WooCommerce](https://wordpress.org/plugins/woocommerce/) plugin, so you can use any payment gateways available for it.
 
 = Does HivePress allow users to add listings from the front end? =
 Sure – this directory plugin includes all the required front-end features, allowing users to create an account and log in, submit and manage listings, search and reply to listings, all without accessing the WordPress dashboard.
@@ -153,10 +153,7 @@ Sure – this directory plugin includes all the required front-end features, all
 There’s no such limit defined in HivePress itself, and while we prioritize performance and continuously optimize the HivePress framework with every update, directory website performance heavily depends on factors such as the hosting plan, website configuration, and third-party plugins.
 
 = Can I bulk import directory listings with HivePress? =
-Yes, since HivePress implements directory listings as a WordPress custom post type, you can use any compatible import plugin of your choice, or use the official Import extension to create or update listings in bulk from a CSV file.
-
-= Can I translate HivePress to my language? =
-Yes, you can easily translate HivePress, its themes, and extensions without code changes using a plugin like Loco Translate or software like Poedit. Moreover, the HivePress core and its free extensions are already translated into a few languages by volunteers from the WordPress plugin repository.
+Yes, since HivePress implements directory listings as a WordPress custom post type, you can use any compatible import plugin of your choice, or use the official [Import](https://hivepress.io/extensions/import/?utm_medium=referral&utm_source=wordpress.org) extension to create or update listings in bulk from a CSV file.
 
 = Do I need coding skills to use HivePress? =
 No, you don’t need any coding skills to use HivePress. The plugin is designed to be user-friendly and accessible to everyone, regardless of technical expertise. You can set up a fully functional directory website, customize listing fields, create categories, configure search filters, and manage monetization options – all through an intuitive interface, with no code required.
@@ -168,7 +165,10 @@ Absolutely – we developed the HivePress framework to be as simple as possible,
 Yes, as a plugin, HivePress adds directory functionality to any WordPress theme. However, if you encounter any styling or layout issues, we recommend using one of the official themes to ensure maximum compatibility.
 
 = Does HivePress support third-party page builders? =
-By default, HivePress is fully integrated with the core WordPress block editor, allowing you to customize layouts using blocks. Additionally, we offer basic Elementor integration and plan to add support for other page builders.
+By default, HivePress is fully integrated with the core WordPress block editor, allowing you to customize layouts using blocks. Additionally, we offer basic [Elementor](https://wordpress.org/plugins/elementor/) integration and plan to add support for other page builders.
+
+= Can I translate HivePress to my language? =
+Yes, you can easily translate HivePress, its themes, and extensions without code changes using a plugin like [Loco Translate](https://wordpress.org/plugins/loco-translate/) or software like Poedit. Moreover, the HivePress core and its free extensions are already translated into a few languages by volunteers from the WordPress plugin repository.
 
 == Installation ==
 
