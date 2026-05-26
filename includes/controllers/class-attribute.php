@@ -87,11 +87,6 @@ final class Attribute extends Controller {
 	 */
 	public function get_attribute_options( $request ) {
 
-		// Check authentication.
-		if ( ! is_user_logged_in() ) {
-			return hp\rest_error( 401 );
-		}
-
 		// Get search query.
 		$query = sanitize_text_field( $request->get_param( 'search' ) );
 
