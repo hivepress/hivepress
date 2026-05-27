@@ -27,14 +27,26 @@ final class Attribute extends Controller {
 		$args = hp\merge_arrays(
 			[
 				'routes' => [
+					'models_resource'            => [
+						'path' => '/models',
+						'rest' => true,
+					],
+
+					'model_resource'             => [
+						'base' => 'models_resource',
+						'path' => '/(?P<model_name>[a-z0-9_]+)',
+						'rest' => true,
+					],
+
 					'attributes_resource'        => [
+						'base' => 'model_resource',
 						'path' => '/attributes',
 						'rest' => true,
 					],
 
 					'attribute_resource'         => [
 						'base' => 'attributes_resource',
-						'path' => '/(?P<attribute_id>\d+)',
+						'path' => '/(?P<attribute_name>[a-z0-9_]+)',
 						'rest' => true,
 					],
 
@@ -94,25 +106,22 @@ final class Attribute extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		// Get attribute ID.
-		$attribute_id = absint( $request->get_param( 'attribute_id' ) );
+		// Get model name.
+		$model = sanitize_key( $request->get_param( 'model_name' ) );
 
-		if ( ! $attribute_id ) {
+		if ( ! in_array( $model, hivepress()->attribute->get_models() ) ) {
+			return hp\rest_error( 400 );
+		}
+
+		// Get attribute name.
+		$attribute_name = sanitize_key( $request->get_param( 'attribute_name' ) );
+
+		if ( ! $attribute_name ) {
 			return hp\rest_error( 400 );
 		}
 
 		// Get attribute.
-		$attribute = null;
-
-		foreach ( hivepress()->attribute->get_models() as $model ) {
-			foreach ( hivepress()->attribute->get_attributes( $model ) as $attribute_args ) {
-				if ( hp\get_array_value( $attribute_args, 'id' ) === $attribute_id ) {
-					$attribute = $attribute_args;
-
-					break 2;
-				}
-			}
-		}
+		$attribute = hp\get_array_value( hivepress()->attribute->get_attributes( $model ), $attribute_name );
 
 		if ( ! $attribute || ! isset( $attribute['edit_field']['source'] ) ) {
 			return hp\rest_error( 404 );

@@ -123,6 +123,12 @@ class Select extends Field {
 						'_order'    => 110,
 					],
 
+					'source'          => [
+						'type'     => 'url',
+						'_context' => 'edit',
+						'_order'   => 115,
+					],
+
 					'options'         => [
 						'label'    => esc_html__( 'Options', 'hivepress' ),
 						'type'     => 'select',
@@ -134,12 +140,13 @@ class Select extends Field {
 
 					// @todo remove prefix from parent.
 					'filter_operator' => [
-						'label'    => esc_html__( 'Options', 'hivepress' ),
-						'caption'  => esc_html__( 'Search any of the selected options', 'hivepress' ),
-						'type'     => 'checkbox',
-						'_context' => 'search',
-						'_parent'  => 'search_field_multiple',
-						'_order'   => 130,
+						'label'       => esc_html__( 'Options', 'hivepress' ),
+						'caption'     => esc_html__( 'Search any of the selected options', 'hivepress' ),
+						'description' => esc_html__( 'Check this option to match any selected choice rather than all choices at once.', 'hivepress' ),
+						'type'        => 'checkbox',
+						'_context'    => 'search',
+						'_parent'     => 'search_field_multiple',
+						'_order'      => 130,
 					],
 				],
 			],
