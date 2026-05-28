@@ -58,7 +58,7 @@ class Regex extends Text {
 		Field::normalize();
 
 		if ( ! is_null( $this->value ) ) {
-			$this->value = trim( addcslashes( trim( $this->value ), '/' ), '^$' );
+			$this->value = trim( preg_replace( '#(?<!\\\\)/#', '\\/', trim( $this->value ) ), '^$' );
 		}
 	}
 
