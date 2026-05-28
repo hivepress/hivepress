@@ -296,6 +296,32 @@
 			min-height: 8rem;
 		}
 
+		input[type=color]&--color {
+			appearance: none;
+			-webkit-appearance: none;
+			width: 40px;
+			height: 40px;
+			padding: 0;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 2px;
+			cursor: pointer;
+			background: none;
+
+			&::-webkit-color-swatch-wrapper {
+				padding: 0;
+			}
+
+			&::-webkit-color-swatch {
+				border: none;
+				border-radius: 2px;
+			}
+
+			&::-moz-color-swatch {
+				border: none;
+				border-radius: 2px;
+			}
+		}
+
 		&--attachment-upload {
 			&::after {
 				display: table;
