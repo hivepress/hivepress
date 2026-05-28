@@ -784,33 +784,6 @@ final class Attribute extends Component {
 
 						// Register taxonomy.
 						register_taxonomy( $taxonomy_name, $taxonomy_type, $taxonomy_args );
-
-						// Set term arguments.
-						$term_args = [
-							'taxonomy'   => $taxonomy_name,
-							'fields'     => 'count',
-							'hide_empty' => false,
-						];
-
-						// Get cache group.
-						$cache_group = hivepress()->model->get_cache_group( 'term', $taxonomy_name );
-
-						// Get term count.
-						$term_count = hivepress()->cache->get_cache( $term_args, $cache_group );
-
-						if ( is_null( $term_count ) ) {
-							$term_count = get_terms( $term_args );
-
-							hivepress()->cache->set_cache( $term_args, $cache_group, $term_count );
-						}
-
-						if ( $term_count > 100 ) {
-							foreach ( $field_contexts as $field_context ) {
-
-								// Set field source.
-								$attributes[ $attribute_name ][ $field_context . '_field' ]['source'] = hivepress()->router->get_url( 'attribute_options_resource', [ 'attribute_id' => $attribute_args['id'] ] );
-							}
-						}
 					}
 				}
 			}
@@ -824,27 +797,41 @@ final class Attribute extends Component {
 			 */
 			$attributes = apply_filters( 'hivepress/v1/models/' . $model . '/attributes', $attributes );
 
-			// Set categories.
 			foreach ( $attributes as $attribute_name => $attribute_args ) {
+
+				// Set categories.
 				$taxonomy_name = hp\prefix( $category_model );
 
-				if ( ! taxonomy_exists( $taxonomy_name ) ) {
-					continue;
+				if ( taxonomy_exists( $taxonomy_name ) ) {
+					$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+
+					if ( $category_ids ) {
+						foreach ( $category_ids as $category_id ) {
+
+							// @todo cache category IDs.
+							$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
+						}
+
+						$attributes[ $attribute_name ]['categories'] = array_unique( $category_ids );
+					}
 				}
 
-				$category_ids = hp\get_array_value( $attribute_args, 'categories' );
+				// Set fields.
+				if ( isset( $attribute_args['edit_field']['options'] ) && ! isset( $attribute_args['edit_field']['_external'] ) ) {
+					$source_url = hp\get_array_value( $attribute_args['edit_field'], 'source' );
 
-				if ( ! $category_ids ) {
-					continue;
+					if ( $source_url && esc_url_raw( true ) === esc_url_raw( $source_url ) ) {
+						foreach ( $field_contexts as $field_context ) {
+							$attributes[ $attribute_name ][ $field_context . '_field' ]['source'] = hivepress()->router->get_url(
+								'attribute_options_resource',
+								[
+									'model_name'     => $model,
+									'attribute_name' => $attribute_name,
+								]
+							);
+						}
+					}
 				}
-
-				foreach ( $category_ids as $category_id ) {
-
-					// @todo cache category IDs.
-					$category_ids = array_merge( $category_ids, get_term_children( $category_id, $taxonomy_name ) );
-				}
-
-				$attributes[ $attribute_name ]['categories'] = array_unique( $category_ids );
 			}
 
 			// Set attributes.
@@ -1016,6 +1003,16 @@ final class Attribute extends Component {
 									]
 								);
 							}
+						} elseif ( 'source' === $field_name ) {
+							$field_args = array_merge(
+								$field_args,
+								[
+									'label'       => hivepress()->translator->get_string( 'performance' ),
+									'caption'     => esc_html__( 'Load options dynamically', 'hivepress' ),
+									'description' => esc_html__( 'Check this option to load dropdown choices while typing instead of all at once.', 'hivepress' ),
+									'type'        => 'checkbox',
+								]
+							);
 						}
 
 						if ( 'required' !== $field_name ) {

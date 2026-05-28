@@ -30,6 +30,7 @@ class Checkboxes extends Select {
 				'settings' => [
 					'placeholder' => null,
 					'multiple'    => null,
+					'source'      => null,
 				],
 			],
 			$meta
