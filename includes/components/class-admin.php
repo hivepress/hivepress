@@ -606,7 +606,7 @@ final class Admin extends Component {
 	/**
 	 * Gets HivePress purchases.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	protected function get_purchases() {
 
@@ -637,22 +637,20 @@ final class Admin extends Component {
 				true
 			);
 
-			if ( ! is_array( $response ) || ! isset( $response['data'] ) ) {
-				return false;
+			if ( is_array( $response ) && isset( $response['data'] ) ) {
+				foreach ( $response['data'] as $product ) {
+
+					// Add purchase.
+					$purchases[ $product['slug'] ] = [
+						'name' => $product['name'],
+						'slug' => $product['slug'],
+						'type' => $product['type'],
+					];
+				}
+
+				// Cache purchases.
+				hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
 			}
-
-			foreach ( $response['data'] as $product ) {
-
-				// Add purchase.
-				$purchases[ $product['slug'] ] = [
-					'name' => $product['name'],
-					'slug' => $product['slug'],
-					'type' => $product['type'],
-				];
-			}
-
-			// Cache purchases.
-			hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
 		}
 
 		return $purchases;
@@ -1785,28 +1783,26 @@ final class Admin extends Component {
 		// Check valid purchases.
 		$purchases = $this->get_purchases();
 
-		if ( is_array( $purchases ) ) {
-			$products = array_filter(
-				array_merge( $this->get_themes(), $this->get_extensions() ),
-				function ( $product ) use ( $purchases ) {
-					return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
-				}
-			);
-
-			if ( $products ) {
-				$product_names = implode( ', ', array_column( $products, 'name' ) );
-
-				$notices[ 'license_request_' . md5( $product_names ) ] = [
-					'type'        => 'error',
-					'dismissible' => true,
-					'text'        => sprintf(
-						/* translators: 1: settings URL, 2: unlicensed products. */
-						hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
-						esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
-						$product_names
-					),
-				];
+		$products = array_filter(
+			array_merge( $this->get_themes(), $this->get_extensions() ),
+			function ( $product ) use ( $purchases ) {
+				return isset( $product['price'] ) && 'bundle' !== $product['slug'] && in_array( $product['status'], [ 'installed', 'latest_installed', 'activate', 'active' ] ) && ! isset( $purchases[ $product['slug'] ] );
 			}
+		);
+
+		if ( $products ) {
+			$product_names = implode( ', ', array_column( $products, 'name' ) );
+
+			$notices[ 'license_request_' . md5( $product_names ) ] = [
+				'type'        => 'error',
+				'dismissible' => true,
+				'text'        => sprintf(
+					/* translators: 1: settings URL, 2: unlicensed products. */
+					hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
+					esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
+					$product_names
+				),
+			];
 		}
 
 		// Check theme support.
