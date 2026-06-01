@@ -848,6 +848,8 @@ var hivepress = {
 				dataType: 'json',
 				paramName: 'file',
 				limitConcurrentUploads: 2,
+				dropZone: selectLabel,
+				pasteZone: null,
 				formData: {
 					'parent_model': container.data('model'),
 					'parent_field': field.data('name'),
