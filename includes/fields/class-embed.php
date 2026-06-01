@@ -55,10 +55,16 @@ class Embed extends URL {
 	 * @return mixed
 	 */
 	public function get_display_value() {
+		global $wp_embed;
+
 		if ( ! is_null( $this->value ) ) {
-			$embed = wp_oembed_get( $this->value );
+			$embed = $wp_embed->shortcode( [], $this->value );
 
 			if ( $embed ) {
+
+				// @todo ensure it runs before rendering template.
+				wp_enqueue_style( 'wp-block-embed' );
+
 				return $embed;
 			}
 		}

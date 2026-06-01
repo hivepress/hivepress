@@ -97,6 +97,10 @@ class Textarea extends Text {
 	 */
 	public function get_display_value() {
 		if ( ! is_null( $this->value ) ) {
+
+			// @todo ensure it runs before rendering template.
+			wp_enqueue_style( 'wp-block-embed' );
+
 			return make_clickable( apply_filters( 'the_content', $this->value ) );
 		}
 	}

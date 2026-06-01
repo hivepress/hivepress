@@ -28,6 +28,9 @@ final class Translator extends Component {
 			// Register options.
 			add_filter( 'alloptions', [ $this, 'register_options' ] );
 
+			// Registers comments.
+			add_filter( 'comments_clauses', [ $this, 'register_comments' ], 1, 2 );
+
 			// Register post.
 			add_action( 'hivepress/v1/models/post/create', [ $this, 'register_post' ], 10, 2 );
 		}
@@ -109,6 +112,23 @@ final class Translator extends Component {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Registers comments.
+	 *
+	 * @param array  $clauses Query clauses.
+	 * @param object $query Query object.
+	 * @return array
+	 */
+	public function register_comments( $clauses, $query ) {
+		global $sitepress;
+
+		if ( strpos( hp\get_array_value( $query->query_vars, 'type', '' ), 'hp_' ) === 0 ) {
+			remove_filter( 'comments_clauses', [ $sitepress, 'comments_clauses' ] );
+		}
+
+		return $clauses;
 	}
 
 	/**

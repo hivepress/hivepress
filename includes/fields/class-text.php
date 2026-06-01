@@ -94,10 +94,11 @@ class Text extends Field {
 					],
 
 					'pattern'     => [
-						'label'      => esc_html__( 'Regex Pattern', 'hivepress' ),
-						'type'       => 'regex',
-						'max_length' => 256,
-						'_order'     => 130,
+						'label'       => esc_html__( 'Regex Pattern', 'hivepress' ),
+						'description' => esc_html__( 'Set a regular expression pattern to validate the field value.', 'hivepress' ),
+						'type'        => 'regex',
+						'max_length'  => 256,
+						'_order'      => 130,
 					],
 				],
 			],
