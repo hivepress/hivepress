@@ -422,7 +422,7 @@ final class WooCommerce extends Component {
 	 * @return string
 	 */
 	public function set_account_template( $path, $name ) {
-		if ( 'myaccount/my-account.php' === $name && ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) ) {
+		if ( 'myaccount/my-account.php' === $name && in_array( WC()->query->get_current_endpoint(), [ 'orders', 'view-order', 'subscriptions', 'view-subscription' ] ) ) {
 			$path = hivepress()->get_path() . '/templates/woocommerce/myaccount/my-account.php';
 		}
 
@@ -444,6 +444,14 @@ final class WooCommerce extends Component {
 			];
 		}
 
+		if ( class_exists( 'wc_subscriptions' ) && wcs_user_has_subscription() ) {
+			$menu['items']['subscriptions_view'] = [
+				'label'  => hp\get_array_value( wc_get_account_menu_items(), 'subscriptions' ),
+				'url'    => wc_get_endpoint_url( 'subscriptions', '', wc_get_page_permalink( 'myaccount' ) ),
+				'_order' => 42,
+			];
+		}
+
 		return $menu;
 	}
 
@@ -454,7 +462,7 @@ final class WooCommerce extends Component {
 	 * @return array
 	 */
 	public function alter_account_page( $template ) {
-		if ( is_wc_endpoint_url( 'orders' ) || is_wc_endpoint_url( 'view-order' ) ) {
+		if ( in_array( WC()->query->get_current_endpoint(), [ 'orders', 'view-order', 'subscriptions', 'view-subscription' ] ) ) {
 
 			// Set page title.
 			add_filter( 'the_title', 'wc_page_endpoint_title' );
