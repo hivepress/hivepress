@@ -654,7 +654,6 @@ final class Admin extends Component {
 
 			// Cache purchases.
 			hivepress()->cache->set_cache( 'purchases', null, $purchases, DAY_IN_SECONDS );
-
 		}
 
 		return $purchases;
