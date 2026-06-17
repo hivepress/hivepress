@@ -1032,7 +1032,7 @@ final class User extends Controller {
 		$user = hivepress()->request->get_context( 'viewed_user' );
 
 		if ( ! $user ) {
-			wp_die( esc_html__( 'No users found.', 'hivepress' ) );
+			return home_url( '/404' );
 		}
 
 		if ( get_option( 'hp_user_verify_email' ) && get_user_meta( $user->get_id(), 'hp_email_verify_key', true ) ) {
