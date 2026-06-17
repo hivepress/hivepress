@@ -321,6 +321,7 @@ return [
 							'last_name'        => esc_html__( 'Last Name', 'hivepress' ),
 							'last_name_extra'  => esc_html__( 'First Letter of First Name and Last Name', 'hivepress' ),
 							'full_name'        => esc_html__( 'Full Name', 'hivepress' ),
+							'display_name'     => esc_html__( 'Display Name', 'hivepress' ),
 						],
 					],
 				],

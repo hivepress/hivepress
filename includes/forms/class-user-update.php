@@ -56,6 +56,10 @@ class User_Update extends Model_Form {
 						'_order' => 30,
 					],
 
+					'display_name'     => [
+						'_order' => 40,
+					],
+
 					'description'      => [
 						'_order' => 200,
 					],
