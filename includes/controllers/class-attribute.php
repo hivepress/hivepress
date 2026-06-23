@@ -152,7 +152,7 @@ final class Attribute extends Controller {
 			foreach ( $terms as $id => $name ) {
 				$results[] = [
 					'id'   => $id,
-					'text' => $name,
+					'text' => html_entity_decode( $name ),
 				];
 			}
 		}
