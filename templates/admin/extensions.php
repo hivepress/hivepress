@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 								<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank">
 									<?php
 									/* translators: %s: Discount percentage. */
-									echo esc_html( sprintf( __( 'Save %s', 'hivepress' ), hivepress()->helper->get_array_value( $extension, 'sale_discount' ) . '%' ) );
+									echo esc_html( sprintf( __( 'Save up to %s', 'hivepress' ), hivepress()->helper->get_array_value( $extension, 'sale_discount' ) . '%' ) );
 									?>
 								</a>
 							<?php else : ?>
@@ -90,7 +90,12 @@ defined( 'ABSPATH' ) || exit;
 								if ( isset( $extension['sale_price'] ) ) :
 									?>
 									<del><?php echo esc_html( $extension['price'] ); ?></del>
-									<span><?php echo esc_html( $extension['sale_price'] ); ?></span>
+									<span>
+										<?php
+										/* translators: %s: annual price. */
+										echo esc_html( sprintf( __( '%s / year', 'hivepress' ), $extension['sale_price'] ) );
+										?>
+									</span>
 									<?php
 								else :
 									echo esc_html( $extension['price'] );
