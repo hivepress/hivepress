@@ -569,7 +569,7 @@ final class Form extends Component {
 		$language = hivepress()->translator->get_language();
 
 		// Enqueue Flatpickr.
-		$filepath = '/node_modules/flatpickr/dist/l10n/' . ( 'el' === $language ? 'gr' : $language ) . '.js';
+		$filepath = '/assets/vendor/flatpickr/dist/l10n/' . ( 'el' === $language ? 'gr' : $language ) . '.js';
 
 		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 			wp_enqueue_script(
@@ -584,7 +584,7 @@ final class Form extends Component {
 		if ( ! is_admin() ) {
 
 			// Enqueue Select2.
-			$filepath = '/node_modules/select2/dist/js/i18n/' . $language . '.js';
+			$filepath = '/assets/vendor/select2/dist/js/i18n/' . $language . '.js';
 
 			if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 				wp_enqueue_script(
@@ -626,7 +626,7 @@ final class Form extends Component {
 		}
 
 		// Enqueue intlTelInput.
-		$filepath = '/node_modules/intl-tel-input/build/js/i18n/' . $language . '/index.js';
+		$filepath = '/assets/vendor/intl-tel-input/build/js/i18n/' . $language . '/index.js';
 
 		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
 			$scripts = '<script type="module">

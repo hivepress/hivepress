@@ -13,72 +13,72 @@ defined( 'ABSPATH' ) || exit;
 return [
 	'jquery_ui_touch_punch'  => [
 		'handle' => 'jquery-ui-touch-punch',
-		'src'    => hivepress()->get_url() . '/node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
 		'deps'   => [ 'jquery-ui-mouse' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fileupload'             => [
 		'handle' => 'fileupload',
-		'src'    => hivepress()->get_url() . '/node_modules/blueimp-file-upload/js/jquery.fileupload.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/blueimp-file-upload/js/jquery.fileupload.js',
 		'deps'   => [ 'jquery-ui-widget' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'fancybox'               => [
 		'handle' => 'fancybox',
-		'src'    => hivepress()->get_url() . '/node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/@fancyapps/fancybox/dist/jquery.fancybox.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'slick'                  => [
 		'handle' => 'slick',
-		'src'    => hivepress()->get_url() . '/node_modules/slick-carousel/slick/slick.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/slick-carousel/slick/slick.min.js',
 	],
 
 	'sticky_sidebar'         => [
 		'handle' => 'sticky-sidebar',
-		'src'    => hivepress()->get_url() . '/node_modules/sticky-sidebar/dist/jquery.sticky-sidebar.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/sticky-sidebar/dist/jquery.sticky-sidebar.min.js',
 	],
 
 	'php_date_formatter'     => [
 		'handle' => 'php-date-formatter',
-		'src'    => hivepress()->get_url() . '/node_modules/php-date-formatter/js/php-date-formatter.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/php-date-formatter/js/php-date-formatter.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'flatpickr'              => [
 		'handle' => 'flatpickr',
-		'src'    => hivepress()->get_url() . '/node_modules/flatpickr/dist/flatpickr.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/flatpickr/dist/flatpickr.min.js',
 		'deps'   => [ 'php-date-formatter' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'select2'                => [
 		'handle' => 'select2-full',
-		'src'    => hivepress()->get_url() . '/node_modules/select2/dist/js/select2.full.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/select2/dist/js/select2.full.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 	],
 
 	'intl_tel_input'         => [
 		'handle' => 'intl-tel-input',
-		'src'    => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/intlTelInput.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/intl-tel-input/build/js/intlTelInput.min.js',
 		'scope'  => [ 'frontend', 'backend' ],
 
 		'data'   => [
-			'utilsURL' => hivepress()->get_url() . '/node_modules/intl-tel-input/build/js/utils.js',
+			'utilsURL' => hivepress()->get_url() . '/assets/vendor/intl-tel-input/build/js/utils.js',
 		],
 	],
 
 	'chartjs'                => [
 		'handle' => 'chartjs',
-		'src'    => hivepress()->get_url() . '/node_modules/chart.js/dist/chart.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/chart.js/dist/chart.min.js',
 		'scope'  => [ 'backend' ],
 	],
 
 	'chartjs_adapter_moment' => [
 		'handle' => 'chartjs-adapter-moment',
-		'src'    => hivepress()->get_url() . '/node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+		'src'    => hivepress()->get_url() . '/assets/vendor/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
 		'deps'   => [ 'chartjs', 'moment' ],
 		'scope'  => [ 'frontend', 'backend' ],
 	],

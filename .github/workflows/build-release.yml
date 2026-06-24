@@ -21,10 +21,11 @@ jobs:
         run: |
           composer install -o --no-dev
           npm install --omit=dev
+          node build.js
 
       - name: Pack release
         run: |
-          rm -rf .git* composer.* phpcs.xml package.json package-lock.json README.md
+          rm -rf .git* composer.* phpcs.xml package.json package-lock.json build.js node_modules README.md
           cd ..
           zip -r release.zip ${{ github.event.repository.name }}
 
