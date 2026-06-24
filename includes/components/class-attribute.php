@@ -822,13 +822,19 @@ final class Attribute extends Component {
 
 					if ( $source_url && esc_url_raw( true ) === esc_url_raw( $source_url ) ) {
 						foreach ( $field_contexts as $field_context ) {
-							$attributes[ $attribute_name ][ $field_context . '_field' ]['source'] = hivepress()->router->get_url(
-								'attribute_options_resource',
-								[
-									'model_name'     => $model,
-									'attribute_name' => $attribute_name,
-								]
-							);
+							$source_url = hp\get_array_value( $attributes[ $attribute_name ][ $field_context . '_field' ], 'source' );
+
+							if ( false === $source_url ) {
+								unset( $attributes[ $attribute_name ][ $field_context . '_field' ]['source'] );
+							} else {
+								$attributes[ $attribute_name ][ $field_context . '_field' ]['source'] = hivepress()->router->get_url(
+									'attribute_options_resource',
+									[
+										'model_name'     => $model,
+										'attribute_name' => $attribute_name,
+									]
+								);
+							}
 						}
 					}
 				}
@@ -1189,7 +1195,7 @@ final class Attribute extends Component {
 					$field_args = array_merge(
 						$field_args,
 						[
-							'_model'    => $category_model,
+							'_model'    => hp\get_array_value( $field_args, '_model', $category_model ),
 							'_alias'    => hp\prefix( $model . '_' . $attribute_name ),
 							'_relation' => 'many_to_many',
 						]
