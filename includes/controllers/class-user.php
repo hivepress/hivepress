@@ -406,7 +406,7 @@ final class User extends Controller {
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
-					'user_password' => $form->get_value( 'password' ),
+					'user_password' => wp_slash( $form->get_value( 'password' ) ),
 					'remember'      => true,
 				]
 			);
@@ -455,8 +455,11 @@ final class User extends Controller {
 
 		$user = Models\User::query()->get_by_id( $user_object );
 
+		// Get password.
+		$password = wp_slash( $form->get_value( 'password' ) );
+
 		// Check password.
-		if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
+		if ( ! wp_check_password( $password, $user->get_password(), $user->get_id() ) ) {
 			return hp\rest_error( 401, esc_html__( 'Username or password is incorrect.', 'hivepress' ) );
 		}
 
@@ -478,7 +481,7 @@ final class User extends Controller {
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
-					'user_password' => $form->get_value( 'password' ),
+					'user_password' => $password,
 					'remember'      => true,
 				]
 			);
@@ -602,7 +605,7 @@ final class User extends Controller {
 			wp_signon(
 				[
 					'user_login'    => $user->get_username(),
-					'user_password' => $form->get_value( 'password' ),
+					'user_password' => wp_slash( $form->get_value( 'password' ) ),
 					'remember'      => true,
 				]
 			);
@@ -662,7 +665,7 @@ final class User extends Controller {
 				return hp\rest_error( 400, esc_html__( 'Current password is required.', 'hivepress' ) );
 			}
 
-			if ( ! wp_check_password( $form->get_value( 'current_password' ), $user->get_password(), $user->get_id() ) ) {
+			if ( ! wp_check_password( wp_slash( $form->get_value( 'current_password' ) ), $user->get_password(), $user->get_id() ) ) {
 				return hp\rest_error( 401, esc_html__( 'Current password is incorrect.', 'hivepress' ) );
 			}
 		}
@@ -752,7 +755,7 @@ final class User extends Controller {
 				return hp\rest_error( 400, $form->get_errors() );
 			}
 
-			if ( ! wp_check_password( $form->get_value( 'password' ), $user->get_password(), $user->get_id() ) ) {
+			if ( ! wp_check_password( wp_slash( $form->get_value( 'password' ) ), $user->get_password(), $user->get_id() ) ) {
 				return hp\rest_error( 401, esc_html__( 'Password is incorrect.', 'hivepress' ) );
 			}
 
