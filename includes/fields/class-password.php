@@ -63,6 +63,17 @@ class Password extends Text {
 	}
 
 	/**
+	 * Normalizes field value.
+	 */
+	protected function normalize() {
+		parent::normalize();
+
+		if ( ! is_null( $this->value ) ) {
+			$this->value = wp_slash( $this->value );
+		}
+	}
+
+	/**
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {}

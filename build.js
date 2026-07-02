@@ -5,6 +5,7 @@ const assets = [
 	'flatpickr/dist/l10n',
 	'select2/dist/js/i18n',
 	'intl-tel-input/build/js/i18n',
+	'intl-tel-input/build/img',
 	'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
 	'blueimp-file-upload/js/jquery.fileupload.js',
 	'@fancyapps/fancybox/dist/jquery.fancybox.min.js',
