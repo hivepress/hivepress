@@ -2057,11 +2057,11 @@ final class Admin extends Component {
 	 */
 	public function set_footer_text( $text ) {
 		if ( $this->is_admin_page() ) {
-			$text = sprintf(
+			$text = '<span id="footer-thankyou">' . sprintf(
 				/* translators: %s: link URL. */
 				hp\sanitize_html( __( 'Thanks for using HivePress ❤️ Your <a href="%s" target="_blank">review</a> matters.', 'hivepress' ) ),
 				'https://wordpress.org/support/plugin/hivepress/reviews/'
-			);
+			) . '</span>';
 		}
 
 		return $text;
