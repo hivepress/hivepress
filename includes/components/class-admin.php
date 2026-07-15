@@ -138,9 +138,10 @@ final class Admin extends Component {
 		global $pagenow;
 
 		$page_name = (string) hp\get_array_value( $_GET, 'page' );
-		$post_type = (string) hp\get_array_value( $_GET, 'post_type' );
+		$post_type = 'post.php' === $pagenow ? get_post_type() : (string) hp\get_array_value( $_GET, 'post_type' );
+		$taxonomy  = (string) hp\get_array_value( $_GET, 'taxonomy' );
 
-		return ( 'admin.php' === $pagenow && strpos( $page_name, 'hp_' ) === 0 ) || ( 'edit.php' === $pagenow && strpos( $post_type, 'hp_' ) === 0 );
+		return ( 'admin.php' === $pagenow && strpos( $page_name, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit.php', 'post.php', 'post-new.php' ] ) && strpos( $post_type, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) && strpos( $taxonomy, 'hp_' ) === 0 );
 	}
 
 	/**
