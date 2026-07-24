@@ -103,6 +103,9 @@ final class Admin extends Component {
 
 			// Render footer.
 			add_action( 'admin_footer', [ $this, 'render_footer' ] );
+
+			// Set footer text.
+			add_filter( 'admin_footer_text', [ $this, 'set_footer_text' ] );
 		}
 
 		parent::__construct( $args );
@@ -124,6 +127,21 @@ final class Admin extends Component {
 		foreach ( hivepress()->get_config( 'taxonomies' ) as $taxonomy => $args ) {
 			register_taxonomy( hp\prefix( $taxonomy ), hp\prefix( $args['post_type'] ), $args );
 		}
+	}
+
+	/**
+	 * Checks if it's the admin page.
+	 *
+	 * @return bool
+	 */
+	protected function is_admin_page() {
+		global $pagenow;
+
+		$page_name = (string) hp\get_array_value( $_GET, 'page' );
+		$post_type = 'post.php' === $pagenow ? get_post_type() : (string) hp\get_array_value( $_GET, 'post_type' );
+		$taxonomy  = (string) hp\get_array_value( $_GET, 'taxonomy' );
+
+		return ( 'admin.php' === $pagenow && strpos( $page_name, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit.php', 'post.php', 'post-new.php' ] ) && strpos( $post_type, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) && strpos( $taxonomy, 'hp_' ) === 0 );
 	}
 
 	/**
@@ -257,7 +275,7 @@ final class Admin extends Component {
 	public function register_settings() {
 		global $pagenow;
 
-		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === hp\get_array_value( $_GET, 'page' ) ) ) {
+		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) ) {
 
 			// Get current tab.
 			$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
@@ -604,6 +622,34 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Gets HivePress license key.
+	 *
+	 * @return string
+	 */
+	protected function get_license_key() {
+		$license_key = get_option( 'hp_hivepress_license_key' );
+
+		if ( ! $license_key ) {
+			return;
+		}
+
+		$license_keys = array_filter(
+			array_map(
+				function ( $key ) {
+					return preg_replace( '/[^a-zA-Z0-9]/', '', $key );
+				},
+				preg_split( '/[\r\n,]+/', (string) $license_key )
+			)
+		);
+
+		if ( ! $license_keys ) {
+			return;
+		}
+
+		return implode( ',', $license_keys );
+	}
+
+	/**
 	 * Gets HivePress purchases.
 	 *
 	 * @return mixed
@@ -611,7 +657,7 @@ final class Admin extends Component {
 	protected function get_purchases() {
 
 		// Get license key.
-		$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+		$license_key = $this->get_license_key();
 
 		if ( ! $license_key ) {
 			return [];
@@ -664,6 +710,9 @@ final class Admin extends Component {
 	 */
 	public function clear_purchases_cache() {
 		hivepress()->cache->delete_cache( 'purchases' );
+
+		$this->clear_extensions_cache();
+		$this->clear_themes_cache();
 	}
 
 	/**
@@ -723,10 +772,20 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get purchases.
+			$purchases = $this->get_purchases();
+
+			// Get license key.
+			$license_key = $this->get_license_key();
+
 			// Set theme URLs.
 			$themes = array_map(
-				function ( $theme ) {
+				function ( $theme ) use ( $purchases, $license_key ) {
 					$slug = sanitize_key( $theme['slug'] );
+
+					if ( isset( $purchases[ $slug ] ) ) {
+						$theme['download_url'] = 'https://store.hivepress.io/products/' . $slug . '/download/?license_key=' . $license_key;
+					}
 
 					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
 					$theme['buy_url']     = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
@@ -869,13 +928,23 @@ final class Admin extends Component {
 				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
 			}
 
+			// Get purchases.
+			$purchases = $this->get_purchases();
+
+			// Get license key.
+			$license_key = $this->get_license_key();
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function ( $extension ) use ( $referral ) {
+				function ( $extension ) use ( $referral, $purchases, $license_key ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					if ( $referral ) {
 						$path .= '&ref=' . $referral;
+					}
+
+					if ( isset( $purchases[ $extension['slug'] ] ) ) {
+						$extension['download_url'] = 'https://store.hivepress.io/products/' . $extension['slug'] . '/download/?license_key=' . $license_key;
 					}
 
 					return array_merge(
@@ -1739,16 +1808,13 @@ final class Admin extends Component {
 
 		$output = '';
 
-		// Get current page.
-		$page = sanitize_key( hp\get_array_value( $_GET, 'page' ) );
-
 		// Get installation time.
 		$installed_time = absint( get_option( 'hp_installed_time' ) );
 
 		// Add default notices.
 		$notices = [];
 
-		if ( 'admin.php' === $pagenow && strpos( $page, 'hp_' ) === 0 ) {
+		if ( $this->is_admin_page() ) {
 
 			// Get cached notices.
 			$notices = hivepress()->cache->get_cache( 'notices' );
@@ -1908,7 +1974,7 @@ final class Admin extends Component {
 		}
 
 		// Render settings errors.
-		if ( 'admin.php' === $pagenow && 'hp_settings' === $page ) {
+		if ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) {
 			ob_start();
 
 			settings_errors();
@@ -2033,6 +2099,24 @@ final class Admin extends Component {
 		$output .= hivepress()->request->get_context( 'admin_footer' );
 
 		echo $output;
+	}
+
+	/**
+	 * Sets footer text.
+	 *
+	 * @param string $text Footer text.
+	 * @return string
+	 */
+	public function set_footer_text( $text ) {
+		if ( $this->is_admin_page() ) {
+			$text = '<span id="footer-thankyou">' . sprintf(
+				/* translators: %s: link URL. */
+				hp\sanitize_html( __( 'Thanks for using HivePress ❤️ Your <a href="%s" target="_blank">review</a> matters.', 'hivepress' ) ),
+				'https://wordpress.org/support/plugin/hivepress/reviews/'
+			) . '</span>';
+		}
+
+		return $text;
 	}
 
 	/**

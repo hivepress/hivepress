@@ -20,12 +20,14 @@ defined( 'ABSPATH' ) || exit;
 							<a href="<?php echo esc_url( $theme['preview_url'] ); ?>" target="_blank" class="button preview install-theme-preview"><?php esc_html_e( 'Preview', 'hivepress' ); ?></a>
 							<?php
 							if ( 'install' === $theme['status'] ) :
-								if ( isset( $theme['price'] ) ) :
+								if ( isset( $theme['download_url'] ) ) :
 									?>
+									<a href="<?php echo esc_url( $theme['download_url'] ); ?>" target="_blank" class="button button-primary theme-install"><?php esc_html_e( 'Download', 'hivepress' ); ?></a>
+								<?php elseif ( isset( $theme['price'] ) ) : ?>
 									<a href="<?php echo esc_url( $theme['buy_url'] ); ?>" target="_blank" class="button button-primary theme-install"><?php esc_html_e( 'Purchase', 'hivepress' ); ?></a>
 								<?php else : ?>
 									<a href="<?php echo esc_url( $theme['url'] ); ?>" class="button button-primary theme-install"><?php esc_html_e( 'Install', 'hivepress' ); ?></a>
-								<?php
+									<?php
 								endif;
 							elseif ( 'activate' === $theme['status'] ) :
 								?>

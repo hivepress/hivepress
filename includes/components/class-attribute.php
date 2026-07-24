@@ -1893,7 +1893,7 @@ final class Attribute extends Component {
 					],
 
 					'icon'           => [
-						'label'       => esc_html__( 'Icon', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'icon' ),
 						'description' => esc_html__( 'Choose an icon for this attribute to include in the display format with the %icon% token.', 'hivepress' ),
 						'type'        => 'select',
 						'options'     => 'icons',
@@ -1919,7 +1919,7 @@ final class Attribute extends Component {
 
 				'fields' => [
 					'icon'       => [
-						'label'       => esc_html__( 'Icon', 'hivepress' ),
+						'label'       => hivepress()->translator->get_string( 'icon' ),
 						'description' => esc_html__( 'Choose an icon to include in the display format with the %icon% token.', 'hivepress' ),
 						'type'        => 'select',
 						'options'     => 'icons',

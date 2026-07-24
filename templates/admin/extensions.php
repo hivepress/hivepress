@@ -33,8 +33,10 @@ defined( 'ABSPATH' ) || exit;
 							<li>
 								<?php
 								if ( 'install' === $extension['status'] ) :
-									if ( isset( $extension['price'] ) ) :
+									if ( isset( $extension['download_url'] ) ) :
 										?>
+										<a href="<?php echo esc_url( $extension['download_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Download', 'hivepress' ); ?></a>
+									<?php elseif ( isset( $extension['price'] ) ) : ?>
 										<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Purchase', 'hivepress' ); ?></a>
 									<?php else : ?>
 										<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install', 'hivepress' ); ?></a>

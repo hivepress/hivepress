@@ -25,7 +25,7 @@ class Color extends Text {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Color', 'hivepress' ),
+				'label'      => hivepress()->translator->get_string( 'color' ),
 				'filterable' => false,
 				'sortable'   => false,
 
