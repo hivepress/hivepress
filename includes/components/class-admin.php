@@ -712,6 +712,7 @@ final class Admin extends Component {
 		hivepress()->cache->delete_cache( 'purchases' );
 
 		$this->clear_extensions_cache();
+		$this->clear_themes_cache();
 	}
 
 	/**
@@ -771,10 +772,20 @@ final class Admin extends Component {
 				);
 			}
 
+			// Get purchases.
+			$purchases = $this->get_purchases();
+
+			// Get license key.
+			$license_key = $this->get_license_key();
+
 			// Set theme URLs.
 			$themes = array_map(
-				function ( $theme ) {
+				function ( $theme ) use ( $purchases, $license_key ) {
 					$slug = sanitize_key( $theme['slug'] );
+
+					if ( isset( $purchases[ $slug ] ) ) {
+						$theme['download_url'] = 'https://store.hivepress.io/products/' . $slug . '/download/?license_key=' . $license_key;
+					}
 
 					$theme['preview_url'] = 'https://' . $slug . '.hivepress.io/';
 					$theme['buy_url']     = 'https://hivepress.io/themes/' . $slug . '/?utm_medium=referral&utm_source=dashboard';
