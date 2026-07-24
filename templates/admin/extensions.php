@@ -9,11 +9,18 @@ defined( 'ABSPATH' ) || exit;
 		<ul class="subsubsub">
 			<?php foreach ( $tabs as $active_tab => $tab_args ) : ?>
 				<li>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_extensions&tab=' . $active_tab ) ); ?>" <?php if ( $active_tab === $current_tab ) : ?>class="current"<?php endif; ?>>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=hp_extensions&tab=' . $active_tab ) ); ?>" 
+					<?php
+					if ( $active_tab === $current_tab ) :
+						?>
+						class="current"<?php endif; ?>>
 						<?php echo esc_html( $tab_args['name'] ); ?>
 						<span class="count">(<?php echo esc_html( number_format_i18n( $tab_args['count'] ) ); ?>)</span>
 					</a>
-					<?php if ( hivepress()->helper->get_last_array_value( $tabs ) !== $tab_args ) : ?> |<?php endif; ?>
+					<?php
+					if ( hivepress()->helper->get_last_array_value( $tabs ) !== $tab_args ) :
+						?>
+						|<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -33,12 +40,14 @@ defined( 'ABSPATH' ) || exit;
 							<li>
 								<?php
 								if ( 'install' === $extension['status'] ) :
-									if ( isset( $extension['price'] ) ) :
+									if ( isset( $extension['download_url'] ) ) :
 										?>
+										<a href="<?php echo esc_url( $extension['download_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Download', 'hivepress' ); ?></a>
+									<?php elseif ( isset( $extension['price'] ) ) : ?>
 										<a href="<?php echo esc_url( $extension['buy_url'] ); ?>" target="_blank" class="install-now button"><?php esc_html_e( 'Purchase', 'hivepress' ); ?></a>
 									<?php else : ?>
 										<a href="<?php echo esc_url( $extension['url'] ); ?>" class="install-now button"><?php esc_html_e( 'Install', 'hivepress' ); ?></a>
-									<?php
+										<?php
 									endif;
 								elseif ( 'update_available' === $extension['status'] ) :
 									?>

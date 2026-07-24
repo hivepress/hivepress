@@ -622,6 +622,34 @@ final class Admin extends Component {
 	}
 
 	/**
+	 * Gets HivePress license key.
+	 *
+	 * @return string
+	 */
+	protected function get_license_key() {
+		$license_key = get_option( 'hp_hivepress_license_key' );
+
+		if ( ! $license_key ) {
+			return;
+		}
+
+		$license_keys = array_filter(
+			array_map(
+				function ( $key ) {
+					return preg_replace( '/[^a-zA-Z0-9]/', '', $key );
+				},
+				preg_split( '/[\r\n,]+/', (string) $license_key )
+			)
+		);
+
+		if ( ! $license_keys ) {
+			return;
+		}
+
+		return implode( ',', $license_keys );
+	}
+
+	/**
 	 * Gets HivePress purchases.
 	 *
 	 * @return mixed
@@ -629,7 +657,7 @@ final class Admin extends Component {
 	protected function get_purchases() {
 
 		// Get license key.
-		$license_key = implode( ',', explode( "\n", get_option( 'hp_hivepress_license_key' ) ) );
+		$license_key = $this->get_license_key();
 
 		if ( ! $license_key ) {
 			return [];
@@ -682,6 +710,8 @@ final class Admin extends Component {
 	 */
 	public function clear_purchases_cache() {
 		hivepress()->cache->delete_cache( 'purchases' );
+
+		$this->clear_extensions_cache();
 	}
 
 	/**
@@ -887,13 +917,23 @@ final class Admin extends Component {
 				$referral = sanitize_key( hp\get_first_array_value( get_file_data( $stylesheet, [ 'HivePress ID' ] ) ) );
 			}
 
+			// Get purchases.
+			$purchases = $this->get_purchases();
+
+			// Get license key.
+			$license_key = $this->get_license_key();
+
 			// Set extension URLs.
 			$extensions = array_map(
-				function ( $extension ) use ( $referral ) {
+				function ( $extension ) use ( $referral, $purchases, $license_key ) {
 					$path = preg_replace( '/^hivepress-/', '', $extension['slug'] ) . '/?utm_medium=referral&utm_source=dashboard';
 
 					if ( $referral ) {
 						$path .= '&ref=' . $referral;
+					}
+
+					if ( isset( $purchases[ $extension['slug'] ] ) ) {
+						$extension['download_url'] = 'https://store.hivepress.io/products/' . $extension['slug'] . '/download/?license_key=' . $license_key;
 					}
 
 					return array_merge(
