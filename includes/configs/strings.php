@@ -26,6 +26,8 @@ return [
 	'name'                                      => esc_html__( 'Name', 'hivepress' ),
 	'date'                                      => esc_html__( 'Date', 'hivepress' ),
 	'status'                                    => esc_html__( 'Status', 'hivepress' ),
+	'color'                                     => esc_html__( 'Color', 'hivepress' ),
+	'icon'                                      => esc_html__( 'Icon', 'hivepress' ),
 	'image'                                     => esc_html__( 'Image', 'hivepress' ),
 	'images'                                    => esc_html__( 'Images', 'hivepress' ),
 	'select_image'                              => esc_html__( 'Select Image', 'hivepress' ),
