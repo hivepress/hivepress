@@ -18,12 +18,16 @@ return [
 
 		'fields'  => [
 			'template' => [
-				'label'    => esc_html__( 'Template', 'hivepress' ),
-				'type'     => 'select',
-				'options'  => 'templates',
-				'required' => true,
-				'_alias'   => 'post_name',
-				'_order'   => 10,
+				'label'      => esc_html__( 'Template', 'hivepress' ),
+				'type'       => 'select',
+				'options'    => 'templates',
+				'required'   => true,
+				'_alias'     => 'post_name',
+				'_order'     => 10,
+
+				'attributes' => [
+					'data-url' => hivepress()->router->get_url( 'validate_template_meta_box' ),
+				],
 			],
 		],
 	],
