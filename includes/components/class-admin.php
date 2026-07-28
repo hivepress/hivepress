@@ -1299,10 +1299,16 @@ final class Admin extends Component {
 								}
 							}
 						} else {
+							$field_value = $field->get_value();
+
+							if ( in_array( $field->get_arg( '_alias' ), [ 'post_title', 'post_excerpt', 'post_content' ] ) ) {
+								$field_value = (string) $field_value;
+							}
+
 							wp_update_post(
 								[
 									'ID' => $post_id,
-									$field->get_arg( '_alias' ) => $field->get_value(),
+									$field->get_arg( '_alias' ) => $field_value,
 								]
 							);
 						}
