@@ -103,6 +103,15 @@ return [
 						'type'    => 'checkbox',
 						'_order'  => 90,
 					],
+
+					'listing_placeholder_image'        => [
+						'label'       => hivepress()->translator->get_string( 'placeholder_image' ),
+						'caption'     => hivepress()->translator->get_string( 'select_image' ),
+						'description' => hivepress()->translator->get_string( 'select_image_to_display_if_no_image' ),
+						'type'        => 'attachment_select',
+						'formats'     => [ 'jpg', 'jpeg', 'png' ],
+						'_order'      => 100,
+					],
 				],
 			],
 
@@ -203,7 +212,7 @@ return [
 				'_order' => 10,
 
 				'fields' => [
-					'vendor_enable_display' => [
+					'vendor_enable_display'    => [
 						'label'   => hivepress()->translator->get_string( 'display_noun' ),
 						'caption' => hivepress()->translator->get_string( 'display_vendors_on_frontend' ),
 						'type'    => 'checkbox',
@@ -211,7 +220,7 @@ return [
 						'_order'  => 10,
 					],
 
-					'page_vendors'          => [
+					'page_vendors'             => [
 						'label'       => hivepress()->translator->get_string( 'vendors_page' ),
 						'description' => hivepress()->translator->get_string( 'choose_page_that_displays_all_vendors' ),
 						'type'        => 'select',
@@ -221,7 +230,7 @@ return [
 						'_order'      => 20,
 					],
 
-					'vendors_per_page'      => [
+					'vendors_per_page'         => [
 						'label'     => hivepress()->translator->get_string( 'regular_vendors_per_page' ),
 						'type'      => 'number',
 						'default'   => 10,
@@ -231,7 +240,7 @@ return [
 						'_order'    => 30,
 					],
 
-					'vendor_display_name'   => [
+					'vendor_display_name'      => [
 						'label'       => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'placeholder' => esc_html__( 'User Name', 'hivepress' ),
 						'type'        => 'select',
@@ -243,6 +252,15 @@ return [
 							'meta_key'   => 'hp_edit_field_type',
 							'meta_value' => 'text',
 						],
+					],
+
+					'vendor_placeholder_image' => [
+						'label'       => hivepress()->translator->get_string( 'placeholder_image' ),
+						'caption'     => hivepress()->translator->get_string( 'select_image' ),
+						'description' => hivepress()->translator->get_string( 'select_image_to_display_if_no_image' ),
+						'type'        => 'attachment_select',
+						'formats'     => [ 'jpg', 'jpeg', 'png' ],
+						'_order'      => 50,
 					],
 				],
 			],
@@ -293,21 +311,21 @@ return [
 				'_order' => 10,
 
 				'fields' => [
-					'user_enable_display' => [
+					'user_enable_display'    => [
 						'label'   => hivepress()->translator->get_string( 'display_noun' ),
 						'caption' => esc_html__( 'Display profiles on the front-end', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_order'  => 10,
 					],
 
-					'user_display_online' => [
+					'user_display_online'    => [
 						'caption' => esc_html__( 'Display online status for users', 'hivepress' ),
 						'type'    => 'checkbox',
 						'_parent' => 'user_enable_display',
 						'_order'  => 20,
 					],
 
-					'user_display_name'   => [
+					'user_display_name'      => [
 						'label'    => esc_html_x( 'Display Name', 'noun', 'hivepress' ),
 						'type'     => 'select',
 						'default'  => 'first_name',
@@ -322,6 +340,16 @@ return [
 							'last_name_extra'  => esc_html__( 'First Letter of First Name and Last Name', 'hivepress' ),
 							'full_name'        => esc_html__( 'Full Name', 'hivepress' ),
 						],
+					],
+
+					'user_placeholder_image' => [
+						'label'       => hivepress()->translator->get_string( 'placeholder_image' ),
+						'caption'     => hivepress()->translator->get_string( 'select_image' ),
+						'description' => hivepress()->translator->get_string( 'select_image_to_display_if_no_image' ),
+						'type'        => 'attachment_select',
+						'formats'     => [ 'jpg', 'jpeg', 'png' ],
+						'_parent'     => 'user_enable_display',
+						'_order'      => 40,
 					],
 				],
 			],
