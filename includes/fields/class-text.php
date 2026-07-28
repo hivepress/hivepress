@@ -53,6 +53,13 @@ class Text extends Field {
 	protected $html = false;
 
 	/**
+	 * Escape text with slashes?
+	 *
+	 * @var bool
+	 */
+	protected $slash = false;
+
+	/**
 	 * Make text read-only?
 	 *
 	 * @var bool
@@ -174,6 +181,10 @@ class Text extends Field {
 
 		if ( ! is_null( $this->value ) ) {
 			$this->value = trim( wp_unslash( $this->value ) );
+
+			if ( $this->slash ) {
+				$this->value = wp_slash( $this->value );
+			}
 		}
 	}
 
@@ -197,11 +208,13 @@ class Text extends Field {
 	 */
 	public function validate() {
 		if ( parent::validate() && ! is_null( $this->value ) ) {
-			if ( ! is_null( $this->min_length ) && mb_strlen( $this->value ) < $this->min_length ) {
+			$length = mb_strlen( $this->slash ? wp_unslash( $this->value ) : $this->value );
+
+			if ( ! is_null( $this->min_length ) && $length < $this->min_length ) {
 				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_shorter_than_n_characters' ), $this->get_label( true ), number_format_i18n( $this->min_length ) ) );
 			}
 
-			if ( ! is_null( $this->max_length ) && mb_strlen( $this->value ) > $this->max_length ) {
+			if ( ! is_null( $this->max_length ) && $length > $this->max_length ) {
 				$this->add_errors( sprintf( hivepress()->translator->get_string( 'field_longer_than_n_characters' ), $this->get_label( true ), number_format_i18n( $this->max_length ) ) );
 			}
 

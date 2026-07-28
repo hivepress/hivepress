@@ -44,6 +44,7 @@ class Password extends Text {
 		$args = hp\merge_arrays(
 			$args,
 			[
+				'slash'      => true,
 				'max_length' => 64,
 			]
 		);
@@ -60,17 +61,6 @@ class Password extends Text {
 		$this->attributes['data-component'] = 'password';
 
 		parent::boot();
-	}
-
-	/**
-	 * Normalizes field value.
-	 */
-	protected function normalize() {
-		parent::normalize();
-
-		if ( ! is_null( $this->value ) ) {
-			$this->value = wp_slash( $this->value );
-		}
 	}
 
 	/**
