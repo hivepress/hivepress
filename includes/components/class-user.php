@@ -310,7 +310,7 @@ final class User extends Component {
 	 */
 	public function render_user_image( $image, $id_or_email, $size, $default, $alt ) {
 
-		// Check ID.
+		// Check user ID.
 		if ( ! $id_or_email ) {
 			return $image;
 		}
@@ -329,9 +329,16 @@ final class User extends Component {
 		if ( $user_object ) {
 			$user = Models\User::query()->get_by_id( $user_object );
 
+			// Get image URL.
+			$image_url = $user->get_image__url( 'thumbnail' );
+
+			if ( ! $image_url ) {
+				$image_url = hivepress()->asset->get_image_url( get_option( 'hp_user_placeholder_image' ), 'thumbnail' );
+			}
+
 			// Render image.
-			if ( $user->get_image__url( 'thumbnail' ) ) {
-				$image = '<img src="' . esc_url( $user->get_image__url( 'thumbnail' ) ) . '" class="avatar avatar-' . esc_attr( $size ) . ' photo" height="' . esc_attr( $size ) . '" width="' . esc_attr( $size ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy">';
+			if ( $image_url ) {
+				$image = '<img src="' . esc_url( $image_url ) . '" class="avatar avatar-' . esc_attr( $size ) . ' photo" height="' . esc_attr( $size ) . '" width="' . esc_attr( $size ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy">';
 			}
 		}
 
