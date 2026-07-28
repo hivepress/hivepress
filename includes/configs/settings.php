@@ -103,6 +103,15 @@ return [
 						'type'    => 'checkbox',
 						'_order'  => 90,
 					],
+
+					'listing_placeholder_image'        => [
+						'label'       => hivepress()->translator->get_string( 'placeholder_image' ),
+						'caption'     => hivepress()->translator->get_string( 'select_image' ),
+						'description' => hivepress()->translator->get_string( 'select_image_to_display_if_no_image' ),
+						'type'        => 'attachment_select',
+						'formats'     => [ 'jpg', 'jpeg', 'png' ],
+						'_order'      => 95,
+					],
 				],
 			],
 

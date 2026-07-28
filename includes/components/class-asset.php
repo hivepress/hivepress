@@ -46,6 +46,31 @@ final class Asset extends Component {
 	}
 
 	/**
+	 * Gets image URL.
+	 *
+	 * @param int    $id Image ID.
+	 * @param string $size Image size.
+	 * @param string $default Default URL.
+	 * @return string
+	 */
+	public function get_image_url( $id, $size = 'full', $default = null ) {
+
+		// Check ID.
+		if ( ! $id ) {
+			return $default;
+		}
+
+		// Get URL.
+		$url = wp_get_attachment_image_url( $id, $size );
+
+		if ( ! $url ) {
+			return $default;
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Gets aspect ratio.
 	 *
 	 * @param string $image_size Image size.

@@ -1778,9 +1778,7 @@ final class Admin extends Component {
 	 * Enqueues scripts.
 	 */
 	public function enqueue_scripts() {
-		global $pagenow;
-
-		if ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ], true ) ) {
+		if ( $this->is_admin_page() ) {
 			wp_enqueue_media();
 		}
 	}
