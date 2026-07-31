@@ -92,6 +92,7 @@ HivePress is extensible by design, which means you can build websites with diffe
 - **[Requests](https://hivepress.io/extensions/requests/?utm_medium=referral&utm_source=wordpress.org)** – allow users to post custom jobs, while vendors can respond with offers.
 - **[Social Login](https://hivepress.io/extensions/social-login/?utm_medium=referral&utm_source=wordpress.org)** – simplify registration by enabling login via social platforms.
 - **[Social Links](https://hivepress.io/extensions/social-links/?utm_medium=referral&utm_source=wordpress.org)** – allow users to add links to social platforms on their listings.
+- **[Badges](https://hivepress.io/extensions/badges/?utm_medium=referral&utm_source=wordpress.org)** – automatically award user badges based on custom conditions.
 - **[Opening Hours](https://hivepress.io/extensions/opening-hours/?utm_medium=referral&utm_source=wordpress.org)** – allow users to set opening hours and enable filtering by them.
 - **[Search Alerts](https://hivepress.io/extensions/search-alerts/?utm_medium=referral&utm_source=wordpress.org)** – allow users to receive notifications about new listings.
 - **[Statistics](https://hivepress.io/extensions/statistics/?utm_medium=referral&utm_source=wordpress.org)** – allow users to view visitor statistics for their listings.
