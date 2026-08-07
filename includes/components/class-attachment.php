@@ -62,6 +62,21 @@ final class Attachment extends Component {
 	}
 
 	/**
+	 * Gets allowed parent statuses.
+	 *
+	 * @return array
+	 */
+	public function get_parent_statuses() {
+		$statuses = [ 'auto-draft', 'draft', 'publish' ];
+
+		if ( false ) {
+			$statuses[] = 'wc-processing';
+		}
+
+		return $statuses;
+	}
+
+	/**
 	 * Sets the attachment parent ID.
 	 *
 	 * @param array $attachment Attachment arguments.
