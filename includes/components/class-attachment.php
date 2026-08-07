@@ -69,7 +69,7 @@ final class Attachment extends Component {
 	public function get_parent_statuses() {
 		$statuses = [ 'auto-draft', 'draft', 'publish' ];
 
-		if ( false ) {
+		if ( hp\is_plugin_active( 'woocommerce' ) ) {
 			$statuses[] = 'wc-processing';
 		}
 
