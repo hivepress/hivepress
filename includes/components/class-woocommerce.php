@@ -465,7 +465,7 @@ final class WooCommerce extends Component {
 		if ( in_array( WC()->query->get_current_endpoint(), [ 'orders', 'view-order', 'subscriptions', 'view-subscription' ] ) ) {
 
 			// Set page title.
-			add_filter( 'the_title', 'wc_page_endpoint_title' );
+			add_filter( 'the_title', 'wc_page_endpoint_title', 10, 2 );
 
 			// Alter page template.
 			$template = hp\merge_trees(
