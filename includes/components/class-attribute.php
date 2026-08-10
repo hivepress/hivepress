@@ -1903,7 +1903,7 @@ final class Attribute extends Component {
 
 					'display_format' => [
 						'label'       => esc_html__( 'Format', 'hivepress' ),
-						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%, %parent_value%' ),
+						'description' => esc_html__( 'Set the attribute display format.', 'hivepress' ) . ' ' . sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), '%label%, %icon%, %value%, %raw_value%, %parent_value%' ),
 						'type'        => 'textarea',
 						'max_length'  => 2048,
 						'default'     => '%value%',
