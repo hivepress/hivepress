@@ -228,7 +228,7 @@ final class Email extends Component {
 				}
 
 				// Set wrapper.
-				$tag = '<code title="' . esc_attr__( 'Click to copy', 'hivepress' ) . '" data-component="copy">';
+				$tag = '<code title="' . esc_attr( hivepress()->translator->get_string( 'click_to_copy' ) ) . '" data-component="copy">';
 
 				// Add tokens.
 				$output .= sprintf( hivepress()->translator->get_string( 'these_tokens_are_available' ), $tag . '%' . implode( '%</code>, ' . $tag . '%', $tokens ) . '%</code>' );

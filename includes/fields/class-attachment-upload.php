@@ -359,7 +359,7 @@ class Attachment_Upload extends Field {
 		}
 
 		// Render delete button.
-		$output .= '<a href="#" title="' . esc_attr__( 'Delete', 'hivepress' ) . '" class="hp-field__button hp-field__button--delete" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
+		$output .= '<a href="#" title="' . esc_attr( hivepress()->translator->get_string( 'delete' ) ) . '" class="hp-field__button hp-field__button--delete" data-component="file-delete" data-url="' . esc_url( hivepress()->router->get_url( 'attachment_delete_action', [ 'attachment_id' => $attachment->get_id() ] ) ) . '"><i class="hp-icon fas fa-times"></i></a>';
 
 		$output .= '</div>';
 
