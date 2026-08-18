@@ -144,7 +144,7 @@ class Text extends Field {
 		// Set readonly flag.
 		if ( $this->readonly ) {
 			$attributes['readonly'] = true;
-			$attributes['title']    = esc_html__( 'Click to copy', 'hivepress' );
+			$attributes['title']    = hivepress()->translator->get_string( 'click_to_copy' );
 
 			$this->statuses['optional'] = null;
 		}

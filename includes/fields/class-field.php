@@ -562,8 +562,9 @@ abstract class Field {
 			array_merge(
 				$this->context,
 				[
-					'label' => '<strong>' . $this->label . '</strong>',
-					'value' => $value,
+					'label'     => '<strong>' . $this->label . '</strong>',
+					'value'     => $value,
+					'raw_value' => is_array( $this->value ) ? '' : (string) $this->value,
 				]
 			),
 			$this->display_template,
