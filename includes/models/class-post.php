@@ -40,7 +40,7 @@ abstract class Post extends Model {
 	 * @param int $id Object ID.
 	 * @return mixed
 	 */
-	final public function get( $id ) {
+	public function get( $id ) {
 
 		// Get post.
 		$post = null;
@@ -107,7 +107,7 @@ abstract class Post extends Model {
 	 * @param array $names Field names.
 	 * @return bool
 	 */
-	final public function save( $names = [] ) {
+	public function save( $names = [] ) {
 
 		// Validate fields.
 		if ( ! $this->validate( $names ) ) {
@@ -203,7 +203,7 @@ abstract class Post extends Model {
 	 * @param int $id Object ID.
 	 * @return bool
 	 */
-	final public function delete( $id = null ) {
+	public function delete( $id = null ) {
 		if ( is_null( $id ) ) {
 			$id = $this->id;
 		}
