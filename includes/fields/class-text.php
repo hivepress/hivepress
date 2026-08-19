@@ -74,9 +74,10 @@ class Text extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Text', 'hivepress' ),
-				'filterable' => true,
-				'sortable'   => true,
+				'label'       => esc_html__( 'Text', 'hivepress' ),
+				'filterable'  => true,
+				'sortable'    => true,
+				'prefillable' => true,
 
 				'settings'   => [
 					'placeholder' => [

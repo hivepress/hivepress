@@ -39,8 +39,9 @@ class Checkbox extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Checkbox', 'hivepress' ),
-				'filterable' => true,
+				'label'       => esc_html__( 'Checkbox', 'hivepress' ),
+				'filterable'  => true,
+				'prefillable' => true,
 
 				'settings'   => [
 					'caption' => [

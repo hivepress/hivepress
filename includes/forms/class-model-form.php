@@ -55,7 +55,7 @@ abstract class Model_Form extends Form {
 			$values = $this->model->serialize();
 
 			foreach ( $this->fields as $field_name => $field ) {
-				if ( $field->get_arg( '_separate' ) ) {
+				if ( $field->get_arg( '_separate' ) || ( $field->is_required() && ! is_null( $field->get_arg( 'default' ) ) && is_null( hp\get_array_value( $values, $field_name ) ) ) ) {
 					unset( $values[ $field_name ] );
 				}
 			}
