@@ -712,6 +712,23 @@ final class Attribute extends Component {
 										$field_args[ $settings_field_name ] = $settings_field->get_value();
 									}
 								}
+
+								// Set default value.
+								if ( hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'prefillable' ] ) ) {
+									$default_value = get_post_meta( $attribute_object->ID, hp\prefix( $field_context . '_field_default' ), true );
+
+									if ( '' !== $default_value ) {
+										$default_field = hp\create_class_instance( '\HivePress\Fields\\' . $field_type, [ $field_args ] );
+
+										if ( $default_field ) {
+											$default_field->set_value( $default_value );
+
+											if ( $default_field->validate() ) {
+												$field_args['default'] = $default_field->get_value();
+											}
+										}
+									}
+								}
 							}
 						}
 
@@ -1028,6 +1045,14 @@ final class Attribute extends Component {
 						// Add field.
 						$meta_box['fields'][ $field_prefix . '_field_' . $field_name ] = $field_args;
 					}
+				}
+
+				if ( in_array( $field_context, [ 'edit', 'search' ], true ) && hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'prefillable' ] ) ) {
+					$meta_box['fields'][ $field_prefix . '_field_default' ] = [
+						'label'  => esc_html__( 'Default Value', 'hivepress' ),
+						'type'   => $field_type,
+						'_order' => 201,
+					];
 				}
 
 				if ( 'edit' === $field_context ) {
