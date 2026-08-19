@@ -1049,9 +1049,11 @@ final class Attribute extends Component {
 
 				if ( in_array( $field_context, [ 'edit', 'search' ], true ) && hp\call_class_method( '\HivePress\Fields\\' . $field_type, 'get_meta', [ 'prefillable' ] ) ) {
 					$meta_box['fields'][ $field_prefix . '_field_default' ] = [
-						'label'  => esc_html__( 'Default Value', 'hivepress' ),
-						'type'   => $field_type,
-						'_order' => 201,
+						'label'   => esc_html__( 'Default Value', 'hivepress' ),
+						'caption' => esc_html_x( 'Checked by default', 'checkbox', 'hivepress' ),
+						'type'    => $field_type,
+						'_parent' => $field_prefix . '_field_required',
+						'_order'  => 201,
 					];
 				}
 
