@@ -53,12 +53,13 @@ class Number extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => esc_html__( 'Number', 'hivepress' ),
-				'type'       => 'DECIMAL',
-				'filterable' => true,
-				'sortable'   => true,
+				'label'       => esc_html__( 'Number', 'hivepress' ),
+				'type'        => 'DECIMAL',
+				'filterable'  => true,
+				'sortable'    => true,
+				'prefillable' => true,
 
-				'settings'   => [
+				'settings'    => [
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',

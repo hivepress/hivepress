@@ -109,10 +109,11 @@ class Date extends Field {
 	public static function init( $meta = [] ) {
 		$meta = hp\merge_arrays(
 			[
-				'label'      => hivepress()->translator->get_string( 'date' ),
-				'type'       => 'DATE',
-				'filterable' => true,
-				'sortable'   => true,
+				'label'       => hivepress()->translator->get_string( 'date' ),
+				'type'        => 'DATE',
+				'filterable'  => true,
+				'sortable'    => true,
+				'prefillable' => true,
 
 				'settings'   => [
 					'placeholder' => [
