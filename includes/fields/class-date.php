@@ -277,7 +277,11 @@ class Date extends Field {
 
 		if ( ! is_null( $this->value ) ) {
 			if ( $this->multiple && ! is_array( $this->value ) ) {
-				$this->value = explode( ',', $this->value );
+				if ( strpos( $this->value, ';' ) !== false ) {
+					$this->value = explode( ';', $this->value );
+				} else {
+					$this->value = explode( ',', $this->value );
+				}
 			}
 
 			$this->value = array_map(
@@ -369,7 +373,7 @@ class Date extends Field {
 		$value = $this->value;
 
 		if ( $this->multiple && ! is_null( $value ) ) {
-			$value = implode( ', ', $value );
+			$value = implode( '; ', $value );
 		}
 
 		// Render field.
