@@ -115,7 +115,7 @@ class Date extends Field {
 				'sortable'    => true,
 				'prefillable' => true,
 
-				'settings'   => [
+				'settings'    => [
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
@@ -304,14 +304,16 @@ class Date extends Field {
 	 */
 	protected function sanitize() {
 		if ( $this->multiple ) {
+			$format = $this->format;
+
 			$this->value = array_map(
-				function( $value ) {
-					return sanitize_text_field( $value );
+				function( $value ) use ( $format ) {
+					return 'U' === $format ? absint( $value ) : sanitize_text_field( $value );
 				},
 				$this->value
 			);
 		} else {
-			$this->value = sanitize_text_field( $this->value );
+			$this->value = 'U' === $this->format ? absint( $this->value ) : sanitize_text_field( $this->value );
 		}
 	}
 
