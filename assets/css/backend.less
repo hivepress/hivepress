@@ -104,12 +104,41 @@
 			&-container {
 				max-width: 25em;
 				min-width: 10em;
+
+				[class*="branch-7"] & {
+					&--default {
+						.select2-selection {
+							&--single {
+								height: 40px;
+
+								.select2-selection__rendered {
+									line-height: 40px;
+									padding-left: 12px;
+								}
+
+								.select2-selection__arrow {
+									top: 50%;
+									transform: translateY(-50%);
+								}
+							}
+
+							&--multiple {
+								min-height: 40px;
+							}
+						}
+					}
+				}
 			}
 		}
 
 		input[type=number] {
 			width: 100px;
 			padding: 1px 6px;
+
+			[class*="branch-7"] & {
+				padding-left: 12px;
+				padding-right: 12px;
+			}
 		}
 
 		input[type=checkbox],
@@ -483,5 +512,18 @@ Select2
 			min-height: 0;
 			line-height: inherit;
 		}
+	}
+}
+
+/*--------------------------------------------------------------
+Flatpickr
+--------------------------------------------------------------*/
+
+[class*="branch-7"] .flatpickr-current-month {
+
+	.numInputWrapper input.cur-year,
+	.flatpickr-monthDropdown-months {
+		min-height: 0;
+		min-width: 0;
 	}
 }
