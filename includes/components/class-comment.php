@@ -30,6 +30,9 @@ final class Comment extends Component {
 		// Filter comment feed.
 		add_filter( 'comment_feed_where', [ $this, 'filter_comment_feed' ] );
 
+		// Filter comment activity.
+		add_action( 'load-index.php', [ $this, 'filter_comment_activity' ] );
+
 		// Update comment count.
 		add_filter( 'wp_count_comments', [ $this, 'update_comment_count' ], 1000, 2 );
 
@@ -115,6 +118,21 @@ final class Comment extends Component {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Filters comment activity.
+	 */
+	public function filter_comment_activity() {
+		add_filter(
+			'pre_get_comments',
+			function( $query ) {
+				$query->query_vars['type__not_in'] = array_merge(
+					(array) hp\get_array_value( $query->query_vars, 'type__not_in', [] ),
+					hp\prefix( array_keys( hivepress()->get_config( 'comment_types' ) ) )
+				);
+			}
+		);
 	}
 
 	/**

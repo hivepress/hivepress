@@ -760,6 +760,18 @@ final class User extends Controller {
 			wp_clear_auth_cookie();
 		}
 
+		// Send email.
+		( new Emails\User_Delete(
+			[
+				'recipient' => $user->get_email(),
+
+				'tokens'    => [
+					'user'      => $user,
+					'user_name' => $user->get_display_name(),
+				],
+			]
+		) )->send();
+
 		// Delete user.
 		if ( ! $user->delete() ) {
 			return hp\rest_error( 400 );

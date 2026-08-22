@@ -289,8 +289,8 @@ final class User extends Component {
 	public function alter_model_fields( $model ) {
 		if ( get_option( 'hp_user_display_online' ) ) {
 			$model['fields']['online_time'] = [
-				'type'      => 'number',
-				'min_value' => 0,
+				'type'      => 'date',
+				'format'    => 'U',
 				'_external' => true,
 			];
 		}

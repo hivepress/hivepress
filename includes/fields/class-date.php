@@ -115,7 +115,7 @@ class Date extends Field {
 				'sortable'    => true,
 				'prefillable' => true,
 
-				'settings'   => [
+				'settings'    => [
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
@@ -277,7 +277,11 @@ class Date extends Field {
 
 		if ( ! is_null( $this->value ) ) {
 			if ( $this->multiple && ! is_array( $this->value ) ) {
-				$this->value = explode( ',', $this->value );
+				if ( strpos( $this->value, ';' ) !== false ) {
+					$this->value = explode( ';', $this->value );
+				} else {
+					$this->value = explode( ',', $this->value );
+				}
 			}
 
 			$this->value = array_map(
@@ -300,14 +304,16 @@ class Date extends Field {
 	 */
 	protected function sanitize() {
 		if ( $this->multiple ) {
+			$format = $this->format;
+
 			$this->value = array_map(
-				function( $value ) {
-					return sanitize_text_field( $value );
+				function( $value ) use ( $format ) {
+					return 'U' === $format ? absint( $value ) : sanitize_text_field( $value );
 				},
 				$this->value
 			);
 		} else {
-			$this->value = sanitize_text_field( $this->value );
+			$this->value = 'U' === $this->format ? absint( $this->value ) : sanitize_text_field( $this->value );
 		}
 	}
 
@@ -369,7 +375,7 @@ class Date extends Field {
 		$value = $this->value;
 
 		if ( $this->multiple && ! is_null( $value ) ) {
-			$value = implode( ', ', $value );
+			$value = implode( '; ', $value );
 		}
 
 		// Render field.

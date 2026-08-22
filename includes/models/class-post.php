@@ -147,7 +147,7 @@ abstract class Post extends Model {
 			}
 		}
 
-		foreach ( [ 'post_excerpt', 'post_content' ] as $field_name ) {
+		foreach ( [ 'post_title', 'post_excerpt', 'post_content' ] as $field_name ) {
 			if ( array_key_exists( $field_name, $post ) && is_null( $post[ $field_name ] ) ) {
 				$post[ $field_name ] = '';
 			}

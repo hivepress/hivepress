@@ -641,7 +641,11 @@ var hivepress = {
 			if (field.data('mode')) {
 				settings['mode'] = field.data('mode');
 
-				if (field.data('mode') === 'range') {
+				if (field.data('mode') === 'multiple') {
+					$.extend(settings, {
+						conjunction: '; ',
+					});
+				} else if (field.data('mode') === 'range') {
 					var fields = field.parent().find('input[type="hidden"]').not(field),
 						minLength = field.data('min-length'),
 						maxLength = field.data('max-length');
