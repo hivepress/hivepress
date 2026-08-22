@@ -387,7 +387,7 @@ final class User extends Controller {
 
 					'tokens'    => [
 						'user'             => $user,
-						'user_name'        => $user->get_username(),
+						'user_name'        => $user->get_display_name(),
 						'email_verify_url' => hivepress()->router->get_url(
 							'user_email_verify_page',
 							[
@@ -759,6 +759,18 @@ final class User extends Controller {
 			// Clear authentication.
 			wp_clear_auth_cookie();
 		}
+
+		// Send email.
+		( new Emails\User_Delete(
+			[
+				'recipient' => $user->get_email(),
+
+				'tokens'    => [
+					'user'      => $user,
+					'user_name' => $user->get_display_name(),
+				],
+			]
+		) )->send();
 
 		// Delete user.
 		if ( ! $user->delete() ) {
