@@ -118,14 +118,12 @@ class Listing extends Post {
 					],
 
 					'expired_time'     => [
-						'type'      => 'date',
-						'format'    => 'U',
+						'type'      => 'timestamp',
 						'_external' => true,
 					],
 
 					'featured_time'    => [
-						'type'      => 'date',
-						'format'    => 'U',
+						'type'      => 'timestamp',
 						'_external' => true,
 					],
 
