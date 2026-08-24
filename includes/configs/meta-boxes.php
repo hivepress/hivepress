@@ -83,8 +83,7 @@ return [
 			'featured_time' => [
 				'label'       => esc_html__( 'Featuring Date', 'hivepress' ),
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_not_featured' ),
-				'type'        => 'date',
-				'format'      => 'U',
+				'type'        => 'timestamp',
 				'_parent'     => 'featured',
 				'_order'      => 40,
 			],
@@ -92,8 +91,7 @@ return [
 			'expired_time'  => [
 				'label'       => hivepress()->translator->get_string( 'expiration_date' ),
 				'description' => hivepress()->translator->get_string( 'set_date_on_which_listing_expired' ),
-				'type'        => 'date',
-				'format'      => 'U',
+				'type'        => 'timestamp',
 				'_order'      => 50,
 			],
 		],
