@@ -5,7 +5,7 @@
  * Description: Multipurpose directory, listing & classifieds plugin.
  * Requires at least: 5.0
  * Requires PHP: 7.4
- * Version: 1.7.29
+ * Version: 1.7.30
  * Author: HivePress
  * Author URI: https://hivepress.io/
  * Text Domain: hivepress
