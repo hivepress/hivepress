@@ -176,6 +176,7 @@ class Listings extends Block {
 
 		if ( 'edit' === $this->mode ) {
 			$attributes['class'][] = 'hp-table';
+			$attributes['class'][] = 'hp-table--stack';
 		} else {
 			$attributes['class'][] = 'hp-grid';
 		}
