@@ -15,8 +15,4 @@ else :
 	$text   = $listing->display_status();
 endif;
 ?>
-<td class="hp-listing__status hp-status hp-status--<?php echo esc_attr( $status ); ?>">
-	<?php if ( $text ) : ?>
-		<span><?php echo esc_html( $text ); ?></span>
-	<?php endif; ?>
-</td>
+<td class="hp-listing__status hp-status hp-status--<?php echo esc_attr( $status ); ?>"><?php if ( $text ) : ?><span><?php echo esc_html( $text ); ?></span><?php endif; ?></td>
