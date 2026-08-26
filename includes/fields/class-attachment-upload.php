@@ -332,7 +332,7 @@ class Attachment_Upload extends Field {
 					'data-name'      => hp\unprefix( $this->name ),
 					'data-url'       => esc_url( hivepress()->router->get_url( 'attachment_upload_action' ) ),
 					'data-max-size'  => wp_max_upload_size(),
-					'data-max-files' => $this->max_files,
+					'data-max-files' => $this->multiple ? $this->max_files : '',
 
 					'data-messages'  => wp_json_encode(
 						[

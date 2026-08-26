@@ -874,7 +874,7 @@ var hivepress = {
 						return;
 					}
 
-					if (maxFiles && (responseContainer.children().length + data.files.length) > maxFiles) {
+					if (maxFiles && (responseContainer.children().length + data.originalFiles.length) > maxFiles) {
 						messageContainer.html('<div>' + messages.max_files + '</div>').show();
 
 						return;
