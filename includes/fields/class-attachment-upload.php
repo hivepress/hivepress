@@ -80,10 +80,11 @@ class Attachment_Upload extends Field {
 					],
 
 					'protected' => [
-						'label'   => esc_html_x( 'Protected', 'attachment', 'hivepress' ),
-						'caption' => esc_html__( 'Protect files from direct access', 'hivepress' ),
-						'type'    => 'checkbox',
-						'_order'  => 120,
+						'label'       => esc_html_x( 'Protected', 'attachment', 'hivepress' ),
+						'caption'     => esc_html__( 'Protect files from direct access', 'hivepress' ),
+						'description' => esc_html__( 'Check this option to add a random, hard-to-guess string to uploaded file names.', 'hivepress' ),
+						'type'        => 'checkbox',
+						'_order'      => 120,
 					],
 				],
 			],
@@ -330,6 +331,16 @@ class Attachment_Upload extends Field {
 					'data-component' => 'file-upload',
 					'data-name'      => hp\unprefix( $this->name ),
 					'data-url'       => esc_url( hivepress()->router->get_url( 'attachment_upload_action' ) ),
+					'data-max-size'  => wp_max_upload_size(),
+					'data-max-files' => $this->multiple ? $this->max_files : '',
+
+					'data-messages'  => wp_json_encode(
+						[
+							'max_size'  => sprintf( esc_html__( 'The file size must not exceed %s.', 'hivepress' ), size_format( wp_max_upload_size() ) ),
+							/* translators: %s: files number. */
+							'max_files' => sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $this->max_files ) ),
+						]
+					),
 				],
 			]
 		) )->render();

@@ -28,6 +28,28 @@
 				margin-right: 0.5rem;
 			}
 		}
+
+		&:last-child i:only-child {
+			margin-right: 0;
+		}
+
+		&--wrap {
+			display: block;
+
+			i {
+				vertical-align: middle;
+				margin-top: -0.125em;
+			}
+		}
+	}
+
+	/*--------------------------------------------------------------
+	Text
+	--------------------------------------------------------------*/
+	&-text {
+		&--secondary {
+			color: rgba(0, 0, 0, 0.5);
+		}
 	}
 
 	/*--------------------------------------------------------------
@@ -213,6 +235,8 @@
 		}
 
 		&--narrow &__action {
+			text-align: center;
+
 			&:not(:last-child) {
 				margin: 0 0 0.5rem;
 			}
@@ -591,6 +615,12 @@
 			&:first-child {
 				margin-top: 0;
 			}
+		}
+	}
+
+	&-modal &-menu {
+		&:not(:last-child) {
+			margin-bottom: 0;
 		}
 	}
 }
