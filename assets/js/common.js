@@ -861,6 +861,27 @@ var hivepress = {
 					'render': true,
 					'_wpnonce': hivepressCoreData.apiNonce,
 				},
+				add: function (e, data) {
+					var maxSize = field.data('max-size'),
+						maxFiles = field.data('max-files'),
+						messages = field.data('messages');
+
+					messageContainer.hide().html('');
+
+					if (maxSize && data.files[0].size > maxSize) {
+						messageContainer.html('<div>' + messages.max_size + '</div>').show();
+
+						return;
+					}
+
+					if (maxFiles && (responseContainer.children().length + data.files.length) > maxFiles) {
+						messageContainer.html('<div>' + messages.max_files + '</div>').show();
+
+						return;
+					}
+
+					data.submit();
+				},
 				start: function () {
 					field.prop('disabled', true);
 
