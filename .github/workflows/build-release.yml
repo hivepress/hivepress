@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Generate POT
         uses: hivepress/action-generate-pot@main
@@ -26,17 +26,14 @@ jobs:
         run: |
           rm -rf .git* composer.* phpcs.xml package.json package-lock.json build.js node_modules README.md
           cd ..
-          zip -r release.zip ${{ github.event.repository.name }}
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Upload release
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ../release.zip
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
+          files: ../${{ github.event.repository.name }}.zip
 
   update-code-reference:
     needs: build
@@ -44,13 +41,14 @@ jobs:
 
     steps:
       - name: Build code reference
-        uses: aurelien-baudet/workflow-dispatch@v2
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Build code reference
           repo: hivepress/code-reference
           token: ${{ secrets.PERSONAL_TOKEN }}
           ref: refs/heads/main
           inputs: '{ "version": "${{ github.event.release.tag_name }}" }'
+          wait-for-completion: true
 
   update-hook-reference:
     needs: build
@@ -58,12 +56,13 @@ jobs:
 
     steps:
       - name: Build hook reference
-        uses: aurelien-baudet/workflow-dispatch@v2
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Build hook reference
           repo: hivepress/hook-reference
           token: ${{ secrets.PERSONAL_TOKEN }}
           ref: refs/heads/main
+          wait-for-completion: true
 
   update-api-reference:
     needs: build
@@ -71,7 +70,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -84,7 +83,7 @@ jobs:
         run: composer require zircote/swagger-php
 
       - name: Generate OpenAPI
-        run: vendor/bin/openapi . -e vendor -o openapi.yaml -l
+        run: vendor/bin/openapi . -e vendor -o openapi.yaml
 
       - name: Deploy documentation
         uses: bump-sh/github-action@v1
