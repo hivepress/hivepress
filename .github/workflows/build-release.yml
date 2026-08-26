@@ -80,7 +80,7 @@ jobs:
           tools: composer
 
       - name: Install Swagger
-        run: composer require zircote/swagger-php
+        run: composer require zircote/swagger-php doctrine/annotations
 
       - name: Generate OpenAPI
         run: vendor/bin/openapi . -e vendor -o openapi.yaml
