@@ -71,7 +71,7 @@ class Listings_View_Page extends Page_Sidebar_Left {
 								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'widget', 'hp-widget', 'hp-widget--listing-filter' ],
+									'class' => [ 'widget', 'hp-widget', 'hp-widget--desktop', 'hp-widget--listing-filter' ],
 								],
 
 								'blocks'     => [

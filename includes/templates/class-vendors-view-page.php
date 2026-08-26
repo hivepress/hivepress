@@ -71,7 +71,7 @@ class Vendors_View_Page extends Page_Sidebar_Left {
 								'_order'     => 10,
 
 								'attributes' => [
-									'class' => [ 'widget', 'hp-widget', 'hp-widget--vendor-filter' ],
+									'class' => [ 'widget', 'hp-widget', 'hp-widget--desktop', 'hp-widget--vendor-filter' ],
 								],
 
 								'blocks'     => [
