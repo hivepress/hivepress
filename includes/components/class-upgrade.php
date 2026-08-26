@@ -8,6 +8,7 @@
 namespace HivePress\Components;
 
 use HivePress\Helpers as hp;
+use HivePress\Models;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -38,6 +39,9 @@ final class Upgrade extends Component {
 
 		// Upgrade attributes.
 		add_action( 'hivepress/v1/update', [ $this, 'upgrade_attributes' ], 50 );
+
+		// Upgrade listings.
+		add_action( 'hivepress/v1/update', [ $this, 'upgrade_listings' ], 60 );
 
 		// Upgrade emails.
 		add_action( 'hivepress/v1/activate', [ $this, 'upgrade_emails' ] );
@@ -206,6 +210,45 @@ final class Upgrade extends Component {
 						]
 					);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Upgrades listings.
+	 *
+	 * @param string $version Old version.
+	 * @deprecated Since version 1.7.31
+	 */
+	public function upgrade_listings( $version ) {
+		if ( version_compare( $version, '1.7.29', '>=' ) && version_compare( $version, '1.7.31', '<' ) ) {
+
+			// Get listings.
+			$listings = Models\Listing::query()->filter(
+				[
+					'status__in'       => [ 'draft', 'trash' ],
+					'expired_time__gt' => time(),
+				]
+			)->set_args(
+				[
+					'date_query' => [
+						[
+							'column'    => 'post_modified',
+							'after'     => '2026-08-22',
+							'before'    => '2026-08-24',
+							'inclusive' => true,
+						],
+					],
+				]
+			)->get();
+
+			// Restore listings.
+			foreach ( $listings as $listing ) {
+				if ( 'trash' === $listing->get_status() ) {
+					wp_untrash_post( $listing->get_id() );
+				}
+
+				$listing->set_status( 'publish' )->save_status();
 			}
 		}
 	}
