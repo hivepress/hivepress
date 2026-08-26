@@ -26,23 +26,19 @@ class User_Account_Page extends Page_Sidebar_Left {
 		$args = hp\merge_trees(
 			[
 				'blocks' => [
-					'page_header'  => [
-						'blocks' => [
-							'user_account_menu_link' => [
-								'type'    => 'part',
-								'path'    => 'user/edit/page/user-account-menu-link',
-								'_parent' => 'user_account_menu_container',
-								'_order'  => 10,
-							],
-						],
-					],
-
 					'page_sidebar' => [
 						'attributes' => [
 							'data-component' => 'sticky',
 						],
 
 						'blocks'     => [
+							'user_account_menu_link'      => [
+								'type'    => 'part',
+								'path'    => 'user/edit/page/user-account-menu-link',
+								'_parent' => 'user_account_menu_container',
+								'_order'  => 5,
+							],
+
 							'user_account_menu_container' => [
 								'type'       => 'container',
 								'_label'     => hivepress()->translator->get_string( 'menu' ),
@@ -63,9 +59,9 @@ class User_Account_Page extends Page_Sidebar_Left {
 
 										'blocks'     => [
 											'user_account_menu' => [
-												'type'       => 'menu',
-												'menu'       => 'user_account',
-												'_order'     => 10,
+												'type'   => 'menu',
+												'menu'   => 'user_account',
+												'_order' => 10,
 
 												'attributes' => [
 													'class' => [ 'widget_nav_menu' ],
@@ -76,7 +72,7 @@ class User_Account_Page extends Page_Sidebar_Left {
 								],
 							],
 
-							'page_sidebar_widgets' => [
+							'page_sidebar_widgets'        => [
 								'type'   => 'widgets',
 								'area'   => 'hp_user_account_sidebar',
 								'_label' => hivepress()->translator->get_string( 'widgets' ),

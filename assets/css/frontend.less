@@ -19,10 +19,22 @@
 			}
 		}
 
+		&--block {
+			&:not(:last-child) {
+				margin-bottom: 2rem;
+			}
+		}
+
 		i {
 			&:first-child {
 				margin-right: 0.5rem;
 			}
+		}
+	}
+
+	&-button--block:has(+ &-widget--desktop:last-child) {
+		@media only screen and (max-width: 47.99em) {
+			margin-bottom: 0;
 		}
 	}
 
@@ -576,6 +588,7 @@
 	--------------------------------------------------------------*/
 	&-table {
 		&--stack {
+
 			td:last-child,
 			th:last-child {
 				white-space: nowrap;
