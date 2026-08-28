@@ -266,6 +266,13 @@ final class Attachment extends Controller {
 			)->save( [ $parent_field->get_name() ] );
 		} else {
 
+			// Update parent object.
+			$parent->fill(
+				[
+					$parent_field->get_name() => array_merge( (array) call_user_func( [ $parent, 'get_' . $parent_field->get_name() ] ), [ $attachment->get_id() ] ),
+				]
+			)->save( [ $parent_field->get_name() ] );
+
 			// Fire update action.
 			do_action( 'hivepress/v1/models/' . $attachment->get_parent_model() . '/update_' . $attachment->get_parent_field(), $attachment->get_parent__id() );
 		}
