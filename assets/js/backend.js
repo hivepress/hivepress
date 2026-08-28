@@ -116,5 +116,24 @@
 
 			e.preventDefault();
 		});
+
+		if (typeof hpPointers !== 'undefined') {
+			var pointers = hpPointers.pointers;
+
+			$.each(pointers, function() {
+				var pointer = this[0],
+					options = $.extend(pointer.options, {
+						content: pointer.content,
+						close: function() {
+							$.post(pointer.handler, {
+								pointer: pointer.pointer_id,
+								action: 'hp_dismissed_pointers'
+							});
+						}
+					});
+
+				$(pointer.target).pointer(options).pointer('open');
+			});
+		}
 	});
 })(jQuery);
