@@ -87,6 +87,11 @@ class Listing extends Post {
 						'_external' => true,
 					],
 
+					'moderated'        => [
+						'type'      => 'checkbox',
+						'_external' => true,
+					],
+
 					'featured'         => [
 						'label'     => esc_html_x( 'Featured', 'listing', 'hivepress' ),
 						'type'      => 'checkbox',

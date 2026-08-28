@@ -93,6 +93,61 @@ var hivepress = {
 			});
 		});
 
+		// Storage
+		container.find('[data-restore]').each(function () {
+			var field = $(this),
+				inputs = field.is(':input[name!=""]') ? field : field.find(':input[name!=""]'),
+				name = 'hp_field_' + inputs.first().attr('name').replace('[]', ''),
+				stored = localStorage.getItem(name);
+
+			if (!stored) {
+				return;
+			}
+
+			try {
+				stored = JSON.parse(stored);
+
+				if (stored.expires > Date.now()) {
+					stored.value.forEach(function (value, index) {
+						inputs.eq(index).val(value);
+					});
+
+					setTimeout(function () {
+						inputs.trigger('change');
+					});
+
+					return;
+				}
+			} catch (error) { }
+
+			localStorage.removeItem(name);
+		});
+
+		container.find('[data-store]').each(function () {
+			var field = $(this),
+				inputs = field.is(':input[name!=""]') ? field : field.find(':input[name!=""]'),
+				name = 'hp_field_' + inputs.first().attr('name').replace('[]', '');
+
+			function storeValues() {
+				var values = inputs.map(function () {
+					return $(this).val();
+				}).get();
+
+				if (values.every(function (value) { return value === ''; })) {
+					localStorage.removeItem(name);
+				} else {
+					localStorage.setItem(name, JSON.stringify({
+						value: values,
+						expires: Date.now() + 24 * 60 * 60 * 1000,
+					}));
+				}
+			}
+
+			storeValues();
+
+			inputs.on('change', storeValues);
+		});
+
 		// Number
 		container.find(hivepress.getSelector('number')).each(function () {
 			var field = $(this),

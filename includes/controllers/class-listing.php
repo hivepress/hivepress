@@ -368,9 +368,15 @@ final class Listing extends Controller {
 		$listing->fill( $form->get_values() );
 
 		if ( $attributes ) {
+			if ( $listing->get_status() === 'draft' && $listing->get_expired_time() && $listing->get_expired_time() < time() ) {
 
-			// Set status.
-			$listing->set_status( 'pending' );
+				// Defer status.
+				$listing->set_moderated( true );
+			} else {
+
+				// Set status.
+				$listing->set_status( 'pending' );
+			}
 
 			// Send email.
 			( new Emails\Listing_Update(
@@ -1180,10 +1186,11 @@ final class Listing extends Controller {
 		// Update listing.
 		$listing->fill(
 			[
-				'status'           => 'publish',
+				'status'           => $listing->is_moderated() ? 'pending' : 'publish',
 				'created_date'     => $date,
 				'created_date_gmt' => get_gmt_from_date( $date ),
 				'expired_time'     => null,
+				'moderated'        => false,
 			]
 		)->save(
 			[
@@ -1191,6 +1198,7 @@ final class Listing extends Controller {
 				'created_date',
 				'created_date_gmt',
 				'expired_time',
+				'moderated',
 			]
 		);
 
