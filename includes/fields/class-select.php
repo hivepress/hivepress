@@ -299,17 +299,18 @@ class Select extends Field {
 				$output = '';
 
 				if ( $this->display_format ) {
+					$display_format = $this->display_format;
 
 					// Check comma.
-					$has_comma = substr( $this->display_format, -1 ) === ',';
+					$has_comma = substr( $display_format, -1 ) === ',';
 
 					if ( $has_comma ) {
-						$this->display_format .= ' ';
+						$display_format .= ' ';
 					}
 
 					// Render options.
 					foreach ( $options as $option ) {
-						$output .= hp\replace_tokens( array_merge( $this->context, $option ), $this->display_format, true );
+						$output .= hp\replace_tokens( array_merge( $this->context, $option ), $display_format, true );
 					}
 
 					// Trim comma.
