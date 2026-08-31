@@ -43,9 +43,6 @@ final class WooCommerce extends Component {
 		// Update options.
 		add_action( 'hivepress/v1/activate', [ $this, 'update_options' ] );
 
-		// Disable HPOS.
-		add_action( 'woocommerce_custom_orders_table_background_sync', [ $this, 'disable_hpos' ] );
-
 		// Update order status.
 		add_action( 'woocommerce_order_status_changed', [ $this, 'update_order_status' ], 10, 4 );
 
@@ -93,26 +90,6 @@ final class WooCommerce extends Component {
 		update_option( 'woocommerce_enable_guest_checkout', 'no' );
 		update_option( 'woocommerce_enable_checkout_login_reminder', 'yes' );
 		update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
-
-		if ( get_option( 'hp_installed_time' ) > strtotime( '2024-07-08' ) ) {
-
-			// @todo Remove after HPOS integration.
-			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'yes' );
-
-			$this->disable_hpos();
-		}
-	}
-
-	/**
-	 * Disables HPOS.
-	 *
-	 * @todo Remove after HPOS integration.
-	 */
-	public function disable_hpos() {
-		if ( OrderUtil::is_custom_order_tables_in_sync() ) {
-			update_option( 'woocommerce_custom_orders_table_enabled', 'no' );
-			update_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' );
-		}
 	}
 
 	/**
