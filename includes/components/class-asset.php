@@ -167,8 +167,6 @@ final class Asset extends Component {
 
 		// Enqueue styles.
 		foreach ( $styles as $style ) {
-
-			// Enqueue style.
 			wp_enqueue_style( $style['handle'], $style['src'], hp\get_array_value( $style, 'deps', [] ), hp\get_array_value( $style, 'version', hivepress()->get_version() ) );
 
 			if ( hp\get_array_value( $style, 'rtl' ) ) {

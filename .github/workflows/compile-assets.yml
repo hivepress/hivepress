@@ -21,9 +21,10 @@ jobs:
 
       - name: Generate RTL styles
         run: |
-          for file in assets/css/*.less; do
-            name="$(basename "$file" .less)"
-            npx --yes rtlcss@4 "assets/css/$name.css" "assets/css/$name-rtl.css"
+          for name in style frontend backend common; do
+            if [ -f "assets/css/$name.css" ]; then
+              npx --yes rtlcss@4 "assets/css/$name.css" "assets/css/$name-rtl.css"
+            fi
           done
 
       - name: Minify assets
