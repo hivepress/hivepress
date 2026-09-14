@@ -454,22 +454,25 @@ final class WooCommerce extends Component {
 			add_filter( 'the_title', 'wc_page_endpoint_title', 10, 2 );
 
 			// Alter page template.
-			$template = hp\merge_trees(
+			$template = hivepress()->template->merge_blocks(
 				$template,
 				[
-					'blocks' => [
-						'page_container' => [
-							'type' => 'container',
-						],
+					'page_container' => [
+						'type' => 'container',
+					],
+				]
+			);
 
-						'page_content'   => [
-							'blocks' => [
-								'woocommerce_content' => [
-									'type'     => 'callback',
-									'callback' => 'do_action',
-									'params'   => [ 'woocommerce_account_content' ],
-									'_order'   => 10,
-								],
+			$template = hivepress()->template->merge_blocks(
+				$template,
+				[
+					'page_content' => [
+						'blocks' => [
+							'woocommerce_content' => [
+								'type'     => 'callback',
+								'callback' => 'do_action',
+								'params'   => [ 'woocommerce_account_content' ],
+								'_order'   => 10,
 							],
 						],
 					],
