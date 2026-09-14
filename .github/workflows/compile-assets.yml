@@ -19,6 +19,16 @@ jobs:
         with:
           target: 'assets/css/*.less'
 
+      - name: Generate RTL styles
+        run: |
+          shopt -s nullglob
+          for file in assets/css/*-rtl.min.css; do
+            name="$(basename "$file" -rtl.min.css)"
+            if [ -f "assets/css/$name.css" ]; then
+              npx --yes rtlcss@4 "assets/css/$name.css" "assets/css/$name-rtl.css"
+            fi
+          done
+
       - name: Minify assets
         uses: hivepress/action-minify-assets@v2.1
 
