@@ -137,6 +137,7 @@
 								slidesToScroll: 1,
 								infinite: false,
 								adaptiveHeight: true,
+								rtl: $('html').attr('dir') === 'rtl',
 							};
 
 						container.html('');
@@ -191,6 +192,7 @@
 								slidesToScroll: 1,
 								infinite: false,
 								focusOnSelect: true,
+								rtl: $('html').attr('dir') === 'rtl',
 								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
 								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
 								asNavFor: slider,
