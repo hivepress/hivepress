@@ -531,6 +531,7 @@ final class Attribute extends Component {
 				add_filter( 'hivepress/v1/forms/' . $model . '_sort', [ $this, 'set_category_value' ], 100, 2 );
 
 				// Set range values.
+				add_filter( 'hivepress/v1/forms/' . $model . '_search', [ $this, 'set_range_values' ], 100, 2 );
 				add_filter( 'hivepress/v1/forms/' . $model . '_filter', [ $this, 'set_range_values' ], 100, 2 );
 
 				// Set related query.
