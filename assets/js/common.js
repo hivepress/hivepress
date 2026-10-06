@@ -376,7 +376,7 @@ var hivepress = {
 					if (currentOptions.length > 1) {
 						currentOptions[0] = $.extend({}, currentOptions[0], {
 							id: currentOptions[0].parent,
-							text: '← ' + currentOptions[0].text,
+							text: ($('html').attr('dir') === 'rtl' ? '→ ' : '← ') + currentOptions[0].text,
 						});
 
 						field.html('').select2($.extend({}, settings, { data: currentOptions }));
@@ -405,7 +405,7 @@ var hivepress = {
 						} else {
 							currentOptions[0] = $.extend({}, currentOptions[0], {
 								id: currentOptions[0].parent,
-								text: '← ' + currentOptions[0].text,
+								text: ($('html').attr('dir') === 'rtl' ? '→ ' : '← ') + currentOptions[0].text,
 							});
 						}
 
