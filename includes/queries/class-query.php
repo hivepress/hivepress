@@ -16,15 +16,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract query class.
  */
-abstract class Query implements \IteratorAggregate, \Countable {
+abstract class Query implements \IteratorAggregate, \ArrayAccess, \Countable {
 	use Traits\Mutator;
-
-	/**
-	 * Model objects.
-	 *
-	 * @var array
-	 */
-	protected $objects = [];
 
 	/**
 	 * Parameter aliases.
@@ -46,6 +39,13 @@ abstract class Query implements \IteratorAggregate, \Countable {
 	 * @var object
 	 */
 	protected $model;
+
+	/**
+	 * Model objects.
+	 *
+	 * @var array
+	 */
+	protected $objects = [];
 
 	/**
 	 * Is query already executed?
@@ -560,6 +560,15 @@ abstract class Query implements \IteratorAggregate, \Countable {
 	}
 
 	/**
+	 * Counts objects.
+	 *
+	 * @return int
+	 */
+	public function count(): int {
+		return count( $this->objects );
+	}
+
+	/**
 	 * Gets objects iterator.
 	 *
 	 * @return \Traversable
@@ -569,11 +578,54 @@ abstract class Query implements \IteratorAggregate, \Countable {
 	}
 
 	/**
-	 * Counts objects.
+	 * Gets objects array copy.
 	 *
-	 * @return int
+	 * @return array
 	 */
-	public function count(): int {
-		return count( $this->objects );
+	public function getArrayCopy() {
+		return $this->objects;
+	}
+
+	/**
+	 * Checks if object exists.
+	 *
+	 * @param mixed $offset Object offset.
+	 * @return bool
+	 */
+	public function offsetExists( $offset ): bool {
+		return isset( $this->objects[ $offset ] );
+	}
+
+	/**
+	 * Gets object.
+	 *
+	 * @param mixed $offset Object offset.
+	 * @return object|null
+	 */
+	public function offsetGet( $offset ): ?object {
+		return $this->objects[ $offset ] ?? null;
+	}
+
+	/**
+	 * Sets object.
+	 *
+	 * @param mixed  $offset Object offset.
+	 * @param object $value Model object.
+	 */
+	public function offsetSet( $offset, $value ): void {
+		if ( is_null( $offset ) ) {
+			$this->objects[] = $value;
+		} else {
+			$this->objects[ $offset ] = $value;
+		}
+	}
+
+	/**
+	 * Unsets object.
+	 *
+	 * @param mixed $offset Object offset.
+	 */
+	public function offsetUnset( $offset ): void {
+		unset( $this->objects[ $offset ] );
 	}
 }
