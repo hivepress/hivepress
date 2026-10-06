@@ -1835,7 +1835,30 @@ final class Admin extends Component {
 				);
 
 				if ( is_array( $response ) && isset( $response['data'] ) ) {
+
+					// Check notice product.
+					$is_product_active = function ( $slug ) {
+						if ( strpos( $slug, 'hivepress-' ) === 0 ) {
+							return hivepress()->get_version( str_replace( '-', '_', substr( $slug, 10 ) ) );
+						}
+
+						return get_template() === $slug;
+					};
+
 					foreach ( $response['data'] as $notice ) {
+
+						// Check notice delay.
+						if ( $installed_time > time() - DAY_IN_SECONDS * absint( hp\get_array_value( $notice, 'delay' ) ) ) {
+							continue;
+						}
+
+						// Check notice products.
+						$included_products = (array) hp\get_array_value( $notice, 'included_products' );
+						$excluded_products = (array) hp\get_array_value( $notice, 'excluded_products' );
+
+						if ( ( $included_products && ! array_filter( $included_products, $is_product_active ) ) || array_filter( $excluded_products, $is_product_active ) ) {
+							continue;
+						}
 
 						// Add notice.
 						$notices[ 'notice_' . absint( $notice['id'] ) ] = [
@@ -1844,7 +1867,9 @@ final class Admin extends Component {
 							'text'        => hp\sanitize_html( $notice['text'] ),
 						];
 
-						break;
+						if ( count( $notices ) > 2 ) {
+							break;
+						}
 					}
 
 					// Cache notices.
