@@ -1773,7 +1773,9 @@ final class Admin extends Component {
 	 * Checks user access.
 	 */
 	public function check_access() {
-		if ( ! wp_doing_ajax() && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
+		global $pagenow;
+
+		if ( ! wp_doing_ajax() && 'admin-post.php' !== $pagenow && get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) {
 			wp_safe_redirect( hivepress()->router->get_url( 'user_account_page' ) );
 
 			exit;
