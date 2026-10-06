@@ -1017,6 +1017,14 @@ var hivepress = {
 				chart = new Chart(canvas, {
 					type: 'line',
 					options: {
+						plugins: {
+							legend: {
+								rtl: $('html').attr('dir') === 'rtl',
+							},
+							tooltip: {
+								rtl: $('html').attr('dir') === 'rtl',
+							},
+						},
 						scales: {
 							y: {
 								beginAtZero: true,
@@ -1382,6 +1390,12 @@ var hivepress = {
 
 		// Date picker
 		var language = hivepressCoreData.language;
+
+		if ($('html').attr('dir') === 'rtl') {
+			flatpickr.setDefaults({
+				position: 'auto right',
+			});
+		}
 
 		if (language === 'el') {
 			language = 'gr';
