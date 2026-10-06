@@ -923,18 +923,8 @@ final class User extends Controller {
 			return hivepress()->router->get_url( 'user_edit_settings_page' );
 		}
 
-		// Send email.
-		( new Emails\User_Register(
-			[
-				'recipient' => $user->user_email,
-
-				'tokens'    => [
-					'user'          => Models\User::query()->get_by_id( $user->ID ),
-					'user_name'     => $user->display_name,
-					'user_password' => '********',
-				],
-			]
-		) )->send();
+		// Verify user.
+		do_action( 'hivepress/v1/models/user/verify', $user->ID );
 
 		// Check authentication.
 		if ( is_user_logged_in() ) {
