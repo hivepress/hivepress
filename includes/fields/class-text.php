@@ -203,6 +203,21 @@ class Text extends Field {
 	}
 
 	/**
+	 * Escapes field value for display.
+	 *
+	 * @param mixed $value Field value.
+	 * @param bool  $raw Is raw value?
+	 * @return mixed
+	 */
+	protected function escape_display_value( $value, $raw = false ) {
+		if ( empty( $this->html ) && is_scalar( $value ) ) {
+			$value = esc_html( $value );
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Validates field value.
 	 *
 	 * @return bool
