@@ -5,6 +5,10 @@
 	--------------------------------------------------------------*/
 	&-icon {
 		font-size: 16px;
+
+		&--rtl {
+			transform: scaleX(1) /*rtl:scaleX(-1)*/;
+		}
 	}
 
 	/*--------------------------------------------------------------
@@ -315,6 +319,12 @@
 			min-width: 1px;
 		}
 
+		&--email,
+		&--password,
+		&--url {
+			direction: ltr /*rtl:ignore*/;
+		}
+
 		&--textarea {
 			max-width: 100%;
 			min-height: 8rem;
@@ -579,6 +589,7 @@
 
 		&__icon {
 			&:last-child {
+				position: relative;
 				margin-left: -2rem;
 			}
 		}
@@ -704,5 +715,23 @@ Phone
 
 	input[type=tel] {
 		width: 100%;
+	}
+}
+/*--------------------------------------------------------------
+Fancybox
+--------------------------------------------------------------*/
+.fancybox {
+	&-slide--html &-content {
+		direction: ltr;
+		text-align: left;
+	}
+
+	&-slide--html &-close-small {
+		right: 0;
+		left: auto;
+	}
+
+	&-container &-caption {
+		direction: ltr;
 	}
 }

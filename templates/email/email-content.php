@@ -2,4 +2,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-echo $email->get_body();
+if ( is_rtl() ) :
+	?>
+	<div dir="auto"><?php echo $email->get_body(); ?></div>
+	<?php
+else :
+	echo $email->get_body();
+endif;

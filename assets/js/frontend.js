@@ -137,6 +137,7 @@
 								slidesToScroll: 1,
 								infinite: false,
 								adaptiveHeight: true,
+								rtl: $('html').attr('dir') === 'rtl',
 							};
 
 						container.html('');
@@ -165,8 +166,8 @@
 							});
 						} else {
 							$.extend(settings, {
-								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon hp-icon--rtl fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon hp-icon--rtl fas fa-chevron-right"></i></div>',
 							});
 						}
 
@@ -191,8 +192,9 @@
 								slidesToScroll: 1,
 								infinite: false,
 								focusOnSelect: true,
-								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+								rtl: $('html').attr('dir') === 'rtl',
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon hp-icon--rtl fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon hp-icon--rtl fas fa-chevron-right"></i></div>',
 								asNavFor: slider,
 								responsive: [{
 									breakpoint: 1025,

@@ -61,23 +61,27 @@ return [
 		'handle' => 'hivepress-grid',
 		'src'    => hivepress()->get_url() . '/assets/css/grid.min.css',
 		'scope'  => [ 'frontend', 'backend', 'editor' ],
+		'rtl'    => true,
 	],
 
 	'core_common'       => [
 		'handle' => 'hivepress-core-common',
 		'src'    => hivepress()->get_url() . '/assets/css/common.min.css',
 		'scope'  => [ 'frontend', 'backend', 'editor' ],
+		'rtl'    => true,
 	],
 
 	'core_frontend'     => [
 		'handle' => 'hivepress-core-frontend',
 		'src'    => hivepress()->get_url() . '/assets/css/frontend.min.css',
 		'scope'  => [ 'frontend', 'editor' ],
+		'rtl'    => true,
 	],
 
 	'core_backend'      => [
 		'handle' => 'hivepress-core-backend',
 		'src'    => hivepress()->get_url() . '/assets/css/backend.min.css',
 		'scope'  => 'backend',
+		'rtl'    => true,
 	],
 ];
