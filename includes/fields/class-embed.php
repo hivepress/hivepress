@@ -71,6 +71,21 @@ class Embed extends URL {
 	}
 
 	/**
+	 * Escapes field value for display.
+	 *
+	 * @param mixed $value Field value.
+	 * @param bool  $raw Is raw value?
+	 * @return mixed
+	 */
+	protected function escape_display_value( $value, $raw = false ) {
+		if ( ! $raw ) {
+			return $value;
+		}
+
+		return parent::escape_display_value( $value, $raw );
+	}
+
+	/**
 	 * Sets field display template.
 	 *
 	 * @param string $display_template Display template.

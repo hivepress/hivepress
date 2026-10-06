@@ -410,6 +410,17 @@ abstract class Field {
 	}
 
 	/**
+	 * Escapes field value for display.
+	 *
+	 * @param mixed $value Field value.
+	 * @param bool  $raw Is raw value?
+	 * @return mixed
+	 */
+	protected function escape_display_value( $value, $raw = false ) {
+		return $value;
+	}
+
+	/**
 	 * Sets parent field value.
 	 *
 	 * @param mixed $value Field value.
@@ -538,7 +549,7 @@ abstract class Field {
 		$shortcode = hp\has_shortcode( $this->display_template );
 
 		// Get value.
-		$value = $this->get_display_value();
+		$value = $this->escape_display_value( $this->get_display_value() );
 
 		foreach ( hp\get_class_parents( static::class ) as $class ) {
 
@@ -564,7 +575,7 @@ abstract class Field {
 				[
 					'label'     => '<strong>' . $this->label . '</strong>',
 					'value'     => $value,
-					'raw_value' => is_array( $this->value ) ? '' : (string) $this->value,
+					'raw_value' => is_array( $this->value ) ? '' : $this->escape_display_value( (string) $this->value, true ),
 				]
 			),
 			$this->display_template,

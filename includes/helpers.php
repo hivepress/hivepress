@@ -365,8 +365,17 @@ function replace_tokens( $tokens, $text, $format = false ) {
 					if ( $field ) {
 
 						// @todo remove date check in the next major version.
-						if ( $format || $fallback ) {
+						if ( $format ) {
 							$match_value = $field->display();
+						} elseif ( $fallback ) {
+							$match_value = strtr(
+								$field->display(),
+								[
+									'&amp;'  => '&',
+									'&quot;' => '"',
+									'&#039;' => "'",
+								]
+							);
 						} else {
 							$match_value = $field->get_display_value();
 						}

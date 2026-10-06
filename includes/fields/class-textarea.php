@@ -101,8 +101,23 @@ class Textarea extends Text {
 			// @todo ensure it runs before rendering template.
 			wp_enqueue_style( 'wp-block-embed' );
 
-			return make_clickable( apply_filters( 'the_content', $this->value ) );
+			return make_clickable( apply_filters( 'the_content', empty( $this->html ) ? esc_html( $this->value ) : $this->value ) );
 		}
+	}
+
+	/**
+	 * Escapes field value for display.
+	 *
+	 * @param mixed $value Field value.
+	 * @param bool  $raw Is raw value?
+	 * @return mixed
+	 */
+	protected function escape_display_value( $value, $raw = false ) {
+		if ( ! $raw ) {
+			return $value;
+		}
+
+		return parent::escape_display_value( $value, $raw );
 	}
 
 	/**

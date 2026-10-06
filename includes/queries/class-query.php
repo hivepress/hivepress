@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract query class.
  */
-abstract class Query extends \ArrayObject {
+abstract class Query implements \IteratorAggregate, \ArrayAccess, \Countable {
 	use Traits\Mutator;
 
 	/**
@@ -39,6 +39,13 @@ abstract class Query extends \ArrayObject {
 	 * @var object
 	 */
 	protected $model;
+
+	/**
+	 * Model objects.
+	 *
+	 * @var array
+	 */
+	protected $objects = [];
 
 	/**
 	 * Is query already executed?
@@ -408,13 +415,11 @@ abstract class Query extends \ArrayObject {
 	 */
 	final public function get() {
 		if ( ! $this->executed ) {
-			$this->exchangeArray(
-				array_map(
-					function( $result ) {
-						return $this->model->get( $result );
-					},
-					$this->get_results( $this->args )
-				)
+			$this->objects = array_map(
+				function( $result ) {
+					return $this->model->get( $result );
+				},
+				$this->get_results( $this->args )
 			);
 
 			$this->executed = true;
@@ -548,11 +553,79 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets objects array.
 	 *
-	 * @todo Fix the return type or class implementation.
 	 * @return array
 	 */
-	#[\ReturnTypeWillChange]
 	final public function serialize() {
-		return $this->getArrayCopy();
+		return $this->objects;
+	}
+
+	/**
+	 * Counts objects.
+	 *
+	 * @return int
+	 */
+	public function count(): int {
+		return count( $this->objects );
+	}
+
+	/**
+	 * Gets objects iterator.
+	 *
+	 * @return \Traversable
+	 */
+	public function getIterator(): \Traversable {
+		return new \ArrayIterator( $this->objects );
+	}
+
+	/**
+	 * Gets objects array copy.
+	 *
+	 * @return array
+	 */
+	public function getArrayCopy() {
+		return $this->objects;
+	}
+
+	/**
+	 * Checks if object exists.
+	 *
+	 * @param mixed $offset Object offset.
+	 * @return bool
+	 */
+	public function offsetExists( $offset ): bool {
+		return isset( $this->objects[ $offset ] );
+	}
+
+	/**
+	 * Gets object.
+	 *
+	 * @param mixed $offset Object offset.
+	 * @return object|null
+	 */
+	public function offsetGet( $offset ): ?object {
+		return $this->objects[ $offset ] ?? null;
+	}
+
+	/**
+	 * Sets object.
+	 *
+	 * @param mixed  $offset Object offset.
+	 * @param object $value Model object.
+	 */
+	public function offsetSet( $offset, $value ): void {
+		if ( is_null( $offset ) ) {
+			$this->objects[] = $value;
+		} else {
+			$this->objects[ $offset ] = $value;
+		}
+	}
+
+	/**
+	 * Unsets object.
+	 *
+	 * @param mixed $offset Object offset.
+	 */
+	public function offsetUnset( $offset ): void {
+		unset( $this->objects[ $offset ] );
 	}
 }
