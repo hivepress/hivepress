@@ -16,8 +16,15 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract query class.
  */
-abstract class Query extends \ArrayObject {
+abstract class Query implements \IteratorAggregate, \Countable {
 	use Traits\Mutator;
+
+	/**
+	 * Model objects.
+	 *
+	 * @var array
+	 */
+	protected $objects = [];
 
 	/**
 	 * Parameter aliases.
@@ -408,13 +415,11 @@ abstract class Query extends \ArrayObject {
 	 */
 	final public function get() {
 		if ( ! $this->executed ) {
-			$this->exchangeArray(
-				array_map(
-					function( $result ) {
-						return $this->model->get( $result );
-					},
-					$this->get_results( $this->args )
-				)
+			$this->objects = array_map(
+				function( $result ) {
+					return $this->model->get( $result );
+				},
+				$this->get_results( $this->args )
 			);
 
 			$this->executed = true;
@@ -548,11 +553,27 @@ abstract class Query extends \ArrayObject {
 	/**
 	 * Gets objects array.
 	 *
-	 * @todo Fix the return type or class implementation.
 	 * @return array
 	 */
-	#[\ReturnTypeWillChange]
 	final public function serialize() {
-		return $this->getArrayCopy();
+		return $this->objects;
+	}
+
+	/**
+	 * Gets objects iterator.
+	 *
+	 * @return \Traversable
+	 */
+	public function getIterator(): \Traversable {
+		return new \ArrayIterator( $this->objects );
+	}
+
+	/**
+	 * Counts objects.
+	 *
+	 * @return int
+	 */
+	public function count(): int {
+		return count( $this->objects );
 	}
 }
