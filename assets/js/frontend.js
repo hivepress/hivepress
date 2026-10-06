@@ -166,8 +166,8 @@
 							});
 						} else {
 							$.extend(settings, {
-								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon hp-icon--rtl fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon hp-icon--rtl fas fa-chevron-right"></i></div>',
 							});
 						}
 
@@ -193,8 +193,8 @@
 								infinite: false,
 								focusOnSelect: true,
 								rtl: $('html').attr('dir') === 'rtl',
-								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon fas fa-chevron-left"></i></div>',
-								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon fas fa-chevron-right"></i></div>',
+								prevArrow: '<div class="slick-arrow slick-prev"><i class="hp-icon hp-icon--rtl fas fa-chevron-left"></i></div>',
+								nextArrow: '<div class="slick-arrow slick-next"><i class="hp-icon hp-icon--rtl fas fa-chevron-right"></i></div>',
 								asNavFor: slider,
 								responsive: [{
 									breakpoint: 1025,

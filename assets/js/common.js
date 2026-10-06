@@ -255,7 +255,7 @@ var hivepress = {
 
 						if (state.element) {
 							level = parseInt($(state.element).data('level'));
-							template = $('<div />').css('padding-left', 20 * level + 'px').text(template);
+							template = $('<div />').css('padding-inline-start', 20 * level + 'px').text(template);
 						}
 
 						return template;
