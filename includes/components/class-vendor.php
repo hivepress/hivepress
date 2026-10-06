@@ -191,6 +191,9 @@ final class Vendor extends Component {
 
 		// Update listings.
 		$this->update_listings( $vendor, $listings );
+
+		// Restore action.
+		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
 	}
 
 	/**
