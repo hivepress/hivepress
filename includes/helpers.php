@@ -368,8 +368,6 @@ function replace_tokens( $tokens, $text, $format = false ) {
 						if ( $format ) {
 							$match_value = $field->display();
 						} elseif ( $fallback ) {
-
-							// Unescape quotes for plain text.
 							$match_value = strtr(
 								$field->display(),
 								[
