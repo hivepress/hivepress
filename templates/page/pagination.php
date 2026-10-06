@@ -6,8 +6,8 @@ defined( 'ABSPATH' ) || exit;
 	<?php
 	the_posts_pagination(
 		[
-			'prev_text' => '<i class="hp-icon fas fa-chevron-left"></i>',
-			'next_text' => '<i class="hp-icon fas fa-chevron-right"></i>',
+			'prev_text' => '<i class="hp-icon hp-icon--rtl fas fa-chevron-left"></i>',
+			'next_text' => '<i class="hp-icon hp-icon--rtl fas fa-chevron-right"></i>',
 		]
 	);
 	?>

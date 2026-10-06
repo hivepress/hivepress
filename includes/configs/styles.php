@@ -61,6 +61,7 @@ return [
 		'handle' => 'hivepress-grid',
 		'src'    => hivepress()->get_url() . '/assets/css/grid.min.css',
 		'scope'  => [ 'frontend', 'backend', 'editor' ],
+		'rtl'    => true,
 	],
 
 	'core_common'       => [

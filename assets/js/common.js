@@ -255,7 +255,7 @@ var hivepress = {
 
 						if (state.element) {
 							level = parseInt($(state.element).data('level'));
-							template = $('<div />').css('padding-left', 20 * level + 'px').text(template);
+							template = $('<div />').css('padding-inline-start', 20 * level + 'px').text(template);
 						}
 
 						return template;
@@ -376,7 +376,7 @@ var hivepress = {
 					if (currentOptions.length > 1) {
 						currentOptions[0] = $.extend({}, currentOptions[0], {
 							id: currentOptions[0].parent,
-							text: '← ' + currentOptions[0].text,
+							text: ($('html').attr('dir') === 'rtl' ? '→ ' : '← ') + currentOptions[0].text,
 						});
 
 						field.html('').select2($.extend({}, settings, { data: currentOptions }));
@@ -405,7 +405,7 @@ var hivepress = {
 						} else {
 							currentOptions[0] = $.extend({}, currentOptions[0], {
 								id: currentOptions[0].parent,
-								text: '← ' + currentOptions[0].text,
+								text: ($('html').attr('dir') === 'rtl' ? '→ ' : '← ') + currentOptions[0].text,
 							});
 						}
 
@@ -1017,6 +1017,14 @@ var hivepress = {
 				chart = new Chart(canvas, {
 					type: 'line',
 					options: {
+						plugins: {
+							legend: {
+								rtl: $('html').attr('dir') === 'rtl',
+							},
+							tooltip: {
+								rtl: $('html').attr('dir') === 'rtl',
+							},
+						},
 						scales: {
 							y: {
 								beginAtZero: true,
@@ -1382,6 +1390,12 @@ var hivepress = {
 
 		// Date picker
 		var language = hivepressCoreData.language;
+
+		if ($('html').attr('dir') === 'rtl') {
+			flatpickr.setDefaults({
+				position: 'auto right',
+			});
+		}
 
 		if (language === 'el') {
 			language = 'gr';

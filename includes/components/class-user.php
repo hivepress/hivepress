@@ -30,6 +30,9 @@ final class User extends Component {
 		// Register user.
 		add_action( 'hivepress/v1/models/user/register', [ $this, 'register_user' ], 10, 2 );
 
+		// Verify user.
+		add_action( 'hivepress/v1/models/user/verify', [ $this, 'verify_user' ], 10, 2 );
+
 		// Login user.
 		add_filter( 'authenticate', [ $this, 'login_user' ], 100 );
 
@@ -117,9 +120,6 @@ final class User extends Component {
 	 */
 	public function register_user( $user_id, $values ) {
 
-		// Get user.
-		$user = Models\User::query()->get_by_id( $user_id );
-
 		// Hide admin bar.
 		update_user_meta( $user_id, 'show_admin_bar_front', 'false' );
 
@@ -130,6 +130,32 @@ final class User extends Component {
 			return;
 		}
 
+		/**
+		 * Fires when a new user is verified.
+		 *
+		 * @hook hivepress/v1/models/user/verify
+		 * @param {int} $user_id User ID.
+		 * @param {array} $values User values.
+		 */
+		do_action( 'hivepress/v1/models/user/verify', $user_id, $values );
+	}
+
+	/**
+	 * Verifies user.
+	 *
+	 * @param int   $user_id User ID.
+	 * @param array $values User values.
+	 */
+	public function verify_user( $user_id, $values = [] ) {
+
+		// Get user.
+		$user = Models\User::query()->get_by_id( $user_id );
+
+		if ( ! $user ) {
+			return;
+		}
+
+		// Send email.
 		( new Emails\User_Register(
 			[
 				'recipient' => $user->get_email(),
@@ -137,7 +163,7 @@ final class User extends Component {
 				'tokens'    => [
 					'user'          => $user,
 					'user_name'     => $user->get_display_name(),
-					'user_password' => hp\get_array_value( $values, 'password' ),
+					'user_password' => hp\get_array_value( $values, 'password', '********' ),
 				],
 			]
 		) )->send();
@@ -422,6 +448,12 @@ final class User extends Component {
 		if ( hp\get_array_value( $_POST, 'hp_email_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
 			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
+
+			if ( ! get_user_meta( $user_id, 'hp_email_verify_address', true ) ) {
+
+				// Verify user.
+				do_action( 'hivepress/v1/models/user/verify', $user_id );
+			}
 		}
 	}
 
