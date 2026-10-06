@@ -904,7 +904,9 @@ final class User extends Controller {
 		}
 
 		// Delete email key.
-		delete_user_meta( $user->ID, 'hp_email_verify_key' );
+		if ( ! delete_user_meta( $user->ID, 'hp_email_verify_key', $email_key ) ) {
+			return true;
+		}
 
 		if ( is_email( $user->hp_email_verify_address ) ) {
 
