@@ -59,6 +59,20 @@ final class Vendor extends Component {
 	}
 
 	/**
+	 * Gets synced listing attributes.
+	 *
+	 * @return array
+	 */
+	protected function get_synced_attributes() {
+		return array_filter(
+			hivepress()->attribute->get_attributes( 'listing' ),
+			function ( $attribute ) {
+				return hp\get_array_value( $attribute, 'synced' );
+			}
+		);
+	}
+
+	/**
 	 * Updates listings.
 	 *
 	 * @param object $vendor Vendor object.
@@ -67,12 +81,7 @@ final class Vendor extends Component {
 	protected function update_listings( $vendor, $listings ) {
 
 		// Get attributes.
-		$attributes = array_filter(
-			hivepress()->attribute->get_attributes( 'listing' ),
-			function ( $attribute ) {
-				return hp\get_array_value( $attribute, 'synced' );
-			}
-		);
+		$attributes = $this->get_synced_attributes();
 
 		if ( ! $attributes ) {
 			return;
@@ -180,17 +189,20 @@ final class Vendor extends Component {
 			}
 		}
 
-		// Get listings.
-		$listings = Models\Listing::query()->filter(
-			[
-				'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
-				'user'       => $vendor->get_user__id(),
-			]
-		)->get()
-		->serialize();
+		if ( $this->get_synced_attributes() ) {
 
-		// Update listings.
-		$this->update_listings( $vendor, $listings );
+			// Get listings.
+			$listings = Models\Listing::query()->filter(
+				[
+					'status__in' => [ 'auto-draft', 'draft', 'pending', 'publish' ],
+					'vendor'     => $vendor->get_id(),
+				]
+			)->get()
+			->serialize();
+
+			// Update listings.
+			$this->update_listings( $vendor, $listings );
+		}
 
 		// Restore action.
 		add_action( 'hivepress/v1/models/vendor/update', [ $this, 'update_vendor' ], 10, 2 );
