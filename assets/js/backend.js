@@ -65,7 +65,7 @@
 		});
 
 		// File select
-		hivepress.getComponent('file-select').on('click', function(e) {
+		$(document).on('click', hivepress.getSelector('file-select'), function(e) {
 			var button = $(this),
 				container = button.parent().children('div').clone(),
 				frame = wp.media({
