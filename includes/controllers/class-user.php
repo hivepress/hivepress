@@ -926,7 +926,7 @@ final class User extends Controller {
 		}
 
 		// Verify user.
-		do_action( 'hivepress/v1/models/user/verify', $user->ID );
+		do_action( 'hivepress/v1/models/user/verify', $user->ID, [] );
 
 		// Check authentication.
 		if ( is_user_logged_in() ) {
