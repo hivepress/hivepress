@@ -164,7 +164,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 		}
 
 		// Create block.
-		$block = hp\create_class_instance( $block_class, [ $this->get_settings_for_display() ] );
+		$block = hp\create_class_instance( $block_class, [ array_intersect_key( $this->get_settings_for_display(), (array) $block_class::get_meta( 'settings' ) ) ] );
 
 		if ( $block ) {
 
