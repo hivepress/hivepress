@@ -118,8 +118,7 @@ final class Debug extends Component {
 		// Enqueue LESS.
 		$scripts['less'] = [
 			'handle'    => 'less',
-			'src'       => '//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js',
-			'version'   => false,
+			'src'       => hivepress()->get_url() . '/assets/vendor/less/dist/less.min.js',
 			'in_footer' => false,
 			'scope'     => [ 'frontend', 'backend' ],
 		];
