@@ -131,11 +131,11 @@ final class User extends Component {
 		}
 
 		/**
-		 * Fires when a new user is verified.
+		 * Fires when a new user's email is verified via the verification link, social login or admin confirmation, or right after registration if email verification is disabled.
 		 *
 		 * @hook hivepress/v1/models/user/verify
 		 * @param {int} $user_id User ID.
-		 * @param {array} $values User values.
+		 * @param {array} $values User values (on registration only).
 		 */
 		do_action( 'hivepress/v1/models/user/verify', $user_id, $values );
 	}
@@ -452,7 +452,7 @@ final class User extends Component {
 			if ( ! get_user_meta( $user_id, 'hp_email_verify_address', true ) ) {
 
 				// Verify user.
-				do_action( 'hivepress/v1/models/user/verify', $user_id );
+				do_action( 'hivepress/v1/models/user/verify', $user_id, [] );
 			}
 		}
 	}

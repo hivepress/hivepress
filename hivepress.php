@@ -3,11 +3,13 @@
  * Plugin Name: HivePress
  * Plugin URI: https://hivepress.io/
  * Description: Multipurpose directory, listing & classifieds plugin.
- * Requires at least: 5.0
+ * Requires at least: 5.7
  * Requires PHP: 7.4
- * Version: 1.7.32
+ * Version: 1.7.33
  * Author: HivePress
  * Author URI: https://hivepress.io/
+ * License: GPLv3
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: hivepress
  * Domain Path: /languages/
  *
