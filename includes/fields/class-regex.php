@@ -58,6 +58,10 @@ class Regex extends Text {
 	protected function normalize() {
 		Field::normalize();
 
+		if ( ! is_null( $this->value ) && ! is_scalar( $this->value ) ) {
+			$this->value = null;
+		}
+
 		if ( ! is_null( $this->value ) ) {
 			$this->value = trim( preg_replace( '#(?<!\\\\)/#', '\\/', trim( $this->value ) ), '^$' );
 		}

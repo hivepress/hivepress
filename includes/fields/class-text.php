@@ -180,6 +180,10 @@ class Text extends Field {
 	protected function normalize() {
 		parent::normalize();
 
+		if ( ! is_null( $this->value ) && ! is_scalar( $this->value ) ) {
+			$this->value = null;
+		}
+
 		if ( ! is_null( $this->value ) ) {
 			$this->value = trim( wp_unslash( $this->value ) );
 

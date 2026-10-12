@@ -288,7 +288,7 @@ class Date extends Field {
 				function( $value ) {
 					return trim( wp_unslash( $value ) );
 				},
-				(array) $this->value
+				array_filter( (array) $this->value, 'is_scalar' )
 			);
 
 			if ( ! $this->multiple ) {
