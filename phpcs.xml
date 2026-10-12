@@ -2,7 +2,7 @@
 <ruleset name="HivePress">
 	<description>HivePress coding standards.</description>
 
-	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern type="relative">^vendor/*</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict"/>
