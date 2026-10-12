@@ -302,14 +302,14 @@ final class Template extends Component {
 	 * Renders site header.
 	 */
 	public function render_site_header() {
-		echo $this->render_menu(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Menu HTML rendered by escaped HivePress templates.
+		echo $this->render_menu(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Menu HTML, menus escape their own output.
 	}
 
 	/**
 	 * Renders site footer.
 	 */
 	public function render_site_footer() {
-		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML rendered by escaped HivePress templates.
+		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 	}
 
 	/**

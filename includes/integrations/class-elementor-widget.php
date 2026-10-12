@@ -169,7 +169,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 		if ( $block ) {
 
 			// Render block.
-			echo $block->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML rendered by escaped HivePress templates.
+			echo $block->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 		}
 	}
 }
