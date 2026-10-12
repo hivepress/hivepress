@@ -384,6 +384,10 @@ final class Editor extends Component {
 			$block_args = (array) hp\get_first_array_value( $args );
 
 			if ( isset( $this->blocks[ $block_type ] ) ) {
+
+				// Filter block arguments.
+				$block_args = array_intersect_key( $block_args, $this->blocks[ $block_type ]['attributes'] );
+
 				if ( is_array( $this->template ) ) {
 
 					// Render placeholder.
