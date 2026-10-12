@@ -128,7 +128,7 @@ class Form extends Block {
 			$form->set_values( $this->values, true );
 
 			if ( $form->get_method() === 'POST' ) {
-				$form->set_values( $_POST, true );
+				$form->set_values( $_POST, true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only pre-fills the rendered form with submitted values, nothing is saved.
 			} elseif ( $form->get_method() === 'GET' ) {
 				$form->set_values( $_GET, true );
 			}

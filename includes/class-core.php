@@ -305,7 +305,7 @@ final class Core {
 			$dirname    = basename( $dir );
 			$textdomain = hp\sanitize_slug( $dirname );
 
-			load_plugin_textdomain( $textdomain, false, $dirname . '/languages' );
+			load_plugin_textdomain( $textdomain, false, $dirname . '/languages' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Loads translations for HivePress and its extensions in one place, to avoid duplicating this code in each extension.
 		}
 	}
 

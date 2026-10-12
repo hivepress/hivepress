@@ -59,7 +59,7 @@ class Page extends Container {
 				$query['hp_archive'] = true;
 			}
 
-			query_posts( $query );
+			query_posts( $query ); // phpcs:ignore WordPress.WP.DiscouragedFunctions.query_posts_query_posts -- Replaces the main query, so the theme loop and conditional tags work on HivePress pages.
 		}
 
 		// Render content.

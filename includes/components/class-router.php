@@ -671,7 +671,7 @@ final class Router extends Component {
 
 			// Render page.
 			if ( isset( $route['action'] ) ) {
-				echo call_user_func( $route['action'] );
+				echo call_user_func( $route['action'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Page HTML rendered by escaped HivePress templates.
 
 				exit;
 			}

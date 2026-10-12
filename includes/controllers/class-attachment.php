@@ -172,12 +172,12 @@ final class Attachment extends Controller {
 		}
 
 		// Check file.
-		if ( ! isset( $_FILES['file'] ) ) {
+		if ( ! isset( $_FILES['file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- REST API request, nonce verified by WordPress.
 			return hp\rest_error( 400 );
 		}
 
 		// Check file format.
-		if ( $parent_field->get_formats() && ! hivepress()->attachment->is_valid_file( $_FILES['file']['tmp_name'], $_FILES['file']['name'], $parent_field->get_formats() ) ) {
+		if ( $parent_field->get_formats() && ! hivepress()->attachment->is_valid_file( $_FILES['file']['tmp_name'], $_FILES['file']['name'], $parent_field->get_formats() ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- REST API request, the uploaded file is checked by is_valid_file() and media_handle_upload().
 
 			/* translators: %s: file extensions. */
 			return hp\rest_error( 400, sprintf( esc_html__( 'Only %s files are allowed.', 'hivepress' ), strtoupper( implode( ', ', $parent_field->get_formats() ) ) ) );
