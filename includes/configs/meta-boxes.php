@@ -51,9 +51,10 @@ return [
 	],
 
 	'listing_settings'          => [
-		'title'  => hivepress()->translator->get_string( 'settings' ),
-		'screen' => 'listing',
-		'model'  => 'listing',
+		'title'       => hivepress()->translator->get_string( 'settings' ),
+		'screen'      => 'listing',
+		'model'       => 'listing',
+		'_capability' => 'edit_others_posts',
 
 		'fields' => [
 			'vendor'        => [
@@ -145,9 +146,10 @@ return [
 	],
 
 	'vendor_settings'           => [
-		'title'  => hivepress()->translator->get_string( 'settings' ),
-		'screen' => 'vendor',
-		'model'  => 'vendor',
+		'title'       => hivepress()->translator->get_string( 'settings' ),
+		'screen'      => 'vendor',
+		'model'       => 'vendor',
+		'_capability' => 'edit_others_posts',
 
 		'fields' => [
 			'user'     => [
