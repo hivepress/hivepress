@@ -302,7 +302,7 @@ final class Template extends Component {
 	 * Renders site header.
 	 */
 	public function render_site_header() {
-		echo $this->render_menu(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Menu HTML, menus escape their own output.
+		echo $this->render_menu(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 	}
 
 	/**

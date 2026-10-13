@@ -509,7 +509,7 @@ final class Cache extends Component {
 				$table  = $wpdb->prefix . $type . 'meta';
 				$column = $type . '_id';
 
-				// phpcs:disable WordPress.DB, PluginCheck.Security.DirectDB -- Table and column names are built from a fixed list of meta types.
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table and column names are built from a fixed list of meta types.
 				$meta_values = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT {$column}, meta_key FROM {$table} 
@@ -521,7 +521,7 @@ final class Cache extends Component {
 					),
 					ARRAY_A
 				);
-				// phpcs:enable
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 				// Delete values.
 				if ( $meta_values ) {
