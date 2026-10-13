@@ -549,12 +549,13 @@ final class Attribute extends Component {
 	public function register_post_types( $post_types ) {
 		foreach ( $this->get_models() as $model ) {
 			$post_types[ $model . '_attribute' ] = [
-				'public'       => false,
-				'show_ui'      => true,
-				'show_in_menu' => 'user' === $model ? 'users.php' : 'edit.php?post_type=' . hp\prefix( $model ),
-				'supports'     => [ 'title', 'page-attributes' ],
+				'public'          => false,
+				'show_ui'         => true,
+				'show_in_menu'    => 'user' === $model ? 'users.php' : 'edit.php?post_type=' . hp\prefix( $model ),
+				'supports'        => [ 'title', 'page-attributes' ],
+				'capability_type' => 'page',
 
-				'labels'       => [
+				'labels'          => [
 					'name'               => hivepress()->translator->get_string( 'attributes' ),
 					'singular_name'      => hivepress()->translator->get_string( 'attribute' ),
 					'add_new'            => hivepress()->translator->get_string( 'add_new_attribute' ),
@@ -919,7 +920,7 @@ final class Attribute extends Component {
 		}
 
 		// Check action.
-		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) {
+		if ( hp\get_array_value( $_POST, 'action' ) !== 'editpost' ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only detects post edit form saves to refresh rewrite rules, no data is saved.
 			return;
 		}
 
@@ -1139,7 +1140,7 @@ final class Attribute extends Component {
 
 		// Add fields.
 		foreach ( $this->get_attributes( $model, $category_ids ) as $attribute_name => $attribute ) {
-			if ( ! $attribute['protected'] && ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
+			if ( ! $attribute['protected'] && ( $attribute['editable'] || current_user_can( 'edit_others_posts' ) ) && ! isset( $meta_box['fields'][ $attribute_name ] ) ) {
 				$meta_box['fields'][ $attribute_name ] = $attribute['edit_field'];
 			}
 		}
