@@ -12,12 +12,13 @@ defined( 'ABSPATH' ) || exit;
 
 return [
 	'email'    => [
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => 'hp_settings',
-		'supports'     => [ 'title', 'editor' ],
+		'public'          => false,
+		'show_ui'         => true,
+		'show_in_menu'    => 'hp_settings',
+		'supports'        => [ 'title', 'editor' ],
+		'capability_type' => 'page',
 
-		'labels'       => [
+		'labels'          => [
 			'name'               => esc_html__( 'Emails', 'hivepress' ),
 			'singular_name'      => esc_html__( 'Email', 'hivepress' ),
 			'add_new'            => esc_html_x( 'Add New', 'email', 'hivepress' ),
@@ -32,13 +33,14 @@ return [
 	],
 
 	'template' => [
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_rest' => true,
-		'show_in_menu' => 'hp_settings',
-		'supports'     => [ 'title', 'editor' ],
+		'public'          => false,
+		'show_ui'         => true,
+		'show_in_rest'    => true,
+		'show_in_menu'    => 'hp_settings',
+		'supports'        => [ 'title', 'editor' ],
+		'capability_type' => 'page',
 
-		'labels'       => [
+		'labels'          => [
 			'name'               => esc_html__( 'Templates', 'hivepress' ),
 			'singular_name'      => esc_html__( 'Template', 'hivepress' ),
 			'add_new'            => esc_html_x( 'Add New', 'template', 'hivepress' ),
