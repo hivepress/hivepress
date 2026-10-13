@@ -139,6 +139,13 @@ When developing HivePress, we follow WordPress coding standards and best securit
 
 Moreover, since HivePress is open-source and self-hosted software, unlike SaaS alternatives, you fully own your directory data, which is stored entirely in your website’s database, giving you more control over your data, security, and privacy.
 
+== External services ==
+
+HivePress connects to these services only in the following cases:
+
+- **HivePress API** – to display notices and HivePress products on dedicated pages in the dashboard, and optionally to send [usage data](https://hivepress.io/usage-tracking/) or deactivation feedback, only if you choose to share them. [Terms of Service](https://hivepress.io/terms-of-service/), [Privacy Policy](https://hivepress.io/privacy-policy/)
+- **Google APIs** – optionally, to use Google services such as reCAPTCHA, only if the API keys are set or a Google account is connected. [Terms of Service](https://policies.google.com/terms), [Privacy Policy](https://policies.google.com/privacy)
+
 == Frequently Asked Questions ==
 
 = What types of directory websites can I build with HivePress? =
