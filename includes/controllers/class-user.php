@@ -1011,6 +1011,7 @@ final class User extends Controller {
 		)->get_first();
 
 		if ( $user ) {
+			/* translators: %s: user name. */
 			$title = sprintf( esc_html__( 'Profile of %s', 'hivepress' ), $user->get_display_name() );
 		}
 

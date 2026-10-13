@@ -18,6 +18,7 @@ const assets = [
 	'intl-tel-input/build/js/utils.js',
 	'chart.js/dist/chart.min.js',
 	'chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+	'less/dist/less.min.js',
 	'@fancyapps/fancybox/dist/jquery.fancybox.min.css',
 	'slick-carousel/slick/slick.css',
 	'flatpickr/dist/flatpickr.min.css',

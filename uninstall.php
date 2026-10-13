@@ -6,7 +6,7 @@
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 global $wpdb;
 

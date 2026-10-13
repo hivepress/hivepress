@@ -45,7 +45,7 @@ class Listing_Expire extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => hivepress()->translator->get_string( 'listing_expired' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired, click on the following link to renew it: %listing_url%', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has expired, click on the following link to renew it: %listing_url%', 'hivepress' ) ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment -- Email tokens, not printf placeholders.
 			],
 			$args
 		);

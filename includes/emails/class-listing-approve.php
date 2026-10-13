@@ -45,7 +45,7 @@ class Listing_Approve extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => hivepress()->translator->get_string( 'listing_approved' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your listing "%listing_title%" has been approved, click on the following link to view it: %listing_url%', 'hivepress' ) ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment -- Email tokens, not printf placeholders.
 			],
 			$args
 		);

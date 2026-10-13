@@ -302,14 +302,14 @@ final class Template extends Component {
 	 * Renders site header.
 	 */
 	public function render_site_header() {
-		echo $this->render_menu();
+		echo $this->render_menu(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 	}
 
 	/**
 	 * Renders site footer.
 	 */
 	public function render_site_footer() {
-		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render();
+		echo ( new Blocks\Template( [ 'template' => 'site_footer_block' ] ) )->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 	}
 
 	/**

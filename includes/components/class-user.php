@@ -445,7 +445,7 @@ final class User extends Component {
 		}
 
 		// Delete verification key.
-		if ( hp\get_array_value( $_POST, 'hp_email_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) {
+		if ( hp\get_array_value( $_POST, 'hp_email_verified' ) && get_user_meta( $user_id, 'hp_email_verify_key', true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WordPress in user-edit.php before saving the profile.
 			delete_user_meta( $user_id, 'hp_email_verified' );
 			delete_user_meta( $user_id, 'hp_email_verify_key' );
 

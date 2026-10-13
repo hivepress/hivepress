@@ -24,7 +24,7 @@ jobs:
 
       - name: Pack release
         run: |
-          rm -rf .git* composer.* phpcs.xml package.json package-lock.json build.js node_modules README.md
+          rm -rf .git* composer.lock phpcs.xml package-lock.json build.js node_modules README.md
           cd ..
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 

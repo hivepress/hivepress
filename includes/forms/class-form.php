@@ -186,7 +186,7 @@ abstract class Form {
 
 		// Set message.
 		if ( $this->message ) {
-			$attributes['data-message'] = $this->message;
+			$attributes['data-message'] = htmlspecialchars( hp\sanitize_html( $this->message ), ENT_QUOTES, 'UTF-8' );
 		}
 
 		// Set action.

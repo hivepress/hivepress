@@ -169,7 +169,7 @@ final class Elementor_Widget extends \Elementor\Widget_Base {
 		if ( $block ) {
 
 			// Render block.
-			echo $block->render();
+			echo $block->render(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block HTML, blocks escape their own output.
 		}
 	}
 }

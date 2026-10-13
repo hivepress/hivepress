@@ -45,7 +45,7 @@ class User_Email_Verify extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Email Verification', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to verify your email address: %email_verify_url%', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Please click on the following link to verify your email address: %email_verify_url%', 'hivepress' ) ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.UnorderedPlaceholdersText -- Email tokens, not printf placeholders.
 			],
 			$args
 		);

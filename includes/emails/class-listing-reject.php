@@ -45,7 +45,7 @@ class Listing_Reject extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => hivepress()->translator->get_string( 'listing_rejected' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Unfortunately, your listing "%listing_title%" has been rejected.', 'hivepress' ) ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment -- Email tokens, not printf placeholders.
 			],
 			$args
 		);

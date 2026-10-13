@@ -443,7 +443,7 @@ final class Form extends Component {
 			$labels = [];
 
 			foreach ( explode( '/', str_replace( '_', ' ', $name ) ) as $label ) {
-				$labels[] = translate( $label, 'continents-cities' );
+				$labels[] = translate( $label, 'continents-cities' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText, WordPress.WP.I18n.TextDomainMismatch, WordPress.WP.I18n.LowLevelTranslationFunction -- Uses WordPress core city name translations, same as wp_timezone_choice().
 			}
 
 			if ( count( $labels ) > 1 ) {
@@ -543,7 +543,7 @@ final class Form extends Component {
 						'https://www.google.com/recaptcha/api/siteverify?' . http_build_query(
 							[
 								'secret'   => get_option( 'hp_recaptcha_secret_key' ),
-								'response' => sanitize_text_field( hp\get_array_value( $_POST, 'g-recaptcha-response' ) ),
+								'response' => sanitize_text_field( hp\get_array_value( $_POST, 'g-recaptcha-response' ) ), // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only reads the reCAPTCHA response to verify it with Google; the reCAPTCHA check itself protects the form.
 							]
 						)
 					)
@@ -602,7 +602,7 @@ final class Form extends Component {
 					'recaptcha',
 					'https://www.google.com/recaptcha/api.js',
 					[],
-					null,
+					null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google API, versioned by Google.
 					false
 				);
 
@@ -616,7 +616,6 @@ final class Form extends Component {
 	 * Prints scripts.
 	 */
 	public function print_scripts() {
-		$scripts = '';
 
 		// Get language.
 		$language = hivepress()->translator->get_language();
@@ -629,13 +628,14 @@ final class Form extends Component {
 		$filepath = '/assets/vendor/intl-tel-input/build/js/i18n/' . $language . '/index.js';
 
 		if ( file_exists( hivepress()->get_path() . $filepath ) ) {
-			$scripts = '<script type="module">
-				import language from "' . esc_url( hivepress()->get_url() . $filepath ) . '";
+			wp_print_inline_script_tag(
+				'import language from "' . esc_url( hivepress()->get_url() . $filepath ) . '";
 
-				window.intlTelInputi18n = language;
-			</script>';
+				window.intlTelInputi18n = language;',
+				[
+					'type' => 'module',
+				]
+			);
 		}
-
-		echo $scripts;
 	}
 }

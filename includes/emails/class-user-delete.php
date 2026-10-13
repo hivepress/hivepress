@@ -45,7 +45,7 @@ class User_Delete extends Email {
 		$args = hp\merge_arrays(
 			[
 				'subject' => esc_html__( 'Account Deleted', 'hivepress' ),
-				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your account has been deleted, along with any associated content.', 'hivepress' ) ),
+				'body'    => hp\sanitize_html( __( 'Hi, %user_name%! Your account has been deleted, along with any associated content.', 'hivepress' ) ), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment -- Email tokens, not printf placeholders.
 			],
 			$args
 		);

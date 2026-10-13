@@ -4,7 +4,7 @@ Tags: business directory, classifieds, directory, directory plugin, listings
 Requires at least: 5.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.33
+Stable tag: 1.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -138,6 +138,13 @@ When developing HivePress, we follow WordPress coding standards and best securit
 - **Restrict Dashboard** – restrict access to the WordPress dashboard for regular users.
 
 Moreover, since HivePress is open-source and self-hosted software, unlike SaaS alternatives, you fully own your directory data, which is stored entirely in your website’s database, giving you more control over your data, security, and privacy.
+
+== External services ==
+
+This plugin connects to these services only in the following cases:
+
+- **HivePress API** – to display notices and HivePress products on dedicated pages in the dashboard, and optionally to send [non-sensitive usage data](https://hivepress.io/usage-tracking/) or deactivation feedback, only if you choose to share them. [Terms of Service](https://hivepress.io/terms-of-service/), [Privacy Policy](https://hivepress.io/privacy-policy/)
+- **Google APIs** – optionally, to use Google services such as reCAPTCHA, only if the API keys are set or a Google account is connected. [Terms of Service](https://policies.google.com/terms), [Privacy Policy](https://policies.google.com/privacy)
 
 == Frequently Asked Questions ==
 
