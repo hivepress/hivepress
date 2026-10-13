@@ -336,6 +336,7 @@ class Attachment_Upload extends Field {
 
 					'data-messages'  => wp_json_encode(
 						[
+							/* translators: %s: file size. */
 							'max_size'  => sprintf( esc_html__( 'The file size must not exceed %s.', 'hivepress' ), size_format( wp_max_upload_size() ) ),
 							/* translators: %s: files number. */
 							'max_files' => sprintf( esc_html__( 'Only up to %s files can be uploaded.', 'hivepress' ), number_format_i18n( $this->max_files ) ),
