@@ -209,10 +209,10 @@ final class Editor extends Component {
 		// Get template ID.
 		$template_id = null;
 
-		if ( is_admin() && 'post.php' === $pagenow && isset( $_GET['post'] ) ) {
-			$template_id = absint( $_GET['post'] );
-		} elseif ( $this->is_block_preview() && isset( $_GET['post_id'] ) ) {
-			$template_id = absint( $_GET['post_id'] );
+		if ( is_admin() && 'post.php' === $pagenow && isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the edited template ID, nothing is saved.
+			$template_id = absint( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the edited template ID, nothing is saved.
+		} elseif ( $this->is_block_preview() && isset( $_GET['post_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the edited template ID, nothing is saved.
+			$template_id = absint( $_GET['post_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the edited template ID, nothing is saved.
 		}
 
 		// Register template blocks.
@@ -339,7 +339,7 @@ final class Editor extends Component {
 		global $pagenow;
 
 		// Check request.
-		if ( isset( $_GET['doing_wp_cron'] ) || ( is_admin() && ! in_array( $pagenow, [ 'post.php', 'post-new.php' ] ) ) ) {
+		if ( isset( $_GET['doing_wp_cron'] ) || ( is_admin() && ! in_array( $pagenow, [ 'post.php', 'post-new.php' ] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the cron request, nothing is saved.
 			return;
 		}
 
@@ -450,7 +450,7 @@ final class Editor extends Component {
 
 		// @todo remove when fixed in the theme framework.
 		if ( ! defined( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS' ) ) {
-			define( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS', true );
+			define( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Constant defined by the Requests library in WordPress core, silences its deprecation notices.
 		}
 
 		foreach ( hivepress()->get_config( 'styles' ) as $style ) {

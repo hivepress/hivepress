@@ -565,22 +565,47 @@ abstract class Field {
 		}
 
 		if ( $shortcode ) {
-			$value = strip_shortcodes( $value );
+			$value = hp\strip_shortcodes( $value );
 		}
 
-		// Render output.
-		$output = hp\replace_tokens(
-			array_merge(
-				$this->context,
-				[
-					'label'     => '<strong>' . $this->label . '</strong>',
-					'value'     => $value,
-					'raw_value' => is_array( $this->value ) ? '' : $this->escape_display_value( (string) $this->value, true ),
-				]
-			),
-			$this->display_template,
-			true
+		// Get tokens.
+		$tokens = array_merge(
+			$this->context,
+			[
+				'label'     => '<strong>' . $this->label . '</strong>',
+				'value'     => $value,
+				'raw_value' => is_array( $this->value ) ? '' : $this->escape_display_value( (string) $this->value, true ),
+			]
 		);
+
+		// Render output.
+		$output = '';
+
+		$parts = preg_split( '/(\s(?:href|src|action|formaction|xlink:href|style)\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))/i', (string) $this->display_template, -1, PREG_SPLIT_DELIM_CAPTURE );
+
+		foreach ( $parts as $index => $part ) {
+			if ( strpos( $part, '%' ) === false ) {
+				$output .= $part;
+			} elseif ( $index % 2 && preg_match( '/^([^=]+=\s*)(["\']?)(.*)\2$/s', $part, $matches ) ) {
+				$attribute = hp\replace_tokens( $tokens, $matches[3], true );
+
+				if ( $attribute !== $matches[3] ) {
+					if ( stripos( $matches[1], 'style' ) !== false ) {
+						$attribute = esc_attr( safecss_filter_attr( $attribute ) );
+					} elseif ( strpbrk( strstr( $matches[3], '%', true ), ':/?#' ) === false ) {
+						$attribute = esc_url( $attribute );
+					}
+
+					$quote = $matches[2] ? $matches[2] : '"';
+
+					$part = $matches[1] . $quote . $attribute . $quote;
+				}
+
+				$output .= $part;
+			} else {
+				$output .= hp\replace_tokens( $tokens, $part, true );
+			}
+		}
 
 		if ( $shortcode ) {
 			$output = do_shortcode( $output );

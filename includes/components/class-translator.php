@@ -47,7 +47,7 @@ final class Translator extends Component {
 		$language = hp\get_first_array_value( explode( '_', get_locale() ) );
 
 		if ( $this->is_multilingual() ) {
-			$language = apply_filters( 'wpml_current_language', $language );
+			$language = apply_filters( 'wpml_current_language', $language ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML API hook.
 		}
 
 		return $language;
@@ -84,7 +84,7 @@ final class Translator extends Component {
 	 * @return int
 	 */
 	public function get_object_id( $id, $type = 'page' ) {
-		return apply_filters( 'wpml_object_id', $id, $type );
+		return apply_filters( 'wpml_object_id', $id, $type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML API hook.
 	}
 
 	/**
@@ -151,7 +151,7 @@ final class Translator extends Component {
 
 		// Set translation.
 		do_action(
-			'wpml_set_element_language_details',
+			'wpml_set_element_language_details', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML API hook.
 			[
 				'element_id'    => $post_id,
 				'element_type'  => 'post_' . $post_type,

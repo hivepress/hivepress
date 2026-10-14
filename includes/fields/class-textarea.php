@@ -101,7 +101,7 @@ class Textarea extends Text {
 			// @todo ensure it runs before rendering template.
 			wp_enqueue_style( 'wp-block-embed' );
 
-			return make_clickable( apply_filters( 'the_content', empty( $this->html ) ? esc_html( $this->value ) : $this->value ) );
+			return make_clickable( apply_filters( 'the_content', empty( $this->html ) ? esc_html( $this->value ) : $this->value ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress hook, applies the default content formatting.
 		}
 	}
 
@@ -125,7 +125,7 @@ class Textarea extends Text {
 	 */
 	protected function sanitize() {
 		if ( empty( $this->html ) ) {
-			$this->value = sanitize_textarea_field( $this->value );
+			$this->value = hp\strip_shortcodes( sanitize_textarea_field( $this->value ) );
 		} else {
 			parent::sanitize();
 		}

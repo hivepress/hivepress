@@ -137,9 +137,9 @@ final class Admin extends Component {
 	protected function is_admin_page() {
 		global $pagenow;
 
-		$page_name = (string) hp\get_array_value( $_GET, 'page' );
-		$post_type = 'post.php' === $pagenow ? get_post_type() : (string) hp\get_array_value( $_GET, 'post_type' );
-		$taxonomy  = (string) hp\get_array_value( $_GET, 'taxonomy' );
+		$page_name = (string) hp\get_array_value( $_GET, 'page' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the current admin page, nothing is saved.
+		$post_type = 'post.php' === $pagenow ? get_post_type() : (string) hp\get_array_value( $_GET, 'post_type' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the current admin page, nothing is saved.
+		$taxonomy  = (string) hp\get_array_value( $_GET, 'taxonomy' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the current admin page, nothing is saved.
 
 		return ( 'admin.php' === $pagenow && strpos( $page_name, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit.php', 'post.php', 'post-new.php' ] ) && strpos( $post_type, 'hp_' ) === 0 ) || ( in_array( $pagenow, [ 'edit-tags.php', 'term.php' ] ) && strpos( $taxonomy, 'hp_' ) === 0 );
 	}
@@ -275,7 +275,7 @@ final class Admin extends Component {
 	public function register_settings() {
 		global $pagenow;
 
-		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) ) {
+		if ( 'options.php' === $pagenow || ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the current admin page, nothing is saved.
 
 			// Get current tab.
 			$tab = hp\get_array_value( hivepress()->get_config( 'settings' ), $this->get_settings_tab() );
@@ -614,7 +614,7 @@ final class Admin extends Component {
 		$tabs = array_keys( hp\sort_array( hivepress()->get_config( 'settings' ) ) );
 
 		$first_tab   = hp\get_first_array_value( $tabs );
-		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
+		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only selects the current tab, nothing is saved.
 
 		// Set the default tab.
 		if ( ! in_array( $current_tab, $tabs, true ) ) {
@@ -1090,7 +1090,7 @@ final class Admin extends Component {
 		$tabs = array_keys( $this->get_extensions_tabs() );
 
 		$first_tab   = hp\get_first_array_value( $tabs );
-		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab );
+		$current_tab = hp\get_array_value( $_GET, 'tab', $first_tab ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only selects the current tab, nothing is saved.
 
 		// Set the default tab.
 		if ( ! in_array( $current_tab, $tabs, true ) ) {
@@ -1903,11 +1903,11 @@ final class Admin extends Component {
 				$product_names = implode( ', ', array_column( $products, 'name' ) );
 
 				$notices[ 'license_request_' . md5( $product_names ) ] = [
-					'type'        => 'error',
+					'type'        => 'warning',
 					'dismissible' => true,
 					'text'        => sprintf(
 						/* translators: 1: settings URL, 2: unlicensed products. */
-						hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions. The following products without valid licenses are going to be disabled automatically: %2$s.', 'hivepress' ) ),
+						hp\sanitize_html( __( 'Please <a href="%1$s">add the license keys</a> for the installed premium HivePress themes and extensions to keep receiving security and feature updates: %2$s.', 'hivepress' ) ),
 						esc_url( admin_url( 'admin.php?page=hp_settings&tab=integrations' ) ),
 						$product_names
 					),
@@ -2013,7 +2013,7 @@ final class Admin extends Component {
 		}
 
 		// Render settings errors.
-		if ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) {
+		if ( 'admin.php' === $pagenow && 'hp_settings' === (string) hp\get_array_value( $_GET, 'page' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only detects the current admin page, nothing is saved.
 			ob_start();
 
 			settings_errors();

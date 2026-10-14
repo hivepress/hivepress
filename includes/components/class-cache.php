@@ -479,9 +479,13 @@ final class Cache extends Component {
 	public function clear_transient_cache() {
 		global $wpdb;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk deletion of HivePress transients by prefix, there is no API for this.
+
 		// Delete transients.
 		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
 		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+
+		// phpcs:enable
 	}
 
 	/**
@@ -509,7 +513,7 @@ final class Cache extends Component {
 				$table  = $wpdb->prefix . $type . 'meta';
 				$column = $type . '_id';
 
-				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table and column names are built from a fixed list of meta types.
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table and column names are built from a fixed list of meta types; finds expired meta transients, there is no API for this.
 				$meta_values = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT {$column}, meta_key FROM {$table} 
@@ -521,7 +525,7 @@ final class Cache extends Component {
 					),
 					ARRAY_A
 				);
-				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+				// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 				// Delete values.
 				if ( $meta_values ) {

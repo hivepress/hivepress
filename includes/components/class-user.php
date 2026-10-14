@@ -262,7 +262,7 @@ final class User extends Component {
 			$form['fields']['_redirect'] = [
 				'type'         => 'url',
 				'display_type' => 'hidden',
-				'default'      => hp\get_array_value( $_GET, 'redirect' ),
+				'default'      => hp\get_array_value( $_GET, 'redirect' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only sets the default redirect URL of the rendered form, nothing is saved.
 				'_separate'    => true,
 			];
 		}
@@ -415,7 +415,7 @@ final class User extends Component {
 		}
 
 		// Get user ID.
-		$user_id = absint( hp\get_array_value( $_GET, 'user_id' ) );
+		$user_id = absint( hp\get_array_value( $_GET, 'user_id' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only checks which profile fields to display, nothing is saved.
 
 		if ( ! $user_id ) {
 			$user_id = get_current_user_id();

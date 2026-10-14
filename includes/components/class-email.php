@@ -81,7 +81,7 @@ final class Email extends Component {
 				}
 
 				// Set body.
-				$args['body'] = apply_filters( 'the_content', $content->post_content );
+				$args['body'] = apply_filters( 'the_content', $content->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress hook, applies the default content formatting.
 
 				hivepress()->request->reset_post();
 			}

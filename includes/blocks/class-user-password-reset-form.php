@@ -46,8 +46,8 @@ class User_Password_Reset_Form extends Form {
 		$this->values = array_merge(
 			$this->values,
 			[
-				'username'           => hp\get_array_value( $_GET, 'username' ),
-				'password_reset_key' => hp\get_array_value( $_GET, 'password_reset_key' ),
+				'username'           => hp\get_array_value( $_GET, 'username' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Pre-fills the form with the password reset link values, the key is verified on submission.
+				'password_reset_key' => hp\get_array_value( $_GET, 'password_reset_key' ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Pre-fills the form with the password reset link values, the key is verified on submission.
 			]
 		);
 

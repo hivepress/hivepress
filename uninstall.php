@@ -8,6 +8,8 @@
 // Exit if accessed directly.
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk removal of all HivePress data on uninstall, there is no API for this and nothing to cache.
+
 global $wpdb;
 
 if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
@@ -45,18 +47,20 @@ if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_hp\_%';" );
 	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
 
-	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
-	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE '\_transient\_timeout\_hp\_%';" );
 
-	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
-	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '\_transient\_timeout\_hp\_%';" );
 
-	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
-	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE meta_key LIKE '\_transient\_timeout\_hp\_%';" );
 
-	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE option_name LIKE '\_transient\_hp\_%';" );
-	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE option_name LIKE '\_transient\_timeout\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE meta_key LIKE '\_transient\_hp\_%';" );
+	$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE meta_key LIKE '\_transient\_timeout\_hp\_%';" );
 
 	// Flush cache.
 	wp_cache_flush();
 }
+
+// phpcs:enable

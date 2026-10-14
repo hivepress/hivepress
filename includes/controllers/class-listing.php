@@ -578,7 +578,7 @@ final class Listing extends Controller {
 
 		// Get category.
 		$category    = null;
-		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, '_category' ) );
+		$category_id = is_tax() ? get_queried_object_id() : absint( hp\get_array_value( $_GET, '_category' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the category ID for the redirect, nothing is saved.
 
 		if ( $category_id ) {
 			$category = Models\Listing_Category::query()->get_by_id( $category_id );
@@ -1040,7 +1040,7 @@ final class Listing extends Controller {
 
 		// Check redirect.
 		// @todo remove temporary fix.
-		if ( isset( $_GET['redirect'] ) ) {
+		if ( isset( $_GET['redirect'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only resets the category of the current user's draft listing being submitted.
 			wp_set_post_terms( $listing->get_id(), [], 'hp_listing_category' );
 
 			return hivepress()->router->get_url( 'listing_submit_details_page' );

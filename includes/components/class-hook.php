@@ -96,7 +96,7 @@ final class Hook extends Component {
 	 */
 	public function start_import() {
 		if ( ! defined( 'HP_IMPORT' ) ) {
-			define( 'HP_IMPORT', true );
+			define( 'HP_IMPORT', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- HP_ is the HivePress constant prefix.
 		}
 	}
 

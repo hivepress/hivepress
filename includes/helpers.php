@@ -610,3 +610,19 @@ function get_column_width( $number ) {
 function has_shortcode( $text ) {
 	return strpos( $text, '[' ) !== false && preg_match( '/\[[a-z0-9_-]+(\]| )/i', $text );
 }
+
+/**
+ * Strips shortcodes recursively.
+ *
+ * @param string $text Text to be stripped.
+ * @return string
+ */
+function strip_shortcodes( $text ) {
+	do {
+		$stripped = $text;
+
+		$text = \strip_shortcodes( $stripped );
+	} while ( $text !== $stripped );
+
+	return $text;
+}

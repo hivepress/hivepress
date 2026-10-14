@@ -78,6 +78,9 @@ final class Attribute extends Component {
 		add_filter( 'hivepress/v1/meta_boxes', [ $this, 'add_meta_boxes' ], 1 );
 		add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ], 100 );
 
+		// Restrict meta fields.
+		add_filter( 'map_meta_cap', [ $this, 'restrict_meta_fields' ], 10, 4 );
+
 		// Redirect archive page.
 		add_action( 'template_redirect', [ $this, 'redirect_archive_page' ] );
 
@@ -317,8 +320,8 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = null;
 
-		if ( isset( $_GET['_category'] ) ) {
-			$category_id = absint( $_GET['_category'] );
+		if ( isset( $_GET['_category'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the category ID of the current search, nothing is saved.
+			$category_id = absint( $_GET['_category'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the category ID of the current search, nothing is saved.
 
 			if ( $validate && $category_id && ! term_exists( $category_id, $taxonomy ) ) {
 				$category_id = null;
@@ -776,6 +779,10 @@ final class Attribute extends Component {
 						'show_in_quick_edit' => false,
 						'show_in_menu'       => false,
 						'rewrite'            => false,
+
+						'capabilities'       => [
+							'assign_terms' => 'edit_others_posts',
+						],
 
 						'labels'             => [
 							'name'          => $attribute_args['label'],
@@ -2097,6 +2104,23 @@ final class Attribute extends Component {
 	}
 
 	/**
+	 * Restricts meta fields.
+	 *
+	 * @param array  $caps Primitive capabilities.
+	 * @param string $cap Meta capability.
+	 * @param int    $user_id User ID.
+	 * @param array  $args Capability arguments.
+	 * @return array
+	 */
+	public function restrict_meta_fields( $caps, $cap, $user_id, $args ) {
+		if ( in_array( $cap, [ 'add_post_meta', 'edit_post_meta', 'delete_post_meta' ], true ) && strpos( (string) hp\get_array_value( $args, 1 ), 'hp_' ) === 0 ) {
+			$caps[] = 'edit_others_posts';
+		}
+
+		return $caps;
+	}
+
+	/**
 	 * Redirects archive page.
 	 */
 	public function redirect_archive_page() {
@@ -2241,7 +2265,7 @@ final class Attribute extends Component {
 			if ( $sort_form ) {
 
 				// Set form values.
-				$sort_form->set_values( $_GET, true );
+				$sort_form->set_values( $_GET, true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Sets the sorting form values from the query, nothing is saved.
 
 				if ( $sort_form->validate() ) {
 
@@ -2314,7 +2338,7 @@ final class Attribute extends Component {
 		if ( $query->is_search() ) {
 
 			// Get attribute fields.
-			$attribute_fields = $this->get_attribute_fields( $model, $_GET );
+			$attribute_fields = $this->get_attribute_fields( $model, $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Filters the search query by attribute values, nothing is saved.
 
 			// Get query arguments.
 			$query_args = $this->get_query_args( $attribute_fields );

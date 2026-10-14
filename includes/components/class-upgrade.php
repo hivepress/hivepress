@@ -165,6 +165,8 @@ final class Upgrade extends Component {
 
 		if ( version_compare( $version, '1.3.0', '<' ) ) {
 
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time renaming of legacy meta keys and options on upgrade, there is no API for bulk renaming.
+
 			// Upgrade user meta.
 			$wpdb->update( $wpdb->usermeta, [ 'meta_key' => 'hp_image' ], [ 'meta_key' => 'hp_image_id' ] );
 
@@ -178,6 +180,8 @@ final class Upgrade extends Component {
 
 			// Upgrade options.
 			$wpdb->update( $wpdb->options, [ 'option_name' => 'hp_email_user_password_request' ], [ 'option_name' => 'hp_email_user_request_password' ] );
+
+			// phpcs:enable
 		}
 	}
 
