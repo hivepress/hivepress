@@ -590,8 +590,6 @@ abstract class Field {
 				$attribute = hp\replace_tokens( $tokens, $matches[3], true );
 
 				if ( $attribute !== $matches[3] ) {
-
-					// Escape attribute value.
 					if ( stripos( $matches[1], 'style' ) !== false ) {
 						$attribute = esc_attr( safecss_filter_attr( $attribute ) );
 					} elseif ( strpbrk( strstr( $matches[3], '%', true ), ':/?#' ) === false ) {
