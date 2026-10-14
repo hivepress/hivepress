@@ -584,19 +584,26 @@ abstract class Field {
 		$parts = preg_split( '/(\s(?:href|src|action|formaction|xlink:href|style)\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))/i', (string) $this->display_template, -1, PREG_SPLIT_DELIM_CAPTURE );
 
 		foreach ( $parts as $index => $part ) {
-			if ( $index % 2 && strpos( $part, '%' ) !== false && preg_match( '/^([^=]+=\s*)(["\']?)(.*)\2$/s', $part, $matches ) ) {
-				$part = hp\replace_tokens( $tokens, $matches[3], true );
+			if ( strpos( $part, '%' ) === false ) {
+				$output .= $part;
+			} elseif ( $index % 2 && preg_match( '/^([^=]+=\s*)(["\']?)(.*)\2$/s', $part, $matches ) ) {
+				$attribute = hp\replace_tokens( $tokens, $matches[3], true );
 
-				// Escape attribute value.
-				if ( stripos( $matches[1], 'style' ) !== false ) {
-					$part = esc_attr( safecss_filter_attr( $part ) );
-				} elseif ( strpbrk( strstr( $matches[3], '%', true ), ':/?#' ) === false ) {
-					$part = esc_url( $part );
+				if ( $attribute !== $matches[3] ) {
+
+					// Escape attribute value.
+					if ( stripos( $matches[1], 'style' ) !== false ) {
+						$attribute = esc_attr( safecss_filter_attr( $attribute ) );
+					} elseif ( strpbrk( strstr( $matches[3], '%', true ), ':/?#' ) === false ) {
+						$attribute = esc_url( $attribute );
+					}
+
+					$quote = $matches[2] ? $matches[2] : '"';
+
+					$part = $matches[1] . $quote . $attribute . $quote;
 				}
 
-				$quote = $matches[2] ? $matches[2] : '"';
-
-				$output .= $matches[1] . $quote . $part . $quote;
+				$output .= $part;
 			} else {
 				$output .= hp\replace_tokens( $tokens, $part, true );
 			}
