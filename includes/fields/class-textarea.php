@@ -125,7 +125,7 @@ class Textarea extends Text {
 	 */
 	protected function sanitize() {
 		if ( empty( $this->html ) ) {
-			$this->value = sanitize_textarea_field( $this->value );
+			$this->value = hp\strip_shortcodes( sanitize_textarea_field( $this->value ) );
 		} else {
 			parent::sanitize();
 		}

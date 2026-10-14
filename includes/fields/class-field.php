@@ -565,7 +565,7 @@ abstract class Field {
 		}
 
 		if ( $shortcode ) {
-			$value = strip_shortcodes( $value );
+			$value = hp\strip_shortcodes( $value );
 		}
 
 		// Get tokens.
