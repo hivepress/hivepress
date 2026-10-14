@@ -888,8 +888,8 @@ final class User extends Controller {
 		}
 
 		// Get username and email key.
-		$username  = sanitize_user( hp\get_array_value( $_GET, 'username' ) );
-		$email_key = sanitize_key( hp\get_array_value( $_GET, 'email_verify_key' ) );
+		$username  = sanitize_user( hp\get_array_value( $_GET, 'username' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Verified with the secret email verification key sent by email instead of a nonce.
+		$email_key = sanitize_key( hp\get_array_value( $_GET, 'email_verify_key' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Verified with the secret email verification key sent by email instead of a nonce.
 
 		if ( ! $username || ! $email_key ) {
 			return true;
@@ -938,7 +938,7 @@ final class User extends Controller {
 
 		wp_set_auth_cookie( $user->ID, true );
 
-		do_action( 'wp_login', $user->user_login, $user );
+		do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress hook, fired after logging in like wp_signon() does.
 
 		// Redirect user.
 		$redirect = $user->hp_email_verify_redirect;

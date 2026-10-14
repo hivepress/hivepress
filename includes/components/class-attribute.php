@@ -317,8 +317,8 @@ final class Attribute extends Component {
 		// Get category ID.
 		$category_id = null;
 
-		if ( isset( $_GET['_category'] ) ) {
-			$category_id = absint( $_GET['_category'] );
+		if ( isset( $_GET['_category'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the category ID of the current search, nothing is saved.
+			$category_id = absint( $_GET['_category'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the category ID of the current search, nothing is saved.
 
 			if ( $validate && $category_id && ! term_exists( $category_id, $taxonomy ) ) {
 				$category_id = null;
@@ -2241,7 +2241,7 @@ final class Attribute extends Component {
 			if ( $sort_form ) {
 
 				// Set form values.
-				$sort_form->set_values( $_GET, true );
+				$sort_form->set_values( $_GET, true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Sets the sorting form values from the query, nothing is saved.
 
 				if ( $sort_form->validate() ) {
 
@@ -2314,7 +2314,7 @@ final class Attribute extends Component {
 		if ( $query->is_search() ) {
 
 			// Get attribute fields.
-			$attribute_fields = $this->get_attribute_fields( $model, $_GET );
+			$attribute_fields = $this->get_attribute_fields( $model, $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Filters the search query by attribute values, nothing is saved.
 
 			// Get query arguments.
 			$query_args = $this->get_query_args( $attribute_fields );

@@ -114,7 +114,7 @@ final class Comment extends Component {
 			$placeholder = implode( ', ', array_fill( 0, count( $types ), '%s' ) );
 
 			// Add clause.
-			$where .= $wpdb->prepare( " AND comment_type NOT IN ( {$placeholder} )", $types );
+			$where .= $wpdb->prepare( " AND comment_type NOT IN ( {$placeholder} )", $types ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- The placeholder list is generated from %s placeholders.
 		}
 
 		return $where;
@@ -178,6 +178,7 @@ final class Comment extends Component {
 					$types = array_merge( $types, [ 'action_log', 'order_note', 'webhook_delivery' ] );
 				}
 
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Counts are cached above, there is no API for counting comments by excluded types; the placeholder list is generated from %s placeholders.
 				if ( $types ) {
 
 					// Set placeholder.
@@ -206,6 +207,7 @@ final class Comment extends Component {
 						ARRAY_A
 					);
 				}
+				// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 				// Add stats.
 				if ( $counts ) {

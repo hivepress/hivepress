@@ -130,7 +130,7 @@ class Form extends Block {
 			if ( $form->get_method() === 'POST' ) {
 				$form->set_values( $_POST, true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Only pre-fills the rendered form with the submitted values, sanitized by the form fields; nothing is saved.
 			} elseif ( $form->get_method() === 'GET' ) {
-				$form->set_values( $_GET, true );
+				$form->set_values( $_GET, true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Pre-fills GET forms such as search and sorting with the query values, nothing is saved.
 			}
 
 			// Render form.

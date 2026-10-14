@@ -280,8 +280,8 @@ final class Router extends Component {
 
 		$path = rtrim( $wp->request, '/' ) . '/';
 
-		if ( $_GET ) {
-			$path .= '?' . http_build_query( $_GET );
+		if ( $_GET ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only builds the current URL, nothing is saved.
+			$path .= '?' . http_build_query( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only builds the current URL, nothing is saved.
 		}
 
 		return home_url( $path );
@@ -363,7 +363,7 @@ final class Router extends Component {
 	 * @return string
 	 */
 	public function get_redirect_url() {
-		return wp_validate_redirect( (string) hp\get_array_value( $_GET, 'redirect' ) );
+		return wp_validate_redirect( (string) hp\get_array_value( $_GET, 'redirect' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only reads the redirect URL, validated with wp_validate_redirect().
 	}
 
 	/**
@@ -564,7 +564,7 @@ final class Router extends Component {
 
 			// Set description.
 			if ( $term->description ) {
-				$context['page_description'] = apply_filters( 'the_content', $term->description );
+				$context['page_description'] = apply_filters( 'the_content', $term->description ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core WordPress hook, applies the default content formatting.
 			}
 		}
 

@@ -8,6 +8,8 @@
 // Exit if accessed directly.
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Bulk removal of all HivePress data on uninstall, there is no API for this and nothing to cache.
+
 global $wpdb;
 
 if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
@@ -60,3 +62,5 @@ if ( defined( 'HP_UNINSTALL' ) && HP_UNINSTALL ) {
 	// Flush cache.
 	wp_cache_flush();
 }
+
+// phpcs:enable

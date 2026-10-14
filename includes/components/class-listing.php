@@ -403,6 +403,8 @@ final class Listing extends Component {
 				// Set placeholder.
 				$placeholder = implode( ', ', array_fill( 0, count( $child_term_ids ), '%d' ) );
 
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Updates the stored term count like _update_post_term_count() does, there is no API for counting across child terms; the placeholder list is generated from %d placeholders.
+
 				// Get count.
 				$count = (int) $wpdb->get_var(
 					$wpdb->prepare(
@@ -416,6 +418,8 @@ final class Listing extends Component {
 
 				// Update count.
 				$wpdb->update( $wpdb->term_taxonomy, [ 'count' => $count ], [ 'term_id' => $parent_term_id ] );
+
+				// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 		}
 	}

@@ -72,7 +72,7 @@ final class Google extends Controller {
 		}
 
 		// Get state.
-		$state = json_decode( wp_unslash( hp\get_array_value( $_GET, 'state' ) ), true );
+		$state = json_decode( wp_unslash( hp\get_array_value( $_GET, 'state' ) ), true ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is passed in the OAuth state parameter and verified below.
 
 		if ( ! $state ) {
 			return true;
@@ -139,7 +139,7 @@ final class Google extends Controller {
 		}
 
 		// Verify nonce.
-		$nonce = hp\get_array_value( $_GET, 'nonce' );
+		$nonce = hp\get_array_value( $_GET, 'nonce' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is verified below.
 
 		if ( ! wp_verify_nonce( $nonce, 'google_oauth_revoke_access' ) ) {
 			return true;
