@@ -43,6 +43,18 @@ final class Comment extends Component {
 		// Disable notifications.
 		add_filter( 'notify_post_author', [ $this, 'disable_notifications' ], 10, 2 );
 
+		// Filter comment list.
+		add_filter( 'comments_list_table_query_args', [ $this, 'filter_comment_list' ] );
+
+		// Restrict comment screen.
+		add_action( 'load-comment.php', [ $this, 'restrict_comment_screen' ] );
+
+		// Restrict REST comment.
+		add_filter( 'rest_prepare_comment', [ $this, 'restrict_rest_comment' ], 10, 2 );
+
+		// Filter XML-RPC comments.
+		add_filter( 'xmlrpc_prepare_comment', [ $this, 'filter_xmlrpc_comment' ], 10, 2 );
+
 		parent::__construct( $args );
 	}
 
@@ -255,5 +267,61 @@ final class Comment extends Component {
 		}
 
 		return $notify;
+	}
+
+	/**
+	 * Filters comment list.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	public function filter_comment_list( $args ) {
+		$args['type__not_in'] = array_merge(
+			(array) hp\get_array_value( $args, 'type__not_in', [] ),
+			$this->get_comment_types()
+		);
+
+		return $args;
+	}
+
+	/**
+	 * Restricts comment screen.
+	 */
+	public function restrict_comment_screen() {
+		$comment = get_comment( absint( hp\get_array_value( $_GET, 'c' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check, nothing is saved.
+
+		if ( $comment && in_array( $comment->comment_type, $this->get_comment_types(), true ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'hivepress' ), 403 );
+		}
+	}
+
+	/**
+	 * Restricts REST comment.
+	 *
+	 * @param WP_REST_Response $response REST response.
+	 * @param WP_Comment       $comment Comment object.
+	 * @return WP_REST_Response
+	 */
+	public function restrict_rest_comment( $response, $comment ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'moderate_comments' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Filters XML-RPC comment.
+	 *
+	 * @param array      $data Comment data.
+	 * @param WP_Comment $comment Comment object.
+	 * @return array
+	 */
+	public function filter_xmlrpc_comment( $data, $comment ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'moderate_comments' ) ) {
+			return [];
+		}
+
+		return $data;
 	}
 }
