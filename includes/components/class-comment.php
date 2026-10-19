@@ -50,7 +50,7 @@ final class Comment extends Component {
 		add_action( 'load-comment.php', [ $this, 'restrict_comment_screen' ] );
 
 		// Restrict REST comment.
-		add_filter( 'rest_prepare_comment', [ $this, 'restrict_rest_comment' ], 10, 2 );
+		add_filter( 'rest_prepare_comment', [ $this, 'restrict_rest_comment' ], 1000, 2 );
 
 		// Filter XML-RPC comments.
 		add_filter( 'xmlrpc_prepare_comment', [ $this, 'filter_xmlrpc_comment' ], 10, 2 );
@@ -291,7 +291,9 @@ final class Comment extends Component {
 		$comment = get_comment( absint( hp\get_array_value( $_GET, 'c' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check, nothing is saved.
 
 		if ( $comment && in_array( $comment->comment_type, $this->get_comment_types(), true ) ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'hivepress' ), 403 );
+			wp_safe_redirect( admin_url( 'edit-comments.php' ) );
+
+			exit;
 		}
 	}
 
@@ -303,7 +305,7 @@ final class Comment extends Component {
 	 * @return WP_REST_Response
 	 */
 	public function restrict_rest_comment( $response, $comment ) {
-		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'moderate_comments' ) ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'manage_options' ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -318,7 +320,7 @@ final class Comment extends Component {
 	 * @return array
 	 */
 	public function filter_xmlrpc_comment( $data, $comment ) {
-		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'moderate_comments' ) ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'manage_options' ) ) {
 			return [];
 		}
 
