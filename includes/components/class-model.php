@@ -197,7 +197,7 @@ final class Model extends Component {
 		} elseif ( $object::_get_meta( 'type' ) === 'comment' ) {
 
 			// Get cached draft ID.
-			$draft_id = hivepress()->cache->get_user_cache( $user_id, 'drafted_id', 'models/' . $model );
+			$draft_id = hivepress()->cache->get_user_cache( $user_id, 'draft_id', 'models/' . $model );
 
 			if ( ! $draft_id || ! get_comment( $draft_id ) ) {
 
@@ -231,7 +231,7 @@ final class Model extends Component {
 
 				// Cache draft ID.
 				if ( $draft_id ) {
-					hivepress()->cache->set_user_cache( $user_id, 'drafted_id', 'models/' . $model, $draft_id );
+					hivepress()->cache->set_user_cache( $user_id, 'draft_id', 'models/' . $model, $draft_id );
 				}
 			}
 
@@ -251,9 +251,18 @@ final class Model extends Component {
 	 * Deletes drafts.
 	 */
 	public function delete_drafts() {
+
+		// Get comment types.
+		$types = hp\prefix( array_keys( hivepress()->get_config( 'comment_types' ) ) );
+
+		if ( ! $types ) {
+			return;
+		}
+
+		// Get draft IDs.
 		$draft_ids = get_comments(
 			[
-				'type'       => 'all',
+				'type'       => $types,
 				'meta_key'   => 'hp_drafted',
 				'meta_value' => '1',
 				'fields'     => 'ids',
