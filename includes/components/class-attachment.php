@@ -152,6 +152,45 @@ final class Attachment extends Component {
 	}
 
 	/**
+	 * Moves attachments.
+	 *
+	 * @param object $from Source object.
+	 * @param object $to Target object.
+	 * @param string $field Field name.
+	 */
+	public function move_attachments( $from, $to, $field ) {
+
+		// Get attachment IDs.
+		$attachment_ids = array_filter( (array) call_user_func( [ $from, 'get_' . $field . '__id' ] ) );
+
+		if ( ! $attachment_ids ) {
+			return;
+		}
+
+		// Get attachments.
+		$attachments = Models\Attachment::query()->filter(
+			[
+				'id__in'       => $attachment_ids,
+				'parent'       => $from->get_id(),
+				'parent_model' => $from::_get_meta( 'name' ),
+			]
+		)->limit( count( $attachment_ids ) )
+		->get();
+
+		// Set parent.
+		foreach ( $attachments as $attachment ) {
+			$attachment->set_parent( $to->get_id() )->save_parent();
+		}
+
+		// Clear field.
+		$from->fill(
+			[
+				$field => null,
+			]
+		)->save( [ $field ] );
+	}
+
+	/**
 	 * Generates a unique filename.
 	 *
 	 * @param string $filename Filename.
