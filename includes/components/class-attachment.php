@@ -177,9 +177,19 @@ final class Attachment extends Component {
 		)->limit( count( $attachment_ids ) )
 		->get();
 
+		// Get parent values.
+		$values = [
+			'parent' => $to->get_id(),
+		];
+
+		if ( $to::_get_meta( 'name' ) !== $from::_get_meta( 'name' ) ) {
+			$values['parent_model'] = $to::_get_meta( 'name' );
+			$values['parent__id']   = $to::_get_meta( 'type' ) === 'post' ? $to->get_id() : null;
+		}
+
 		// Set parent.
 		foreach ( $attachments as $attachment ) {
-			$attachment->set_parent( $to->get_id() )->save_parent();
+			$attachment->fill( $values )->save( array_keys( $values ) );
 		}
 
 		// Clear field.
