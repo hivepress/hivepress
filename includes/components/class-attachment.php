@@ -40,6 +40,16 @@ final class Attachment extends Component {
 		// Generate filename.
 		add_filter( 'hivepress/v1/models/attachment/filename', [ $this, 'generate_filename' ], 10, 3 );
 
+		// Restrict REST attachments.
+		add_filter( 'rest_attachment_query', [ $this, 'filter_rest_attachments' ] );
+		add_filter( 'rest_prepare_attachment', [ $this, 'restrict_rest_attachment' ], 1000, 2 );
+
+		// Restrict attachment page.
+		add_filter( 'posts_results', [ $this, 'restrict_attachment_page' ], 10, 2 );
+
+		// Restrict attachment embed.
+		add_filter( 'oembed_request_post_id', [ $this, 'restrict_attachment_embed' ] );
+
 		parent::__construct( $args );
 	}
 
@@ -198,6 +208,87 @@ final class Attachment extends Component {
 				$field => null,
 			]
 		)->save( [ $field ] );
+	}
+
+	/**
+	 * Filters REST attachments.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	public function filter_rest_attachments( $args ) {
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			$meta_query = [
+				[
+					'key'     => 'hp_parent_model',
+					'compare' => 'NOT EXISTS',
+				],
+			];
+
+			if ( ! empty( $args['meta_query'] ) ) {
+				$meta_query[] = $args['meta_query'];
+			}
+
+			$args['meta_query'] = $meta_query;
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Restricts REST attachment.
+	 *
+	 * @param object $response REST response.
+	 * @param object $attachment Attachment object.
+	 * @return object
+	 */
+	public function restrict_rest_attachment( $response, $attachment ) {
+		if ( get_post_meta( $attachment->ID, 'hp_parent_model', true ) && ! current_user_can( 'edit_post', $attachment->ID ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Checks if the attachment is restricted.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 * @return bool
+	 */
+	protected function is_restricted_attachment( $attachment_id ) {
+		return $attachment_id && get_post_meta( $attachment_id, 'hp_parent_model', true ) && ! current_user_can( 'edit_post', $attachment_id );
+	}
+
+	/**
+	 * Restricts attachment page.
+	 *
+	 * @param array  $posts Post objects.
+	 * @param object $query Query object.
+	 * @return array
+	 */
+	public function restrict_attachment_page( $posts, $query ) {
+		if ( $query->is_main_query() && $query->is_singular() && count( $posts ) === 1 && get_post_type( hp\get_first_array_value( $posts ) ) === 'attachment' && $this->is_restricted_attachment( hp\get_first_array_value( $posts )->ID ) ) {
+			$posts = [];
+
+			remove_action( 'template_redirect', 'redirect_canonical' );
+		}
+
+		return $posts;
+	}
+
+	/**
+	 * Restricts attachment embed.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return int
+	 */
+	public function restrict_attachment_embed( $post_id ) {
+		if ( get_post_type( $post_id ) === 'attachment' && $this->is_restricted_attachment( $post_id ) ) {
+			return 0;
+		}
+
+		return $post_id;
 	}
 
 	/**
