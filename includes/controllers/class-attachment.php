@@ -137,15 +137,8 @@ final class Attachment extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		// Get user ID.
-		$user_id = $parent->get_user__id();
-
-		if ( $parent::_get_meta( 'type' ) === 'user' ) {
-			$user_id = $parent->get_id();
-		}
-
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), hivepress()->attachment->get_parent_statuses(), true ) ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -309,15 +302,8 @@ final class Attachment extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		// Get user ID.
-		$user_id = $parent->get_user__id();
-
-		if ( $parent::_get_meta( 'type' ) === 'user' ) {
-			$user_id = $parent->get_id();
-		}
-
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), hivepress()->attachment->get_parent_statuses(), true ) ) ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -366,15 +352,8 @@ final class Attachment extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		// Get user ID.
-		$user_id = $parent->get_user__id();
-
-		if ( $parent::_get_meta( 'type' ) === 'user' ) {
-			$user_id = $parent->get_id();
-		}
-
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && ( get_current_user_id() !== $user_id || ( $parent::_get_meta( 'type' ) === 'post' && ! in_array( $parent->get_status(), hivepress()->attachment->get_parent_statuses(), true ) ) ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
 			return hp\rest_error( 403 );
 		}
 

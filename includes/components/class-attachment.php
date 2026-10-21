@@ -101,6 +101,41 @@ final class Attachment extends Component {
 	}
 
 	/**
+	 * Checks if the parent object is editable.
+	 *
+	 * @param object $object Parent object.
+	 * @return bool
+	 */
+	public function is_editable_parent( $object ) {
+
+		// Get user ID.
+		$user_id = $object->get_user__id();
+
+		if ( $object::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $object->get_id();
+		}
+
+		// Check user.
+		if ( get_current_user_id() !== $user_id ) {
+			return false;
+		}
+
+		// Check status.
+		if ( $object::_get_meta( 'type' ) === 'post' ) {
+			return in_array( $object->get_status(), $this->get_parent_statuses(), true );
+		}
+
+		// Check draft.
+		if ( $object::_get_meta( 'type' ) === 'comment' ) {
+			$comment = get_comment( $object->get_id() );
+
+			return $comment && ! $comment->comment_post_ID && ! $comment->comment_karma;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Sets the attachment parent ID.
 	 *
 	 * @param array $attachment Attachment arguments.
