@@ -41,7 +41,7 @@ final class Attachment extends Component {
 		add_filter( 'hivepress/v1/models/attachment/filename', [ $this, 'generate_filename' ], 10, 3 );
 
 		// Restrict REST attachments.
-		add_filter( 'rest_attachment_query', [ $this, 'filter_rest_attachments' ] );
+		add_filter( 'rest_attachment_query', [ $this, 'filter_attachments' ] );
 		add_filter( 'rest_prepare_attachment', [ $this, 'restrict_rest_attachment' ], 1000, 2 );
 
 		// Restrict attachment page.
@@ -49,6 +49,10 @@ final class Attachment extends Component {
 
 		// Restrict attachment embed.
 		add_filter( 'oembed_request_post_id', [ $this, 'restrict_attachment_embed' ] );
+
+		// Restrict attachment shortcode.
+		add_filter( 'shortcode_atts_gallery', [ $this, 'restrict_attachment_shortcode' ] );
+		add_filter( 'shortcode_atts_playlist', [ $this, 'restrict_attachment_shortcode' ] );
 
 		parent::__construct( $args );
 	}
@@ -94,6 +98,41 @@ final class Attachment extends Component {
 		}
 
 		return $statuses;
+	}
+
+	/**
+	 * Checks if the parent object is editable.
+	 *
+	 * @param object $object Parent object.
+	 * @return bool
+	 */
+	public function is_editable_parent( $object ) {
+
+		// Get user ID.
+		$user_id = $object->get_user__id();
+
+		if ( $object::_get_meta( 'type' ) === 'user' ) {
+			$user_id = $object->get_id();
+		}
+
+		// Check user.
+		if ( get_current_user_id() !== $user_id ) {
+			return false;
+		}
+
+		// Check status.
+		if ( $object::_get_meta( 'type' ) === 'post' ) {
+			return in_array( $object->get_status(), $this->get_parent_statuses(), true );
+		}
+
+		// Check draft.
+		if ( $object::_get_meta( 'type' ) === 'comment' ) {
+			$comment = get_comment( $object->get_id() );
+
+			return $comment && ! $comment->comment_post_ID && ! $comment->comment_karma;
+		}
+
+		return true;
 	}
 
 	/**
@@ -221,12 +260,12 @@ final class Attachment extends Component {
 	}
 
 	/**
-	 * Filters REST attachments.
+	 * Filters attachments.
 	 *
 	 * @param array $args Query arguments.
 	 * @return array
 	 */
-	public function filter_rest_attachments( $args ) {
+	public function filter_attachments( $args ) {
 		if ( ! current_user_can( 'edit_others_posts' ) ) {
 			$meta_query = [
 				[
@@ -293,6 +332,37 @@ final class Attachment extends Component {
 		}
 
 		return $post_id;
+	}
+
+	/**
+	 * Restricts attachment shortcode.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return array
+	 */
+	public function restrict_attachment_shortcode( $atts ) {
+
+		// Get author ID.
+		$author_id = wp_doing_ajax() ? get_current_user_id() : get_post_field( 'post_author' );
+
+		if ( ! user_can( $author_id, 'edit_others_posts' ) ) {
+			add_action( 'pre_get_posts', [ $this, 'filter_shortcode_attachments' ] );
+		}
+
+		return $atts;
+	}
+
+	/**
+	 * Filters shortcode attachments.
+	 *
+	 * @param object $query Query object.
+	 */
+	public function filter_shortcode_attachments( $query ) {
+		if ( $query->get( 'post_type' ) === 'attachment' ) {
+			remove_action( 'pre_get_posts', [ $this, 'filter_shortcode_attachments' ] );
+
+			$query->query_vars = $this->filter_attachments( $query->query_vars );
+		}
 	}
 
 	/**
