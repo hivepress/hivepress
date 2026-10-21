@@ -253,7 +253,7 @@ final class Attachment extends Component {
 	 * @return object
 	 */
 	public function restrict_rest_attachment( $response, $attachment ) {
-		if ( get_post_meta( $attachment->ID, 'hp_parent_model', true ) && ! current_user_can( 'edit_post', $attachment->ID ) ) {
+		if ( $this->is_restricted_attachment( $attachment->ID ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -268,10 +268,14 @@ final class Attachment extends Component {
 	 * @return array
 	 */
 	public function restrict_attachment_page( $posts, $query ) {
-		if ( $query->is_main_query() && $query->is_singular() && count( $posts ) === 1 && get_post_type( hp\get_first_array_value( $posts ) ) === 'attachment' && $this->is_restricted_attachment( hp\get_first_array_value( $posts )->ID ) ) {
-			$posts = [];
+		if ( $query->is_main_query() && $query->is_singular() && count( $posts ) === 1 ) {
+			$attachment = hp\get_first_array_value( $posts );
 
-			remove_action( 'template_redirect', 'redirect_canonical' );
+			if ( get_post_type( $attachment ) === 'attachment' && $this->is_restricted_attachment( $attachment->ID ) ) {
+				$posts = [];
+
+				remove_action( 'template_redirect', 'redirect_canonical' );
+			}
 		}
 
 		return $posts;
