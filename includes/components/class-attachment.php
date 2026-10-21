@@ -54,6 +54,16 @@ final class Attachment extends Component {
 	}
 
 	/**
+	 * Checks if the attachment is restricted.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 * @return bool
+	 */
+	protected function is_restricted_attachment( $attachment_id ) {
+		return $attachment_id && get_post_meta( $attachment_id, 'hp_parent_model', true ) && ! current_user_can( 'edit_post', $attachment_id );
+	}
+
+	/**
 	 * Checks if the file is valid.
 	 *
 	 * @param string $path File path.
@@ -248,16 +258,6 @@ final class Attachment extends Component {
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Checks if the attachment is restricted.
-	 *
-	 * @param int $attachment_id Attachment ID.
-	 * @return bool
-	 */
-	protected function is_restricted_attachment( $attachment_id ) {
-		return $attachment_id && get_post_meta( $attachment_id, 'hp_parent_model', true ) && ! current_user_can( 'edit_post', $attachment_id );
 	}
 
 	/**
