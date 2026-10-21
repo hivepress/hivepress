@@ -18,6 +18,19 @@ defined( 'ABSPATH' ) || exit;
 final class Model extends Component {
 
 	/**
+	 * Class constructor.
+	 *
+	 * @param array $args Component arguments.
+	 */
+	public function __construct( $args = [] ) {
+
+		// Delete drafts.
+		add_action( 'hivepress/v1/events/hourly', [ $this, 'delete_drafts' ] );
+
+		parent::__construct( $args );
+	}
+
+	/**
 	 * Gets model name.
 	 *
 	 * @param string $type Model type.
@@ -115,6 +128,157 @@ final class Model extends Component {
 			if ( in_array( $alias, $aliases, true ) ) {
 				return array_search( $alias, $aliases, true );
 			}
+		}
+	}
+
+	/**
+	 * Gets model draft.
+	 *
+	 * @param string $model Model name.
+	 * @return object
+	 */
+	public function get_draft( $model ) {
+
+		// Check authentication.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// Get cached draft.
+		$draft = hivepress()->request->get_context( $model . '_draft' );
+
+		if ( $draft ) {
+			return $draft;
+		}
+
+		// Create model.
+		$object = hp\create_class_instance( '\HivePress\Models\\' . $model );
+
+		if ( ! $object ) {
+			return;
+		}
+
+		// Get user ID.
+		$user_id = get_current_user_id();
+
+		if ( $object::_get_meta( 'type' ) === 'post' ) {
+
+			// Check fields.
+			$fields = $object->_get_fields();
+
+			if ( ! isset( $fields['drafted'], $fields['user'] ) ) {
+				return;
+			}
+
+			// Get draft.
+			$draft = $object::query()->filter(
+				[
+					'status'  => 'auto-draft',
+					'drafted' => true,
+					'user'    => $user_id,
+				]
+			)->get_first();
+
+			if ( ! $draft ) {
+
+				// Add draft.
+				$draft = $object->fill(
+					[
+						'status'  => 'auto-draft',
+						'drafted' => true,
+						'user'    => $user_id,
+					]
+				);
+
+				if ( ! $draft->save( [ 'status', 'drafted', 'user' ] ) ) {
+					return;
+				}
+			}
+		} elseif ( $object::_get_meta( 'type' ) === 'comment' ) {
+
+			// Get cached draft ID.
+			$draft_id = hivepress()->cache->get_user_cache( $user_id, 'draft_id', 'models/' . $model );
+
+			if ( ! $draft_id || ! get_comment( $draft_id ) ) {
+
+				// Get draft ID.
+				$draft_id = (int) hp\get_first_array_value(
+					get_comments(
+						[
+							'type'       => $object::_get_meta( 'alias' ),
+							'user_id'    => $user_id,
+							'meta_key'   => 'hp_drafted',
+							'meta_value' => '1',
+							'fields'     => 'ids',
+							'number'     => 1,
+						]
+					)
+				);
+
+				if ( ! $draft_id ) {
+
+					// Add draft.
+					$draft_id = (int) wp_insert_comment(
+						[
+							'comment_type' => $object::_get_meta( 'alias' ),
+							'user_id'      => $user_id,
+							'comment_meta' => [
+								'hp_drafted' => 1,
+							],
+						]
+					);
+				}
+
+				// Cache draft ID.
+				if ( $draft_id ) {
+					hivepress()->cache->set_user_cache( $user_id, 'draft_id', 'models/' . $model, $draft_id );
+				}
+			}
+
+			// Get draft.
+			if ( $draft_id ) {
+				$draft = $object::query()->get_by_id( $draft_id );
+
+				// Set request context.
+				hivepress()->request->set_context( $model . '_draft', $draft );
+			}
+		}
+
+		return $draft;
+	}
+
+	/**
+	 * Deletes drafts.
+	 */
+	public function delete_drafts() {
+
+		// Get comment types.
+		$types = hp\prefix( array_keys( hivepress()->get_config( 'comment_types' ) ) );
+
+		if ( ! $types ) {
+			return;
+		}
+
+		// Get draft IDs.
+		$draft_ids = get_comments(
+			[
+				'type'       => $types,
+				'meta_key'   => 'hp_drafted',
+				'meta_value' => '1',
+				'fields'     => 'ids',
+				'number'     => 100,
+
+				'date_query' => [
+					[
+						'column' => 'comment_date_gmt',
+						'before' => gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS ),
+					],
+				],
+			]
+		);
+
+		foreach ( $draft_ids as $draft_id ) {
+			wp_delete_comment( $draft_id, true );
 		}
 	}
 }

@@ -852,28 +852,10 @@ final class Listing extends Controller {
 		}
 
 		// Get listing.
-		$listing = Models\Listing::query()->filter(
-			[
-				'status'  => 'auto-draft',
-				'drafted' => true,
-				'user'    => get_current_user_id(),
-			]
-		)->get_first();
+		$listing = hivepress()->model->get_draft( 'listing' );
 
-		if ( empty( $listing ) ) {
-
-			// Add listing.
-			$listing = ( new Models\Listing() )->fill(
-				[
-					'status'  => 'auto-draft',
-					'drafted' => true,
-					'user'    => get_current_user_id(),
-				]
-			);
-
-			if ( ! $listing->save( [ 'status', 'drafted', 'user' ] ) ) {
-				return home_url();
-			}
+		if ( ! $listing ) {
+			return home_url();
 		}
 
 		// Set request context.

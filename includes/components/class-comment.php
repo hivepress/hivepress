@@ -43,6 +43,23 @@ final class Comment extends Component {
 		// Disable notifications.
 		add_filter( 'notify_post_author', [ $this, 'disable_notifications' ], 10, 2 );
 
+		// Filter comment list.
+		add_filter( 'comments_list_table_query_args', [ $this, 'filter_comment_list' ] );
+
+		// Restrict comment screen.
+		add_action( 'load-comment.php', [ $this, 'restrict_comment_screen' ] );
+
+		// Restrict REST comment.
+		add_filter( 'rest_prepare_comment', [ $this, 'restrict_rest_comment' ], 1000, 2 );
+
+		// Filter XML-RPC comments.
+		add_filter( 'xmlrpc_prepare_comment', [ $this, 'filter_xmlrpc_comment' ], 10, 2 );
+
+		// Restrict comment editing.
+		add_filter( 'map_meta_cap', [ $this, 'restrict_comment_editing' ], 10, 4 );
+		add_filter( 'rest_request_before_callbacks', [ $this, 'restrict_rest_comment_editing' ], 10, 3 );
+		add_action( 'wp_ajax_dim-comment', [ $this, 'restrict_comment_status' ], 0 );
+
 		parent::__construct( $args );
 	}
 
@@ -255,5 +272,115 @@ final class Comment extends Component {
 		}
 
 		return $notify;
+	}
+
+	/**
+	 * Filters comment list.
+	 *
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	public function filter_comment_list( $args ) {
+		$args['type__not_in'] = array_merge(
+			(array) hp\get_array_value( $args, 'type__not_in', [] ),
+			$this->get_comment_types()
+		);
+
+		return $args;
+	}
+
+	/**
+	 * Restricts comment screen.
+	 */
+	public function restrict_comment_screen() {
+		$comment = get_comment( absint( hp\get_array_value( $_GET, 'c' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check, nothing is saved.
+
+		if ( $comment && in_array( $comment->comment_type, $this->get_comment_types(), true ) ) {
+			wp_safe_redirect( admin_url( 'edit-comments.php' ) );
+
+			exit;
+		}
+	}
+
+	/**
+	 * Restricts REST comment.
+	 *
+	 * @param WP_REST_Response $response REST response.
+	 * @param WP_Comment       $comment Comment object.
+	 * @return WP_REST_Response
+	 */
+	public function restrict_rest_comment( $response, $comment ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'manage_options' ) ) {
+			return hp\rest_error( 403 );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Filters XML-RPC comment.
+	 *
+	 * @param array      $data Comment data.
+	 * @param WP_Comment $comment Comment object.
+	 * @return array
+	 */
+	public function filter_xmlrpc_comment( $data, $comment ) {
+		if ( in_array( $comment->comment_type, $this->get_comment_types(), true ) && ! current_user_can( 'manage_options' ) ) {
+			return [];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Restricts comment editing.
+	 *
+	 * @param array  $caps Primitive capabilities.
+	 * @param string $cap Meta capability.
+	 * @param int    $user_id User ID.
+	 * @param array  $args Capability arguments.
+	 * @return array
+	 */
+	public function restrict_comment_editing( $caps, $cap, $user_id, $args ) {
+		if ( 'edit_comment' === $cap && isset( $args[0] ) ) {
+			$comment = get_comment( $args[0] );
+
+			if ( $comment && strpos( $comment->comment_type, 'hp_' ) === 0 ) {
+				$caps[] = in_array( $comment->comment_type, $this->get_comment_types(), true ) ? 'manage_options' : 'moderate_comments';
+			}
+		}
+
+		return $caps;
+	}
+
+	/**
+	 * Restricts REST comment editing.
+	 *
+	 * @param mixed           $response Response.
+	 * @param array           $handler Route handler.
+	 * @param WP_REST_Request $request REST request.
+	 * @return mixed
+	 */
+	public function restrict_rest_comment_editing( $response, $handler, $request ) {
+		if ( 'GET' !== $request->get_method() && preg_match( '#^/wp/v2/comments/(\d+)#', $request->get_route(), $matches ) ) {
+			$comment = get_comment( absint( $matches[1] ) );
+
+			if ( $comment && strpos( $comment->comment_type, 'hp_' ) === 0 && ! current_user_can( 'edit_comment', $comment->comment_ID ) ) {
+				return new \WP_Error( 'rest_forbidden', '', [ 'status' => 403 ] );
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Restricts comment status.
+	 */
+	public function restrict_comment_status() {
+		$comment = get_comment( absint( hp\get_array_value( $_POST, 'id' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only check, the nonce is verified by the WordPress handler.
+
+		if ( $comment && strpos( $comment->comment_type, 'hp_' ) === 0 && ! current_user_can( 'edit_comment', $comment->comment_ID ) ) {
+			wp_die( -1 );
+		}
 	}
 }

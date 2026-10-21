@@ -124,9 +124,27 @@ final class Translator extends Component {
 	public function register_comments( $clauses, $query ) {
 		global $sitepress;
 
-		if ( strpos( hp\get_array_value( $query->query_vars, 'type', '' ), 'hp_' ) === 0 ) {
-			remove_filter( 'comments_clauses', [ $sitepress, 'comments_clauses' ] );
+		$types = (array) hp\get_array_value( $query->query_vars, 'type' );
+
+		if ( $types && count( preg_grep( '/^hp_/', $types ) ) === count( $types ) && remove_filter( 'comments_clauses', [ $sitepress, 'comments_clauses' ] ) ) {
+			add_filter( 'comments_clauses', [ $this, 'restore_comments' ], 1000 );
 		}
+
+		return $clauses;
+	}
+
+	/**
+	 * Restores comments.
+	 *
+	 * @param array $clauses Query clauses.
+	 * @return array
+	 */
+	public function restore_comments( $clauses ) {
+		global $sitepress;
+
+		remove_filter( 'comments_clauses', [ $this, 'restore_comments' ], 1000 );
+
+		add_filter( 'comments_clauses', [ $sitepress, 'comments_clauses' ], 10, 2 );
 
 		return $clauses;
 	}
