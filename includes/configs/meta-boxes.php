@@ -145,6 +145,21 @@ return [
 		],
 	],
 
+	'vendor_category_settings'  => [
+		'screen' => 'vendor_category',
+
+		'fields' => [
+			'sort_order' => [
+				'label'     => hivepress()->translator->get_string( 'sort_order' ),
+				'type'      => 'number',
+				'min_value' => 0,
+				'default'   => 0,
+				'required'  => true,
+				'_order'    => 10,
+			],
+		],
+	],
+
 	'vendor_settings'           => [
 		'title'       => hivepress()->translator->get_string( 'settings' ),
 		'screen'      => 'vendor',
