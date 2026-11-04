@@ -202,7 +202,18 @@ class Text extends Field {
 		} elseif ( is_array( $this->html ) ) {
 			$this->value = wp_kses( $this->value, $this->html );
 		} else {
-			$this->value = wp_kses( $this->value, 'post' );
+
+			// Get allowed tags.
+			$tags = wp_kses_allowed_html( 'post' );
+
+			// Remove data attributes.
+			foreach ( $tags as $tag => $attributes ) {
+				if ( is_array( $attributes ) ) {
+					unset( $tags[ $tag ]['data-*'] );
+				}
+			}
+
+			$this->value = wp_kses( $this->value, $tags );
 		}
 	}
 
