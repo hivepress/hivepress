@@ -49,12 +49,13 @@ final class Scheduler extends Component {
 	 * @param array  $args Hook arguments.
 	 * @param int    $time Time to execute.
 	 * @param mixed  $interval Recurring interval.
+	 * @param bool   $unique Skip if scheduled.
 	 * @return mixed
 	 */
-	public function add_action( $hook, $args = [], $time = null, $interval = null ) {
+	public function add_action( $hook, $args = [], $time = null, $interval = null, $unique = true ) {
 
 		// Check if scheduled.
-		if ( as_has_scheduled_action( $hook, $args, 'hivepress' ) ) {
+		if ( $unique && as_has_scheduled_action( $hook, $args, 'hivepress' ) ) {
 			return;
 		}
 
