@@ -64,10 +64,11 @@ final class Attachment extends Controller {
 					 * )
 					 */
 					'attachment_upload_action' => [
-						'base'   => 'attachments_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'upload_attachment' ],
-						'rest'   => true,
+						'base'     => 'attachments_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'upload_attachment' ],
+						'throttle' => 50,
+						'rest'     => true,
 					],
 
 					/**
@@ -81,10 +82,11 @@ final class Attachment extends Controller {
 					 * )
 					 */
 					'attachment_update_action' => [
-						'base'   => 'attachment_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'update_attachment' ],
-						'rest'   => true,
+						'base'     => 'attachment_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'update_attachment' ],
+						'throttle' => 100,
+						'rest'     => true,
 					],
 
 					/**
@@ -97,10 +99,11 @@ final class Attachment extends Controller {
 					 * )
 					 */
 					'attachment_delete_action' => [
-						'base'   => 'attachment_resource',
-						'method' => 'DELETE',
-						'action' => [ $this, 'delete_attachment' ],
-						'rest'   => true,
+						'base'     => 'attachment_resource',
+						'method'   => 'DELETE',
+						'action'   => [ $this, 'delete_attachment' ],
+						'throttle' => 50,
+						'rest'     => true,
 					],
 				],
 			],
@@ -137,16 +140,16 @@ final class Attachment extends Controller {
 			return hp\rest_error( 400 );
 		}
 
-		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
-			return hp\rest_error( 403 );
-		}
-
 		// Get parent field.
 		$parent_field = hp\get_array_value( $parent->_get_fields(), sanitize_key( $request->get_param( 'parent_field' ) ) );
 
 		if ( empty( $parent_field ) || $parent_field::get_meta( 'name' ) !== 'attachment_upload' ) {
 			return hp\rest_error( 400 );
+		}
+
+		// Check permissions.
+		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent, $parent_field->get_name() ) ) {
+			return hp\rest_error( 403 );
 		}
 
 		// Get attachments.
@@ -303,7 +306,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent, $attachment->get_parent_field() ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -353,7 +356,7 @@ final class Attachment extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'delete_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent ) ) {
+		if ( ! current_user_can( 'delete_others_posts' ) && ! hivepress()->attachment->is_editable_parent( $parent, $attachment->get_parent_field() ) ) {
 			return hp\rest_error( 403 );
 		}
 
