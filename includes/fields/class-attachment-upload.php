@@ -299,7 +299,26 @@ class Attachment_Upload extends Field {
 			->get();
 
 			// Render attachments.
+			$parents = [];
+
 			foreach ( $attachments as $attachment ) {
+
+				// Check permissions.
+				if ( ! current_user_can( 'edit_post', $attachment->get_id() ) ) {
+					$parent_key = $attachment->get_parent_model() . '_' . $attachment->get_parent__id();
+
+					if ( ! isset( $parents[ $parent_key ] ) ) {
+						$parent = $attachment->get_parent();
+
+						$parents[ $parent_key ] = $parent && hivepress()->attachment->is_editable_parent( $parent );
+					}
+
+					if ( ! $parents[ $parent_key ] ) {
+						continue;
+					}
+				}
+
+				// Render attachment.
 				$output .= $this->render_attachment( $attachment );
 			}
 		}

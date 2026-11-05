@@ -41,6 +41,9 @@ final class Router extends Component {
 		// Register REST routes.
 		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
 
+		// Throttle REST requests.
+		add_filter( 'rest_request_before_callbacks', [ $this, 'throttle_rest_request' ], 10, 2 );
+
 		// Add rewrite rules.
 		add_action( 'init', [ $this, 'add_rewrite_rules' ] );
 
@@ -410,10 +413,87 @@ final class Router extends Component {
 						'methods'             => hp\get_array_value( $route, 'method', 'GET' ),
 						'callback'            => $route['action'],
 						'permission_callback' => '__return_true',
+						'hp_route'            => $name,
 					]
 				);
 			}
 		}
+	}
+
+	/**
+	 * Throttles REST request.
+	 *
+	 * @param mixed $response API response.
+	 * @param array $handler Route handler.
+	 * @return mixed
+	 */
+	public function throttle_rest_request( $response, $handler ) {
+
+		// Check response.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		// Get route.
+		$name = hp\get_array_value( $handler, 'hp_route' );
+
+		if ( ! $name ) {
+			return $response;
+		}
+
+		// Get limit.
+		$limit = absint( hp\get_array_value( $this->get_route( $name ), 'throttle' ) );
+
+		if ( ! $limit ) {
+			return $response;
+		}
+
+		// Get user ID.
+		$user_id = get_current_user_id();
+
+		if ( ! $user_id || current_user_can( 'edit_others_posts' ) ) {
+			return $response;
+		}
+
+		// Get counters.
+		$time = time();
+
+		$counters = array_filter(
+			(array) get_user_meta( $user_id, '_transient_hp_rest_requests', true ),
+			function ( $counter ) use ( $time ) {
+				return is_array( $counter ) && isset( $counter['count'] ) && hp\get_array_value( $counter, 'expires' ) > $time;
+			}
+		);
+
+		// Get counter.
+		$counter = hp\get_array_value(
+			$counters,
+			$name,
+			[
+				'count'   => 0,
+				'expires' => $time + MINUTE_IN_SECONDS,
+			]
+		);
+
+		// Check counter.
+		if ( $counter['count'] >= $limit ) {
+			rest_get_server()->send_header( 'Retry-After', max( 1, $counter['expires'] - $time ) );
+
+			return new \WP_Error(
+				'too_many_requests',
+				__( 'Too many requests, please try again later.', 'hivepress' ),
+				[ 'status' => 429 ]
+			);
+		}
+
+		// Update counter.
+		++$counter['count'];
+
+		$counters[ $name ] = $counter;
+
+		update_user_meta( $user_id, '_transient_hp_rest_requests', $counters );
+
+		return $response;
 	}
 
 	/**

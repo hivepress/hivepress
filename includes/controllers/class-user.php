@@ -153,10 +153,11 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_update_action'           => [
-						'base'   => 'user_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'update_user' ],
-						'rest'   => true,
+						'base'     => 'user_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'update_user' ],
+						'throttle' => 20,
+						'rest'     => true,
 					],
 
 					/**
@@ -169,10 +170,11 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_delete_action'           => [
-						'base'   => 'user_resource',
-						'method' => 'DELETE',
-						'action' => [ $this, 'delete_user' ],
-						'rest'   => true,
+						'base'     => 'user_resource',
+						'method'   => 'DELETE',
+						'action'   => [ $this, 'delete_user' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					'user_account_page'            => [

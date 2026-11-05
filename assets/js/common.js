@@ -13,6 +13,20 @@ var hivepress = {
 	getComponent: function (name) {
 		return jQuery(this.getSelector(name));
 	},
+
+	/**
+	 * Checks if URL is safe to open.
+	 */
+	isSafeURL: function (url) {
+		return ['http:', 'https:'].includes(new URL(url, window.location.href).protocol);
+	},
+
+	/**
+	 * Checks if URL is local.
+	 */
+	isLocalURL: function (url) {
+		return [window.location.origin, new URL(hivepressCoreData.apiURL).origin].includes(new URL(url, window.location.href).origin);
+	},
 };
 
 (function ($) {
@@ -27,7 +41,7 @@ var hivepress = {
 		container.find(hivepress.getSelector('link')).on('click', function (e) {
 			var url = $(this).data('url');
 
-			if (url.indexOf('#') !== 0) {
+			if (url.indexOf('#') !== 0 && hivepress.isSafeURL(url)) {
 				window.location.href = url;
 			}
 
@@ -48,9 +62,11 @@ var hivepress = {
 			var image = $(this);
 
 			image.on('click', function () {
-				$.fancybox.open({ src: image.data('zoom') }, {
-					buttons: ['close'],
-				});
+				if (hivepress.isSafeURL(image.data('zoom'))) {
+					$.fancybox.open({ src: image.data('zoom') }, {
+						buttons: ['close'],
+					});
+				}
 			});
 		});
 
@@ -964,7 +980,7 @@ var hivepress = {
 				always: function (e, data) {
 					var response = data.jqXHR.responseJSON;
 
-					if (response.hasOwnProperty('data')) {
+					if (data.jqXHR.status < 400 && response.hasOwnProperty('data')) {
 						if (field.prop('multiple')) {
 							responseContainer.append(response.data.html);
 						} else {
@@ -982,6 +998,8 @@ var hivepress = {
 						if (!messageContainer.is(':empty')) {
 							messageContainer.show();
 						}
+					} else if (data.jqXHR.status >= 400 && response.message) {
+						messageContainer.html($('<div />').text(response.message)).show();
 					}
 				},
 			});
@@ -995,6 +1013,10 @@ var hivepress = {
 				stop: function () {
 					if (container.children().length > 1) {
 						container.children().each(function (index) {
+							if (!hivepress.isLocalURL($(this).data('url'))) {
+								return;
+							}
+
 							$.ajax({
 								url: $(this).data('url'),
 								method: 'POST',
@@ -1069,6 +1091,10 @@ var hivepress = {
 				function renderBlock() {
 					var url = new URL(renderSettings.url),
 						container = $('[data-block=' + renderSettings.block + ']');
+
+					if (!hivepress.isLocalURL(url)) {
+						return;
+					}
 
 					if (!container.length) {
 						if (renderSettings.hasOwnProperty('interval')) {
@@ -1273,7 +1299,7 @@ var hivepress = {
 								grecaptcha.reset(captchaId);
 							}
 
-							if (response == null || response.hasOwnProperty('data')) {
+							if (response == null || (xhr.status < 400 && response.hasOwnProperty('data'))) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
@@ -1307,6 +1333,8 @@ var hivepress = {
 								if (!messageContainer.is(':empty')) {
 									messageContainer.addClass(messageClass + '--error').show();
 								}
+							} else if (xhr.status >= 400 && response.message) {
+								messageContainer.html($('<div />').text(response.message)).addClass(messageClass + '--error').show();
 							}
 
 							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
@@ -1421,13 +1449,15 @@ var hivepress = {
 		$(document).on('click tap touchstart', hivepress.getSelector('file-delete'), function (e) {
 			var container = $(this).parent();
 
-			$.ajax({
-				url: $(this).data('url'),
-				method: 'DELETE',
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-				},
-			});
+			if (hivepress.isLocalURL($(this).data('url'))) {
+				$.ajax({
+					url: $(this).data('url'),
+					method: 'DELETE',
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+					},
+				});
+			}
 
 			container.remove();
 

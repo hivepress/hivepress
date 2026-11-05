@@ -104,9 +104,10 @@ final class Attachment extends Component {
 	 * Checks if the parent object is editable.
 	 *
 	 * @param object $object Parent object.
+	 * @param string $field_name Parent field name.
 	 * @return bool
 	 */
-	public function is_editable_parent( $object ) {
+	public function is_editable_parent( $object, $field_name = null ) {
 
 		// Get user ID.
 		$user_id = $object->get_user__id();
@@ -118,6 +119,15 @@ final class Attachment extends Component {
 		// Check user.
 		if ( get_current_user_id() !== $user_id ) {
 			return false;
+		}
+
+		// Check attribute.
+		if ( $field_name ) {
+			$attribute = hp\get_array_value( hivepress()->attribute->get_attributes( $object::_get_meta( 'name' ) ), $field_name );
+
+			if ( $attribute && ! $attribute['editable'] ) {
+				return false;
+			}
 		}
 
 		// Check status.

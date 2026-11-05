@@ -1,7 +1,7 @@
 {
 	"require": {
 		"league/oauth2-client": "^2.9.0",
-		"league/oauth2-google": "^3.0",
+		"league/oauth2-google": "^4.2",
 		"woocommerce/action-scheduler": "^3.9.0"
 	},
 	"require-dev": {

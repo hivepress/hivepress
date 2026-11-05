@@ -33,7 +33,7 @@
 					button.attr('data-state', '');
 				}
 
-				if (button.data('url')) {
+				if (button.data('url') && hivepress.isLocalURL(button.data('url'))) {
 					$.ajax({
 						url: button.data('url'),
 						method: 'POST',
@@ -116,7 +116,9 @@
 						container.on('click', 'img, video', function (e) {
 							var index = container.find('img, video').index($(this).get(0));
 
-							if (index < imageURLs.length) {
+							if (index < imageURLs.length && imageURLs.every(function (image) {
+								return hivepress.isSafeURL(image.src);
+							})) {
 								$.fancybox.open(imageURLs, {
 									loop: true,
 									buttons: ['close'],
@@ -142,8 +144,8 @@
 
 						container.html('');
 
-						if (url) {
-							slider.find('img, video').wrap('<a href="' + url + '" />');
+						if (url && hivepress.isSafeURL(url)) {
+							slider.find('img, video').wrap($('<a />').attr('href', url));
 						}
 
 						slider.appendTo(container);
