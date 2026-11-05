@@ -69,10 +69,11 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_register_action'         => [
-						'base'   => 'users_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'register_user' ],
-						'rest'   => true,
+						'base'     => 'users_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'register_user' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					/**
@@ -90,11 +91,12 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_login_action'            => [
-						'base'   => 'users_resource',
-						'path'   => '/login',
-						'method' => 'POST',
-						'action' => [ $this, 'login_user' ],
-						'rest'   => true,
+						'base'     => 'users_resource',
+						'path'     => '/login',
+						'method'   => 'POST',
+						'action'   => [ $this, 'login_user' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					/**
@@ -111,11 +113,12 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_password_request_action' => [
-						'base'   => 'users_resource',
-						'path'   => '/request-password',
-						'method' => 'POST',
-						'action' => [ $this, 'request_user_password' ],
-						'rest'   => true,
+						'base'     => 'users_resource',
+						'path'     => '/request-password',
+						'method'   => 'POST',
+						'action'   => [ $this, 'request_user_password' ],
+						'throttle' => 5,
+						'rest'     => true,
 					],
 
 					/**
@@ -134,11 +137,12 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_password_reset_action'   => [
-						'base'   => 'users_resource',
-						'path'   => '/reset-password',
-						'method' => 'POST',
-						'action' => [ $this, 'reset_user_password' ],
-						'rest'   => true,
+						'base'     => 'users_resource',
+						'path'     => '/reset-password',
+						'method'   => 'POST',
+						'action'   => [ $this, 'reset_user_password' ],
+						'throttle' => 5,
+						'rest'     => true,
 					],
 
 					/**
@@ -153,10 +157,11 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_update_action'           => [
-						'base'   => 'user_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'update_user' ],
-						'rest'   => true,
+						'base'     => 'user_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'update_user' ],
+						'throttle' => 20,
+						'rest'     => true,
 					],
 
 					/**
@@ -169,10 +174,11 @@ final class User extends Controller {
 					 * )
 					 */
 					'user_delete_action'           => [
-						'base'   => 'user_resource',
-						'method' => 'DELETE',
-						'action' => [ $this, 'delete_user' ],
-						'rest'   => true,
+						'base'     => 'user_resource',
+						'method'   => 'DELETE',
+						'action'   => [ $this, 'delete_user' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					'user_account_page'            => [

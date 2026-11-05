@@ -64,10 +64,11 @@ final class Listing extends Controller {
 					 * )
 					 */
 					'listing_update_action'        => [
-						'base'   => 'listing_resource',
-						'method' => 'POST',
-						'action' => [ $this, 'update_listing' ],
-						'rest'   => true,
+						'base'     => 'listing_resource',
+						'method'   => 'POST',
+						'action'   => [ $this, 'update_listing' ],
+						'throttle' => 20,
+						'rest'     => true,
 					],
 
 					/**
@@ -81,11 +82,12 @@ final class Listing extends Controller {
 					 * )
 					 */
 					'listing_hide_action'          => [
-						'base'   => 'listing_resource',
-						'path'   => '/hide',
-						'method' => 'POST',
-						'action' => [ $this, 'hide_listing' ],
-						'rest'   => true,
+						'base'     => 'listing_resource',
+						'path'     => '/hide',
+						'method'   => 'POST',
+						'action'   => [ $this, 'hide_listing' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					/**
@@ -104,11 +106,12 @@ final class Listing extends Controller {
 					 * )
 					 */
 					'listing_report_action'        => [
-						'base'   => 'listing_resource',
-						'path'   => '/report',
-						'method' => 'POST',
-						'action' => [ $this, 'report_listing' ],
-						'rest'   => true,
+						'base'     => 'listing_resource',
+						'path'     => '/report',
+						'method'   => 'POST',
+						'action'   => [ $this, 'report_listing' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					/**
@@ -121,10 +124,11 @@ final class Listing extends Controller {
 					 * )
 					 */
 					'listing_delete_action'        => [
-						'base'   => 'listing_resource',
-						'method' => 'DELETE',
-						'action' => [ $this, 'delete_listing' ],
-						'rest'   => true,
+						'base'     => 'listing_resource',
+						'method'   => 'DELETE',
+						'action'   => [ $this, 'delete_listing' ],
+						'throttle' => 10,
+						'rest'     => true,
 					],
 
 					'listings_view_page'           => [
