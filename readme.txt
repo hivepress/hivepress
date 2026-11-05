@@ -4,7 +4,7 @@ Tags: business directory, classifieds, directory, directory plugin, listings
 Requires at least: 5.7
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -177,9 +177,6 @@ By default, HivePress is fully integrated with the core WordPress block editor, 
 
 = Can I translate HivePress to my language? =
 Yes, you can easily translate HivePress, its themes, and extensions without code changes using a plugin like [Loco Translate](https://wordpress.org/plugins/loco-translate/) or software like Poedit. Moreover, the HivePress core and its free extensions are already translated into a few languages by volunteers from the WordPress plugin repository.
-
-= Where do I report security bugs found in this plugin? =
-Please report security bugs found in the source code of the HivePress plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/c186a795-0b87-40be-8617-3f72303a9914). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Installation ==
 
