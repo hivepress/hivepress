@@ -79,7 +79,7 @@ class Text extends Field {
 				'sortable'    => true,
 				'prefillable' => true,
 
-				'settings'   => [
+				'settings'    => [
 					'placeholder' => [
 						'label'      => esc_html__( 'Placeholder', 'hivepress' ),
 						'type'       => 'text',
@@ -202,11 +202,8 @@ class Text extends Field {
 		} elseif ( is_array( $this->html ) ) {
 			$this->value = wp_kses( $this->value, $this->html );
 		} else {
-
-			// Get allowed tags.
 			$tags = wp_kses_allowed_html( 'post' );
 
-			// Remove data attributes.
 			foreach ( $tags as $tag => $attributes ) {
 				if ( is_array( $attributes ) ) {
 					unset( $tags[ $tag ]['data-*'] );
