@@ -451,7 +451,7 @@ final class Router extends Component {
 		// Get user ID.
 		$user_id = get_current_user_id();
 
-		if ( ! $user_id ) {
+		if ( ! $user_id || current_user_can( 'edit_others_posts' ) ) {
 			return $response;
 		}
 
@@ -480,7 +480,7 @@ final class Router extends Component {
 			rest_get_server()->send_header( 'Retry-After', max( 1, $counter['expires'] - $time ) );
 
 			return new \WP_Error(
-				'rest_throttled',
+				'too_many_requests',
 				__( 'Too many requests, please try again later.', 'hivepress' ),
 				[ 'status' => 429 ]
 			);
