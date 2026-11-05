@@ -980,7 +980,7 @@ var hivepress = {
 				always: function (e, data) {
 					var response = data.jqXHR.responseJSON;
 
-					if (response.hasOwnProperty('data')) {
+					if (data.jqXHR.status < 400 && response.hasOwnProperty('data')) {
 						if (field.prop('multiple')) {
 							responseContainer.append(response.data.html);
 						} else {
@@ -998,6 +998,8 @@ var hivepress = {
 						if (!messageContainer.is(':empty')) {
 							messageContainer.show();
 						}
+					} else if (data.jqXHR.status >= 400 && response.message) {
+						messageContainer.html($('<div />').text(response.message)).show();
 					}
 				},
 			});
@@ -1297,7 +1299,7 @@ var hivepress = {
 								grecaptcha.reset(captchaId);
 							}
 
-							if (response == null || response.hasOwnProperty('data')) {
+							if (response == null || (xhr.status < 400 && response.hasOwnProperty('data'))) {
 								if (form.data('message') && xhr.status !== 307) {
 									messageContainer.addClass(messageClass + '--success').html('<div>' + form.data('message') + '</div>').show();
 								}
@@ -1331,6 +1333,8 @@ var hivepress = {
 								if (!messageContainer.is(':empty')) {
 									messageContainer.addClass(messageClass + '--error').show();
 								}
+							} else if (xhr.status >= 400 && response.message) {
+								messageContainer.html($('<div />').text(response.message)).addClass(messageClass + '--error').show();
 							}
 
 							if (messageContainer.is(':visible') && form.offset().top < $(window).scrollTop()) {
