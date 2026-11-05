@@ -13,6 +13,20 @@ var hivepress = {
 	getComponent: function (name) {
 		return jQuery(this.getSelector(name));
 	},
+
+	/**
+	 * Checks if URL is safe to open.
+	 */
+	isSafeURL: function (url) {
+		return ['http:', 'https:'].includes(new URL(url, window.location.href).protocol);
+	},
+
+	/**
+	 * Checks if URL is local.
+	 */
+	isLocalURL: function (url) {
+		return [window.location.origin, new URL(hivepressCoreData.apiURL).origin].includes(new URL(url, window.location.href).origin);
+	},
 };
 
 (function ($) {
@@ -27,7 +41,7 @@ var hivepress = {
 		container.find(hivepress.getSelector('link')).on('click', function (e) {
 			var url = $(this).data('url');
 
-			if (url.indexOf('#') !== 0) {
+			if (url.indexOf('#') !== 0 && hivepress.isSafeURL(url)) {
 				window.location.href = url;
 			}
 
@@ -48,9 +62,11 @@ var hivepress = {
 			var image = $(this);
 
 			image.on('click', function () {
-				$.fancybox.open({ src: image.data('zoom') }, {
-					buttons: ['close'],
-				});
+				if (hivepress.isSafeURL(image.data('zoom'))) {
+					$.fancybox.open({ src: image.data('zoom') }, {
+						buttons: ['close'],
+					});
+				}
 			});
 		});
 
@@ -995,6 +1011,10 @@ var hivepress = {
 				stop: function () {
 					if (container.children().length > 1) {
 						container.children().each(function (index) {
+							if (!hivepress.isLocalURL($(this).data('url'))) {
+								return;
+							}
+
 							$.ajax({
 								url: $(this).data('url'),
 								method: 'POST',
@@ -1069,6 +1089,10 @@ var hivepress = {
 				function renderBlock() {
 					var url = new URL(renderSettings.url),
 						container = $('[data-block=' + renderSettings.block + ']');
+
+					if (!hivepress.isLocalURL(url)) {
+						return;
+					}
 
 					if (!container.length) {
 						if (renderSettings.hasOwnProperty('interval')) {
@@ -1421,13 +1445,15 @@ var hivepress = {
 		$(document).on('click tap touchstart', hivepress.getSelector('file-delete'), function (e) {
 			var container = $(this).parent();
 
-			$.ajax({
-				url: $(this).data('url'),
-				method: 'DELETE',
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
-				},
-			});
+			if (hivepress.isLocalURL($(this).data('url'))) {
+				$.ajax({
+					url: $(this).data('url'),
+					method: 'DELETE',
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', hivepressCoreData.apiNonce);
+					},
+				});
+			}
 
 			container.remove();
 
