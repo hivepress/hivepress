@@ -1,8 +1,7 @@
 name: Check coding standards
 
 on:
-  push:
-    branches-ignore: [ main, master ]
+  pull_request:
 
   workflow_dispatch:
 
@@ -13,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -40,5 +41,14 @@ jobs:
           composer update --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
           echo "vendor/bin" >> $GITHUB_PATH
 
+      - name: Run PHPCS on changed files
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- '*.php' > changed-files.txt
+          if [ -s changed-files.txt ]; then
+            vendor/bin/phpcs --file-list=changed-files.txt -d memory_limit=-1 -q -n --report=checkstyle | cs2pr
+          fi
+
       - name: Run PHPCS on all files
-        run: vendor/bin/phpcs . -q -n --extensions=php --report=checkstyle | cs2pr
+        if: github.event_name != 'pull_request'
+        run: vendor/bin/phpcs . -d memory_limit=-1 -q -n --extensions=php --report=checkstyle | cs2pr
