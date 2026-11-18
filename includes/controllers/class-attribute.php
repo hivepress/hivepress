@@ -201,7 +201,13 @@ final class Attribute extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || ! in_array( $model->get_status(), [ 'auto-draft', 'draft', 'publish' ] ) ) ) {
+		$statuses = [ 'auto-draft' ];
+
+		if ( 'vendor' === $model_name ) {
+			$statuses = array_merge( $statuses, [ 'draft', 'publish' ] );
+		}
+
+		if ( ! current_user_can( 'edit_others_posts' ) && ( get_current_user_id() !== $model->get_user__id() || ! in_array( $model->get_status(), $statuses ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
@@ -276,7 +282,7 @@ final class Attribute extends Controller {
 		}
 
 		// Check permissions.
-		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+		if ( ! current_user_can( 'edit_post', $post->ID ) || ( get_option( 'hp_user_disable_backend' ) && ! current_user_can( 'publish_posts' ) ) ) {
 			return hp\rest_error( 403 );
 		}
 
