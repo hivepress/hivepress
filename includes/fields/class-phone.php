@@ -146,9 +146,7 @@ class Phone extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		parent::sanitize();
-
-		$this->value = preg_replace( '/[^\d+]/', '', $this->value );
+		$this->value = preg_replace( '/[^\d+]/', '', sanitize_text_field( $this->value ) );
 		$this->value = preg_replace( '/(?!^)\+/', '', $this->value );
 	}
 }
