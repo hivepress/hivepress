@@ -90,6 +90,12 @@
 
 				slider.slider('values', [Number(minField.val()), Number(maxField.val())]);
 			});
+
+			container.closest('form').on('submit', function () {
+				if (Number(minField.val()) === Number(minField.attr('min')) && Number(maxField.val()) === Number(maxField.attr('max'))) {
+					fields.val('');
+				}
+			});
 		});
 
 		// Carousel slider
@@ -269,7 +275,7 @@
 				});
 			}
 
-			if (label.length && field.attr('autocomplete') === 'new-password') {
+			if (label.length && field.attr('autocomplete') === 'new-password' && typeof wp !== 'undefined' && wp.passwordStrength) {
 				var status = $('<small />').appendTo(label);
 
 				field.on('input', function () {

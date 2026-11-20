@@ -76,6 +76,11 @@ class Password extends Text {
 	 */
 	public function render() {
 
+		// Enqueue script.
+		if ( 'new-password' === hp\get_array_value( $this->attributes, 'autocomplete' ) ) {
+			wp_enqueue_script( 'password-strength-meter' );
+		}
+
 		// Render field.
 		$output = '<input type="' . esc_attr( $this->display_type ) . '" name="' . esc_attr( $this->name ) . '" ' . hp\html_attributes( $this->attributes ) . '>';
 

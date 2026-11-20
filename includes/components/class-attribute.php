@@ -179,7 +179,7 @@ final class Attribute extends Component {
 				if ( $field->validate() ) {
 
 					// Check range values.
-					if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+					if ( 'number_range' === $field::get_meta( 'name' ) && ( is_null( $field->get_value() ) || $field->get_value() == $this->get_range_values( $model, $attribute_name ) ) ) {
 						continue;
 					}
 
@@ -1702,6 +1702,20 @@ final class Attribute extends Component {
 			'fields'           => 'ids',
 			'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 		];
+
+		// Get category ID.
+		$category_id = $this->get_category_id( $model, true );
+
+		if ( $category_id ) {
+
+			// Set category.
+			$query_args['tax_query'] = [
+				[
+					'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
+					'terms'    => $category_id,
+				],
+			];
+		}
 
 		// Get cached range.
 		$range = hivepress()->cache->get_cache(

@@ -85,6 +85,10 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+
+				@media screen and (max-width: 782px) {
+					display: block;
+				}
 			}
 
 			label {
@@ -98,6 +102,10 @@
 		input[type=tel],
 		select {
 			width: 25em;
+
+			@media screen and (max-width: 782px) {
+				width: 100%;
+			}
 		}
 
 		.iti {
@@ -277,6 +285,10 @@
 
 		&--repeater {
 
+			@media only screen and (max-width: 47.99em) {
+				padding-right: 1.5rem;
+			}
+
 			input[type=number],
 			input[type=text] {
 				width: 100%;
@@ -330,12 +342,16 @@
 		cursor: help;
 
 		@media screen and (max-width: 782px) {
-			display: none;
+			margin: 4px 0 0;
 		}
 
 		&__icon {
 			color: #82878c;
 			opacity: 0.5;
+
+			@media screen and (max-width: 782px) {
+				display: none;
+			}
 		}
 
 		&:hover &__icon {
@@ -368,7 +384,23 @@
 			}
 
 			a {
-				color: inherit;
+				@media screen and (min-width: 783px) {
+					color: inherit;
+				}
+			}
+
+			@media screen and (max-width: 782px) {
+				display: block;
+				position: static;
+				width: auto;
+				padding: 0;
+				font-size: 13px;
+				background: none;
+				color: #646970;
+
+				&::after {
+					display: none;
+				}
 			}
 		}
 
