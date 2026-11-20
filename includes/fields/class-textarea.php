@@ -128,6 +128,10 @@ class Textarea extends Text {
 			$this->value = hp\encode_shortcodes( sanitize_textarea_field( $this->value ) );
 		} else {
 			parent::sanitize();
+
+			if ( $this->editor ) {
+				$this->value = hp\encode_shortcodes( $this->value );
+			}
 		}
 	}
 
