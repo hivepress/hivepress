@@ -626,3 +626,21 @@ function strip_shortcodes( $text ) {
 
 	return $text;
 }
+
+/**
+ * Encodes shortcode brackets.
+ *
+ * @param string $text Text to be encoded.
+ * @return string
+ */
+function encode_shortcodes( $text ) {
+	return strtr(
+		$text,
+		[
+			'['     => '&#091;',
+			']'     => '&#093;',
+			'&#91;' => '&#091;',
+			'&#93;' => '&#093;',
+		]
+	);
+}

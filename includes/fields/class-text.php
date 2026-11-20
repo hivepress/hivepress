@@ -198,7 +198,7 @@ class Text extends Field {
 	 */
 	protected function sanitize() {
 		if ( empty( $this->html ) ) {
-			$this->value = hp\strip_shortcodes( sanitize_text_field( $this->value ) );
+			$this->value = hp\encode_shortcodes( sanitize_text_field( $this->value ) );
 		} elseif ( is_array( $this->html ) ) {
 			$this->value = wp_kses( $this->value, $this->html );
 		} else {
