@@ -269,7 +269,7 @@
 				});
 			}
 
-			if (label.length && field.attr('autocomplete') === 'new-password') {
+			if (label.length && field.attr('autocomplete') === 'new-password' && typeof wp !== 'undefined' && wp.passwordStrength) {
 				var status = $('<small />').appendTo(label);
 
 				field.on('input', function () {
