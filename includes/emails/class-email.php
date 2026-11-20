@@ -208,6 +208,6 @@ abstract class Email {
 		) )->render();
 
 		// Send email.
-		return wp_mail( $this->recipient, $this->subject, $content, $headers );
+		return wp_mail( $this->recipient, hp\decode_shortcodes( $this->subject ), $content, $headers );
 	}
 }

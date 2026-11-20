@@ -75,6 +75,6 @@ class URL extends Text {
 	 * Sanitizes field value.
 	 */
 	protected function sanitize() {
-		$this->value = esc_url_raw( $this->value );
+		$this->value = hp\encode_shortcodes( esc_url_raw( $this->value ), true );
 	}
 }

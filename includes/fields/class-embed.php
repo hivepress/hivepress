@@ -65,7 +65,7 @@ class Embed extends URL {
 				// @todo ensure it runs before rendering template.
 				wp_enqueue_style( 'wp-block-embed' );
 
-				return $embed;
+				return hp\encode_shortcodes( $embed );
 			}
 		}
 	}

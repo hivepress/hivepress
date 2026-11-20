@@ -68,6 +68,13 @@ class Regex extends Text {
 	}
 
 	/**
+	 * Sanitizes field value.
+	 */
+	protected function sanitize() {
+		$this->value = sanitize_text_field( $this->value );
+	}
+
+	/**
 	 * Validates field value.
 	 *
 	 * @return bool

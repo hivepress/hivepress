@@ -564,6 +564,7 @@ abstract class Field {
 			$value = apply_filters( 'hivepress/v1/fields/' . hp\get_class_name( $class ) . '/display_value', $value, $this );
 		}
 
+		// @deprecated since version 1.8.3.
 		if ( $shortcode ) {
 			$value = hp\strip_shortcodes( $value );
 		}
