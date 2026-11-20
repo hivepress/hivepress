@@ -129,7 +129,7 @@ class Textarea extends Text {
 		} else {
 			parent::sanitize();
 
-			if ( $this->editor ) {
+			if ( true === $this->get_arg( 'editor' ) ) {
 				$this->value = hp\encode_shortcodes( $this->value );
 			}
 		}
