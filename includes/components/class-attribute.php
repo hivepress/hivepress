@@ -1703,6 +1703,20 @@ final class Attribute extends Component {
 			'suppress_filters' => ! hivepress()->translator->is_multilingual(),
 		];
 
+		// Get category ID.
+		$category_id = $this->get_category_id( $model, true );
+
+		if ( $category_id ) {
+
+			// Set category.
+			$query_args['tax_query'] = [
+				[
+					'taxonomy' => hp\prefix( $this->get_category_model( $model ) ),
+					'terms'    => $category_id,
+				],
+			];
+		}
+
 		// Get cached range.
 		$range = hivepress()->cache->get_cache(
 			array_merge(

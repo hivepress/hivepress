@@ -90,6 +90,12 @@
 
 				slider.slider('values', [Number(minField.val()), Number(maxField.val())]);
 			});
+
+			container.closest('form').on('submit', function () {
+				if (Number(minField.val()) === Number(minField.attr('min')) && Number(maxField.val()) === Number(maxField.attr('max'))) {
+					fields.val('');
+				}
+			});
 		});
 
 		// Carousel slider
