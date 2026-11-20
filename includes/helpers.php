@@ -644,3 +644,19 @@ function encode_shortcodes( $text ) {
 		]
 	);
 }
+
+/**
+ * Decodes shortcode brackets.
+ *
+ * @param string $text Text to be decoded.
+ * @return string
+ */
+function decode_shortcodes( $text ) {
+	return strtr(
+		$text,
+		[
+			'&#091;' => '[',
+			'&#093;' => ']',
+		]
+	);
+}
