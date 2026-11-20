@@ -179,7 +179,7 @@ final class Attribute extends Component {
 				if ( $field->validate() ) {
 
 					// Check range values.
-					if ( 'number_range' === $field::get_meta( 'name' ) && ! array_diff( (array) $field->get_value(), $this->get_range_values( $model, $attribute_name ) ) ) {
+					if ( 'number_range' === $field::get_meta( 'name' ) && ( is_null( $field->get_value() ) || $field->get_value() == $this->get_range_values( $model, $attribute_name ) ) ) {
 						continue;
 					}
 
