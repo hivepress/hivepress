@@ -631,18 +631,25 @@ function strip_shortcodes( $text ) {
  * Encodes shortcode brackets.
  *
  * @param string $text Text to be encoded.
+ * @param bool   $url Is URL?
  * @return string
  */
-function encode_shortcodes( $text ) {
-	return strtr(
-		$text,
-		[
-			'['     => '&#091;',
-			']'     => '&#093;',
-			'&#91;' => '&#091;',
-			'&#93;' => '&#093;',
-		]
-	);
+function encode_shortcodes( $text, $url = false ) {
+	$map = [
+		'['     => '&#091;',
+		']'     => '&#093;',
+		'&#91;' => '&#091;',
+		'&#93;' => '&#093;',
+	];
+
+	if ( $url ) {
+		$map = [
+			'[' => '%5B',
+			']' => '%5D',
+		];
+	}
+
+	return strtr( $text, $map );
 }
 
 /**
