@@ -96,7 +96,15 @@ class User extends Model {
 						'_external'  => true,
 					],
 
+					/**
+					* @OA\Property(
+					*   property="display_name",
+					*   type="string",
+					*   description="Display name.",
+					* )
+					 */
 					'display_name'    => [
+						'label'      => esc_html__( 'Display Name', 'hivepress' ),
 						'type'       => 'text',
 						'max_length' => 256,
 						'_alias'     => 'display_name',
