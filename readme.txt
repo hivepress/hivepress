@@ -103,7 +103,7 @@ HivePress is extensible by design, which means you can build websites with diffe
 Since HivePress is open-source and has a flexible API, there is a growing ecosystem of custom-built HivePress extensions and ready-made code snippets shared by developers on the [community forum](https://community.hivepress.io/). Therefore, the above list of add-ons is not exhaustive, and you can benefit from third-party HivePress solutions or even contribute by developing your own.
 
 = Help when you need it =
-This directory plugin is directly supported by its developers, the people who know it best, so any issues are handled with a deep understanding of how it works. Plus, there’s an [AI Assistant](https://www.chatbase.co/PdfFucPZ0vUmh3dfM-oe1/help) familiar with all the resources and solutions we’ve provided over the years, ready to assist you 24/7, from help with setting up to general developer guidance.
+This directory plugin is directly supported by its developers, the people who know it best, so any issues are handled with a deep understanding of how it works. Plus, there’s an [AI Assistant](https://hivepress.io/ai-assistant/) familiar with all the resources and solutions we’ve provided over the years, ready to assist you 24/7, from help with setting up to general developer guidance.
 
 Beyond support, HivePress comes with various resources to help you along the way:
 

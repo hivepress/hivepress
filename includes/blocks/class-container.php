@@ -68,7 +68,7 @@ class Container extends Block {
 		$this->blocks = [];
 
 		foreach ( hp\sort_array( $blocks ) as $name => $args ) {
-			if ( ! isset( $args['_capability'] ) || ( is_user_logged_in() && current_user_can( $args['_capability'] ) ) || ( ! is_user_logged_in() && 'login' === $args['_capability'] ) ) {
+			if ( ! isset( $args['_capability'] ) || ( is_user_logged_in() ? 'read' === $args['_capability'] || ( 'login' !== $args['_capability'] && current_user_can( $args['_capability'] ) ) : 'login' === $args['_capability'] ) ) {
 
 				// Create block.
 				$block = hp\create_class_instance(
